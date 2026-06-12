@@ -1,0 +1,663 @@
+{
+  "$defs": {
+    "BoundaryInfo": {
+      "description": "Describes a state boundary",
+      "properties": {
+        "boundary": {
+          "type": "string"
+        },
+        "boundary_callers": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "boundary_perms": {
+          "items": {
+            "$ref": "#/$defs/StatePermEntry"
+          },
+          "type": "array"
+        },
+        "collection": {
+          "type": "boolean"
+        },
+        "consistency": {
+          "type": "string"
+        },
+        "internal": {
+          "type": "boolean"
+        },
+        "persistence": {
+          "type": "boolean"
+        },
+        "state_perms": {
+          "items": {
+            "$ref": "#/$defs/StatePermEntry"
+          },
+          "type": "array"
+        },
+        "state_root": {
+          "type": "string"
+        },
+        "type_fqn": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "EntitlementGrantInfo": {
+      "description": "Generated entitlement grant token. Exact grants identify one package/service/RPC; wildcard grants expand to exact tokens.",
+      "properties": {
+        "capability_scope": {
+          "description": "Wildcard scope such as ANY, READ, WRITE, WATCH, PAGE, AGENT, or generated agent verb scope",
+          "type": "string"
+        },
+        "expands_to": {
+          "description": "Exact grant tokens implied by a wildcard",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "package": {
+          "description": "Proto package/capability namespace",
+          "type": "string"
+        },
+        "rpc": {
+          "description": "RPC name for exact grants",
+          "type": "string"
+        },
+        "service_name": {
+          "description": "Service name for exact grants",
+          "type": "string"
+        },
+        "token": {
+          "description": "Stable flattened token such as PACKAGE_SERVICE_RPC, PACKAGE_ANY, or PACKAGE_READ_ANY",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "EnumValueInfo": {
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "number": {
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "FieldInfo": {
+      "description": "Describes a field within a message type",
+      "properties": {
+        "constraints": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "default_json": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "enum_values": {
+          "items": {
+            "$ref": "#/$defs/EnumValueInfo"
+          },
+          "type": "array"
+        },
+        "graph_edge": {
+          "description": "Target graph type for uid edge from (spec.graph_edge)",
+          "type": "string"
+        },
+        "graph_field_index": {
+          "description": "Graph index hint from (spec.graph).index",
+          "type": "string"
+        },
+        "graph_index": {
+          "description": "Graph index directives from (spec.graph_index)",
+          "type": "string"
+        },
+        "graph_mode": {
+          "description": "Graph persistence mode: INCLUDE or PREDICATE",
+          "type": "string"
+        },
+        "graph_reverse": {
+          "description": "True when uid edge generates @reverse",
+          "type": "boolean"
+        },
+        "graph_upsert": {
+          "description": "True when this is the upsert identity predicate",
+          "type": "boolean"
+        },
+        "map_key_type": {
+          "type": "string"
+        },
+        "map_value_type": {
+          "type": "string"
+        },
+        "message": {
+          "$ref": "#/$defs/TypeInfo"
+        },
+        "name": {
+          "type": "string"
+        },
+        "projection_source": {
+          "description": "Source field path from (spec.projection_source)",
+          "type": "string"
+        },
+        "repeated": {
+          "type": "boolean"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "timeseries_codec": {
+          "description": "Timeseries compression codec",
+          "type": "string"
+        },
+        "timeseries_default_expr": {
+          "description": "Timeseries DEFAULT expression",
+          "type": "string"
+        },
+        "timeseries_low_cardinality": {
+          "description": "Wrap column type in LowCardinality()",
+          "type": "boolean"
+        },
+        "timeseries_order_key": {
+          "description": "Position in ORDER BY (1-indexed, 0 = not in key)",
+          "type": "integer"
+        },
+        "timeseries_partition_key": {
+          "description": "Part of PARTITION BY expression",
+          "type": "boolean"
+        },
+        "timeseries_type": {
+          "description": "Timeseries column type override",
+          "type": "string"
+        },
+        "type": {
+          "description": "TypeKind enum value",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "PackageNode": {
+      "description": "A node in the hierarchical registry tree",
+      "properties": {
+        "boundaries": {
+          "items": {
+            "$ref": "#/$defs/BoundaryInfo"
+          },
+          "type": "array"
+        },
+        "children": {
+          "items": {
+            "$ref": "#/$defs/PackageNode"
+          },
+          "type": "array"
+        },
+        "docs": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "entitlement_grants": {
+          "description": "Root-level generated entitlement grant catalog for entitlement-checked C2S RPCs. Wildcards expand to exact grant tokens.",
+          "items": {
+            "$ref": "#/$defs/EntitlementGrantInfo"
+          },
+          "type": "array"
+        },
+        "full_path": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "rpcs": {
+          "items": {
+            "$ref": "#/$defs/RpcInfo"
+          },
+          "type": "array"
+        },
+        "schema": {
+          "type": "string"
+        },
+        "subscriptions": {
+          "items": {
+            "$ref": "#/$defs/SubscriptionInfo"
+          },
+          "type": "array"
+        },
+        "types": {
+          "items": {
+            "$ref": "#/$defs/TypeInfo"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "RpcInfo": {
+      "description": "Describes a gRPC RPC method",
+      "properties": {
+        "access_kind": {
+          "description": "static access kind derived from the governed verb/pattern",
+          "enum": [
+            "",
+            "READ",
+            "WRITE"
+          ],
+          "type": "string"
+        },
+        "allowed_patterns": {
+          "description": "method patterns this canonical verb may resolve to",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "audit_meaning": {
+          "description": "operator/security meaning of this call",
+          "type": "string"
+        },
+        "auth_any_user": {
+          "type": "boolean"
+        },
+        "auth_disabled": {
+          "type": "boolean"
+        },
+        "auth_entitled_users": {
+          "type": "boolean"
+        },
+        "auth_model": {
+          "enum": [
+            "s2s",
+            "c2s"
+          ],
+          "type": "string"
+        },
+        "auth_services": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "capability_scope": {
+          "description": "primary package capability bucket for capability-any expansion",
+          "enum": [
+            "",
+            "READ",
+            "WRITE",
+            "WATCH",
+            "PAGE",
+            "AGENT"
+          ],
+          "type": "string"
+        },
+        "category": {
+          "enum": [
+            "RPC_CATEGORY_ACCESSOR",
+            "RPC_CATEGORY_MUTATOR",
+            "RPC_CATEGORY_EXECUTOR"
+          ],
+          "type": "string"
+        },
+        "client_streaming": {
+          "type": "boolean"
+        },
+        "collection_default_page_size": {
+          "description": "PAGE keyset default page size when the request omits a limit (0 on SNAPSHOT/WATCH)",
+          "type": "integer"
+        },
+        "collection_max_items": {
+          "description": "SNAPSHOT item cap (0 on WATCH/PAGE)",
+          "type": "integer"
+        },
+        "collection_mode": {
+          "description": "method_collection mode; empty when the RPC is not a collection read",
+          "enum": [
+            "",
+            "SNAPSHOT",
+            "WATCH",
+            "PAGE"
+          ],
+          "type": "string"
+        },
+        "collection_order_by": {
+          "description": "stable total-order fields",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "collection_replay_depth": {
+          "description": "WATCH ring depth (0 = platform default)",
+          "type": "integer"
+        },
+        "description": {
+          "type": "string"
+        },
+        "entitlement_scopes": {
+          "description": "grant scopes that admit this method, ordered broad to narrow",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "grpc_path": {
+          "description": "Full gRPC method path",
+          "type": "string"
+        },
+        "handler_shape": {
+          "description": "wire handler/client shape",
+          "enum": [
+            "",
+            "UNARY",
+            "SERVER_STREAM",
+            "CLIENT_STREAM",
+            "BIDI"
+          ],
+          "type": "string"
+        },
+        "http_alias_path": {
+          "description": "Additional REST alias route relative to REST_ROOT_PATH",
+          "type": "string"
+        },
+        "http_methods": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "http_path": {
+          "description": "REST path for gateway routing",
+          "type": "string"
+        },
+        "input_type": {
+          "type": "string"
+        },
+        "method_pattern": {
+          "description": "governed RPC pattern; empty when classification is advisory-failed",
+          "enum": [
+            "",
+            "GET",
+            "LIST",
+            "WATCH",
+            "CREATE",
+            "UPDATE",
+            "DELETE",
+            "ACTION",
+            "CLIENT_STREAM",
+            "BIDI"
+          ],
+          "type": "string"
+        },
+        "output_type": {
+          "type": "string"
+        },
+        "rejected_verbs": {
+          "description": "non-canonical verbs that fold to rpc_verb and are rejected by generation",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "retry_policy": {
+          "description": "semantic retry/idempotency posture for generated calls",
+          "enum": [
+            "",
+            "READ_ONLY",
+            "WATCH_RECONNECT",
+            "IDEMPOTENCY_REQUIRED",
+            "NO_GENERATED_AUTO_RETRY"
+          ],
+          "type": "string"
+        },
+        "rpc": {
+          "type": "string"
+        },
+        "rpc_noun": {
+          "description": "noun suffix after the canonical verb",
+          "type": "string"
+        },
+        "rpc_verb": {
+          "description": "canonical governed verb token when classification succeeds",
+          "type": "string"
+        },
+        "server_streaming": {
+          "type": "boolean"
+        },
+        "service_name": {
+          "type": "string"
+        },
+        "subject_namespace_source": {
+          "description": "Source of the caller namespace used by generated authorizers.",
+          "enum": [
+            "",
+            "token.namespace"
+          ],
+          "type": "string"
+        },
+        "target_namespace": {
+          "description": "Fixed target namespace after normalization; set only when target_namespace_source is literal.",
+          "type": "string"
+        },
+        "target_namespace_field": {
+          "description": "Request string field for namespace extraction; for auth_any_user this may be the authored fixed namespace literal.",
+          "type": "string"
+        },
+        "target_namespace_source": {
+          "description": "Source of the object/target namespace used by generated authorizers.",
+          "enum": [
+            "",
+            "request.field",
+            "literal"
+          ],
+          "type": "string"
+        },
+        "verb_boundary": {
+          "description": "governance boundary: what this verb is not",
+          "type": "string"
+        },
+        "verb_class": {
+          "description": "governed verb class",
+          "enum": [
+            "",
+            "core",
+            "action",
+            "agent"
+          ],
+          "type": "string"
+        },
+        "verb_definition": {
+          "description": "governed dictionary definition for rpc_verb",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "StatePermEntry": {
+      "description": "State-to-state access grant",
+      "properties": {
+        "mode": {
+          "enum": [
+            "STATE_PERMS_MODE_RO",
+            "STATE_PERMS_MODE_RW",
+            "STATE_PERMS_MODE_WORM",
+            "STATE_PERMS_MODE_CALL"
+          ],
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "SubscriptionInfo": {
+      "description": "Event-bus topic subscription declared via (spec.subscribe)",
+      "properties": {
+        "source": {
+          "description": "Original annotation value, e.g. aegis.AegisState.event_stream",
+          "type": "string"
+        },
+        "source_field": {
+          "description": "Topic field name on the source state root",
+          "type": "string"
+        },
+        "source_package": {
+          "description": "Proto package of the source state root",
+          "type": "string"
+        },
+        "source_state_root": {
+          "description": "Source state root message name",
+          "type": "string"
+        },
+        "source_type_fqn": {
+          "description": "Fully qualified proto type of the topic message",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "TypeInfo": {
+      "description": "Describes a protobuf message type",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "fields": {
+          "items": {
+            "$ref": "#/$defs/FieldInfo"
+          },
+          "type": "array"
+        },
+        "fqn": {
+          "description": "Fully qualified name",
+          "type": "string"
+        },
+        "graph_schema": {
+          "description": "Precomputed DQL schema fragment from (spec.graph) annotations",
+          "type": "string"
+        },
+        "graph_type": {
+          "description": "Graph type name from (spec.graph_type)",
+          "type": "string"
+        },
+        "graph_type_source": {
+          "description": "Source event FQN from (spec.graph_type).source",
+          "type": "string"
+        },
+        "graph_xid_field": {
+          "description": "Field used for upsert xid from (spec.graph_type).xid_field",
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "package": {
+          "type": "string"
+        },
+        "schema_json": {
+          "type": "string"
+        },
+        "timeseries_schema": {
+          "description": "Precomputed timeseries CREATE TABLE DDL",
+          "type": "string"
+        },
+        "timeseries_table_name": {
+          "description": "Timeseries table name",
+          "type": "string"
+        },
+        "timeseries_table_source": {
+          "description": "Source event FQN for field extraction",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "$id": "registry.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Schema for the tacplus registry.json — a self-describing hierarchical registry of types, RPCs, boundaries, and security metadata.",
+  "properties": {
+    "$schema": {
+      "description": "JSON Schema reference",
+      "type": "string"
+    },
+    "boundaries": {
+      "description": "State boundary descriptors",
+      "items": {
+        "$ref": "#/$defs/BoundaryInfo"
+      },
+      "type": "array"
+    },
+    "children": {
+      "description": "Sub-packages contained in this node",
+      "items": {
+        "$ref": "#/$defs/PackageNode"
+      },
+      "type": "array"
+    },
+    "docs": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Documentation files (filename → content). Present on root node only.",
+      "type": "object"
+    },
+    "entitlement_grants": {
+      "description": "Root-level generated entitlement grant catalog for entitlement-checked C2S RPCs. Wildcards expand to exact grant tokens.",
+      "items": {
+        "$ref": "#/$defs/EntitlementGrantInfo"
+      },
+      "type": "array"
+    },
+    "full_path": {
+      "description": "Slash-separated path from root",
+      "type": "string"
+    },
+    "name": {
+      "description": "Short package name",
+      "type": "string"
+    },
+    "rpcs": {
+      "description": "RPC descriptors",
+      "items": {
+        "$ref": "#/$defs/RpcInfo"
+      },
+      "type": "array"
+    },
+    "schema": {
+      "description": "Self-description pointer",
+      "type": "string"
+    },
+    "subscriptions": {
+      "description": "Event-bus topic subscriptions declared on state roots",
+      "items": {
+        "$ref": "#/$defs/SubscriptionInfo"
+      },
+      "type": "array"
+    },
+    "types": {
+      "description": "Message type descriptors",
+      "items": {
+        "$ref": "#/$defs/TypeInfo"
+      },
+      "type": "array"
+    }
+  },
+  "title": "tacplus Registry",
+  "type": "object"
+}

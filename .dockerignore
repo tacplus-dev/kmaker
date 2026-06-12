@@ -1,0 +1,6 @@
+.git
+bin
+proto
+*.test
+*.out
+.DS_Store

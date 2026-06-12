@@ -1,0 +1,9 @@
+tacplus-version: "1.2.x"
+language: go
+pkg: com.gitlab.secondstarcavalier.controlplane.cavalier.services.kmaker
+output-dir: model
+clients:
+  c2s:
+    enabled: true
+  w2s:
+    enabled: false

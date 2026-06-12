@@ -1,0 +1,200 @@
+// Copyright (c) 2024 Second Star Cavalier, LLC.
+
+// ============================================================================
+// DO NOT MODIFY THIS FILE
+// ============================================================================
+// This file defines SAML 2.0 assertion structures and metadata types used for
+// SAML-based authentication and identity federation across all services.
+// Modifying these definitions will break SAML assertion generation, validation,
+// and metadata exchange in all components that handle SAML federation.
+// ============================================================================
+
+syntax = "proto3";
+
+package saml;
+option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/saml";
+
+import "libs/x509.proto";
+
+// SamlNameIdFormat represents SAML 2.0 NameID format URIs
+enum SamlNameIdFormat {
+  SAML_NAME_ID_FORMAT_UNDEFINED   = 0;
+  SAML_NAME_ID_FORMAT_EMAIL       = 1;
+  SAML_NAME_ID_FORMAT_TRANSIENT   = 2;
+  SAML_NAME_ID_FORMAT_PERSISTENT  = 3;
+  SAML_NAME_ID_FORMAT_UNSPECIFIED = 4;
+  SAML_NAME_ID_FORMAT_X509        = 5;
+}
+
+// SamlBinding represents SAML 2.0 binding URIs for endpoint communication
+enum SamlBinding {
+  SAML_BINDING_UNDEFINED     = 0;
+  SAML_BINDING_HTTP_POST     = 1;
+  SAML_BINDING_HTTP_REDIRECT = 2;
+  SAML_BINDING_SOAP          = 3;
+}
+
+// SamlAuthnContext represents SAML 2.0 authentication context class reference URIs.
+// These appear in the AuthnStatement and describe the mechanism used to authenticate
+// the subject at the asserting party.
+enum SamlAuthnContext {
+  SAML_AUTHN_CONTEXT_UNDEFINED    = 0;
+  // PasswordProtectedTransport — username/password over TLS (most common for web SSO)
+  SAML_AUTHN_CONTEXT_PASSWORD     = 1;
+  // TLSClient — mutual TLS with client certificate
+  SAML_AUTHN_CONTEXT_TLS_CLIENT   = 2;
+  // X509 — X.509 certificate authentication
+  SAML_AUTHN_CONTEXT_X509         = 3;
+  // Unspecified — authentication mechanism not specified
+  SAML_AUTHN_CONTEXT_UNSPECIFIED  = 4;
+}
+
+// SamlStatusCode represents SAML 2.0 top-level status code URIs.
+// These appear in the Status element of a SAMLResponse.
+enum SamlStatusCode {
+  SAML_STATUS_CODE_UNDEFINED        = 0;
+  // Success — the request succeeded
+  SAML_STATUS_CODE_SUCCESS          = 1;
+  // Requester — the request could not be performed due to an error on the requester's part
+  SAML_STATUS_CODE_REQUESTER        = 2;
+  // Responder — the request could not be performed due to an error on the responder's part
+  SAML_STATUS_CODE_RESPONDER        = 3;
+  // VersionMismatch — the responder does not support the SAML version in the request
+  SAML_STATUS_CODE_VERSION_MISMATCH = 4;
+}
+
+// SamlAssertion represents a SAML 2.0 assertion and its enclosing response.
+// It holds the semantic fields of both the <samlp:Response> envelope and the
+// inner <saml:Assertion> element, plus the final signed XML once Sign() is called.
+//
+// Parallel to the Token message for JWT: immutable after signing, builder pattern
+// in generated libs, Sign() produces the xml field.
+message SamlAssertion {
+  // --- Response envelope ---
+
+  // ResponseId is the unique identifier for the <samlp:Response> element
+  string response_id = 1;
+  // InResponseTo is the ID of the <samlp:AuthnRequest> that triggered this response.
+  // Empty for IDP-initiated flows.
+  string in_response_to = 2;
+  // StatusCode is the top-level status of the response
+  string status_code = 3;
+  // StatusMessage is an optional human-readable status description
+  string status_message = 4;
+
+  // --- Assertion core ---
+
+  // Id is the unique identifier for the <saml:Assertion> element (UUID prefixed with '_')
+  string id = 5;
+  // IssueInstant is the UTC timestamp when the assertion was issued (ISO 8601)
+  string issue_instant = 6;
+  // Issuer is the entity ID of the asserting party (our SAML IDP entity ID when issuing,
+  // or the external IDP entity ID when consuming)
+  string issuer = 7;
+
+  // --- Subject ---
+
+  // SubjectNameId is the principal identifier (e.g. email address, opaque ID)
+  string subject_name_id = 8;
+  // NameIdFormat is the SamlNameIdFormat URI describing the format of subject_name_id
+  string name_id_format = 9;
+  // SubjectRecipient is the ACS URL this assertion is addressed to.
+  // Populated in the SubjectConfirmationData Recipient attribute.
+  string subject_recipient = 10;
+  // SubjectNotOnOrAfter is the expiry of the subject confirmation (ISO 8601).
+  // Controls how long the SP may use this assertion to establish a session.
+  string subject_not_on_or_after = 11;
+
+  // --- Conditions ---
+
+  // NotBefore is the start of the assertion validity window (ISO 8601)
+  string not_before = 12;
+  // NotOnOrAfter is the end of the assertion validity window (ISO 8601)
+  string not_on_or_after = 13;
+  // Audiences lists the entity IDs of the intended recipients (AudienceRestriction).
+  // Typically contains the SP entity ID.
+  repeated string audiences = 14;
+
+  // --- AuthnStatement ---
+
+  // AuthnInstant is the UTC timestamp when the subject was authenticated (ISO 8601)
+  string authn_instant = 15;
+  // AuthnContext is the SamlAuthnContext URI describing how the subject authenticated
+  string authn_context = 16;
+  // SessionIndex is the identifier for the session at the IDP.
+  // Used in single logout to identify which session to terminate.
+  string session_index = 17;
+
+  // --- Attributes ---
+
+  // Attributes contains the AttributeStatement entries.
+  // Keys are SAML attribute names (e.g. "email", "groups").
+  // Values are attribute values; multi-valued attributes are comma-delimited.
+  // Parallel to the custom claims map in Token.
+  map<string, string> attributes = 18;
+
+  // --- Serialized form ---
+
+  // Xml contains the complete signed <samlp:Response> XML document.
+  // This field is populated by Sign() and must not be set manually.
+  // Parallel to the base64 field in Token.
+  string xml = 19;
+}
+
+// SamlEndpoint describes a single SAML protocol endpoint with its binding and URL.
+// Used in EntityDescriptor metadata to advertise service locations.
+message SamlEndpoint {
+  // Binding is the SamlBinding URI for this endpoint
+  string binding = 1;
+  // Location is the endpoint URL
+  string location = 2;
+  // Index is the endpoint index for indexed endpoints (e.g. AssertionConsumerService).
+  // Zero-valued for non-indexed endpoints such as SingleSignOnService.
+  int32 index = 3;
+}
+
+// SamlEntityDescriptor represents a SAML 2.0 EntityDescriptor metadata document.
+// Used both to describe our own endpoints (SP or IDP role) and to parse external
+// IDP metadata fetched during federation setup.
+//
+// Parallel to OIDC's /.well-known/openid-configuration discovery document.
+message SamlEntityDescriptor {
+  // EntityId is the globally unique identifier for this SAML entity (a URI)
+  string entity_id = 1;
+
+  // SigningCert is the X.509 certificate whose private key signs assertions or
+  // AuthnRequests for this entity. Embedded as base64 DER in metadata XML.
+  // For IDP role: the key that signs assertions we issue.
+  // For SP role: the key that signs AuthnRequests we send (optional).
+  x509.X509Cert signing_cert = 2;
+
+  // SsoServices lists SingleSignOnService endpoints (IDP role only).
+  // External SPs use these URLs to send AuthnRequests.
+  repeated SamlEndpoint sso_services = 3;
+
+  // AcsUrls lists AssertionConsumerService endpoints (SP role only).
+  // IDPs POST SAMLResponses to these URLs.
+  repeated SamlEndpoint acs_urls = 4;
+
+  // SloServices lists SingleLogoutService endpoints for both IDP and SP roles.
+  repeated SamlEndpoint slo_services = 5;
+
+  // WantAuthnRequestsSigned indicates (IDP role) whether this IDP requires
+  // incoming AuthnRequests to be signed.
+  bool want_authn_requests_signed = 6;
+
+  // AuthnRequestsSigned indicates (SP role) whether this SP will sign its
+  // outgoing AuthnRequests.
+  bool authn_requests_signed = 7;
+}
+
+// ============================================================================
+// Generated Proto Registry IDs
+// Auto-injected by tacplus for shared type/RPC identifiers.
+// ============================================================================
+enum TypeID {
+  TYPE_ID_UNSPECIFIED = 0;
+  TYPE_ID_SAML_ASSERTION = 1;
+  TYPE_ID_SAML_ENDPOINT = 2;
+  TYPE_ID_SAML_ENTITY_DESCRIPTOR = 3;
+}
