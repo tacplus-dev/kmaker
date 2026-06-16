@@ -157,56 +157,6 @@ func (Level) EnumDescriptor() ([]byte, []int) {
 	return file_libs_logger_proto_rawDescGZIP(), []int{1}
 }
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED   TypeID = 0
-	TypeID_TYPE_ID_LOGGER_CONFIG TypeID = 1
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_LOGGER_CONFIG",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":   0,
-		"TYPE_ID_LOGGER_CONFIG": 1,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_logger_proto_enumTypes[2].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_logger_proto_enumTypes[2]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_logger_proto_rawDescGZIP(), []int{2}
-}
-
 // LoggerConfig represents the configuration for a logger instance.
 // It controls the output format, verbosity level, and formatting options.
 //
@@ -390,10 +340,7 @@ const file_libs_logger_proto_rawDesc = "" +
 	"LEVEL_INFO\x10\x03\x12\x0e\n" +
 	"\n" +
 	"LEVEL_WARN\x10\x04\x12\x0f\n" +
-	"\vLEVEL_ERROR\x10\x05*<\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x19\n" +
-	"\x15TYPE_ID_LOGGER_CONFIG\x10\x01BXZVgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/loggerb\x06proto3"
+	"\vLEVEL_ERROR\x10\x05BXZVgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/loggerb\x06proto3"
 
 var (
 	file_libs_logger_proto_rawDescOnce sync.Once
@@ -407,19 +354,18 @@ func file_libs_logger_proto_rawDescGZIP() []byte {
 	return file_libs_logger_proto_rawDescData
 }
 
-var file_libs_logger_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
+var file_libs_logger_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_libs_logger_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_libs_logger_proto_goTypes = []any{
 	(Format)(0),          // 0: logger.Format
 	(Level)(0),           // 1: logger.Level
-	(TypeID)(0),          // 2: logger.TypeID
-	(*LoggerConfig)(nil), // 3: logger.LoggerConfig
-	nil,                  // 4: logger.LoggerConfig.InitialFieldsEntry
+	(*LoggerConfig)(nil), // 2: logger.LoggerConfig
+	nil,                  // 3: logger.LoggerConfig.InitialFieldsEntry
 }
 var file_libs_logger_proto_depIdxs = []int32{
 	0, // 0: logger.LoggerConfig.format:type_name -> logger.Format
 	1, // 1: logger.LoggerConfig.level:type_name -> logger.Level
-	4, // 2: logger.LoggerConfig.initial_fields:type_name -> logger.LoggerConfig.InitialFieldsEntry
+	3, // 2: logger.LoggerConfig.initial_fields:type_name -> logger.LoggerConfig.InitialFieldsEntry
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
@@ -437,7 +383,7 @@ func file_libs_logger_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_logger_proto_rawDesc), len(file_libs_logger_proto_rawDesc)),
-			NumEnums:      3,
+			NumEnums:      2,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,

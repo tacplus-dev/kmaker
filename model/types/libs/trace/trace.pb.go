@@ -99,62 +99,6 @@ func (TraceEventKind) EnumDescriptor() ([]byte, []int) {
 	return file_libs_trace_proto_rawDescGZIP(), []int{0}
 }
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED   TypeID = 0
-	TypeID_TYPE_ID_TRACE_ROUND   TypeID = 1
-	TypeID_TYPE_ID_TRACE_REQUEST TypeID = 2
-	TypeID_TYPE_ID_TRACE_EVENT   TypeID = 3
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_TRACE_ROUND",
-		2: "TYPE_ID_TRACE_REQUEST",
-		3: "TYPE_ID_TRACE_EVENT",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":   0,
-		"TYPE_ID_TRACE_ROUND":   1,
-		"TYPE_ID_TRACE_REQUEST": 2,
-		"TYPE_ID_TRACE_EVENT":   3,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_trace_proto_enumTypes[1].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_trace_proto_enumTypes[1]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_trace_proto_rawDescGZIP(), []int{1}
-}
-
 // TraceRound identifies a single service hop in a traced request.
 type TraceRound struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -380,12 +324,7 @@ const file_libs_trace_proto_rawDesc = "" +
 	"!TRACE_EVENT_KIND_EXTERNAL_REQUEST\x10\x01\x12&\n" +
 	"\"TRACE_EVENT_KIND_EXTERNAL_RESPONSE\x10\x02\x12%\n" +
 	"!TRACE_EVENT_KIND_INTERNAL_REQUEST\x10\x03\x12&\n" +
-	"\"TRACE_EVENT_KIND_INTERNAL_RESPONSE\x10\x04*n\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x17\n" +
-	"\x13TYPE_ID_TRACE_ROUND\x10\x01\x12\x19\n" +
-	"\x15TYPE_ID_TRACE_REQUEST\x10\x02\x12\x17\n" +
-	"\x13TYPE_ID_TRACE_EVENT\x10\x03BWZUgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/traceb\x06proto3"
+	"\"TRACE_EVENT_KIND_INTERNAL_RESPONSE\x10\x04BWZUgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/traceb\x06proto3"
 
 var (
 	file_libs_trace_proto_rawDescOnce sync.Once
@@ -399,19 +338,18 @@ func file_libs_trace_proto_rawDescGZIP() []byte {
 	return file_libs_trace_proto_rawDescData
 }
 
-var file_libs_trace_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_libs_trace_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_libs_trace_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_libs_trace_proto_goTypes = []any{
 	(TraceEventKind)(0),                        // 0: trace.TraceEventKind
-	(TypeID)(0),                                // 1: trace.TypeID
-	(*TraceRound)(nil),                         // 2: trace.TraceRound
-	(*TraceRequest)(nil),                       // 3: trace.TraceRequest
-	(*TraceEvent)(nil),                         // 4: trace.TraceEvent
-	(*accounting_method.AccountingMethod)(nil), // 5: accounting_method.AccountingMethod
+	(*TraceRound)(nil),                         // 1: trace.TraceRound
+	(*TraceRequest)(nil),                       // 2: trace.TraceRequest
+	(*TraceEvent)(nil),                         // 3: trace.TraceEvent
+	(*accounting_method.AccountingMethod)(nil), // 4: accounting_method.AccountingMethod
 }
 var file_libs_trace_proto_depIdxs = []int32{
-	2, // 0: trace.TraceEvent.round:type_name -> trace.TraceRound
-	5, // 1: trace.TraceEvent.rpc:type_name -> accounting_method.AccountingMethod
+	1, // 0: trace.TraceEvent.round:type_name -> trace.TraceRound
+	4, // 1: trace.TraceEvent.rpc:type_name -> accounting_method.AccountingMethod
 	0, // 2: trace.TraceEvent.kind:type_name -> trace.TraceEventKind
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
@@ -430,7 +368,7 @@ func file_libs_trace_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_trace_proto_rawDesc), len(file_libs_trace_proto_rawDesc)),
-			NumEnums:      2,
+			NumEnums:      1,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,

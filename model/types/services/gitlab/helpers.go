@@ -831,13 +831,13 @@ func ProxyRpcIdValues() []ProxyRpcId {
 		ProxyRpcId_PROXY_RPC_ID_LIST_BRANCHES,
 		ProxyRpcId_PROXY_RPC_ID_CREATE_BRANCH,
 		ProxyRpcId_PROXY_RPC_ID_LIST_COMMITS,
-		ProxyRpcId_PROXY_RPC_ID_SEARCH_BLOBS,
+		ProxyRpcId_PROXY_RPC_ID_LIST_BLOB_SEARCH_RESULTS,
 	}
 }
 
 // ProxyRpcIdStringValues returns all valid ProxyRpcId names as strings
 func ProxyRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "proxy", "get-project", "list-issues", "get-issue", "create-issue", "update-issue", "create-issue-note", "list-merge-requests", "get-merge-request", "create-merge-request", "update-merge-request", "merge-merge-request", "list-merge-request-changes", "create-merge-request-note", "list-pipelines", "get-pipeline", "create-pipeline", "cancel-pipeline", "retry-pipeline", "list-pipeline-jobs", "get-repository-file", "create-repository-file", "update-repository-file", "list-branches", "create-branch", "list-commits", "search-blobs"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "proxy", "get-project", "list-issues", "get-issue", "create-issue", "update-issue", "create-issue-note", "list-merge-requests", "get-merge-request", "create-merge-request", "update-merge-request", "merge-merge-request", "list-merge-request-changes", "create-merge-request-note", "list-pipelines", "get-pipeline", "create-pipeline", "cancel-pipeline", "retry-pipeline", "list-pipeline-jobs", "get-repository-file", "create-repository-file", "update-repository-file", "list-branches", "create-branch", "list-commits", "list-blob-search-results"}
 }
 
 // ParseProxyRpcId converts a string to a ProxyRpcId enum value
@@ -906,8 +906,8 @@ func ParseProxyRpcId(s string) (ProxyRpcId, error) {
 		return ProxyRpcId_PROXY_RPC_ID_CREATE_BRANCH, nil
 	case "list-commits", "proxy-rpc-id-list-commits":
 		return ProxyRpcId_PROXY_RPC_ID_LIST_COMMITS, nil
-	case "search-blobs", "proxy-rpc-id-search-blobs":
-		return ProxyRpcId_PROXY_RPC_ID_SEARCH_BLOBS, nil
+	case "list-blob-search-results", "proxy-rpc-id-list-blob-search-results":
+		return ProxyRpcId_PROXY_RPC_ID_LIST_BLOB_SEARCH_RESULTS, nil
 	default:
 		return ProxyRpcId_PROXY_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid proxyrpcid %s, expecting one of: %v", s, ProxyRpcIdStringValues())
 	}
@@ -996,8 +996,8 @@ func ProxyRpcIdToString(v ProxyRpcId) string {
 		return "create-branch"
 	case ProxyRpcId_PROXY_RPC_ID_LIST_COMMITS:
 		return "list-commits"
-	case ProxyRpcId_PROXY_RPC_ID_SEARCH_BLOBS:
-		return "search-blobs"
+	case ProxyRpcId_PROXY_RPC_ID_LIST_BLOB_SEARCH_RESULTS:
+		return "list-blob-search-results"
 	default:
 		return ""
 	}
@@ -1078,8 +1078,8 @@ func ParseProxyRpcIdLiberal(s string) ProxyRpcId {
 		return ProxyRpcId_PROXY_RPC_ID_CREATE_BRANCH
 	case "list-commits", "proxy-rpc-id-list-commits":
 		return ProxyRpcId_PROXY_RPC_ID_LIST_COMMITS
-	case "search-blobs", "proxy-rpc-id-search-blobs":
-		return ProxyRpcId_PROXY_RPC_ID_SEARCH_BLOBS
+	case "list-blob-search-results", "proxy-rpc-id-list-blob-search-results":
+		return ProxyRpcId_PROXY_RPC_ID_LIST_BLOB_SEARCH_RESULTS
 	default:
 		return ProxyRpcId_PROXY_RPC_ID_UNSPECIFIED
 	}
@@ -1148,8 +1148,8 @@ func ProxyRpcIdToSpecName(v ProxyRpcId) string {
 		return "PROXY_RPC_ID_CREATE_BRANCH"
 	case ProxyRpcId_PROXY_RPC_ID_LIST_COMMITS:
 		return "PROXY_RPC_ID_LIST_COMMITS"
-	case ProxyRpcId_PROXY_RPC_ID_SEARCH_BLOBS:
-		return "PROXY_RPC_ID_SEARCH_BLOBS"
+	case ProxyRpcId_PROXY_RPC_ID_LIST_BLOB_SEARCH_RESULTS:
+		return "PROXY_RPC_ID_LIST_BLOB_SEARCH_RESULTS"
 	default:
 		return ""
 	}
@@ -21543,6 +21543,11 @@ func ValidateGetProjectRequestWithDepth(m *GetProjectRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
+	// Validate ProjectId (assert_max_length: 512)
+	if len(m.ProjectId) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
+	}
+
 	// Validate ProjectId (assert_required)
 	if m.ProjectId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
@@ -21551,11 +21556,6 @@ func ValidateGetProjectRequestWithDepth(m *GetProjectRequest, depth int) error {
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
-	}
-
-	// Validate ProjectId (assert_max_length: 512)
-	if len(m.ProjectId) > 512 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
 	}
 
 	// Validate Metadata (default max size: 32768 bytes)
@@ -21665,14 +21665,14 @@ func ValidateListIssuesRequestWithDepth(m *ListIssuesRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field OrderBy must be at most 16 characters, got: %d", len(m.OrderBy))
 	}
 
-	// Validate Labels (assert_max_length: 256)
-	if len(m.Labels) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Labels must be at most 256 characters, got: %d", len(m.Labels))
-	}
-
 	// Validate Labels (assert_max_size: 32)
 	if len(m.Labels) > 32 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Labels exceeds max size of 32, got: %d", len(m.Labels))
+	}
+
+	// Validate Labels (assert_max_length: 256)
+	if len(m.Labels) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Labels must be at most 256 characters, got: %d", len(m.Labels))
 	}
 
 	// Validate AssigneeUsername (assert_max_length: 256)
@@ -21699,13 +21699,13 @@ func ValidateListIssuesRequestWithDepth(m *ListIssuesRequest, depth int) error {
 	if m.Page < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Page must be >= 0, got: %v", m.Page)
 	}
-	// Validate PerPage (assert_ge: 0)
-	if m.PerPage < 0 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be >= 0, got: %v", m.PerPage)
-	}
 	// Validate PerPage (assert_le: 100)
 	if m.PerPage > 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be <= 100, got: %v", m.PerPage)
+	}
+	// Validate PerPage (assert_ge: 0)
+	if m.PerPage < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be >= 0, got: %v", m.PerPage)
 	}
 	// Validate Labels elements (default max size: 32768 bytes)
 	for i, val := range m.Labels {
@@ -21838,6 +21838,11 @@ func ValidateGetIssueRequestWithDepth(m *GetIssueRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
+	// Validate ProjectId (assert_max_length: 512)
+	if len(m.ProjectId) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
+	}
+
 	// Validate ProjectId (assert_required)
 	if m.ProjectId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
@@ -21846,11 +21851,6 @@ func ValidateGetIssueRequestWithDepth(m *GetIssueRequest, depth int) error {
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
-	}
-
-	// Validate ProjectId (assert_max_length: 512)
-	if len(m.ProjectId) > 512 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
 	}
 
 	// Validate IssueIid (assert_ge: 1)
@@ -21969,14 +21969,14 @@ func ValidateCreateIssueRequestWithDepth(m *CreateIssueRequest, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field Description must be at most 262144 characters, got: %d", len(m.Description))
 	}
 
-	// Validate Labels (assert_max_size: 32)
-	if len(m.Labels) > 32 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Labels exceeds max size of 32, got: %d", len(m.Labels))
-	}
-
 	// Validate Labels (assert_max_length: 256)
 	if len(m.Labels) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Labels must be at most 256 characters, got: %d", len(m.Labels))
+	}
+
+	// Validate Labels (assert_max_size: 32)
+	if len(m.Labels) > 32 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Labels exceeds max size of 32, got: %d", len(m.Labels))
 	}
 
 	// Validate AssigneeId (assert_ge: 0)
@@ -22086,6 +22086,11 @@ func ValidateUpdateIssueRequestWithDepth(m *UpdateIssueRequest, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
+	// Validate ProjectId (assert_max_length: 512)
+	if len(m.ProjectId) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
+	}
+
 	// Validate ProjectId (assert_required)
 	if m.ProjectId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
@@ -22094,11 +22099,6 @@ func ValidateUpdateIssueRequestWithDepth(m *UpdateIssueRequest, depth int) error
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
-	}
-
-	// Validate ProjectId (assert_max_length: 512)
-	if len(m.ProjectId) > 512 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
 	}
 
 	// Validate IssueIid (assert_ge: 1)
@@ -22238,11 +22238,6 @@ func ValidateCreateIssueNoteRequestWithDepth(m *CreateIssueNoteRequest, depth in
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate ProjectId (assert_min_length: 1)
-	if len(m.ProjectId) < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
-	}
-
 	// Validate ProjectId (assert_max_length: 512)
 	if len(m.ProjectId) > 512 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
@@ -22251,6 +22246,11 @@ func ValidateCreateIssueNoteRequestWithDepth(m *CreateIssueNoteRequest, depth in
 	// Validate ProjectId (assert_required)
 	if m.ProjectId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
+	}
+
+	// Validate ProjectId (assert_min_length: 1)
+	if len(m.ProjectId) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
 	}
 
 	// Validate IssueIid (assert_ge: 1)
@@ -22354,6 +22354,11 @@ func ValidateListMergeRequestsRequestWithDepth(m *ListMergeRequestsRequest, dept
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
+	// Validate ProjectId (assert_max_length: 512)
+	if len(m.ProjectId) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
+	}
+
 	// Validate ProjectId (assert_required)
 	if m.ProjectId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
@@ -22362,11 +22367,6 @@ func ValidateListMergeRequestsRequestWithDepth(m *ListMergeRequestsRequest, dept
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
-	}
-
-	// Validate ProjectId (assert_max_length: 512)
-	if len(m.ProjectId) > 512 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
 	}
 
 	// Validate State (assert_max_length: 16)
@@ -22413,13 +22413,13 @@ func ValidateListMergeRequestsRequestWithDepth(m *ListMergeRequestsRequest, dept
 	if m.Page < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Page must be >= 0, got: %v", m.Page)
 	}
-	// Validate PerPage (assert_le: 100)
-	if m.PerPage > 100 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be <= 100, got: %v", m.PerPage)
-	}
 	// Validate PerPage (assert_ge: 0)
 	if m.PerPage < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be >= 0, got: %v", m.PerPage)
+	}
+	// Validate PerPage (assert_le: 100)
+	if m.PerPage > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be <= 100, got: %v", m.PerPage)
 	}
 	// Validate Labels elements (default max size: 32768 bytes)
 	for i, val := range m.Labels {
@@ -22547,11 +22547,6 @@ func ValidateGetMergeRequestRequestWithDepth(m *GetMergeRequestRequest, depth in
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate ProjectId (assert_max_length: 512)
-	if len(m.ProjectId) > 512 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
-	}
-
 	// Validate ProjectId (assert_required)
 	if m.ProjectId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
@@ -22560,6 +22555,11 @@ func ValidateGetMergeRequestRequestWithDepth(m *GetMergeRequestRequest, depth in
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
+	}
+
+	// Validate ProjectId (assert_max_length: 512)
+	if len(m.ProjectId) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
 	}
 
 	// Validate MergeRequestIid (assert_ge: 1)
@@ -22643,11 +22643,6 @@ func ValidateCreateMergeRequestRequestWithDepth(m *CreateMergeRequestRequest, de
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate ProjectId (assert_max_length: 512)
-	if len(m.ProjectId) > 512 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
-	}
-
 	// Validate ProjectId (assert_required)
 	if m.ProjectId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
@@ -22658,9 +22653,9 @@ func ValidateCreateMergeRequestRequestWithDepth(m *CreateMergeRequestRequest, de
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
 	}
 
-	// Validate Title (assert_required)
-	if m.Title == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Title is required")
+	// Validate ProjectId (assert_max_length: 512)
+	if len(m.ProjectId) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
 	}
 
 	// Validate Title (assert_min_length: 1)
@@ -22671,6 +22666,11 @@ func ValidateCreateMergeRequestRequestWithDepth(m *CreateMergeRequestRequest, de
 	// Validate Title (assert_max_length: 1024)
 	if len(m.Title) > 1024 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Title must be at most 1024 characters, got: %d", len(m.Title))
+	}
+
+	// Validate Title (assert_required)
+	if m.Title == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Title is required")
 	}
 
 	// Validate SourceBranch (assert_required)
@@ -22835,6 +22835,11 @@ func ValidateUpdateMergeRequestRequestWithDepth(m *UpdateMergeRequestRequest, de
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
+	// Validate ProjectId (assert_required)
+	if m.ProjectId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
+	}
+
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
@@ -22843,11 +22848,6 @@ func ValidateUpdateMergeRequestRequestWithDepth(m *UpdateMergeRequestRequest, de
 	// Validate ProjectId (assert_max_length: 512)
 	if len(m.ProjectId) > 512 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
-	}
-
-	// Validate ProjectId (assert_required)
-	if m.ProjectId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
 	}
 
 	// Validate MergeRequestIid (assert_ge: 1)
@@ -22869,14 +22869,14 @@ func ValidateUpdateMergeRequestRequestWithDepth(m *UpdateMergeRequestRequest, de
 		return protoerrors.NewErrMissingInvalidData(nil, "field StateEvent must be at most 16 characters, got: %d", len(m.StateEvent))
 	}
 
-	// Validate Labels (assert_max_size: 32)
-	if len(m.Labels) > 32 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Labels exceeds max size of 32, got: %d", len(m.Labels))
-	}
-
 	// Validate Labels (assert_max_length: 256)
 	if len(m.Labels) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Labels must be at most 256 characters, got: %d", len(m.Labels))
+	}
+
+	// Validate Labels (assert_max_size: 32)
+	if len(m.Labels) > 32 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Labels exceeds max size of 32, got: %d", len(m.Labels))
 	}
 
 	// Validate AssigneeId (assert_ge: 0)
@@ -23228,6 +23228,11 @@ func ValidateCreateMergeRequestNoteRequestWithDepth(m *CreateMergeRequestNoteReq
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
+	// Validate ProjectId (assert_required)
+	if m.ProjectId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
+	}
+
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
@@ -23236,11 +23241,6 @@ func ValidateCreateMergeRequestNoteRequestWithDepth(m *CreateMergeRequestNoteReq
 	// Validate ProjectId (assert_max_length: 512)
 	if len(m.ProjectId) > 512 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
-	}
-
-	// Validate ProjectId (assert_required)
-	if m.ProjectId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
 	}
 
 	// Validate MergeRequestIid (assert_ge: 1)
@@ -23344,11 +23344,6 @@ func ValidateListPipelinesRequestWithDepth(m *ListPipelinesRequest, depth int) e
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate ProjectId (assert_required)
-	if m.ProjectId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
-	}
-
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
@@ -23357,6 +23352,11 @@ func ValidateListPipelinesRequestWithDepth(m *ListPipelinesRequest, depth int) e
 	// Validate ProjectId (assert_max_length: 512)
 	if len(m.ProjectId) > 512 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
+	}
+
+	// Validate ProjectId (assert_required)
+	if m.ProjectId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
 	}
 
 	// Validate Status (assert_max_length: 16)
@@ -23388,13 +23388,13 @@ func ValidateListPipelinesRequestWithDepth(m *ListPipelinesRequest, depth int) e
 	if m.Page < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Page must be >= 0, got: %v", m.Page)
 	}
-	// Validate PerPage (assert_le: 100)
-	if m.PerPage > 100 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be <= 100, got: %v", m.PerPage)
-	}
 	// Validate PerPage (assert_ge: 0)
 	if m.PerPage < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be >= 0, got: %v", m.PerPage)
+	}
+	// Validate PerPage (assert_le: 100)
+	if m.PerPage > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be <= 100, got: %v", m.PerPage)
 	}
 	// Validate Metadata (default max size: 32768 bytes)
 	if len(m.Metadata) > 32768 {
@@ -23687,14 +23687,14 @@ func ValidatePipelineVariableWithDepth(m *PipelineVariable, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Key (assert_required)
-	if m.Key == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Key is required")
-	}
-
 	// Validate Key (assert_max_length: 256)
 	if len(m.Key) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Key must be at most 256 characters, got: %d", len(m.Key))
+	}
+
+	// Validate Key (assert_required)
+	if m.Key == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key is required")
 	}
 
 	// Validate Value (assert_max_length: 4096)
@@ -23885,11 +23885,6 @@ func ValidateRetryPipelineRequestWithDepth(m *RetryPipelineRequest, depth int) e
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate ProjectId (assert_max_length: 512)
-	if len(m.ProjectId) > 512 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
-	}
-
 	// Validate ProjectId (assert_required)
 	if m.ProjectId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
@@ -23898,6 +23893,11 @@ func ValidateRetryPipelineRequestWithDepth(m *RetryPipelineRequest, depth int) e
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
+	}
+
+	// Validate ProjectId (assert_max_length: 512)
+	if len(m.ProjectId) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
 	}
 
 	// Validate PipelineId (assert_ge: 1)
@@ -23981,11 +23981,6 @@ func ValidateListPipelineJobsRequestWithDepth(m *ListPipelineJobsRequest, depth 
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate ProjectId (assert_required)
-	if m.ProjectId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
-	}
-
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
@@ -23994,6 +23989,11 @@ func ValidateListPipelineJobsRequestWithDepth(m *ListPipelineJobsRequest, depth 
 	// Validate ProjectId (assert_max_length: 512)
 	if len(m.ProjectId) > 512 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
+	}
+
+	// Validate ProjectId (assert_required)
+	if m.ProjectId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
 	}
 
 	// Validate PipelineId (assert_ge: 1)
@@ -24111,6 +24111,11 @@ func ValidateGetRepositoryFileRequestWithDepth(m *GetRepositoryFileRequest, dept
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
+	// Validate ProjectId (assert_required)
+	if m.ProjectId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
+	}
+
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
@@ -24119,11 +24124,6 @@ func ValidateGetRepositoryFileRequestWithDepth(m *GetRepositoryFileRequest, dept
 	// Validate ProjectId (assert_max_length: 512)
 	if len(m.ProjectId) > 512 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
-	}
-
-	// Validate ProjectId (assert_required)
-	if m.ProjectId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
 	}
 
 	// Validate FilePath (assert_required)
@@ -24298,11 +24298,6 @@ func ValidateCreateRepositoryFileRequestWithDepth(m *CreateRepositoryFileRequest
 		return protoerrors.NewErrMissingInvalidData(nil, "field Content must be at most 10485760 characters, got: %d", len(m.Content))
 	}
 
-	// Validate CommitMessage (assert_max_length: 4096)
-	if len(m.CommitMessage) > 4096 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field CommitMessage must be at most 4096 characters, got: %d", len(m.CommitMessage))
-	}
-
 	// Validate CommitMessage (assert_required)
 	if m.CommitMessage == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field CommitMessage is required")
@@ -24311,6 +24306,11 @@ func ValidateCreateRepositoryFileRequestWithDepth(m *CreateRepositoryFileRequest
 	// Validate CommitMessage (assert_min_length: 1)
 	if len(m.CommitMessage) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field CommitMessage must be at least 1 characters, got: %d", len(m.CommitMessage))
+	}
+
+	// Validate CommitMessage (assert_max_length: 4096)
+	if len(m.CommitMessage) > 4096 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CommitMessage must be at most 4096 characters, got: %d", len(m.CommitMessage))
 	}
 
 	// Validate Encoding (assert_max_length: 16)
@@ -24450,11 +24450,6 @@ func ValidateUpdateRepositoryFileRequestWithDepth(m *UpdateRepositoryFileRequest
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate ProjectId (assert_required)
-	if m.ProjectId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
-	}
-
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
@@ -24463,6 +24458,11 @@ func ValidateUpdateRepositoryFileRequestWithDepth(m *UpdateRepositoryFileRequest
 	// Validate ProjectId (assert_max_length: 512)
 	if len(m.ProjectId) > 512 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
+	}
+
+	// Validate ProjectId (assert_required)
+	if m.ProjectId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
 	}
 
 	// Validate FilePath (assert_max_length: 2048)
@@ -25071,6 +25071,11 @@ func ValidateSearchBlobsRequestWithDepth(m *SearchBlobsRequest, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
+	// Validate ProjectId (assert_max_length: 512)
+	if len(m.ProjectId) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
+	}
+
 	// Validate ProjectId (assert_required)
 	if m.ProjectId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
@@ -25079,11 +25084,6 @@ func ValidateSearchBlobsRequestWithDepth(m *SearchBlobsRequest, depth int) error
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
-	}
-
-	// Validate ProjectId (assert_max_length: 512)
-	if len(m.ProjectId) > 512 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
 	}
 
 	// Validate Search (assert_required)
@@ -25110,13 +25110,13 @@ func ValidateSearchBlobsRequestWithDepth(m *SearchBlobsRequest, depth int) error
 	if m.Page < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Page must be >= 0, got: %v", m.Page)
 	}
-	// Validate PerPage (assert_le: 100)
-	if m.PerPage > 100 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be <= 100, got: %v", m.PerPage)
-	}
 	// Validate PerPage (assert_ge: 0)
 	if m.PerPage < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be >= 0, got: %v", m.PerPage)
+	}
+	// Validate PerPage (assert_le: 100)
+	if m.PerPage > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be <= 100, got: %v", m.PerPage)
 	}
 	// Validate Metadata (default max size: 32768 bytes)
 	if len(m.Metadata) > 32768 {
@@ -25212,6 +25212,11 @@ func ValidateProxyEventWithDepth(m *ProxyEvent, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
+	// Validate Subject (assert_required)
+	if m.Subject == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Subject is required")
+	}
+
 	// Validate Subject (assert_min_length: 1)
 	if len(m.Subject) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Subject must be at least 1 characters, got: %d", len(m.Subject))
@@ -25220,11 +25225,6 @@ func ValidateProxyEventWithDepth(m *ProxyEvent, depth int) error {
 	// Validate Subject (assert_max_length: 256)
 	if len(m.Subject) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Subject must be at most 256 characters, got: %d", len(m.Subject))
-	}
-
-	// Validate Subject (assert_required)
-	if m.Subject == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Subject is required")
 	}
 
 	// Validate Method (assert_enum_defined)
@@ -25252,13 +25252,13 @@ func ValidateProxyEventWithDepth(m *ProxyEvent, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field RpcMethod must be at most 128 characters, got: %d", len(m.RpcMethod))
 	}
 
-	// Validate UpstreamStatus (assert_ge: 100)
-	if m.UpstreamStatus < 100 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field UpstreamStatus must be >= 100, got: %v", m.UpstreamStatus)
-	}
 	// Validate UpstreamStatus (assert_le: 599)
 	if m.UpstreamStatus > 599 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field UpstreamStatus must be <= 599, got: %v", m.UpstreamStatus)
+	}
+	// Validate UpstreamStatus (assert_ge: 100)
+	if m.UpstreamStatus < 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field UpstreamStatus must be >= 100, got: %v", m.UpstreamStatus)
 	}
 	// Validate RequestEpochMs (assert_ge: 0)
 	if m.RequestEpochMs < 0 {

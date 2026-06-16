@@ -39,120 +39,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED           TypeID = 0
-	TypeID_TYPE_ID_JWK_VIEW_RESPONSE     TypeID = 1
-	TypeID_TYPE_ID_JWK_VIEW_GET_REQUEST  TypeID = 2
-	TypeID_TYPE_ID_JWK_VIEW_GET_RESPONSE TypeID = 3
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_JWK_VIEW_RESPONSE",
-		2: "TYPE_ID_JWK_VIEW_GET_REQUEST",
-		3: "TYPE_ID_JWK_VIEW_GET_RESPONSE",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":           0,
-		"TYPE_ID_JWK_VIEW_RESPONSE":     1,
-		"TYPE_ID_JWK_VIEW_GET_REQUEST":  2,
-		"TYPE_ID_JWK_VIEW_GET_RESPONSE": 3,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_jwkview_proto_enumTypes[0].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_jwkview_proto_enumTypes[0]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_jwkview_proto_rawDescGZIP(), []int{0}
-}
-
-type JwkVerifyingKeysViewServiceRpcId int32
-
-const (
-	JwkVerifyingKeysViewServiceRpcId_JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_UNSPECIFIED   JwkVerifyingKeysViewServiceRpcId = 0
-	JwkVerifyingKeysViewServiceRpcId_JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_ALL_ACCESSORS JwkVerifyingKeysViewServiceRpcId = 1
-	JwkVerifyingKeysViewServiceRpcId_JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_ALL_MUTATORS  JwkVerifyingKeysViewServiceRpcId = 2
-	JwkVerifyingKeysViewServiceRpcId_JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_ALL_EXECUTORS JwkVerifyingKeysViewServiceRpcId = 3
-	JwkVerifyingKeysViewServiceRpcId_JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_WATCH         JwkVerifyingKeysViewServiceRpcId = 4
-	JwkVerifyingKeysViewServiceRpcId_JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_GET           JwkVerifyingKeysViewServiceRpcId = 5
-)
-
-// Enum value maps for JwkVerifyingKeysViewServiceRpcId.
-var (
-	JwkVerifyingKeysViewServiceRpcId_name = map[int32]string{
-		0: "JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_UNSPECIFIED",
-		1: "JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_ALL_ACCESSORS",
-		2: "JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_ALL_MUTATORS",
-		3: "JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_ALL_EXECUTORS",
-		4: "JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_WATCH",
-		5: "JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_GET",
-	}
-	JwkVerifyingKeysViewServiceRpcId_value = map[string]int32{
-		"JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_UNSPECIFIED":   0,
-		"JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_ALL_ACCESSORS": 1,
-		"JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_ALL_MUTATORS":  2,
-		"JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_ALL_EXECUTORS": 3,
-		"JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_WATCH":         4,
-		"JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_GET":           5,
-	}
-)
-
-func (x JwkVerifyingKeysViewServiceRpcId) Enum() *JwkVerifyingKeysViewServiceRpcId {
-	p := new(JwkVerifyingKeysViewServiceRpcId)
-	*p = x
-	return p
-}
-
-func (x JwkVerifyingKeysViewServiceRpcId) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (JwkVerifyingKeysViewServiceRpcId) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_jwkview_proto_enumTypes[1].Descriptor()
-}
-
-func (JwkVerifyingKeysViewServiceRpcId) Type() protoreflect.EnumType {
-	return &file_libs_jwkview_proto_enumTypes[1]
-}
-
-func (x JwkVerifyingKeysViewServiceRpcId) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use JwkVerifyingKeysViewServiceRpcId.Descriptor instead.
-func (JwkVerifyingKeysViewServiceRpcId) EnumDescriptor() ([]byte, []int) {
-	return file_libs_jwkview_proto_rawDescGZIP(), []int{1}
-}
-
 type JwkViewResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Entries       map[string]*jwk.Jwk    `protobuf:"bytes,1,rep,name=entries,proto3" json:"entries,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // kid -> Jwk
@@ -307,19 +193,7 @@ const file_libs_jwkview_proto_rawDesc = "" +
 	"\x03kid\x18\x01 \x01(\tR\x03kid\"J\n" +
 	"\x12JwkViewGetResponse\x12\x1e\n" +
 	"\x05value\x18\x01 \x01(\v2\b.jwk.JwkR\x05value\x12\x14\n" +
-	"\x05found\x18\x02 \x01(\bR\x05found*\x85\x01\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x1d\n" +
-	"\x19TYPE_ID_JWK_VIEW_RESPONSE\x10\x01\x12 \n" +
-	"\x1cTYPE_ID_JWK_VIEW_GET_REQUEST\x10\x02\x12!\n" +
-	"\x1dTYPE_ID_JWK_VIEW_GET_RESPONSE\x10\x03*\xe9\x02\n" +
-	" JwkVerifyingKeysViewServiceRpcId\x126\n" +
-	"2JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x128\n" +
-	"4JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x127\n" +
-	"3JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_ALL_MUTATORS\x10\x02\x128\n" +
-	"4JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x120\n" +
-	",JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_WATCH\x10\x04\x12.\n" +
-	"*JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_GET\x10\x052\x97\x01\n" +
+	"\x05found\x18\x02 \x01(\bR\x05found2\x97\x01\n" +
 	"\x1bJwkVerifyingKeysViewService\x128\n" +
 	"\x05Watch\x12\x13.trace.TraceRequest\x1a\x18.jwkview.JwkViewResponse0\x01\x12>\n" +
 	"\x03Get\x12\x1a.jwkview.JwkViewGetRequest\x1a\x1b.jwkview.JwkViewGetResponseBYZWgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/jwkviewb\x06proto3"
@@ -336,26 +210,23 @@ func file_libs_jwkview_proto_rawDescGZIP() []byte {
 	return file_libs_jwkview_proto_rawDescData
 }
 
-var file_libs_jwkview_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_libs_jwkview_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_libs_jwkview_proto_goTypes = []any{
-	(TypeID)(0),                           // 0: jwkview.TypeID
-	(JwkVerifyingKeysViewServiceRpcId)(0), // 1: jwkview.JwkVerifyingKeysViewServiceRpcId
-	(*JwkViewResponse)(nil),               // 2: jwkview.JwkViewResponse
-	(*JwkViewGetRequest)(nil),             // 3: jwkview.JwkViewGetRequest
-	(*JwkViewGetResponse)(nil),            // 4: jwkview.JwkViewGetResponse
-	nil,                                   // 5: jwkview.JwkViewResponse.EntriesEntry
-	(*jwk.Jwk)(nil),                       // 6: jwk.Jwk
-	(*trace.TraceRequest)(nil),            // 7: trace.TraceRequest
+	(*JwkViewResponse)(nil),    // 0: jwkview.JwkViewResponse
+	(*JwkViewGetRequest)(nil),  // 1: jwkview.JwkViewGetRequest
+	(*JwkViewGetResponse)(nil), // 2: jwkview.JwkViewGetResponse
+	nil,                        // 3: jwkview.JwkViewResponse.EntriesEntry
+	(*jwk.Jwk)(nil),            // 4: jwk.Jwk
+	(*trace.TraceRequest)(nil), // 5: trace.TraceRequest
 }
 var file_libs_jwkview_proto_depIdxs = []int32{
-	5, // 0: jwkview.JwkViewResponse.entries:type_name -> jwkview.JwkViewResponse.EntriesEntry
-	6, // 1: jwkview.JwkViewGetResponse.value:type_name -> jwk.Jwk
-	6, // 2: jwkview.JwkViewResponse.EntriesEntry.value:type_name -> jwk.Jwk
-	7, // 3: jwkview.JwkVerifyingKeysViewService.Watch:input_type -> trace.TraceRequest
-	3, // 4: jwkview.JwkVerifyingKeysViewService.Get:input_type -> jwkview.JwkViewGetRequest
-	2, // 5: jwkview.JwkVerifyingKeysViewService.Watch:output_type -> jwkview.JwkViewResponse
-	4, // 6: jwkview.JwkVerifyingKeysViewService.Get:output_type -> jwkview.JwkViewGetResponse
+	3, // 0: jwkview.JwkViewResponse.entries:type_name -> jwkview.JwkViewResponse.EntriesEntry
+	4, // 1: jwkview.JwkViewGetResponse.value:type_name -> jwk.Jwk
+	4, // 2: jwkview.JwkViewResponse.EntriesEntry.value:type_name -> jwk.Jwk
+	5, // 3: jwkview.JwkVerifyingKeysViewService.Watch:input_type -> trace.TraceRequest
+	1, // 4: jwkview.JwkVerifyingKeysViewService.Get:input_type -> jwkview.JwkViewGetRequest
+	0, // 5: jwkview.JwkVerifyingKeysViewService.Watch:output_type -> jwkview.JwkViewResponse
+	2, // 6: jwkview.JwkVerifyingKeysViewService.Get:output_type -> jwkview.JwkViewGetResponse
 	5, // [5:7] is the sub-list for method output_type
 	3, // [3:5] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
@@ -373,14 +244,13 @@ func file_libs_jwkview_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_jwkview_proto_rawDesc), len(file_libs_jwkview_proto_rawDesc)),
-			NumEnums:      2,
+			NumEnums:      0,
 			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_libs_jwkview_proto_goTypes,
 		DependencyIndexes: file_libs_jwkview_proto_depIdxs,
-		EnumInfos:         file_libs_jwkview_proto_enumTypes,
 		MessageInfos:      file_libs_jwkview_proto_msgTypes,
 	}.Build()
 	File_libs_jwkview_proto = out.File

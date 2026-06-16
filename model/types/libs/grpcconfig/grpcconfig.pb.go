@@ -22,6 +22,7 @@
 package grpcconfig
 
 import (
+	diskstore "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/diskstore"
 	host "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/host"
 	jwk "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/jwk"
 	key "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/key"
@@ -102,202 +103,6 @@ func (MemberStatus) EnumDescriptor() ([]byte, []int) {
 	return file_libs_grpcconfig_proto_rawDescGZIP(), []int{0}
 }
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED          TypeID = 0
-	TypeID_TYPE_ID_CONFIG               TypeID = 1
-	TypeID_TYPE_ID_LOG_MESSAGE          TypeID = 2
-	TypeID_TYPE_ID_CLUSTER_MEMBER       TypeID = 3
-	TypeID_TYPE_ID_CLUSTER_INFO         TypeID = 4
-	TypeID_TYPE_ID_CLUSTER_STATE        TypeID = 5
-	TypeID_TYPE_ID_PING_RESPONSE        TypeID = 6
-	TypeID_TYPE_ID_SERVICE_CONFIG_STATE TypeID = 7
-	TypeID_TYPE_ID_MAP_EMPTY            TypeID = 8
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_CONFIG",
-		2: "TYPE_ID_LOG_MESSAGE",
-		3: "TYPE_ID_CLUSTER_MEMBER",
-		4: "TYPE_ID_CLUSTER_INFO",
-		5: "TYPE_ID_CLUSTER_STATE",
-		6: "TYPE_ID_PING_RESPONSE",
-		7: "TYPE_ID_SERVICE_CONFIG_STATE",
-		8: "TYPE_ID_MAP_EMPTY",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":          0,
-		"TYPE_ID_CONFIG":               1,
-		"TYPE_ID_LOG_MESSAGE":          2,
-		"TYPE_ID_CLUSTER_MEMBER":       3,
-		"TYPE_ID_CLUSTER_INFO":         4,
-		"TYPE_ID_CLUSTER_STATE":        5,
-		"TYPE_ID_PING_RESPONSE":        6,
-		"TYPE_ID_SERVICE_CONFIG_STATE": 7,
-		"TYPE_ID_MAP_EMPTY":            8,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_grpcconfig_proto_enumTypes[1].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_grpcconfig_proto_enumTypes[1]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_grpcconfig_proto_rawDescGZIP(), []int{1}
-}
-
-type ClusterServiceRpcId int32
-
-const (
-	ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_UNSPECIFIED   ClusterServiceRpcId = 0
-	ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_ALL_ACCESSORS ClusterServiceRpcId = 1
-	ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_ALL_MUTATORS  ClusterServiceRpcId = 2
-	ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_ALL_EXECUTORS ClusterServiceRpcId = 3
-	ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_LOG           ClusterServiceRpcId = 4
-	ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_PING          ClusterServiceRpcId = 5
-	ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_SUBSCRIBE     ClusterServiceRpcId = 6
-	ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_WATCH_JWKS    ClusterServiceRpcId = 7
-)
-
-// Enum value maps for ClusterServiceRpcId.
-var (
-	ClusterServiceRpcId_name = map[int32]string{
-		0: "CLUSTER_SERVICE_RPC_ID_UNSPECIFIED",
-		1: "CLUSTER_SERVICE_RPC_ID_ALL_ACCESSORS",
-		2: "CLUSTER_SERVICE_RPC_ID_ALL_MUTATORS",
-		3: "CLUSTER_SERVICE_RPC_ID_ALL_EXECUTORS",
-		4: "CLUSTER_SERVICE_RPC_ID_LOG",
-		5: "CLUSTER_SERVICE_RPC_ID_PING",
-		6: "CLUSTER_SERVICE_RPC_ID_SUBSCRIBE",
-		7: "CLUSTER_SERVICE_RPC_ID_WATCH_JWKS",
-	}
-	ClusterServiceRpcId_value = map[string]int32{
-		"CLUSTER_SERVICE_RPC_ID_UNSPECIFIED":   0,
-		"CLUSTER_SERVICE_RPC_ID_ALL_ACCESSORS": 1,
-		"CLUSTER_SERVICE_RPC_ID_ALL_MUTATORS":  2,
-		"CLUSTER_SERVICE_RPC_ID_ALL_EXECUTORS": 3,
-		"CLUSTER_SERVICE_RPC_ID_LOG":           4,
-		"CLUSTER_SERVICE_RPC_ID_PING":          5,
-		"CLUSTER_SERVICE_RPC_ID_SUBSCRIBE":     6,
-		"CLUSTER_SERVICE_RPC_ID_WATCH_JWKS":    7,
-	}
-)
-
-func (x ClusterServiceRpcId) Enum() *ClusterServiceRpcId {
-	p := new(ClusterServiceRpcId)
-	*p = x
-	return p
-}
-
-func (x ClusterServiceRpcId) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ClusterServiceRpcId) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_grpcconfig_proto_enumTypes[2].Descriptor()
-}
-
-func (ClusterServiceRpcId) Type() protoreflect.EnumType {
-	return &file_libs_grpcconfig_proto_enumTypes[2]
-}
-
-func (x ClusterServiceRpcId) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use ClusterServiceRpcId.Descriptor instead.
-func (ClusterServiceRpcId) EnumDescriptor() ([]byte, []int) {
-	return file_libs_grpcconfig_proto_rawDescGZIP(), []int{2}
-}
-
-type ServiceConfigStateServiceRpcId int32
-
-const (
-	ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED   ServiceConfigStateServiceRpcId = 0
-	ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS ServiceConfigStateServiceRpcId = 1
-	ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_MUTATORS  ServiceConfigStateServiceRpcId = 2
-	ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS ServiceConfigStateServiceRpcId = 3
-	ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG    ServiceConfigStateServiceRpcId = 4
-	ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG    ServiceConfigStateServiceRpcId = 5
-	ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG  ServiceConfigStateServiceRpcId = 6
-)
-
-// Enum value maps for ServiceConfigStateServiceRpcId.
-var (
-	ServiceConfigStateServiceRpcId_name = map[int32]string{
-		0: "SERVICE_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED",
-		1: "SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS",
-		2: "SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_MUTATORS",
-		3: "SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS",
-		4: "SERVICE_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG",
-		5: "SERVICE_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG",
-		6: "SERVICE_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG",
-	}
-	ServiceConfigStateServiceRpcId_value = map[string]int32{
-		"SERVICE_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED":   0,
-		"SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS": 1,
-		"SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_MUTATORS":  2,
-		"SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS": 3,
-		"SERVICE_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG":    4,
-		"SERVICE_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG":    5,
-		"SERVICE_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG":  6,
-	}
-)
-
-func (x ServiceConfigStateServiceRpcId) Enum() *ServiceConfigStateServiceRpcId {
-	p := new(ServiceConfigStateServiceRpcId)
-	*p = x
-	return p
-}
-
-func (x ServiceConfigStateServiceRpcId) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ServiceConfigStateServiceRpcId) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_grpcconfig_proto_enumTypes[3].Descriptor()
-}
-
-func (ServiceConfigStateServiceRpcId) Type() protoreflect.EnumType {
-	return &file_libs_grpcconfig_proto_enumTypes[3]
-}
-
-func (x ServiceConfigStateServiceRpcId) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use ServiceConfigStateServiceRpcId.Descriptor instead.
-func (ServiceConfigStateServiceRpcId) EnumDescriptor() ([]byte, []int) {
-	return file_libs_grpcconfig_proto_rawDescGZIP(), []int{3}
-}
-
 // Config is the single configuration type for all services.
 //
 // Bootstrap fields (endpoints, instance_id, private_key, trusted_cas) are loaded
@@ -375,9 +180,16 @@ type Config struct {
 	// SPIFFE segment grammar and must not be reserved tags. Supplied by the
 	// operator/deployment from runtime config (where the service runs); it is
 	// not a token claim. May be empty (no topology tiers).
-	LocationPath  string `protobuf:"bytes,17,opt,name=location_path,json=locationPath,proto3" json:"location_path,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	LocationPath string `protobuf:"bytes,17,opt,name=location_path,json=locationPath,proto3" json:"location_path,omitempty"`
+	// disk_persistence is an init-time/bootstrap setting that enables
+	// ServiceManager-owned redo-log lifecycle for generated service_store stores.
+	// When present at ServiceManager creation, the generated ServiceManager opens
+	// the per-store redo logs, exposes those handles to service code, and owns
+	// scheduled compaction/roll. It is not hot-reloaded; when absent, typed
+	// diskstore helpers remain available but no managed roll loop is started.
+	DiskPersistence *diskstore.DiskPersistenceConfig `protobuf:"bytes,18,opt,name=disk_persistence,json=diskPersistence,proto3" json:"disk_persistence,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *Config) Reset() {
@@ -520,6 +332,13 @@ func (x *Config) GetLocationPath() string {
 		return x.LocationPath
 	}
 	return ""
+}
+
+func (x *Config) GetDiskPersistence() *diskstore.DiskPersistenceConfig {
+	if x != nil {
+		return x.DiskPersistence
+	}
+	return nil
 }
 
 // LogMessage is a log entry sent from the cluster to the service for logging.
@@ -894,7 +713,7 @@ var File_libs_grpcconfig_proto protoreflect.FileDescriptor
 const file_libs_grpcconfig_proto_rawDesc = "" +
 	"\n" +
 	"\x15libs/grpcconfig.proto\x12\n" +
-	"grpcconfig\x1a\x0flibs/host.proto\x1a\x0elibs/jwk.proto\x1a\x0elibs/key.proto\x1a\x11libs/logger.proto\x1a\x0flibs/spec.proto\x1a\x0flibs/x509.proto\x1a\x10libs/trace.proto\"\x8d\a\n" +
+	"grpcconfig\x1a\x0flibs/host.proto\x1a\x0elibs/jwk.proto\x1a\x0elibs/key.proto\x1a\x11libs/logger.proto\x1a\x0flibs/spec.proto\x1a\x0flibs/x509.proto\x1a\x10libs/trace.proto\x1a\x14libs/diskstore.proto\"\xda\a\n" +
 	"\x06Config\x12.\n" +
 	"\tendpoints\x18\x01 \x03(\v2\n" +
 	".host.HostB\x04\xb8\xa8\x1d R\tendpoints\x12&\n" +
@@ -918,7 +737,8 @@ const file_libs_grpcconfig_proto_rawDesc = "" +
 	"\vtrusted_cas\x18\v \x03(\v2\x0e.x509.X509CertB\x04\xb8\xa8\x1d R\n" +
 	"trustedCas\x125\n" +
 	"\x13spiffe_trust_domain\x18\x10 \x01(\tB\x05\x90\xa7\x1d\x80\x02R\x11spiffeTrustDomain\x12*\n" +
-	"\rlocation_path\x18\x11 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\flocationPathJ\x04\b\f\x10\rR\rspiffe_prefix\"\\\n" +
+	"\rlocation_path\x18\x11 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\flocationPath\x12K\n" +
+	"\x10disk_persistence\x18\x12 \x01(\v2 .diskstore.DiskPersistenceConfigR\x0fdiskPersistenceJ\x04\b\f\x10\rR\rspiffe_prefix\"\\\n" +
 	"\n" +
 	"LogMessage\x12)\n" +
 	"\x05level\x18\x01 \x01(\x0e2\r.logger.LevelB\x04\x98\xa7\x1d\x01R\x05level\x12#\n" +
@@ -949,34 +769,7 @@ const file_libs_grpcconfig_proto_rawDesc = "" +
 	"\x13MEMBER_STATUS_READY\x10\x02\x12\x1a\n" +
 	"\x16MEMBER_STATUS_DRAINING\x10\x03\x12\x1f\n" +
 	"\x1bMEMBER_STATUS_SHUTTING_DOWN\x10\x04\x12\x1d\n" +
-	"\x19MEMBER_STATUS_UNREACHABLE\x10\x05*\xf3\x01\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x12\n" +
-	"\x0eTYPE_ID_CONFIG\x10\x01\x12\x17\n" +
-	"\x13TYPE_ID_LOG_MESSAGE\x10\x02\x12\x1a\n" +
-	"\x16TYPE_ID_CLUSTER_MEMBER\x10\x03\x12\x18\n" +
-	"\x14TYPE_ID_CLUSTER_INFO\x10\x04\x12\x19\n" +
-	"\x15TYPE_ID_CLUSTER_STATE\x10\x05\x12\x19\n" +
-	"\x15TYPE_ID_PING_RESPONSE\x10\x06\x12 \n" +
-	"\x1cTYPE_ID_SERVICE_CONFIG_STATE\x10\a\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10\b*\xc8\x02\n" +
-	"\x13ClusterServiceRpcId\x12&\n" +
-	"\"CLUSTER_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x12(\n" +
-	"$CLUSTER_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x12'\n" +
-	"#CLUSTER_SERVICE_RPC_ID_ALL_MUTATORS\x10\x02\x12(\n" +
-	"$CLUSTER_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x12\x1e\n" +
-	"\x1aCLUSTER_SERVICE_RPC_ID_LOG\x10\x04\x12\x1f\n" +
-	"\x1bCLUSTER_SERVICE_RPC_ID_PING\x10\x05\x12$\n" +
-	" CLUSTER_SERVICE_RPC_ID_SUBSCRIBE\x10\x06\x12%\n" +
-	"!CLUSTER_SERVICE_RPC_ID_WATCH_JWKS\x10\a*\x97\x03\n" +
-	"\x1eServiceConfigStateServiceRpcId\x123\n" +
-	"/SERVICE_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x125\n" +
-	"1SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x124\n" +
-	"0SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_MUTATORS\x10\x02\x125\n" +
-	"1SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x122\n" +
-	".SERVICE_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x122\n" +
-	".SERVICE_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x124\n" +
-	"0SERVICE_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xea\x01\n" +
+	"\x19MEMBER_STATUS_UNREACHABLE\x10\x052\xea\x01\n" +
 	"\x0eClusterService\x124\n" +
 	"\x03Log\x12\x13.trace.TraceRequest\x1a\x16.grpcconfig.LogMessage0\x01\x125\n" +
 	"\x04Ping\x12\x13.trace.TraceRequest\x1a\x18.grpcconfig.PingResponse\x12<\n" +
@@ -1000,61 +793,60 @@ func file_libs_grpcconfig_proto_rawDescGZIP() []byte {
 	return file_libs_grpcconfig_proto_rawDescData
 }
 
-var file_libs_grpcconfig_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
+var file_libs_grpcconfig_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_libs_grpcconfig_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_libs_grpcconfig_proto_goTypes = []any{
-	(MemberStatus)(0),                   // 0: grpcconfig.MemberStatus
-	(TypeID)(0),                         // 1: grpcconfig.TypeID
-	(ClusterServiceRpcId)(0),            // 2: grpcconfig.ClusterServiceRpcId
-	(ServiceConfigStateServiceRpcId)(0), // 3: grpcconfig.ServiceConfigStateServiceRpcId
-	(*Config)(nil),                      // 4: grpcconfig.Config
-	(*LogMessage)(nil),                  // 5: grpcconfig.LogMessage
-	(*ClusterMember)(nil),               // 6: grpcconfig.ClusterMember
-	(*ClusterInfo)(nil),                 // 7: grpcconfig.ClusterInfo
-	(*ClusterState)(nil),                // 8: grpcconfig.ClusterState
-	(*PingResponse)(nil),                // 9: grpcconfig.PingResponse
-	(*ServiceConfigState)(nil),          // 10: grpcconfig.ServiceConfigState
-	(*MapEmpty)(nil),                    // 11: grpcconfig.MapEmpty
-	(*host.Host)(nil),                   // 12: host.Host
-	(*key.Key)(nil),                     // 13: key.Key
-	(*logger.LoggerConfig)(nil),         // 14: logger.LoggerConfig
-	(*x509.X509Cert)(nil),               // 15: x509.X509Cert
-	(logger.Level)(0),                   // 16: logger.Level
-	(*trace.TraceRequest)(nil),          // 17: trace.TraceRequest
-	(*jwk.Jwks)(nil),                    // 18: jwk.Jwks
+	(MemberStatus)(0),                       // 0: grpcconfig.MemberStatus
+	(*Config)(nil),                          // 1: grpcconfig.Config
+	(*LogMessage)(nil),                      // 2: grpcconfig.LogMessage
+	(*ClusterMember)(nil),                   // 3: grpcconfig.ClusterMember
+	(*ClusterInfo)(nil),                     // 4: grpcconfig.ClusterInfo
+	(*ClusterState)(nil),                    // 5: grpcconfig.ClusterState
+	(*PingResponse)(nil),                    // 6: grpcconfig.PingResponse
+	(*ServiceConfigState)(nil),              // 7: grpcconfig.ServiceConfigState
+	(*MapEmpty)(nil),                        // 8: grpcconfig.MapEmpty
+	(*host.Host)(nil),                       // 9: host.Host
+	(*key.Key)(nil),                         // 10: key.Key
+	(*logger.LoggerConfig)(nil),             // 11: logger.LoggerConfig
+	(*x509.X509Cert)(nil),                   // 12: x509.X509Cert
+	(*diskstore.DiskPersistenceConfig)(nil), // 13: diskstore.DiskPersistenceConfig
+	(logger.Level)(0),                       // 14: logger.Level
+	(*trace.TraceRequest)(nil),              // 15: trace.TraceRequest
+	(*jwk.Jwks)(nil),                        // 16: jwk.Jwks
 }
 var file_libs_grpcconfig_proto_depIdxs = []int32{
-	12, // 0: grpcconfig.Config.endpoints:type_name -> host.Host
-	13, // 1: grpcconfig.Config.private_key:type_name -> key.Key
-	12, // 2: grpcconfig.Config.listen_address:type_name -> host.Host
-	14, // 3: grpcconfig.Config.logger:type_name -> logger.LoggerConfig
-	15, // 4: grpcconfig.Config.trusted_cas:type_name -> x509.X509Cert
-	16, // 5: grpcconfig.LogMessage.level:type_name -> logger.Level
-	12, // 6: grpcconfig.ClusterMember.endpoint:type_name -> host.Host
-	0,  // 7: grpcconfig.ClusterMember.status:type_name -> grpcconfig.MemberStatus
-	6,  // 8: grpcconfig.ClusterInfo.members:type_name -> grpcconfig.ClusterMember
-	7,  // 9: grpcconfig.ClusterState.clusters:type_name -> grpcconfig.ClusterInfo
-	0,  // 10: grpcconfig.PingResponse.status:type_name -> grpcconfig.MemberStatus
-	4,  // 11: grpcconfig.ServiceConfigState.config:type_name -> grpcconfig.Config
-	17, // 12: grpcconfig.ClusterService.Log:input_type -> trace.TraceRequest
-	17, // 13: grpcconfig.ClusterService.Ping:input_type -> trace.TraceRequest
-	17, // 14: grpcconfig.ClusterService.Subscribe:input_type -> trace.TraceRequest
-	17, // 15: grpcconfig.ClusterService.WatchJwks:input_type -> trace.TraceRequest
-	17, // 16: grpcconfig.ServiceConfigStateService.GetConfig:input_type -> trace.TraceRequest
-	4,  // 17: grpcconfig.ServiceConfigStateService.SetConfig:input_type -> grpcconfig.Config
-	17, // 18: grpcconfig.ServiceConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	5,  // 19: grpcconfig.ClusterService.Log:output_type -> grpcconfig.LogMessage
-	9,  // 20: grpcconfig.ClusterService.Ping:output_type -> grpcconfig.PingResponse
-	8,  // 21: grpcconfig.ClusterService.Subscribe:output_type -> grpcconfig.ClusterState
-	18, // 22: grpcconfig.ClusterService.WatchJwks:output_type -> jwk.Jwks
-	4,  // 23: grpcconfig.ServiceConfigStateService.GetConfig:output_type -> grpcconfig.Config
-	4,  // 24: grpcconfig.ServiceConfigStateService.SetConfig:output_type -> grpcconfig.Config
-	4,  // 25: grpcconfig.ServiceConfigStateService.WatchConfig:output_type -> grpcconfig.Config
-	19, // [19:26] is the sub-list for method output_type
-	12, // [12:19] is the sub-list for method input_type
-	12, // [12:12] is the sub-list for extension type_name
-	12, // [12:12] is the sub-list for extension extendee
-	0,  // [0:12] is the sub-list for field type_name
+	9,  // 0: grpcconfig.Config.endpoints:type_name -> host.Host
+	10, // 1: grpcconfig.Config.private_key:type_name -> key.Key
+	9,  // 2: grpcconfig.Config.listen_address:type_name -> host.Host
+	11, // 3: grpcconfig.Config.logger:type_name -> logger.LoggerConfig
+	12, // 4: grpcconfig.Config.trusted_cas:type_name -> x509.X509Cert
+	13, // 5: grpcconfig.Config.disk_persistence:type_name -> diskstore.DiskPersistenceConfig
+	14, // 6: grpcconfig.LogMessage.level:type_name -> logger.Level
+	9,  // 7: grpcconfig.ClusterMember.endpoint:type_name -> host.Host
+	0,  // 8: grpcconfig.ClusterMember.status:type_name -> grpcconfig.MemberStatus
+	3,  // 9: grpcconfig.ClusterInfo.members:type_name -> grpcconfig.ClusterMember
+	4,  // 10: grpcconfig.ClusterState.clusters:type_name -> grpcconfig.ClusterInfo
+	0,  // 11: grpcconfig.PingResponse.status:type_name -> grpcconfig.MemberStatus
+	1,  // 12: grpcconfig.ServiceConfigState.config:type_name -> grpcconfig.Config
+	15, // 13: grpcconfig.ClusterService.Log:input_type -> trace.TraceRequest
+	15, // 14: grpcconfig.ClusterService.Ping:input_type -> trace.TraceRequest
+	15, // 15: grpcconfig.ClusterService.Subscribe:input_type -> trace.TraceRequest
+	15, // 16: grpcconfig.ClusterService.WatchJwks:input_type -> trace.TraceRequest
+	15, // 17: grpcconfig.ServiceConfigStateService.GetConfig:input_type -> trace.TraceRequest
+	1,  // 18: grpcconfig.ServiceConfigStateService.SetConfig:input_type -> grpcconfig.Config
+	15, // 19: grpcconfig.ServiceConfigStateService.WatchConfig:input_type -> trace.TraceRequest
+	2,  // 20: grpcconfig.ClusterService.Log:output_type -> grpcconfig.LogMessage
+	6,  // 21: grpcconfig.ClusterService.Ping:output_type -> grpcconfig.PingResponse
+	5,  // 22: grpcconfig.ClusterService.Subscribe:output_type -> grpcconfig.ClusterState
+	16, // 23: grpcconfig.ClusterService.WatchJwks:output_type -> jwk.Jwks
+	1,  // 24: grpcconfig.ServiceConfigStateService.GetConfig:output_type -> grpcconfig.Config
+	1,  // 25: grpcconfig.ServiceConfigStateService.SetConfig:output_type -> grpcconfig.Config
+	1,  // 26: grpcconfig.ServiceConfigStateService.WatchConfig:output_type -> grpcconfig.Config
+	20, // [20:27] is the sub-list for method output_type
+	13, // [13:20] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_libs_grpcconfig_proto_init() }
@@ -1067,7 +859,7 @@ func file_libs_grpcconfig_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_grpcconfig_proto_rawDesc), len(file_libs_grpcconfig_proto_rawDesc)),
-			NumEnums:      4,
+			NumEnums:      1,
 			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   2,

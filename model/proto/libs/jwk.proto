@@ -153,14 +153,3 @@ message OpenIdConfiguration {
 // PATH_WELL_KNOWN_OPENID is the path for OpenID Connect discovery endpoint.
 // This endpoint provides metadata about the Hermes service's OpenID Connect configuration.
 // Full path example: "/api/v1/.well-known/openid-configuration"
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-enum TypeID {
-  TYPE_ID_UNSPECIFIED = 0;
-  TYPE_ID_JWK = 1;
-  TYPE_ID_JWKS = 2;
-  TYPE_ID_OPEN_ID_CONFIGURATION = 3;
-}

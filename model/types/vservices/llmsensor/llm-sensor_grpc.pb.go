@@ -51,7 +51,7 @@ const (
 type LlmEventBusStateServiceClient interface {
 	// Topic: EventStream
 	PublishToEventStream(ctx context.Context, in *LlmEvent, opts ...grpc.CallOption) (*TopicPublishReceipt, error)
-	SubscribeToEventStream(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[LlmEvent], error)
+	SubscribeToEventStream(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[LlmEventBusEventStreamSubscribeRecord], error)
 }
 
 type llmEventBusStateServiceClient struct {
@@ -72,13 +72,13 @@ func (c *llmEventBusStateServiceClient) PublishToEventStream(ctx context.Context
 	return out, nil
 }
 
-func (c *llmEventBusStateServiceClient) SubscribeToEventStream(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[LlmEvent], error) {
+func (c *llmEventBusStateServiceClient) SubscribeToEventStream(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[LlmEventBusEventStreamSubscribeRecord], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	stream, err := c.cc.NewStream(ctx, &LlmEventBusStateService_ServiceDesc.Streams[0], LlmEventBusStateService_SubscribeToEventStream_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[trace.TraceRequest, LlmEvent]{ClientStream: stream}
+	x := &grpc.GenericClientStream[trace.TraceRequest, LlmEventBusEventStreamSubscribeRecord]{ClientStream: stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -89,7 +89,7 @@ func (c *llmEventBusStateServiceClient) SubscribeToEventStream(ctx context.Conte
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type LlmEventBusStateService_SubscribeToEventStreamClient = grpc.ServerStreamingClient[LlmEvent]
+type LlmEventBusStateService_SubscribeToEventStreamClient = grpc.ServerStreamingClient[LlmEventBusEventStreamSubscribeRecord]
 
 // LlmEventBusStateServiceServer is the server API for LlmEventBusStateService service.
 // All implementations must embed UnimplementedLlmEventBusStateServiceServer
@@ -102,7 +102,7 @@ type LlmEventBusStateService_SubscribeToEventStreamClient = grpc.ServerStreaming
 type LlmEventBusStateServiceServer interface {
 	// Topic: EventStream
 	PublishToEventStream(context.Context, *LlmEvent) (*TopicPublishReceipt, error)
-	SubscribeToEventStream(*trace.TraceRequest, grpc.ServerStreamingServer[LlmEvent]) error
+	SubscribeToEventStream(*trace.TraceRequest, grpc.ServerStreamingServer[LlmEventBusEventStreamSubscribeRecord]) error
 	mustEmbedUnimplementedLlmEventBusStateServiceServer()
 }
 
@@ -116,7 +116,7 @@ type UnimplementedLlmEventBusStateServiceServer struct{}
 func (UnimplementedLlmEventBusStateServiceServer) PublishToEventStream(context.Context, *LlmEvent) (*TopicPublishReceipt, error) {
 	return nil, status.Error(codes.Unimplemented, "method PublishToEventStream not implemented")
 }
-func (UnimplementedLlmEventBusStateServiceServer) SubscribeToEventStream(*trace.TraceRequest, grpc.ServerStreamingServer[LlmEvent]) error {
+func (UnimplementedLlmEventBusStateServiceServer) SubscribeToEventStream(*trace.TraceRequest, grpc.ServerStreamingServer[LlmEventBusEventStreamSubscribeRecord]) error {
 	return status.Error(codes.Unimplemented, "method SubscribeToEventStream not implemented")
 }
 func (UnimplementedLlmEventBusStateServiceServer) mustEmbedUnimplementedLlmEventBusStateServiceServer() {
@@ -164,11 +164,11 @@ func _LlmEventBusStateService_SubscribeToEventStream_Handler(srv interface{}, st
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(LlmEventBusStateServiceServer).SubscribeToEventStream(m, &grpc.GenericServerStream[trace.TraceRequest, LlmEvent]{ServerStream: stream})
+	return srv.(LlmEventBusStateServiceServer).SubscribeToEventStream(m, &grpc.GenericServerStream[trace.TraceRequest, LlmEventBusEventStreamSubscribeRecord]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type LlmEventBusStateService_SubscribeToEventStreamServer = grpc.ServerStreamingServer[LlmEvent]
+type LlmEventBusStateService_SubscribeToEventStreamServer = grpc.ServerStreamingServer[LlmEventBusEventStreamSubscribeRecord]
 
 // LlmEventBusStateService_ServiceDesc is the grpc.ServiceDesc for LlmEventBusStateService service.
 // It's only intended for direct use with grpc.RegisterService,

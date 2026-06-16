@@ -91,62 +91,6 @@ func (JwkUseType) EnumDescriptor() ([]byte, []int) {
 	return file_libs_jwk_proto_rawDescGZIP(), []int{0}
 }
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED           TypeID = 0
-	TypeID_TYPE_ID_JWK                   TypeID = 1
-	TypeID_TYPE_ID_JWKS                  TypeID = 2
-	TypeID_TYPE_ID_OPEN_ID_CONFIGURATION TypeID = 3
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_JWK",
-		2: "TYPE_ID_JWKS",
-		3: "TYPE_ID_OPEN_ID_CONFIGURATION",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":           0,
-		"TYPE_ID_JWK":                   1,
-		"TYPE_ID_JWKS":                  2,
-		"TYPE_ID_OPEN_ID_CONFIGURATION": 3,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_jwk_proto_enumTypes[1].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_jwk_proto_enumTypes[1]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_jwk_proto_rawDescGZIP(), []int{1}
-}
-
 // Jwk represents a JSON Web Key as defined in RFC 7517.
 // It contains the public key parameters for RSA (e, n), EC (crv, x, y), or OKP (crv, x) keys.
 // JWK is used for key distribution and verification in JSON-based protocols like JWT.
@@ -731,22 +675,22 @@ var File_libs_jwk_proto protoreflect.FileDescriptor
 
 const file_libs_jwk_proto_rawDesc = "" +
 	"\n" +
-	"\x0elibs/jwk.proto\x12\x03jwk\x1a\x0elibs/key.proto\x1a\x0flibs/spec.proto\"\xaa\x02\n" +
+	"\x0elibs/jwk.proto\x12\x03jwk\x1a\x0elibs/key.proto\x1a\x0flibs/spec.proto\"\xcc\x02\n" +
 	"\x03Jwk\x12\x1e\n" +
-	"\x03kty\x18\x01 \x01(\x0e2\f.key.KeyTypeR\x03kty\x12\x1a\n" +
-	"\x03alg\x18\x02 \x01(\tB\b\x88\xa6\x1d\x01\x88\xa7\x1d\x01R\x03alg\x12\x1e\n" +
-	"\x03kid\x18\x03 \x01(\tB\fе\x18\x01\x88\xa6\x1d\x01\x88\xa7\x1d\x01R\x03kid\x12!\n" +
-	"\x03use\x18\x04 \x01(\x0e2\x0f.jwk.JwkUseTypeR\x03use\x12\x12\n" +
-	"\x01e\x18\x05 \x01(\tB\x04\x80\xa7\x1d\x01R\x01e\x12\x12\n" +
-	"\x01n\x18\x06 \x01(\tB\x04\x80\xa7\x1d\x01R\x01n\x12\x10\n" +
-	"\x03crv\x18\a \x01(\tR\x03crv\x12\x12\n" +
-	"\x01x\x18\b \x01(\tB\x04\x80\xa7\x1d\x01R\x01x\x12\x12\n" +
-	"\x01y\x18\t \x01(\tB\x04\x80\xa7\x1d\x01R\x01y\x12\x16\n" +
+	"\x03kty\x18\x01 \x01(\x0e2\f.key.KeyTypeR\x03kty\x12\x1e\n" +
+	"\x03alg\x18\x02 \x01(\tB\f\x88\xa6\x1d\x01\x88\xa7\x1d\x01\xb8\xa8\x1d@R\x03alg\x12#\n" +
+	"\x03kid\x18\x03 \x01(\tB\x11е\x18\x01\x88\xa6\x1d\x01\x88\xa7\x1d\x01\xb8\xa8\x1d\x80\x04R\x03kid\x12!\n" +
+	"\x03use\x18\x04 \x01(\x0e2\x0f.jwk.JwkUseTypeR\x03use\x12\x16\n" +
+	"\x01e\x18\x05 \x01(\tB\b\x80\xa7\x1d\x01\xb8\xa8\x1d@R\x01e\x12\x17\n" +
+	"\x01n\x18\x06 \x01(\tB\t\x80\xa7\x1d\x01\xb8\xa8\x1d\x80\bR\x01n\x12\x16\n" +
+	"\x03crv\x18\a \x01(\tB\x04\xb8\xa8\x1d@R\x03crv\x12\x17\n" +
+	"\x01x\x18\b \x01(\tB\t\x80\xa7\x1d\x01\xb8\xa8\x1d\x80\x02R\x01x\x12\x17\n" +
+	"\x01y\x18\t \x01(\tB\t\x80\xa7\x1d\x01\xb8\xa8\x1d\x80\x02R\x01y\x12\x16\n" +
 	"\x03exp\x18\n" +
 	" \x01(\x03B\x04ض\x18\x01R\x03exp\x12*\n" +
 	"\acreated\x18\v \x01(\x03B\x10\xb0\xa7\x1d\x80\x8bһ\x06\xc0\xa7\x1d\x80\x86\xc1\xfc\x1dR\acreated\"+\n" +
 	"\x04Jwks\x12#\n" +
-	"\x04keys\x18\x01 \x03(\v2\b.jwk.JwkB\x05\xb8\xa8\x1d\x80\x01R\x04keys\"\xbf\x13\n" +
+	"\x04keys\x18\x01 \x03(\v2\b.jwk.JwkB\x05\xb8\xa8\x1d\x80\x01R\x04keys\"\xdb\x13\n" +
 	"\x13OpenIdConfiguration\x12 \n" +
 	"\x06issuer\x18\x01 \x01(\tB\b\x88\xa6\x1d\x01\xa8\xa6\x1d\x02R\x06issuer\x12;\n" +
 	"\x16authorization_endpoint\x18\x02 \x01(\tB\x04\xa8\xa6\x1d\x02R\x15authorizationEndpoint\x12+\n" +
@@ -776,11 +720,11 @@ const file_libs_jwk_proto_rawDesc = "" +
 	"\x15http_logout_supported\x18\x19 \x01(\bR\x13httpLogoutSupported\x12B\n" +
 	"\x1dfrontchannel_logout_supported\x18\x1a \x01(\bR\x1bfrontchannelLogoutSupported\x126\n" +
 	"\x14check_session_iframe\x18\x1b \x01(\tB\x04\xa8\xa6\x1d\x02R\x12checkSessionIframe\x121\n" +
-	"\x11kerberos_endpoint\x18\x1c \x01(\tB\x04\xa8\xa6\x1d\x02R\x10kerberosEndpoint\x12.\n" +
-	"\x13tenant_region_scope\x18\x1d \x01(\tR\x11tenantRegionScope\x12.\n" +
-	"\x13cloud_instance_name\x18\x1e \x01(\tR\x11cloudInstanceName\x121\n" +
-	"\x15cloud_graph_host_name\x18\x1f \x01(\tR\x12cloudGraphHostName\x12!\n" +
-	"\fmsgraph_host\x18  \x01(\tR\vmsgraphHost\x12\x1f\n" +
+	"\x11kerberos_endpoint\x18\x1c \x01(\tB\x04\xa8\xa6\x1d\x02R\x10kerberosEndpoint\x125\n" +
+	"\x13tenant_region_scope\x18\x1d \x01(\tB\x05\xb8\xa8\x1d\x80\x02R\x11tenantRegionScope\x125\n" +
+	"\x13cloud_instance_name\x18\x1e \x01(\tB\x05\xb8\xa8\x1d\x80\x02R\x11cloudInstanceName\x128\n" +
+	"\x15cloud_graph_host_name\x18\x1f \x01(\tB\x05\xb8\xa8\x1d\x80\x02R\x12cloudGraphHostName\x12(\n" +
+	"\fmsgraph_host\x18  \x01(\tB\x05\xb8\xa8\x1d\x80\x02R\vmsgraphHost\x12\x1f\n" +
 	"\brbac_url\x18! \x01(\tB\x04\xa8\xa6\x1d\x02R\arbacUrl\x12:\n" +
 	"\x16mfa_challenge_endpoint\x18\" \x01(\tB\x04\xa8\xa6\x1d\x02R\x14mfaChallengeEndpoint\x12E\n" +
 	"\x1frequest_uri_parameter_supported\x18# \x01(\bR\x1crequestUriParameterSupported\x12j\n" +
@@ -792,12 +736,7 @@ const file_libs_jwk_proto_rawDesc = "" +
 	"JwkUseType\x12\x1a\n" +
 	"\x16JWK_USE_TYPE_UNDEFINED\x10\x00\x12\x1d\n" +
 	"\x10JWK_USE_TYPE_SIG\x10\x01\x1a\a\xaa\xb5\x18\x03sig\x12\x1d\n" +
-	"\x10JWK_USE_TYPE_ENC\x10\x02\x1a\a\xaa\xb5\x18\x03enc*g\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x0f\n" +
-	"\vTYPE_ID_JWK\x10\x01\x12\x10\n" +
-	"\fTYPE_ID_JWKS\x10\x02\x12!\n" +
-	"\x1dTYPE_ID_OPEN_ID_CONFIGURATION\x10\x03B\x93\x01\x8a\xb5\x18:\n" +
+	"\x10JWK_USE_TYPE_ENC\x10\x02\x1a\a\xaa\xb5\x18\x03encB\x93\x01\x8a\xb5\x18:\n" +
 	"\x16PATH_WELL_KNOWN_OPENID\x12 .well-known/openid-configurationZSgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/jwkb\x06proto3"
 
 var (
@@ -812,20 +751,19 @@ func file_libs_jwk_proto_rawDescGZIP() []byte {
 	return file_libs_jwk_proto_rawDescData
 }
 
-var file_libs_jwk_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_libs_jwk_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_libs_jwk_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_libs_jwk_proto_goTypes = []any{
 	(JwkUseType)(0),             // 0: jwk.JwkUseType
-	(TypeID)(0),                 // 1: jwk.TypeID
-	(*Jwk)(nil),                 // 2: jwk.Jwk
-	(*Jwks)(nil),                // 3: jwk.Jwks
-	(*OpenIdConfiguration)(nil), // 4: jwk.OpenIdConfiguration
-	(key.KeyType)(0),            // 5: key.KeyType
+	(*Jwk)(nil),                 // 1: jwk.Jwk
+	(*Jwks)(nil),                // 2: jwk.Jwks
+	(*OpenIdConfiguration)(nil), // 3: jwk.OpenIdConfiguration
+	(key.KeyType)(0),            // 4: key.KeyType
 }
 var file_libs_jwk_proto_depIdxs = []int32{
-	5, // 0: jwk.Jwk.kty:type_name -> key.KeyType
+	4, // 0: jwk.Jwk.kty:type_name -> key.KeyType
 	0, // 1: jwk.Jwk.use:type_name -> jwk.JwkUseType
-	2, // 2: jwk.Jwks.keys:type_name -> jwk.Jwk
+	1, // 2: jwk.Jwks.keys:type_name -> jwk.Jwk
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
@@ -843,7 +781,7 @@ func file_libs_jwk_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_jwk_proto_rawDesc), len(file_libs_jwk_proto_rawDesc)),
-			NumEnums:      2,
+			NumEnums:      1,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,

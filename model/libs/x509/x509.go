@@ -36,6 +36,7 @@ import (
 	"time"
 
 	wrapperKey "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/libs/key"
+	wrapperSpiffe "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/libs/spiffe"
 	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/errors"
 	protoX509 "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/x509"
 	utils "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/utils"
@@ -190,9 +191,56 @@ func (w *ImmutableCertChain) Chain() []*ImmutableCert { return w.chain }
 // Returns nil if no key was provided.
 func (w *ImmutableCertChain) TlsCert() *tls.Certificate { return w.tlsCert }
 
+// verifyPeerServiceIdentity validates a peer leaf certificate's identity.
+//
+// When a SPIFFE trustDomain is configured, the peer MUST present a canonical
+// service SPIFFE ID URI SAN — spiffe://<td>/system[/<loc>...]/services/<svc> —
+// in that trust domain whose service label matches serviceName. The SAN is
+// parsed and compared via the generated libs/spiffe (ParseSpiffeID + the
+// SubjectKind/TrustDomain/SubjectPath relations), never by ad-hoc string
+// splitting: the old 2-segment "spiffe://<td>/<azp>/<svc>" matcher could never
+// match a canonical SAN, so SPIFFE pinning silently degraded to CN/DNS (OF-12).
+// A malformed configured trust domain fails loudly rather than matching
+// nothing. CN/DNS are honored only as a legacy fallback when no trust domain
+// is configured.
+func verifyPeerServiceIdentity(cert *stdx509.Certificate, serviceName, trustDomain string) error {
+	if trustDomain != "" {
+		expectedTD, err := wrapperSpiffe.NormalizeTrustDomain(trustDomain)
+		if err != nil {
+			return fmt.Errorf("invalid configured SPIFFE trust domain %q: %w", trustDomain, err)
+		}
+		for _, uri := range cert.URIs {
+			if uri == nil || uri.Scheme != wrapperSpiffe.Scheme {
+				continue
+			}
+			parsed, perr := wrapperSpiffe.ParseSpiffeID(uri.String())
+			if perr != nil {
+				continue
+			}
+			if parsed.SubjectKind == wrapperSpiffe.KindService &&
+				parsed.TrustDomain == expectedTD &&
+				parsed.SubjectPath == serviceName {
+				return nil
+			}
+		}
+		return fmt.Errorf("peer cert presents no canonical service SPIFFE ID for %q in trust domain %q", serviceName, expectedTD)
+	}
+	// Legacy fallback: no SPIFFE trust domain configured — match CN or DNS SAN.
+	if cert.Subject.CommonName == serviceName {
+		return nil
+	}
+	for _, dns := range cert.DNSNames {
+		if dns == serviceName {
+			return nil
+		}
+	}
+	return fmt.Errorf("leaf cert does not match service name %q", serviceName)
+}
+
 // TLSConfig returns client and server *tls.Config for mTLS using this chain.
-// The serviceName is validated in peer certificates' CN or DNS SANs.
-func (w *ImmutableCertChain) TLSConfig(serviceName string) (*tls.Config, *tls.Config) {
+// The peer identity is validated against serviceName: by canonical SPIFFE ID
+// when trustDomain is set, else by CN/DNS (see verifyPeerServiceIdentity).
+func (w *ImmutableCertChain) TLSConfig(serviceName, trustDomain string) (*tls.Config, *tls.Config) {
 	if w.tlsCert == nil {
 		return nil, nil
 	}
@@ -212,24 +260,7 @@ func (w *ImmutableCertChain) TLSConfig(serviceName string) (*tls.Config, *tls.Co
 		if err != nil {
 			return fmt.Errorf("failed to parse leaf certificate: %w", err)
 		}
-		if cert.Subject.CommonName == serviceName {
-			return nil
-		}
-		for _, dns := range cert.DNSNames {
-			if dns == serviceName {
-				return nil
-			}
-		}
-		// Check URI SANs (SPIFFE IDs): spiffe://<domain>/<azp>/<servicename>
-		for _, uri := range cert.URIs {
-			if uri.Scheme == "spiffe" {
-				parts := strings.Split(strings.TrimPrefix(uri.Path, "/"), "/")
-				if len(parts) == 2 && parts[1] == serviceName {
-					return nil
-				}
-			}
-		}
-		return fmt.Errorf("leaf cert does not match service name %q", serviceName)
+		return verifyPeerServiceIdentity(cert, serviceName, trustDomain)
 	}
 
 	clientTLS := &tls.Config{

@@ -686,10 +686,10 @@ func TypeIDValues() []TypeID {
 		TypeID_TYPE_ID_MESSAGE,
 		TypeID_TYPE_ID_EVENT,
 		TypeID_TYPE_ID_CHANNEL,
-		TypeID_TYPE_ID_REGISTER_USER_REQUEST,
-		TypeID_TYPE_ID_UNREGISTER_USER_REQUEST,
+		TypeID_TYPE_ID_UPDATE_VIRTUAL_USER_REQUEST,
+		TypeID_TYPE_ID_DELETE_VIRTUAL_USER_REQUEST,
 		TypeID_TYPE_ID_SUBSCRIBE_REQUEST,
-		TypeID_TYPE_ID_UNSUBSCRIBE_REQUEST,
+		TypeID_TYPE_ID_DELETE_SUBSCRIPTION_REQUEST,
 		TypeID_TYPE_ID_EVENTS_REQUEST,
 		TypeID_TYPE_ID_SEND_MESSAGE_REQUEST,
 		TypeID_TYPE_ID_SEND_THREAD_REPLY_REQUEST,
@@ -736,7 +736,7 @@ func TypeIDValues() []TypeID {
 
 // TypeIDStringValues returns all valid TypeID names as strings
 func TypeIDStringValues() []string {
-	return []string{"config", "virtual-user", "channel-subscription", "gateway-state", "message", "event", "channel", "register-user-request", "unregister-user-request", "subscribe-request", "unsubscribe-request", "events-request", "send-message-request", "send-thread-reply-request", "send-message-response", "get-thread-request", "get-thread-response", "get-channel-history-request", "get-channel-history-response", "list-channels-response", "reaction-request", "msggateway-config-state", "query-value", "predicate", "predicate-group", "sort-field", "collection-query", "virtual-users-get-request", "virtual-users-put-request", "virtual-users-get-all-request", "virtual-users-keys-request", "virtual-users-size-request", "virtual-users-clear-request", "virtual-users-value-response", "virtual-users-entries-response", "virtual-users-keys-response", "virtual-users-size-response", "virtual-users-query-request", "virtual-users-query-response", "subscriptions-get-request", "subscriptions-put-request", "subscriptions-get-all-request", "subscriptions-keys-request", "subscriptions-size-request", "subscriptions-clear-request", "subscriptions-value-response", "subscriptions-entries-response", "subscriptions-keys-response", "subscriptions-size-response", "subscriptions-query-request", "subscriptions-query-response", "map-empty"}
+	return []string{"config", "virtual-user", "channel-subscription", "gateway-state", "message", "event", "channel", "update-virtual-user-request", "delete-virtual-user-request", "subscribe-request", "delete-subscription-request", "events-request", "send-message-request", "send-thread-reply-request", "send-message-response", "get-thread-request", "get-thread-response", "get-channel-history-request", "get-channel-history-response", "list-channels-response", "reaction-request", "msggateway-config-state", "query-value", "predicate", "predicate-group", "sort-field", "collection-query", "virtual-users-get-request", "virtual-users-put-request", "virtual-users-get-all-request", "virtual-users-keys-request", "virtual-users-size-request", "virtual-users-clear-request", "virtual-users-value-response", "virtual-users-entries-response", "virtual-users-keys-response", "virtual-users-size-response", "virtual-users-query-request", "virtual-users-query-response", "subscriptions-get-request", "subscriptions-put-request", "subscriptions-get-all-request", "subscriptions-keys-request", "subscriptions-size-request", "subscriptions-clear-request", "subscriptions-value-response", "subscriptions-entries-response", "subscriptions-keys-response", "subscriptions-size-response", "subscriptions-query-request", "subscriptions-query-response", "map-empty"}
 }
 
 // ParseTypeID converts a string to a TypeID enum value
@@ -761,14 +761,14 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_EVENT, nil
 	case "channel", "type-id-channel":
 		return TypeID_TYPE_ID_CHANNEL, nil
-	case "register-user-request", "type-id-register-user-request":
-		return TypeID_TYPE_ID_REGISTER_USER_REQUEST, nil
-	case "unregister-user-request", "type-id-unregister-user-request":
-		return TypeID_TYPE_ID_UNREGISTER_USER_REQUEST, nil
+	case "update-virtual-user-request", "type-id-update-virtual-user-request":
+		return TypeID_TYPE_ID_UPDATE_VIRTUAL_USER_REQUEST, nil
+	case "delete-virtual-user-request", "type-id-delete-virtual-user-request":
+		return TypeID_TYPE_ID_DELETE_VIRTUAL_USER_REQUEST, nil
 	case "subscribe-request", "type-id-subscribe-request":
 		return TypeID_TYPE_ID_SUBSCRIBE_REQUEST, nil
-	case "unsubscribe-request", "type-id-unsubscribe-request":
-		return TypeID_TYPE_ID_UNSUBSCRIBE_REQUEST, nil
+	case "delete-subscription-request", "type-id-delete-subscription-request":
+		return TypeID_TYPE_ID_DELETE_SUBSCRIPTION_REQUEST, nil
 	case "events-request", "type-id-events-request":
 		return TypeID_TYPE_ID_EVENTS_REQUEST, nil
 	case "send-message-request", "type-id-send-message-request":
@@ -895,14 +895,14 @@ func TypeIDToString(v TypeID) string {
 		return "event"
 	case TypeID_TYPE_ID_CHANNEL:
 		return "channel"
-	case TypeID_TYPE_ID_REGISTER_USER_REQUEST:
-		return "register-user-request"
-	case TypeID_TYPE_ID_UNREGISTER_USER_REQUEST:
-		return "unregister-user-request"
+	case TypeID_TYPE_ID_UPDATE_VIRTUAL_USER_REQUEST:
+		return "update-virtual-user-request"
+	case TypeID_TYPE_ID_DELETE_VIRTUAL_USER_REQUEST:
+		return "delete-virtual-user-request"
 	case TypeID_TYPE_ID_SUBSCRIBE_REQUEST:
 		return "subscribe-request"
-	case TypeID_TYPE_ID_UNSUBSCRIBE_REQUEST:
-		return "unsubscribe-request"
+	case TypeID_TYPE_ID_DELETE_SUBSCRIPTION_REQUEST:
+		return "delete-subscription-request"
 	case TypeID_TYPE_ID_EVENTS_REQUEST:
 		return "events-request"
 	case TypeID_TYPE_ID_SEND_MESSAGE_REQUEST:
@@ -1021,14 +1021,14 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_EVENT
 	case "channel", "type-id-channel":
 		return TypeID_TYPE_ID_CHANNEL
-	case "register-user-request", "type-id-register-user-request":
-		return TypeID_TYPE_ID_REGISTER_USER_REQUEST
-	case "unregister-user-request", "type-id-unregister-user-request":
-		return TypeID_TYPE_ID_UNREGISTER_USER_REQUEST
+	case "update-virtual-user-request", "type-id-update-virtual-user-request":
+		return TypeID_TYPE_ID_UPDATE_VIRTUAL_USER_REQUEST
+	case "delete-virtual-user-request", "type-id-delete-virtual-user-request":
+		return TypeID_TYPE_ID_DELETE_VIRTUAL_USER_REQUEST
 	case "subscribe-request", "type-id-subscribe-request":
 		return TypeID_TYPE_ID_SUBSCRIBE_REQUEST
-	case "unsubscribe-request", "type-id-unsubscribe-request":
-		return TypeID_TYPE_ID_UNSUBSCRIBE_REQUEST
+	case "delete-subscription-request", "type-id-delete-subscription-request":
+		return TypeID_TYPE_ID_DELETE_SUBSCRIPTION_REQUEST
 	case "events-request", "type-id-events-request":
 		return TypeID_TYPE_ID_EVENTS_REQUEST
 	case "send-message-request", "type-id-send-message-request":
@@ -1135,14 +1135,14 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_EVENT"
 	case TypeID_TYPE_ID_CHANNEL:
 		return "TYPE_ID_CHANNEL"
-	case TypeID_TYPE_ID_REGISTER_USER_REQUEST:
-		return "TYPE_ID_REGISTER_USER_REQUEST"
-	case TypeID_TYPE_ID_UNREGISTER_USER_REQUEST:
-		return "TYPE_ID_UNREGISTER_USER_REQUEST"
+	case TypeID_TYPE_ID_UPDATE_VIRTUAL_USER_REQUEST:
+		return "TYPE_ID_UPDATE_VIRTUAL_USER_REQUEST"
+	case TypeID_TYPE_ID_DELETE_VIRTUAL_USER_REQUEST:
+		return "TYPE_ID_DELETE_VIRTUAL_USER_REQUEST"
 	case TypeID_TYPE_ID_SUBSCRIBE_REQUEST:
 		return "TYPE_ID_SUBSCRIBE_REQUEST"
-	case TypeID_TYPE_ID_UNSUBSCRIBE_REQUEST:
-		return "TYPE_ID_UNSUBSCRIBE_REQUEST"
+	case TypeID_TYPE_ID_DELETE_SUBSCRIPTION_REQUEST:
+		return "TYPE_ID_DELETE_SUBSCRIPTION_REQUEST"
 	case TypeID_TYPE_ID_EVENTS_REQUEST:
 		return "TYPE_ID_EVENTS_REQUEST"
 	case TypeID_TYPE_ID_SEND_MESSAGE_REQUEST:
@@ -1236,24 +1236,24 @@ func MessagingRpcIdValues() []MessagingRpcId {
 		MessagingRpcId_MESSAGING_RPC_ID_ALL_ACCESSORS,
 		MessagingRpcId_MESSAGING_RPC_ID_ALL_MUTATORS,
 		MessagingRpcId_MESSAGING_RPC_ID_ALL_EXECUTORS,
-		MessagingRpcId_MESSAGING_RPC_ID_REGISTER_USER,
-		MessagingRpcId_MESSAGING_RPC_ID_UNREGISTER_USER,
+		MessagingRpcId_MESSAGING_RPC_ID_UPDATE_VIRTUAL_USER,
+		MessagingRpcId_MESSAGING_RPC_ID_DELETE_VIRTUAL_USER,
 		MessagingRpcId_MESSAGING_RPC_ID_SUBSCRIBE,
-		MessagingRpcId_MESSAGING_RPC_ID_UNSUBSCRIBE,
-		MessagingRpcId_MESSAGING_RPC_ID_EVENTS,
+		MessagingRpcId_MESSAGING_RPC_ID_DELETE_SUBSCRIPTION,
+		MessagingRpcId_MESSAGING_RPC_ID_SUBSCRIBE_EVENTS,
 		MessagingRpcId_MESSAGING_RPC_ID_SEND_MESSAGE,
 		MessagingRpcId_MESSAGING_RPC_ID_SEND_THREAD_REPLY,
-		MessagingRpcId_MESSAGING_RPC_ID_GET_THREAD,
+		MessagingRpcId_MESSAGING_RPC_ID_LIST_THREAD_MESSAGES,
 		MessagingRpcId_MESSAGING_RPC_ID_GET_CHANNEL_HISTORY,
 		MessagingRpcId_MESSAGING_RPC_ID_LIST_CHANNELS,
-		MessagingRpcId_MESSAGING_RPC_ID_ADD_REACTION,
-		MessagingRpcId_MESSAGING_RPC_ID_REMOVE_REACTION,
+		MessagingRpcId_MESSAGING_RPC_ID_CREATE_REACTION,
+		MessagingRpcId_MESSAGING_RPC_ID_DELETE_REACTION,
 	}
 }
 
 // MessagingRpcIdStringValues returns all valid MessagingRpcId names as strings
 func MessagingRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "register-user", "unregister-user", "subscribe", "unsubscribe", "events", "send-message", "send-thread-reply", "get-thread", "get-channel-history", "list-channels", "add-reaction", "remove-reaction"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "update-virtual-user", "delete-virtual-user", "subscribe", "delete-subscription", "subscribe-events", "send-message", "send-thread-reply", "list-thread-messages", "get-channel-history", "list-channels", "create-reaction", "delete-reaction"}
 }
 
 // ParseMessagingRpcId converts a string to a MessagingRpcId enum value
@@ -1270,30 +1270,30 @@ func ParseMessagingRpcId(s string) (MessagingRpcId, error) {
 		return MessagingRpcId_MESSAGING_RPC_ID_ALL_MUTATORS, nil
 	case "all-executors", "messaging-rpc-id-all-executors":
 		return MessagingRpcId_MESSAGING_RPC_ID_ALL_EXECUTORS, nil
-	case "register-user", "messaging-rpc-id-register-user":
-		return MessagingRpcId_MESSAGING_RPC_ID_REGISTER_USER, nil
-	case "unregister-user", "messaging-rpc-id-unregister-user":
-		return MessagingRpcId_MESSAGING_RPC_ID_UNREGISTER_USER, nil
+	case "update-virtual-user", "messaging-rpc-id-update-virtual-user":
+		return MessagingRpcId_MESSAGING_RPC_ID_UPDATE_VIRTUAL_USER, nil
+	case "delete-virtual-user", "messaging-rpc-id-delete-virtual-user":
+		return MessagingRpcId_MESSAGING_RPC_ID_DELETE_VIRTUAL_USER, nil
 	case "subscribe", "messaging-rpc-id-subscribe":
 		return MessagingRpcId_MESSAGING_RPC_ID_SUBSCRIBE, nil
-	case "unsubscribe", "messaging-rpc-id-unsubscribe":
-		return MessagingRpcId_MESSAGING_RPC_ID_UNSUBSCRIBE, nil
-	case "events", "messaging-rpc-id-events":
-		return MessagingRpcId_MESSAGING_RPC_ID_EVENTS, nil
+	case "delete-subscription", "messaging-rpc-id-delete-subscription":
+		return MessagingRpcId_MESSAGING_RPC_ID_DELETE_SUBSCRIPTION, nil
+	case "subscribe-events", "messaging-rpc-id-subscribe-events":
+		return MessagingRpcId_MESSAGING_RPC_ID_SUBSCRIBE_EVENTS, nil
 	case "send-message", "messaging-rpc-id-send-message":
 		return MessagingRpcId_MESSAGING_RPC_ID_SEND_MESSAGE, nil
 	case "send-thread-reply", "messaging-rpc-id-send-thread-reply":
 		return MessagingRpcId_MESSAGING_RPC_ID_SEND_THREAD_REPLY, nil
-	case "get-thread", "messaging-rpc-id-get-thread":
-		return MessagingRpcId_MESSAGING_RPC_ID_GET_THREAD, nil
+	case "list-thread-messages", "messaging-rpc-id-list-thread-messages":
+		return MessagingRpcId_MESSAGING_RPC_ID_LIST_THREAD_MESSAGES, nil
 	case "get-channel-history", "messaging-rpc-id-get-channel-history":
 		return MessagingRpcId_MESSAGING_RPC_ID_GET_CHANNEL_HISTORY, nil
 	case "list-channels", "messaging-rpc-id-list-channels":
 		return MessagingRpcId_MESSAGING_RPC_ID_LIST_CHANNELS, nil
-	case "add-reaction", "messaging-rpc-id-add-reaction":
-		return MessagingRpcId_MESSAGING_RPC_ID_ADD_REACTION, nil
-	case "remove-reaction", "messaging-rpc-id-remove-reaction":
-		return MessagingRpcId_MESSAGING_RPC_ID_REMOVE_REACTION, nil
+	case "create-reaction", "messaging-rpc-id-create-reaction":
+		return MessagingRpcId_MESSAGING_RPC_ID_CREATE_REACTION, nil
+	case "delete-reaction", "messaging-rpc-id-delete-reaction":
+		return MessagingRpcId_MESSAGING_RPC_ID_DELETE_REACTION, nil
 	default:
 		return MessagingRpcId_MESSAGING_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid messagingrpcid %s, expecting one of: %v", s, MessagingRpcIdStringValues())
 	}
@@ -1330,30 +1330,30 @@ func MessagingRpcIdToString(v MessagingRpcId) string {
 		return "all-mutators"
 	case MessagingRpcId_MESSAGING_RPC_ID_ALL_EXECUTORS:
 		return "all-executors"
-	case MessagingRpcId_MESSAGING_RPC_ID_REGISTER_USER:
-		return "register-user"
-	case MessagingRpcId_MESSAGING_RPC_ID_UNREGISTER_USER:
-		return "unregister-user"
+	case MessagingRpcId_MESSAGING_RPC_ID_UPDATE_VIRTUAL_USER:
+		return "update-virtual-user"
+	case MessagingRpcId_MESSAGING_RPC_ID_DELETE_VIRTUAL_USER:
+		return "delete-virtual-user"
 	case MessagingRpcId_MESSAGING_RPC_ID_SUBSCRIBE:
 		return "subscribe"
-	case MessagingRpcId_MESSAGING_RPC_ID_UNSUBSCRIBE:
-		return "unsubscribe"
-	case MessagingRpcId_MESSAGING_RPC_ID_EVENTS:
-		return "events"
+	case MessagingRpcId_MESSAGING_RPC_ID_DELETE_SUBSCRIPTION:
+		return "delete-subscription"
+	case MessagingRpcId_MESSAGING_RPC_ID_SUBSCRIBE_EVENTS:
+		return "subscribe-events"
 	case MessagingRpcId_MESSAGING_RPC_ID_SEND_MESSAGE:
 		return "send-message"
 	case MessagingRpcId_MESSAGING_RPC_ID_SEND_THREAD_REPLY:
 		return "send-thread-reply"
-	case MessagingRpcId_MESSAGING_RPC_ID_GET_THREAD:
-		return "get-thread"
+	case MessagingRpcId_MESSAGING_RPC_ID_LIST_THREAD_MESSAGES:
+		return "list-thread-messages"
 	case MessagingRpcId_MESSAGING_RPC_ID_GET_CHANNEL_HISTORY:
 		return "get-channel-history"
 	case MessagingRpcId_MESSAGING_RPC_ID_LIST_CHANNELS:
 		return "list-channels"
-	case MessagingRpcId_MESSAGING_RPC_ID_ADD_REACTION:
-		return "add-reaction"
-	case MessagingRpcId_MESSAGING_RPC_ID_REMOVE_REACTION:
-		return "remove-reaction"
+	case MessagingRpcId_MESSAGING_RPC_ID_CREATE_REACTION:
+		return "create-reaction"
+	case MessagingRpcId_MESSAGING_RPC_ID_DELETE_REACTION:
+		return "delete-reaction"
 	default:
 		return ""
 	}
@@ -1382,30 +1382,30 @@ func ParseMessagingRpcIdLiberal(s string) MessagingRpcId {
 		return MessagingRpcId_MESSAGING_RPC_ID_ALL_MUTATORS
 	case "all-executors", "messaging-rpc-id-all-executors":
 		return MessagingRpcId_MESSAGING_RPC_ID_ALL_EXECUTORS
-	case "register-user", "messaging-rpc-id-register-user":
-		return MessagingRpcId_MESSAGING_RPC_ID_REGISTER_USER
-	case "unregister-user", "messaging-rpc-id-unregister-user":
-		return MessagingRpcId_MESSAGING_RPC_ID_UNREGISTER_USER
+	case "update-virtual-user", "messaging-rpc-id-update-virtual-user":
+		return MessagingRpcId_MESSAGING_RPC_ID_UPDATE_VIRTUAL_USER
+	case "delete-virtual-user", "messaging-rpc-id-delete-virtual-user":
+		return MessagingRpcId_MESSAGING_RPC_ID_DELETE_VIRTUAL_USER
 	case "subscribe", "messaging-rpc-id-subscribe":
 		return MessagingRpcId_MESSAGING_RPC_ID_SUBSCRIBE
-	case "unsubscribe", "messaging-rpc-id-unsubscribe":
-		return MessagingRpcId_MESSAGING_RPC_ID_UNSUBSCRIBE
-	case "events", "messaging-rpc-id-events":
-		return MessagingRpcId_MESSAGING_RPC_ID_EVENTS
+	case "delete-subscription", "messaging-rpc-id-delete-subscription":
+		return MessagingRpcId_MESSAGING_RPC_ID_DELETE_SUBSCRIPTION
+	case "subscribe-events", "messaging-rpc-id-subscribe-events":
+		return MessagingRpcId_MESSAGING_RPC_ID_SUBSCRIBE_EVENTS
 	case "send-message", "messaging-rpc-id-send-message":
 		return MessagingRpcId_MESSAGING_RPC_ID_SEND_MESSAGE
 	case "send-thread-reply", "messaging-rpc-id-send-thread-reply":
 		return MessagingRpcId_MESSAGING_RPC_ID_SEND_THREAD_REPLY
-	case "get-thread", "messaging-rpc-id-get-thread":
-		return MessagingRpcId_MESSAGING_RPC_ID_GET_THREAD
+	case "list-thread-messages", "messaging-rpc-id-list-thread-messages":
+		return MessagingRpcId_MESSAGING_RPC_ID_LIST_THREAD_MESSAGES
 	case "get-channel-history", "messaging-rpc-id-get-channel-history":
 		return MessagingRpcId_MESSAGING_RPC_ID_GET_CHANNEL_HISTORY
 	case "list-channels", "messaging-rpc-id-list-channels":
 		return MessagingRpcId_MESSAGING_RPC_ID_LIST_CHANNELS
-	case "add-reaction", "messaging-rpc-id-add-reaction":
-		return MessagingRpcId_MESSAGING_RPC_ID_ADD_REACTION
-	case "remove-reaction", "messaging-rpc-id-remove-reaction":
-		return MessagingRpcId_MESSAGING_RPC_ID_REMOVE_REACTION
+	case "create-reaction", "messaging-rpc-id-create-reaction":
+		return MessagingRpcId_MESSAGING_RPC_ID_CREATE_REACTION
+	case "delete-reaction", "messaging-rpc-id-delete-reaction":
+		return MessagingRpcId_MESSAGING_RPC_ID_DELETE_REACTION
 	default:
 		return MessagingRpcId_MESSAGING_RPC_ID_UNSPECIFIED
 	}
@@ -1422,30 +1422,30 @@ func MessagingRpcIdToSpecName(v MessagingRpcId) string {
 		return "MESSAGING_RPC_ID_ALL_MUTATORS"
 	case MessagingRpcId_MESSAGING_RPC_ID_ALL_EXECUTORS:
 		return "MESSAGING_RPC_ID_ALL_EXECUTORS"
-	case MessagingRpcId_MESSAGING_RPC_ID_REGISTER_USER:
-		return "MESSAGING_RPC_ID_REGISTER_USER"
-	case MessagingRpcId_MESSAGING_RPC_ID_UNREGISTER_USER:
-		return "MESSAGING_RPC_ID_UNREGISTER_USER"
+	case MessagingRpcId_MESSAGING_RPC_ID_UPDATE_VIRTUAL_USER:
+		return "MESSAGING_RPC_ID_UPDATE_VIRTUAL_USER"
+	case MessagingRpcId_MESSAGING_RPC_ID_DELETE_VIRTUAL_USER:
+		return "MESSAGING_RPC_ID_DELETE_VIRTUAL_USER"
 	case MessagingRpcId_MESSAGING_RPC_ID_SUBSCRIBE:
 		return "MESSAGING_RPC_ID_SUBSCRIBE"
-	case MessagingRpcId_MESSAGING_RPC_ID_UNSUBSCRIBE:
-		return "MESSAGING_RPC_ID_UNSUBSCRIBE"
-	case MessagingRpcId_MESSAGING_RPC_ID_EVENTS:
-		return "MESSAGING_RPC_ID_EVENTS"
+	case MessagingRpcId_MESSAGING_RPC_ID_DELETE_SUBSCRIPTION:
+		return "MESSAGING_RPC_ID_DELETE_SUBSCRIPTION"
+	case MessagingRpcId_MESSAGING_RPC_ID_SUBSCRIBE_EVENTS:
+		return "MESSAGING_RPC_ID_SUBSCRIBE_EVENTS"
 	case MessagingRpcId_MESSAGING_RPC_ID_SEND_MESSAGE:
 		return "MESSAGING_RPC_ID_SEND_MESSAGE"
 	case MessagingRpcId_MESSAGING_RPC_ID_SEND_THREAD_REPLY:
 		return "MESSAGING_RPC_ID_SEND_THREAD_REPLY"
-	case MessagingRpcId_MESSAGING_RPC_ID_GET_THREAD:
-		return "MESSAGING_RPC_ID_GET_THREAD"
+	case MessagingRpcId_MESSAGING_RPC_ID_LIST_THREAD_MESSAGES:
+		return "MESSAGING_RPC_ID_LIST_THREAD_MESSAGES"
 	case MessagingRpcId_MESSAGING_RPC_ID_GET_CHANNEL_HISTORY:
 		return "MESSAGING_RPC_ID_GET_CHANNEL_HISTORY"
 	case MessagingRpcId_MESSAGING_RPC_ID_LIST_CHANNELS:
 		return "MESSAGING_RPC_ID_LIST_CHANNELS"
-	case MessagingRpcId_MESSAGING_RPC_ID_ADD_REACTION:
-		return "MESSAGING_RPC_ID_ADD_REACTION"
-	case MessagingRpcId_MESSAGING_RPC_ID_REMOVE_REACTION:
-		return "MESSAGING_RPC_ID_REMOVE_REACTION"
+	case MessagingRpcId_MESSAGING_RPC_ID_CREATE_REACTION:
+		return "MESSAGING_RPC_ID_CREATE_REACTION"
+	case MessagingRpcId_MESSAGING_RPC_ID_DELETE_REACTION:
+		return "MESSAGING_RPC_ID_DELETE_REACTION"
 	default:
 		return ""
 	}
@@ -3214,22 +3214,22 @@ func ChannelToTOML(v *Channel) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// RegisterUserRequestJSON represents RegisterUserRequest in external JSON format (with string enums)
+// UpdateVirtualUserRequestJSON represents UpdateVirtualUserRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type registeruserrequestJSON struct {
+type updatevirtualuserrequestJSON struct {
 	User    json.RawMessage `json:"user,omitempty"`
 	TraceId string          `json:"trace_id,omitempty"`
 	Noop    bool            `json:"noop,omitempty"`
 }
 
-// RegisterUserRequestToJSON converts RegisterUserRequest to JSON bytes.
+// UpdateVirtualUserRequestToJSON converts UpdateVirtualUserRequest to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func RegisterUserRequestToJSON(v *RegisterUserRequest) ([]byte, error) {
+func UpdateVirtualUserRequestToJSON(v *UpdateVirtualUserRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "registeruserrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatevirtualuserrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := registeruserrequestJSON{
+	helper := updatevirtualuserrequestJSON{
 		User: func() json.RawMessage {
 			if v.User == nil {
 				return nil
@@ -3243,14 +3243,14 @@ func RegisterUserRequestToJSON(v *RegisterUserRequest) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// RegisterUserRequestToJSONPretty converts RegisterUserRequest to indented JSON bytes.
+// UpdateVirtualUserRequestToJSONPretty converts UpdateVirtualUserRequest to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func RegisterUserRequestToJSONPretty(v *RegisterUserRequest) ([]byte, error) {
+func UpdateVirtualUserRequestToJSONPretty(v *UpdateVirtualUserRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "registeruserrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatevirtualuserrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := registeruserrequestJSON{
+	helper := updatevirtualuserrequestJSON{
 		User: func() json.RawMessage {
 			if v.User == nil {
 				return nil
@@ -3264,9 +3264,9 @@ func RegisterUserRequestToJSONPretty(v *RegisterUserRequest) ([]byte, error) {
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// RegisterUserRequestFromBytes creates RegisterUserRequest from bytes, auto-detecting the format.
+// UpdateVirtualUserRequestFromBytes creates UpdateVirtualUserRequest from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func RegisterUserRequestFromBytes(data []byte) (*RegisterUserRequest, error) {
+func UpdateVirtualUserRequestFromBytes(data []byte) (*UpdateVirtualUserRequest, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -3274,7 +3274,7 @@ func RegisterUserRequestFromBytes(data []byte) (*RegisterUserRequest, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := RegisterUserRequestFromJSON(data); err == nil {
+		if result, err := UpdateVirtualUserRequestFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -3284,7 +3284,7 @@ func RegisterUserRequestFromBytes(data []byte) (*RegisterUserRequest, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := RegisterUserRequestFromJSON(jsonData); err == nil {
+			if result, err := UpdateVirtualUserRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -3295,35 +3295,35 @@ func RegisterUserRequestFromBytes(data []byte) (*RegisterUserRequest, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := RegisterUserRequestFromJSON(jsonData); err == nil {
+			if result, err := UpdateVirtualUserRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &RegisterUserRequest{}
+	v := &UpdateVirtualUserRequest{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse RegisterUserRequest: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse UpdateVirtualUserRequest: unsupported format or invalid data")
 }
 
-// RegisterUserRequestFromJSON creates RegisterUserRequest from JSON bytes.
+// UpdateVirtualUserRequestFromJSON creates UpdateVirtualUserRequest from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func RegisterUserRequestFromJSON(data []byte) (*RegisterUserRequest, error) {
+func UpdateVirtualUserRequestFromJSON(data []byte) (*UpdateVirtualUserRequest, error) {
 	// Unmarshal into helper struct with string enums
-	var raw registeruserrequestJSON
+	var raw updatevirtualuserrequestJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &RegisterUserRequest{}
+		v := &UpdateVirtualUserRequest{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &RegisterUserRequest{}
+	result := &UpdateVirtualUserRequest{}
 	// Parse message field: User
 	if len(raw.User) > 0 {
 		parsed, err := VirtualUserFromJSON(raw.User)
@@ -3336,14 +3336,14 @@ func RegisterUserRequestFromJSON(data []byte) (*RegisterUserRequest, error) {
 	return result, nil
 }
 
-// RegisterUserRequestToYAML converts RegisterUserRequest to YAML bytes.
+// UpdateVirtualUserRequestToYAML converts UpdateVirtualUserRequest to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func RegisterUserRequestToYAML(v *RegisterUserRequest) ([]byte, error) {
+func UpdateVirtualUserRequestToYAML(v *UpdateVirtualUserRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "registeruserrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatevirtualuserrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := RegisterUserRequestToJSON(v)
+	jsonData, err := UpdateVirtualUserRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -3357,14 +3357,14 @@ func RegisterUserRequestToYAML(v *RegisterUserRequest) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// RegisterUserRequestToTOML converts RegisterUserRequest to TOML bytes.
+// UpdateVirtualUserRequestToTOML converts UpdateVirtualUserRequest to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func RegisterUserRequestToTOML(v *RegisterUserRequest) ([]byte, error) {
+func UpdateVirtualUserRequestToTOML(v *UpdateVirtualUserRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "registeruserrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatevirtualuserrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := RegisterUserRequestToJSON(v)
+	jsonData, err := UpdateVirtualUserRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -3376,22 +3376,22 @@ func RegisterUserRequestToTOML(v *RegisterUserRequest) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// UnregisterUserRequestJSON represents UnregisterUserRequest in external JSON format (with string enums)
+// DeleteVirtualUserRequestJSON represents DeleteVirtualUserRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type unregisteruserrequestJSON struct {
+type deletevirtualuserrequestJSON struct {
 	UserId  string `json:"user_id,omitempty"`
 	TraceId string `json:"trace_id,omitempty"`
 	Noop    bool   `json:"noop,omitempty"`
 }
 
-// UnregisterUserRequestToJSON converts UnregisterUserRequest to JSON bytes.
+// DeleteVirtualUserRequestToJSON converts DeleteVirtualUserRequest to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func UnregisterUserRequestToJSON(v *UnregisterUserRequest) ([]byte, error) {
+func DeleteVirtualUserRequestToJSON(v *DeleteVirtualUserRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "unregisteruserrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "deletevirtualuserrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := unregisteruserrequestJSON{
+	helper := deletevirtualuserrequestJSON{
 		UserId:  v.UserId,
 		TraceId: v.TraceId,
 		Noop:    v.Noop,
@@ -3399,14 +3399,14 @@ func UnregisterUserRequestToJSON(v *UnregisterUserRequest) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// UnregisterUserRequestToJSONPretty converts UnregisterUserRequest to indented JSON bytes.
+// DeleteVirtualUserRequestToJSONPretty converts DeleteVirtualUserRequest to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func UnregisterUserRequestToJSONPretty(v *UnregisterUserRequest) ([]byte, error) {
+func DeleteVirtualUserRequestToJSONPretty(v *DeleteVirtualUserRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "unregisteruserrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "deletevirtualuserrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := unregisteruserrequestJSON{
+	helper := deletevirtualuserrequestJSON{
 		UserId:  v.UserId,
 		TraceId: v.TraceId,
 		Noop:    v.Noop,
@@ -3414,9 +3414,9 @@ func UnregisterUserRequestToJSONPretty(v *UnregisterUserRequest) ([]byte, error)
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// UnregisterUserRequestFromBytes creates UnregisterUserRequest from bytes, auto-detecting the format.
+// DeleteVirtualUserRequestFromBytes creates DeleteVirtualUserRequest from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func UnregisterUserRequestFromBytes(data []byte) (*UnregisterUserRequest, error) {
+func DeleteVirtualUserRequestFromBytes(data []byte) (*DeleteVirtualUserRequest, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -3424,7 +3424,7 @@ func UnregisterUserRequestFromBytes(data []byte) (*UnregisterUserRequest, error)
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := UnregisterUserRequestFromJSON(data); err == nil {
+		if result, err := DeleteVirtualUserRequestFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -3434,7 +3434,7 @@ func UnregisterUserRequestFromBytes(data []byte) (*UnregisterUserRequest, error)
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := UnregisterUserRequestFromJSON(jsonData); err == nil {
+			if result, err := DeleteVirtualUserRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -3445,49 +3445,49 @@ func UnregisterUserRequestFromBytes(data []byte) (*UnregisterUserRequest, error)
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := UnregisterUserRequestFromJSON(jsonData); err == nil {
+			if result, err := DeleteVirtualUserRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &UnregisterUserRequest{}
+	v := &DeleteVirtualUserRequest{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse UnregisterUserRequest: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse DeleteVirtualUserRequest: unsupported format or invalid data")
 }
 
-// UnregisterUserRequestFromJSON creates UnregisterUserRequest from JSON bytes.
+// DeleteVirtualUserRequestFromJSON creates DeleteVirtualUserRequest from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func UnregisterUserRequestFromJSON(data []byte) (*UnregisterUserRequest, error) {
+func DeleteVirtualUserRequestFromJSON(data []byte) (*DeleteVirtualUserRequest, error) {
 	// Unmarshal into helper struct with string enums
-	var raw unregisteruserrequestJSON
+	var raw deletevirtualuserrequestJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &UnregisterUserRequest{}
+		v := &DeleteVirtualUserRequest{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &UnregisterUserRequest{}
+	result := &DeleteVirtualUserRequest{}
 	result.UserId = raw.UserId
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
 }
 
-// UnregisterUserRequestToYAML converts UnregisterUserRequest to YAML bytes.
+// DeleteVirtualUserRequestToYAML converts DeleteVirtualUserRequest to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func UnregisterUserRequestToYAML(v *UnregisterUserRequest) ([]byte, error) {
+func DeleteVirtualUserRequestToYAML(v *DeleteVirtualUserRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "unregisteruserrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "deletevirtualuserrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := UnregisterUserRequestToJSON(v)
+	jsonData, err := DeleteVirtualUserRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -3501,14 +3501,14 @@ func UnregisterUserRequestToYAML(v *UnregisterUserRequest) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// UnregisterUserRequestToTOML converts UnregisterUserRequest to TOML bytes.
+// DeleteVirtualUserRequestToTOML converts DeleteVirtualUserRequest to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func UnregisterUserRequestToTOML(v *UnregisterUserRequest) ([]byte, error) {
+func DeleteVirtualUserRequestToTOML(v *DeleteVirtualUserRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "unregisteruserrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "deletevirtualuserrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := UnregisterUserRequestToJSON(v)
+	jsonData, err := DeleteVirtualUserRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -3703,23 +3703,23 @@ func SubscribeRequestToTOML(v *SubscribeRequest) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// UnsubscribeRequestJSON represents UnsubscribeRequest in external JSON format (with string enums)
+// DeleteSubscriptionRequestJSON represents DeleteSubscriptionRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type unsubscriberequestJSON struct {
+type deletesubscriptionrequestJSON struct {
 	ChannelId    string `json:"channel_id,omitempty"`
 	SubscriberId string `json:"subscriber_id,omitempty"`
 	TraceId      string `json:"trace_id,omitempty"`
 	Noop         bool   `json:"noop,omitempty"`
 }
 
-// UnsubscribeRequestToJSON converts UnsubscribeRequest to JSON bytes.
+// DeleteSubscriptionRequestToJSON converts DeleteSubscriptionRequest to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func UnsubscribeRequestToJSON(v *UnsubscribeRequest) ([]byte, error) {
+func DeleteSubscriptionRequestToJSON(v *DeleteSubscriptionRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "unsubscriberequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "deletesubscriptionrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := unsubscriberequestJSON{
+	helper := deletesubscriptionrequestJSON{
 		ChannelId:    v.ChannelId,
 		SubscriberId: v.SubscriberId,
 		TraceId:      v.TraceId,
@@ -3728,14 +3728,14 @@ func UnsubscribeRequestToJSON(v *UnsubscribeRequest) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// UnsubscribeRequestToJSONPretty converts UnsubscribeRequest to indented JSON bytes.
+// DeleteSubscriptionRequestToJSONPretty converts DeleteSubscriptionRequest to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func UnsubscribeRequestToJSONPretty(v *UnsubscribeRequest) ([]byte, error) {
+func DeleteSubscriptionRequestToJSONPretty(v *DeleteSubscriptionRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "unsubscriberequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "deletesubscriptionrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := unsubscriberequestJSON{
+	helper := deletesubscriptionrequestJSON{
 		ChannelId:    v.ChannelId,
 		SubscriberId: v.SubscriberId,
 		TraceId:      v.TraceId,
@@ -3744,9 +3744,9 @@ func UnsubscribeRequestToJSONPretty(v *UnsubscribeRequest) ([]byte, error) {
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// UnsubscribeRequestFromBytes creates UnsubscribeRequest from bytes, auto-detecting the format.
+// DeleteSubscriptionRequestFromBytes creates DeleteSubscriptionRequest from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func UnsubscribeRequestFromBytes(data []byte) (*UnsubscribeRequest, error) {
+func DeleteSubscriptionRequestFromBytes(data []byte) (*DeleteSubscriptionRequest, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -3754,7 +3754,7 @@ func UnsubscribeRequestFromBytes(data []byte) (*UnsubscribeRequest, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := UnsubscribeRequestFromJSON(data); err == nil {
+		if result, err := DeleteSubscriptionRequestFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -3764,7 +3764,7 @@ func UnsubscribeRequestFromBytes(data []byte) (*UnsubscribeRequest, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := UnsubscribeRequestFromJSON(jsonData); err == nil {
+			if result, err := DeleteSubscriptionRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -3775,35 +3775,35 @@ func UnsubscribeRequestFromBytes(data []byte) (*UnsubscribeRequest, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := UnsubscribeRequestFromJSON(jsonData); err == nil {
+			if result, err := DeleteSubscriptionRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &UnsubscribeRequest{}
+	v := &DeleteSubscriptionRequest{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse UnsubscribeRequest: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse DeleteSubscriptionRequest: unsupported format or invalid data")
 }
 
-// UnsubscribeRequestFromJSON creates UnsubscribeRequest from JSON bytes.
+// DeleteSubscriptionRequestFromJSON creates DeleteSubscriptionRequest from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func UnsubscribeRequestFromJSON(data []byte) (*UnsubscribeRequest, error) {
+func DeleteSubscriptionRequestFromJSON(data []byte) (*DeleteSubscriptionRequest, error) {
 	// Unmarshal into helper struct with string enums
-	var raw unsubscriberequestJSON
+	var raw deletesubscriptionrequestJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &UnsubscribeRequest{}
+		v := &DeleteSubscriptionRequest{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &UnsubscribeRequest{}
+	result := &DeleteSubscriptionRequest{}
 	result.ChannelId = raw.ChannelId
 	result.SubscriberId = raw.SubscriberId
 	result.TraceId = raw.TraceId
@@ -3811,14 +3811,14 @@ func UnsubscribeRequestFromJSON(data []byte) (*UnsubscribeRequest, error) {
 	return result, nil
 }
 
-// UnsubscribeRequestToYAML converts UnsubscribeRequest to YAML bytes.
+// DeleteSubscriptionRequestToYAML converts DeleteSubscriptionRequest to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func UnsubscribeRequestToYAML(v *UnsubscribeRequest) ([]byte, error) {
+func DeleteSubscriptionRequestToYAML(v *DeleteSubscriptionRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "unsubscriberequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "deletesubscriptionrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := UnsubscribeRequestToJSON(v)
+	jsonData, err := DeleteSubscriptionRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -3832,14 +3832,14 @@ func UnsubscribeRequestToYAML(v *UnsubscribeRequest) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// UnsubscribeRequestToTOML converts UnsubscribeRequest to TOML bytes.
+// DeleteSubscriptionRequestToTOML converts DeleteSubscriptionRequest to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func UnsubscribeRequestToTOML(v *UnsubscribeRequest) ([]byte, error) {
+func DeleteSubscriptionRequestToTOML(v *DeleteSubscriptionRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "unsubscriberequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "deletesubscriptionrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := UnsubscribeRequestToJSON(v)
+	jsonData, err := DeleteSubscriptionRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -10856,8 +10856,8 @@ func ChannelFromEnvVar(env map[string]string) (*Channel, error) {
 	return result, nil
 }
 
-// RegisterUserRequestToEnvVar converts RegisterUserRequest to environment variable key-value pairs.
-func RegisterUserRequestToEnvVar(v *RegisterUserRequest) map[string]string {
+// UpdateVirtualUserRequestToEnvVar converts UpdateVirtualUserRequest to environment variable key-value pairs.
+func UpdateVirtualUserRequestToEnvVar(v *UpdateVirtualUserRequest) map[string]string {
 	if v == nil {
 		return nil
 	}
@@ -10867,23 +10867,23 @@ func RegisterUserRequestToEnvVar(v *RegisterUserRequest) map[string]string {
 			result[k] = val
 		}
 	}
-	result["PROTO_SERVICES_MSGGATEWAY_REGISTER_USER_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_SERVICES_MSGGATEWAY_REGISTER_USER_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_SERVICES_MSGGATEWAY_UPDATE_VIRTUAL_USER_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_MSGGATEWAY_UPDATE_VIRTUAL_USER_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// RegisterUserRequestFromEnvVar creates RegisterUserRequest from environment variable key-value pairs.
-func RegisterUserRequestFromEnvVar(env map[string]string) (*RegisterUserRequest, error) {
-	result := &RegisterUserRequest{}
+// UpdateVirtualUserRequestFromEnvVar creates UpdateVirtualUserRequest from environment variable key-value pairs.
+func UpdateVirtualUserRequestFromEnvVar(env map[string]string) (*UpdateVirtualUserRequest, error) {
+	result := &UpdateVirtualUserRequest{}
 	if sub, err := VirtualUserFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.User = sub
 	}
-	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_REGISTER_USER_REQUEST_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_UPDATE_VIRTUAL_USER_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_REGISTER_USER_REQUEST_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_UPDATE_VIRTUAL_USER_REQUEST_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -10893,28 +10893,28 @@ func RegisterUserRequestFromEnvVar(env map[string]string) (*RegisterUserRequest,
 	return result, nil
 }
 
-// UnregisterUserRequestToEnvVar converts UnregisterUserRequest to environment variable key-value pairs.
-func UnregisterUserRequestToEnvVar(v *UnregisterUserRequest) map[string]string {
+// DeleteVirtualUserRequestToEnvVar converts DeleteVirtualUserRequest to environment variable key-value pairs.
+func DeleteVirtualUserRequestToEnvVar(v *DeleteVirtualUserRequest) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_SERVICES_MSGGATEWAY_UNREGISTER_USER_REQUEST_USER_ID"] = v.UserId
-	result["PROTO_SERVICES_MSGGATEWAY_UNREGISTER_USER_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_SERVICES_MSGGATEWAY_UNREGISTER_USER_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_SERVICES_MSGGATEWAY_DELETE_VIRTUAL_USER_REQUEST_USER_ID"] = v.UserId
+	result["PROTO_SERVICES_MSGGATEWAY_DELETE_VIRTUAL_USER_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_MSGGATEWAY_DELETE_VIRTUAL_USER_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// UnregisterUserRequestFromEnvVar creates UnregisterUserRequest from environment variable key-value pairs.
-func UnregisterUserRequestFromEnvVar(env map[string]string) (*UnregisterUserRequest, error) {
-	result := &UnregisterUserRequest{}
-	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_UNREGISTER_USER_REQUEST_USER_ID"]; ok && val != "" {
+// DeleteVirtualUserRequestFromEnvVar creates DeleteVirtualUserRequest from environment variable key-value pairs.
+func DeleteVirtualUserRequestFromEnvVar(env map[string]string) (*DeleteVirtualUserRequest, error) {
+	result := &DeleteVirtualUserRequest{}
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_DELETE_VIRTUAL_USER_REQUEST_USER_ID"]; ok && val != "" {
 		result.UserId = val
 	}
-	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_UNREGISTER_USER_REQUEST_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_DELETE_VIRTUAL_USER_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_UNREGISTER_USER_REQUEST_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_DELETE_VIRTUAL_USER_REQUEST_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -10977,32 +10977,32 @@ func SubscribeRequestFromEnvVar(env map[string]string) (*SubscribeRequest, error
 	return result, nil
 }
 
-// UnsubscribeRequestToEnvVar converts UnsubscribeRequest to environment variable key-value pairs.
-func UnsubscribeRequestToEnvVar(v *UnsubscribeRequest) map[string]string {
+// DeleteSubscriptionRequestToEnvVar converts DeleteSubscriptionRequest to environment variable key-value pairs.
+func DeleteSubscriptionRequestToEnvVar(v *DeleteSubscriptionRequest) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_SERVICES_MSGGATEWAY_UNSUBSCRIBE_REQUEST_CHANNEL_ID"] = v.ChannelId
-	result["PROTO_SERVICES_MSGGATEWAY_UNSUBSCRIBE_REQUEST_SUBSCRIBER_ID"] = v.SubscriberId
-	result["PROTO_SERVICES_MSGGATEWAY_UNSUBSCRIBE_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_SERVICES_MSGGATEWAY_UNSUBSCRIBE_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_SERVICES_MSGGATEWAY_DELETE_SUBSCRIPTION_REQUEST_CHANNEL_ID"] = v.ChannelId
+	result["PROTO_SERVICES_MSGGATEWAY_DELETE_SUBSCRIPTION_REQUEST_SUBSCRIBER_ID"] = v.SubscriberId
+	result["PROTO_SERVICES_MSGGATEWAY_DELETE_SUBSCRIPTION_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_MSGGATEWAY_DELETE_SUBSCRIPTION_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// UnsubscribeRequestFromEnvVar creates UnsubscribeRequest from environment variable key-value pairs.
-func UnsubscribeRequestFromEnvVar(env map[string]string) (*UnsubscribeRequest, error) {
-	result := &UnsubscribeRequest{}
-	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_UNSUBSCRIBE_REQUEST_CHANNEL_ID"]; ok && val != "" {
+// DeleteSubscriptionRequestFromEnvVar creates DeleteSubscriptionRequest from environment variable key-value pairs.
+func DeleteSubscriptionRequestFromEnvVar(env map[string]string) (*DeleteSubscriptionRequest, error) {
+	result := &DeleteSubscriptionRequest{}
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_DELETE_SUBSCRIPTION_REQUEST_CHANNEL_ID"]; ok && val != "" {
 		result.ChannelId = val
 	}
-	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_UNSUBSCRIBE_REQUEST_SUBSCRIBER_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_DELETE_SUBSCRIPTION_REQUEST_SUBSCRIBER_ID"]; ok && val != "" {
 		result.SubscriberId = val
 	}
-	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_UNSUBSCRIBE_REQUEST_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_DELETE_SUBSCRIPTION_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_UNSUBSCRIBE_REQUEST_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_DELETE_SUBSCRIPTION_REQUEST_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -12495,13 +12495,13 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field WorkspaceId must be at most 64 characters, got: %d", len(m.WorkspaceId))
 	}
 
-	// Validate ReconnectDelaySeconds (assert_ge: 1)
-	if m.ReconnectDelaySeconds < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ReconnectDelaySeconds must be >= 1, got: %v", m.ReconnectDelaySeconds)
-	}
 	// Validate ReconnectDelaySeconds (assert_le: 60)
 	if m.ReconnectDelaySeconds > 60 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ReconnectDelaySeconds must be <= 60, got: %v", m.ReconnectDelaySeconds)
+	}
+	// Validate ReconnectDelaySeconds (assert_ge: 1)
+	if m.ReconnectDelaySeconds < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ReconnectDelaySeconds must be >= 1, got: %v", m.ReconnectDelaySeconds)
 	}
 	// Validate MaxMessageLength (assert_ge: 1)
 	if m.MaxMessageLength < 1 {
@@ -12651,14 +12651,14 @@ func ValidateChannelSubscriptionWithDepth(m *ChannelSubscription, depth int) err
 		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelName must be at most 128 characters, got: %d", len(m.ChannelName))
 	}
 
-	// Validate SubscriberId (assert_max_length: 128)
-	if len(m.SubscriberId) > 128 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field SubscriberId must be at most 128 characters, got: %d", len(m.SubscriberId))
-	}
-
 	// Validate SubscriberId (assert_required)
 	if m.SubscriberId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SubscriberId is required")
+	}
+
+	// Validate SubscriberId (assert_max_length: 128)
+	if len(m.SubscriberId) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SubscriberId must be at most 128 characters, got: %d", len(m.SubscriberId))
 	}
 
 	// Validate ChannelId (default max size: 32768 bytes)
@@ -12748,14 +12748,14 @@ func ValidateMessageWithDepth(m *Message, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate ChannelId (assert_required)
-	if m.ChannelId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId is required")
-	}
-
 	// Validate ChannelId (assert_max_length: 64)
 	if len(m.ChannelId) > 64 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId must be at most 64 characters, got: %d", len(m.ChannelId))
+	}
+
+	// Validate ChannelId (assert_required)
+	if m.ChannelId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId is required")
 	}
 
 	// Validate ThreadTs (assert_max_length: 64)
@@ -12854,14 +12854,14 @@ func ValidateEventWithDepth(m *Event, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field EventType must be defined")
 	}
 
-	// Validate ChannelId (assert_max_length: 64)
-	if len(m.ChannelId) > 64 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId must be at most 64 characters, got: %d", len(m.ChannelId))
-	}
-
 	// Validate ChannelId (assert_required)
 	if m.ChannelId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId is required")
+	}
+
+	// Validate ChannelId (assert_max_length: 64)
+	if len(m.ChannelId) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId must be at most 64 characters, got: %d", len(m.ChannelId))
 	}
 
 	// Validate Reaction (assert_max_length: 64)
@@ -12915,14 +12915,14 @@ func ValidateChannelWithDepth(m *Channel, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Id (assert_max_length: 64)
-	if len(m.Id) > 64 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Id must be at most 64 characters, got: %d", len(m.Id))
-	}
-
 	// Validate Id (assert_required)
 	if m.Id == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Id is required")
+	}
+
+	// Validate Id (assert_max_length: 64)
+	if len(m.Id) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Id must be at most 64 characters, got: %d", len(m.Id))
 	}
 
 	// Validate Name (assert_required)
@@ -12977,15 +12977,15 @@ func ValidateChannelWithDepth(m *Channel, depth int) error {
 	return nil
 }
 
-// ValidateRegisterUserRequest validates all fields in RegisterUserRequest according to their annotations.
+// ValidateUpdateVirtualUserRequest validates all fields in UpdateVirtualUserRequest according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateRegisterUserRequest(m *RegisterUserRequest) error {
-	return ValidateRegisterUserRequestWithDepth(m, 0)
+func ValidateUpdateVirtualUserRequest(m *UpdateVirtualUserRequest) error {
+	return ValidateUpdateVirtualUserRequestWithDepth(m, 0)
 }
 
-// ValidateRegisterUserRequestWithDepth validates RegisterUserRequest and carries nested-message depth across
+// ValidateUpdateVirtualUserRequestWithDepth validates UpdateVirtualUserRequest and carries nested-message depth across
 // generated package boundaries.
-func ValidateRegisterUserRequestWithDepth(m *RegisterUserRequest, depth int) error {
+func ValidateUpdateVirtualUserRequestWithDepth(m *UpdateVirtualUserRequest, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -13013,15 +13013,15 @@ func ValidateRegisterUserRequestWithDepth(m *RegisterUserRequest, depth int) err
 	return nil
 }
 
-// ValidateUnregisterUserRequest validates all fields in UnregisterUserRequest according to their annotations.
+// ValidateDeleteVirtualUserRequest validates all fields in DeleteVirtualUserRequest according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateUnregisterUserRequest(m *UnregisterUserRequest) error {
-	return ValidateUnregisterUserRequestWithDepth(m, 0)
+func ValidateDeleteVirtualUserRequest(m *DeleteVirtualUserRequest) error {
+	return ValidateDeleteVirtualUserRequestWithDepth(m, 0)
 }
 
-// ValidateUnregisterUserRequestWithDepth validates UnregisterUserRequest and carries nested-message depth across
+// ValidateDeleteVirtualUserRequestWithDepth validates DeleteVirtualUserRequest and carries nested-message depth across
 // generated package boundaries.
-func ValidateUnregisterUserRequestWithDepth(m *UnregisterUserRequest, depth int) error {
+func ValidateDeleteVirtualUserRequestWithDepth(m *DeleteVirtualUserRequest, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -13029,14 +13029,14 @@ func ValidateUnregisterUserRequestWithDepth(m *UnregisterUserRequest, depth int)
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate UserId (assert_required)
-	if m.UserId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field UserId is required")
-	}
-
 	// Validate UserId (assert_max_length: 128)
 	if len(m.UserId) > 128 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field UserId must be at most 128 characters, got: %d", len(m.UserId))
+	}
+
+	// Validate UserId (assert_required)
+	if m.UserId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field UserId is required")
 	}
 
 	// Validate UserId (default max size: 32768 bytes)
@@ -13118,15 +13118,15 @@ func ValidateSubscribeRequestWithDepth(m *SubscribeRequest, depth int) error {
 	return nil
 }
 
-// ValidateUnsubscribeRequest validates all fields in UnsubscribeRequest according to their annotations.
+// ValidateDeleteSubscriptionRequest validates all fields in DeleteSubscriptionRequest according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateUnsubscribeRequest(m *UnsubscribeRequest) error {
-	return ValidateUnsubscribeRequestWithDepth(m, 0)
+func ValidateDeleteSubscriptionRequest(m *DeleteSubscriptionRequest) error {
+	return ValidateDeleteSubscriptionRequestWithDepth(m, 0)
 }
 
-// ValidateUnsubscribeRequestWithDepth validates UnsubscribeRequest and carries nested-message depth across
+// ValidateDeleteSubscriptionRequestWithDepth validates DeleteSubscriptionRequest and carries nested-message depth across
 // generated package boundaries.
-func ValidateUnsubscribeRequestWithDepth(m *UnsubscribeRequest, depth int) error {
+func ValidateDeleteSubscriptionRequestWithDepth(m *DeleteSubscriptionRequest, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -13188,14 +13188,14 @@ func ValidateEventsRequestWithDepth(m *EventsRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate SubscriberId (assert_max_length: 128)
-	if len(m.SubscriberId) > 128 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field SubscriberId must be at most 128 characters, got: %d", len(m.SubscriberId))
-	}
-
 	// Validate SubscriberId (assert_required)
 	if m.SubscriberId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SubscriberId is required")
+	}
+
+	// Validate SubscriberId (assert_max_length: 128)
+	if len(m.SubscriberId) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SubscriberId must be at most 128 characters, got: %d", len(m.SubscriberId))
 	}
 
 	// Validate SubscriberId (default max size: 32768 bytes)
@@ -13227,19 +13227,14 @@ func ValidateSendMessageRequestWithDepth(m *SendMessageRequest, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate SenderId (assert_required)
-	if m.SenderId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field SenderId is required")
-	}
-
 	// Validate SenderId (assert_max_length: 128)
 	if len(m.SenderId) > 128 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SenderId must be at most 128 characters, got: %d", len(m.SenderId))
 	}
 
-	// Validate ChannelId (assert_max_length: 64)
-	if len(m.ChannelId) > 64 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId must be at most 64 characters, got: %d", len(m.ChannelId))
+	// Validate SenderId (assert_required)
+	if m.SenderId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SenderId is required")
 	}
 
 	// Validate ChannelId (assert_required)
@@ -13247,14 +13242,19 @@ func ValidateSendMessageRequestWithDepth(m *SendMessageRequest, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId is required")
 	}
 
-	// Validate Text (assert_required)
-	if m.Text == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Text is required")
+	// Validate ChannelId (assert_max_length: 64)
+	if len(m.ChannelId) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId must be at most 64 characters, got: %d", len(m.ChannelId))
 	}
 
 	// Validate Text (assert_max_length: 40000)
 	if len(m.Text) > 40000 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Text must be at most 40000 characters, got: %d", len(m.Text))
+	}
+
+	// Validate Text (assert_required)
+	if m.Text == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Text is required")
 	}
 
 	// Validate SenderId (default max size: 32768 bytes)
@@ -13296,14 +13296,14 @@ func ValidateSendThreadReplyRequestWithDepth(m *SendThreadReplyRequest, depth in
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate SenderId (assert_required)
-	if m.SenderId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field SenderId is required")
-	}
-
 	// Validate SenderId (assert_max_length: 128)
 	if len(m.SenderId) > 128 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SenderId must be at most 128 characters, got: %d", len(m.SenderId))
+	}
+
+	// Validate SenderId (assert_required)
+	if m.SenderId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SenderId is required")
 	}
 
 	// Validate ChannelId (assert_required)
@@ -13424,14 +13424,14 @@ func ValidateGetThreadRequestWithDepth(m *GetThreadRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate ChannelId (assert_max_length: 64)
-	if len(m.ChannelId) > 64 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId must be at most 64 characters, got: %d", len(m.ChannelId))
-	}
-
 	// Validate ChannelId (assert_required)
 	if m.ChannelId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId is required")
+	}
+
+	// Validate ChannelId (assert_max_length: 64)
+	if len(m.ChannelId) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId must be at most 64 characters, got: %d", len(m.ChannelId))
 	}
 
 	// Validate ThreadTs (assert_required)
@@ -13651,14 +13651,14 @@ func ValidateReactionRequestWithDepth(m *ReactionRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate ChannelId (assert_required)
-	if m.ChannelId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId is required")
-	}
-
 	// Validate ChannelId (assert_max_length: 64)
 	if len(m.ChannelId) > 64 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId must be at most 64 characters, got: %d", len(m.ChannelId))
+	}
+
+	// Validate ChannelId (assert_required)
+	if m.ChannelId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId is required")
 	}
 
 	// Validate MessageTs (assert_required)
@@ -14712,126 +14712,126 @@ const (
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizeConfigBotToken                      int = 32768
-	MaxSizeConfigAppToken                      int = 32768
-	MaxSizeConfigWorkspaceId                   int = 32768
-	MaxSizeConfigTraceId                       int = 32768
-	MaxSizeVirtualuserId                       int = 32768
-	MaxSizeVirtualuserDisplayName              int = 32768
-	MaxSizeVirtualuserIconUrl                  int = 32768
-	MaxSizeVirtualuserIconEmoji                int = 32768
-	MaxSizeVirtualuserTraceId                  int = 32768
-	MaxSizeChannelsubscriptionChannelId        int = 32768
-	MaxSizeChannelsubscriptionChannelName      int = 32768
-	MaxSizeChannelsubscriptionSubscriberId     int = 32768
-	MaxSizeChannelsubscriptionTraceId          int = 32768
-	MaxSizeGatewaystateVirtualUsers            int = 1024
-	MaxSizeGatewaystateSubscriptions           int = 256
-	MaxSizeGatewaystateTraceId                 int = 32768
-	MaxSizeMessageChannelId                    int = 32768
-	MaxSizeMessageThreadTs                     int = 32768
-	MaxSizeMessageMessageTs                    int = 32768
-	MaxSizeMessageUserId                       int = 32768
-	MaxSizeMessageUserName                     int = 32768
-	MaxSizeMessageText                         int = 32768
-	MaxSizeMessageMentions                     int = 64
-	MaxSizeMessageTraceId                      int = 32768
-	MaxSizeEventChannelId                      int = 32768
-	MaxSizeEventReaction                       int = 32768
-	MaxSizeEventTraceId                        int = 32768
-	MaxSizeChannelId                           int = 32768
-	MaxSizeChannelName                         int = 32768
-	MaxSizeChannelTopic                        int = 32768
-	MaxSizeChannelPurpose                      int = 32768
-	MaxSizeChannelTraceId                      int = 32768
-	MaxSizeRegisteruserrequestTraceId          int = 32768
-	MaxSizeUnregisteruserrequestUserId         int = 32768
-	MaxSizeUnregisteruserrequestTraceId        int = 32768
-	MaxSizeSubscriberequestChannelId           int = 32768
-	MaxSizeSubscriberequestSubscriberId        int = 32768
-	MaxSizeSubscriberequestEventTypes          int = 16
-	MaxSizeSubscriberequestTraceId             int = 32768
-	MaxSizeUnsubscriberequestChannelId         int = 32768
-	MaxSizeUnsubscriberequestSubscriberId      int = 32768
-	MaxSizeUnsubscriberequestTraceId           int = 32768
-	MaxSizeEventsrequestSubscriberId           int = 32768
-	MaxSizeEventsrequestTraceId                int = 32768
-	MaxSizeSendmessagerequestSenderId          int = 32768
-	MaxSizeSendmessagerequestChannelId         int = 32768
-	MaxSizeSendmessagerequestText              int = 32768
-	MaxSizeSendmessagerequestTraceId           int = 32768
-	MaxSizeSendthreadreplyrequestSenderId      int = 32768
-	MaxSizeSendthreadreplyrequestChannelId     int = 32768
-	MaxSizeSendthreadreplyrequestThreadTs      int = 32768
-	MaxSizeSendthreadreplyrequestText          int = 32768
-	MaxSizeSendthreadreplyrequestTraceId       int = 32768
-	MaxSizeSendmessageresponseChannelId        int = 32768
-	MaxSizeSendmessageresponseMessageTs        int = 32768
-	MaxSizeSendmessageresponseTraceId          int = 32768
-	MaxSizeGetthreadrequestChannelId           int = 32768
-	MaxSizeGetthreadrequestThreadTs            int = 32768
-	MaxSizeGetthreadrequestTraceId             int = 32768
-	MaxSizeGetthreadresponseMessages           int = 1000
-	MaxSizeGetthreadresponseTraceId            int = 32768
-	MaxSizeGetchannelhistoryrequestChannelId   int = 32768
-	MaxSizeGetchannelhistoryrequestBefore      int = 32768
-	MaxSizeGetchannelhistoryrequestTraceId     int = 32768
-	MaxSizeGetchannelhistoryresponseMessages   int = 1000
-	MaxSizeGetchannelhistoryresponseTraceId    int = 32768
-	MaxSizeListchannelsresponseChannels        int = 1024
-	MaxSizeListchannelsresponseTraceId         int = 32768
-	MaxSizeReactionrequestChannelId            int = 32768
-	MaxSizeReactionrequestMessageTs            int = 32768
-	MaxSizeReactionrequestEmoji                int = 32768
-	MaxSizeReactionrequestTraceId              int = 32768
-	MaxSizeMsggatewayconfigstateTraceId        int = 32768
-	MaxSizeQueryvalueStringValue               int = 32768
-	MaxSizeQueryvalueTraceId                   int = 32768
-	MaxSizePredicateFieldName                  int = 32768
-	MaxSizePredicateValues                     int = 1024
-	MaxSizePredicateTraceId                    int = 32768
-	MaxSizePredicategroupPredicates            int = 1024
-	MaxSizePredicategroupGroups                int = 1024
-	MaxSizePredicategroupTraceId               int = 32768
-	MaxSizeSortfieldFieldName                  int = 32768
-	MaxSizeSortfieldTraceId                    int = 32768
-	MaxSizeCollectionqueryOrderBy              int = 1024
-	MaxSizeCollectionqueryTraceId              int = 32768
-	MaxSizeVirtualusersgetrequestKey           int = 32768
-	MaxSizeVirtualusersgetrequestTraceId       int = 32768
-	MaxSizeVirtualusersputrequestKey           int = 32768
-	MaxSizeVirtualusersputrequestTraceId       int = 32768
-	MaxSizeVirtualusersgetallrequestTraceId    int = 32768
-	MaxSizeVirtualuserskeysrequestTraceId      int = 32768
-	MaxSizeVirtualuserssizerequestTraceId      int = 32768
-	MaxSizeVirtualusersclearrequestTraceId     int = 32768
-	MaxSizeVirtualusersvalueresponseTraceId    int = 32768
-	MaxSizeVirtualusersentriesresponseEntries  int = 1024
-	MaxSizeVirtualusersentriesresponseTraceId  int = 32768
-	MaxSizeVirtualuserskeysresponseKeys        int = 1024
-	MaxSizeVirtualuserskeysresponseTraceId     int = 32768
-	MaxSizeVirtualuserssizeresponseTraceId     int = 32768
-	MaxSizeVirtualusersqueryrequestTraceId     int = 32768
-	MaxSizeVirtualusersqueryresponseResults    int = 1024
-	MaxSizeVirtualusersqueryresponseTraceId    int = 32768
-	MaxSizeSubscriptionsgetrequestKey          int = 32768
-	MaxSizeSubscriptionsgetrequestTraceId      int = 32768
-	MaxSizeSubscriptionsputrequestKey          int = 32768
-	MaxSizeSubscriptionsputrequestTraceId      int = 32768
-	MaxSizeSubscriptionsgetallrequestTraceId   int = 32768
-	MaxSizeSubscriptionskeysrequestTraceId     int = 32768
-	MaxSizeSubscriptionssizerequestTraceId     int = 32768
-	MaxSizeSubscriptionsclearrequestTraceId    int = 32768
-	MaxSizeSubscriptionsvalueresponseTraceId   int = 32768
-	MaxSizeSubscriptionsentriesresponseEntries int = 1024
-	MaxSizeSubscriptionsentriesresponseTraceId int = 32768
-	MaxSizeSubscriptionskeysresponseKeys       int = 1024
-	MaxSizeSubscriptionskeysresponseTraceId    int = 32768
-	MaxSizeSubscriptionssizeresponseTraceId    int = 32768
-	MaxSizeSubscriptionsqueryrequestTraceId    int = 32768
-	MaxSizeSubscriptionsqueryresponseResults   int = 1024
-	MaxSizeSubscriptionsqueryresponseTraceId   int = 32768
-	MaxSizeMapemptyTraceId                     int = 32768
+	MaxSizeConfigBotToken                        int = 32768
+	MaxSizeConfigAppToken                        int = 32768
+	MaxSizeConfigWorkspaceId                     int = 32768
+	MaxSizeConfigTraceId                         int = 32768
+	MaxSizeVirtualuserId                         int = 32768
+	MaxSizeVirtualuserDisplayName                int = 32768
+	MaxSizeVirtualuserIconUrl                    int = 32768
+	MaxSizeVirtualuserIconEmoji                  int = 32768
+	MaxSizeVirtualuserTraceId                    int = 32768
+	MaxSizeChannelsubscriptionChannelId          int = 32768
+	MaxSizeChannelsubscriptionChannelName        int = 32768
+	MaxSizeChannelsubscriptionSubscriberId       int = 32768
+	MaxSizeChannelsubscriptionTraceId            int = 32768
+	MaxSizeGatewaystateVirtualUsers              int = 1024
+	MaxSizeGatewaystateSubscriptions             int = 256
+	MaxSizeGatewaystateTraceId                   int = 32768
+	MaxSizeMessageChannelId                      int = 32768
+	MaxSizeMessageThreadTs                       int = 32768
+	MaxSizeMessageMessageTs                      int = 32768
+	MaxSizeMessageUserId                         int = 32768
+	MaxSizeMessageUserName                       int = 32768
+	MaxSizeMessageText                           int = 32768
+	MaxSizeMessageMentions                       int = 64
+	MaxSizeMessageTraceId                        int = 32768
+	MaxSizeEventChannelId                        int = 32768
+	MaxSizeEventReaction                         int = 32768
+	MaxSizeEventTraceId                          int = 32768
+	MaxSizeChannelId                             int = 32768
+	MaxSizeChannelName                           int = 32768
+	MaxSizeChannelTopic                          int = 32768
+	MaxSizeChannelPurpose                        int = 32768
+	MaxSizeChannelTraceId                        int = 32768
+	MaxSizeUpdatevirtualuserrequestTraceId       int = 32768
+	MaxSizeDeletevirtualuserrequestUserId        int = 32768
+	MaxSizeDeletevirtualuserrequestTraceId       int = 32768
+	MaxSizeSubscriberequestChannelId             int = 32768
+	MaxSizeSubscriberequestSubscriberId          int = 32768
+	MaxSizeSubscriberequestEventTypes            int = 16
+	MaxSizeSubscriberequestTraceId               int = 32768
+	MaxSizeDeletesubscriptionrequestChannelId    int = 32768
+	MaxSizeDeletesubscriptionrequestSubscriberId int = 32768
+	MaxSizeDeletesubscriptionrequestTraceId      int = 32768
+	MaxSizeEventsrequestSubscriberId             int = 32768
+	MaxSizeEventsrequestTraceId                  int = 32768
+	MaxSizeSendmessagerequestSenderId            int = 32768
+	MaxSizeSendmessagerequestChannelId           int = 32768
+	MaxSizeSendmessagerequestText                int = 32768
+	MaxSizeSendmessagerequestTraceId             int = 32768
+	MaxSizeSendthreadreplyrequestSenderId        int = 32768
+	MaxSizeSendthreadreplyrequestChannelId       int = 32768
+	MaxSizeSendthreadreplyrequestThreadTs        int = 32768
+	MaxSizeSendthreadreplyrequestText            int = 32768
+	MaxSizeSendthreadreplyrequestTraceId         int = 32768
+	MaxSizeSendmessageresponseChannelId          int = 32768
+	MaxSizeSendmessageresponseMessageTs          int = 32768
+	MaxSizeSendmessageresponseTraceId            int = 32768
+	MaxSizeGetthreadrequestChannelId             int = 32768
+	MaxSizeGetthreadrequestThreadTs              int = 32768
+	MaxSizeGetthreadrequestTraceId               int = 32768
+	MaxSizeGetthreadresponseMessages             int = 1000
+	MaxSizeGetthreadresponseTraceId              int = 32768
+	MaxSizeGetchannelhistoryrequestChannelId     int = 32768
+	MaxSizeGetchannelhistoryrequestBefore        int = 32768
+	MaxSizeGetchannelhistoryrequestTraceId       int = 32768
+	MaxSizeGetchannelhistoryresponseMessages     int = 1000
+	MaxSizeGetchannelhistoryresponseTraceId      int = 32768
+	MaxSizeListchannelsresponseChannels          int = 1024
+	MaxSizeListchannelsresponseTraceId           int = 32768
+	MaxSizeReactionrequestChannelId              int = 32768
+	MaxSizeReactionrequestMessageTs              int = 32768
+	MaxSizeReactionrequestEmoji                  int = 32768
+	MaxSizeReactionrequestTraceId                int = 32768
+	MaxSizeMsggatewayconfigstateTraceId          int = 32768
+	MaxSizeQueryvalueStringValue                 int = 32768
+	MaxSizeQueryvalueTraceId                     int = 32768
+	MaxSizePredicateFieldName                    int = 32768
+	MaxSizePredicateValues                       int = 1024
+	MaxSizePredicateTraceId                      int = 32768
+	MaxSizePredicategroupPredicates              int = 1024
+	MaxSizePredicategroupGroups                  int = 1024
+	MaxSizePredicategroupTraceId                 int = 32768
+	MaxSizeSortfieldFieldName                    int = 32768
+	MaxSizeSortfieldTraceId                      int = 32768
+	MaxSizeCollectionqueryOrderBy                int = 1024
+	MaxSizeCollectionqueryTraceId                int = 32768
+	MaxSizeVirtualusersgetrequestKey             int = 32768
+	MaxSizeVirtualusersgetrequestTraceId         int = 32768
+	MaxSizeVirtualusersputrequestKey             int = 32768
+	MaxSizeVirtualusersputrequestTraceId         int = 32768
+	MaxSizeVirtualusersgetallrequestTraceId      int = 32768
+	MaxSizeVirtualuserskeysrequestTraceId        int = 32768
+	MaxSizeVirtualuserssizerequestTraceId        int = 32768
+	MaxSizeVirtualusersclearrequestTraceId       int = 32768
+	MaxSizeVirtualusersvalueresponseTraceId      int = 32768
+	MaxSizeVirtualusersentriesresponseEntries    int = 1024
+	MaxSizeVirtualusersentriesresponseTraceId    int = 32768
+	MaxSizeVirtualuserskeysresponseKeys          int = 1024
+	MaxSizeVirtualuserskeysresponseTraceId       int = 32768
+	MaxSizeVirtualuserssizeresponseTraceId       int = 32768
+	MaxSizeVirtualusersqueryrequestTraceId       int = 32768
+	MaxSizeVirtualusersqueryresponseResults      int = 1024
+	MaxSizeVirtualusersqueryresponseTraceId      int = 32768
+	MaxSizeSubscriptionsgetrequestKey            int = 32768
+	MaxSizeSubscriptionsgetrequestTraceId        int = 32768
+	MaxSizeSubscriptionsputrequestKey            int = 32768
+	MaxSizeSubscriptionsputrequestTraceId        int = 32768
+	MaxSizeSubscriptionsgetallrequestTraceId     int = 32768
+	MaxSizeSubscriptionskeysrequestTraceId       int = 32768
+	MaxSizeSubscriptionssizerequestTraceId       int = 32768
+	MaxSizeSubscriptionsclearrequestTraceId      int = 32768
+	MaxSizeSubscriptionsvalueresponseTraceId     int = 32768
+	MaxSizeSubscriptionsentriesresponseEntries   int = 1024
+	MaxSizeSubscriptionsentriesresponseTraceId   int = 32768
+	MaxSizeSubscriptionskeysresponseKeys         int = 1024
+	MaxSizeSubscriptionskeysresponseTraceId      int = 32768
+	MaxSizeSubscriptionssizeresponseTraceId      int = 32768
+	MaxSizeSubscriptionsqueryrequestTraceId      int = 32768
+	MaxSizeSubscriptionsqueryresponseResults     int = 1024
+	MaxSizeSubscriptionsqueryresponseTraceId     int = 32768
+	MaxSizeMapemptyTraceId                       int = 32768
 )
 
 // ============================================================
@@ -14911,10 +14911,10 @@ func ChannelDefaults(v *Channel) {
 }
 
 // ============================================================
-// TypeDefaults: RegisterUserRequest
+// TypeDefaults: UpdateVirtualUserRequest
 // ============================================================
-// RegisterUserRequestDefaults applies field-level default values to zero-valued fields.
-func RegisterUserRequestDefaults(v *RegisterUserRequest) {
+// UpdateVirtualUserRequestDefaults applies field-level default values to zero-valued fields.
+func UpdateVirtualUserRequestDefaults(v *UpdateVirtualUserRequest) {
 	if v == nil {
 		return
 	}
@@ -14924,10 +14924,10 @@ func RegisterUserRequestDefaults(v *RegisterUserRequest) {
 }
 
 // ============================================================
-// TypeDefaults: UnregisterUserRequest
+// TypeDefaults: DeleteVirtualUserRequest
 // ============================================================
-// UnregisterUserRequestDefaults applies field-level default values to zero-valued fields.
-func UnregisterUserRequestDefaults(v *UnregisterUserRequest) {
+// DeleteVirtualUserRequestDefaults applies field-level default values to zero-valued fields.
+func DeleteVirtualUserRequestDefaults(v *DeleteVirtualUserRequest) {
 	if v == nil {
 		return
 	}
@@ -14944,10 +14944,10 @@ func SubscribeRequestDefaults(v *SubscribeRequest) {
 }
 
 // ============================================================
-// TypeDefaults: UnsubscribeRequest
+// TypeDefaults: DeleteSubscriptionRequest
 // ============================================================
-// UnsubscribeRequestDefaults applies field-level default values to zero-valued fields.
-func UnsubscribeRequestDefaults(v *UnsubscribeRequest) {
+// DeleteSubscriptionRequestDefaults applies field-level default values to zero-valued fields.
+func DeleteSubscriptionRequestDefaults(v *DeleteSubscriptionRequest) {
 	if v == nil {
 		return
 	}
@@ -15456,22 +15456,22 @@ func ChannelUndefaults(v *Channel) {
 }
 
 // ============================================================
-// TypeUndefaults: RegisterUserRequest
+// TypeUndefaults: UpdateVirtualUserRequest
 // ============================================================
-// RegisterUserRequestUndefaults resets fields that match their default values back to zero.
+// UpdateVirtualUserRequestUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func RegisterUserRequestUndefaults(v *RegisterUserRequest) {
+func UpdateVirtualUserRequestUndefaults(v *UpdateVirtualUserRequest) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeUndefaults: UnregisterUserRequest
+// TypeUndefaults: DeleteVirtualUserRequest
 // ============================================================
-// UnregisterUserRequestUndefaults resets fields that match their default values back to zero.
+// DeleteVirtualUserRequestUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func UnregisterUserRequestUndefaults(v *UnregisterUserRequest) {
+func DeleteVirtualUserRequestUndefaults(v *DeleteVirtualUserRequest) {
 	if v == nil {
 		return
 	}
@@ -15489,11 +15489,11 @@ func SubscribeRequestUndefaults(v *SubscribeRequest) {
 }
 
 // ============================================================
-// TypeUndefaults: UnsubscribeRequest
+// TypeUndefaults: DeleteSubscriptionRequest
 // ============================================================
-// UnsubscribeRequestUndefaults resets fields that match their default values back to zero.
+// DeleteSubscriptionRequestUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func UnsubscribeRequestUndefaults(v *UnsubscribeRequest) {
+func DeleteSubscriptionRequestUndefaults(v *DeleteSubscriptionRequest) {
 	if v == nil {
 		return
 	}
@@ -16155,10 +16155,10 @@ func MergeChannel(dst, src *Channel) {
 }
 
 // ============================================================
-// Merge: RegisterUserRequest
+// Merge: UpdateVirtualUserRequest
 // ============================================================
-// MergeRegisterUserRequest fills zero-valued fields in dst from src.
-func MergeRegisterUserRequest(dst, src *RegisterUserRequest) {
+// MergeUpdateVirtualUserRequest fills zero-valued fields in dst from src.
+func MergeUpdateVirtualUserRequest(dst, src *UpdateVirtualUserRequest) {
 	if dst.User == nil {
 		dst.User = src.User
 	} else if src.User != nil {
@@ -16173,10 +16173,10 @@ func MergeRegisterUserRequest(dst, src *RegisterUserRequest) {
 }
 
 // ============================================================
-// Merge: UnregisterUserRequest
+// Merge: DeleteVirtualUserRequest
 // ============================================================
-// MergeUnregisterUserRequest fills zero-valued fields in dst from src.
-func MergeUnregisterUserRequest(dst, src *UnregisterUserRequest) {
+// MergeDeleteVirtualUserRequest fills zero-valued fields in dst from src.
+func MergeDeleteVirtualUserRequest(dst, src *DeleteVirtualUserRequest) {
 	if dst.UserId == "" {
 		dst.UserId = src.UserId
 	}
@@ -16211,10 +16211,10 @@ func MergeSubscribeRequest(dst, src *SubscribeRequest) {
 }
 
 // ============================================================
-// Merge: UnsubscribeRequest
+// Merge: DeleteSubscriptionRequest
 // ============================================================
-// MergeUnsubscribeRequest fills zero-valued fields in dst from src.
-func MergeUnsubscribeRequest(dst, src *UnsubscribeRequest) {
+// MergeDeleteSubscriptionRequest fills zero-valued fields in dst from src.
+func MergeDeleteSubscriptionRequest(dst, src *DeleteSubscriptionRequest) {
 	if dst.ChannelId == "" {
 		dst.ChannelId = src.ChannelId
 	}

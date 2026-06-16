@@ -34,15 +34,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	DaemonControl_Auth_FullMethodName            = "/cavalier.DaemonControl/Auth"
-	DaemonControl_Ping_FullMethodName            = "/cavalier.DaemonControl/Ping"
-	DaemonControl_Status_FullMethodName          = "/cavalier.DaemonControl/Status"
-	DaemonControl_WatchStatus_FullMethodName     = "/cavalier.DaemonControl/WatchStatus"
-	DaemonControl_ResetProxyStats_FullMethodName = "/cavalier.DaemonControl/ResetProxyStats"
-	DaemonControl_GetToken_FullMethodName        = "/cavalier.DaemonControl/GetToken"
-	DaemonControl_GetProxyEnv_FullMethodName     = "/cavalier.DaemonControl/GetProxyEnv"
-	DaemonControl_GetRefreshToken_FullMethodName = "/cavalier.DaemonControl/GetRefreshToken"
-	DaemonControl_SetRefreshToken_FullMethodName = "/cavalier.DaemonControl/SetRefreshToken"
+	DaemonControl_BrokerAuth_FullMethodName         = "/cavalier.DaemonControl/BrokerAuth"
+	DaemonControl_Ping_FullMethodName               = "/cavalier.DaemonControl/Ping"
+	DaemonControl_GetStatus_FullMethodName          = "/cavalier.DaemonControl/GetStatus"
+	DaemonControl_SubscribeStatus_FullMethodName    = "/cavalier.DaemonControl/SubscribeStatus"
+	DaemonControl_ResetProxyStats_FullMethodName    = "/cavalier.DaemonControl/ResetProxyStats"
+	DaemonControl_GetToken_FullMethodName           = "/cavalier.DaemonControl/GetToken"
+	DaemonControl_GetProxyEnv_FullMethodName        = "/cavalier.DaemonControl/GetProxyEnv"
+	DaemonControl_GetRefreshToken_FullMethodName    = "/cavalier.DaemonControl/GetRefreshToken"
+	DaemonControl_UpdateRefreshToken_FullMethodName = "/cavalier.DaemonControl/UpdateRefreshToken"
 )
 
 // DaemonControlClient is the client API for DaemonControl service.
@@ -55,21 +55,21 @@ const (
 // Transport: Unix socket (~/.cavalier/daemon.sock)
 // Auth: None — filesystem permissions are the security boundary.
 type DaemonControlClient interface {
-	// Auth begins authentication if the daemon has no valid local token.
+	// BrokerAuth begins authentication if the daemon has no valid local token.
 	// The daemon owns the OAuth backend session and returns an auth URL for the
 	// caller to present or open. Returns immediately if a valid local token
-	// already exists. Auth does not wait for browser completion; callers that
-	// need completion should observe WatchStatus.
-	Auth(ctx context.Context, in *DaemonAuthRequest, opts ...grpc.CallOption) (*DaemonAuthResponse, error)
+	// already exists. BrokerAuth does not wait for browser completion; callers
+	// that need completion should observe SubscribeStatus.
+	BrokerAuth(ctx context.Context, in *DaemonAuthRequest, opts ...grpc.CallOption) (*DaemonAuthResponse, error)
 	// Ping verifies that the local daemon process is alive and serving the
 	// Unix-socket control plane.
 	Ping(ctx context.Context, in *DaemonPingRequest, opts ...grpc.CallOption) (*DaemonPingResponse, error)
-	// Status returns daemon health, token state, and version info.
-	Status(ctx context.Context, in *DaemonStatusRequest, opts ...grpc.CallOption) (*DaemonStatusResponse, error)
-	// WatchStatus streams daemon health, token state, and version info.
+	// GetStatus returns daemon health, token state, and version info.
+	GetStatus(ctx context.Context, in *DaemonStatusRequest, opts ...grpc.CallOption) (*DaemonStatusResponse, error)
+	// SubscribeStatus streams daemon health, token state, and version info.
 	// The server sends the current status immediately, then sends a new
 	// response whenever the status changes.
-	WatchStatus(ctx context.Context, in *DaemonStatusRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DaemonStatusResponse], error)
+	SubscribeStatus(ctx context.Context, in *DaemonStatusRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DaemonStatusResponse], error)
 	// ResetProxyStats clears accumulated local proxy listener counters.
 	// Listener definitions and current bind state are preserved.
 	ResetProxyStats(ctx context.Context, in *ResetProxyStatsRequest, opts ...grpc.CallOption) (*ResetProxyStatsResponse, error)
@@ -87,10 +87,10 @@ type DaemonControlClient interface {
 	// daemon version-restart without re-prompting the user. Filesystem
 	// permissions on the unix socket are the security boundary.
 	GetRefreshToken(ctx context.Context, in *GetRefreshTokenRequest, opts ...grpc.CallOption) (*GetRefreshTokenResponse, error)
-	// SetRefreshToken installs a refresh token into the daemon's in-memory
+	// UpdateRefreshToken installs a refresh token into the daemon's in-memory
 	// state (Client IM). Symmetric with GetRefreshToken; used after a
 	// version-restart to repopulate the new daemon without re-auth.
-	SetRefreshToken(ctx context.Context, in *SetRefreshTokenRequest, opts ...grpc.CallOption) (*SetRefreshTokenResponse, error)
+	UpdateRefreshToken(ctx context.Context, in *SetRefreshTokenRequest, opts ...grpc.CallOption) (*SetRefreshTokenResponse, error)
 }
 
 type daemonControlClient struct {
@@ -101,10 +101,10 @@ func NewDaemonControlClient(cc grpc.ClientConnInterface) DaemonControlClient {
 	return &daemonControlClient{cc}
 }
 
-func (c *daemonControlClient) Auth(ctx context.Context, in *DaemonAuthRequest, opts ...grpc.CallOption) (*DaemonAuthResponse, error) {
+func (c *daemonControlClient) BrokerAuth(ctx context.Context, in *DaemonAuthRequest, opts ...grpc.CallOption) (*DaemonAuthResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DaemonAuthResponse)
-	err := c.cc.Invoke(ctx, DaemonControl_Auth_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, DaemonControl_BrokerAuth_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -121,19 +121,19 @@ func (c *daemonControlClient) Ping(ctx context.Context, in *DaemonPingRequest, o
 	return out, nil
 }
 
-func (c *daemonControlClient) Status(ctx context.Context, in *DaemonStatusRequest, opts ...grpc.CallOption) (*DaemonStatusResponse, error) {
+func (c *daemonControlClient) GetStatus(ctx context.Context, in *DaemonStatusRequest, opts ...grpc.CallOption) (*DaemonStatusResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DaemonStatusResponse)
-	err := c.cc.Invoke(ctx, DaemonControl_Status_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, DaemonControl_GetStatus_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *daemonControlClient) WatchStatus(ctx context.Context, in *DaemonStatusRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DaemonStatusResponse], error) {
+func (c *daemonControlClient) SubscribeStatus(ctx context.Context, in *DaemonStatusRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DaemonStatusResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &DaemonControl_ServiceDesc.Streams[0], DaemonControl_WatchStatus_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &DaemonControl_ServiceDesc.Streams[0], DaemonControl_SubscribeStatus_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -148,7 +148,7 @@ func (c *daemonControlClient) WatchStatus(ctx context.Context, in *DaemonStatusR
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type DaemonControl_WatchStatusClient = grpc.ServerStreamingClient[DaemonStatusResponse]
+type DaemonControl_SubscribeStatusClient = grpc.ServerStreamingClient[DaemonStatusResponse]
 
 func (c *daemonControlClient) ResetProxyStats(ctx context.Context, in *ResetProxyStatsRequest, opts ...grpc.CallOption) (*ResetProxyStatsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -190,10 +190,10 @@ func (c *daemonControlClient) GetRefreshToken(ctx context.Context, in *GetRefres
 	return out, nil
 }
 
-func (c *daemonControlClient) SetRefreshToken(ctx context.Context, in *SetRefreshTokenRequest, opts ...grpc.CallOption) (*SetRefreshTokenResponse, error) {
+func (c *daemonControlClient) UpdateRefreshToken(ctx context.Context, in *SetRefreshTokenRequest, opts ...grpc.CallOption) (*SetRefreshTokenResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SetRefreshTokenResponse)
-	err := c.cc.Invoke(ctx, DaemonControl_SetRefreshToken_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, DaemonControl_UpdateRefreshToken_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -210,21 +210,21 @@ func (c *daemonControlClient) SetRefreshToken(ctx context.Context, in *SetRefres
 // Transport: Unix socket (~/.cavalier/daemon.sock)
 // Auth: None — filesystem permissions are the security boundary.
 type DaemonControlServer interface {
-	// Auth begins authentication if the daemon has no valid local token.
+	// BrokerAuth begins authentication if the daemon has no valid local token.
 	// The daemon owns the OAuth backend session and returns an auth URL for the
 	// caller to present or open. Returns immediately if a valid local token
-	// already exists. Auth does not wait for browser completion; callers that
-	// need completion should observe WatchStatus.
-	Auth(context.Context, *DaemonAuthRequest) (*DaemonAuthResponse, error)
+	// already exists. BrokerAuth does not wait for browser completion; callers
+	// that need completion should observe SubscribeStatus.
+	BrokerAuth(context.Context, *DaemonAuthRequest) (*DaemonAuthResponse, error)
 	// Ping verifies that the local daemon process is alive and serving the
 	// Unix-socket control plane.
 	Ping(context.Context, *DaemonPingRequest) (*DaemonPingResponse, error)
-	// Status returns daemon health, token state, and version info.
-	Status(context.Context, *DaemonStatusRequest) (*DaemonStatusResponse, error)
-	// WatchStatus streams daemon health, token state, and version info.
+	// GetStatus returns daemon health, token state, and version info.
+	GetStatus(context.Context, *DaemonStatusRequest) (*DaemonStatusResponse, error)
+	// SubscribeStatus streams daemon health, token state, and version info.
 	// The server sends the current status immediately, then sends a new
 	// response whenever the status changes.
-	WatchStatus(*DaemonStatusRequest, grpc.ServerStreamingServer[DaemonStatusResponse]) error
+	SubscribeStatus(*DaemonStatusRequest, grpc.ServerStreamingServer[DaemonStatusResponse]) error
 	// ResetProxyStats clears accumulated local proxy listener counters.
 	// Listener definitions and current bind state are preserved.
 	ResetProxyStats(context.Context, *ResetProxyStatsRequest) (*ResetProxyStatsResponse, error)
@@ -242,10 +242,10 @@ type DaemonControlServer interface {
 	// daemon version-restart without re-prompting the user. Filesystem
 	// permissions on the unix socket are the security boundary.
 	GetRefreshToken(context.Context, *GetRefreshTokenRequest) (*GetRefreshTokenResponse, error)
-	// SetRefreshToken installs a refresh token into the daemon's in-memory
+	// UpdateRefreshToken installs a refresh token into the daemon's in-memory
 	// state (Client IM). Symmetric with GetRefreshToken; used after a
 	// version-restart to repopulate the new daemon without re-auth.
-	SetRefreshToken(context.Context, *SetRefreshTokenRequest) (*SetRefreshTokenResponse, error)
+	UpdateRefreshToken(context.Context, *SetRefreshTokenRequest) (*SetRefreshTokenResponse, error)
 	mustEmbedUnimplementedDaemonControlServer()
 }
 
@@ -256,17 +256,17 @@ type DaemonControlServer interface {
 // pointer dereference when methods are called.
 type UnimplementedDaemonControlServer struct{}
 
-func (UnimplementedDaemonControlServer) Auth(context.Context, *DaemonAuthRequest) (*DaemonAuthResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method Auth not implemented")
+func (UnimplementedDaemonControlServer) BrokerAuth(context.Context, *DaemonAuthRequest) (*DaemonAuthResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method BrokerAuth not implemented")
 }
 func (UnimplementedDaemonControlServer) Ping(context.Context, *DaemonPingRequest) (*DaemonPingResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Ping not implemented")
 }
-func (UnimplementedDaemonControlServer) Status(context.Context, *DaemonStatusRequest) (*DaemonStatusResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method Status not implemented")
+func (UnimplementedDaemonControlServer) GetStatus(context.Context, *DaemonStatusRequest) (*DaemonStatusResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetStatus not implemented")
 }
-func (UnimplementedDaemonControlServer) WatchStatus(*DaemonStatusRequest, grpc.ServerStreamingServer[DaemonStatusResponse]) error {
-	return status.Error(codes.Unimplemented, "method WatchStatus not implemented")
+func (UnimplementedDaemonControlServer) SubscribeStatus(*DaemonStatusRequest, grpc.ServerStreamingServer[DaemonStatusResponse]) error {
+	return status.Error(codes.Unimplemented, "method SubscribeStatus not implemented")
 }
 func (UnimplementedDaemonControlServer) ResetProxyStats(context.Context, *ResetProxyStatsRequest) (*ResetProxyStatsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ResetProxyStats not implemented")
@@ -280,8 +280,8 @@ func (UnimplementedDaemonControlServer) GetProxyEnv(context.Context, *GetProxyEn
 func (UnimplementedDaemonControlServer) GetRefreshToken(context.Context, *GetRefreshTokenRequest) (*GetRefreshTokenResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetRefreshToken not implemented")
 }
-func (UnimplementedDaemonControlServer) SetRefreshToken(context.Context, *SetRefreshTokenRequest) (*SetRefreshTokenResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method SetRefreshToken not implemented")
+func (UnimplementedDaemonControlServer) UpdateRefreshToken(context.Context, *SetRefreshTokenRequest) (*SetRefreshTokenResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateRefreshToken not implemented")
 }
 func (UnimplementedDaemonControlServer) mustEmbedUnimplementedDaemonControlServer() {}
 func (UnimplementedDaemonControlServer) testEmbeddedByValue()                       {}
@@ -304,20 +304,20 @@ func RegisterDaemonControlServer(s grpc.ServiceRegistrar, srv DaemonControlServe
 	s.RegisterService(&DaemonControl_ServiceDesc, srv)
 }
 
-func _DaemonControl_Auth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _DaemonControl_BrokerAuth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DaemonAuthRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DaemonControlServer).Auth(ctx, in)
+		return srv.(DaemonControlServer).BrokerAuth(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DaemonControl_Auth_FullMethodName,
+		FullMethod: DaemonControl_BrokerAuth_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DaemonControlServer).Auth(ctx, req.(*DaemonAuthRequest))
+		return srv.(DaemonControlServer).BrokerAuth(ctx, req.(*DaemonAuthRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -340,34 +340,34 @@ func _DaemonControl_Ping_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DaemonControl_Status_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _DaemonControl_GetStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DaemonStatusRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DaemonControlServer).Status(ctx, in)
+		return srv.(DaemonControlServer).GetStatus(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DaemonControl_Status_FullMethodName,
+		FullMethod: DaemonControl_GetStatus_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DaemonControlServer).Status(ctx, req.(*DaemonStatusRequest))
+		return srv.(DaemonControlServer).GetStatus(ctx, req.(*DaemonStatusRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DaemonControl_WatchStatus_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _DaemonControl_SubscribeStatus_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(DaemonStatusRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(DaemonControlServer).WatchStatus(m, &grpc.GenericServerStream[DaemonStatusRequest, DaemonStatusResponse]{ServerStream: stream})
+	return srv.(DaemonControlServer).SubscribeStatus(m, &grpc.GenericServerStream[DaemonStatusRequest, DaemonStatusResponse]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type DaemonControl_WatchStatusServer = grpc.ServerStreamingServer[DaemonStatusResponse]
+type DaemonControl_SubscribeStatusServer = grpc.ServerStreamingServer[DaemonStatusResponse]
 
 func _DaemonControl_ResetProxyStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ResetProxyStatsRequest)
@@ -441,20 +441,20 @@ func _DaemonControl_GetRefreshToken_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DaemonControl_SetRefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _DaemonControl_UpdateRefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetRefreshTokenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DaemonControlServer).SetRefreshToken(ctx, in)
+		return srv.(DaemonControlServer).UpdateRefreshToken(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DaemonControl_SetRefreshToken_FullMethodName,
+		FullMethod: DaemonControl_UpdateRefreshToken_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DaemonControlServer).SetRefreshToken(ctx, req.(*SetRefreshTokenRequest))
+		return srv.(DaemonControlServer).UpdateRefreshToken(ctx, req.(*SetRefreshTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -467,16 +467,16 @@ var DaemonControl_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*DaemonControlServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Auth",
-			Handler:    _DaemonControl_Auth_Handler,
+			MethodName: "BrokerAuth",
+			Handler:    _DaemonControl_BrokerAuth_Handler,
 		},
 		{
 			MethodName: "Ping",
 			Handler:    _DaemonControl_Ping_Handler,
 		},
 		{
-			MethodName: "Status",
-			Handler:    _DaemonControl_Status_Handler,
+			MethodName: "GetStatus",
+			Handler:    _DaemonControl_GetStatus_Handler,
 		},
 		{
 			MethodName: "ResetProxyStats",
@@ -495,14 +495,14 @@ var DaemonControl_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _DaemonControl_GetRefreshToken_Handler,
 		},
 		{
-			MethodName: "SetRefreshToken",
-			Handler:    _DaemonControl_SetRefreshToken_Handler,
+			MethodName: "UpdateRefreshToken",
+			Handler:    _DaemonControl_UpdateRefreshToken_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "WatchStatus",
-			Handler:       _DaemonControl_WatchStatus_Handler,
+			StreamName:    "SubscribeStatus",
+			Handler:       _DaemonControl_SubscribeStatus_Handler,
 			ServerStreams: true,
 		},
 	},

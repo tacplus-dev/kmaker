@@ -84,56 +84,6 @@ func (Protocol) EnumDescriptor() ([]byte, []int) {
 	return file_libs_host_proto_rawDescGZIP(), []int{0}
 }
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED TypeID = 0
-	TypeID_TYPE_ID_HOST        TypeID = 1
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_HOST",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED": 0,
-		"TYPE_ID_HOST":        1,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_host_proto_enumTypes[1].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_host_proto_enumTypes[1]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_host_proto_rawDescGZIP(), []int{1}
-}
-
 // Host identifies a network endpoint by hostname/IP and port.
 // The host field accepts either an FQDN or an IP address (v4/v6).
 type Host struct {
@@ -210,10 +160,7 @@ const file_libs_host_proto_rawDesc = "" +
 	"\bprotocol\x18\x03 \x01(\x0e2\x0e.host.ProtocolR\bprotocol*\x1c\n" +
 	"\bProtocol\x12\a\n" +
 	"\x03TCP\x10\x00\x12\a\n" +
-	"\x03UDP\x10\x01*3\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x10\n" +
-	"\fTYPE_ID_HOST\x10\x01BVZTgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/hostb\x06proto3"
+	"\x03UDP\x10\x01BVZTgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/hostb\x06proto3"
 
 var (
 	file_libs_host_proto_rawDescOnce sync.Once
@@ -227,12 +174,11 @@ func file_libs_host_proto_rawDescGZIP() []byte {
 	return file_libs_host_proto_rawDescData
 }
 
-var file_libs_host_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_libs_host_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_libs_host_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_libs_host_proto_goTypes = []any{
 	(Protocol)(0), // 0: host.Protocol
-	(TypeID)(0),   // 1: host.TypeID
-	(*Host)(nil),  // 2: host.Host
+	(*Host)(nil),  // 1: host.Host
 }
 var file_libs_host_proto_depIdxs = []int32{
 	0, // 0: host.Host.protocol:type_name -> host.Protocol
@@ -253,7 +199,7 @@ func file_libs_host_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_host_proto_rawDesc), len(file_libs_host_proto_rawDesc)),
-			NumEnums:      2,
+			NumEnums:      1,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,

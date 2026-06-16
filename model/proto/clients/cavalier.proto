@@ -189,24 +189,24 @@ message AgenticConfig {
 // Auth: None — filesystem permissions are the security boundary.
 service DaemonControl {
 
-  // Auth begins authentication if the daemon has no valid local token.
+  // BrokerAuth begins authentication if the daemon has no valid local token.
   // The daemon owns the OAuth backend session and returns an auth URL for the
   // caller to present or open. Returns immediately if a valid local token
-  // already exists. Auth does not wait for browser completion; callers that
-  // need completion should observe WatchStatus.
-  rpc Auth(DaemonAuthRequest) returns (DaemonAuthResponse);
+  // already exists. BrokerAuth does not wait for browser completion; callers
+  // that need completion should observe SubscribeStatus.
+  rpc BrokerAuth(DaemonAuthRequest) returns (DaemonAuthResponse);
 
   // Ping verifies that the local daemon process is alive and serving the
   // Unix-socket control plane.
   rpc Ping(DaemonPingRequest) returns (DaemonPingResponse);
 
-  // Status returns daemon health, token state, and version info.
-  rpc Status(DaemonStatusRequest) returns (DaemonStatusResponse);
+  // GetStatus returns daemon health, token state, and version info.
+  rpc GetStatus(DaemonStatusRequest) returns (DaemonStatusResponse);
 
-  // WatchStatus streams daemon health, token state, and version info.
+  // SubscribeStatus streams daemon health, token state, and version info.
   // The server sends the current status immediately, then sends a new
   // response whenever the status changes.
-  rpc WatchStatus(DaemonStatusRequest) returns (stream DaemonStatusResponse);
+  rpc SubscribeStatus(DaemonStatusRequest) returns (stream DaemonStatusResponse);
 
   // ResetProxyStats clears accumulated local proxy listener counters.
   // Listener definitions and current bind state are preserved.
@@ -229,10 +229,10 @@ service DaemonControl {
   // permissions on the unix socket are the security boundary.
   rpc GetRefreshToken(GetRefreshTokenRequest) returns (GetRefreshTokenResponse);
 
-  // SetRefreshToken installs a refresh token into the daemon's in-memory
+  // UpdateRefreshToken installs a refresh token into the daemon's in-memory
   // state (Client IM). Symmetric with GetRefreshToken; used after a
   // version-restart to repopulate the new daemon without re-auth.
-  rpc SetRefreshToken(SetRefreshTokenRequest) returns (SetRefreshTokenResponse);
+  rpc UpdateRefreshToken(SetRefreshTokenRequest) returns (SetRefreshTokenResponse);
 }
 
 // HookReceiver accepts hook events from Claude Code and other tools.
@@ -380,6 +380,7 @@ message ResetProxyStatsRequest {
 
 message ResetProxyStatsResponse {
   repeated DaemonProxyStats proxy_stats = 1;
+  int64 timestamp_ms = 2;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -512,15 +513,15 @@ enum DaemonControlRpcId {
   DAEMON_CONTROL_RPC_ID_ALL_ACCESSORS = 1;
   DAEMON_CONTROL_RPC_ID_ALL_MUTATORS = 2;
   DAEMON_CONTROL_RPC_ID_ALL_EXECUTORS = 3;
-  DAEMON_CONTROL_RPC_ID_AUTH = 4;
+  DAEMON_CONTROL_RPC_ID_BROKER_AUTH = 4;
   DAEMON_CONTROL_RPC_ID_PING = 5;
-  DAEMON_CONTROL_RPC_ID_STATUS = 6;
-  DAEMON_CONTROL_RPC_ID_WATCH_STATUS = 7;
+  DAEMON_CONTROL_RPC_ID_GET_STATUS = 6;
+  DAEMON_CONTROL_RPC_ID_SUBSCRIBE_STATUS = 7;
   DAEMON_CONTROL_RPC_ID_RESET_PROXY_STATS = 8;
   DAEMON_CONTROL_RPC_ID_GET_TOKEN = 9;
   DAEMON_CONTROL_RPC_ID_GET_PROXY_ENV = 10;
   DAEMON_CONTROL_RPC_ID_GET_REFRESH_TOKEN = 11;
-  DAEMON_CONTROL_RPC_ID_SET_REFRESH_TOKEN = 12;
+  DAEMON_CONTROL_RPC_ID_UPDATE_REFRESH_TOKEN = 12;
 }
 
 enum HookReceiverRpcId {

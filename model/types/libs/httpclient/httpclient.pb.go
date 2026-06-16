@@ -38,59 +38,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED        TypeID = 0
-	TypeID_TYPE_ID_HTTP_CLIENT_CONFIG TypeID = 1
-	TypeID_TYPE_ID_RETRY_CONFIG       TypeID = 2
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_HTTP_CLIENT_CONFIG",
-		2: "TYPE_ID_RETRY_CONFIG",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":        0,
-		"TYPE_ID_HTTP_CLIENT_CONFIG": 1,
-		"TYPE_ID_RETRY_CONFIG":       2,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_httpclient_proto_enumTypes[0].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_httpclient_proto_enumTypes[0]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_httpclient_proto_rawDescGZIP(), []int{0}
-}
-
 // HttpClientConfig represents configuration for an HTTP client.
 // It provides settings for TLS verification, keep-alive behavior, certificates, and timeouts.
 // This configuration is typically used to create HTTP clients for making outbound requests
@@ -371,11 +318,7 @@ const file_libs_httpclient_proto_rawDesc = "" +
 	"\x12initial_backoff_ms\x18\x02 \x01(\x03B\x04\xc0\xa6\x1d\x01R\x10initialBackoffMs\x12*\n" +
 	"\x0emax_backoff_ms\x18\x03 \x01(\x03B\x04\xc0\xa6\x1d\x01R\fmaxBackoffMs\x123\n" +
 	"\x12backoff_multiplier\x18\x04 \x01(\x01B\x04\xa8\xa7\x1d\x00R\x11backoffMultiplier\x12:\n" +
-	"\x16retryable_status_codes\x18\x05 \x03(\x05B\x04\xb8\xa8\x1d R\x14retryableStatusCodes*[\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x1e\n" +
-	"\x1aTYPE_ID_HTTP_CLIENT_CONFIG\x10\x01\x12\x18\n" +
-	"\x14TYPE_ID_RETRY_CONFIG\x10\x02B\\ZZgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/httpclientb\x06proto3"
+	"\x16retryable_status_codes\x18\x05 \x03(\x05B\x04\xb8\xa8\x1d R\x14retryableStatusCodesB\\ZZgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/httpclientb\x06proto3"
 
 var (
 	file_libs_httpclient_proto_rawDescOnce sync.Once
@@ -389,19 +332,17 @@ func file_libs_httpclient_proto_rawDescGZIP() []byte {
 	return file_libs_httpclient_proto_rawDescData
 }
 
-var file_libs_httpclient_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_libs_httpclient_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_libs_httpclient_proto_goTypes = []any{
-	(TypeID)(0),                // 0: httpclient.TypeID
-	(*HttpClientConfig)(nil),   // 1: httpclient.HttpClientConfig
-	(*RetryConfig)(nil),        // 2: httpclient.RetryConfig
-	(*x509.X509Cert)(nil),      // 3: x509.X509Cert
-	(*x509.X509CertChain)(nil), // 4: x509.X509CertChain
+	(*HttpClientConfig)(nil),   // 0: httpclient.HttpClientConfig
+	(*RetryConfig)(nil),        // 1: httpclient.RetryConfig
+	(*x509.X509Cert)(nil),      // 2: x509.X509Cert
+	(*x509.X509CertChain)(nil), // 3: x509.X509CertChain
 }
 var file_libs_httpclient_proto_depIdxs = []int32{
-	3, // 0: httpclient.HttpClientConfig.root_certs:type_name -> x509.X509Cert
-	4, // 1: httpclient.HttpClientConfig.client_cert:type_name -> x509.X509CertChain
-	2, // 2: httpclient.HttpClientConfig.retry_config:type_name -> httpclient.RetryConfig
+	2, // 0: httpclient.HttpClientConfig.root_certs:type_name -> x509.X509Cert
+	3, // 1: httpclient.HttpClientConfig.client_cert:type_name -> x509.X509CertChain
+	1, // 2: httpclient.HttpClientConfig.retry_config:type_name -> httpclient.RetryConfig
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
@@ -419,14 +360,13 @@ func file_libs_httpclient_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_httpclient_proto_rawDesc), len(file_libs_httpclient_proto_rawDesc)),
-			NumEnums:      1,
+			NumEnums:      0,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_libs_httpclient_proto_goTypes,
 		DependencyIndexes: file_libs_httpclient_proto_depIdxs,
-		EnumInfos:         file_libs_httpclient_proto_enumTypes,
 		MessageInfos:      file_libs_httpclient_proto_msgTypes,
 	}.Build()
 	File_libs_httpclient_proto = out.File

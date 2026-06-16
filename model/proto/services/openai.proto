@@ -482,9 +482,9 @@ service Proxy {
   // CreateChatCompletion sends a non-streaming request to the OpenAI Chat Completions API.
   rpc CreateChatCompletion(ProxyRequest) returns (CreateChatCompletionResponse);
 
-  // CreateChatCompletionStream sends a streaming request to the OpenAI Chat Completions API.
+  // GenerateChatCompletionStream sends a streaming request to the OpenAI Chat Completions API.
   // Returns a server-side stream of SSE chunks.
-  rpc CreateChatCompletionStream(ProxyRequest) returns (stream ChatCompletionChunk);
+  rpc GenerateChatCompletionStream(ProxyRequest) returns (stream ChatCompletionChunk);
 }
 
 // ============================================================================
@@ -592,7 +592,7 @@ enum ProxyRpcId {
   PROXY_RPC_ID_ALL_MUTATORS = 2;
   PROXY_RPC_ID_ALL_EXECUTORS = 3;
   PROXY_RPC_ID_CREATE_CHAT_COMPLETION = 4;
-  PROXY_RPC_ID_CREATE_CHAT_COMPLETION_STREAM = 5;
+  PROXY_RPC_ID_GENERATE_CHAT_COMPLETION_STREAM = 5;
 }
 
 enum OpenaiConfigStateServiceRpcId {

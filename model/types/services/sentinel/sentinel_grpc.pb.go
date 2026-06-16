@@ -36,17 +36,17 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Dashboard_GetClusterInfo_FullMethodName       = "/sentinel.Dashboard/GetClusterInfo"
-	Dashboard_GetClusterHealth_FullMethodName     = "/sentinel.Dashboard/GetClusterHealth"
-	Dashboard_GetNodeMetrics_FullMethodName       = "/sentinel.Dashboard/GetNodeMetrics"
-	Dashboard_GetGrpcStats_FullMethodName         = "/sentinel.Dashboard/GetGrpcStats"
-	Dashboard_GetPersistenceStatus_FullMethodName = "/sentinel.Dashboard/GetPersistenceStatus"
-	Dashboard_GetNetworkStats_FullMethodName      = "/sentinel.Dashboard/GetNetworkStats"
-	Dashboard_GetThreadInfo_FullMethodName        = "/sentinel.Dashboard/GetThreadInfo"
-	Dashboard_GetTokenCacheStats_FullMethodName   = "/sentinel.Dashboard/GetTokenCacheStats"
-	Dashboard_GetMapStats_FullMethodName          = "/sentinel.Dashboard/GetMapStats"
-	Dashboard_GetDashboard_FullMethodName         = "/sentinel.Dashboard/GetDashboard"
-	Dashboard_WatchDashboard_FullMethodName       = "/sentinel.Dashboard/WatchDashboard"
+	Dashboard_GetClusterInfo_FullMethodName        = "/sentinel.Dashboard/GetClusterInfo"
+	Dashboard_GetClusterHealth_FullMethodName      = "/sentinel.Dashboard/GetClusterHealth"
+	Dashboard_ListNodeMetrics_FullMethodName       = "/sentinel.Dashboard/ListNodeMetrics"
+	Dashboard_ListGrpcStats_FullMethodName         = "/sentinel.Dashboard/ListGrpcStats"
+	Dashboard_ListPersistenceStatus_FullMethodName = "/sentinel.Dashboard/ListPersistenceStatus"
+	Dashboard_ListNetworkStats_FullMethodName      = "/sentinel.Dashboard/ListNetworkStats"
+	Dashboard_ListThreadInfo_FullMethodName        = "/sentinel.Dashboard/ListThreadInfo"
+	Dashboard_ListTokenCacheStats_FullMethodName   = "/sentinel.Dashboard/ListTokenCacheStats"
+	Dashboard_ListMapStats_FullMethodName          = "/sentinel.Dashboard/ListMapStats"
+	Dashboard_GetDashboard_FullMethodName          = "/sentinel.Dashboard/GetDashboard"
+	Dashboard_SubscribeDashboard_FullMethodName    = "/sentinel.Dashboard/SubscribeDashboard"
 )
 
 // DashboardClient is the client API for Dashboard service.
@@ -57,17 +57,17 @@ type DashboardClient interface {
 	GetClusterInfo(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*hazelcast.AdminClusterInfo, error)
 	GetClusterHealth(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*hazelcast.AdminClusterHealth, error)
 	// Per-node collections
-	GetNodeMetrics(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*NodeMetricsResponse, error)
-	GetGrpcStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*GrpcStatsResponse, error)
-	GetPersistenceStatus(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*PersistenceStatusResponse, error)
-	GetNetworkStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*NetworkStatsResponse, error)
-	GetThreadInfo(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*ThreadInfoResponse, error)
-	GetTokenCacheStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*TokenCacheStatsResponse, error)
-	GetMapStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*MapStatsResponse, error)
+	ListNodeMetrics(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*NodeMetricsResponse, error)
+	ListGrpcStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*GrpcStatsResponse, error)
+	ListPersistenceStatus(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*PersistenceStatusResponse, error)
+	ListNetworkStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*NetworkStatsResponse, error)
+	ListThreadInfo(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*ThreadInfoResponse, error)
+	ListTokenCacheStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*TokenCacheStatsResponse, error)
+	ListMapStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*MapStatsResponse, error)
 	// Full snapshot (all data in one call)
 	GetDashboard(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*DashboardResponse, error)
-	// Server-streaming dashboard — pushes updates at a regular interval.
-	WatchDashboard(ctx context.Context, in *WatchDashboardRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DashboardResponse], error)
+	// Server-streaming dashboard: pushes updates at a regular interval.
+	SubscribeDashboard(ctx context.Context, in *WatchDashboardRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DashboardResponse], error)
 }
 
 type dashboardClient struct {
@@ -98,70 +98,70 @@ func (c *dashboardClient) GetClusterHealth(ctx context.Context, in *trace.TraceR
 	return out, nil
 }
 
-func (c *dashboardClient) GetNodeMetrics(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*NodeMetricsResponse, error) {
+func (c *dashboardClient) ListNodeMetrics(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*NodeMetricsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(NodeMetricsResponse)
-	err := c.cc.Invoke(ctx, Dashboard_GetNodeMetrics_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Dashboard_ListNodeMetrics_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dashboardClient) GetGrpcStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*GrpcStatsResponse, error) {
+func (c *dashboardClient) ListGrpcStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*GrpcStatsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GrpcStatsResponse)
-	err := c.cc.Invoke(ctx, Dashboard_GetGrpcStats_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Dashboard_ListGrpcStats_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dashboardClient) GetPersistenceStatus(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*PersistenceStatusResponse, error) {
+func (c *dashboardClient) ListPersistenceStatus(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*PersistenceStatusResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PersistenceStatusResponse)
-	err := c.cc.Invoke(ctx, Dashboard_GetPersistenceStatus_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Dashboard_ListPersistenceStatus_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dashboardClient) GetNetworkStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*NetworkStatsResponse, error) {
+func (c *dashboardClient) ListNetworkStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*NetworkStatsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(NetworkStatsResponse)
-	err := c.cc.Invoke(ctx, Dashboard_GetNetworkStats_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Dashboard_ListNetworkStats_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dashboardClient) GetThreadInfo(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*ThreadInfoResponse, error) {
+func (c *dashboardClient) ListThreadInfo(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*ThreadInfoResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ThreadInfoResponse)
-	err := c.cc.Invoke(ctx, Dashboard_GetThreadInfo_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Dashboard_ListThreadInfo_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dashboardClient) GetTokenCacheStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*TokenCacheStatsResponse, error) {
+func (c *dashboardClient) ListTokenCacheStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*TokenCacheStatsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TokenCacheStatsResponse)
-	err := c.cc.Invoke(ctx, Dashboard_GetTokenCacheStats_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Dashboard_ListTokenCacheStats_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dashboardClient) GetMapStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*MapStatsResponse, error) {
+func (c *dashboardClient) ListMapStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*MapStatsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MapStatsResponse)
-	err := c.cc.Invoke(ctx, Dashboard_GetMapStats_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Dashboard_ListMapStats_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -178,9 +178,9 @@ func (c *dashboardClient) GetDashboard(ctx context.Context, in *trace.TraceReque
 	return out, nil
 }
 
-func (c *dashboardClient) WatchDashboard(ctx context.Context, in *WatchDashboardRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DashboardResponse], error) {
+func (c *dashboardClient) SubscribeDashboard(ctx context.Context, in *WatchDashboardRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DashboardResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Dashboard_ServiceDesc.Streams[0], Dashboard_WatchDashboard_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Dashboard_ServiceDesc.Streams[0], Dashboard_SubscribeDashboard_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -195,7 +195,7 @@ func (c *dashboardClient) WatchDashboard(ctx context.Context, in *WatchDashboard
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Dashboard_WatchDashboardClient = grpc.ServerStreamingClient[DashboardResponse]
+type Dashboard_SubscribeDashboardClient = grpc.ServerStreamingClient[DashboardResponse]
 
 // DashboardServer is the server API for Dashboard service.
 // All implementations must embed UnimplementedDashboardServer
@@ -205,17 +205,17 @@ type DashboardServer interface {
 	GetClusterInfo(context.Context, *trace.TraceRequest) (*hazelcast.AdminClusterInfo, error)
 	GetClusterHealth(context.Context, *trace.TraceRequest) (*hazelcast.AdminClusterHealth, error)
 	// Per-node collections
-	GetNodeMetrics(context.Context, *trace.TraceRequest) (*NodeMetricsResponse, error)
-	GetGrpcStats(context.Context, *trace.TraceRequest) (*GrpcStatsResponse, error)
-	GetPersistenceStatus(context.Context, *trace.TraceRequest) (*PersistenceStatusResponse, error)
-	GetNetworkStats(context.Context, *trace.TraceRequest) (*NetworkStatsResponse, error)
-	GetThreadInfo(context.Context, *trace.TraceRequest) (*ThreadInfoResponse, error)
-	GetTokenCacheStats(context.Context, *trace.TraceRequest) (*TokenCacheStatsResponse, error)
-	GetMapStats(context.Context, *trace.TraceRequest) (*MapStatsResponse, error)
+	ListNodeMetrics(context.Context, *trace.TraceRequest) (*NodeMetricsResponse, error)
+	ListGrpcStats(context.Context, *trace.TraceRequest) (*GrpcStatsResponse, error)
+	ListPersistenceStatus(context.Context, *trace.TraceRequest) (*PersistenceStatusResponse, error)
+	ListNetworkStats(context.Context, *trace.TraceRequest) (*NetworkStatsResponse, error)
+	ListThreadInfo(context.Context, *trace.TraceRequest) (*ThreadInfoResponse, error)
+	ListTokenCacheStats(context.Context, *trace.TraceRequest) (*TokenCacheStatsResponse, error)
+	ListMapStats(context.Context, *trace.TraceRequest) (*MapStatsResponse, error)
 	// Full snapshot (all data in one call)
 	GetDashboard(context.Context, *trace.TraceRequest) (*DashboardResponse, error)
-	// Server-streaming dashboard — pushes updates at a regular interval.
-	WatchDashboard(*WatchDashboardRequest, grpc.ServerStreamingServer[DashboardResponse]) error
+	// Server-streaming dashboard: pushes updates at a regular interval.
+	SubscribeDashboard(*WatchDashboardRequest, grpc.ServerStreamingServer[DashboardResponse]) error
 	mustEmbedUnimplementedDashboardServer()
 }
 
@@ -232,32 +232,32 @@ func (UnimplementedDashboardServer) GetClusterInfo(context.Context, *trace.Trace
 func (UnimplementedDashboardServer) GetClusterHealth(context.Context, *trace.TraceRequest) (*hazelcast.AdminClusterHealth, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetClusterHealth not implemented")
 }
-func (UnimplementedDashboardServer) GetNodeMetrics(context.Context, *trace.TraceRequest) (*NodeMetricsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetNodeMetrics not implemented")
+func (UnimplementedDashboardServer) ListNodeMetrics(context.Context, *trace.TraceRequest) (*NodeMetricsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListNodeMetrics not implemented")
 }
-func (UnimplementedDashboardServer) GetGrpcStats(context.Context, *trace.TraceRequest) (*GrpcStatsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetGrpcStats not implemented")
+func (UnimplementedDashboardServer) ListGrpcStats(context.Context, *trace.TraceRequest) (*GrpcStatsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListGrpcStats not implemented")
 }
-func (UnimplementedDashboardServer) GetPersistenceStatus(context.Context, *trace.TraceRequest) (*PersistenceStatusResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetPersistenceStatus not implemented")
+func (UnimplementedDashboardServer) ListPersistenceStatus(context.Context, *trace.TraceRequest) (*PersistenceStatusResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListPersistenceStatus not implemented")
 }
-func (UnimplementedDashboardServer) GetNetworkStats(context.Context, *trace.TraceRequest) (*NetworkStatsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetNetworkStats not implemented")
+func (UnimplementedDashboardServer) ListNetworkStats(context.Context, *trace.TraceRequest) (*NetworkStatsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListNetworkStats not implemented")
 }
-func (UnimplementedDashboardServer) GetThreadInfo(context.Context, *trace.TraceRequest) (*ThreadInfoResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetThreadInfo not implemented")
+func (UnimplementedDashboardServer) ListThreadInfo(context.Context, *trace.TraceRequest) (*ThreadInfoResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListThreadInfo not implemented")
 }
-func (UnimplementedDashboardServer) GetTokenCacheStats(context.Context, *trace.TraceRequest) (*TokenCacheStatsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetTokenCacheStats not implemented")
+func (UnimplementedDashboardServer) ListTokenCacheStats(context.Context, *trace.TraceRequest) (*TokenCacheStatsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListTokenCacheStats not implemented")
 }
-func (UnimplementedDashboardServer) GetMapStats(context.Context, *trace.TraceRequest) (*MapStatsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetMapStats not implemented")
+func (UnimplementedDashboardServer) ListMapStats(context.Context, *trace.TraceRequest) (*MapStatsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListMapStats not implemented")
 }
 func (UnimplementedDashboardServer) GetDashboard(context.Context, *trace.TraceRequest) (*DashboardResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetDashboard not implemented")
 }
-func (UnimplementedDashboardServer) WatchDashboard(*WatchDashboardRequest, grpc.ServerStreamingServer[DashboardResponse]) error {
-	return status.Error(codes.Unimplemented, "method WatchDashboard not implemented")
+func (UnimplementedDashboardServer) SubscribeDashboard(*WatchDashboardRequest, grpc.ServerStreamingServer[DashboardResponse]) error {
+	return status.Error(codes.Unimplemented, "method SubscribeDashboard not implemented")
 }
 func (UnimplementedDashboardServer) mustEmbedUnimplementedDashboardServer() {}
 func (UnimplementedDashboardServer) testEmbeddedByValue()                   {}
@@ -316,128 +316,128 @@ func _Dashboard_GetClusterHealth_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Dashboard_GetNodeMetrics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Dashboard_ListNodeMetrics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(trace.TraceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DashboardServer).GetNodeMetrics(ctx, in)
+		return srv.(DashboardServer).ListNodeMetrics(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Dashboard_GetNodeMetrics_FullMethodName,
+		FullMethod: Dashboard_ListNodeMetrics_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardServer).GetNodeMetrics(ctx, req.(*trace.TraceRequest))
+		return srv.(DashboardServer).ListNodeMetrics(ctx, req.(*trace.TraceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Dashboard_GetGrpcStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Dashboard_ListGrpcStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(trace.TraceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DashboardServer).GetGrpcStats(ctx, in)
+		return srv.(DashboardServer).ListGrpcStats(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Dashboard_GetGrpcStats_FullMethodName,
+		FullMethod: Dashboard_ListGrpcStats_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardServer).GetGrpcStats(ctx, req.(*trace.TraceRequest))
+		return srv.(DashboardServer).ListGrpcStats(ctx, req.(*trace.TraceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Dashboard_GetPersistenceStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Dashboard_ListPersistenceStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(trace.TraceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DashboardServer).GetPersistenceStatus(ctx, in)
+		return srv.(DashboardServer).ListPersistenceStatus(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Dashboard_GetPersistenceStatus_FullMethodName,
+		FullMethod: Dashboard_ListPersistenceStatus_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardServer).GetPersistenceStatus(ctx, req.(*trace.TraceRequest))
+		return srv.(DashboardServer).ListPersistenceStatus(ctx, req.(*trace.TraceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Dashboard_GetNetworkStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Dashboard_ListNetworkStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(trace.TraceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DashboardServer).GetNetworkStats(ctx, in)
+		return srv.(DashboardServer).ListNetworkStats(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Dashboard_GetNetworkStats_FullMethodName,
+		FullMethod: Dashboard_ListNetworkStats_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardServer).GetNetworkStats(ctx, req.(*trace.TraceRequest))
+		return srv.(DashboardServer).ListNetworkStats(ctx, req.(*trace.TraceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Dashboard_GetThreadInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Dashboard_ListThreadInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(trace.TraceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DashboardServer).GetThreadInfo(ctx, in)
+		return srv.(DashboardServer).ListThreadInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Dashboard_GetThreadInfo_FullMethodName,
+		FullMethod: Dashboard_ListThreadInfo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardServer).GetThreadInfo(ctx, req.(*trace.TraceRequest))
+		return srv.(DashboardServer).ListThreadInfo(ctx, req.(*trace.TraceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Dashboard_GetTokenCacheStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Dashboard_ListTokenCacheStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(trace.TraceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DashboardServer).GetTokenCacheStats(ctx, in)
+		return srv.(DashboardServer).ListTokenCacheStats(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Dashboard_GetTokenCacheStats_FullMethodName,
+		FullMethod: Dashboard_ListTokenCacheStats_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardServer).GetTokenCacheStats(ctx, req.(*trace.TraceRequest))
+		return srv.(DashboardServer).ListTokenCacheStats(ctx, req.(*trace.TraceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Dashboard_GetMapStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Dashboard_ListMapStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(trace.TraceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DashboardServer).GetMapStats(ctx, in)
+		return srv.(DashboardServer).ListMapStats(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Dashboard_GetMapStats_FullMethodName,
+		FullMethod: Dashboard_ListMapStats_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardServer).GetMapStats(ctx, req.(*trace.TraceRequest))
+		return srv.(DashboardServer).ListMapStats(ctx, req.(*trace.TraceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -460,16 +460,16 @@ func _Dashboard_GetDashboard_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Dashboard_WatchDashboard_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Dashboard_SubscribeDashboard_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(WatchDashboardRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(DashboardServer).WatchDashboard(m, &grpc.GenericServerStream[WatchDashboardRequest, DashboardResponse]{ServerStream: stream})
+	return srv.(DashboardServer).SubscribeDashboard(m, &grpc.GenericServerStream[WatchDashboardRequest, DashboardResponse]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Dashboard_WatchDashboardServer = grpc.ServerStreamingServer[DashboardResponse]
+type Dashboard_SubscribeDashboardServer = grpc.ServerStreamingServer[DashboardResponse]
 
 // Dashboard_ServiceDesc is the grpc.ServiceDesc for Dashboard service.
 // It's only intended for direct use with grpc.RegisterService,
@@ -487,32 +487,32 @@ var Dashboard_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Dashboard_GetClusterHealth_Handler,
 		},
 		{
-			MethodName: "GetNodeMetrics",
-			Handler:    _Dashboard_GetNodeMetrics_Handler,
+			MethodName: "ListNodeMetrics",
+			Handler:    _Dashboard_ListNodeMetrics_Handler,
 		},
 		{
-			MethodName: "GetGrpcStats",
-			Handler:    _Dashboard_GetGrpcStats_Handler,
+			MethodName: "ListGrpcStats",
+			Handler:    _Dashboard_ListGrpcStats_Handler,
 		},
 		{
-			MethodName: "GetPersistenceStatus",
-			Handler:    _Dashboard_GetPersistenceStatus_Handler,
+			MethodName: "ListPersistenceStatus",
+			Handler:    _Dashboard_ListPersistenceStatus_Handler,
 		},
 		{
-			MethodName: "GetNetworkStats",
-			Handler:    _Dashboard_GetNetworkStats_Handler,
+			MethodName: "ListNetworkStats",
+			Handler:    _Dashboard_ListNetworkStats_Handler,
 		},
 		{
-			MethodName: "GetThreadInfo",
-			Handler:    _Dashboard_GetThreadInfo_Handler,
+			MethodName: "ListThreadInfo",
+			Handler:    _Dashboard_ListThreadInfo_Handler,
 		},
 		{
-			MethodName: "GetTokenCacheStats",
-			Handler:    _Dashboard_GetTokenCacheStats_Handler,
+			MethodName: "ListTokenCacheStats",
+			Handler:    _Dashboard_ListTokenCacheStats_Handler,
 		},
 		{
-			MethodName: "GetMapStats",
-			Handler:    _Dashboard_GetMapStats_Handler,
+			MethodName: "ListMapStats",
+			Handler:    _Dashboard_ListMapStats_Handler,
 		},
 		{
 			MethodName: "GetDashboard",
@@ -521,8 +521,8 @@ var Dashboard_ServiceDesc = grpc.ServiceDesc{
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "WatchDashboard",
-			Handler:       _Dashboard_WatchDashboard_Handler,
+			StreamName:    "SubscribeDashboard",
+			Handler:       _Dashboard_SubscribeDashboard_Handler,
 			ServerStreams: true,
 		},
 	},

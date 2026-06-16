@@ -35,8 +35,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Proxy_CreateChatCompletion_FullMethodName       = "/openai.Proxy/CreateChatCompletion"
-	Proxy_CreateChatCompletionStream_FullMethodName = "/openai.Proxy/CreateChatCompletionStream"
+	Proxy_CreateChatCompletion_FullMethodName         = "/openai.Proxy/CreateChatCompletion"
+	Proxy_GenerateChatCompletionStream_FullMethodName = "/openai.Proxy/GenerateChatCompletionStream"
 )
 
 // ProxyClient is the client API for Proxy service.
@@ -45,9 +45,9 @@ const (
 type ProxyClient interface {
 	// CreateChatCompletion sends a non-streaming request to the OpenAI Chat Completions API.
 	CreateChatCompletion(ctx context.Context, in *ProxyRequest, opts ...grpc.CallOption) (*CreateChatCompletionResponse, error)
-	// CreateChatCompletionStream sends a streaming request to the OpenAI Chat Completions API.
+	// GenerateChatCompletionStream sends a streaming request to the OpenAI Chat Completions API.
 	// Returns a server-side stream of SSE chunks.
-	CreateChatCompletionStream(ctx context.Context, in *ProxyRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ChatCompletionChunk], error)
+	GenerateChatCompletionStream(ctx context.Context, in *ProxyRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ChatCompletionChunk], error)
 }
 
 type proxyClient struct {
@@ -68,9 +68,9 @@ func (c *proxyClient) CreateChatCompletion(ctx context.Context, in *ProxyRequest
 	return out, nil
 }
 
-func (c *proxyClient) CreateChatCompletionStream(ctx context.Context, in *ProxyRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ChatCompletionChunk], error) {
+func (c *proxyClient) GenerateChatCompletionStream(ctx context.Context, in *ProxyRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ChatCompletionChunk], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Proxy_ServiceDesc.Streams[0], Proxy_CreateChatCompletionStream_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Proxy_ServiceDesc.Streams[0], Proxy_GenerateChatCompletionStream_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +85,7 @@ func (c *proxyClient) CreateChatCompletionStream(ctx context.Context, in *ProxyR
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Proxy_CreateChatCompletionStreamClient = grpc.ServerStreamingClient[ChatCompletionChunk]
+type Proxy_GenerateChatCompletionStreamClient = grpc.ServerStreamingClient[ChatCompletionChunk]
 
 // ProxyServer is the server API for Proxy service.
 // All implementations must embed UnimplementedProxyServer
@@ -93,9 +93,9 @@ type Proxy_CreateChatCompletionStreamClient = grpc.ServerStreamingClient[ChatCom
 type ProxyServer interface {
 	// CreateChatCompletion sends a non-streaming request to the OpenAI Chat Completions API.
 	CreateChatCompletion(context.Context, *ProxyRequest) (*CreateChatCompletionResponse, error)
-	// CreateChatCompletionStream sends a streaming request to the OpenAI Chat Completions API.
+	// GenerateChatCompletionStream sends a streaming request to the OpenAI Chat Completions API.
 	// Returns a server-side stream of SSE chunks.
-	CreateChatCompletionStream(*ProxyRequest, grpc.ServerStreamingServer[ChatCompletionChunk]) error
+	GenerateChatCompletionStream(*ProxyRequest, grpc.ServerStreamingServer[ChatCompletionChunk]) error
 	mustEmbedUnimplementedProxyServer()
 }
 
@@ -109,8 +109,8 @@ type UnimplementedProxyServer struct{}
 func (UnimplementedProxyServer) CreateChatCompletion(context.Context, *ProxyRequest) (*CreateChatCompletionResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateChatCompletion not implemented")
 }
-func (UnimplementedProxyServer) CreateChatCompletionStream(*ProxyRequest, grpc.ServerStreamingServer[ChatCompletionChunk]) error {
-	return status.Error(codes.Unimplemented, "method CreateChatCompletionStream not implemented")
+func (UnimplementedProxyServer) GenerateChatCompletionStream(*ProxyRequest, grpc.ServerStreamingServer[ChatCompletionChunk]) error {
+	return status.Error(codes.Unimplemented, "method GenerateChatCompletionStream not implemented")
 }
 func (UnimplementedProxyServer) mustEmbedUnimplementedProxyServer() {}
 func (UnimplementedProxyServer) testEmbeddedByValue()               {}
@@ -151,16 +151,16 @@ func _Proxy_CreateChatCompletion_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Proxy_CreateChatCompletionStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Proxy_GenerateChatCompletionStream_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(ProxyRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ProxyServer).CreateChatCompletionStream(m, &grpc.GenericServerStream[ProxyRequest, ChatCompletionChunk]{ServerStream: stream})
+	return srv.(ProxyServer).GenerateChatCompletionStream(m, &grpc.GenericServerStream[ProxyRequest, ChatCompletionChunk]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Proxy_CreateChatCompletionStreamServer = grpc.ServerStreamingServer[ChatCompletionChunk]
+type Proxy_GenerateChatCompletionStreamServer = grpc.ServerStreamingServer[ChatCompletionChunk]
 
 // Proxy_ServiceDesc is the grpc.ServiceDesc for Proxy service.
 // It's only intended for direct use with grpc.RegisterService,
@@ -176,8 +176,8 @@ var Proxy_ServiceDesc = grpc.ServiceDesc{
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "CreateChatCompletionStream",
-			Handler:       _Proxy_CreateChatCompletionStream_Handler,
+			StreamName:    "GenerateChatCompletionStream",
+			Handler:       _Proxy_GenerateChatCompletionStream_Handler,
 			ServerStreams: true,
 		},
 	},

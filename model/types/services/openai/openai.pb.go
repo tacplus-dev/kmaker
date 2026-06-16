@@ -341,12 +341,12 @@ func (TypeID) EnumDescriptor() ([]byte, []int) {
 type ProxyRpcId int32
 
 const (
-	ProxyRpcId_PROXY_RPC_ID_UNSPECIFIED                   ProxyRpcId = 0
-	ProxyRpcId_PROXY_RPC_ID_ALL_ACCESSORS                 ProxyRpcId = 1
-	ProxyRpcId_PROXY_RPC_ID_ALL_MUTATORS                  ProxyRpcId = 2
-	ProxyRpcId_PROXY_RPC_ID_ALL_EXECUTORS                 ProxyRpcId = 3
-	ProxyRpcId_PROXY_RPC_ID_CREATE_CHAT_COMPLETION        ProxyRpcId = 4
-	ProxyRpcId_PROXY_RPC_ID_CREATE_CHAT_COMPLETION_STREAM ProxyRpcId = 5
+	ProxyRpcId_PROXY_RPC_ID_UNSPECIFIED                     ProxyRpcId = 0
+	ProxyRpcId_PROXY_RPC_ID_ALL_ACCESSORS                   ProxyRpcId = 1
+	ProxyRpcId_PROXY_RPC_ID_ALL_MUTATORS                    ProxyRpcId = 2
+	ProxyRpcId_PROXY_RPC_ID_ALL_EXECUTORS                   ProxyRpcId = 3
+	ProxyRpcId_PROXY_RPC_ID_CREATE_CHAT_COMPLETION          ProxyRpcId = 4
+	ProxyRpcId_PROXY_RPC_ID_GENERATE_CHAT_COMPLETION_STREAM ProxyRpcId = 5
 )
 
 // Enum value maps for ProxyRpcId.
@@ -357,15 +357,15 @@ var (
 		2: "PROXY_RPC_ID_ALL_MUTATORS",
 		3: "PROXY_RPC_ID_ALL_EXECUTORS",
 		4: "PROXY_RPC_ID_CREATE_CHAT_COMPLETION",
-		5: "PROXY_RPC_ID_CREATE_CHAT_COMPLETION_STREAM",
+		5: "PROXY_RPC_ID_GENERATE_CHAT_COMPLETION_STREAM",
 	}
 	ProxyRpcId_value = map[string]int32{
-		"PROXY_RPC_ID_UNSPECIFIED":                   0,
-		"PROXY_RPC_ID_ALL_ACCESSORS":                 1,
-		"PROXY_RPC_ID_ALL_MUTATORS":                  2,
-		"PROXY_RPC_ID_ALL_EXECUTORS":                 3,
-		"PROXY_RPC_ID_CREATE_CHAT_COMPLETION":        4,
-		"PROXY_RPC_ID_CREATE_CHAT_COMPLETION_STREAM": 5,
+		"PROXY_RPC_ID_UNSPECIFIED":                     0,
+		"PROXY_RPC_ID_ALL_ACCESSORS":                   1,
+		"PROXY_RPC_ID_ALL_MUTATORS":                    2,
+		"PROXY_RPC_ID_ALL_EXECUTORS":                   3,
+		"PROXY_RPC_ID_CREATE_CHAT_COMPLETION":          4,
+		"PROXY_RPC_ID_GENERATE_CHAT_COMPLETION_STREAM": 5,
 	}
 )
 
@@ -3333,12 +3333,12 @@ const file_services_openai_proto_rawDesc = "" +
 	"\bprovider\x18\n" +
 	" \x01(\tB\x0e\x90\xa7\x1d@\x8a\xa8\x1d\x06openaiR\bprovider\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9b\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9d\x01\n" +
 	"\x11OpenaiConfigState\x120\n" +
 	"\x06config\x18\x01 \x01(\v2\x0e.openai.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:#\x9a\xa8\x1d\x1b\n" +
-	"\x11OpenaiConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:%\x9a\xa8\x1d\x1d\n" +
+	"\x11OpenaiConfigState\x1a\beventbus\xa0\xa8\x1d\x02\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\x8a\x01\n" +
@@ -3394,15 +3394,15 @@ const file_services_openai_proto_rawDesc = "" +
 	"\x15TYPE_ID_PROXY_REQUEST\x10\x1b\x12\x17\n" +
 	"\x13TYPE_ID_PROXY_EVENT\x10\x1c\x12\x1f\n" +
 	"\x1bTYPE_ID_OPENAI_CONFIG_STATE\x10\x1d\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10\x1e*\xe2\x01\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x10\x1e*\xe4\x01\n" +
 	"\n" +
 	"ProxyRpcId\x12\x1c\n" +
 	"\x18PROXY_RPC_ID_UNSPECIFIED\x10\x00\x12\x1e\n" +
 	"\x1aPROXY_RPC_ID_ALL_ACCESSORS\x10\x01\x12\x1d\n" +
 	"\x19PROXY_RPC_ID_ALL_MUTATORS\x10\x02\x12\x1e\n" +
 	"\x1aPROXY_RPC_ID_ALL_EXECUTORS\x10\x03\x12'\n" +
-	"#PROXY_RPC_ID_CREATE_CHAT_COMPLETION\x10\x04\x12.\n" +
-	"*PROXY_RPC_ID_CREATE_CHAT_COMPLETION_STREAM\x10\x05*\x8f\x03\n" +
+	"#PROXY_RPC_ID_CREATE_CHAT_COMPLETION\x10\x04\x120\n" +
+	",PROXY_RPC_ID_GENERATE_CHAT_COMPLETION_STREAM\x10\x05*\x8f\x03\n" +
 	"\x1dOpenaiConfigStateServiceRpcId\x122\n" +
 	".OPENAI_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x124\n" +
 	"0OPENAI_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x123\n" +
@@ -3410,10 +3410,10 @@ const file_services_openai_proto_rawDesc = "" +
 	"0OPENAI_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x121\n" +
 	"-OPENAI_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x121\n" +
 	"-OPENAI_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x123\n" +
-	"/OPENAI_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xb6\x01\n" +
+	"/OPENAI_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xb8\x01\n" +
 	"\x05Proxy\x12R\n" +
-	"\x14CreateChatCompletion\x12\x14.openai.ProxyRequest\x1a$.openai.CreateChatCompletionResponse\x12Q\n" +
-	"\x1aCreateChatCompletionStream\x12\x14.openai.ProxyRequest\x1a\x1b.openai.ChatCompletionChunk0\x01\x1a\x06\xf2\x97\"\x02\x18\x012\xb5\x01\n" +
+	"\x14CreateChatCompletion\x12\x14.openai.ProxyRequest\x1a$.openai.CreateChatCompletionResponse\x12S\n" +
+	"\x1cGenerateChatCompletionStream\x12\x14.openai.ProxyRequest\x1a\x1b.openai.ChatCompletionChunk0\x01\x1a\x06\xf2\x97\"\x02\x18\x012\xb5\x01\n" +
 	"\x18OpenaiConfigStateService\x120\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x0e.openai.Config\x12+\n" +
 	"\tSetConfig\x12\x0e.openai.Config\x1a\x0e.openai.Config\x124\n" +
@@ -3515,12 +3515,12 @@ var file_services_openai_proto_depIdxs = []int32{
 	29, // 35: openai.ProxyEvent.error:type_name -> openai.ErrorResponse
 	31, // 36: openai.OpenaiConfigState.config:type_name -> openai.Config
 	32, // 37: openai.Proxy.CreateChatCompletion:input_type -> openai.ProxyRequest
-	32, // 38: openai.Proxy.CreateChatCompletionStream:input_type -> openai.ProxyRequest
+	32, // 38: openai.Proxy.GenerateChatCompletionStream:input_type -> openai.ProxyRequest
 	36, // 39: openai.OpenaiConfigStateService.GetConfig:input_type -> trace.TraceRequest
 	31, // 40: openai.OpenaiConfigStateService.SetConfig:input_type -> openai.Config
 	36, // 41: openai.OpenaiConfigStateService.WatchConfig:input_type -> trace.TraceRequest
 	19, // 42: openai.Proxy.CreateChatCompletion:output_type -> openai.CreateChatCompletionResponse
-	26, // 43: openai.Proxy.CreateChatCompletionStream:output_type -> openai.ChatCompletionChunk
+	26, // 43: openai.Proxy.GenerateChatCompletionStream:output_type -> openai.ChatCompletionChunk
 	31, // 44: openai.OpenaiConfigStateService.GetConfig:output_type -> openai.Config
 	31, // 45: openai.OpenaiConfigStateService.SetConfig:output_type -> openai.Config
 	31, // 46: openai.OpenaiConfigStateService.WatchConfig:output_type -> openai.Config

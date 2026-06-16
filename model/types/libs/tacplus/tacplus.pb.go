@@ -139,116 +139,6 @@ func (RpcCategory) EnumDescriptor() ([]byte, []int) {
 	return file_libs_tacplus_proto_rawDescGZIP(), []int{1}
 }
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED                      TypeID = 0
-	TypeID_TYPE_ID_LANGUAGE_DEPENDENCIES            TypeID = 1
-	TypeID_TYPE_ID_DEPENDENCIES_REGISTRY            TypeID = 2
-	TypeID_TYPE_ID_DEPENDENCIES_CONFIG              TypeID = 3
-	TypeID_TYPE_ID_STATE_PERM_ENTRY                 TypeID = 4
-	TypeID_TYPE_ID_BOUNDARY_INFO                    TypeID = 5
-	TypeID_TYPE_ID_SUBSCRIPTION_INFO                TypeID = 6
-	TypeID_TYPE_ID_ENUM_VALUE_INFO                  TypeID = 7
-	TypeID_TYPE_ID_FIELD_INFO                       TypeID = 8
-	TypeID_TYPE_ID_TYPE_INFO                        TypeID = 9
-	TypeID_TYPE_ID_GRAPH_PROJECTION_FIELD_INFO      TypeID = 10
-	TypeID_TYPE_ID_GRAPH_PROJECTION_INFO            TypeID = 11
-	TypeID_TYPE_ID_TIMESERIES_PROJECTION_FIELD_INFO TypeID = 12
-	TypeID_TYPE_ID_TIMESERIES_PROJECTION_INFO       TypeID = 13
-	TypeID_TYPE_ID_RPC_INFO                         TypeID = 14
-	TypeID_TYPE_ID_ENUM_INFO                        TypeID = 15
-	TypeID_TYPE_ID_SERVICE_INFO                     TypeID = 16
-	TypeID_TYPE_ID_ENTITLEMENT_GRANT_INFO           TypeID = 17
-	TypeID_TYPE_ID_BUILD_INFO                       TypeID = 18
-	TypeID_TYPE_ID_VERIFICATION_HARNESS             TypeID = 19
-	TypeID_TYPE_ID_VERIFICATION_REPORT              TypeID = 20
-	TypeID_TYPE_ID_PACKAGE_NODE                     TypeID = 21
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0:  "TYPE_ID_UNSPECIFIED",
-		1:  "TYPE_ID_LANGUAGE_DEPENDENCIES",
-		2:  "TYPE_ID_DEPENDENCIES_REGISTRY",
-		3:  "TYPE_ID_DEPENDENCIES_CONFIG",
-		4:  "TYPE_ID_STATE_PERM_ENTRY",
-		5:  "TYPE_ID_BOUNDARY_INFO",
-		6:  "TYPE_ID_SUBSCRIPTION_INFO",
-		7:  "TYPE_ID_ENUM_VALUE_INFO",
-		8:  "TYPE_ID_FIELD_INFO",
-		9:  "TYPE_ID_TYPE_INFO",
-		10: "TYPE_ID_GRAPH_PROJECTION_FIELD_INFO",
-		11: "TYPE_ID_GRAPH_PROJECTION_INFO",
-		12: "TYPE_ID_TIMESERIES_PROJECTION_FIELD_INFO",
-		13: "TYPE_ID_TIMESERIES_PROJECTION_INFO",
-		14: "TYPE_ID_RPC_INFO",
-		15: "TYPE_ID_ENUM_INFO",
-		16: "TYPE_ID_SERVICE_INFO",
-		17: "TYPE_ID_ENTITLEMENT_GRANT_INFO",
-		18: "TYPE_ID_BUILD_INFO",
-		19: "TYPE_ID_VERIFICATION_HARNESS",
-		20: "TYPE_ID_VERIFICATION_REPORT",
-		21: "TYPE_ID_PACKAGE_NODE",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":                      0,
-		"TYPE_ID_LANGUAGE_DEPENDENCIES":            1,
-		"TYPE_ID_DEPENDENCIES_REGISTRY":            2,
-		"TYPE_ID_DEPENDENCIES_CONFIG":              3,
-		"TYPE_ID_STATE_PERM_ENTRY":                 4,
-		"TYPE_ID_BOUNDARY_INFO":                    5,
-		"TYPE_ID_SUBSCRIPTION_INFO":                6,
-		"TYPE_ID_ENUM_VALUE_INFO":                  7,
-		"TYPE_ID_FIELD_INFO":                       8,
-		"TYPE_ID_TYPE_INFO":                        9,
-		"TYPE_ID_GRAPH_PROJECTION_FIELD_INFO":      10,
-		"TYPE_ID_GRAPH_PROJECTION_INFO":            11,
-		"TYPE_ID_TIMESERIES_PROJECTION_FIELD_INFO": 12,
-		"TYPE_ID_TIMESERIES_PROJECTION_INFO":       13,
-		"TYPE_ID_RPC_INFO":                         14,
-		"TYPE_ID_ENUM_INFO":                        15,
-		"TYPE_ID_SERVICE_INFO":                     16,
-		"TYPE_ID_ENTITLEMENT_GRANT_INFO":           17,
-		"TYPE_ID_BUILD_INFO":                       18,
-		"TYPE_ID_VERIFICATION_HARNESS":             19,
-		"TYPE_ID_VERIFICATION_REPORT":              20,
-		"TYPE_ID_PACKAGE_NODE":                     21,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_tacplus_proto_enumTypes[2].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_tacplus_proto_enumTypes[2]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_tacplus_proto_rawDescGZIP(), []int{2}
-}
-
 // LanguageDependencies holds the dependency configuration for a single language.
 type LanguageDependencies struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -752,6 +642,256 @@ func (x *SubscriptionInfo) GetSourceTypeFqn() string {
 	return ""
 }
 
+// EventPublishInfo describes an event_publish binding declared by an actor.
+type EventPublishInfo struct {
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	ActorPackage         string                 `protobuf:"bytes,1,opt,name=actor_package,json=actorPackage,proto3" json:"actor_package,omitempty"`
+	ActorMessage         string                 `protobuf:"bytes,2,opt,name=actor_message,json=actorMessage,proto3" json:"actor_message,omitempty"`
+	TopicRef             string                 `protobuf:"bytes,3,opt,name=topic_ref,json=topicRef,proto3" json:"topic_ref,omitempty"`
+	EventTypeFqn         string                 `protobuf:"bytes,4,opt,name=event_type_fqn,json=eventTypeFqn,proto3" json:"event_type_fqn,omitempty"`
+	BrokerTag            string                 `protobuf:"bytes,5,opt,name=broker_tag,json=brokerTag,proto3" json:"broker_tag,omitempty"`
+	RpcStem              string                 `protobuf:"bytes,6,opt,name=rpc_stem,json=rpcStem,proto3" json:"rpc_stem,omitempty"`
+	AuthModel            string                 `protobuf:"bytes,7,opt,name=auth_model,json=authModel,proto3" json:"auth_model,omitempty"`
+	AuthServices         []string               `protobuf:"bytes,8,rep,name=auth_services,json=authServices,proto3" json:"auth_services,omitempty"`
+	AuthDisabled         bool                   `protobuf:"varint,9,opt,name=auth_disabled,json=authDisabled,proto3" json:"auth_disabled,omitempty"`
+	AuthAnyUser          bool                   `protobuf:"varint,10,opt,name=auth_any_user,json=authAnyUser,proto3" json:"auth_any_user,omitempty"`
+	TargetNamespaceField string                 `protobuf:"bytes,11,opt,name=target_namespace_field,json=targetNamespaceField,proto3" json:"target_namespace_field,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *EventPublishInfo) Reset() {
+	*x = EventPublishInfo{}
+	mi := &file_libs_tacplus_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EventPublishInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EventPublishInfo) ProtoMessage() {}
+
+func (x *EventPublishInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_libs_tacplus_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EventPublishInfo.ProtoReflect.Descriptor instead.
+func (*EventPublishInfo) Descriptor() ([]byte, []int) {
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *EventPublishInfo) GetActorPackage() string {
+	if x != nil {
+		return x.ActorPackage
+	}
+	return ""
+}
+
+func (x *EventPublishInfo) GetActorMessage() string {
+	if x != nil {
+		return x.ActorMessage
+	}
+	return ""
+}
+
+func (x *EventPublishInfo) GetTopicRef() string {
+	if x != nil {
+		return x.TopicRef
+	}
+	return ""
+}
+
+func (x *EventPublishInfo) GetEventTypeFqn() string {
+	if x != nil {
+		return x.EventTypeFqn
+	}
+	return ""
+}
+
+func (x *EventPublishInfo) GetBrokerTag() string {
+	if x != nil {
+		return x.BrokerTag
+	}
+	return ""
+}
+
+func (x *EventPublishInfo) GetRpcStem() string {
+	if x != nil {
+		return x.RpcStem
+	}
+	return ""
+}
+
+func (x *EventPublishInfo) GetAuthModel() string {
+	if x != nil {
+		return x.AuthModel
+	}
+	return ""
+}
+
+func (x *EventPublishInfo) GetAuthServices() []string {
+	if x != nil {
+		return x.AuthServices
+	}
+	return nil
+}
+
+func (x *EventPublishInfo) GetAuthDisabled() bool {
+	if x != nil {
+		return x.AuthDisabled
+	}
+	return false
+}
+
+func (x *EventPublishInfo) GetAuthAnyUser() bool {
+	if x != nil {
+		return x.AuthAnyUser
+	}
+	return false
+}
+
+func (x *EventPublishInfo) GetTargetNamespaceField() string {
+	if x != nil {
+		return x.TargetNamespaceField
+	}
+	return ""
+}
+
+// EventWatchInfo describes an event_watch binding declared by an actor.
+type EventWatchInfo struct {
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	ActorPackage         string                 `protobuf:"bytes,1,opt,name=actor_package,json=actorPackage,proto3" json:"actor_package,omitempty"`
+	ActorMessage         string                 `protobuf:"bytes,2,opt,name=actor_message,json=actorMessage,proto3" json:"actor_message,omitempty"`
+	TopicRef             string                 `protobuf:"bytes,3,opt,name=topic_ref,json=topicRef,proto3" json:"topic_ref,omitempty"`
+	EventTypeFqn         string                 `protobuf:"bytes,4,opt,name=event_type_fqn,json=eventTypeFqn,proto3" json:"event_type_fqn,omitempty"`
+	BrokerTag            string                 `protobuf:"bytes,5,opt,name=broker_tag,json=brokerTag,proto3" json:"broker_tag,omitempty"`
+	RpcStem              string                 `protobuf:"bytes,6,opt,name=rpc_stem,json=rpcStem,proto3" json:"rpc_stem,omitempty"`
+	AuthModel            string                 `protobuf:"bytes,7,opt,name=auth_model,json=authModel,proto3" json:"auth_model,omitempty"`
+	AuthServices         []string               `protobuf:"bytes,8,rep,name=auth_services,json=authServices,proto3" json:"auth_services,omitempty"`
+	AuthDisabled         bool                   `protobuf:"varint,9,opt,name=auth_disabled,json=authDisabled,proto3" json:"auth_disabled,omitempty"`
+	AuthAnyUser          bool                   `protobuf:"varint,10,opt,name=auth_any_user,json=authAnyUser,proto3" json:"auth_any_user,omitempty"`
+	TargetNamespaceField string                 `protobuf:"bytes,11,opt,name=target_namespace_field,json=targetNamespaceField,proto3" json:"target_namespace_field,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *EventWatchInfo) Reset() {
+	*x = EventWatchInfo{}
+	mi := &file_libs_tacplus_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EventWatchInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EventWatchInfo) ProtoMessage() {}
+
+func (x *EventWatchInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_libs_tacplus_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EventWatchInfo.ProtoReflect.Descriptor instead.
+func (*EventWatchInfo) Descriptor() ([]byte, []int) {
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *EventWatchInfo) GetActorPackage() string {
+	if x != nil {
+		return x.ActorPackage
+	}
+	return ""
+}
+
+func (x *EventWatchInfo) GetActorMessage() string {
+	if x != nil {
+		return x.ActorMessage
+	}
+	return ""
+}
+
+func (x *EventWatchInfo) GetTopicRef() string {
+	if x != nil {
+		return x.TopicRef
+	}
+	return ""
+}
+
+func (x *EventWatchInfo) GetEventTypeFqn() string {
+	if x != nil {
+		return x.EventTypeFqn
+	}
+	return ""
+}
+
+func (x *EventWatchInfo) GetBrokerTag() string {
+	if x != nil {
+		return x.BrokerTag
+	}
+	return ""
+}
+
+func (x *EventWatchInfo) GetRpcStem() string {
+	if x != nil {
+		return x.RpcStem
+	}
+	return ""
+}
+
+func (x *EventWatchInfo) GetAuthModel() string {
+	if x != nil {
+		return x.AuthModel
+	}
+	return ""
+}
+
+func (x *EventWatchInfo) GetAuthServices() []string {
+	if x != nil {
+		return x.AuthServices
+	}
+	return nil
+}
+
+func (x *EventWatchInfo) GetAuthDisabled() bool {
+	if x != nil {
+		return x.AuthDisabled
+	}
+	return false
+}
+
+func (x *EventWatchInfo) GetAuthAnyUser() bool {
+	if x != nil {
+		return x.AuthAnyUser
+	}
+	return false
+}
+
+func (x *EventWatchInfo) GetTargetNamespaceField() string {
+	if x != nil {
+		return x.TargetNamespaceField
+	}
+	return ""
+}
+
 // EnumValueInfo describes a single enum value in type metadata.
 type EnumValueInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -764,7 +904,7 @@ type EnumValueInfo struct {
 
 func (x *EnumValueInfo) Reset() {
 	*x = EnumValueInfo{}
-	mi := &file_libs_tacplus_proto_msgTypes[6]
+	mi := &file_libs_tacplus_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -776,7 +916,7 @@ func (x *EnumValueInfo) String() string {
 func (*EnumValueInfo) ProtoMessage() {}
 
 func (x *EnumValueInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_tacplus_proto_msgTypes[6]
+	mi := &file_libs_tacplus_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -789,7 +929,7 @@ func (x *EnumValueInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EnumValueInfo.ProtoReflect.Descriptor instead.
 func (*EnumValueInfo) Descriptor() ([]byte, []int) {
-	return file_libs_tacplus_proto_rawDescGZIP(), []int{6}
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *EnumValueInfo) GetName() string {
@@ -809,6 +949,163 @@ func (x *EnumValueInfo) GetNumber() int32 {
 func (x *EnumValueInfo) GetDescription() string {
 	if x != nil {
 		return x.Description
+	}
+	return ""
+}
+
+// FieldConstraintInfo describes one machine-readable validation constraint.
+type FieldConstraintInfo struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// rule is the source annotation or derived rule name, e.g. assert_max_size.
+	Rule string `protobuf:"bytes,1,opt,name=rule,proto3" json:"rule,omitempty"`
+	// target identifies what the rule constrains: field, element, key, or value.
+	Target string `protobuf:"bytes,2,opt,name=target,proto3" json:"target,omitempty"`
+	// value_kind is bool, int, float, string, enum, int_list, or float_list.
+	ValueKind   string    `protobuf:"bytes,3,opt,name=value_kind,json=valueKind,proto3" json:"value_kind,omitempty"`
+	BoolValue   *bool     `protobuf:"varint,4,opt,name=bool_value,json=boolValue,proto3,oneof" json:"bool_value,omitempty"`
+	IntValue    *int64    `protobuf:"varint,5,opt,name=int_value,json=intValue,proto3,oneof" json:"int_value,omitempty"`
+	FloatValue  *float64  `protobuf:"fixed64,6,opt,name=float_value,json=floatValue,proto3,oneof" json:"float_value,omitempty"`
+	StringValue string    `protobuf:"bytes,7,opt,name=string_value,json=stringValue,proto3" json:"string_value,omitempty"`
+	EnumValue   string    `protobuf:"bytes,8,opt,name=enum_value,json=enumValue,proto3" json:"enum_value,omitempty"`
+	IntValues   []int64   `protobuf:"varint,9,rep,packed,name=int_values,json=intValues,proto3" json:"int_values,omitempty"`
+	FloatValues []float64 `protobuf:"fixed64,10,rep,packed,name=float_values,json=floatValues,proto3" json:"float_values,omitempty"`
+	// operator carries comparisons such as gt, ge, lt, le, eq, ne, in, not_in,
+	// or multiple_of for compound numeric annotations.
+	Operator string `protobuf:"bytes,11,opt,name=operator,proto3" json:"operator,omitempty"`
+	// defaulted is true for compiler-provided default bounds.
+	Defaulted bool `protobuf:"varint,12,opt,name=defaulted,proto3" json:"defaulted,omitempty"`
+	// unit is bytes, elements, entries, or another rule-specific unit.
+	Unit string `protobuf:"bytes,13,opt,name=unit,proto3" json:"unit,omitempty"`
+	// source is annotation or default_bound.
+	Source        string `protobuf:"bytes,14,opt,name=source,proto3" json:"source,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FieldConstraintInfo) Reset() {
+	*x = FieldConstraintInfo{}
+	mi := &file_libs_tacplus_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FieldConstraintInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FieldConstraintInfo) ProtoMessage() {}
+
+func (x *FieldConstraintInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_libs_tacplus_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FieldConstraintInfo.ProtoReflect.Descriptor instead.
+func (*FieldConstraintInfo) Descriptor() ([]byte, []int) {
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *FieldConstraintInfo) GetRule() string {
+	if x != nil {
+		return x.Rule
+	}
+	return ""
+}
+
+func (x *FieldConstraintInfo) GetTarget() string {
+	if x != nil {
+		return x.Target
+	}
+	return ""
+}
+
+func (x *FieldConstraintInfo) GetValueKind() string {
+	if x != nil {
+		return x.ValueKind
+	}
+	return ""
+}
+
+func (x *FieldConstraintInfo) GetBoolValue() bool {
+	if x != nil && x.BoolValue != nil {
+		return *x.BoolValue
+	}
+	return false
+}
+
+func (x *FieldConstraintInfo) GetIntValue() int64 {
+	if x != nil && x.IntValue != nil {
+		return *x.IntValue
+	}
+	return 0
+}
+
+func (x *FieldConstraintInfo) GetFloatValue() float64 {
+	if x != nil && x.FloatValue != nil {
+		return *x.FloatValue
+	}
+	return 0
+}
+
+func (x *FieldConstraintInfo) GetStringValue() string {
+	if x != nil {
+		return x.StringValue
+	}
+	return ""
+}
+
+func (x *FieldConstraintInfo) GetEnumValue() string {
+	if x != nil {
+		return x.EnumValue
+	}
+	return ""
+}
+
+func (x *FieldConstraintInfo) GetIntValues() []int64 {
+	if x != nil {
+		return x.IntValues
+	}
+	return nil
+}
+
+func (x *FieldConstraintInfo) GetFloatValues() []float64 {
+	if x != nil {
+		return x.FloatValues
+	}
+	return nil
+}
+
+func (x *FieldConstraintInfo) GetOperator() string {
+	if x != nil {
+		return x.Operator
+	}
+	return ""
+}
+
+func (x *FieldConstraintInfo) GetDefaulted() bool {
+	if x != nil {
+		return x.Defaulted
+	}
+	return false
+}
+
+func (x *FieldConstraintInfo) GetUnit() string {
+	if x != nil {
+		return x.Unit
+	}
+	return ""
+}
+
+func (x *FieldConstraintInfo) GetSource() string {
+	if x != nil {
+		return x.Source
 	}
 	return ""
 }
@@ -856,13 +1153,23 @@ type FieldInfo struct {
 	TimeseriesDefaultExpr string `protobuf:"bytes,23,opt,name=timeseries_default_expr,json=timeseriesDefaultExpr,proto3" json:"timeseries_default_expr,omitempty"`
 	// True when this column is wrapped in LowCardinality() from (spec.timeseries).low_cardinality.
 	TimeseriesLowCardinality bool `protobuf:"varint,24,opt,name=timeseries_low_cardinality,json=timeseriesLowCardinality,proto3" json:"timeseries_low_cardinality,omitempty"`
-	unknownFields            protoimpl.UnknownFields
-	sizeCache                protoimpl.SizeCache
+	// True when this field is a member of a protobuf oneof group.
+	Oneof bool `protobuf:"varint,25,opt,name=oneof,proto3" json:"oneof,omitempty"`
+	// Name of the protobuf oneof group when oneof is true.
+	OneofName string `protobuf:"bytes,26,opt,name=oneof_name,json=oneofName,proto3" json:"oneof_name,omitempty"`
+	// True when this field is the key field for a service_store message.
+	StoreKey bool `protobuf:"varint,27,opt,name=store_key,json=storeKey,proto3" json:"store_key,omitempty"`
+	// True when writes involving this field require quorum acknowledgement.
+	QuorumWrite bool `protobuf:"varint,28,opt,name=quorum_write,json=quorumWrite,proto3" json:"quorum_write,omitempty"`
+	// Machine-readable constraints derived from proto annotations and defaults.
+	ConstraintInfos []*FieldConstraintInfo `protobuf:"bytes,29,rep,name=constraint_infos,json=constraintInfos,proto3" json:"constraint_infos,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *FieldInfo) Reset() {
 	*x = FieldInfo{}
-	mi := &file_libs_tacplus_proto_msgTypes[7]
+	mi := &file_libs_tacplus_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -874,7 +1181,7 @@ func (x *FieldInfo) String() string {
 func (*FieldInfo) ProtoMessage() {}
 
 func (x *FieldInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_tacplus_proto_msgTypes[7]
+	mi := &file_libs_tacplus_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -887,7 +1194,7 @@ func (x *FieldInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FieldInfo.ProtoReflect.Descriptor instead.
 func (*FieldInfo) Descriptor() ([]byte, []int) {
-	return file_libs_tacplus_proto_rawDescGZIP(), []int{7}
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *FieldInfo) GetName() string {
@@ -1058,6 +1365,41 @@ func (x *FieldInfo) GetTimeseriesLowCardinality() bool {
 	return false
 }
 
+func (x *FieldInfo) GetOneof() bool {
+	if x != nil {
+		return x.Oneof
+	}
+	return false
+}
+
+func (x *FieldInfo) GetOneofName() string {
+	if x != nil {
+		return x.OneofName
+	}
+	return ""
+}
+
+func (x *FieldInfo) GetStoreKey() bool {
+	if x != nil {
+		return x.StoreKey
+	}
+	return false
+}
+
+func (x *FieldInfo) GetQuorumWrite() bool {
+	if x != nil {
+		return x.QuorumWrite
+	}
+	return false
+}
+
+func (x *FieldInfo) GetConstraintInfos() []*FieldConstraintInfo {
+	if x != nil {
+		return x.ConstraintInfos
+	}
+	return nil
+}
+
 // TypeInfo describes a protobuf message type in the generated registry.
 type TypeInfo struct {
 	state       protoimpl.MessageState `protogen:"open.v1"`
@@ -1094,13 +1436,19 @@ type TypeInfo struct {
 	GraphProjections []*GraphProjectionInfo `protobuf:"bytes,18,rep,name=graph_projections,json=graphProjections,proto3" json:"graph_projections,omitempty"`
 	// timeseries_projections from (spec.timeseries_projection). Tables to generate.
 	TimeseriesProjections []*TimeseriesProjectionInfo `protobuf:"bytes,19,rep,name=timeseries_projections,json=timeseriesProjections,proto3" json:"timeseries_projections,omitempty"`
-	unknownFields         protoimpl.UnknownFields
-	sizeCache             protoimpl.SizeCache
+	// True when this message is annotated as a durable service_store value.
+	ServiceStore bool `protobuf:"varint,20,opt,name=service_store,json=serviceStore,proto3" json:"service_store,omitempty"`
+	// Durable service_store name. Defaults to the protobuf message name.
+	ServiceStoreName string `protobuf:"bytes,21,opt,name=service_store_name,json=serviceStoreName,proto3" json:"service_store_name,omitempty"`
+	// Hosting service tag from (spec.service_store).tag.
+	ServiceStoreTag string `protobuf:"bytes,22,opt,name=service_store_tag,json=serviceStoreTag,proto3" json:"service_store_tag,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *TypeInfo) Reset() {
 	*x = TypeInfo{}
-	mi := &file_libs_tacplus_proto_msgTypes[8]
+	mi := &file_libs_tacplus_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1112,7 +1460,7 @@ func (x *TypeInfo) String() string {
 func (*TypeInfo) ProtoMessage() {}
 
 func (x *TypeInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_tacplus_proto_msgTypes[8]
+	mi := &file_libs_tacplus_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1125,7 +1473,7 @@ func (x *TypeInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TypeInfo.ProtoReflect.Descriptor instead.
 func (*TypeInfo) Descriptor() ([]byte, []int) {
-	return file_libs_tacplus_proto_rawDescGZIP(), []int{8}
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *TypeInfo) GetFqn() string {
@@ -1247,6 +1595,27 @@ func (x *TypeInfo) GetTimeseriesProjections() []*TimeseriesProjectionInfo {
 	return nil
 }
 
+func (x *TypeInfo) GetServiceStore() bool {
+	if x != nil {
+		return x.ServiceStore
+	}
+	return false
+}
+
+func (x *TypeInfo) GetServiceStoreName() string {
+	if x != nil {
+		return x.ServiceStoreName
+	}
+	return ""
+}
+
+func (x *TypeInfo) GetServiceStoreTag() string {
+	if x != nil {
+		return x.ServiceStoreTag
+	}
+	return ""
+}
+
 // GraphProjectionFieldInfo describes a single field in a graph projection.
 type GraphProjectionFieldInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1262,7 +1631,7 @@ type GraphProjectionFieldInfo struct {
 
 func (x *GraphProjectionFieldInfo) Reset() {
 	*x = GraphProjectionFieldInfo{}
-	mi := &file_libs_tacplus_proto_msgTypes[9]
+	mi := &file_libs_tacplus_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1274,7 +1643,7 @@ func (x *GraphProjectionFieldInfo) String() string {
 func (*GraphProjectionFieldInfo) ProtoMessage() {}
 
 func (x *GraphProjectionFieldInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_tacplus_proto_msgTypes[9]
+	mi := &file_libs_tacplus_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1287,7 +1656,7 @@ func (x *GraphProjectionFieldInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GraphProjectionFieldInfo.ProtoReflect.Descriptor instead.
 func (*GraphProjectionFieldInfo) Descriptor() ([]byte, []int) {
-	return file_libs_tacplus_proto_rawDescGZIP(), []int{9}
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *GraphProjectionFieldInfo) GetSource() string {
@@ -1344,7 +1713,7 @@ type GraphProjectionInfo struct {
 
 func (x *GraphProjectionInfo) Reset() {
 	*x = GraphProjectionInfo{}
-	mi := &file_libs_tacplus_proto_msgTypes[10]
+	mi := &file_libs_tacplus_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1356,7 +1725,7 @@ func (x *GraphProjectionInfo) String() string {
 func (*GraphProjectionInfo) ProtoMessage() {}
 
 func (x *GraphProjectionInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_tacplus_proto_msgTypes[10]
+	mi := &file_libs_tacplus_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1369,7 +1738,7 @@ func (x *GraphProjectionInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GraphProjectionInfo.ProtoReflect.Descriptor instead.
 func (*GraphProjectionInfo) Descriptor() ([]byte, []int) {
-	return file_libs_tacplus_proto_rawDescGZIP(), []int{10}
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *GraphProjectionInfo) GetName() string {
@@ -1407,7 +1776,7 @@ type TimeseriesProjectionFieldInfo struct {
 
 func (x *TimeseriesProjectionFieldInfo) Reset() {
 	*x = TimeseriesProjectionFieldInfo{}
-	mi := &file_libs_tacplus_proto_msgTypes[11]
+	mi := &file_libs_tacplus_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1419,7 +1788,7 @@ func (x *TimeseriesProjectionFieldInfo) String() string {
 func (*TimeseriesProjectionFieldInfo) ProtoMessage() {}
 
 func (x *TimeseriesProjectionFieldInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_tacplus_proto_msgTypes[11]
+	mi := &file_libs_tacplus_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1432,7 +1801,7 @@ func (x *TimeseriesProjectionFieldInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TimeseriesProjectionFieldInfo.ProtoReflect.Descriptor instead.
 func (*TimeseriesProjectionFieldInfo) Descriptor() ([]byte, []int) {
-	return file_libs_tacplus_proto_rawDescGZIP(), []int{11}
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *TimeseriesProjectionFieldInfo) GetSource() string {
@@ -1484,7 +1853,7 @@ type TimeseriesProjectionInfo struct {
 
 func (x *TimeseriesProjectionInfo) Reset() {
 	*x = TimeseriesProjectionInfo{}
-	mi := &file_libs_tacplus_proto_msgTypes[12]
+	mi := &file_libs_tacplus_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1496,7 +1865,7 @@ func (x *TimeseriesProjectionInfo) String() string {
 func (*TimeseriesProjectionInfo) ProtoMessage() {}
 
 func (x *TimeseriesProjectionInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_tacplus_proto_msgTypes[12]
+	mi := &file_libs_tacplus_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1509,7 +1878,7 @@ func (x *TimeseriesProjectionInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TimeseriesProjectionInfo.ProtoReflect.Descriptor instead.
 func (*TimeseriesProjectionInfo) Descriptor() ([]byte, []int) {
-	return file_libs_tacplus_proto_rawDescGZIP(), []int{12}
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *TimeseriesProjectionInfo) GetName() string {
@@ -1547,6 +1916,166 @@ func (x *TimeseriesProjectionInfo) GetField() []*TimeseriesProjectionFieldInfo {
 	return nil
 }
 
+// RpcSurfaceInfo describes one transport/auth surface for an RPC.
+type RpcSurfaceInfo struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// surface_kind is "s2s", "c2s", "c2d", or "w2s".
+	SurfaceKind string `protobuf:"bytes,1,opt,name=surface_kind,json=surfaceKind,proto3" json:"surface_kind,omitempty"`
+	// transport is "grpc", "grpc_over_rest", or "unix".
+	Transport string `protobuf:"bytes,2,opt,name=transport,proto3" json:"transport,omitempty"`
+	// auth_model is the auth model enforced on this surface.
+	AuthModel              string   `protobuf:"bytes,3,opt,name=auth_model,json=authModel,proto3" json:"auth_model,omitempty"`
+	AuthDisabled           bool     `protobuf:"varint,4,opt,name=auth_disabled,json=authDisabled,proto3" json:"auth_disabled,omitempty"`
+	AuthServices           []string `protobuf:"bytes,5,rep,name=auth_services,json=authServices,proto3" json:"auth_services,omitempty"`
+	AuthEntitledUsers      bool     `protobuf:"varint,6,opt,name=auth_entitled_users,json=authEntitledUsers,proto3" json:"auth_entitled_users,omitempty"`
+	AuthAnyUser            bool     `protobuf:"varint,7,opt,name=auth_any_user,json=authAnyUser,proto3" json:"auth_any_user,omitempty"`
+	TargetNamespaceField   string   `protobuf:"bytes,8,opt,name=target_namespace_field,json=targetNamespaceField,proto3" json:"target_namespace_field,omitempty"`
+	SubjectNamespaceSource string   `protobuf:"bytes,9,opt,name=subject_namespace_source,json=subjectNamespaceSource,proto3" json:"subject_namespace_source,omitempty"`
+	TargetNamespaceSource  string   `protobuf:"bytes,10,opt,name=target_namespace_source,json=targetNamespaceSource,proto3" json:"target_namespace_source,omitempty"`
+	TargetNamespace        string   `protobuf:"bytes,11,opt,name=target_namespace,json=targetNamespace,proto3" json:"target_namespace,omitempty"`
+	GrpcPath               string   `protobuf:"bytes,12,opt,name=grpc_path,json=grpcPath,proto3" json:"grpc_path,omitempty"`
+	HttpPath               string   `protobuf:"bytes,13,opt,name=http_path,json=httpPath,proto3" json:"http_path,omitempty"`
+	HttpMethods            []string `protobuf:"bytes,14,rep,name=http_methods,json=httpMethods,proto3" json:"http_methods,omitempty"`
+	HttpAliasPath          string   `protobuf:"bytes,15,opt,name=http_alias_path,json=httpAliasPath,proto3" json:"http_alias_path,omitempty"`
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
+}
+
+func (x *RpcSurfaceInfo) Reset() {
+	*x = RpcSurfaceInfo{}
+	mi := &file_libs_tacplus_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RpcSurfaceInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RpcSurfaceInfo) ProtoMessage() {}
+
+func (x *RpcSurfaceInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_libs_tacplus_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RpcSurfaceInfo.ProtoReflect.Descriptor instead.
+func (*RpcSurfaceInfo) Descriptor() ([]byte, []int) {
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *RpcSurfaceInfo) GetSurfaceKind() string {
+	if x != nil {
+		return x.SurfaceKind
+	}
+	return ""
+}
+
+func (x *RpcSurfaceInfo) GetTransport() string {
+	if x != nil {
+		return x.Transport
+	}
+	return ""
+}
+
+func (x *RpcSurfaceInfo) GetAuthModel() string {
+	if x != nil {
+		return x.AuthModel
+	}
+	return ""
+}
+
+func (x *RpcSurfaceInfo) GetAuthDisabled() bool {
+	if x != nil {
+		return x.AuthDisabled
+	}
+	return false
+}
+
+func (x *RpcSurfaceInfo) GetAuthServices() []string {
+	if x != nil {
+		return x.AuthServices
+	}
+	return nil
+}
+
+func (x *RpcSurfaceInfo) GetAuthEntitledUsers() bool {
+	if x != nil {
+		return x.AuthEntitledUsers
+	}
+	return false
+}
+
+func (x *RpcSurfaceInfo) GetAuthAnyUser() bool {
+	if x != nil {
+		return x.AuthAnyUser
+	}
+	return false
+}
+
+func (x *RpcSurfaceInfo) GetTargetNamespaceField() string {
+	if x != nil {
+		return x.TargetNamespaceField
+	}
+	return ""
+}
+
+func (x *RpcSurfaceInfo) GetSubjectNamespaceSource() string {
+	if x != nil {
+		return x.SubjectNamespaceSource
+	}
+	return ""
+}
+
+func (x *RpcSurfaceInfo) GetTargetNamespaceSource() string {
+	if x != nil {
+		return x.TargetNamespaceSource
+	}
+	return ""
+}
+
+func (x *RpcSurfaceInfo) GetTargetNamespace() string {
+	if x != nil {
+		return x.TargetNamespace
+	}
+	return ""
+}
+
+func (x *RpcSurfaceInfo) GetGrpcPath() string {
+	if x != nil {
+		return x.GrpcPath
+	}
+	return ""
+}
+
+func (x *RpcSurfaceInfo) GetHttpPath() string {
+	if x != nil {
+		return x.HttpPath
+	}
+	return ""
+}
+
+func (x *RpcSurfaceInfo) GetHttpMethods() []string {
+	if x != nil {
+		return x.HttpMethods
+	}
+	return nil
+}
+
+func (x *RpcSurfaceInfo) GetHttpAliasPath() string {
+	if x != nil {
+		return x.HttpAliasPath
+	}
+	return ""
+}
+
 // RpcInfo describes a protobuf RPC in the generated registry.
 type RpcInfo struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
@@ -1576,7 +2105,8 @@ type RpcInfo struct {
 	AuthServices      []string `protobuf:"bytes,21,rep,name=auth_services,json=authServices,proto3" json:"auth_services,omitempty"`
 	AuthEntitledUsers bool     `protobuf:"varint,22,opt,name=auth_entitled_users,json=authEntitledUsers,proto3" json:"auth_entitled_users,omitempty"`
 	AuthAnyUser       bool     `protobuf:"varint,23,opt,name=auth_any_user,json=authAnyUser,proto3" json:"auth_any_user,omitempty"`
-	// auth_model: "s2s" (service-to-service) or "c2s" (client-to-service).
+	// auth_model: "s2s" (service-to-service), "c2s" (client-to-service),
+	// or "c2d" (client-to-daemon local IPC).
 	AuthModel string `protobuf:"bytes,24,opt,name=auth_model,json=authModel,proto3" json:"auth_model,omitempty"`
 	// method_collection (collection-returning read) — see docs/API.md.
 	// collection_mode is "SNAPSHOT" | "WATCH" | "PAGE"; empty when the RPC is not
@@ -1610,13 +2140,21 @@ type RpcInfo struct {
 	SubjectNamespaceSource string `protobuf:"bytes,45,opt,name=subject_namespace_source,json=subjectNamespaceSource,proto3" json:"subject_namespace_source,omitempty"` // "" | "token.namespace"
 	TargetNamespaceSource  string `protobuf:"bytes,46,opt,name=target_namespace_source,json=targetNamespaceSource,proto3" json:"target_namespace_source,omitempty"`    // "" | "request.field" | "literal"
 	TargetNamespace        string `protobuf:"bytes,47,opt,name=target_namespace,json=targetNamespace,proto3" json:"target_namespace,omitempty"`                        // fixed namespace literal after normalization ("" unless target_namespace_source == "literal")
-	unknownFields          protoimpl.UnknownFields
-	sizeCache              protoimpl.SizeCache
+	// verb_status is "classified", "unclassified", or "exempt".
+	VerbStatus string `protobuf:"bytes,48,opt,name=verb_status,json=verbStatus,proto3" json:"verb_status,omitempty"`
+	// folded_to_verb is the canonical verb for a rejected leading synonym, when known.
+	FoldedToVerb string `protobuf:"bytes,49,opt,name=folded_to_verb,json=foldedToVerb,proto3" json:"folded_to_verb,omitempty"`
+	// surfaces lists every generated transport/auth surface for this RPC. This
+	// includes derived W2S gRPC-over-REST exposure when a C2S RPC has REST route
+	// metadata.
+	Surfaces      []*RpcSurfaceInfo `protobuf:"bytes,50,rep,name=surfaces,proto3" json:"surfaces,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *RpcInfo) Reset() {
 	*x = RpcInfo{}
-	mi := &file_libs_tacplus_proto_msgTypes[13]
+	mi := &file_libs_tacplus_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1628,7 +2166,7 @@ func (x *RpcInfo) String() string {
 func (*RpcInfo) ProtoMessage() {}
 
 func (x *RpcInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_tacplus_proto_msgTypes[13]
+	mi := &file_libs_tacplus_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1641,7 +2179,7 @@ func (x *RpcInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RpcInfo.ProtoReflect.Descriptor instead.
 func (*RpcInfo) Descriptor() ([]byte, []int) {
-	return file_libs_tacplus_proto_rawDescGZIP(), []int{13}
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *RpcInfo) GetService() ServiceName {
@@ -1931,6 +2469,27 @@ func (x *RpcInfo) GetTargetNamespace() string {
 	return ""
 }
 
+func (x *RpcInfo) GetVerbStatus() string {
+	if x != nil {
+		return x.VerbStatus
+	}
+	return ""
+}
+
+func (x *RpcInfo) GetFoldedToVerb() string {
+	if x != nil {
+		return x.FoldedToVerb
+	}
+	return ""
+}
+
+func (x *RpcInfo) GetSurfaces() []*RpcSurfaceInfo {
+	if x != nil {
+		return x.Surfaces
+	}
+	return nil
+}
+
 // EnumInfo describes a top-level protobuf enum definition.
 type EnumInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1944,7 +2503,7 @@ type EnumInfo struct {
 
 func (x *EnumInfo) Reset() {
 	*x = EnumInfo{}
-	mi := &file_libs_tacplus_proto_msgTypes[14]
+	mi := &file_libs_tacplus_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1956,7 +2515,7 @@ func (x *EnumInfo) String() string {
 func (*EnumInfo) ProtoMessage() {}
 
 func (x *EnumInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_tacplus_proto_msgTypes[14]
+	mi := &file_libs_tacplus_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1969,7 +2528,7 @@ func (x *EnumInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EnumInfo.ProtoReflect.Descriptor instead.
 func (*EnumInfo) Descriptor() ([]byte, []int) {
-	return file_libs_tacplus_proto_rawDescGZIP(), []int{14}
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *EnumInfo) GetName() string {
@@ -2021,21 +2580,27 @@ type ServiceInfo struct {
 	EventTag string `protobuf:"bytes,8,opt,name=event_tag,json=eventTag,proto3" json:"event_tag,omitempty"`
 	// smb marks a Service Mesh Blackbox service: its own instances talk over a
 	// black-box peer protocol (e.g. Hazelcast) within a single cluster (SPIFFE
-	// plan D7). Consumers read this from the registry — not proto text — to drive
+	// plan D7). Consumers read this from the registry, not proto text, to drive
 	// the per-SMB CA + member-cert wiring.
 	Smb bool `protobuf:"varint,9,opt,name=smb,proto3" json:"smb,omitempty"`
 	// smb_authority marks the consumer service designated to issue per-SMB CAs +
 	// member certs for smb services (SPIFFE plan D7). Read from the registry so an
 	// SMB service / its tooling can resolve which service to obtain its CA + cert
 	// from. tacplus does not implement the authority.
-	SmbAuthority  bool `protobuf:"varint,10,opt,name=smb_authority,json=smbAuthority,proto3" json:"smb_authority,omitempty"`
+	SmbAuthority bool `protobuf:"varint,10,opt,name=smb_authority,json=smbAuthority,proto3" json:"smb_authority,omitempty"`
+	// smb_root is present when smb is true and records the trust profile selected
+	// by spec.smb. SMB_ROOT_ISOLATED is the default; SMB_ROOT_CLUSTER requests a
+	// per-SMB intermediate rooted in the cluster CA.
+	SmbRoot *spec.SmbRoot `protobuf:"varint,11,opt,name=smb_root,json=smbRoot,proto3,enum=spec.SmbRoot,oneof" json:"smb_root,omitempty"`
+	// host_tag is the service_s2s tag for hosted vservice RPC surfaces.
+	HostTag       string `protobuf:"bytes,12,opt,name=host_tag,json=hostTag,proto3" json:"host_tag,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ServiceInfo) Reset() {
 	*x = ServiceInfo{}
-	mi := &file_libs_tacplus_proto_msgTypes[15]
+	mi := &file_libs_tacplus_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2047,7 +2612,7 @@ func (x *ServiceInfo) String() string {
 func (*ServiceInfo) ProtoMessage() {}
 
 func (x *ServiceInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_tacplus_proto_msgTypes[15]
+	mi := &file_libs_tacplus_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2060,7 +2625,7 @@ func (x *ServiceInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceInfo.ProtoReflect.Descriptor instead.
 func (*ServiceInfo) Descriptor() ([]byte, []int) {
-	return file_libs_tacplus_proto_rawDescGZIP(), []int{15}
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *ServiceInfo) GetName() string {
@@ -2133,6 +2698,175 @@ func (x *ServiceInfo) GetSmbAuthority() bool {
 	return false
 }
 
+func (x *ServiceInfo) GetSmbRoot() spec.SmbRoot {
+	if x != nil && x.SmbRoot != nil {
+		return *x.SmbRoot
+	}
+	return spec.SmbRoot(0)
+}
+
+func (x *ServiceInfo) GetHostTag() string {
+	if x != nil {
+		return x.HostTag
+	}
+	return ""
+}
+
+// VServiceInfo describes a file-level virtual service identity.
+type VServiceInfo struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Virtual service identity name from spec.vservice.name.
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// Stable field id from spec.vservice.id.
+	Id int32 `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
+	// Proto package that declares this vservice.
+	Package       string `protobuf:"bytes,3,opt,name=package,proto3" json:"package,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VServiceInfo) Reset() {
+	*x = VServiceInfo{}
+	mi := &file_libs_tacplus_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VServiceInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VServiceInfo) ProtoMessage() {}
+
+func (x *VServiceInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_libs_tacplus_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VServiceInfo.ProtoReflect.Descriptor instead.
+func (*VServiceInfo) Descriptor() ([]byte, []int) {
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *VServiceInfo) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *VServiceInfo) GetId() int32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *VServiceInfo) GetPackage() string {
+	if x != nil {
+		return x.Package
+	}
+	return ""
+}
+
+// ClientDependencyInfo describes a file-level declared gRPC client dependency.
+type ClientDependencyInfo struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// source_package is the proto package that declares the dependency.
+	SourcePackage string `protobuf:"bytes,1,opt,name=source_package,json=sourcePackage,proto3" json:"source_package,omitempty"`
+	// surface_kind is "s2s", "c2s", or "w2s".
+	SurfaceKind string `protobuf:"bytes,2,opt,name=surface_kind,json=surfaceKind,proto3" json:"surface_kind,omitempty"`
+	// service is the declared target service ref, usually "package.ServiceName".
+	Service string `protobuf:"bytes,3,opt,name=service,proto3" json:"service,omitempty"`
+	// target_package is parsed from service when service is package-qualified.
+	TargetPackage string `protobuf:"bytes,4,opt,name=target_package,json=targetPackage,proto3" json:"target_package,omitempty"`
+	// target_service is parsed from service when service is package-qualified.
+	TargetService string `protobuf:"bytes,5,opt,name=target_service,json=targetService,proto3" json:"target_service,omitempty"`
+	// wildcard is true for spec.all_grpc_s2s_clients.
+	Wildcard      bool `protobuf:"varint,6,opt,name=wildcard,proto3" json:"wildcard,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ClientDependencyInfo) Reset() {
+	*x = ClientDependencyInfo{}
+	mi := &file_libs_tacplus_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ClientDependencyInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ClientDependencyInfo) ProtoMessage() {}
+
+func (x *ClientDependencyInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_libs_tacplus_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ClientDependencyInfo.ProtoReflect.Descriptor instead.
+func (*ClientDependencyInfo) Descriptor() ([]byte, []int) {
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *ClientDependencyInfo) GetSourcePackage() string {
+	if x != nil {
+		return x.SourcePackage
+	}
+	return ""
+}
+
+func (x *ClientDependencyInfo) GetSurfaceKind() string {
+	if x != nil {
+		return x.SurfaceKind
+	}
+	return ""
+}
+
+func (x *ClientDependencyInfo) GetService() string {
+	if x != nil {
+		return x.Service
+	}
+	return ""
+}
+
+func (x *ClientDependencyInfo) GetTargetPackage() string {
+	if x != nil {
+		return x.TargetPackage
+	}
+	return ""
+}
+
+func (x *ClientDependencyInfo) GetTargetService() string {
+	if x != nil {
+		return x.TargetService
+	}
+	return ""
+}
+
+func (x *ClientDependencyInfo) GetWildcard() bool {
+	if x != nil {
+		return x.Wildcard
+	}
+	return false
+}
+
 // EntitlementGrantInfo describes one generated entitlement grant token.
 // Exact grants name a package + service + RPC. Wildcard grants name a package
 // plus a capability scope and expand to the exact grant tokens they cover.
@@ -2159,7 +2893,7 @@ type EntitlementGrantInfo struct {
 
 func (x *EntitlementGrantInfo) Reset() {
 	*x = EntitlementGrantInfo{}
-	mi := &file_libs_tacplus_proto_msgTypes[16]
+	mi := &file_libs_tacplus_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2171,7 +2905,7 @@ func (x *EntitlementGrantInfo) String() string {
 func (*EntitlementGrantInfo) ProtoMessage() {}
 
 func (x *EntitlementGrantInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_tacplus_proto_msgTypes[16]
+	mi := &file_libs_tacplus_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2184,7 +2918,7 @@ func (x *EntitlementGrantInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EntitlementGrantInfo.ProtoReflect.Descriptor instead.
 func (*EntitlementGrantInfo) Descriptor() ([]byte, []int) {
-	return file_libs_tacplus_proto_rawDescGZIP(), []int{16}
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *EntitlementGrantInfo) GetToken() string {
@@ -2244,7 +2978,7 @@ type BuildInfo struct {
 
 func (x *BuildInfo) Reset() {
 	*x = BuildInfo{}
-	mi := &file_libs_tacplus_proto_msgTypes[17]
+	mi := &file_libs_tacplus_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2256,7 +2990,7 @@ func (x *BuildInfo) String() string {
 func (*BuildInfo) ProtoMessage() {}
 
 func (x *BuildInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_tacplus_proto_msgTypes[17]
+	mi := &file_libs_tacplus_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2269,7 +3003,7 @@ func (x *BuildInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BuildInfo.ProtoReflect.Descriptor instead.
 func (*BuildInfo) Descriptor() ([]byte, []int) {
-	return file_libs_tacplus_proto_rawDescGZIP(), []int{17}
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *BuildInfo) GetTacplusVersion() string {
@@ -2315,7 +3049,7 @@ type VerificationHarness struct {
 
 func (x *VerificationHarness) Reset() {
 	*x = VerificationHarness{}
-	mi := &file_libs_tacplus_proto_msgTypes[18]
+	mi := &file_libs_tacplus_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2327,7 +3061,7 @@ func (x *VerificationHarness) String() string {
 func (*VerificationHarness) ProtoMessage() {}
 
 func (x *VerificationHarness) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_tacplus_proto_msgTypes[18]
+	mi := &file_libs_tacplus_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2340,7 +3074,7 @@ func (x *VerificationHarness) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VerificationHarness.ProtoReflect.Descriptor instead.
 func (*VerificationHarness) Descriptor() ([]byte, []int) {
-	return file_libs_tacplus_proto_rawDescGZIP(), []int{18}
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *VerificationHarness) GetMessageFqn() string {
@@ -2410,7 +3144,7 @@ type VerificationReport struct {
 
 func (x *VerificationReport) Reset() {
 	*x = VerificationReport{}
-	mi := &file_libs_tacplus_proto_msgTypes[19]
+	mi := &file_libs_tacplus_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2422,7 +3156,7 @@ func (x *VerificationReport) String() string {
 func (*VerificationReport) ProtoMessage() {}
 
 func (x *VerificationReport) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_tacplus_proto_msgTypes[19]
+	mi := &file_libs_tacplus_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2435,7 +3169,7 @@ func (x *VerificationReport) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VerificationReport.ProtoReflect.Descriptor instead.
 func (*VerificationReport) Descriptor() ([]byte, []int) {
-	return file_libs_tacplus_proto_rawDescGZIP(), []int{19}
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *VerificationReport) GetTool() string {
@@ -2537,13 +3271,27 @@ type PackageNode struct {
 	// entitlement-checked C2S RPCs. Exact grants are package+service+RPC tokens;
 	// wildcard grants expand to exact grants.
 	EntitlementGrants []*EntitlementGrantInfo `protobuf:"bytes,14,rep,name=entitlement_grants,json=entitlementGrants,proto3" json:"entitlement_grants,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	// proto_packages are the declared protobuf package names represented by this
+	// leaf node. Present on leaf nodes so consumers do not infer package identity
+	// from registry directory names.
+	ProtoPackages []string `protobuf:"bytes,15,rep,name=proto_packages,json=protoPackages,proto3" json:"proto_packages,omitempty"`
+	// vservices are virtual service identities declared by proto files in this
+	// leaf node.
+	Vservices []*VServiceInfo `protobuf:"bytes,16,rep,name=vservices,proto3" json:"vservices,omitempty"`
+	// client_dependencies are file-level declared grpc_*_client dependency edges
+	// with their selected surface kind.
+	ClientDependencies []*ClientDependencyInfo `protobuf:"bytes,17,rep,name=client_dependencies,json=clientDependencies,proto3" json:"client_dependencies,omitempty"`
+	// event_publishes are validated event_publish bindings declared in this leaf.
+	EventPublishes []*EventPublishInfo `protobuf:"bytes,18,rep,name=event_publishes,json=eventPublishes,proto3" json:"event_publishes,omitempty"`
+	// event_watches are validated event_watch bindings declared in this leaf.
+	EventWatches  []*EventWatchInfo `protobuf:"bytes,19,rep,name=event_watches,json=eventWatches,proto3" json:"event_watches,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *PackageNode) Reset() {
 	*x = PackageNode{}
-	mi := &file_libs_tacplus_proto_msgTypes[20]
+	mi := &file_libs_tacplus_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2555,7 +3303,7 @@ func (x *PackageNode) String() string {
 func (*PackageNode) ProtoMessage() {}
 
 func (x *PackageNode) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_tacplus_proto_msgTypes[20]
+	mi := &file_libs_tacplus_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2568,7 +3316,7 @@ func (x *PackageNode) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PackageNode.ProtoReflect.Descriptor instead.
 func (*PackageNode) Descriptor() ([]byte, []int) {
-	return file_libs_tacplus_proto_rawDescGZIP(), []int{20}
+	return file_libs_tacplus_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *PackageNode) GetName() string {
@@ -2669,6 +3417,41 @@ func (x *PackageNode) GetEntitlementGrants() []*EntitlementGrantInfo {
 	return nil
 }
 
+func (x *PackageNode) GetProtoPackages() []string {
+	if x != nil {
+		return x.ProtoPackages
+	}
+	return nil
+}
+
+func (x *PackageNode) GetVservices() []*VServiceInfo {
+	if x != nil {
+		return x.Vservices
+	}
+	return nil
+}
+
+func (x *PackageNode) GetClientDependencies() []*ClientDependencyInfo {
+	if x != nil {
+		return x.ClientDependencies
+	}
+	return nil
+}
+
+func (x *PackageNode) GetEventPublishes() []*EventPublishInfo {
+	if x != nil {
+		return x.EventPublishes
+	}
+	return nil
+}
+
+func (x *PackageNode) GetEventWatches() []*EventWatchInfo {
+	if x != nil {
+		return x.EventWatches
+	}
+	return nil
+}
+
 var File_libs_tacplus_proto protoreflect.FileDescriptor
 
 const file_libs_tacplus_proto_rawDesc = "" +
@@ -2733,11 +3516,66 @@ const file_libs_tacplus_proto_rawDesc = "" +
 	"\x0esource_package\x18\x02 \x01(\tR\rsourcePackage\x12*\n" +
 	"\x11source_state_root\x18\x03 \x01(\tR\x0fsourceStateRoot\x12!\n" +
 	"\fsource_field\x18\x04 \x01(\tR\vsourceField\x12&\n" +
-	"\x0fsource_type_fqn\x18\x05 \x01(\tR\rsourceTypeFqn\"]\n" +
+	"\x0fsource_type_fqn\x18\x05 \x01(\tR\rsourceTypeFqn\"\x9c\x03\n" +
+	"\x10EventPublishInfo\x12#\n" +
+	"\ractor_package\x18\x01 \x01(\tR\factorPackage\x12#\n" +
+	"\ractor_message\x18\x02 \x01(\tR\factorMessage\x12\x1b\n" +
+	"\ttopic_ref\x18\x03 \x01(\tR\btopicRef\x12$\n" +
+	"\x0eevent_type_fqn\x18\x04 \x01(\tR\feventTypeFqn\x12\x1d\n" +
+	"\n" +
+	"broker_tag\x18\x05 \x01(\tR\tbrokerTag\x12\x19\n" +
+	"\brpc_stem\x18\x06 \x01(\tR\arpcStem\x12\x1d\n" +
+	"\n" +
+	"auth_model\x18\a \x01(\tR\tauthModel\x12#\n" +
+	"\rauth_services\x18\b \x03(\tR\fauthServices\x12#\n" +
+	"\rauth_disabled\x18\t \x01(\bR\fauthDisabled\x12\"\n" +
+	"\rauth_any_user\x18\n" +
+	" \x01(\bR\vauthAnyUser\x124\n" +
+	"\x16target_namespace_field\x18\v \x01(\tR\x14targetNamespaceField\"\x9a\x03\n" +
+	"\x0eEventWatchInfo\x12#\n" +
+	"\ractor_package\x18\x01 \x01(\tR\factorPackage\x12#\n" +
+	"\ractor_message\x18\x02 \x01(\tR\factorMessage\x12\x1b\n" +
+	"\ttopic_ref\x18\x03 \x01(\tR\btopicRef\x12$\n" +
+	"\x0eevent_type_fqn\x18\x04 \x01(\tR\feventTypeFqn\x12\x1d\n" +
+	"\n" +
+	"broker_tag\x18\x05 \x01(\tR\tbrokerTag\x12\x19\n" +
+	"\brpc_stem\x18\x06 \x01(\tR\arpcStem\x12\x1d\n" +
+	"\n" +
+	"auth_model\x18\a \x01(\tR\tauthModel\x12#\n" +
+	"\rauth_services\x18\b \x03(\tR\fauthServices\x12#\n" +
+	"\rauth_disabled\x18\t \x01(\bR\fauthDisabled\x12\"\n" +
+	"\rauth_any_user\x18\n" +
+	" \x01(\bR\vauthAnyUser\x124\n" +
+	"\x16target_namespace_field\x18\v \x01(\tR\x14targetNamespaceField\"]\n" +
 	"\rEnumValueInfo\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
 	"\x06number\x18\x02 \x01(\x05R\x06number\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\"\xc6\a\n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\"\xe3\x03\n" +
+	"\x13FieldConstraintInfo\x12\x12\n" +
+	"\x04rule\x18\x01 \x01(\tR\x04rule\x12\x16\n" +
+	"\x06target\x18\x02 \x01(\tR\x06target\x12\x1d\n" +
+	"\n" +
+	"value_kind\x18\x03 \x01(\tR\tvalueKind\x12\"\n" +
+	"\n" +
+	"bool_value\x18\x04 \x01(\bH\x00R\tboolValue\x88\x01\x01\x12 \n" +
+	"\tint_value\x18\x05 \x01(\x03H\x01R\bintValue\x88\x01\x01\x12$\n" +
+	"\vfloat_value\x18\x06 \x01(\x01H\x02R\n" +
+	"floatValue\x88\x01\x01\x12!\n" +
+	"\fstring_value\x18\a \x01(\tR\vstringValue\x12\x1d\n" +
+	"\n" +
+	"enum_value\x18\b \x01(\tR\tenumValue\x12\x1d\n" +
+	"\n" +
+	"int_values\x18\t \x03(\x03R\tintValues\x12!\n" +
+	"\ffloat_values\x18\n" +
+	" \x03(\x01R\vfloatValues\x12\x1a\n" +
+	"\boperator\x18\v \x01(\tR\boperator\x12\x1c\n" +
+	"\tdefaulted\x18\f \x01(\bR\tdefaulted\x12\x12\n" +
+	"\x04unit\x18\r \x01(\tR\x04unit\x12\x16\n" +
+	"\x06source\x18\x0e \x01(\tR\x06sourceB\r\n" +
+	"\v_bool_valueB\f\n" +
+	"\n" +
+	"_int_valueB\x0e\n" +
+	"\f_float_value\"\x84\t\n" +
 	"\tFieldInfo\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\"\n" +
 	"\x04type\x18\x02 \x01(\x0e2\x0e.spec.TypeKindR\x04type\x12 \n" +
@@ -2768,7 +3606,13 @@ const file_libs_tacplus_proto_rawDesc = "" +
 	"\x14timeseries_order_key\x18\x15 \x01(\x05R\x12timeseriesOrderKey\x128\n" +
 	"\x18timeseries_partition_key\x18\x16 \x01(\bR\x16timeseriesPartitionKey\x126\n" +
 	"\x17timeseries_default_expr\x18\x17 \x01(\tR\x15timeseriesDefaultExpr\x12<\n" +
-	"\x1atimeseries_low_cardinality\x18\x18 \x01(\bR\x18timeseriesLowCardinality\"\xd3\x05\n" +
+	"\x1atimeseries_low_cardinality\x18\x18 \x01(\bR\x18timeseriesLowCardinality\x12\x14\n" +
+	"\x05oneof\x18\x19 \x01(\bR\x05oneof\x12\x1d\n" +
+	"\n" +
+	"oneof_name\x18\x1a \x01(\tR\toneofName\x12\x1b\n" +
+	"\tstore_key\x18\x1b \x01(\bR\bstoreKey\x12!\n" +
+	"\fquorum_write\x18\x1c \x01(\bR\vquorumWrite\x12G\n" +
+	"\x10constraint_infos\x18\x1d \x03(\v2\x1c.tacplus.FieldConstraintInfoR\x0fconstraintInfos\"\xd2\x06\n" +
 	"\bTypeInfo\x12\x10\n" +
 	"\x03fqn\x18\x01 \x01(\tR\x03fqn\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x18\n" +
@@ -2789,7 +3633,10 @@ const file_libs_tacplus_proto_rawDesc = "" +
 	"eventdbKey\x12#\n" +
 	"\reventdb_owner\x18\x11 \x01(\tR\feventdbOwner\x12I\n" +
 	"\x11graph_projections\x18\x12 \x03(\v2\x1c.tacplus.GraphProjectionInfoR\x10graphProjections\x12X\n" +
-	"\x16timeseries_projections\x18\x13 \x03(\v2!.tacplus.TimeseriesProjectionInfoR\x15timeseriesProjections\"\x9e\x01\n" +
+	"\x16timeseries_projections\x18\x13 \x03(\v2!.tacplus.TimeseriesProjectionInfoR\x15timeseriesProjections\x12#\n" +
+	"\rservice_store\x18\x14 \x01(\bR\fserviceStore\x12,\n" +
+	"\x12service_store_name\x18\x15 \x01(\tR\x10serviceStoreName\x12*\n" +
+	"\x11service_store_tag\x18\x16 \x01(\tR\x0fserviceStoreTag\"\x9e\x01\n" +
 	"\x18GraphProjectionFieldInfo\x12\x16\n" +
 	"\x06source\x18\x01 \x01(\tR\x06source\x12\x0e\n" +
 	"\x02as\x18\x02 \x01(\tR\x02as\x12\x14\n" +
@@ -2812,7 +3659,25 @@ const file_libs_tacplus_proto_rawDesc = "" +
 	"\x06engine\x18\x02 \x01(\tR\x06engine\x12\x10\n" +
 	"\x03ttl\x18\x03 \x01(\tR\x03ttl\x12\x12\n" +
 	"\x04when\x18\x04 \x01(\tR\x04when\x12<\n" +
-	"\x05field\x18\x05 \x03(\v2&.tacplus.TimeseriesProjectionFieldInfoR\x05field\"\xf5\f\n" +
+	"\x05field\x18\x05 \x03(\v2&.tacplus.TimeseriesProjectionFieldInfoR\x05field\"\xe6\x04\n" +
+	"\x0eRpcSurfaceInfo\x12!\n" +
+	"\fsurface_kind\x18\x01 \x01(\tR\vsurfaceKind\x12\x1c\n" +
+	"\ttransport\x18\x02 \x01(\tR\ttransport\x12\x1d\n" +
+	"\n" +
+	"auth_model\x18\x03 \x01(\tR\tauthModel\x12#\n" +
+	"\rauth_disabled\x18\x04 \x01(\bR\fauthDisabled\x12#\n" +
+	"\rauth_services\x18\x05 \x03(\tR\fauthServices\x12.\n" +
+	"\x13auth_entitled_users\x18\x06 \x01(\bR\x11authEntitledUsers\x12\"\n" +
+	"\rauth_any_user\x18\a \x01(\bR\vauthAnyUser\x124\n" +
+	"\x16target_namespace_field\x18\b \x01(\tR\x14targetNamespaceField\x128\n" +
+	"\x18subject_namespace_source\x18\t \x01(\tR\x16subjectNamespaceSource\x126\n" +
+	"\x17target_namespace_source\x18\n" +
+	" \x01(\tR\x15targetNamespaceSource\x12)\n" +
+	"\x10target_namespace\x18\v \x01(\tR\x0ftargetNamespace\x12\x1b\n" +
+	"\tgrpc_path\x18\f \x01(\tR\bgrpcPath\x12\x1b\n" +
+	"\thttp_path\x18\r \x01(\tR\bhttpPath\x12!\n" +
+	"\fhttp_methods\x18\x0e \x03(\tR\vhttpMethods\x12&\n" +
+	"\x0fhttp_alias_path\x18\x0f \x01(\tR\rhttpAliasPath\"\xf1\r\n" +
 	"\aRpcInfo\x12.\n" +
 	"\aservice\x18\x01 \x01(\x0e2\x14.tacplus.ServiceNameR\aservice\x12!\n" +
 	"\fservice_name\x18\x02 \x01(\tR\vserviceName\x12\x10\n" +
@@ -2859,12 +3724,16 @@ const file_libs_tacplus_proto_rawDesc = "" +
 	"\x16target_namespace_field\x18, \x01(\tR\x14targetNamespaceField\x128\n" +
 	"\x18subject_namespace_source\x18- \x01(\tR\x16subjectNamespaceSource\x126\n" +
 	"\x17target_namespace_source\x18. \x01(\tR\x15targetNamespaceSource\x12)\n" +
-	"\x10target_namespace\x18/ \x01(\tR\x0ftargetNamespace\"\x8a\x01\n" +
+	"\x10target_namespace\x18/ \x01(\tR\x0ftargetNamespace\x12\x1f\n" +
+	"\vverb_status\x180 \x01(\tR\n" +
+	"verbStatus\x12$\n" +
+	"\x0efolded_to_verb\x181 \x01(\tR\ffoldedToVerb\x123\n" +
+	"\bsurfaces\x182 \x03(\v2\x17.tacplus.RpcSurfaceInfoR\bsurfaces\"\x8a\x01\n" +
 	"\bEnumInfo\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
 	"\apackage\x18\x02 \x01(\tR\apackage\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12.\n" +
-	"\x06values\x18\x04 \x03(\v2\x16.tacplus.EnumValueInfoR\x06values\"\xbe\x02\n" +
+	"\x06values\x18\x04 \x03(\v2\x16.tacplus.EnumValueInfoR\x06values\"\x95\x03\n" +
 	"\vServiceInfo\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x18\n" +
@@ -2878,7 +3747,21 @@ const file_libs_tacplus_proto_rawDesc = "" +
 	"\tevent_tag\x18\b \x01(\tR\beventTag\x12\x10\n" +
 	"\x03smb\x18\t \x01(\bR\x03smb\x12#\n" +
 	"\rsmb_authority\x18\n" +
-	" \x01(\bR\fsmbAuthority\"\xc5\x01\n" +
+	" \x01(\bR\fsmbAuthority\x12-\n" +
+	"\bsmb_root\x18\v \x01(\x0e2\r.spec.SmbRootH\x00R\asmbRoot\x88\x01\x01\x12\x19\n" +
+	"\bhost_tag\x18\f \x01(\tR\ahostTagB\v\n" +
+	"\t_smb_root\"L\n" +
+	"\fVServiceInfo\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x0e\n" +
+	"\x02id\x18\x02 \x01(\x05R\x02id\x12\x18\n" +
+	"\apackage\x18\x03 \x01(\tR\apackage\"\xe4\x01\n" +
+	"\x14ClientDependencyInfo\x12%\n" +
+	"\x0esource_package\x18\x01 \x01(\tR\rsourcePackage\x12!\n" +
+	"\fsurface_kind\x18\x02 \x01(\tR\vsurfaceKind\x12\x18\n" +
+	"\aservice\x18\x03 \x01(\tR\aservice\x12%\n" +
+	"\x0etarget_package\x18\x04 \x01(\tR\rtargetPackage\x12%\n" +
+	"\x0etarget_service\x18\x05 \x01(\tR\rtargetService\x12\x1a\n" +
+	"\bwildcard\x18\x06 \x01(\bR\bwildcard\"\xc5\x01\n" +
 	"\x14EntitlementGrantInfo\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12\x18\n" +
 	"\apackage\x18\x02 \x01(\tR\apackage\x12!\n" +
@@ -2908,7 +3791,7 @@ const file_libs_tacplus_proto_rawDesc = "" +
 	"\x06failed\x18\x06 \x01(\x05R\x06failed\x12\x14\n" +
 	"\x05total\x18\a \x01(\x05R\x05total\x12\x1f\n" +
 	"\vduration_ms\x18\b \x01(\x03R\n" +
-	"durationMs\"\x90\x06\n" +
+	"durationMs\"\xbe\b\n" +
 	"\vPackageNode\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1b\n" +
 	"\tfull_path\x18\x02 \x01(\tR\bfullPath\x120\n" +
@@ -2926,7 +3809,12 @@ const file_libs_tacplus_proto_rawDesc = "" +
 	"\x05build\x18\v \x01(\v2\x12.tacplus.BuildInfoR\x05build\x12?\n" +
 	"\rsubscriptions\x18\f \x03(\v2\x19.tacplus.SubscriptionInfoR\rsubscriptions\x12A\n" +
 	"\tconstants\x18\r \x03(\v2#.tacplus.PackageNode.ConstantsEntryR\tconstants\x12L\n" +
-	"\x12entitlement_grants\x18\x0e \x03(\v2\x1d.tacplus.EntitlementGrantInfoR\x11entitlementGrants\x1a7\n" +
+	"\x12entitlement_grants\x18\x0e \x03(\v2\x1d.tacplus.EntitlementGrantInfoR\x11entitlementGrants\x12%\n" +
+	"\x0eproto_packages\x18\x0f \x03(\tR\rprotoPackages\x123\n" +
+	"\tvservices\x18\x10 \x03(\v2\x15.tacplus.VServiceInfoR\tvservices\x12N\n" +
+	"\x13client_dependencies\x18\x11 \x03(\v2\x1d.tacplus.ClientDependencyInfoR\x12clientDependencies\x12B\n" +
+	"\x0fevent_publishes\x18\x12 \x03(\v2\x19.tacplus.EventPublishInfoR\x0eeventPublishes\x12<\n" +
+	"\revent_watches\x18\x13 \x03(\v2\x17.tacplus.EventWatchInfoR\feventWatches\x1a7\n" +
 	"\tDocsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\x1a<\n" +
@@ -2940,31 +3828,7 @@ const file_libs_tacplus_proto_rawDesc = "" +
 	"\x18RPC_CATEGORY_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15RPC_CATEGORY_ACCESSOR\x10\x01\x12\x18\n" +
 	"\x14RPC_CATEGORY_MUTATOR\x10\x02\x12\x19\n" +
-	"\x15RPC_CATEGORY_EXECUTOR\x10\x03*\xae\x05\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12!\n" +
-	"\x1dTYPE_ID_LANGUAGE_DEPENDENCIES\x10\x01\x12!\n" +
-	"\x1dTYPE_ID_DEPENDENCIES_REGISTRY\x10\x02\x12\x1f\n" +
-	"\x1bTYPE_ID_DEPENDENCIES_CONFIG\x10\x03\x12\x1c\n" +
-	"\x18TYPE_ID_STATE_PERM_ENTRY\x10\x04\x12\x19\n" +
-	"\x15TYPE_ID_BOUNDARY_INFO\x10\x05\x12\x1d\n" +
-	"\x19TYPE_ID_SUBSCRIPTION_INFO\x10\x06\x12\x1b\n" +
-	"\x17TYPE_ID_ENUM_VALUE_INFO\x10\a\x12\x16\n" +
-	"\x12TYPE_ID_FIELD_INFO\x10\b\x12\x15\n" +
-	"\x11TYPE_ID_TYPE_INFO\x10\t\x12'\n" +
-	"#TYPE_ID_GRAPH_PROJECTION_FIELD_INFO\x10\n" +
-	"\x12!\n" +
-	"\x1dTYPE_ID_GRAPH_PROJECTION_INFO\x10\v\x12,\n" +
-	"(TYPE_ID_TIMESERIES_PROJECTION_FIELD_INFO\x10\f\x12&\n" +
-	"\"TYPE_ID_TIMESERIES_PROJECTION_INFO\x10\r\x12\x14\n" +
-	"\x10TYPE_ID_RPC_INFO\x10\x0e\x12\x15\n" +
-	"\x11TYPE_ID_ENUM_INFO\x10\x0f\x12\x18\n" +
-	"\x14TYPE_ID_SERVICE_INFO\x10\x10\x12\"\n" +
-	"\x1eTYPE_ID_ENTITLEMENT_GRANT_INFO\x10\x11\x12\x16\n" +
-	"\x12TYPE_ID_BUILD_INFO\x10\x12\x12 \n" +
-	"\x1cTYPE_ID_VERIFICATION_HARNESS\x10\x13\x12\x1f\n" +
-	"\x1bTYPE_ID_VERIFICATION_REPORT\x10\x14\x12\x18\n" +
-	"\x14TYPE_ID_PACKAGE_NODE\x10\x15BYZWgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/tacplusb\x06proto3"
+	"\x15RPC_CATEGORY_EXECUTOR\x10\x03BYZWgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/tacplusb\x06proto3"
 
 var (
 	file_libs_tacplus_proto_rawDescOnce sync.Once
@@ -2978,86 +3842,99 @@ func file_libs_tacplus_proto_rawDescGZIP() []byte {
 	return file_libs_tacplus_proto_rawDescData
 }
 
-var file_libs_tacplus_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_libs_tacplus_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
+var file_libs_tacplus_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_libs_tacplus_proto_msgTypes = make([]protoimpl.MessageInfo, 34)
 var file_libs_tacplus_proto_goTypes = []any{
 	(ServiceName)(0),                      // 0: tacplus.ServiceName
 	(RpcCategory)(0),                      // 1: tacplus.RpcCategory
-	(TypeID)(0),                           // 2: tacplus.TypeID
-	(*LanguageDependencies)(nil),          // 3: tacplus.LanguageDependencies
-	(*DependenciesRegistry)(nil),          // 4: tacplus.DependenciesRegistry
-	(*DependenciesConfig)(nil),            // 5: tacplus.DependenciesConfig
-	(*StatePermEntry)(nil),                // 6: tacplus.StatePermEntry
-	(*BoundaryInfo)(nil),                  // 7: tacplus.BoundaryInfo
-	(*SubscriptionInfo)(nil),              // 8: tacplus.SubscriptionInfo
-	(*EnumValueInfo)(nil),                 // 9: tacplus.EnumValueInfo
-	(*FieldInfo)(nil),                     // 10: tacplus.FieldInfo
-	(*TypeInfo)(nil),                      // 11: tacplus.TypeInfo
-	(*GraphProjectionFieldInfo)(nil),      // 12: tacplus.GraphProjectionFieldInfo
-	(*GraphProjectionInfo)(nil),           // 13: tacplus.GraphProjectionInfo
-	(*TimeseriesProjectionFieldInfo)(nil), // 14: tacplus.TimeseriesProjectionFieldInfo
-	(*TimeseriesProjectionInfo)(nil),      // 15: tacplus.TimeseriesProjectionInfo
-	(*RpcInfo)(nil),                       // 16: tacplus.RpcInfo
-	(*EnumInfo)(nil),                      // 17: tacplus.EnumInfo
-	(*ServiceInfo)(nil),                   // 18: tacplus.ServiceInfo
-	(*EntitlementGrantInfo)(nil),          // 19: tacplus.EntitlementGrantInfo
-	(*BuildInfo)(nil),                     // 20: tacplus.BuildInfo
-	(*VerificationHarness)(nil),           // 21: tacplus.VerificationHarness
-	(*VerificationReport)(nil),            // 22: tacplus.VerificationReport
-	(*PackageNode)(nil),                   // 23: tacplus.PackageNode
-	nil,                                   // 24: tacplus.LanguageDependencies.DependenciesEntry
-	nil,                                   // 25: tacplus.DependenciesRegistry.InterfacesEntry
-	nil,                                   // 26: tacplus.DependenciesRegistry.ImportsEntry
-	nil,                                   // 27: tacplus.DependenciesConfig.ToolsEntry
-	nil,                                   // 28: tacplus.DependenciesConfig.LangEntry
-	nil,                                   // 29: tacplus.PackageNode.DocsEntry
-	nil,                                   // 30: tacplus.PackageNode.ConstantsEntry
-	(spec.StatePermsMode)(0),              // 31: spec.StatePermsMode
-	(spec.ConsistencyModel)(0),            // 32: spec.ConsistencyModel
-	(spec.TypeKind)(0),                    // 33: spec.TypeKind
+	(*LanguageDependencies)(nil),          // 2: tacplus.LanguageDependencies
+	(*DependenciesRegistry)(nil),          // 3: tacplus.DependenciesRegistry
+	(*DependenciesConfig)(nil),            // 4: tacplus.DependenciesConfig
+	(*StatePermEntry)(nil),                // 5: tacplus.StatePermEntry
+	(*BoundaryInfo)(nil),                  // 6: tacplus.BoundaryInfo
+	(*SubscriptionInfo)(nil),              // 7: tacplus.SubscriptionInfo
+	(*EventPublishInfo)(nil),              // 8: tacplus.EventPublishInfo
+	(*EventWatchInfo)(nil),                // 9: tacplus.EventWatchInfo
+	(*EnumValueInfo)(nil),                 // 10: tacplus.EnumValueInfo
+	(*FieldConstraintInfo)(nil),           // 11: tacplus.FieldConstraintInfo
+	(*FieldInfo)(nil),                     // 12: tacplus.FieldInfo
+	(*TypeInfo)(nil),                      // 13: tacplus.TypeInfo
+	(*GraphProjectionFieldInfo)(nil),      // 14: tacplus.GraphProjectionFieldInfo
+	(*GraphProjectionInfo)(nil),           // 15: tacplus.GraphProjectionInfo
+	(*TimeseriesProjectionFieldInfo)(nil), // 16: tacplus.TimeseriesProjectionFieldInfo
+	(*TimeseriesProjectionInfo)(nil),      // 17: tacplus.TimeseriesProjectionInfo
+	(*RpcSurfaceInfo)(nil),                // 18: tacplus.RpcSurfaceInfo
+	(*RpcInfo)(nil),                       // 19: tacplus.RpcInfo
+	(*EnumInfo)(nil),                      // 20: tacplus.EnumInfo
+	(*ServiceInfo)(nil),                   // 21: tacplus.ServiceInfo
+	(*VServiceInfo)(nil),                  // 22: tacplus.VServiceInfo
+	(*ClientDependencyInfo)(nil),          // 23: tacplus.ClientDependencyInfo
+	(*EntitlementGrantInfo)(nil),          // 24: tacplus.EntitlementGrantInfo
+	(*BuildInfo)(nil),                     // 25: tacplus.BuildInfo
+	(*VerificationHarness)(nil),           // 26: tacplus.VerificationHarness
+	(*VerificationReport)(nil),            // 27: tacplus.VerificationReport
+	(*PackageNode)(nil),                   // 28: tacplus.PackageNode
+	nil,                                   // 29: tacplus.LanguageDependencies.DependenciesEntry
+	nil,                                   // 30: tacplus.DependenciesRegistry.InterfacesEntry
+	nil,                                   // 31: tacplus.DependenciesRegistry.ImportsEntry
+	nil,                                   // 32: tacplus.DependenciesConfig.ToolsEntry
+	nil,                                   // 33: tacplus.DependenciesConfig.LangEntry
+	nil,                                   // 34: tacplus.PackageNode.DocsEntry
+	nil,                                   // 35: tacplus.PackageNode.ConstantsEntry
+	(spec.StatePermsMode)(0),              // 36: spec.StatePermsMode
+	(spec.ConsistencyModel)(0),            // 37: spec.ConsistencyModel
+	(spec.TypeKind)(0),                    // 38: spec.TypeKind
+	(spec.SmbRoot)(0),                     // 39: spec.SmbRoot
 }
 var file_libs_tacplus_proto_depIdxs = []int32{
-	24, // 0: tacplus.LanguageDependencies.dependencies:type_name -> tacplus.LanguageDependencies.DependenciesEntry
-	25, // 1: tacplus.DependenciesRegistry.interfaces:type_name -> tacplus.DependenciesRegistry.InterfacesEntry
-	26, // 2: tacplus.DependenciesRegistry.imports:type_name -> tacplus.DependenciesRegistry.ImportsEntry
-	4,  // 3: tacplus.DependenciesConfig.registry:type_name -> tacplus.DependenciesRegistry
-	27, // 4: tacplus.DependenciesConfig.tools:type_name -> tacplus.DependenciesConfig.ToolsEntry
-	28, // 5: tacplus.DependenciesConfig.lang:type_name -> tacplus.DependenciesConfig.LangEntry
-	31, // 6: tacplus.StatePermEntry.mode:type_name -> spec.StatePermsMode
+	29, // 0: tacplus.LanguageDependencies.dependencies:type_name -> tacplus.LanguageDependencies.DependenciesEntry
+	30, // 1: tacplus.DependenciesRegistry.interfaces:type_name -> tacplus.DependenciesRegistry.InterfacesEntry
+	31, // 2: tacplus.DependenciesRegistry.imports:type_name -> tacplus.DependenciesRegistry.ImportsEntry
+	3,  // 3: tacplus.DependenciesConfig.registry:type_name -> tacplus.DependenciesRegistry
+	32, // 4: tacplus.DependenciesConfig.tools:type_name -> tacplus.DependenciesConfig.ToolsEntry
+	33, // 5: tacplus.DependenciesConfig.lang:type_name -> tacplus.DependenciesConfig.LangEntry
+	36, // 6: tacplus.StatePermEntry.mode:type_name -> spec.StatePermsMode
 	0,  // 7: tacplus.BoundaryInfo.service:type_name -> tacplus.ServiceName
-	32, // 8: tacplus.BoundaryInfo.consistency:type_name -> spec.ConsistencyModel
-	6,  // 9: tacplus.BoundaryInfo.boundary_perms:type_name -> tacplus.StatePermEntry
-	6,  // 10: tacplus.BoundaryInfo.state_perms:type_name -> tacplus.StatePermEntry
-	33, // 11: tacplus.FieldInfo.type:type_name -> spec.TypeKind
-	11, // 12: tacplus.FieldInfo.message:type_name -> tacplus.TypeInfo
-	9,  // 13: tacplus.FieldInfo.enum_values:type_name -> tacplus.EnumValueInfo
-	10, // 14: tacplus.TypeInfo.fields:type_name -> tacplus.FieldInfo
-	13, // 15: tacplus.TypeInfo.graph_projections:type_name -> tacplus.GraphProjectionInfo
-	15, // 16: tacplus.TypeInfo.timeseries_projections:type_name -> tacplus.TimeseriesProjectionInfo
-	12, // 17: tacplus.GraphProjectionInfo.field:type_name -> tacplus.GraphProjectionFieldInfo
-	14, // 18: tacplus.TimeseriesProjectionInfo.field:type_name -> tacplus.TimeseriesProjectionFieldInfo
-	0,  // 19: tacplus.RpcInfo.service:type_name -> tacplus.ServiceName
-	1,  // 20: tacplus.RpcInfo.category:type_name -> tacplus.RpcCategory
-	9,  // 21: tacplus.EnumInfo.values:type_name -> tacplus.EnumValueInfo
-	16, // 22: tacplus.ServiceInfo.rpcs:type_name -> tacplus.RpcInfo
-	21, // 23: tacplus.VerificationReport.harnesses:type_name -> tacplus.VerificationHarness
-	23, // 24: tacplus.PackageNode.children:type_name -> tacplus.PackageNode
-	11, // 25: tacplus.PackageNode.types:type_name -> tacplus.TypeInfo
-	16, // 26: tacplus.PackageNode.rpcs:type_name -> tacplus.RpcInfo
-	7,  // 27: tacplus.PackageNode.boundaries:type_name -> tacplus.BoundaryInfo
-	29, // 28: tacplus.PackageNode.docs:type_name -> tacplus.PackageNode.DocsEntry
-	17, // 29: tacplus.PackageNode.enums:type_name -> tacplus.EnumInfo
-	18, // 30: tacplus.PackageNode.services:type_name -> tacplus.ServiceInfo
-	20, // 31: tacplus.PackageNode.build:type_name -> tacplus.BuildInfo
-	8,  // 32: tacplus.PackageNode.subscriptions:type_name -> tacplus.SubscriptionInfo
-	30, // 33: tacplus.PackageNode.constants:type_name -> tacplus.PackageNode.ConstantsEntry
-	19, // 34: tacplus.PackageNode.entitlement_grants:type_name -> tacplus.EntitlementGrantInfo
-	3,  // 35: tacplus.DependenciesConfig.LangEntry.value:type_name -> tacplus.LanguageDependencies
-	36, // [36:36] is the sub-list for method output_type
-	36, // [36:36] is the sub-list for method input_type
-	36, // [36:36] is the sub-list for extension type_name
-	36, // [36:36] is the sub-list for extension extendee
-	0,  // [0:36] is the sub-list for field type_name
+	37, // 8: tacplus.BoundaryInfo.consistency:type_name -> spec.ConsistencyModel
+	5,  // 9: tacplus.BoundaryInfo.boundary_perms:type_name -> tacplus.StatePermEntry
+	5,  // 10: tacplus.BoundaryInfo.state_perms:type_name -> tacplus.StatePermEntry
+	38, // 11: tacplus.FieldInfo.type:type_name -> spec.TypeKind
+	13, // 12: tacplus.FieldInfo.message:type_name -> tacplus.TypeInfo
+	10, // 13: tacplus.FieldInfo.enum_values:type_name -> tacplus.EnumValueInfo
+	11, // 14: tacplus.FieldInfo.constraint_infos:type_name -> tacplus.FieldConstraintInfo
+	12, // 15: tacplus.TypeInfo.fields:type_name -> tacplus.FieldInfo
+	15, // 16: tacplus.TypeInfo.graph_projections:type_name -> tacplus.GraphProjectionInfo
+	17, // 17: tacplus.TypeInfo.timeseries_projections:type_name -> tacplus.TimeseriesProjectionInfo
+	14, // 18: tacplus.GraphProjectionInfo.field:type_name -> tacplus.GraphProjectionFieldInfo
+	16, // 19: tacplus.TimeseriesProjectionInfo.field:type_name -> tacplus.TimeseriesProjectionFieldInfo
+	0,  // 20: tacplus.RpcInfo.service:type_name -> tacplus.ServiceName
+	1,  // 21: tacplus.RpcInfo.category:type_name -> tacplus.RpcCategory
+	18, // 22: tacplus.RpcInfo.surfaces:type_name -> tacplus.RpcSurfaceInfo
+	10, // 23: tacplus.EnumInfo.values:type_name -> tacplus.EnumValueInfo
+	19, // 24: tacplus.ServiceInfo.rpcs:type_name -> tacplus.RpcInfo
+	39, // 25: tacplus.ServiceInfo.smb_root:type_name -> spec.SmbRoot
+	26, // 26: tacplus.VerificationReport.harnesses:type_name -> tacplus.VerificationHarness
+	28, // 27: tacplus.PackageNode.children:type_name -> tacplus.PackageNode
+	13, // 28: tacplus.PackageNode.types:type_name -> tacplus.TypeInfo
+	19, // 29: tacplus.PackageNode.rpcs:type_name -> tacplus.RpcInfo
+	6,  // 30: tacplus.PackageNode.boundaries:type_name -> tacplus.BoundaryInfo
+	34, // 31: tacplus.PackageNode.docs:type_name -> tacplus.PackageNode.DocsEntry
+	20, // 32: tacplus.PackageNode.enums:type_name -> tacplus.EnumInfo
+	21, // 33: tacplus.PackageNode.services:type_name -> tacplus.ServiceInfo
+	25, // 34: tacplus.PackageNode.build:type_name -> tacplus.BuildInfo
+	7,  // 35: tacplus.PackageNode.subscriptions:type_name -> tacplus.SubscriptionInfo
+	35, // 36: tacplus.PackageNode.constants:type_name -> tacplus.PackageNode.ConstantsEntry
+	24, // 37: tacplus.PackageNode.entitlement_grants:type_name -> tacplus.EntitlementGrantInfo
+	22, // 38: tacplus.PackageNode.vservices:type_name -> tacplus.VServiceInfo
+	23, // 39: tacplus.PackageNode.client_dependencies:type_name -> tacplus.ClientDependencyInfo
+	8,  // 40: tacplus.PackageNode.event_publishes:type_name -> tacplus.EventPublishInfo
+	9,  // 41: tacplus.PackageNode.event_watches:type_name -> tacplus.EventWatchInfo
+	2,  // 42: tacplus.DependenciesConfig.LangEntry.value:type_name -> tacplus.LanguageDependencies
+	43, // [43:43] is the sub-list for method output_type
+	43, // [43:43] is the sub-list for method input_type
+	43, // [43:43] is the sub-list for extension type_name
+	43, // [43:43] is the sub-list for extension extendee
+	0,  // [0:43] is the sub-list for field type_name
 }
 
 func init() { file_libs_tacplus_proto_init() }
@@ -3065,13 +3942,15 @@ func file_libs_tacplus_proto_init() {
 	if File_libs_tacplus_proto != nil {
 		return
 	}
+	file_libs_tacplus_proto_msgTypes[9].OneofWrappers = []any{}
+	file_libs_tacplus_proto_msgTypes[19].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_tacplus_proto_rawDesc), len(file_libs_tacplus_proto_rawDesc)),
-			NumEnums:      3,
-			NumMessages:   28,
+			NumEnums:      2,
+			NumMessages:   34,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

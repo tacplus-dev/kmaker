@@ -619,62 +619,6 @@ func (TokenParamKey) EnumDescriptor() ([]byte, []int) {
 	return file_libs_token_proto_rawDescGZIP(), []int{7}
 }
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED          TypeID = 0
-	TypeID_TYPE_ID_TOKEN                TypeID = 1
-	TypeID_TYPE_ID_EXCHANGE             TypeID = 2
-	TypeID_TYPE_ID_TOKEN_REQUEST_PARAMS TypeID = 3
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_TOKEN",
-		2: "TYPE_ID_EXCHANGE",
-		3: "TYPE_ID_TOKEN_REQUEST_PARAMS",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":          0,
-		"TYPE_ID_TOKEN":                1,
-		"TYPE_ID_EXCHANGE":             2,
-		"TYPE_ID_TOKEN_REQUEST_PARAMS": 3,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_token_proto_enumTypes[8].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_token_proto_enumTypes[8]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_token_proto_rawDescGZIP(), []int{8}
-}
-
 // Token represents a JWT (JSON Web Token) with header, payload, and signature components.
 // The token can be in either parsed form (header/payload maps) or encoded form
 // (JWT compact serialization).
@@ -1153,12 +1097,7 @@ const file_libs_token_proto_rawDesc = "" +
 	"store_code\x124\n" +
 	"\x1dTOKEN_PARAM_KEY_ID_TOKEN_HINT\x10\r\x1a\x11\xaa\xb5\x18\rid_token_hint\x12J\n" +
 	"(TOKEN_PARAM_KEY_POST_LOGOUT_REDIRECT_URI\x10\x0e\x1a\x1c\xaa\xb5\x18\x18post_logout_redirect_uri\x12,\n" +
-	"\x19TOKEN_PARAM_KEY_GET_TOKEN\x10\x0f\x1a\r\xaa\xb5\x18\tget_token*l\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x11\n" +
-	"\rTYPE_ID_TOKEN\x10\x01\x12\x14\n" +
-	"\x10TYPE_ID_EXCHANGE\x10\x02\x12 \n" +
-	"\x1cTYPE_ID_TOKEN_REQUEST_PARAMS\x10\x03BWZUgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/tokenb\x06proto3"
+	"\x19TOKEN_PARAM_KEY_GET_TOKEN\x10\x0f\x1a\r\xaa\xb5\x18\tget_tokenBWZUgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/tokenb\x06proto3"
 
 var (
 	file_libs_token_proto_rawDescOnce sync.Once
@@ -1172,7 +1111,7 @@ func file_libs_token_proto_rawDescGZIP() []byte {
 	return file_libs_token_proto_rawDescData
 }
 
-var file_libs_token_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
+var file_libs_token_proto_enumTypes = make([]protoimpl.EnumInfo, 8)
 var file_libs_token_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_libs_token_proto_goTypes = []any{
 	(JwtHeaderType)(0),         // 0: token.JwtHeaderType
@@ -1183,16 +1122,15 @@ var file_libs_token_proto_goTypes = []any{
 	(SubType)(0),               // 5: token.SubType
 	(TokenType)(0),             // 6: token.TokenType
 	(TokenParamKey)(0),         // 7: token.TokenParamKey
-	(TypeID)(0),                // 8: token.TypeID
-	(*Token)(nil),              // 9: token.Token
-	(*Exchange)(nil),           // 10: token.Exchange
-	(*TokenRequestParams)(nil), // 11: token.TokenRequestParams
-	nil,                        // 12: token.Token.HeaderEntry
-	nil,                        // 13: token.Token.PayloadEntry
+	(*Token)(nil),              // 8: token.Token
+	(*Exchange)(nil),           // 9: token.Exchange
+	(*TokenRequestParams)(nil), // 10: token.TokenRequestParams
+	nil,                        // 11: token.Token.HeaderEntry
+	nil,                        // 12: token.Token.PayloadEntry
 }
 var file_libs_token_proto_depIdxs = []int32{
-	12, // 0: token.Token.header:type_name -> token.Token.HeaderEntry
-	13, // 1: token.Token.payload:type_name -> token.Token.PayloadEntry
+	11, // 0: token.Token.header:type_name -> token.Token.HeaderEntry
+	12, // 1: token.Token.payload:type_name -> token.Token.PayloadEntry
 	2,  // 2: token.TokenRequestParams.grant_type:type_name -> token.GrantType
 	3,  // [3:3] is the sub-list for method output_type
 	3,  // [3:3] is the sub-list for method input_type
@@ -1212,7 +1150,7 @@ func file_libs_token_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_token_proto_rawDesc), len(file_libs_token_proto_rawDesc)),
-			NumEnums:      9,
+			NumEnums:      8,
 			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   0,

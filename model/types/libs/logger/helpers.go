@@ -273,101 +273,6 @@ func LevelToSpecName(v Level) string {
 	}
 }
 
-// TypeIDValues returns all valid TypeID values (excluding UNDEFINED)
-func TypeIDValues() []TypeID {
-	return []TypeID{
-		TypeID_TYPE_ID_LOGGER_CONFIG,
-	}
-}
-
-// TypeIDStringValues returns all valid TypeID names as strings
-func TypeIDStringValues() []string {
-	return []string{"logger-config"}
-}
-
-// ParseTypeID converts a string to a TypeID enum value
-// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseTypeID(s string) (TypeID, error) {
-	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
-	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
-	switch normalized {
-	case "":
-		return TypeID_TYPE_ID_UNSPECIFIED, nil
-	case "logger-config", "type-id-logger-config":
-		return TypeID_TYPE_ID_LOGGER_CONFIG, nil
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid typeid %s, expecting one of: %v", s, TypeIDStringValues())
-	}
-}
-
-// ParseTypeIDs converts a comma-separated string to a slice of TypeID enum values
-// Returns an error if any value is invalid
-func ParseTypeIDs(s string) ([]TypeID, error) {
-	if s == "" {
-		return nil, nil
-	}
-	parts := strings.Split(s, ",")
-	result := make([]TypeID, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed == "" {
-			continue
-		}
-		val, err := ParseTypeID(trimmed)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, val)
-	}
-	return result, nil
-}
-
-// TypeIDToString converts a TypeID to its lowercase string representation
-func TypeIDToString(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_LOGGER_CONFIG:
-		return "logger-config"
-	default:
-		return ""
-	}
-}
-
-// ParseTypeIDLiberal parses a TypeID liberally, accepting:
-// - Integer values (as string or int)
-// - Enum names in any case
-// - RFC-compliant JSON names
-func ParseTypeIDLiberal(s string) TypeID {
-	if s == "" {
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-	// Try parsing as integer
-	if num, err := strconv.Atoi(s); err == nil {
-		return TypeID(num)
-	}
-	// Normalize and try parsing
-	normalized := strings.ToLower(strings.TrimSpace(s))
-	normalized = strings.ReplaceAll(normalized, "_", "-")
-	normalized = strings.ReplaceAll(normalized, " ", "-")
-	switch normalized {
-	case "logger-config", "type-id-logger-config":
-		return TypeID_TYPE_ID_LOGGER_CONFIG
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-}
-
-// TypeIDToSpecName converts a TypeID to its canonical protobuf spec name
-func TypeIDToSpecName(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_UNSPECIFIED:
-		return "TYPE_ID_UNSPECIFIED"
-	case TypeID_TYPE_ID_LOGGER_CONFIG:
-		return "TYPE_ID_LOGGER_CONFIG"
-	default:
-		return ""
-	}
-}
-
 // ============================================================
 // JSON/YAML/TOML Serialization Helpers
 // ============================================================
@@ -713,6 +618,11 @@ func ValidateLoggerConfigWithDepth(m *LoggerConfig, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field OutputPaths exceeds max size of 8, got: %d", len(m.OutputPaths))
 	}
 
+	// Validate ErrorOutputPaths (assert_max_size: 8)
+	if len(m.ErrorOutputPaths) > 8 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ErrorOutputPaths exceeds max size of 8, got: %d", len(m.ErrorOutputPaths))
+	}
+
 	// Validate ErrorOutputPaths (assert_file_path: PATH_ANY)
 	for i, path := range m.ErrorOutputPaths {
 		if path != "" {
@@ -720,11 +630,6 @@ func ValidateLoggerConfigWithDepth(m *LoggerConfig, depth int) error {
 				return protoerrors.NewErrMissingInvalidData(err, "field ErrorOutputPaths[%d] file path validation failed", i)
 			}
 		}
-	}
-
-	// Validate ErrorOutputPaths (assert_max_size: 8)
-	if len(m.ErrorOutputPaths) > 8 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ErrorOutputPaths exceeds max size of 8, got: %d", len(m.ErrorOutputPaths))
 	}
 
 	// Validate InitialFields (assert_max_size: 32)

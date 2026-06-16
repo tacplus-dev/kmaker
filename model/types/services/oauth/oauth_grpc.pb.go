@@ -35,7 +35,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Session_Session_FullMethodName = "/oauth.Session/Session"
+	Session_BrokerSession_FullMethodName = "/oauth.Session/BrokerSession"
 )
 
 // SessionClient is the client API for Session service.
@@ -46,11 +46,11 @@ const (
 // The client doesn't have a token yet — the whole point of this flow
 // is to obtain one, so each RPC has auth_disabled.
 type SessionClient interface {
-	// Session is a bidirectional stream between cavalierctl and OAuth.
+	// BrokerSession is a bidirectional stream between cavalierctl and OAuth.
 	// The client sends a session_id, then waits for token delivery.
 	// OAuth holds the stream open until the Callback handler writes a
 	// matching token to OAuthState or the session times out.
-	Session(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[SessionRequest, SessionResponse], error)
+	BrokerSession(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[SessionRequest, SessionResponse], error)
 }
 
 type sessionClient struct {
@@ -61,9 +61,9 @@ func NewSessionClient(cc grpc.ClientConnInterface) SessionClient {
 	return &sessionClient{cc}
 }
 
-func (c *sessionClient) Session(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[SessionRequest, SessionResponse], error) {
+func (c *sessionClient) BrokerSession(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[SessionRequest, SessionResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Session_ServiceDesc.Streams[0], Session_Session_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Session_ServiceDesc.Streams[0], Session_BrokerSession_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +72,7 @@ func (c *sessionClient) Session(ctx context.Context, opts ...grpc.CallOption) (g
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Session_SessionClient = grpc.BidiStreamingClient[SessionRequest, SessionResponse]
+type Session_BrokerSessionClient = grpc.BidiStreamingClient[SessionRequest, SessionResponse]
 
 // SessionServer is the server API for Session service.
 // All implementations must embed UnimplementedSessionServer
@@ -82,11 +82,11 @@ type Session_SessionClient = grpc.BidiStreamingClient[SessionRequest, SessionRes
 // The client doesn't have a token yet — the whole point of this flow
 // is to obtain one, so each RPC has auth_disabled.
 type SessionServer interface {
-	// Session is a bidirectional stream between cavalierctl and OAuth.
+	// BrokerSession is a bidirectional stream between cavalierctl and OAuth.
 	// The client sends a session_id, then waits for token delivery.
 	// OAuth holds the stream open until the Callback handler writes a
 	// matching token to OAuthState or the session times out.
-	Session(grpc.BidiStreamingServer[SessionRequest, SessionResponse]) error
+	BrokerSession(grpc.BidiStreamingServer[SessionRequest, SessionResponse]) error
 	mustEmbedUnimplementedSessionServer()
 }
 
@@ -97,8 +97,8 @@ type SessionServer interface {
 // pointer dereference when methods are called.
 type UnimplementedSessionServer struct{}
 
-func (UnimplementedSessionServer) Session(grpc.BidiStreamingServer[SessionRequest, SessionResponse]) error {
-	return status.Error(codes.Unimplemented, "method Session not implemented")
+func (UnimplementedSessionServer) BrokerSession(grpc.BidiStreamingServer[SessionRequest, SessionResponse]) error {
+	return status.Error(codes.Unimplemented, "method BrokerSession not implemented")
 }
 func (UnimplementedSessionServer) mustEmbedUnimplementedSessionServer() {}
 func (UnimplementedSessionServer) testEmbeddedByValue()                 {}
@@ -121,12 +121,12 @@ func RegisterSessionServer(s grpc.ServiceRegistrar, srv SessionServer) {
 	s.RegisterService(&Session_ServiceDesc, srv)
 }
 
-func _Session_Session_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(SessionServer).Session(&grpc.GenericServerStream[SessionRequest, SessionResponse]{ServerStream: stream})
+func _Session_BrokerSession_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(SessionServer).BrokerSession(&grpc.GenericServerStream[SessionRequest, SessionResponse]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Session_SessionServer = grpc.BidiStreamingServer[SessionRequest, SessionResponse]
+type Session_BrokerSessionServer = grpc.BidiStreamingServer[SessionRequest, SessionResponse]
 
 // Session_ServiceDesc is the grpc.ServiceDesc for Session service.
 // It's only intended for direct use with grpc.RegisterService,
@@ -137,8 +137,8 @@ var Session_ServiceDesc = grpc.ServiceDesc{
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "Session",
-			Handler:       _Session_Session_Handler,
+			StreamName:    "BrokerSession",
+			Handler:       _Session_BrokerSession_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},
@@ -147,11 +147,11 @@ var Session_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	Auth_ListProviders_FullMethodName   = "/oauth.Auth/ListProviders"
-	Auth_Authorize_FullMethodName       = "/oauth.Auth/Authorize"
-	Auth_Callback_FullMethodName        = "/oauth.Auth/Callback"
-	Auth_Logout_FullMethodName          = "/oauth.Auth/Logout"
-	Auth_CompleteCliAuth_FullMethodName = "/oauth.Auth/CompleteCliAuth"
+	Auth_ListProviders_FullMethodName      = "/oauth.Auth/ListProviders"
+	Auth_Authorize_FullMethodName          = "/oauth.Auth/Authorize"
+	Auth_MintCallbackTokens_FullMethodName = "/oauth.Auth/MintCallbackTokens"
+	Auth_RevokeSession_FullMethodName      = "/oauth.Auth/RevokeSession"
+	Auth_BrokerCliAuth_FullMethodName      = "/oauth.Auth/BrokerCliAuth"
 )
 
 // AuthClient is the client API for Auth service.
@@ -165,16 +165,16 @@ type AuthClient interface {
 	// Creates a nonce/state in memory and returns the IDP redirect URL.
 	// The caller provides a callback_url for post-auth redirect.
 	Authorize(ctx context.Context, in *AuthorizeRequest, opts ...grpc.CallOption) (*AuthorizeResponse, error)
-	// Callback handles the OAuth2 authorization code callback from the IDP.
+	// MintCallbackTokens handles the OAuth2 authorization code callback from the IDP.
 	// Exchanges the authorization code for an IDP ID token, validates it
 	// against the IDP's JWKS, then delegates to kernel's MintUserToken.
-	Callback(ctx context.Context, in *CallbackRequest, opts ...grpc.CallOption) (*CallbackResponse, error)
-	// Logout invalidates the session and optionally redirects to the IDP logout.
-	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
-	// CompleteCliAuth is called by the webapp when a user is already logged in
+	MintCallbackTokens(ctx context.Context, in *CallbackRequest, opts ...grpc.CallOption) (*CallbackResponse, error)
+	// RevokeSession invalidates the session and optionally redirects to the IDP logout.
+	RevokeSession(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
+	// BrokerCliAuth is called by the webapp when a user is already logged in
 	// and session_id is in the URL. OAuth forwards the authenticated identity
 	// to kernel's CliTokenBroker for nonce completion and token minting.
-	CompleteCliAuth(ctx context.Context, in *CompleteCliAuthRequest, opts ...grpc.CallOption) (*CompleteCliAuthResponse, error)
+	BrokerCliAuth(ctx context.Context, in *CompleteCliAuthRequest, opts ...grpc.CallOption) (*CompleteCliAuthResponse, error)
 }
 
 type authClient struct {
@@ -205,30 +205,30 @@ func (c *authClient) Authorize(ctx context.Context, in *AuthorizeRequest, opts .
 	return out, nil
 }
 
-func (c *authClient) Callback(ctx context.Context, in *CallbackRequest, opts ...grpc.CallOption) (*CallbackResponse, error) {
+func (c *authClient) MintCallbackTokens(ctx context.Context, in *CallbackRequest, opts ...grpc.CallOption) (*CallbackResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CallbackResponse)
-	err := c.cc.Invoke(ctx, Auth_Callback_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Auth_MintCallbackTokens_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error) {
+func (c *authClient) RevokeSession(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(LogoutResponse)
-	err := c.cc.Invoke(ctx, Auth_Logout_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Auth_RevokeSession_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authClient) CompleteCliAuth(ctx context.Context, in *CompleteCliAuthRequest, opts ...grpc.CallOption) (*CompleteCliAuthResponse, error) {
+func (c *authClient) BrokerCliAuth(ctx context.Context, in *CompleteCliAuthRequest, opts ...grpc.CallOption) (*CompleteCliAuthResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CompleteCliAuthResponse)
-	err := c.cc.Invoke(ctx, Auth_CompleteCliAuth_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Auth_BrokerCliAuth_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -246,16 +246,16 @@ type AuthServer interface {
 	// Creates a nonce/state in memory and returns the IDP redirect URL.
 	// The caller provides a callback_url for post-auth redirect.
 	Authorize(context.Context, *AuthorizeRequest) (*AuthorizeResponse, error)
-	// Callback handles the OAuth2 authorization code callback from the IDP.
+	// MintCallbackTokens handles the OAuth2 authorization code callback from the IDP.
 	// Exchanges the authorization code for an IDP ID token, validates it
 	// against the IDP's JWKS, then delegates to kernel's MintUserToken.
-	Callback(context.Context, *CallbackRequest) (*CallbackResponse, error)
-	// Logout invalidates the session and optionally redirects to the IDP logout.
-	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
-	// CompleteCliAuth is called by the webapp when a user is already logged in
+	MintCallbackTokens(context.Context, *CallbackRequest) (*CallbackResponse, error)
+	// RevokeSession invalidates the session and optionally redirects to the IDP logout.
+	RevokeSession(context.Context, *LogoutRequest) (*LogoutResponse, error)
+	// BrokerCliAuth is called by the webapp when a user is already logged in
 	// and session_id is in the URL. OAuth forwards the authenticated identity
 	// to kernel's CliTokenBroker for nonce completion and token minting.
-	CompleteCliAuth(context.Context, *CompleteCliAuthRequest) (*CompleteCliAuthResponse, error)
+	BrokerCliAuth(context.Context, *CompleteCliAuthRequest) (*CompleteCliAuthResponse, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -272,14 +272,14 @@ func (UnimplementedAuthServer) ListProviders(context.Context, *trace.TraceReques
 func (UnimplementedAuthServer) Authorize(context.Context, *AuthorizeRequest) (*AuthorizeResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Authorize not implemented")
 }
-func (UnimplementedAuthServer) Callback(context.Context, *CallbackRequest) (*CallbackResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method Callback not implemented")
+func (UnimplementedAuthServer) MintCallbackTokens(context.Context, *CallbackRequest) (*CallbackResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MintCallbackTokens not implemented")
 }
-func (UnimplementedAuthServer) Logout(context.Context, *LogoutRequest) (*LogoutResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method Logout not implemented")
+func (UnimplementedAuthServer) RevokeSession(context.Context, *LogoutRequest) (*LogoutResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RevokeSession not implemented")
 }
-func (UnimplementedAuthServer) CompleteCliAuth(context.Context, *CompleteCliAuthRequest) (*CompleteCliAuthResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method CompleteCliAuth not implemented")
+func (UnimplementedAuthServer) BrokerCliAuth(context.Context, *CompleteCliAuthRequest) (*CompleteCliAuthResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method BrokerCliAuth not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
 func (UnimplementedAuthServer) testEmbeddedByValue()              {}
@@ -338,56 +338,56 @@ func _Auth_Authorize_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Auth_Callback_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Auth_MintCallbackTokens_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CallbackRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServer).Callback(ctx, in)
+		return srv.(AuthServer).MintCallbackTokens(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Auth_Callback_FullMethodName,
+		FullMethod: Auth_MintCallbackTokens_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).Callback(ctx, req.(*CallbackRequest))
+		return srv.(AuthServer).MintCallbackTokens(ctx, req.(*CallbackRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Auth_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Auth_RevokeSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LogoutRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServer).Logout(ctx, in)
+		return srv.(AuthServer).RevokeSession(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Auth_Logout_FullMethodName,
+		FullMethod: Auth_RevokeSession_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).Logout(ctx, req.(*LogoutRequest))
+		return srv.(AuthServer).RevokeSession(ctx, req.(*LogoutRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Auth_CompleteCliAuth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Auth_BrokerCliAuth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CompleteCliAuthRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServer).CompleteCliAuth(ctx, in)
+		return srv.(AuthServer).BrokerCliAuth(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Auth_CompleteCliAuth_FullMethodName,
+		FullMethod: Auth_BrokerCliAuth_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).CompleteCliAuth(ctx, req.(*CompleteCliAuthRequest))
+		return srv.(AuthServer).BrokerCliAuth(ctx, req.(*CompleteCliAuthRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -408,16 +408,16 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Auth_Authorize_Handler,
 		},
 		{
-			MethodName: "Callback",
-			Handler:    _Auth_Callback_Handler,
+			MethodName: "MintCallbackTokens",
+			Handler:    _Auth_MintCallbackTokens_Handler,
 		},
 		{
-			MethodName: "Logout",
-			Handler:    _Auth_Logout_Handler,
+			MethodName: "RevokeSession",
+			Handler:    _Auth_RevokeSession_Handler,
 		},
 		{
-			MethodName: "CompleteCliAuth",
-			Handler:    _Auth_CompleteCliAuth_Handler,
+			MethodName: "BrokerCliAuth",
+			Handler:    _Auth_BrokerCliAuth_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

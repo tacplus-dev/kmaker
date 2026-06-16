@@ -151,11 +151,11 @@ func (TypeID) EnumDescriptor() ([]byte, []int) {
 type SessionRpcId int32
 
 const (
-	SessionRpcId_SESSION_RPC_ID_UNSPECIFIED   SessionRpcId = 0
-	SessionRpcId_SESSION_RPC_ID_ALL_ACCESSORS SessionRpcId = 1
-	SessionRpcId_SESSION_RPC_ID_ALL_MUTATORS  SessionRpcId = 2
-	SessionRpcId_SESSION_RPC_ID_ALL_EXECUTORS SessionRpcId = 3
-	SessionRpcId_SESSION_RPC_ID_SESSION       SessionRpcId = 4
+	SessionRpcId_SESSION_RPC_ID_UNSPECIFIED    SessionRpcId = 0
+	SessionRpcId_SESSION_RPC_ID_ALL_ACCESSORS  SessionRpcId = 1
+	SessionRpcId_SESSION_RPC_ID_ALL_MUTATORS   SessionRpcId = 2
+	SessionRpcId_SESSION_RPC_ID_ALL_EXECUTORS  SessionRpcId = 3
+	SessionRpcId_SESSION_RPC_ID_BROKER_SESSION SessionRpcId = 4
 )
 
 // Enum value maps for SessionRpcId.
@@ -165,14 +165,14 @@ var (
 		1: "SESSION_RPC_ID_ALL_ACCESSORS",
 		2: "SESSION_RPC_ID_ALL_MUTATORS",
 		3: "SESSION_RPC_ID_ALL_EXECUTORS",
-		4: "SESSION_RPC_ID_SESSION",
+		4: "SESSION_RPC_ID_BROKER_SESSION",
 	}
 	SessionRpcId_value = map[string]int32{
-		"SESSION_RPC_ID_UNSPECIFIED":   0,
-		"SESSION_RPC_ID_ALL_ACCESSORS": 1,
-		"SESSION_RPC_ID_ALL_MUTATORS":  2,
-		"SESSION_RPC_ID_ALL_EXECUTORS": 3,
-		"SESSION_RPC_ID_SESSION":       4,
+		"SESSION_RPC_ID_UNSPECIFIED":    0,
+		"SESSION_RPC_ID_ALL_ACCESSORS":  1,
+		"SESSION_RPC_ID_ALL_MUTATORS":   2,
+		"SESSION_RPC_ID_ALL_EXECUTORS":  3,
+		"SESSION_RPC_ID_BROKER_SESSION": 4,
 	}
 )
 
@@ -206,15 +206,15 @@ func (SessionRpcId) EnumDescriptor() ([]byte, []int) {
 type AuthRpcId int32
 
 const (
-	AuthRpcId_AUTH_RPC_ID_UNSPECIFIED       AuthRpcId = 0
-	AuthRpcId_AUTH_RPC_ID_ALL_ACCESSORS     AuthRpcId = 1
-	AuthRpcId_AUTH_RPC_ID_ALL_MUTATORS      AuthRpcId = 2
-	AuthRpcId_AUTH_RPC_ID_ALL_EXECUTORS     AuthRpcId = 3
-	AuthRpcId_AUTH_RPC_ID_LIST_PROVIDERS    AuthRpcId = 4
-	AuthRpcId_AUTH_RPC_ID_AUTHORIZE         AuthRpcId = 5
-	AuthRpcId_AUTH_RPC_ID_CALLBACK          AuthRpcId = 6
-	AuthRpcId_AUTH_RPC_ID_LOGOUT            AuthRpcId = 7
-	AuthRpcId_AUTH_RPC_ID_COMPLETE_CLI_AUTH AuthRpcId = 8
+	AuthRpcId_AUTH_RPC_ID_UNSPECIFIED          AuthRpcId = 0
+	AuthRpcId_AUTH_RPC_ID_ALL_ACCESSORS        AuthRpcId = 1
+	AuthRpcId_AUTH_RPC_ID_ALL_MUTATORS         AuthRpcId = 2
+	AuthRpcId_AUTH_RPC_ID_ALL_EXECUTORS        AuthRpcId = 3
+	AuthRpcId_AUTH_RPC_ID_LIST_PROVIDERS       AuthRpcId = 4
+	AuthRpcId_AUTH_RPC_ID_AUTHORIZE            AuthRpcId = 5
+	AuthRpcId_AUTH_RPC_ID_MINT_CALLBACK_TOKENS AuthRpcId = 6
+	AuthRpcId_AUTH_RPC_ID_REVOKE_SESSION       AuthRpcId = 7
+	AuthRpcId_AUTH_RPC_ID_BROKER_CLI_AUTH      AuthRpcId = 8
 )
 
 // Enum value maps for AuthRpcId.
@@ -226,20 +226,20 @@ var (
 		3: "AUTH_RPC_ID_ALL_EXECUTORS",
 		4: "AUTH_RPC_ID_LIST_PROVIDERS",
 		5: "AUTH_RPC_ID_AUTHORIZE",
-		6: "AUTH_RPC_ID_CALLBACK",
-		7: "AUTH_RPC_ID_LOGOUT",
-		8: "AUTH_RPC_ID_COMPLETE_CLI_AUTH",
+		6: "AUTH_RPC_ID_MINT_CALLBACK_TOKENS",
+		7: "AUTH_RPC_ID_REVOKE_SESSION",
+		8: "AUTH_RPC_ID_BROKER_CLI_AUTH",
 	}
 	AuthRpcId_value = map[string]int32{
-		"AUTH_RPC_ID_UNSPECIFIED":       0,
-		"AUTH_RPC_ID_ALL_ACCESSORS":     1,
-		"AUTH_RPC_ID_ALL_MUTATORS":      2,
-		"AUTH_RPC_ID_ALL_EXECUTORS":     3,
-		"AUTH_RPC_ID_LIST_PROVIDERS":    4,
-		"AUTH_RPC_ID_AUTHORIZE":         5,
-		"AUTH_RPC_ID_CALLBACK":          6,
-		"AUTH_RPC_ID_LOGOUT":            7,
-		"AUTH_RPC_ID_COMPLETE_CLI_AUTH": 8,
+		"AUTH_RPC_ID_UNSPECIFIED":          0,
+		"AUTH_RPC_ID_ALL_ACCESSORS":        1,
+		"AUTH_RPC_ID_ALL_MUTATORS":         2,
+		"AUTH_RPC_ID_ALL_EXECUTORS":        3,
+		"AUTH_RPC_ID_LIST_PROVIDERS":       4,
+		"AUTH_RPC_ID_AUTHORIZE":            5,
+		"AUTH_RPC_ID_MINT_CALLBACK_TOKENS": 6,
+		"AUTH_RPC_ID_REVOKE_SESSION":       7,
+		"AUTH_RPC_ID_BROKER_CLI_AUTH":      8,
 	}
 )
 
@@ -2146,10 +2146,10 @@ const file_services_oauth_proto_rawDesc = "" +
 	"\x15ListProvidersResponse\x127\n" +
 	"\tproviders\x18\x01 \x03(\v2\x13.oauth.ProviderInfoB\x04\xb8\xa8\x1d\x10R\tproviders\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xaa\x01\n" +
-	"\fProviderInfo\x12\x1c\n" +
-	"\x04name\x18\x01 \x01(\tB\b\x88\xa6\x1d\x01\x88\xa7\x1d\x01R\x04name\x12\x1e\n" +
-	"\adomains\x18\x02 \x03(\tB\x04\xb8\xa8\x1d R\adomains\x12+\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb4\x01\n" +
+	"\fProviderInfo\x12!\n" +
+	"\x04name\x18\x01 \x01(\tB\r\x88\xa6\x1d\x01\x88\xa7\x1d\x01\x90\xa7\x1d\x80\x01R\x04name\x12#\n" +
+	"\adomains\x18\x02 \x03(\tB\t\x90\xa7\x1d\xfd\x01\xb8\xa8\x1d R\adomains\x12+\n" +
 	"\x0eprovider_index\x18\x03 \x01(\x05B\x04\xb0\xa7\x1d\x00R\rproviderIndex\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc3\x01\n" +
@@ -2218,17 +2218,17 @@ const file_services_oauth_proto_rawDesc = "" +
 	"\vclaim_value\x18\x03 \x01(\tB\b\x88\xa6\x1d\x01\x88\xa7\x1d\x01R\n" +
 	"claimValue\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc6\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xcf\x01\n" +
 	"\x11OAuthTenantConfig\x128\n" +
 	"\tproviders\x18\x01 \x03(\v2\x14.oauth.OAuthProviderB\x04\xb8\xa8\x1d\x10R\tproviders\x12@\n" +
 	"\x0eclaim_matchers\x18\x02 \x03(\v2\x13.oauth.ClaimMatcherB\x04\xb8\xa8\x1d R\rclaimMatchers\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x04\xa8\xaa\x1d\x01\"\x98\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\rڪ\x1d\t\b\x01\x12\x05oauth\"\x9a\x01\n" +
 	"\x10OauthConfigState\x12/\n" +
 	"\x06config\x18\x01 \x01(\v2\r.oauth.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\"\x9a\xa8\x1d\x1a\n" +
-	"\x10OauthConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:$\x9a\xa8\x1d\x1c\n" +
+	"\x10OauthConfigState\x1a\beventbus\xa0\xa8\x1d\x02\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\xaa\x05\n" +
@@ -2255,23 +2255,23 @@ const file_services_oauth_proto_rawDesc = "" +
 	"\x15TYPE_ID_CLAIM_MATCHER\x10\x12\x12 \n" +
 	"\x1cTYPE_ID_O_AUTH_TENANT_CONFIG\x10\x13\x12\x1e\n" +
 	"\x1aTYPE_ID_OAUTH_CONFIG_STATE\x10\x14\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10\x15*\xaf\x01\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x10\x15*\xb6\x01\n" +
 	"\fSessionRpcId\x12\x1e\n" +
 	"\x1aSESSION_RPC_ID_UNSPECIFIED\x10\x00\x12 \n" +
 	"\x1cSESSION_RPC_ID_ALL_ACCESSORS\x10\x01\x12\x1f\n" +
 	"\x1bSESSION_RPC_ID_ALL_MUTATORS\x10\x02\x12 \n" +
-	"\x1cSESSION_RPC_ID_ALL_EXECUTORS\x10\x03\x12\x1a\n" +
-	"\x16SESSION_RPC_ID_SESSION\x10\x04*\x94\x02\n" +
+	"\x1cSESSION_RPC_ID_ALL_EXECUTORS\x10\x03\x12!\n" +
+	"\x1dSESSION_RPC_ID_BROKER_SESSION\x10\x04*\xa6\x02\n" +
 	"\tAuthRpcId\x12\x1b\n" +
 	"\x17AUTH_RPC_ID_UNSPECIFIED\x10\x00\x12\x1d\n" +
 	"\x19AUTH_RPC_ID_ALL_ACCESSORS\x10\x01\x12\x1c\n" +
 	"\x18AUTH_RPC_ID_ALL_MUTATORS\x10\x02\x12\x1d\n" +
 	"\x19AUTH_RPC_ID_ALL_EXECUTORS\x10\x03\x12\x1e\n" +
 	"\x1aAUTH_RPC_ID_LIST_PROVIDERS\x10\x04\x12\x19\n" +
-	"\x15AUTH_RPC_ID_AUTHORIZE\x10\x05\x12\x18\n" +
-	"\x14AUTH_RPC_ID_CALLBACK\x10\x06\x12\x16\n" +
-	"\x12AUTH_RPC_ID_LOGOUT\x10\a\x12!\n" +
-	"\x1dAUTH_RPC_ID_COMPLETE_CLI_AUTH\x10\b*\x87\x03\n" +
+	"\x15AUTH_RPC_ID_AUTHORIZE\x10\x05\x12$\n" +
+	" AUTH_RPC_ID_MINT_CALLBACK_TOKENS\x10\x06\x12\x1e\n" +
+	"\x1aAUTH_RPC_ID_REVOKE_SESSION\x10\a\x12\x1f\n" +
+	"\x1bAUTH_RPC_ID_BROKER_CLI_AUTH\x10\b*\x87\x03\n" +
 	"\x1cOauthConfigStateServiceRpcId\x121\n" +
 	"-OAUTH_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x123\n" +
 	"/OAUTH_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x122\n" +
@@ -2279,16 +2279,16 @@ const file_services_oauth_proto_rawDesc = "" +
 	"/OAUTH_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x120\n" +
 	",OAUTH_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x120\n" +
 	",OAUTH_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x122\n" +
-	".OAUTH_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062U\n" +
-	"\aSession\x12D\n" +
-	"\aSession\x12\x15.oauth.SessionRequest\x1a\x16.oauth.SessionResponse\"\x06\xea\x88'\x02\b\x01(\x010\x01\x1a\x04\xf2\x97\"\x002\x85\x03\n" +
-	"\x04Auth\x12Q\n" +
-	"\rListProviders\x12\x13.trace.TraceRequest\x1a\x1c.oauth.ListProvidersResponse\"\rʈ'\x03\n" +
-	"\x01\x01\xea\x88'\x02\b\x01\x12F\n" +
-	"\tAuthorize\x12\x17.oauth.AuthorizeRequest\x1a\x18.oauth.AuthorizeResponse\"\x06\xea\x88'\x02\b\x01\x12C\n" +
-	"\bCallback\x12\x16.oauth.CallbackRequest\x1a\x17.oauth.CallbackResponse\"\x06\xea\x88'\x02\b\x01\x12=\n" +
-	"\x06Logout\x12\x14.oauth.LogoutRequest\x1a\x15.oauth.LogoutResponse\"\x06\xea\x88'\x02\b\x01\x12X\n" +
-	"\x0fCompleteCliAuth\x12\x1d.oauth.CompleteCliAuthRequest\x1a\x1e.oauth.CompleteCliAuthResponse\"\x06\xea\x88'\x02\x10\x01\x1a\x04\xf2\x97\"\x002\xb0\x01\n" +
+	".OAUTH_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062[\n" +
+	"\aSession\x12J\n" +
+	"\rBrokerSession\x12\x15.oauth.SessionRequest\x1a\x16.oauth.SessionResponse\"\x06\xea\x88'\x02\b\x01(\x010\x01\x1a\x04\xf2\x97\"\x002\xac\x03\n" +
+	"\x04Auth\x12i\n" +
+	"\rListProviders\x12\x13.trace.TraceRequest\x1a\x1c.oauth.ListProvidersResponse\"%ʈ'\x03\n" +
+	"\x01\x01\xea\x88'\x02\b\x01\xf2\x88'\x14\b\x01\x12\x0eprovider_index\x18\x10\x12F\n" +
+	"\tAuthorize\x12\x17.oauth.AuthorizeRequest\x1a\x18.oauth.AuthorizeResponse\"\x06\xea\x88'\x02\b\x01\x12M\n" +
+	"\x12MintCallbackTokens\x12\x16.oauth.CallbackRequest\x1a\x17.oauth.CallbackResponse\"\x06\xea\x88'\x02\b\x01\x12D\n" +
+	"\rRevokeSession\x12\x14.oauth.LogoutRequest\x1a\x15.oauth.LogoutResponse\"\x06\xea\x88'\x02\b\x01\x12V\n" +
+	"\rBrokerCliAuth\x12\x1d.oauth.CompleteCliAuthRequest\x1a\x1e.oauth.CompleteCliAuthResponse\"\x06\xea\x88'\x02\x10\x01\x1a\x04\xf2\x97\"\x002\xb0\x01\n" +
 	"\x17OauthConfigStateService\x12/\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\r.oauth.Config\x12)\n" +
 	"\tSetConfig\x12\r.oauth.Config\x1a\r.oauth.Config\x123\n" +
@@ -2347,21 +2347,21 @@ var file_services_oauth_proto_depIdxs = []int32{
 	20, // 3: oauth.OAuthTenantConfig.providers:type_name -> oauth.OAuthProvider
 	21, // 4: oauth.OAuthTenantConfig.claim_matchers:type_name -> oauth.ClaimMatcher
 	4,  // 5: oauth.OauthConfigState.config:type_name -> oauth.Config
-	8,  // 6: oauth.Session.Session:input_type -> oauth.SessionRequest
+	8,  // 6: oauth.Session.BrokerSession:input_type -> oauth.SessionRequest
 	25, // 7: oauth.Auth.ListProviders:input_type -> trace.TraceRequest
 	12, // 8: oauth.Auth.Authorize:input_type -> oauth.AuthorizeRequest
-	14, // 9: oauth.Auth.Callback:input_type -> oauth.CallbackRequest
-	16, // 10: oauth.Auth.Logout:input_type -> oauth.LogoutRequest
-	6,  // 11: oauth.Auth.CompleteCliAuth:input_type -> oauth.CompleteCliAuthRequest
+	14, // 9: oauth.Auth.MintCallbackTokens:input_type -> oauth.CallbackRequest
+	16, // 10: oauth.Auth.RevokeSession:input_type -> oauth.LogoutRequest
+	6,  // 11: oauth.Auth.BrokerCliAuth:input_type -> oauth.CompleteCliAuthRequest
 	25, // 12: oauth.OauthConfigStateService.GetConfig:input_type -> trace.TraceRequest
 	4,  // 13: oauth.OauthConfigStateService.SetConfig:input_type -> oauth.Config
 	25, // 14: oauth.OauthConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	9,  // 15: oauth.Session.Session:output_type -> oauth.SessionResponse
+	9,  // 15: oauth.Session.BrokerSession:output_type -> oauth.SessionResponse
 	10, // 16: oauth.Auth.ListProviders:output_type -> oauth.ListProvidersResponse
 	13, // 17: oauth.Auth.Authorize:output_type -> oauth.AuthorizeResponse
-	15, // 18: oauth.Auth.Callback:output_type -> oauth.CallbackResponse
-	17, // 19: oauth.Auth.Logout:output_type -> oauth.LogoutResponse
-	7,  // 20: oauth.Auth.CompleteCliAuth:output_type -> oauth.CompleteCliAuthResponse
+	15, // 18: oauth.Auth.MintCallbackTokens:output_type -> oauth.CallbackResponse
+	17, // 19: oauth.Auth.RevokeSession:output_type -> oauth.LogoutResponse
+	7,  // 20: oauth.Auth.BrokerCliAuth:output_type -> oauth.CompleteCliAuthResponse
 	4,  // 21: oauth.OauthConfigStateService.GetConfig:output_type -> oauth.Config
 	4,  // 22: oauth.OauthConfigStateService.SetConfig:output_type -> oauth.Config
 	4,  // 23: oauth.OauthConfigStateService.WatchConfig:output_type -> oauth.Config

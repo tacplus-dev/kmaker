@@ -200,48 +200,12 @@ func (a *authorizer) JwkCache() *JwkCache {
 // Authorize checks if the request is authorized by verifying the token signature,
 // audience, and service_entitlements claim.
 func (a *authorizer) Authorize(ctx context.Context, fullMethod string, req any) error {
-	// Extract authorization header from context
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return protoerrors.NewErrUnauthorized(nil, "missing authorization header")
-	}
-
-	authValues := md.Get("authorization")
-	if len(authValues) == 0 || authValues[0] == "" {
-		return protoerrors.NewErrUnauthorized(nil, "missing authorization header")
-	}
-
-	tokenStr := authValues[0]
-	if strings.HasPrefix(strings.ToLower(tokenStr), "bearer ") {
-		tokenStr = tokenStr[7:]
-	}
-
-	// Verify token signature and parse
-	tw, err := a.verifyToken(tokenStr)
+	tw, err := a.verifyBearer(ctx)
 	if err != nil {
 		zap.L().Debug("Token verification failed",
 			zap.String("method", fullMethod),
 			zap.Error(err))
-		return protoerrors.NewErrUnauthorized(err, "token verification failed")
-	}
-
-	// Reject refresh tokens — they should only be exchanged at the Mint endpoint.
-	tokenUse := tw.GetTokenUse()
-	if tokenUse == "refresh" {
-		return protoerrors.NewErrUnauthorized(nil, "refresh tokens cannot be used for API access")
-	}
-
-	// Reject bootstrap, locality, and external tokens — these are only valid for
-	// their specific flows. External tokens are minted by the token authority for upstream
-	// services and must never be accepted by internal Cavalier services.
-	if tokenUse == "bootstrap" || tokenUse == "locality" || tokenUse == "external" {
-		return protoerrors.NewErrUnauthorized(nil, "%s tokens cannot be used for API access", tokenUse)
-	}
-
-	// Check aud matches service name
-	if tw.GetAudience() != serviceName {
-		return protoerrors.NewErrPermissionDenied(nil,
-			"token audience %q does not match service %q", tw.GetAudience(), serviceName)
+		return err
 	}
 
 	// S2S path: service/workload tokens carry structured identity claims
@@ -344,7 +308,7 @@ func (a *authorizer) authorizeByServiceEntitlements(te *entitlementspb.TokenEnti
 	required := methodGrantToken(fullMethod)
 	raw := make([]string, 0, len(te.GetGrants()))
 	for _, grant := range te.GetGrants() {
-		raw = append(raw, grant.GetToken())
+		raw = append(raw, grant)
 	}
 	for _, token := range granthelper.Normalize(raw) {
 		if token == required {
@@ -392,7 +356,22 @@ func grantTokenPart(s string) string {
 	return b.String()
 }
 
-func (a *authorizer) authenticateToken(ctx context.Context) (*tokenlib.TokenWrapper, error) {
+func rejectAPITokenClass(tw *tokenlib.TokenWrapper) error {
+	// Reject refresh tokens — they should only be exchanged at the Mint endpoint.
+	tokenUse := tw.GetTokenUse()
+	if tokenUse == "refresh" || (tokenUse == "" && tw.GetCustomField("typ") == "refresh") {
+		return protoerrors.NewErrUnauthorized(nil, "refresh tokens cannot be used for API access")
+	}
+
+	// Reject bootstrap, locality, and external tokens. External tokens are minted
+	// by the token authority for upstream services and must never be accepted internally.
+	if tokenUse == "bootstrap" || tokenUse == "locality" || tokenUse == "external" {
+		return protoerrors.NewErrUnauthorized(nil, "%s tokens cannot be used for API access", tokenUse)
+	}
+	return nil
+}
+
+func (a *authorizer) verifyBearer(ctx context.Context) (*tokenlib.TokenWrapper, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return nil, protoerrors.NewErrUnauthorized(nil, "missing authorization header")
@@ -413,18 +392,8 @@ func (a *authorizer) authenticateToken(ctx context.Context) (*tokenlib.TokenWrap
 		return nil, protoerrors.NewErrUnauthorized(err, "token verification failed")
 	}
 
-	// Reject refresh tokens — they should only be exchanged at the Mint endpoint.
-	authTokenUse := tw.GetTokenUse()
-	if authTokenUse == "refresh" {
-		return nil, protoerrors.NewErrUnauthorized(nil, "refresh tokens cannot be used for API access")
-	}
-	if authTokenUse == "" && tw.GetCustomField("typ") == "refresh" {
-		return nil, protoerrors.NewErrUnauthorized(nil, "refresh tokens cannot be used for API access")
-	}
-
-	// Reject bootstrap, locality, and external tokens.
-	if authTokenUse == "bootstrap" || authTokenUse == "locality" || authTokenUse == "external" {
-		return nil, protoerrors.NewErrUnauthorized(nil, "%s tokens cannot be used for API access", authTokenUse)
+	if err := rejectAPITokenClass(tw); err != nil {
+		return nil, err
 	}
 
 	if tw.GetAudience() != serviceName {
@@ -437,7 +406,7 @@ func (a *authorizer) authenticateToken(ctx context.Context) (*tokenlib.TokenWrap
 // Authenticate verifies token signature, audience, and expiry without
 // checking entitlements. Used for auth_any_user services.
 func (a *authorizer) Authenticate(ctx context.Context) error {
-	_, err := a.authenticateToken(ctx)
+	_, err := a.verifyBearer(ctx)
 	// Token is valid (signature + aud). Allow for both S2S and C2S tokens.
 	// S2S tokens (sub set): authorized by valid token with correct audience.
 	// C2S tokens (auth_any_user): valid user token, no entitlement check needed.
@@ -447,7 +416,7 @@ func (a *authorizer) Authenticate(ctx context.Context) error {
 // AuthenticateAtOrBelow verifies token authenticity and enforces the universal
 // namespace rule against a fixed target namespace.
 func (a *authorizer) AuthenticateAtOrBelow(ctx context.Context, targetNamespace string) error {
-	tw, err := a.authenticateToken(ctx)
+	tw, err := a.verifyBearer(ctx)
 	if err != nil {
 		return err
 	}

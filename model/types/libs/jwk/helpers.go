@@ -144,119 +144,6 @@ func JwkUseTypeToSpecName(v JwkUseType) string {
 	}
 }
 
-// TypeIDValues returns all valid TypeID values (excluding UNDEFINED)
-func TypeIDValues() []TypeID {
-	return []TypeID{
-		TypeID_TYPE_ID_JWK,
-		TypeID_TYPE_ID_JWKS,
-		TypeID_TYPE_ID_OPEN_ID_CONFIGURATION,
-	}
-}
-
-// TypeIDStringValues returns all valid TypeID names as strings
-func TypeIDStringValues() []string {
-	return []string{"jwk", "jwks", "open-id-configuration"}
-}
-
-// ParseTypeID converts a string to a TypeID enum value
-// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseTypeID(s string) (TypeID, error) {
-	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
-	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
-	switch normalized {
-	case "":
-		return TypeID_TYPE_ID_UNSPECIFIED, nil
-	case "jwk", "type-id-jwk":
-		return TypeID_TYPE_ID_JWK, nil
-	case "jwks", "type-id-jwks":
-		return TypeID_TYPE_ID_JWKS, nil
-	case "open-id-configuration", "type-id-open-id-configuration":
-		return TypeID_TYPE_ID_OPEN_ID_CONFIGURATION, nil
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid typeid %s, expecting one of: %v", s, TypeIDStringValues())
-	}
-}
-
-// ParseTypeIDs converts a comma-separated string to a slice of TypeID enum values
-// Returns an error if any value is invalid
-func ParseTypeIDs(s string) ([]TypeID, error) {
-	if s == "" {
-		return nil, nil
-	}
-	parts := strings.Split(s, ",")
-	result := make([]TypeID, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed == "" {
-			continue
-		}
-		val, err := ParseTypeID(trimmed)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, val)
-	}
-	return result, nil
-}
-
-// TypeIDToString converts a TypeID to its lowercase string representation
-func TypeIDToString(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_JWK:
-		return "jwk"
-	case TypeID_TYPE_ID_JWKS:
-		return "jwks"
-	case TypeID_TYPE_ID_OPEN_ID_CONFIGURATION:
-		return "open-id-configuration"
-	default:
-		return ""
-	}
-}
-
-// ParseTypeIDLiberal parses a TypeID liberally, accepting:
-// - Integer values (as string or int)
-// - Enum names in any case
-// - RFC-compliant JSON names
-func ParseTypeIDLiberal(s string) TypeID {
-	if s == "" {
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-	// Try parsing as integer
-	if num, err := strconv.Atoi(s); err == nil {
-		return TypeID(num)
-	}
-	// Normalize and try parsing
-	normalized := strings.ToLower(strings.TrimSpace(s))
-	normalized = strings.ReplaceAll(normalized, "_", "-")
-	normalized = strings.ReplaceAll(normalized, " ", "-")
-	switch normalized {
-	case "jwk", "type-id-jwk":
-		return TypeID_TYPE_ID_JWK
-	case "jwks", "type-id-jwks":
-		return TypeID_TYPE_ID_JWKS
-	case "open-id-configuration", "type-id-open-id-configuration":
-		return TypeID_TYPE_ID_OPEN_ID_CONFIGURATION
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-}
-
-// TypeIDToSpecName converts a TypeID to its canonical protobuf spec name
-func TypeIDToSpecName(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_UNSPECIFIED:
-		return "TYPE_ID_UNSPECIFIED"
-	case TypeID_TYPE_ID_JWK:
-		return "TYPE_ID_JWK"
-	case TypeID_TYPE_ID_JWKS:
-		return "TYPE_ID_JWKS"
-	case TypeID_TYPE_ID_OPEN_ID_CONFIGURATION:
-		return "TYPE_ID_OPEN_ID_CONFIGURATION"
-	default:
-		return ""
-	}
-}
-
 // ============================================================
 // JSON/YAML/TOML Serialization Helpers
 // ============================================================
@@ -1286,6 +1173,11 @@ func ValidateJwkWithDepth(m *Jwk, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Alg must be at least 1 characters, got: %d", len(m.Alg))
 	}
 
+	// Validate Alg (assert_max_size: 64 bytes)
+	if len(m.Alg) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Alg exceeds max size of 64 bytes, got: %d", len(m.Alg))
+	}
+
 	// Validate Kid (assert_required)
 	if m.Kid == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Kid is required")
@@ -1296,11 +1188,26 @@ func ValidateJwkWithDepth(m *Jwk, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Kid must be at least 1 characters, got: %d", len(m.Kid))
 	}
 
+	// Validate Kid (assert_max_size: 512 bytes)
+	if len(m.Kid) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Kid exceeds max size of 512 bytes, got: %d", len(m.Kid))
+	}
+
 	// Validate E (assert_base64)
 	if m.E != "" {
 		if err := utils.ValidateAssertBase64(m.E); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field E base64 validation failed")
 		}
+	}
+
+	// Validate E (assert_max_size: 64 bytes)
+	if len(m.E) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field E exceeds max size of 64 bytes, got: %d", len(m.E))
+	}
+
+	// Validate N (assert_max_size: 1024 bytes)
+	if len(m.N) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field N exceeds max size of 1024 bytes, got: %d", len(m.N))
 	}
 
 	// Validate N (assert_base64)
@@ -1310,6 +1217,11 @@ func ValidateJwkWithDepth(m *Jwk, depth int) error {
 		}
 	}
 
+	// Validate Crv (assert_max_size: 64 bytes)
+	if len(m.Crv) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Crv exceeds max size of 64 bytes, got: %d", len(m.Crv))
+	}
+
 	// Validate X (assert_base64)
 	if m.X != "" {
 		if err := utils.ValidateAssertBase64(m.X); err != nil {
@@ -1317,11 +1229,21 @@ func ValidateJwkWithDepth(m *Jwk, depth int) error {
 		}
 	}
 
+	// Validate X (assert_max_size: 256 bytes)
+	if len(m.X) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field X exceeds max size of 256 bytes, got: %d", len(m.X))
+	}
+
 	// Validate Y (assert_base64)
 	if m.Y != "" {
 		if err := utils.ValidateAssertBase64(m.Y); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field Y base64 validation failed")
 		}
+	}
+
+	// Validate Y (assert_max_size: 256 bytes)
+	if len(m.Y) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Y exceeds max size of 256 bytes, got: %d", len(m.Y))
 	}
 
 	// Validate Exp (epoch_expiration)
@@ -1343,41 +1265,6 @@ func ValidateJwkWithDepth(m *Jwk, depth int) error {
 	if m.Created > 8045740800 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Created must be <= 8045740800, got: %v", m.Created)
 	}
-	// Validate Alg (default max size: 32768 bytes)
-	if len(m.Alg) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Alg exceeds max size of 32768 bytes, got: %d", len(m.Alg))
-	}
-
-	// Validate Kid (default max size: 32768 bytes)
-	if len(m.Kid) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Kid exceeds max size of 32768 bytes, got: %d", len(m.Kid))
-	}
-
-	// Validate E (default max size: 32768 bytes)
-	if len(m.E) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field E exceeds max size of 32768 bytes, got: %d", len(m.E))
-	}
-
-	// Validate N (default max size: 32768 bytes)
-	if len(m.N) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field N exceeds max size of 32768 bytes, got: %d", len(m.N))
-	}
-
-	// Validate Crv (default max size: 32768 bytes)
-	if len(m.Crv) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Crv exceeds max size of 32768 bytes, got: %d", len(m.Crv))
-	}
-
-	// Validate X (default max size: 32768 bytes)
-	if len(m.X) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field X exceeds max size of 32768 bytes, got: %d", len(m.X))
-	}
-
-	// Validate Y (default max size: 32768 bytes)
-	if len(m.Y) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Y exceeds max size of 32768 bytes, got: %d", len(m.Y))
-	}
-
 	// Validate Kty enum value is known
 	if _, ok := key.KeyType_name[int32(m.Kty)]; !ok {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Kty has unknown enum value %d", int32(m.Kty))
@@ -1592,6 +1479,26 @@ func ValidateOpenIdConfigurationWithDepth(m *OpenIdConfiguration, depth int) err
 		}
 	}
 
+	// Validate TenantRegionScope (assert_max_size: 256 bytes)
+	if len(m.TenantRegionScope) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TenantRegionScope exceeds max size of 256 bytes, got: %d", len(m.TenantRegionScope))
+	}
+
+	// Validate CloudInstanceName (assert_max_size: 256 bytes)
+	if len(m.CloudInstanceName) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CloudInstanceName exceeds max size of 256 bytes, got: %d", len(m.CloudInstanceName))
+	}
+
+	// Validate CloudGraphHostName (assert_max_size: 256 bytes)
+	if len(m.CloudGraphHostName) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CloudGraphHostName exceeds max size of 256 bytes, got: %d", len(m.CloudGraphHostName))
+	}
+
+	// Validate MsgraphHost (assert_max_size: 256 bytes)
+	if len(m.MsgraphHost) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field MsgraphHost exceeds max size of 256 bytes, got: %d", len(m.MsgraphHost))
+	}
+
 	// Validate RbacUrl (assert_url: URL_SCHEME_HTTPS)
 	if m.RbacUrl != "" {
 		if err := utils.ValidateAssertURL_URL_SCHEME_HTTPS(m.RbacUrl); err != nil {
@@ -1774,26 +1681,6 @@ func ValidateOpenIdConfigurationWithDepth(m *OpenIdConfiguration, depth int) err
 		return protoerrors.NewErrMissingInvalidData(nil, "field KerberosEndpoint exceeds max size of 32768 bytes, got: %d", len(m.KerberosEndpoint))
 	}
 
-	// Validate TenantRegionScope (default max size: 32768 bytes)
-	if len(m.TenantRegionScope) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TenantRegionScope exceeds max size of 32768 bytes, got: %d", len(m.TenantRegionScope))
-	}
-
-	// Validate CloudInstanceName (default max size: 32768 bytes)
-	if len(m.CloudInstanceName) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field CloudInstanceName exceeds max size of 32768 bytes, got: %d", len(m.CloudInstanceName))
-	}
-
-	// Validate CloudGraphHostName (default max size: 32768 bytes)
-	if len(m.CloudGraphHostName) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field CloudGraphHostName exceeds max size of 32768 bytes, got: %d", len(m.CloudGraphHostName))
-	}
-
-	// Validate MsgraphHost (default max size: 32768 bytes)
-	if len(m.MsgraphHost) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field MsgraphHost exceeds max size of 32768 bytes, got: %d", len(m.MsgraphHost))
-	}
-
 	// Validate RbacUrl (default max size: 32768 bytes)
 	if len(m.RbacUrl) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field RbacUrl exceeds max size of 32768 bytes, got: %d", len(m.RbacUrl))
@@ -1818,13 +1705,13 @@ const (
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizeJwkAlg                                                        int = 32768
-	MaxSizeJwkKid                                                        int = 32768
-	MaxSizeJwkE                                                          int = 32768
-	MaxSizeJwkN                                                          int = 32768
-	MaxSizeJwkCrv                                                        int = 32768
-	MaxSizeJwkX                                                          int = 32768
-	MaxSizeJwkY                                                          int = 32768
+	MaxSizeJwkAlg                                                        int = 64
+	MaxSizeJwkKid                                                        int = 512
+	MaxSizeJwkE                                                          int = 64
+	MaxSizeJwkN                                                          int = 1024
+	MaxSizeJwkCrv                                                        int = 64
+	MaxSizeJwkX                                                          int = 256
+	MaxSizeJwkY                                                          int = 256
 	MaxSizeJwksKeys                                                      int = 128
 	MaxSizeOpenidconfigurationIssuer                                     int = 32768
 	MaxSizeOpenidconfigurationAuthorizationEndpoint                      int = 32768
@@ -1850,10 +1737,10 @@ const (
 	MaxSizeOpenidconfigurationDeviceAuthorizationEndpoint                int = 32768
 	MaxSizeOpenidconfigurationCheckSessionIframe                         int = 32768
 	MaxSizeOpenidconfigurationKerberosEndpoint                           int = 32768
-	MaxSizeOpenidconfigurationTenantRegionScope                          int = 32768
-	MaxSizeOpenidconfigurationCloudInstanceName                          int = 32768
-	MaxSizeOpenidconfigurationCloudGraphHostName                         int = 32768
-	MaxSizeOpenidconfigurationMsgraphHost                                int = 32768
+	MaxSizeOpenidconfigurationTenantRegionScope                          int = 256
+	MaxSizeOpenidconfigurationCloudInstanceName                          int = 256
+	MaxSizeOpenidconfigurationCloudGraphHostName                         int = 256
+	MaxSizeOpenidconfigurationMsgraphHost                                int = 256
 	MaxSizeOpenidconfigurationRbacUrl                                    int = 32768
 	MaxSizeOpenidconfigurationMfaChallengeEndpoint                       int = 32768
 	MaxSizeOpenidconfigurationTokenEndpointAuthSigningAlgValuesSupported int = 32

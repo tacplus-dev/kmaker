@@ -143,12 +143,12 @@ func (TypeID) EnumDescriptor() ([]byte, []int) {
 type InboundRpcId int32
 
 const (
-	InboundRpcId_INBOUND_RPC_ID_UNSPECIFIED   InboundRpcId = 0
-	InboundRpcId_INBOUND_RPC_ID_ALL_ACCESSORS InboundRpcId = 1
-	InboundRpcId_INBOUND_RPC_ID_ALL_MUTATORS  InboundRpcId = 2
-	InboundRpcId_INBOUND_RPC_ID_ALL_EXECUTORS InboundRpcId = 3
-	InboundRpcId_INBOUND_RPC_ID_ACS           InboundRpcId = 4
-	InboundRpcId_INBOUND_RPC_ID_AUTHORIZE     InboundRpcId = 5
+	InboundRpcId_INBOUND_RPC_ID_UNSPECIFIED     InboundRpcId = 0
+	InboundRpcId_INBOUND_RPC_ID_ALL_ACCESSORS   InboundRpcId = 1
+	InboundRpcId_INBOUND_RPC_ID_ALL_MUTATORS    InboundRpcId = 2
+	InboundRpcId_INBOUND_RPC_ID_ALL_EXECUTORS   InboundRpcId = 3
+	InboundRpcId_INBOUND_RPC_ID_MINT_ACS_TOKENS InboundRpcId = 4
+	InboundRpcId_INBOUND_RPC_ID_AUTHORIZE       InboundRpcId = 5
 )
 
 // Enum value maps for InboundRpcId.
@@ -158,16 +158,16 @@ var (
 		1: "INBOUND_RPC_ID_ALL_ACCESSORS",
 		2: "INBOUND_RPC_ID_ALL_MUTATORS",
 		3: "INBOUND_RPC_ID_ALL_EXECUTORS",
-		4: "INBOUND_RPC_ID_ACS",
+		4: "INBOUND_RPC_ID_MINT_ACS_TOKENS",
 		5: "INBOUND_RPC_ID_AUTHORIZE",
 	}
 	InboundRpcId_value = map[string]int32{
-		"INBOUND_RPC_ID_UNSPECIFIED":   0,
-		"INBOUND_RPC_ID_ALL_ACCESSORS": 1,
-		"INBOUND_RPC_ID_ALL_MUTATORS":  2,
-		"INBOUND_RPC_ID_ALL_EXECUTORS": 3,
-		"INBOUND_RPC_ID_ACS":           4,
-		"INBOUND_RPC_ID_AUTHORIZE":     5,
+		"INBOUND_RPC_ID_UNSPECIFIED":     0,
+		"INBOUND_RPC_ID_ALL_ACCESSORS":   1,
+		"INBOUND_RPC_ID_ALL_MUTATORS":    2,
+		"INBOUND_RPC_ID_ALL_EXECUTORS":   3,
+		"INBOUND_RPC_ID_MINT_ACS_TOKENS": 4,
+		"INBOUND_RPC_ID_AUTHORIZE":       5,
 	}
 )
 
@@ -263,8 +263,8 @@ const (
 	MetadataRpcId_METADATA_RPC_ID_ALL_ACCESSORS      MetadataRpcId = 1
 	MetadataRpcId_METADATA_RPC_ID_ALL_MUTATORS       MetadataRpcId = 2
 	MetadataRpcId_METADATA_RPC_ID_ALL_EXECUTORS      MetadataRpcId = 3
-	MetadataRpcId_METADATA_RPC_ID_IDP_METADATA       MetadataRpcId = 4
-	MetadataRpcId_METADATA_RPC_ID_SP_METADATA        MetadataRpcId = 5
+	MetadataRpcId_METADATA_RPC_ID_GET_IDP_METADATA   MetadataRpcId = 4
+	MetadataRpcId_METADATA_RPC_ID_GET_SP_METADATA    MetadataRpcId = 5
 	MetadataRpcId_METADATA_RPC_ID_GET_IDP_DESCRIPTOR MetadataRpcId = 6
 )
 
@@ -275,8 +275,8 @@ var (
 		1: "METADATA_RPC_ID_ALL_ACCESSORS",
 		2: "METADATA_RPC_ID_ALL_MUTATORS",
 		3: "METADATA_RPC_ID_ALL_EXECUTORS",
-		4: "METADATA_RPC_ID_IDP_METADATA",
-		5: "METADATA_RPC_ID_SP_METADATA",
+		4: "METADATA_RPC_ID_GET_IDP_METADATA",
+		5: "METADATA_RPC_ID_GET_SP_METADATA",
 		6: "METADATA_RPC_ID_GET_IDP_DESCRIPTOR",
 	}
 	MetadataRpcId_value = map[string]int32{
@@ -284,8 +284,8 @@ var (
 		"METADATA_RPC_ID_ALL_ACCESSORS":      1,
 		"METADATA_RPC_ID_ALL_MUTATORS":       2,
 		"METADATA_RPC_ID_ALL_EXECUTORS":      3,
-		"METADATA_RPC_ID_IDP_METADATA":       4,
-		"METADATA_RPC_ID_SP_METADATA":        5,
+		"METADATA_RPC_ID_GET_IDP_METADATA":   4,
+		"METADATA_RPC_ID_GET_SP_METADATA":    5,
 		"METADATA_RPC_ID_GET_IDP_DESCRIPTOR": 6,
 	}
 )
@@ -1822,10 +1822,10 @@ const file_services_saml_proto_rawDesc = "" +
 	"\x0fListSPsResponse\x12'\n" +
 	"\x03sps\x18\x01 \x03(\v2\x0f.samlsvc.SpInfoB\x04\xb8\xa8\x1d\x10R\x03sps\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9f\x01\n" +
-	"\x06SpInfo\x12\x1c\n" +
-	"\x04name\x18\x01 \x01(\tB\b\x88\xa6\x1d\x01\x88\xa7\x1d\x01R\x04name\x12%\n" +
-	"\tentity_id\x18\x02 \x01(\tB\b\x88\xa6\x1d\x01\x88\xa7\x1d\x01R\bentityId\x12\x1f\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa9\x01\n" +
+	"\x06SpInfo\x12!\n" +
+	"\x04name\x18\x01 \x01(\tB\r\x88\xa6\x1d\x01\x88\xa7\x1d\x01\x90\xa7\x1d\x80\x01R\x04name\x12*\n" +
+	"\tentity_id\x18\x02 \x01(\tB\r\x88\xa6\x1d\x01\x88\xa7\x1d\x01\x90\xa7\x1d\x80\x10R\bentityId\x12\x1f\n" +
 	"\bsp_index\x18\x03 \x01(\x05B\x04\xb0\xa7\x1d\x00R\aspIndex\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"B\n" +
@@ -1843,12 +1843,12 @@ const file_services_saml_proto_rawDesc = "" +
 	"\x15GetDescriptorResponse\x12G\n" +
 	"\x11entity_descriptor\x18\x01 \x01(\v2\x1a.saml.SamlEntityDescriptorR\x10entityDescriptor\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x98\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9a\x01\n" +
 	"\x0fSamlConfigState\x121\n" +
 	"\x06config\x18\x01 \x01(\v2\x0f.samlsvc.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:!\x9a\xa8\x1d\x19\n" +
-	"\x0fSamlConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:#\x9a\xa8\x1d\x1b\n" +
+	"\x0fSamlConfigState\x1a\beventbus\xa0\xa8\x1d\x02\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\xb9\x04\n" +
@@ -1872,13 +1872,13 @@ const file_services_saml_proto_rawDesc = "" +
 	"\x1eTYPE_ID_GET_DESCRIPTOR_REQUEST\x10\x0f\x12#\n" +
 	"\x1fTYPE_ID_GET_DESCRIPTOR_RESPONSE\x10\x10\x12\x1d\n" +
 	"\x19TYPE_ID_SAML_CONFIG_STATE\x10\x11\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10\x12*\xc9\x01\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x10\x12*\xd5\x01\n" +
 	"\fInboundRpcId\x12\x1e\n" +
 	"\x1aINBOUND_RPC_ID_UNSPECIFIED\x10\x00\x12 \n" +
 	"\x1cINBOUND_RPC_ID_ALL_ACCESSORS\x10\x01\x12\x1f\n" +
 	"\x1bINBOUND_RPC_ID_ALL_MUTATORS\x10\x02\x12 \n" +
-	"\x1cINBOUND_RPC_ID_ALL_EXECUTORS\x10\x03\x12\x16\n" +
-	"\x12INBOUND_RPC_ID_ACS\x10\x04\x12\x1c\n" +
+	"\x1cINBOUND_RPC_ID_ALL_EXECUTORS\x10\x03\x12\"\n" +
+	"\x1eINBOUND_RPC_ID_MINT_ACS_TOKENS\x10\x04\x12\x1c\n" +
 	"\x18INBOUND_RPC_ID_AUTHORIZE\x10\x05*\xdb\x01\n" +
 	"\rOutboundRpcId\x12\x1f\n" +
 	"\x1bOUTBOUND_RPC_ID_UNSPECIFIED\x10\x00\x12!\n" +
@@ -1886,14 +1886,14 @@ const file_services_saml_proto_rawDesc = "" +
 	"\x1cOUTBOUND_RPC_ID_ALL_MUTATORS\x10\x02\x12!\n" +
 	"\x1dOUTBOUND_RPC_ID_ALL_EXECUTORS\x10\x03\x12\"\n" +
 	"\x1eOUTBOUND_RPC_ID_MINT_ASSERTION\x10\x04\x12\x1d\n" +
-	"\x19OUTBOUND_RPC_ID_LIST_S_PS\x10\x05*\x83\x02\n" +
+	"\x19OUTBOUND_RPC_ID_LIST_S_PS\x10\x05*\x8b\x02\n" +
 	"\rMetadataRpcId\x12\x1f\n" +
 	"\x1bMETADATA_RPC_ID_UNSPECIFIED\x10\x00\x12!\n" +
 	"\x1dMETADATA_RPC_ID_ALL_ACCESSORS\x10\x01\x12 \n" +
 	"\x1cMETADATA_RPC_ID_ALL_MUTATORS\x10\x02\x12!\n" +
-	"\x1dMETADATA_RPC_ID_ALL_EXECUTORS\x10\x03\x12 \n" +
-	"\x1cMETADATA_RPC_ID_IDP_METADATA\x10\x04\x12\x1f\n" +
-	"\x1bMETADATA_RPC_ID_SP_METADATA\x10\x05\x12&\n" +
+	"\x1dMETADATA_RPC_ID_ALL_EXECUTORS\x10\x03\x12$\n" +
+	" METADATA_RPC_ID_GET_IDP_METADATA\x10\x04\x12#\n" +
+	"\x1fMETADATA_RPC_ID_GET_SP_METADATA\x10\x05\x12&\n" +
 	"\"METADATA_RPC_ID_GET_IDP_DESCRIPTOR\x10\x06*\xff\x02\n" +
 	"\x1bSamlConfigStateServiceRpcId\x120\n" +
 	",SAML_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x122\n" +
@@ -1902,19 +1902,18 @@ const file_services_saml_proto_rawDesc = "" +
 	".SAML_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x12/\n" +
 	"+SAML_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x12/\n" +
 	"+SAML_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x121\n" +
-	"-SAML_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\x9d\x01\n" +
-	"\aInbound\x128\n" +
-	"\x03ACS\x12\x13.samlsvc.AcsRequest\x1a\x14.samlsvc.AcsResponse\"\x06\xea\x88'\x02\b\x01\x12R\n" +
-	"\tAuthorize\x12\x1d.samlsvc.SamlAuthorizeRequest\x1a\x1e.samlsvc.SamlAuthorizeResponse\"\x06\xea\x88'\x02\b\x01\x1a\x04\xf2\x97\"\x002\xb5\x01\n" +
+	"-SAML_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xa7\x01\n" +
+	"\aInbound\x12B\n" +
+	"\rMintAcsTokens\x12\x13.samlsvc.AcsRequest\x1a\x14.samlsvc.AcsResponse\"\x06\xea\x88'\x02\b\x01\x12R\n" +
+	"\tAuthorize\x12\x1d.samlsvc.SamlAuthorizeRequest\x1a\x1e.samlsvc.SamlAuthorizeResponse\"\x06\xea\x88'\x02\b\x01\x1a\x04\xf2\x97\"\x002\xc7\x01\n" +
 	"\bOutbound\x12V\n" +
-	"\rMintAssertion\x12\x1d.samlsvc.MintAssertionRequest\x1a\x1e.samlsvc.MintAssertionResponse\"\x06\xea\x88'\x02\x10\x01\x12K\n" +
-	"\aListSPs\x12\x17.samlsvc.ListSPsRequest\x1a\x18.samlsvc.ListSPsResponse\"\rʈ'\x03\n" +
-	"\x01\x01\xea\x88'\x02\b\x01\x1a\x04\xf2\x97\"\x002\x90\x02\n" +
-	"\bMetadata\x12Q\n" +
-	"\vIdpMetadata\x12\x18.samlsvc.MetadataRequest\x1a\x19.samlsvc.MetadataResponse\"\rʈ'\x03\n" +
-	"\x01\x01\xea\x88'\x02\b\x01\x12P\n" +
-	"\n" +
-	"SpMetadata\x12\x18.samlsvc.MetadataRequest\x1a\x19.samlsvc.MetadataResponse\"\rʈ'\x03\n" +
+	"\rMintAssertion\x12\x1d.samlsvc.MintAssertionRequest\x1a\x1e.samlsvc.MintAssertionResponse\"\x06\xea\x88'\x02\x10\x01\x12]\n" +
+	"\aListSPs\x12\x17.samlsvc.ListSPsRequest\x1a\x18.samlsvc.ListSPsResponse\"\x1fʈ'\x03\n" +
+	"\x01\x01\xea\x88'\x02\b\x01\xf2\x88'\x0e\b\x01\x12\bsp_index\x18\x10\x1a\x04\xf2\x97\"\x002\x96\x02\n" +
+	"\bMetadata\x12T\n" +
+	"\x0eGetIdpMetadata\x12\x18.samlsvc.MetadataRequest\x1a\x19.samlsvc.MetadataResponse\"\rʈ'\x03\n" +
+	"\x01\x01\xea\x88'\x02\b\x01\x12S\n" +
+	"\rGetSpMetadata\x12\x18.samlsvc.MetadataRequest\x1a\x19.samlsvc.MetadataResponse\"\rʈ'\x03\n" +
 	"\x01\x01\xea\x88'\x02\b\x01\x12Y\n" +
 	"\x10GetIdpDescriptor\x12\x1d.samlsvc.GetDescriptorRequest\x1a\x1e.samlsvc.GetDescriptorResponse\"\x06\xea\x88'\x02\x10\x01\x1a\x04\xf2\x97\"\x002\xb7\x01\n" +
 	"\x16SamlConfigStateService\x121\n" +
@@ -1975,22 +1974,22 @@ var file_services_saml_proto_depIdxs = []int32{
 	16, // 4: samlsvc.ListSPsResponse.sps:type_name -> samlsvc.SpInfo
 	25, // 5: samlsvc.GetDescriptorResponse.entity_descriptor:type_name -> saml.SamlEntityDescriptor
 	5,  // 6: samlsvc.SamlConfigState.config:type_name -> samlsvc.Config
-	8,  // 7: samlsvc.Inbound.ACS:input_type -> samlsvc.AcsRequest
+	8,  // 7: samlsvc.Inbound.MintAcsTokens:input_type -> samlsvc.AcsRequest
 	10, // 8: samlsvc.Inbound.Authorize:input_type -> samlsvc.SamlAuthorizeRequest
 	12, // 9: samlsvc.Outbound.MintAssertion:input_type -> samlsvc.MintAssertionRequest
 	14, // 10: samlsvc.Outbound.ListSPs:input_type -> samlsvc.ListSPsRequest
-	17, // 11: samlsvc.Metadata.IdpMetadata:input_type -> samlsvc.MetadataRequest
-	17, // 12: samlsvc.Metadata.SpMetadata:input_type -> samlsvc.MetadataRequest
+	17, // 11: samlsvc.Metadata.GetIdpMetadata:input_type -> samlsvc.MetadataRequest
+	17, // 12: samlsvc.Metadata.GetSpMetadata:input_type -> samlsvc.MetadataRequest
 	19, // 13: samlsvc.Metadata.GetIdpDescriptor:input_type -> samlsvc.GetDescriptorRequest
 	26, // 14: samlsvc.SamlConfigStateService.GetConfig:input_type -> trace.TraceRequest
 	5,  // 15: samlsvc.SamlConfigStateService.SetConfig:input_type -> samlsvc.Config
 	26, // 16: samlsvc.SamlConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	9,  // 17: samlsvc.Inbound.ACS:output_type -> samlsvc.AcsResponse
+	9,  // 17: samlsvc.Inbound.MintAcsTokens:output_type -> samlsvc.AcsResponse
 	11, // 18: samlsvc.Inbound.Authorize:output_type -> samlsvc.SamlAuthorizeResponse
 	13, // 19: samlsvc.Outbound.MintAssertion:output_type -> samlsvc.MintAssertionResponse
 	15, // 20: samlsvc.Outbound.ListSPs:output_type -> samlsvc.ListSPsResponse
-	18, // 21: samlsvc.Metadata.IdpMetadata:output_type -> samlsvc.MetadataResponse
-	18, // 22: samlsvc.Metadata.SpMetadata:output_type -> samlsvc.MetadataResponse
+	18, // 21: samlsvc.Metadata.GetIdpMetadata:output_type -> samlsvc.MetadataResponse
+	18, // 22: samlsvc.Metadata.GetSpMetadata:output_type -> samlsvc.MetadataResponse
 	20, // 23: samlsvc.Metadata.GetIdpDescriptor:output_type -> samlsvc.GetDescriptorResponse
 	5,  // 24: samlsvc.SamlConfigStateService.GetConfig:output_type -> samlsvc.Config
 	5,  // 25: samlsvc.SamlConfigStateService.SetConfig:output_type -> samlsvc.Config

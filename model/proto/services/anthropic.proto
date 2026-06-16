@@ -84,9 +84,9 @@ service Proxy {
   // CreateMessage sends a non-streaming request to the Anthropic Messages API.
   rpc CreateMessage(ProxyRequest) returns (CreateMessageResponse);
 
-  // CreateMessageStream sends a streaming request to the Anthropic Messages API.
+  // GenerateMessageStream sends a streaming request to the Anthropic Messages API.
   // Returns a server-side stream of SSE events.
-  rpc CreateMessageStream(ProxyRequest) returns (stream StreamEvent);
+  rpc GenerateMessageStream(ProxyRequest) returns (stream StreamEvent);
 }
 
 // ============================================================================
@@ -462,7 +462,7 @@ enum ProxyRpcId {
   PROXY_RPC_ID_ALL_MUTATORS = 2;
   PROXY_RPC_ID_ALL_EXECUTORS = 3;
   PROXY_RPC_ID_CREATE_MESSAGE = 4;
-  PROXY_RPC_ID_CREATE_MESSAGE_STREAM = 5;
+  PROXY_RPC_ID_GENERATE_MESSAGE_STREAM = 5;
 }
 
 enum AnthropicConfigStateServiceRpcId {

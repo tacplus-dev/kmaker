@@ -72,7 +72,7 @@ var reservedTags = map[string]bool{
 // segmentRe is the shared single-segment grammar: [A-Za-z0-9][A-Za-z0-9._-]*.
 // It rejects empty, leading separators, "." / "..", "/", "\", ":", "%", query,
 // fragment, and encoded separators by construction.
-var segmentRe = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9._-]*$`)
+var segmentRe = regexp.MustCompile("^[A-Za-z0-9][A-Za-z0-9._-]*$")
 
 // IsReservedTag reports whether s is a reserved structural tag.
 func IsReservedTag(s string) bool { return reservedTags[s] }

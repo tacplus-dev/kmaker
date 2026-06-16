@@ -124,11 +124,15 @@ const imdsTimeout = 2 * time.Second
 // the deadlock that occurs when interceptors try to call GetToken() during
 // token exchange RPCs.
 type IdentityManager struct {
-	ctx         context.Context
-	cancel      context.CancelFunc
-	conn        *grpc.ClientConn  // bare connection (no interceptors)
-	minter      *tokenMinter      // CredPair auth (nil if cloud)
-	cloudMinter *cloudTokenMinter // Cloud-native auth (nil if CredPair)
+	ctx                context.Context
+	cancel             context.CancelFunc
+	connMu             sync.Mutex
+	conn               *grpc.ClientConn // bare connection (no interceptors)
+	authorityTargets   []string
+	activeAuthorityIdx int
+	bareOpts           []grpc.DialOption
+	minter             *tokenMinter      // CredPair auth (nil if cloud)
+	cloudMinter        *cloudTokenMinter // Cloud-native auth (nil if CredPair)
 }
 
 // New creates an IdentityManager: dials a bare connection to the cluster,
@@ -178,24 +182,16 @@ func New(ctx context.Context, cfg *grpcconfig_pb.Config) (*IdentityManager, erro
 	bareOpts := []grpc.DialOption{
 		grpc.WithTransportCredentials(credentials.NewTLS(tlsCfg)),
 	}
+	im.bareOpts = bareOpts
+	im.authorityTargets = authorityTargets(cfg)
 
-	// Dial the first available endpoint with no interceptors.
-	var dialErr error
-	for _, ep := range cfg.Endpoints {
-		target := fmt.Sprintf("%s:%d", ep.Host, ep.Port)
-		conn, err := grpc.NewClient(target, bareOpts...)
-		if err != nil {
-			dialErr = err
-			continue
-		}
-		im.conn = conn
-		zap.L().Info("IdentityManager: bare connection established",
-			zap.String("target", target))
-		break
-	}
-	if im.conn == nil {
+	// Create the initial bare token-authority connection with no interceptors.
+	im.connMu.Lock()
+	err := im.setAuthorityConnLocked(0)
+	im.connMu.Unlock()
+	if err != nil {
 		imCancel()
-		return nil, fmt.Errorf("im: failed to connect to any endpoint: %w", dialErr)
+		return nil, fmt.Errorf("im: failed to connect to any endpoint: %w", err)
 	}
 
 	// Detect auth method and perform initial token exchange.
@@ -209,12 +205,12 @@ func New(ctx context.Context, cfg *grpcconfig_pb.Config) (*IdentityManager, erro
 			return nil, fmt.Errorf("im: token minter: %w", err)
 		}
 		minter.setConn(im.conn)
-		if err := imInitialExchangeWithRetry(imCtx, minter.getToken); err != nil {
+		im.minter = minter
+		if err := imInitialExchangeWithRetry(imCtx, im.GetToken); err != nil {
 			im.conn.Close()
 			imCancel()
 			return nil, fmt.Errorf("im: initial token exchange: %w", err)
 		}
-		im.minter = minter
 		zap.L().Info("IdentityManager: initial CredPair token exchange successful")
 	} else {
 		// No private_key — attempt cloud-native authentication.
@@ -227,17 +223,66 @@ func New(ctx context.Context, cfg *grpcconfig_pb.Config) (*IdentityManager, erro
 				zap.String("vendor", vendor.String()))
 			cm := newCloudTokenMinter(vendor, cfg.GetInstanceId())
 			cm.setConn(im.conn)
-			if err := imInitialExchangeWithRetry(imCtx, cm.getToken); err != nil {
+			im.cloudMinter = cm
+			if err := imInitialExchangeWithRetry(imCtx, im.GetToken); err != nil {
 				im.conn.Close()
 				imCancel()
 				return nil, fmt.Errorf("im: initial cloud token exchange: %w", err)
 			}
-			im.cloudMinter = cm
 			zap.L().Info("IdentityManager: initial cloud token exchange successful")
 		}
 	}
 
 	return im, nil
+}
+
+func authorityTargets(cfg *grpcconfig_pb.Config) []string {
+	targets := make([]string, 0, len(cfg.Endpoints))
+	for _, ep := range cfg.Endpoints {
+		targets = append(targets, fmt.Sprintf("%s:%d", ep.Host, ep.Port))
+	}
+	return targets
+}
+
+func (im *IdentityManager) setAuthorityConnLocked(start int) error {
+	if len(im.authorityTargets) == 0 {
+		return fmt.Errorf("no token authority endpoints configured")
+	}
+	var lastErr error
+	for offset := range im.authorityTargets {
+		idx := (start + offset) % len(im.authorityTargets)
+		target := im.authorityTargets[idx]
+		conn, err := grpc.NewClient(target, im.bareOpts...)
+		if err != nil {
+			lastErr = err
+			continue
+		}
+		oldConn := im.conn
+		im.conn = conn
+		im.activeAuthorityIdx = idx
+		if im.minter != nil {
+			im.minter.setConn(conn)
+		}
+		if im.cloudMinter != nil {
+			im.cloudMinter.setConn(conn)
+		}
+		if oldConn != nil {
+			oldConn.Close()
+		}
+		zap.L().Info("IdentityManager: bare token-authority connection selected",
+			zap.String("target", target))
+		return nil
+	}
+	return fmt.Errorf("all token authority endpoint dials failed: %w", lastErr)
+}
+
+func (im *IdentityManager) rotateAuthorityConn() error {
+	im.connMu.Lock()
+	defer im.connMu.Unlock()
+	if len(im.authorityTargets) < 2 {
+		return fmt.Errorf("no alternate token authority endpoint configured")
+	}
+	return im.setAuthorityConnLocked(im.activeAuthorityIdx + 1)
 }
 
 // imInitialExchangeWithRetry retries the given exchange function with exponential backoff
@@ -282,6 +327,24 @@ func (im *IdentityManager) GetToken() (string, error) {
 // GetTokenFor returns a valid bearer token for the given audience, refreshing if needed.
 // Tokens are cached per-audience and refreshed independently.
 func (im *IdentityManager) GetTokenFor(audience string) (string, error) {
+	token, err := im.getTokenForOnce(audience)
+	if err == nil {
+		return token, nil
+	}
+	if im.minter == nil && im.cloudMinter == nil {
+		return "", err
+	}
+	if rotateErr := im.rotateAuthorityConn(); rotateErr != nil {
+		return "", err
+	}
+	token, retryErr := im.getTokenForOnce(audience)
+	if retryErr != nil {
+		return "", fmt.Errorf("obtaining bearer token after token-authority re-resolution: %w (initial error: %v)", retryErr, err)
+	}
+	return token, nil
+}
+
+func (im *IdentityManager) getTokenForOnce(audience string) (string, error) {
 	if im.minter != nil {
 		return im.minter.getTokenFor(audience)
 	}
@@ -295,12 +358,12 @@ func (im *IdentityManager) GetTokenFor(audience string) (string, error) {
 func (im *IdentityManager) RefreshToken() error {
 	if im.minter != nil {
 		im.minter.invalidate()
-		_, err := im.minter.getToken()
+		_, err := im.GetToken()
 		return err
 	}
 	if im.cloudMinter != nil {
 		im.cloudMinter.invalidate()
-		_, err := im.cloudMinter.getToken()
+		_, err := im.GetToken()
 		return err
 	}
 	return fmt.Errorf("no token source configured")
@@ -367,12 +430,21 @@ func (im *IdentityManager) StreamInterceptor() grpc.StreamClientInterceptor {
 
 // Close releases the bare connection and stops renewal goroutines.
 func (im *IdentityManager) Close() {
-	im.cancel()
+	if im == nil {
+		return
+	}
+	if im.cancel != nil {
+		im.cancel()
+	}
 	if im.cloudMinter != nil && im.cloudMinter.cancelRenew != nil {
 		im.cloudMinter.cancelRenew()
 	}
-	if im.conn != nil {
-		im.conn.Close()
+	im.connMu.Lock()
+	conn := im.conn
+	im.conn = nil
+	im.connMu.Unlock()
+	if conn != nil {
+		conn.Close()
 	}
 }
 
@@ -386,11 +458,12 @@ func (im *IdentityManager) Close() {
 //  3. Exchanges the refresh token for a service token with the correct audience (Phase 2)
 //  4. Caches and refreshes the service token before expiry
 type tokenMinter struct {
-	key        *wrapperKey.ImmutableKey
-	mu         sync.Mutex
-	tokens     map[string]*tokenEntry // per-audience token cache
-	instanceId string                 // instance_id from token exchange (set by server)
-	exchClient cluster_svc_pb.MintClient
+	key          *wrapperKey.ImmutableKey
+	mu           sync.Mutex
+	tokens       map[string]*tokenEntry // per-audience token cache
+	refreshLocks map[string]*sync.Mutex // per-audience refresh lock; never held during cache-only reads
+	instanceId   string                 // instance_id from token exchange (set by server)
+	exchClient   cluster_svc_pb.MintClient
 }
 
 // newTokenMinter creates a tokenMinter from a private key.
@@ -403,14 +476,23 @@ func newTokenMinter(privateKey *key_pb.Key) (*tokenMinter, error) {
 		return nil, fmt.Errorf("parsing private key: %w", err)
 	}
 	return &tokenMinter{
-		key:    immKey,
-		tokens: make(map[string]*tokenEntry),
+		key:          immKey,
+		tokens:       make(map[string]*tokenEntry),
+		refreshLocks: make(map[string]*sync.Mutex),
 	}, nil
 }
 
 // setConn sets the gRPC connection for token exchange.
 func (tm *tokenMinter) setConn(conn *grpc.ClientConn) {
+	tm.mu.Lock()
+	defer tm.mu.Unlock()
 	tm.exchClient = cluster_svc_pb.NewMintClient(conn)
+}
+
+func (tm *tokenMinter) exchangeClient() cluster_svc_pb.MintClient {
+	tm.mu.Lock()
+	defer tm.mu.Unlock()
+	return tm.exchClient
 }
 
 // getToken returns a valid bearer token for the default audience.
@@ -421,15 +503,41 @@ func (tm *tokenMinter) getToken() (string, error) {
 // getTokenFor returns a valid bearer token for the given audience, performing
 // token exchange if the cached token is expired or about to expire.
 func (tm *tokenMinter) getTokenFor(audience string) (string, error) {
-	tm.mu.Lock()
-	defer tm.mu.Unlock()
-	// Return cached token if still valid (with refresh buffer)
-	if entry, ok := tm.tokens[audience]; ok {
-		if entry.token != "" && time.Now().Add(tokenRefreshBuffer).Before(entry.exp) {
-			return entry.token, nil
-		}
+	if token, ok := tm.cachedToken(audience); ok {
+		return token, nil
+	}
+
+	lock := tm.refreshLockFor(audience)
+	lock.Lock()
+	defer lock.Unlock()
+
+	// Another goroutine may have refreshed this audience while we waited.
+	if token, ok := tm.cachedToken(audience); ok {
+		return token, nil
 	}
 	return tm.doExchange(audience)
+}
+
+func (tm *tokenMinter) cachedToken(audience string) (string, bool) {
+	tm.mu.Lock()
+	defer tm.mu.Unlock()
+	if entry, ok := tm.tokens[audience]; ok {
+		if entry.token != "" && time.Now().Add(tokenRefreshBuffer).Before(entry.exp) {
+			return entry.token, true
+		}
+	}
+	return "", false
+}
+
+func (tm *tokenMinter) refreshLockFor(audience string) *sync.Mutex {
+	tm.mu.Lock()
+	defer tm.mu.Unlock()
+	lock := tm.refreshLocks[audience]
+	if lock == nil {
+		lock = &sync.Mutex{}
+		tm.refreshLocks[audience] = lock
+	}
+	return lock
 }
 
 // invalidate clears all cached tokens, forcing the next getToken to re-exchange.
@@ -439,7 +547,7 @@ func (tm *tokenMinter) invalidate() {
 	tm.tokens = make(map[string]*tokenEntry)
 }
 
-// doExchange performs the full token exchange. Must be called with tm.mu held.
+// doExchange performs the full token exchange for one audience.
 // Phase 1: bootstrap (throwaway → refresh + access token).
 // Phase 2: exchange access token for audience-specific token.
 func (tm *tokenMinter) doExchange(audience string) (string, error) {
@@ -457,14 +565,15 @@ func (tm *tokenMinter) doExchange(audience string) (string, error) {
 	}
 	throwaway := tok.GetBase64()
 
-	if tm.exchClient == nil {
+	exchClient := tm.exchangeClient()
+	if exchClient == nil {
 		return "", fmt.Errorf("token exchange client not initialized")
 	}
 
 	// 2. Phase 1: Bootstrap — exchange throwaway for refresh + access tokens.
 	exchCtx1, cancel1 := context.WithTimeout(context.Background(), exchangeTimeout)
 	defer cancel1()
-	bootstrapResp, err := tm.exchClient.MintServiceToken(exchCtx1, &common_pb.MintServiceTokenRequest{
+	bootstrapResp, err := exchClient.MintServiceToken(exchCtx1, &common_pb.MintServiceTokenRequest{
 		InputToken:   throwaway,
 		TokenPurpose: token_pb.TokenPurpose_TOKEN_PURPOSE_REFRESH,
 	})
@@ -474,10 +583,11 @@ func (tm *tokenMinter) doExchange(audience string) (string, error) {
 	accessToken := bootstrapResp.GetAccessToken().GetBase64()
 
 	// Parse instance_id from the refresh token (server assigns it on bootstrap).
+	instanceId := ""
 	if rt := bootstrapResp.GetRefreshToken(); rt != nil {
 		if payload := rt.GetPayload(); payload != nil {
 			if idStr, ok := payload["instance_id"]; ok {
-				tm.instanceId = idStr
+				instanceId = idStr
 			}
 		}
 	}
@@ -485,7 +595,7 @@ func (tm *tokenMinter) doExchange(audience string) (string, error) {
 	// 3. Phase 2: Exchange access token for an audience-specific token.
 	exchCtx2, cancel2 := context.WithTimeout(context.Background(), exchangeTimeout)
 	defer cancel2()
-	serviceResp, err := tm.exchClient.MintServiceToken(exchCtx2, &common_pb.MintServiceTokenRequest{
+	serviceResp, err := exchClient.MintServiceToken(exchCtx2, &common_pb.MintServiceTokenRequest{
 		InputToken:   accessToken,
 		Aud:          audience,
 		TokenPurpose: token_pb.TokenPurpose_TOKEN_PURPOSE_SERVICE,
@@ -506,6 +616,11 @@ func (tm *tokenMinter) doExchange(audience string) (string, error) {
 	}
 	if entry.exp.IsZero() || entry.exp.Before(time.Now()) {
 		entry.exp = time.Now().Add(time.Hour) // fallback: 1 hour
+	}
+	tm.mu.Lock()
+	defer tm.mu.Unlock()
+	if instanceId != "" {
+		tm.instanceId = instanceId
 	}
 	evictTokenCache(tm.tokens)
 	tm.tokens[audience] = entry
@@ -972,7 +1087,9 @@ type cloudTokenMinter struct {
 	vendor        cloudvendor_pb.CloudVendor
 	serviceId     string // from config's instance_id
 	mu            sync.Mutex
+	refreshMu     sync.Mutex
 	tokens        map[string]*tokenEntry // per-audience service token cache
+	refreshLocks  map[string]*sync.Mutex // per-audience service-token refresh locks
 	genericAccess string                 // cached generic access token for the default audience
 	genericExp    time.Time              // expiry of generic access token
 	refreshTok    string                 // cached refresh token base64
@@ -986,15 +1103,24 @@ type cloudTokenMinter struct {
 // newCloudTokenMinter creates a cloudTokenMinter for the detected vendor.
 func newCloudTokenMinter(vendor cloudvendor_pb.CloudVendor, serviceId string) *cloudTokenMinter {
 	return &cloudTokenMinter{
-		vendor:    vendor,
-		serviceId: serviceId,
-		tokens:    make(map[string]*tokenEntry),
+		vendor:       vendor,
+		serviceId:    serviceId,
+		tokens:       make(map[string]*tokenEntry),
+		refreshLocks: make(map[string]*sync.Mutex),
 	}
 }
 
 // setConn sets the gRPC connection for token exchange.
 func (cm *cloudTokenMinter) setConn(conn *grpc.ClientConn) {
+	cm.mu.Lock()
+	defer cm.mu.Unlock()
 	cm.exchClient = cluster_svc_pb.NewMintClient(conn)
+}
+
+func (cm *cloudTokenMinter) exchangeClient() cluster_svc_pb.MintClient {
+	cm.mu.Lock()
+	defer cm.mu.Unlock()
+	return cm.exchClient
 }
 
 // getToken returns a valid bearer token for the default audience.
@@ -1004,41 +1130,102 @@ func (cm *cloudTokenMinter) getToken() (string, error) {
 
 // getTokenFor returns a valid bearer token for the given audience.
 func (cm *cloudTokenMinter) getTokenFor(audience string) (string, error) {
-	cm.mu.Lock()
-	defer cm.mu.Unlock()
-
-	// Return cached service token if still valid
-	if entry, ok := cm.tokens[audience]; ok {
-		if entry.token != "" && time.Now().Add(tokenRefreshBuffer).Before(entry.exp) {
-			return entry.token, nil
-		}
+	if token, ok := cm.cachedToken(audience); ok {
+		return token, nil
 	}
 
-	// Try generic access → service exchange if generic access is still valid
-	if cm.genericAccess != "" && time.Now().Add(tokenRefreshBuffer).Before(cm.genericExp) {
-		tok, err := cm.doServiceExchange(audience)
+	lock := cm.refreshLockFor(audience)
+	lock.Lock()
+	defer lock.Unlock()
+
+	// Another goroutine may have refreshed this audience while we waited.
+	if token, ok := cm.cachedToken(audience); ok {
+		return token, nil
+	}
+
+	if accessToken, ok := cm.freshGenericAccess(); ok {
+		tok, err := cm.doServiceExchange(audience, accessToken)
 		if err == nil {
 			return tok, nil
 		}
 		zap.L().Warn("Cloud auth: access→service exchange failed", zap.Error(err))
 	}
 
-	// Try refresh → generic access, then service exchange
-	if cm.refreshTok != "" && time.Now().Before(cm.refreshExp) {
-		if err := cm.doGenericExchange(); err == nil {
-			tok, err := cm.doServiceExchange(audience)
-			if err == nil {
-				return tok, nil
+	cm.refreshMu.Lock()
+	defer cm.refreshMu.Unlock()
+
+	if token, ok := cm.cachedToken(audience); ok {
+		return token, nil
+	}
+
+	if accessToken, ok := cm.freshGenericAccess(); ok {
+		tok, err := cm.doServiceExchange(audience, accessToken)
+		if err == nil {
+			return tok, nil
+		}
+		zap.L().Warn("Cloud auth: access→service exchange failed", zap.Error(err))
+	}
+
+	if refreshToken, ok := cm.validRefreshToken(); ok {
+		if err := cm.doGenericExchange(refreshToken); err == nil {
+			if accessToken, ok := cm.freshGenericAccess(); ok {
+				tok, err := cm.doServiceExchange(audience, accessToken)
+				if err == nil {
+					return tok, nil
+				}
 			}
 		}
 		zap.L().Warn("Cloud auth: refresh→access→service exchange failed, re-proving")
 	}
 
-	// Full cloud proof exchange
 	if err := cm.doCloudExchange(); err != nil {
 		return "", fmt.Errorf("cloud token exchange: %w", err)
 	}
-	return cm.doServiceExchange(audience)
+	accessToken, ok := cm.freshGenericAccess()
+	if !ok {
+		return "", fmt.Errorf("cloud token exchange did not return a usable access token")
+	}
+	return cm.doServiceExchange(audience, accessToken)
+}
+
+func (cm *cloudTokenMinter) cachedToken(audience string) (string, bool) {
+	cm.mu.Lock()
+	defer cm.mu.Unlock()
+	if entry, ok := cm.tokens[audience]; ok {
+		if entry.token != "" && time.Now().Add(tokenRefreshBuffer).Before(entry.exp) {
+			return entry.token, true
+		}
+	}
+	return "", false
+}
+
+func (cm *cloudTokenMinter) refreshLockFor(audience string) *sync.Mutex {
+	cm.mu.Lock()
+	defer cm.mu.Unlock()
+	lock := cm.refreshLocks[audience]
+	if lock == nil {
+		lock = &sync.Mutex{}
+		cm.refreshLocks[audience] = lock
+	}
+	return lock
+}
+
+func (cm *cloudTokenMinter) freshGenericAccess() (string, bool) {
+	cm.mu.Lock()
+	defer cm.mu.Unlock()
+	if cm.genericAccess != "" && time.Now().Add(tokenRefreshBuffer).Before(cm.genericExp) {
+		return cm.genericAccess, true
+	}
+	return "", false
+}
+
+func (cm *cloudTokenMinter) validRefreshToken() (string, bool) {
+	cm.mu.Lock()
+	defer cm.mu.Unlock()
+	if cm.refreshTok != "" && time.Now().Before(cm.refreshExp) {
+		return cm.refreshTok, true
+	}
+	return "", false
 }
 
 // invalidate clears all cached tokens, forcing re-exchange.
@@ -1053,14 +1240,14 @@ func (cm *cloudTokenMinter) invalidate() {
 }
 
 // doCloudExchange builds a cloud proof and exchanges it for refresh + access tokens.
-// Must be called with cm.mu held.
 func (cm *cloudTokenMinter) doCloudExchange() error {
 	proof, err := cm.buildProof()
 	if err != nil {
 		return fmt.Errorf("building cloud proof: %w", err)
 	}
 
-	if cm.exchClient == nil {
+	exchClient := cm.exchangeClient()
+	if exchClient == nil {
 		return fmt.Errorf("token exchange client not initialized")
 	}
 
@@ -1068,101 +1255,135 @@ func (cm *cloudTokenMinter) doCloudExchange() error {
 		CloudProof:   proof,
 		TokenPurpose: token_pb.TokenPurpose_TOKEN_PURPOSE_REFRESH,
 	}
-	if cm.refreshTok != "" && time.Now().Before(cm.refreshExp) {
-		req.ContinuityToken = cm.refreshTok
+	if refreshToken, ok := cm.validRefreshToken(); ok {
+		req.ContinuityToken = refreshToken
 	}
 
 	exchCtx, cancel := context.WithTimeout(context.Background(), exchangeTimeout)
 	defer cancel()
-	resp, err := cm.exchClient.MintServiceToken(exchCtx, req)
+	resp, err := exchClient.MintServiceToken(exchCtx, req)
 	if err != nil {
 		return fmt.Errorf("cloud proof exchange: %w", err)
 	}
 
+	var (
+		nextRefreshTok    string
+		nextRefreshExp    time.Time
+		nextRefreshIat    time.Time
+		nextInstanceId    string
+		nextGenericAccess string
+		nextGenericExp    time.Time
+	)
+
 	// Extract refresh token.
 	if rt := resp.GetRefreshToken(); rt != nil {
-		cm.refreshTok = rt.GetBase64()
-		cm.refreshIat = time.Now()
+		nextRefreshTok = rt.GetBase64()
+		nextRefreshIat = time.Now()
 		if payload := rt.GetPayload(); payload != nil {
 			if expStr, ok := payload["exp"]; ok {
 				if exp, err := parseUnixSeconds(expStr); err == nil && exp > 0 {
-					cm.refreshExp = time.Unix(exp, 0)
+					nextRefreshExp = time.Unix(exp, 0)
 				}
 			}
 			if idStr, ok := payload["instance_id"]; ok {
-				cm.instanceId = idStr
+				nextInstanceId = idStr
 			}
 		}
-		if cm.refreshExp.IsZero() || cm.refreshExp.Before(time.Now()) {
-			cm.refreshExp = time.Now().Add(24 * time.Hour) // fallback
+		if nextRefreshExp.IsZero() || nextRefreshExp.Before(time.Now()) {
+			nextRefreshExp = time.Now().Add(24 * time.Hour) // fallback
 		}
 	}
 
 	// Extract generic access token.
 	if at := resp.GetAccessToken(); at != nil {
-		cm.genericAccess = at.GetBase64()
+		nextGenericAccess = at.GetBase64()
 		if payload := at.GetPayload(); payload != nil {
 			if expStr, ok := payload["exp"]; ok {
 				if exp, err := parseUnixSeconds(expStr); err == nil && exp > 0 {
-					cm.genericExp = time.Unix(exp, 0)
+					nextGenericExp = time.Unix(exp, 0)
 				}
 			}
 		}
-		if cm.genericExp.IsZero() || cm.genericExp.Before(time.Now()) {
-			cm.genericExp = time.Now().Add(time.Hour) // fallback
+		if nextGenericExp.IsZero() || nextGenericExp.Before(time.Now()) {
+			nextGenericExp = time.Now().Add(time.Hour) // fallback
 		}
 	}
 
-	cm.scheduleRenewal()
+	cm.mu.Lock()
+	if nextRefreshTok != "" {
+		cm.refreshTok = nextRefreshTok
+		cm.refreshExp = nextRefreshExp
+		cm.refreshIat = nextRefreshIat
+	}
+	if nextInstanceId != "" {
+		cm.instanceId = nextInstanceId
+	}
+	if nextGenericAccess != "" {
+		cm.genericAccess = nextGenericAccess
+		cm.genericExp = nextGenericExp
+	}
+	cm.mu.Unlock()
+
+	if !nextRefreshIat.IsZero() {
+		cm.scheduleRenewal(nextRefreshIat, nextRefreshExp)
+	}
 
 	return nil
 }
 
 // doGenericExchange exchanges the cached refresh token for a generic access token (no aud).
-// Must be called with cm.mu held.
-func (cm *cloudTokenMinter) doGenericExchange() error {
-	if cm.exchClient == nil {
+func (cm *cloudTokenMinter) doGenericExchange(refreshToken string) error {
+	exchClient := cm.exchangeClient()
+	if exchClient == nil {
 		return fmt.Errorf("token exchange client not initialized")
 	}
 
 	exchCtx, cancel := context.WithTimeout(context.Background(), exchangeTimeout)
 	defer cancel()
-	resp, err := cm.exchClient.MintServiceToken(exchCtx, &common_pb.MintServiceTokenRequest{
-		InputToken:   cm.refreshTok,
+	resp, err := exchClient.MintServiceToken(exchCtx, &common_pb.MintServiceTokenRequest{
+		InputToken:   refreshToken,
 		TokenPurpose: token_pb.TokenPurpose_TOKEN_PURPOSE_ACCESS,
 	})
 	if err != nil {
 		return fmt.Errorf("refresh→access exchange: %w", err)
 	}
 
+	var nextGenericAccess string
+	var nextGenericExp time.Time
 	if at := resp.GetAccessToken(); at != nil {
-		cm.genericAccess = at.GetBase64()
+		nextGenericAccess = at.GetBase64()
 		if payload := at.GetPayload(); payload != nil {
 			if expStr, ok := payload["exp"]; ok {
 				if exp, err := parseUnixSeconds(expStr); err == nil && exp > 0 {
-					cm.genericExp = time.Unix(exp, 0)
+					nextGenericExp = time.Unix(exp, 0)
 				}
 			}
 		}
-		if cm.genericExp.IsZero() || cm.genericExp.Before(time.Now()) {
-			cm.genericExp = time.Now().Add(time.Hour) // fallback
+		if nextGenericExp.IsZero() || nextGenericExp.Before(time.Now()) {
+			nextGenericExp = time.Now().Add(time.Hour) // fallback
 		}
+	}
+	if nextGenericAccess != "" {
+		cm.mu.Lock()
+		cm.genericAccess = nextGenericAccess
+		cm.genericExp = nextGenericExp
+		cm.mu.Unlock()
 	}
 
 	return nil
 }
 
 // doServiceExchange exchanges the cached generic access token for an audience-specific token.
-// Must be called with cm.mu held.
-func (cm *cloudTokenMinter) doServiceExchange(audience string) (string, error) {
-	if cm.exchClient == nil {
+func (cm *cloudTokenMinter) doServiceExchange(audience, accessToken string) (string, error) {
+	exchClient := cm.exchangeClient()
+	if exchClient == nil {
 		return "", fmt.Errorf("token exchange client not initialized")
 	}
 
 	exchCtx, cancel := context.WithTimeout(context.Background(), exchangeTimeout)
 	defer cancel()
-	resp, err := cm.exchClient.MintServiceToken(exchCtx, &common_pb.MintServiceTokenRequest{
-		InputToken:   cm.genericAccess,
+	resp, err := exchClient.MintServiceToken(exchCtx, &common_pb.MintServiceTokenRequest{
+		InputToken:   accessToken,
 		Aud:          audience,
 		TokenPurpose: token_pb.TokenPurpose_TOKEN_PURPOSE_SERVICE,
 	})
@@ -1184,6 +1405,8 @@ func (cm *cloudTokenMinter) doServiceExchange(audience string) (string, error) {
 	if entry.exp.IsZero() || entry.exp.Before(time.Now()) {
 		entry.exp = time.Now().Add(time.Hour) // fallback
 	}
+	cm.mu.Lock()
+	defer cm.mu.Unlock()
 	evictTokenCache(cm.tokens)
 	cm.tokens[audience] = entry
 
@@ -1209,20 +1432,22 @@ func (cm *cloudTokenMinter) buildProof() (*cloudidentity_pb.CloudIdentityProof, 
 
 // scheduleRenewal starts a background goroutine that renews the refresh token
 // at a randomized time after its half-life.
-func (cm *cloudTokenMinter) scheduleRenewal() {
+func (cm *cloudTokenMinter) scheduleRenewal(refreshIat, refreshExp time.Time) {
+	cm.mu.Lock()
 	if cm.cancelRenew != nil {
 		cm.cancelRenew()
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
 	cm.cancelRenew = cancel
+	cm.mu.Unlock()
 
-	halfLife := cm.refreshExp.Sub(cm.refreshIat) / 2
+	halfLife := refreshExp.Sub(refreshIat) / 2
 	if halfLife <= 0 {
 		halfLife = 12 * time.Hour
 	}
 	jitter := randomDuration(halfLife)
-	renewAt := cm.refreshIat.Add(halfLife + jitter)
+	renewAt := refreshIat.Add(halfLife + jitter)
 
 	go func() {
 		timer := time.NewTimer(time.Until(renewAt))
@@ -1231,8 +1456,8 @@ func (cm *cloudTokenMinter) scheduleRenewal() {
 		case <-ctx.Done():
 			return
 		case <-timer.C:
-			cm.mu.Lock()
-			defer cm.mu.Unlock()
+			cm.refreshMu.Lock()
+			defer cm.refreshMu.Unlock()
 			if err := cm.doCloudExchange(); err != nil {
 				zap.L().Warn("Cloud auth: half-life renewal failed", zap.Error(err))
 			} else {

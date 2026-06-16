@@ -924,42 +924,42 @@ func ArgusRpcIdValues() []ArgusRpcId {
 		ArgusRpcId_ARGUS_RPC_ID_LIST_ACTIVE_SESSIONS,
 		ArgusRpcId_ARGUS_RPC_ID_GET_SESSION_DETAIL,
 		ArgusRpcId_ARGUS_RPC_ID_GET_USER_ACTIVITY,
-		ArgusRpcId_ARGUS_RPC_ID_SEARCH_SESSIONS,
-		ArgusRpcId_ARGUS_RPC_ID_WATCH_LIVE_SESSIONS,
-		ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_READ,
-		ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_WRITE,
-		ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_DELETE,
-		ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_LIST,
-		ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_CLEAR,
+		ArgusRpcId_ARGUS_RPC_ID_LIST_SESSION_SEARCH_RESULTS,
+		ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_LIVE_SESSIONS,
+		ArgusRpcId_ARGUS_RPC_ID_GET_SCRATCHPAD,
+		ArgusRpcId_ARGUS_RPC_ID_UPDATE_SCRATCHPAD,
+		ArgusRpcId_ARGUS_RPC_ID_DELETE_SCRATCHPAD,
+		ArgusRpcId_ARGUS_RPC_ID_LIST_SCRATCHPADS,
+		ArgusRpcId_ARGUS_RPC_ID_DELETE_SCRATCHPADS,
 		ArgusRpcId_ARGUS_RPC_ID_GET_SUPERVISOR_CONTEXT,
-		ArgusRpcId_ARGUS_RPC_ID_WATCH_DASHBOARD,
-		ArgusRpcId_ARGUS_RPC_ID_WATCH_SESSION_DETAIL,
-		ArgusRpcId_ARGUS_RPC_ID_WATCH_USER_ACTIVITY,
-		ArgusRpcId_ARGUS_RPC_ID_WATCH_SUPERVISOR_CONTEXT,
-		ArgusRpcId_ARGUS_RPC_ID_WATCH_SCRATCHPAD_LIST,
-		ArgusRpcId_ARGUS_RPC_ID_WATCH_SCRATCHPAD_READ,
+		ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_DASHBOARD,
+		ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SESSION_DETAIL,
+		ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_USER_ACTIVITY,
+		ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SUPERVISOR_CONTEXT,
+		ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_LIST,
+		ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_READ,
 		ArgusRpcId_ARGUS_RPC_ID_LIST_USERS,
 		ArgusRpcId_ARGUS_RPC_ID_GET_USER_PROFILE,
 		ArgusRpcId_ARGUS_RPC_ID_GET_USER_TOKEN_STATS,
-		ArgusRpcId_ARGUS_RPC_ID_WATCH_USER_PROFILE,
-		ArgusRpcId_ARGUS_RPC_ID_GET_USER_COMMIT_ACTIVITY,
+		ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE,
+		ArgusRpcId_ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY,
 		ArgusRpcId_ARGUS_RPC_ID_GET_FILE_ACTIVITY,
 		ArgusRpcId_ARGUS_RPC_ID_GET_SESSION_TIMELINE,
 		ArgusRpcId_ARGUS_RPC_ID_GET_AGENT_TREE,
 		ArgusRpcId_ARGUS_RPC_ID_GET_SYSTEM_STATS,
-		ArgusRpcId_ARGUS_RPC_ID_GET_TOOL_LEADERBOARD,
-		ArgusRpcId_ARGUS_RPC_ID_GET_MODEL_USAGE,
-		ArgusRpcId_ARGUS_RPC_ID_GET_ACTIVITY_TIMESERIES,
-		ArgusRpcId_ARGUS_RPC_ID_WATCH_SYSTEM_STATS,
-		ArgusRpcId_ARGUS_RPC_ID_WATCH_TOOL_LEADERBOARD,
-		ArgusRpcId_ARGUS_RPC_ID_SEARCH_EVENTS,
-		ArgusRpcId_ARGUS_RPC_ID_SEARCH_BY_FILE_PATH,
+		ArgusRpcId_ARGUS_RPC_ID_LIST_TOOL_LEADERBOARD,
+		ArgusRpcId_ARGUS_RPC_ID_LIST_MODEL_USAGE,
+		ArgusRpcId_ARGUS_RPC_ID_LIST_ACTIVITY_TIMESERIES,
+		ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SYSTEM_STATS,
+		ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_TOOL_LEADERBOARD,
+		ArgusRpcId_ARGUS_RPC_ID_LIST_EVENT_SEARCH_RESULTS,
+		ArgusRpcId_ARGUS_RPC_ID_LIST_FILE_PATH_MATCHES,
 	}
 }
 
 // ArgusRpcIdStringValues returns all valid ArgusRpcId names as strings
 func ArgusRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "get-dashboard", "list-active-sessions", "get-session-detail", "get-user-activity", "search-sessions", "watch-live-sessions", "scratchpad-read", "scratchpad-write", "scratchpad-delete", "scratchpad-list", "scratchpad-clear", "get-supervisor-context", "watch-dashboard", "watch-session-detail", "watch-user-activity", "watch-supervisor-context", "watch-scratchpad-list", "watch-scratchpad-read", "list-users", "get-user-profile", "get-user-token-stats", "watch-user-profile", "get-user-commit-activity", "get-file-activity", "get-session-timeline", "get-agent-tree", "get-system-stats", "get-tool-leaderboard", "get-model-usage", "get-activity-timeseries", "watch-system-stats", "watch-tool-leaderboard", "search-events", "search-by-file-path"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "get-dashboard", "list-active-sessions", "get-session-detail", "get-user-activity", "list-session-search-results", "subscribe-live-sessions", "get-scratchpad", "update-scratchpad", "delete-scratchpad", "list-scratchpads", "delete-scratchpads", "get-supervisor-context", "subscribe-dashboard", "subscribe-session-detail", "subscribe-user-activity", "subscribe-supervisor-context", "subscribe-scratchpad-list", "subscribe-scratchpad-read", "list-users", "get-user-profile", "get-user-token-stats", "subscribe-user-profile", "list-user-commit-activity", "get-file-activity", "get-session-timeline", "get-agent-tree", "get-system-stats", "list-tool-leaderboard", "list-model-usage", "list-activity-timeseries", "subscribe-system-stats", "subscribe-tool-leaderboard", "list-event-search-results", "list-file-path-matches"}
 }
 
 // ParseArgusRpcId converts a string to a ArgusRpcId enum value
@@ -984,44 +984,44 @@ func ParseArgusRpcId(s string) (ArgusRpcId, error) {
 		return ArgusRpcId_ARGUS_RPC_ID_GET_SESSION_DETAIL, nil
 	case "get-user-activity", "argus-rpc-id-get-user-activity":
 		return ArgusRpcId_ARGUS_RPC_ID_GET_USER_ACTIVITY, nil
-	case "search-sessions", "argus-rpc-id-search-sessions":
-		return ArgusRpcId_ARGUS_RPC_ID_SEARCH_SESSIONS, nil
-	case "watch-live-sessions", "argus-rpc-id-watch-live-sessions":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_LIVE_SESSIONS, nil
-	case "scratchpad-read", "argus-rpc-id-scratchpad-read":
-		return ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_READ, nil
-	case "scratchpad-write", "argus-rpc-id-scratchpad-write":
-		return ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_WRITE, nil
-	case "scratchpad-delete", "argus-rpc-id-scratchpad-delete":
-		return ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_DELETE, nil
-	case "scratchpad-list", "argus-rpc-id-scratchpad-list":
-		return ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_LIST, nil
-	case "scratchpad-clear", "argus-rpc-id-scratchpad-clear":
-		return ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_CLEAR, nil
+	case "list-session-search-results", "argus-rpc-id-list-session-search-results":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_SESSION_SEARCH_RESULTS, nil
+	case "subscribe-live-sessions", "argus-rpc-id-subscribe-live-sessions":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_LIVE_SESSIONS, nil
+	case "get-scratchpad", "argus-rpc-id-get-scratchpad":
+		return ArgusRpcId_ARGUS_RPC_ID_GET_SCRATCHPAD, nil
+	case "update-scratchpad", "argus-rpc-id-update-scratchpad":
+		return ArgusRpcId_ARGUS_RPC_ID_UPDATE_SCRATCHPAD, nil
+	case "delete-scratchpad", "argus-rpc-id-delete-scratchpad":
+		return ArgusRpcId_ARGUS_RPC_ID_DELETE_SCRATCHPAD, nil
+	case "list-scratchpads", "argus-rpc-id-list-scratchpads":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_SCRATCHPADS, nil
+	case "delete-scratchpads", "argus-rpc-id-delete-scratchpads":
+		return ArgusRpcId_ARGUS_RPC_ID_DELETE_SCRATCHPADS, nil
 	case "get-supervisor-context", "argus-rpc-id-get-supervisor-context":
 		return ArgusRpcId_ARGUS_RPC_ID_GET_SUPERVISOR_CONTEXT, nil
-	case "watch-dashboard", "argus-rpc-id-watch-dashboard":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_DASHBOARD, nil
-	case "watch-session-detail", "argus-rpc-id-watch-session-detail":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_SESSION_DETAIL, nil
-	case "watch-user-activity", "argus-rpc-id-watch-user-activity":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_USER_ACTIVITY, nil
-	case "watch-supervisor-context", "argus-rpc-id-watch-supervisor-context":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_SUPERVISOR_CONTEXT, nil
-	case "watch-scratchpad-list", "argus-rpc-id-watch-scratchpad-list":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_SCRATCHPAD_LIST, nil
-	case "watch-scratchpad-read", "argus-rpc-id-watch-scratchpad-read":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_SCRATCHPAD_READ, nil
+	case "subscribe-dashboard", "argus-rpc-id-subscribe-dashboard":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_DASHBOARD, nil
+	case "subscribe-session-detail", "argus-rpc-id-subscribe-session-detail":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SESSION_DETAIL, nil
+	case "subscribe-user-activity", "argus-rpc-id-subscribe-user-activity":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_USER_ACTIVITY, nil
+	case "subscribe-supervisor-context", "argus-rpc-id-subscribe-supervisor-context":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SUPERVISOR_CONTEXT, nil
+	case "subscribe-scratchpad-list", "argus-rpc-id-subscribe-scratchpad-list":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_LIST, nil
+	case "subscribe-scratchpad-read", "argus-rpc-id-subscribe-scratchpad-read":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_READ, nil
 	case "list-users", "argus-rpc-id-list-users":
 		return ArgusRpcId_ARGUS_RPC_ID_LIST_USERS, nil
 	case "get-user-profile", "argus-rpc-id-get-user-profile":
 		return ArgusRpcId_ARGUS_RPC_ID_GET_USER_PROFILE, nil
 	case "get-user-token-stats", "argus-rpc-id-get-user-token-stats":
 		return ArgusRpcId_ARGUS_RPC_ID_GET_USER_TOKEN_STATS, nil
-	case "watch-user-profile", "argus-rpc-id-watch-user-profile":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_USER_PROFILE, nil
-	case "get-user-commit-activity", "argus-rpc-id-get-user-commit-activity":
-		return ArgusRpcId_ARGUS_RPC_ID_GET_USER_COMMIT_ACTIVITY, nil
+	case "subscribe-user-profile", "argus-rpc-id-subscribe-user-profile":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE, nil
+	case "list-user-commit-activity", "argus-rpc-id-list-user-commit-activity":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY, nil
 	case "get-file-activity", "argus-rpc-id-get-file-activity":
 		return ArgusRpcId_ARGUS_RPC_ID_GET_FILE_ACTIVITY, nil
 	case "get-session-timeline", "argus-rpc-id-get-session-timeline":
@@ -1030,20 +1030,20 @@ func ParseArgusRpcId(s string) (ArgusRpcId, error) {
 		return ArgusRpcId_ARGUS_RPC_ID_GET_AGENT_TREE, nil
 	case "get-system-stats", "argus-rpc-id-get-system-stats":
 		return ArgusRpcId_ARGUS_RPC_ID_GET_SYSTEM_STATS, nil
-	case "get-tool-leaderboard", "argus-rpc-id-get-tool-leaderboard":
-		return ArgusRpcId_ARGUS_RPC_ID_GET_TOOL_LEADERBOARD, nil
-	case "get-model-usage", "argus-rpc-id-get-model-usage":
-		return ArgusRpcId_ARGUS_RPC_ID_GET_MODEL_USAGE, nil
-	case "get-activity-timeseries", "argus-rpc-id-get-activity-timeseries":
-		return ArgusRpcId_ARGUS_RPC_ID_GET_ACTIVITY_TIMESERIES, nil
-	case "watch-system-stats", "argus-rpc-id-watch-system-stats":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_SYSTEM_STATS, nil
-	case "watch-tool-leaderboard", "argus-rpc-id-watch-tool-leaderboard":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_TOOL_LEADERBOARD, nil
-	case "search-events", "argus-rpc-id-search-events":
-		return ArgusRpcId_ARGUS_RPC_ID_SEARCH_EVENTS, nil
-	case "search-by-file-path", "argus-rpc-id-search-by-file-path":
-		return ArgusRpcId_ARGUS_RPC_ID_SEARCH_BY_FILE_PATH, nil
+	case "list-tool-leaderboard", "argus-rpc-id-list-tool-leaderboard":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_TOOL_LEADERBOARD, nil
+	case "list-model-usage", "argus-rpc-id-list-model-usage":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_MODEL_USAGE, nil
+	case "list-activity-timeseries", "argus-rpc-id-list-activity-timeseries":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_ACTIVITY_TIMESERIES, nil
+	case "subscribe-system-stats", "argus-rpc-id-subscribe-system-stats":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SYSTEM_STATS, nil
+	case "subscribe-tool-leaderboard", "argus-rpc-id-subscribe-tool-leaderboard":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_TOOL_LEADERBOARD, nil
+	case "list-event-search-results", "argus-rpc-id-list-event-search-results":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_EVENT_SEARCH_RESULTS, nil
+	case "list-file-path-matches", "argus-rpc-id-list-file-path-matches":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_FILE_PATH_MATCHES, nil
 	default:
 		return ArgusRpcId_ARGUS_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid argusrpcid %s, expecting one of: %v", s, ArgusRpcIdStringValues())
 	}
@@ -1088,44 +1088,44 @@ func ArgusRpcIdToString(v ArgusRpcId) string {
 		return "get-session-detail"
 	case ArgusRpcId_ARGUS_RPC_ID_GET_USER_ACTIVITY:
 		return "get-user-activity"
-	case ArgusRpcId_ARGUS_RPC_ID_SEARCH_SESSIONS:
-		return "search-sessions"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_LIVE_SESSIONS:
-		return "watch-live-sessions"
-	case ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_READ:
-		return "scratchpad-read"
-	case ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_WRITE:
-		return "scratchpad-write"
-	case ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_DELETE:
-		return "scratchpad-delete"
-	case ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_LIST:
-		return "scratchpad-list"
-	case ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_CLEAR:
-		return "scratchpad-clear"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_SESSION_SEARCH_RESULTS:
+		return "list-session-search-results"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_LIVE_SESSIONS:
+		return "subscribe-live-sessions"
+	case ArgusRpcId_ARGUS_RPC_ID_GET_SCRATCHPAD:
+		return "get-scratchpad"
+	case ArgusRpcId_ARGUS_RPC_ID_UPDATE_SCRATCHPAD:
+		return "update-scratchpad"
+	case ArgusRpcId_ARGUS_RPC_ID_DELETE_SCRATCHPAD:
+		return "delete-scratchpad"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_SCRATCHPADS:
+		return "list-scratchpads"
+	case ArgusRpcId_ARGUS_RPC_ID_DELETE_SCRATCHPADS:
+		return "delete-scratchpads"
 	case ArgusRpcId_ARGUS_RPC_ID_GET_SUPERVISOR_CONTEXT:
 		return "get-supervisor-context"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_DASHBOARD:
-		return "watch-dashboard"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_SESSION_DETAIL:
-		return "watch-session-detail"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_USER_ACTIVITY:
-		return "watch-user-activity"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_SUPERVISOR_CONTEXT:
-		return "watch-supervisor-context"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_SCRATCHPAD_LIST:
-		return "watch-scratchpad-list"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_SCRATCHPAD_READ:
-		return "watch-scratchpad-read"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_DASHBOARD:
+		return "subscribe-dashboard"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SESSION_DETAIL:
+		return "subscribe-session-detail"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_USER_ACTIVITY:
+		return "subscribe-user-activity"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SUPERVISOR_CONTEXT:
+		return "subscribe-supervisor-context"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_LIST:
+		return "subscribe-scratchpad-list"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_READ:
+		return "subscribe-scratchpad-read"
 	case ArgusRpcId_ARGUS_RPC_ID_LIST_USERS:
 		return "list-users"
 	case ArgusRpcId_ARGUS_RPC_ID_GET_USER_PROFILE:
 		return "get-user-profile"
 	case ArgusRpcId_ARGUS_RPC_ID_GET_USER_TOKEN_STATS:
 		return "get-user-token-stats"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_USER_PROFILE:
-		return "watch-user-profile"
-	case ArgusRpcId_ARGUS_RPC_ID_GET_USER_COMMIT_ACTIVITY:
-		return "get-user-commit-activity"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE:
+		return "subscribe-user-profile"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY:
+		return "list-user-commit-activity"
 	case ArgusRpcId_ARGUS_RPC_ID_GET_FILE_ACTIVITY:
 		return "get-file-activity"
 	case ArgusRpcId_ARGUS_RPC_ID_GET_SESSION_TIMELINE:
@@ -1134,20 +1134,20 @@ func ArgusRpcIdToString(v ArgusRpcId) string {
 		return "get-agent-tree"
 	case ArgusRpcId_ARGUS_RPC_ID_GET_SYSTEM_STATS:
 		return "get-system-stats"
-	case ArgusRpcId_ARGUS_RPC_ID_GET_TOOL_LEADERBOARD:
-		return "get-tool-leaderboard"
-	case ArgusRpcId_ARGUS_RPC_ID_GET_MODEL_USAGE:
-		return "get-model-usage"
-	case ArgusRpcId_ARGUS_RPC_ID_GET_ACTIVITY_TIMESERIES:
-		return "get-activity-timeseries"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_SYSTEM_STATS:
-		return "watch-system-stats"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_TOOL_LEADERBOARD:
-		return "watch-tool-leaderboard"
-	case ArgusRpcId_ARGUS_RPC_ID_SEARCH_EVENTS:
-		return "search-events"
-	case ArgusRpcId_ARGUS_RPC_ID_SEARCH_BY_FILE_PATH:
-		return "search-by-file-path"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_TOOL_LEADERBOARD:
+		return "list-tool-leaderboard"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_MODEL_USAGE:
+		return "list-model-usage"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_ACTIVITY_TIMESERIES:
+		return "list-activity-timeseries"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SYSTEM_STATS:
+		return "subscribe-system-stats"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_TOOL_LEADERBOARD:
+		return "subscribe-tool-leaderboard"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_EVENT_SEARCH_RESULTS:
+		return "list-event-search-results"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_FILE_PATH_MATCHES:
+		return "list-file-path-matches"
 	default:
 		return ""
 	}
@@ -1184,44 +1184,44 @@ func ParseArgusRpcIdLiberal(s string) ArgusRpcId {
 		return ArgusRpcId_ARGUS_RPC_ID_GET_SESSION_DETAIL
 	case "get-user-activity", "argus-rpc-id-get-user-activity":
 		return ArgusRpcId_ARGUS_RPC_ID_GET_USER_ACTIVITY
-	case "search-sessions", "argus-rpc-id-search-sessions":
-		return ArgusRpcId_ARGUS_RPC_ID_SEARCH_SESSIONS
-	case "watch-live-sessions", "argus-rpc-id-watch-live-sessions":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_LIVE_SESSIONS
-	case "scratchpad-read", "argus-rpc-id-scratchpad-read":
-		return ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_READ
-	case "scratchpad-write", "argus-rpc-id-scratchpad-write":
-		return ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_WRITE
-	case "scratchpad-delete", "argus-rpc-id-scratchpad-delete":
-		return ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_DELETE
-	case "scratchpad-list", "argus-rpc-id-scratchpad-list":
-		return ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_LIST
-	case "scratchpad-clear", "argus-rpc-id-scratchpad-clear":
-		return ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_CLEAR
+	case "list-session-search-results", "argus-rpc-id-list-session-search-results":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_SESSION_SEARCH_RESULTS
+	case "subscribe-live-sessions", "argus-rpc-id-subscribe-live-sessions":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_LIVE_SESSIONS
+	case "get-scratchpad", "argus-rpc-id-get-scratchpad":
+		return ArgusRpcId_ARGUS_RPC_ID_GET_SCRATCHPAD
+	case "update-scratchpad", "argus-rpc-id-update-scratchpad":
+		return ArgusRpcId_ARGUS_RPC_ID_UPDATE_SCRATCHPAD
+	case "delete-scratchpad", "argus-rpc-id-delete-scratchpad":
+		return ArgusRpcId_ARGUS_RPC_ID_DELETE_SCRATCHPAD
+	case "list-scratchpads", "argus-rpc-id-list-scratchpads":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_SCRATCHPADS
+	case "delete-scratchpads", "argus-rpc-id-delete-scratchpads":
+		return ArgusRpcId_ARGUS_RPC_ID_DELETE_SCRATCHPADS
 	case "get-supervisor-context", "argus-rpc-id-get-supervisor-context":
 		return ArgusRpcId_ARGUS_RPC_ID_GET_SUPERVISOR_CONTEXT
-	case "watch-dashboard", "argus-rpc-id-watch-dashboard":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_DASHBOARD
-	case "watch-session-detail", "argus-rpc-id-watch-session-detail":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_SESSION_DETAIL
-	case "watch-user-activity", "argus-rpc-id-watch-user-activity":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_USER_ACTIVITY
-	case "watch-supervisor-context", "argus-rpc-id-watch-supervisor-context":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_SUPERVISOR_CONTEXT
-	case "watch-scratchpad-list", "argus-rpc-id-watch-scratchpad-list":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_SCRATCHPAD_LIST
-	case "watch-scratchpad-read", "argus-rpc-id-watch-scratchpad-read":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_SCRATCHPAD_READ
+	case "subscribe-dashboard", "argus-rpc-id-subscribe-dashboard":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_DASHBOARD
+	case "subscribe-session-detail", "argus-rpc-id-subscribe-session-detail":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SESSION_DETAIL
+	case "subscribe-user-activity", "argus-rpc-id-subscribe-user-activity":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_USER_ACTIVITY
+	case "subscribe-supervisor-context", "argus-rpc-id-subscribe-supervisor-context":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SUPERVISOR_CONTEXT
+	case "subscribe-scratchpad-list", "argus-rpc-id-subscribe-scratchpad-list":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_LIST
+	case "subscribe-scratchpad-read", "argus-rpc-id-subscribe-scratchpad-read":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_READ
 	case "list-users", "argus-rpc-id-list-users":
 		return ArgusRpcId_ARGUS_RPC_ID_LIST_USERS
 	case "get-user-profile", "argus-rpc-id-get-user-profile":
 		return ArgusRpcId_ARGUS_RPC_ID_GET_USER_PROFILE
 	case "get-user-token-stats", "argus-rpc-id-get-user-token-stats":
 		return ArgusRpcId_ARGUS_RPC_ID_GET_USER_TOKEN_STATS
-	case "watch-user-profile", "argus-rpc-id-watch-user-profile":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_USER_PROFILE
-	case "get-user-commit-activity", "argus-rpc-id-get-user-commit-activity":
-		return ArgusRpcId_ARGUS_RPC_ID_GET_USER_COMMIT_ACTIVITY
+	case "subscribe-user-profile", "argus-rpc-id-subscribe-user-profile":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE
+	case "list-user-commit-activity", "argus-rpc-id-list-user-commit-activity":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY
 	case "get-file-activity", "argus-rpc-id-get-file-activity":
 		return ArgusRpcId_ARGUS_RPC_ID_GET_FILE_ACTIVITY
 	case "get-session-timeline", "argus-rpc-id-get-session-timeline":
@@ -1230,20 +1230,20 @@ func ParseArgusRpcIdLiberal(s string) ArgusRpcId {
 		return ArgusRpcId_ARGUS_RPC_ID_GET_AGENT_TREE
 	case "get-system-stats", "argus-rpc-id-get-system-stats":
 		return ArgusRpcId_ARGUS_RPC_ID_GET_SYSTEM_STATS
-	case "get-tool-leaderboard", "argus-rpc-id-get-tool-leaderboard":
-		return ArgusRpcId_ARGUS_RPC_ID_GET_TOOL_LEADERBOARD
-	case "get-model-usage", "argus-rpc-id-get-model-usage":
-		return ArgusRpcId_ARGUS_RPC_ID_GET_MODEL_USAGE
-	case "get-activity-timeseries", "argus-rpc-id-get-activity-timeseries":
-		return ArgusRpcId_ARGUS_RPC_ID_GET_ACTIVITY_TIMESERIES
-	case "watch-system-stats", "argus-rpc-id-watch-system-stats":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_SYSTEM_STATS
-	case "watch-tool-leaderboard", "argus-rpc-id-watch-tool-leaderboard":
-		return ArgusRpcId_ARGUS_RPC_ID_WATCH_TOOL_LEADERBOARD
-	case "search-events", "argus-rpc-id-search-events":
-		return ArgusRpcId_ARGUS_RPC_ID_SEARCH_EVENTS
-	case "search-by-file-path", "argus-rpc-id-search-by-file-path":
-		return ArgusRpcId_ARGUS_RPC_ID_SEARCH_BY_FILE_PATH
+	case "list-tool-leaderboard", "argus-rpc-id-list-tool-leaderboard":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_TOOL_LEADERBOARD
+	case "list-model-usage", "argus-rpc-id-list-model-usage":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_MODEL_USAGE
+	case "list-activity-timeseries", "argus-rpc-id-list-activity-timeseries":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_ACTIVITY_TIMESERIES
+	case "subscribe-system-stats", "argus-rpc-id-subscribe-system-stats":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SYSTEM_STATS
+	case "subscribe-tool-leaderboard", "argus-rpc-id-subscribe-tool-leaderboard":
+		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_TOOL_LEADERBOARD
+	case "list-event-search-results", "argus-rpc-id-list-event-search-results":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_EVENT_SEARCH_RESULTS
+	case "list-file-path-matches", "argus-rpc-id-list-file-path-matches":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_FILE_PATH_MATCHES
 	default:
 		return ArgusRpcId_ARGUS_RPC_ID_UNSPECIFIED
 	}
@@ -1268,44 +1268,44 @@ func ArgusRpcIdToSpecName(v ArgusRpcId) string {
 		return "ARGUS_RPC_ID_GET_SESSION_DETAIL"
 	case ArgusRpcId_ARGUS_RPC_ID_GET_USER_ACTIVITY:
 		return "ARGUS_RPC_ID_GET_USER_ACTIVITY"
-	case ArgusRpcId_ARGUS_RPC_ID_SEARCH_SESSIONS:
-		return "ARGUS_RPC_ID_SEARCH_SESSIONS"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_LIVE_SESSIONS:
-		return "ARGUS_RPC_ID_WATCH_LIVE_SESSIONS"
-	case ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_READ:
-		return "ARGUS_RPC_ID_SCRATCHPAD_READ"
-	case ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_WRITE:
-		return "ARGUS_RPC_ID_SCRATCHPAD_WRITE"
-	case ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_DELETE:
-		return "ARGUS_RPC_ID_SCRATCHPAD_DELETE"
-	case ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_LIST:
-		return "ARGUS_RPC_ID_SCRATCHPAD_LIST"
-	case ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_CLEAR:
-		return "ARGUS_RPC_ID_SCRATCHPAD_CLEAR"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_SESSION_SEARCH_RESULTS:
+		return "ARGUS_RPC_ID_LIST_SESSION_SEARCH_RESULTS"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_LIVE_SESSIONS:
+		return "ARGUS_RPC_ID_SUBSCRIBE_LIVE_SESSIONS"
+	case ArgusRpcId_ARGUS_RPC_ID_GET_SCRATCHPAD:
+		return "ARGUS_RPC_ID_GET_SCRATCHPAD"
+	case ArgusRpcId_ARGUS_RPC_ID_UPDATE_SCRATCHPAD:
+		return "ARGUS_RPC_ID_UPDATE_SCRATCHPAD"
+	case ArgusRpcId_ARGUS_RPC_ID_DELETE_SCRATCHPAD:
+		return "ARGUS_RPC_ID_DELETE_SCRATCHPAD"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_SCRATCHPADS:
+		return "ARGUS_RPC_ID_LIST_SCRATCHPADS"
+	case ArgusRpcId_ARGUS_RPC_ID_DELETE_SCRATCHPADS:
+		return "ARGUS_RPC_ID_DELETE_SCRATCHPADS"
 	case ArgusRpcId_ARGUS_RPC_ID_GET_SUPERVISOR_CONTEXT:
 		return "ARGUS_RPC_ID_GET_SUPERVISOR_CONTEXT"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_DASHBOARD:
-		return "ARGUS_RPC_ID_WATCH_DASHBOARD"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_SESSION_DETAIL:
-		return "ARGUS_RPC_ID_WATCH_SESSION_DETAIL"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_USER_ACTIVITY:
-		return "ARGUS_RPC_ID_WATCH_USER_ACTIVITY"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_SUPERVISOR_CONTEXT:
-		return "ARGUS_RPC_ID_WATCH_SUPERVISOR_CONTEXT"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_SCRATCHPAD_LIST:
-		return "ARGUS_RPC_ID_WATCH_SCRATCHPAD_LIST"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_SCRATCHPAD_READ:
-		return "ARGUS_RPC_ID_WATCH_SCRATCHPAD_READ"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_DASHBOARD:
+		return "ARGUS_RPC_ID_SUBSCRIBE_DASHBOARD"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SESSION_DETAIL:
+		return "ARGUS_RPC_ID_SUBSCRIBE_SESSION_DETAIL"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_USER_ACTIVITY:
+		return "ARGUS_RPC_ID_SUBSCRIBE_USER_ACTIVITY"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SUPERVISOR_CONTEXT:
+		return "ARGUS_RPC_ID_SUBSCRIBE_SUPERVISOR_CONTEXT"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_LIST:
+		return "ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_LIST"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_READ:
+		return "ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_READ"
 	case ArgusRpcId_ARGUS_RPC_ID_LIST_USERS:
 		return "ARGUS_RPC_ID_LIST_USERS"
 	case ArgusRpcId_ARGUS_RPC_ID_GET_USER_PROFILE:
 		return "ARGUS_RPC_ID_GET_USER_PROFILE"
 	case ArgusRpcId_ARGUS_RPC_ID_GET_USER_TOKEN_STATS:
 		return "ARGUS_RPC_ID_GET_USER_TOKEN_STATS"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_USER_PROFILE:
-		return "ARGUS_RPC_ID_WATCH_USER_PROFILE"
-	case ArgusRpcId_ARGUS_RPC_ID_GET_USER_COMMIT_ACTIVITY:
-		return "ARGUS_RPC_ID_GET_USER_COMMIT_ACTIVITY"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE:
+		return "ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY:
+		return "ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY"
 	case ArgusRpcId_ARGUS_RPC_ID_GET_FILE_ACTIVITY:
 		return "ARGUS_RPC_ID_GET_FILE_ACTIVITY"
 	case ArgusRpcId_ARGUS_RPC_ID_GET_SESSION_TIMELINE:
@@ -1314,20 +1314,20 @@ func ArgusRpcIdToSpecName(v ArgusRpcId) string {
 		return "ARGUS_RPC_ID_GET_AGENT_TREE"
 	case ArgusRpcId_ARGUS_RPC_ID_GET_SYSTEM_STATS:
 		return "ARGUS_RPC_ID_GET_SYSTEM_STATS"
-	case ArgusRpcId_ARGUS_RPC_ID_GET_TOOL_LEADERBOARD:
-		return "ARGUS_RPC_ID_GET_TOOL_LEADERBOARD"
-	case ArgusRpcId_ARGUS_RPC_ID_GET_MODEL_USAGE:
-		return "ARGUS_RPC_ID_GET_MODEL_USAGE"
-	case ArgusRpcId_ARGUS_RPC_ID_GET_ACTIVITY_TIMESERIES:
-		return "ARGUS_RPC_ID_GET_ACTIVITY_TIMESERIES"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_SYSTEM_STATS:
-		return "ARGUS_RPC_ID_WATCH_SYSTEM_STATS"
-	case ArgusRpcId_ARGUS_RPC_ID_WATCH_TOOL_LEADERBOARD:
-		return "ARGUS_RPC_ID_WATCH_TOOL_LEADERBOARD"
-	case ArgusRpcId_ARGUS_RPC_ID_SEARCH_EVENTS:
-		return "ARGUS_RPC_ID_SEARCH_EVENTS"
-	case ArgusRpcId_ARGUS_RPC_ID_SEARCH_BY_FILE_PATH:
-		return "ARGUS_RPC_ID_SEARCH_BY_FILE_PATH"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_TOOL_LEADERBOARD:
+		return "ARGUS_RPC_ID_LIST_TOOL_LEADERBOARD"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_MODEL_USAGE:
+		return "ARGUS_RPC_ID_LIST_MODEL_USAGE"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_ACTIVITY_TIMESERIES:
+		return "ARGUS_RPC_ID_LIST_ACTIVITY_TIMESERIES"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SYSTEM_STATS:
+		return "ARGUS_RPC_ID_SUBSCRIBE_SYSTEM_STATS"
+	case ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_TOOL_LEADERBOARD:
+		return "ARGUS_RPC_ID_SUBSCRIBE_TOOL_LEADERBOARD"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_EVENT_SEARCH_RESULTS:
+		return "ARGUS_RPC_ID_LIST_EVENT_SEARCH_RESULTS"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_FILE_PATH_MATCHES:
+		return "ARGUS_RPC_ID_LIST_FILE_PATH_MATCHES"
 	default:
 		return ""
 	}
@@ -17633,13 +17633,13 @@ func ValidateSearchSessionsRequestWithDepth(m *SearchSessionsRequest, depth int)
 		return protoerrors.NewErrMissingInvalidData(nil, "field Query must be at most 1024 characters, got: %d", len(m.Query))
 	}
 
-	// Validate PageSize (assert_ge: 1)
-	if m.PageSize < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 1, got: %v", m.PageSize)
-	}
 	// Validate PageSize (assert_le: 500)
 	if m.PageSize > 500 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 500, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_ge: 1)
+	if m.PageSize < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 1, got: %v", m.PageSize)
 	}
 	// Validate Query (default max size: 32768 bytes)
 	if len(m.Query) > 32768 {
@@ -17745,14 +17745,14 @@ func ValidateScratchpadReadRequestWithDepth(m *ScratchpadReadRequest, depth int)
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Key (assert_max_length: 256)
-	if len(m.Key) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Key must be at most 256 characters, got: %d", len(m.Key))
-	}
-
 	// Validate Key (assert_required)
 	if m.Key == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Key is required")
+	}
+
+	// Validate Key (assert_max_length: 256)
+	if len(m.Key) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key must be at most 256 characters, got: %d", len(m.Key))
 	}
 
 	// Validate Key (default max size: 32768 bytes)
@@ -18260,14 +18260,14 @@ func ValidateWatchScratchpadReadRequestWithDepth(m *WatchScratchpadReadRequest, 
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Key (assert_required)
-	if m.Key == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Key is required")
-	}
-
 	// Validate Key (assert_max_length: 256)
 	if len(m.Key) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Key must be at most 256 characters, got: %d", len(m.Key))
+	}
+
+	// Validate Key (assert_required)
+	if m.Key == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key is required")
 	}
 
 	// Validate Key (default max size: 32768 bytes)
@@ -18471,16 +18471,16 @@ func ValidateGetUserProfileRequestWithDepth(m *GetUserProfileRequest, depth int)
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Email (assert_required)
-	if m.Email == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email is required")
-	}
-
 	// Validate Email (assert_email)
 	if m.Email != "" {
 		if err := utils.ValidateAssertEmail(m.Email); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field Email email validation failed")
 		}
+	}
+
+	// Validate Email (assert_required)
+	if m.Email == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Email is required")
 	}
 
 	// Validate Email (default max size: 32768 bytes)
@@ -19407,13 +19407,13 @@ func ValidateGetToolLeaderboardRequestWithDepth(m *GetToolLeaderboardRequest, de
 		return protoerrors.NewErrMissingInvalidData(nil, "field TimeRange is required")
 	}
 
-	// Validate Limit (assert_le: 100)
-	if m.Limit > 100 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Limit must be <= 100, got: %v", m.Limit)
-	}
 	// Validate Limit (assert_ge: 1)
 	if m.Limit < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Limit must be >= 1, got: %v", m.Limit)
+	}
+	// Validate Limit (assert_le: 100)
+	if m.Limit > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Limit must be <= 100, got: %v", m.Limit)
 	}
 	// Validate EmailFilter (default max size: 32768 bytes)
 	if len(m.EmailFilter) > 32768 {
@@ -19492,13 +19492,13 @@ func ValidateWatchToolLeaderboardRequestWithDepth(m *WatchToolLeaderboardRequest
 		return protoerrors.NewErrMissingInvalidData(nil, "field TimeRange is required")
 	}
 
-	// Validate Limit (assert_ge: 1)
-	if m.Limit < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Limit must be >= 1, got: %v", m.Limit)
-	}
 	// Validate Limit (assert_le: 100)
 	if m.Limit > 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Limit must be <= 100, got: %v", m.Limit)
+	}
+	// Validate Limit (assert_ge: 1)
+	if m.Limit < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Limit must be >= 1, got: %v", m.Limit)
 	}
 	// Validate EmailFilter (default max size: 32768 bytes)
 	if len(m.EmailFilter) > 32768 {
@@ -19820,13 +19820,13 @@ func ValidateSearchEventsRequestWithDepth(m *SearchEventsRequest, depth int) err
 		return protoerrors.NewErrMissingInvalidData(nil, "field Filter is required")
 	}
 
-	// Validate PageSize (assert_ge: 1)
-	if m.PageSize < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 1, got: %v", m.PageSize)
-	}
 	// Validate PageSize (assert_le: 500)
 	if m.PageSize > 500 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 500, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_ge: 1)
+	if m.PageSize < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 1, got: %v", m.PageSize)
 	}
 	// Validate PageToken (default max size: 32768 bytes)
 	if len(m.PageToken) > 32768 {

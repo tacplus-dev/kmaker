@@ -847,13 +847,13 @@ type WatchedGitLabGroup struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// group_path is the GitLab group path, e.g. "myorg/platform".
 	GroupPath string `protobuf:"bytes,1,opt,name=group_path,json=groupPath,proto3" json:"group_path,omitempty"`
-	// project_namespace optionally narrows ownership to a Cavalier project under
-	// the tenant. Empty means the tenant namespace itself owns the events.
-	ProjectNamespace string `protobuf:"bytes,2,opt,name=project_namespace,json=projectNamespace,proto3" json:"project_namespace,omitempty"`
-	TraceId          string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop             bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	// workspace_namespace optionally narrows ownership to a Cavalier workspace
+	// under the tenant. Empty means the tenant namespace itself owns the events.
+	WorkspaceNamespace string `protobuf:"bytes,2,opt,name=workspace_namespace,json=workspaceNamespace,proto3" json:"workspace_namespace,omitempty"`
+	TraceId            string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop               bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *WatchedGitLabGroup) Reset() {
@@ -893,9 +893,9 @@ func (x *WatchedGitLabGroup) GetGroupPath() string {
 	return ""
 }
 
-func (x *WatchedGitLabGroup) GetProjectNamespace() string {
+func (x *WatchedGitLabGroup) GetWorkspaceNamespace() string {
 	if x != nil {
-		return x.ProjectNamespace
+		return x.WorkspaceNamespace
 	}
 	return ""
 }
@@ -3492,20 +3492,20 @@ const file_services_gitlab_connector_proto_rawDesc = "" +
 	"\x13event_types_enabled\x18\x06 \x03(\tB\x04\xb8\xa8\x1d\x10R\x11eventTypesEnabled\x124\n" +
 	"\x16auto_register_webhooks\x18\a \x01(\bR\x14autoRegisterWebhooks\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x17\xa8\xaa\x1d\x01\xb2\xaa\x1d\x0fgitlabconnector\"\xa3\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x17ڪ\x1d\x13\b\x01\x12\x0fgitlabconnector\"\xab\x01\n" +
 	"\x12WatchedGitLabGroup\x12(\n" +
 	"\n" +
-	"group_path\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x04R\tgroupPath\x122\n" +
-	"\x11project_namespace\x18\x02 \x01(\tB\x05\x90\xa7\x1d\x80\x02R\x10projectNamespace\x12\x1a\n" +
+	"group_path\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x04R\tgroupPath\x12:\n" +
+	"\x13workspace_namespace\x18\x02 \x01(\tB\t\x90\xa7\x1d\x80\x02ت\x1d\x01R\x12workspaceNamespace\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9a\x02\n" +
 	"\x14GitLabConnectorState\x12^\n" +
 	"\x14last_poll_timestamps\x18\x01 \x03(\v2%.gitlabconnectorsvc.LastPollTimestampB\x05\xb8\xa8\x1d\x80 R\x12lastPollTimestamps\x12c\n" +
 	"\x15webhook_registrations\x18\x02 \x03(\v2'.gitlabconnectorsvc.WebhookRegistrationB\x05\xb8\xa8\x1d\x80 R\x14webhookRegistrations\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\f\x9a\xa8\x1d\b\x1a\x06kernel\"\xee\x01\n" +
-	"\x11LastPollTimestamp\x123\n" +
-	"\x10tenant_namespace\x18\x01 \x01(\tB\bе\x18\x01\x88\xa6\x1d\x01R\x0ftenantNamespace\x12(\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\f\x9a\xa8\x1d\b\x1a\x06kernel\"\xf2\x01\n" +
+	"\x11LastPollTimestamp\x127\n" +
+	"\x10tenant_namespace\x18\x01 \x01(\tB\fе\x18\x01\x88\xa6\x1d\x01ت\x1d\x01R\x0ftenantNamespace\x12(\n" +
 	"\n" +
 	"gitlab_url\x18\x02 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x04R\tgitlabUrl\x12'\n" +
 	"\n" +
@@ -3513,9 +3513,9 @@ const file_services_gitlab_connector_proto_rawDesc = "" +
 	"\flast_poll_ms\x18\x04 \x01(\x03R\n" +
 	"lastPollMs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa1\x02\n" +
-	"\x13WebhookRegistration\x123\n" +
-	"\x10tenant_namespace\x18\x01 \x01(\tB\bе\x18\x01\x88\xa6\x1d\x01R\x0ftenantNamespace\x12(\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa5\x02\n" +
+	"\x13WebhookRegistration\x127\n" +
+	"\x10tenant_namespace\x18\x01 \x01(\tB\fе\x18\x01\x88\xa6\x1d\x01ت\x1d\x01R\x0ftenantNamespace\x12(\n" +
 	"\n" +
 	"gitlab_url\x18\x02 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x04R\tgitlabUrl\x12'\n" +
 	"\n" +
@@ -3552,12 +3552,12 @@ const file_services_gitlab_connector_proto_rawDesc = "" +
 	"lastPollMs\x12-\n" +
 	"\x12webhook_registered\x18\x06 \x01(\bR\x11webhookRegistered\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb9\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xbb\x01\n" +
 	"\x1aGitlabconnectorConfigState\x12<\n" +
 	"\x06config\x18\x01 \x01(\v2\x1a.gitlabconnectorsvc.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:,\x9a\xa8\x1d$\n" +
-	"\x1aGitlabconnectorConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\"\xd0\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:.\x9a\xa8\x1d&\n" +
+	"\x1aGitlabconnectorConfigState\x1a\beventbus\xa0\xa8\x1d\x02\"\xd0\x01\n" +
 	"\n" +
 	"QueryValue\x12#\n" +
 	"\fstring_value\x18\x01 \x01(\tH\x00R\vstringValue\x12\x1d\n" +

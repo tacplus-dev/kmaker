@@ -129,25 +129,3 @@ message SmbCertRenew {
   // reason is a human-readable reason (e.g. "half-life reached").
   string reason = 1;
 }
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-enum TypeID {
-  TYPE_ID_UNSPECIFIED = 0;
-  TYPE_ID_SMB_CERT_CLIENT_MSG = 1;
-  TYPE_ID_SMB_CERT_INIT = 2;
-  TYPE_ID_SMB_CERT_CSR = 3;
-  TYPE_ID_SMB_CERT_SERVER_MSG = 4;
-  TYPE_ID_SMB_CERT_DELIVERY = 5;
-  TYPE_ID_SMB_CERT_RENEW = 6;
-}
-
-enum SmbCertServiceRpcId {
-  SMB_CERT_SERVICE_RPC_ID_UNSPECIFIED = 0;
-  SMB_CERT_SERVICE_RPC_ID_ALL_ACCESSORS = 1;
-  SMB_CERT_SERVICE_RPC_ID_ALL_MUTATORS = 2;
-  SMB_CERT_SERVICE_RPC_ID_ALL_EXECUTORS = 3;
-  SMB_CERT_SERVICE_RPC_ID_MANAGE_SMB_CERT = 4;
-}

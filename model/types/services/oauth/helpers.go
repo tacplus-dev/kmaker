@@ -319,13 +319,13 @@ func SessionRpcIdValues() []SessionRpcId {
 		SessionRpcId_SESSION_RPC_ID_ALL_ACCESSORS,
 		SessionRpcId_SESSION_RPC_ID_ALL_MUTATORS,
 		SessionRpcId_SESSION_RPC_ID_ALL_EXECUTORS,
-		SessionRpcId_SESSION_RPC_ID_SESSION,
+		SessionRpcId_SESSION_RPC_ID_BROKER_SESSION,
 	}
 }
 
 // SessionRpcIdStringValues returns all valid SessionRpcId names as strings
 func SessionRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "session"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "broker-session"}
 }
 
 // ParseSessionRpcId converts a string to a SessionRpcId enum value
@@ -342,8 +342,8 @@ func ParseSessionRpcId(s string) (SessionRpcId, error) {
 		return SessionRpcId_SESSION_RPC_ID_ALL_MUTATORS, nil
 	case "all-executors", "session-rpc-id-all-executors":
 		return SessionRpcId_SESSION_RPC_ID_ALL_EXECUTORS, nil
-	case "session", "session-rpc-id-session":
-		return SessionRpcId_SESSION_RPC_ID_SESSION, nil
+	case "broker-session", "session-rpc-id-broker-session":
+		return SessionRpcId_SESSION_RPC_ID_BROKER_SESSION, nil
 	default:
 		return SessionRpcId_SESSION_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid sessionrpcid %s, expecting one of: %v", s, SessionRpcIdStringValues())
 	}
@@ -380,8 +380,8 @@ func SessionRpcIdToString(v SessionRpcId) string {
 		return "all-mutators"
 	case SessionRpcId_SESSION_RPC_ID_ALL_EXECUTORS:
 		return "all-executors"
-	case SessionRpcId_SESSION_RPC_ID_SESSION:
-		return "session"
+	case SessionRpcId_SESSION_RPC_ID_BROKER_SESSION:
+		return "broker-session"
 	default:
 		return ""
 	}
@@ -410,8 +410,8 @@ func ParseSessionRpcIdLiberal(s string) SessionRpcId {
 		return SessionRpcId_SESSION_RPC_ID_ALL_MUTATORS
 	case "all-executors", "session-rpc-id-all-executors":
 		return SessionRpcId_SESSION_RPC_ID_ALL_EXECUTORS
-	case "session", "session-rpc-id-session":
-		return SessionRpcId_SESSION_RPC_ID_SESSION
+	case "broker-session", "session-rpc-id-broker-session":
+		return SessionRpcId_SESSION_RPC_ID_BROKER_SESSION
 	default:
 		return SessionRpcId_SESSION_RPC_ID_UNSPECIFIED
 	}
@@ -428,8 +428,8 @@ func SessionRpcIdToSpecName(v SessionRpcId) string {
 		return "SESSION_RPC_ID_ALL_MUTATORS"
 	case SessionRpcId_SESSION_RPC_ID_ALL_EXECUTORS:
 		return "SESSION_RPC_ID_ALL_EXECUTORS"
-	case SessionRpcId_SESSION_RPC_ID_SESSION:
-		return "SESSION_RPC_ID_SESSION"
+	case SessionRpcId_SESSION_RPC_ID_BROKER_SESSION:
+		return "SESSION_RPC_ID_BROKER_SESSION"
 	default:
 		return ""
 	}
@@ -443,15 +443,15 @@ func AuthRpcIdValues() []AuthRpcId {
 		AuthRpcId_AUTH_RPC_ID_ALL_EXECUTORS,
 		AuthRpcId_AUTH_RPC_ID_LIST_PROVIDERS,
 		AuthRpcId_AUTH_RPC_ID_AUTHORIZE,
-		AuthRpcId_AUTH_RPC_ID_CALLBACK,
-		AuthRpcId_AUTH_RPC_ID_LOGOUT,
-		AuthRpcId_AUTH_RPC_ID_COMPLETE_CLI_AUTH,
+		AuthRpcId_AUTH_RPC_ID_MINT_CALLBACK_TOKENS,
+		AuthRpcId_AUTH_RPC_ID_REVOKE_SESSION,
+		AuthRpcId_AUTH_RPC_ID_BROKER_CLI_AUTH,
 	}
 }
 
 // AuthRpcIdStringValues returns all valid AuthRpcId names as strings
 func AuthRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "list-providers", "authorize", "callback", "logout", "complete-cli-auth"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "list-providers", "authorize", "mint-callback-tokens", "revoke-session", "broker-cli-auth"}
 }
 
 // ParseAuthRpcId converts a string to a AuthRpcId enum value
@@ -472,12 +472,12 @@ func ParseAuthRpcId(s string) (AuthRpcId, error) {
 		return AuthRpcId_AUTH_RPC_ID_LIST_PROVIDERS, nil
 	case "authorize", "auth-rpc-id-authorize":
 		return AuthRpcId_AUTH_RPC_ID_AUTHORIZE, nil
-	case "callback", "auth-rpc-id-callback":
-		return AuthRpcId_AUTH_RPC_ID_CALLBACK, nil
-	case "logout", "auth-rpc-id-logout":
-		return AuthRpcId_AUTH_RPC_ID_LOGOUT, nil
-	case "complete-cli-auth", "auth-rpc-id-complete-cli-auth":
-		return AuthRpcId_AUTH_RPC_ID_COMPLETE_CLI_AUTH, nil
+	case "mint-callback-tokens", "auth-rpc-id-mint-callback-tokens":
+		return AuthRpcId_AUTH_RPC_ID_MINT_CALLBACK_TOKENS, nil
+	case "revoke-session", "auth-rpc-id-revoke-session":
+		return AuthRpcId_AUTH_RPC_ID_REVOKE_SESSION, nil
+	case "broker-cli-auth", "auth-rpc-id-broker-cli-auth":
+		return AuthRpcId_AUTH_RPC_ID_BROKER_CLI_AUTH, nil
 	default:
 		return AuthRpcId_AUTH_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid authrpcid %s, expecting one of: %v", s, AuthRpcIdStringValues())
 	}
@@ -518,12 +518,12 @@ func AuthRpcIdToString(v AuthRpcId) string {
 		return "list-providers"
 	case AuthRpcId_AUTH_RPC_ID_AUTHORIZE:
 		return "authorize"
-	case AuthRpcId_AUTH_RPC_ID_CALLBACK:
-		return "callback"
-	case AuthRpcId_AUTH_RPC_ID_LOGOUT:
-		return "logout"
-	case AuthRpcId_AUTH_RPC_ID_COMPLETE_CLI_AUTH:
-		return "complete-cli-auth"
+	case AuthRpcId_AUTH_RPC_ID_MINT_CALLBACK_TOKENS:
+		return "mint-callback-tokens"
+	case AuthRpcId_AUTH_RPC_ID_REVOKE_SESSION:
+		return "revoke-session"
+	case AuthRpcId_AUTH_RPC_ID_BROKER_CLI_AUTH:
+		return "broker-cli-auth"
 	default:
 		return ""
 	}
@@ -556,12 +556,12 @@ func ParseAuthRpcIdLiberal(s string) AuthRpcId {
 		return AuthRpcId_AUTH_RPC_ID_LIST_PROVIDERS
 	case "authorize", "auth-rpc-id-authorize":
 		return AuthRpcId_AUTH_RPC_ID_AUTHORIZE
-	case "callback", "auth-rpc-id-callback":
-		return AuthRpcId_AUTH_RPC_ID_CALLBACK
-	case "logout", "auth-rpc-id-logout":
-		return AuthRpcId_AUTH_RPC_ID_LOGOUT
-	case "complete-cli-auth", "auth-rpc-id-complete-cli-auth":
-		return AuthRpcId_AUTH_RPC_ID_COMPLETE_CLI_AUTH
+	case "mint-callback-tokens", "auth-rpc-id-mint-callback-tokens":
+		return AuthRpcId_AUTH_RPC_ID_MINT_CALLBACK_TOKENS
+	case "revoke-session", "auth-rpc-id-revoke-session":
+		return AuthRpcId_AUTH_RPC_ID_REVOKE_SESSION
+	case "broker-cli-auth", "auth-rpc-id-broker-cli-auth":
+		return AuthRpcId_AUTH_RPC_ID_BROKER_CLI_AUTH
 	default:
 		return AuthRpcId_AUTH_RPC_ID_UNSPECIFIED
 	}
@@ -582,12 +582,12 @@ func AuthRpcIdToSpecName(v AuthRpcId) string {
 		return "AUTH_RPC_ID_LIST_PROVIDERS"
 	case AuthRpcId_AUTH_RPC_ID_AUTHORIZE:
 		return "AUTH_RPC_ID_AUTHORIZE"
-	case AuthRpcId_AUTH_RPC_ID_CALLBACK:
-		return "AUTH_RPC_ID_CALLBACK"
-	case AuthRpcId_AUTH_RPC_ID_LOGOUT:
-		return "AUTH_RPC_ID_LOGOUT"
-	case AuthRpcId_AUTH_RPC_ID_COMPLETE_CLI_AUTH:
-		return "AUTH_RPC_ID_COMPLETE_CLI_AUTH"
+	case AuthRpcId_AUTH_RPC_ID_MINT_CALLBACK_TOKENS:
+		return "AUTH_RPC_ID_MINT_CALLBACK_TOKENS"
+	case AuthRpcId_AUTH_RPC_ID_REVOKE_SESSION:
+		return "AUTH_RPC_ID_REVOKE_SESSION"
+	case AuthRpcId_AUTH_RPC_ID_BROKER_CLI_AUTH:
+		return "AUTH_RPC_ID_BROKER_CLI_AUTH"
 	default:
 		return ""
 	}
@@ -5071,11 +5071,6 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate SessionTimeoutSeconds (assert_duration: POSITIVE)
-	if m.SessionTimeoutSeconds <= 0 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field SessionTimeoutSeconds must be positive (> 0), got: %d", m.SessionTimeoutSeconds)
-	}
-
 	// Validate SessionTimeoutSeconds (assert_duration_min: 30)
 	if m.SessionTimeoutSeconds < 30 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SessionTimeoutSeconds must be >= 30, got: %d", m.SessionTimeoutSeconds)
@@ -5084,6 +5079,11 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 	// Validate SessionTimeoutSeconds (assert_duration_max: 600)
 	if m.SessionTimeoutSeconds > 600 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SessionTimeoutSeconds must be <= 600, got: %d", m.SessionTimeoutSeconds)
+	}
+
+	// Validate SessionTimeoutSeconds (assert_duration: POSITIVE)
+	if m.SessionTimeoutSeconds <= 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SessionTimeoutSeconds must be positive (> 0), got: %d", m.SessionTimeoutSeconds)
 	}
 
 	// Validate RefreshTokenLifetimeSeconds (assert_duration: POSITIVE)
@@ -5126,11 +5126,6 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Providers exceeds max size of 16, got: %d", len(m.Providers))
 	}
 
-	// Validate NonceExpireSeconds (assert_duration: POSITIVE)
-	if m.NonceExpireSeconds <= 0 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field NonceExpireSeconds must be positive (> 0), got: %d", m.NonceExpireSeconds)
-	}
-
 	// Validate NonceExpireSeconds (assert_duration_min: 1)
 	if m.NonceExpireSeconds < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field NonceExpireSeconds must be >= 1, got: %d", m.NonceExpireSeconds)
@@ -5139,6 +5134,11 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 	// Validate NonceExpireSeconds (assert_duration_max: 86400)
 	if m.NonceExpireSeconds > 86400 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field NonceExpireSeconds must be <= 86400, got: %d", m.NonceExpireSeconds)
+	}
+
+	// Validate NonceExpireSeconds (assert_duration: POSITIVE)
+	if m.NonceExpireSeconds <= 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NonceExpireSeconds must be positive (> 0), got: %d", m.NonceExpireSeconds)
 	}
 
 	// Validate JwkRefetchIntervalSeconds (assert_duration: POSITIVE)
@@ -5505,6 +5505,16 @@ func ValidateProviderInfoWithDepth(m *ProviderInfo, depth int) error {
 	// Validate Name (assert_min_length: 1)
 	if len(m.Name) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Name must be at least 1 characters, got: %d", len(m.Name))
+	}
+
+	// Validate Name (assert_max_length: 128)
+	if len(m.Name) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Name must be at most 128 characters, got: %d", len(m.Name))
+	}
+
+	// Validate Domains (assert_max_length: 253)
+	if len(m.Domains) > 253 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Domains must be at most 253 characters, got: %d", len(m.Domains))
 	}
 
 	// Validate Domains (assert_max_size: 32)
@@ -6096,14 +6106,14 @@ func ValidateClaimMatcherWithDepth(m *ClaimMatcher, depth int) error {
 		}
 	}
 
-	// Validate ClaimKey (assert_required)
-	if m.ClaimKey == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ClaimKey is required")
-	}
-
 	// Validate ClaimKey (assert_min_length: 1)
 	if len(m.ClaimKey) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ClaimKey must be at least 1 characters, got: %d", len(m.ClaimKey))
+	}
+
+	// Validate ClaimKey (assert_required)
+	if m.ClaimKey == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ClaimKey is required")
 	}
 
 	// Validate ClaimValue (assert_required)

@@ -331,19 +331,19 @@ func (TypeID) EnumDescriptor() ([]byte, []int) {
 type DaemonControlRpcId int32
 
 const (
-	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_UNSPECIFIED       DaemonControlRpcId = 0
-	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_ALL_ACCESSORS     DaemonControlRpcId = 1
-	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_ALL_MUTATORS      DaemonControlRpcId = 2
-	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_ALL_EXECUTORS     DaemonControlRpcId = 3
-	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_AUTH              DaemonControlRpcId = 4
-	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_PING              DaemonControlRpcId = 5
-	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_STATUS            DaemonControlRpcId = 6
-	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_WATCH_STATUS      DaemonControlRpcId = 7
-	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_RESET_PROXY_STATS DaemonControlRpcId = 8
-	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_TOKEN         DaemonControlRpcId = 9
-	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_PROXY_ENV     DaemonControlRpcId = 10
-	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_REFRESH_TOKEN DaemonControlRpcId = 11
-	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_SET_REFRESH_TOKEN DaemonControlRpcId = 12
+	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_UNSPECIFIED          DaemonControlRpcId = 0
+	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_ALL_ACCESSORS        DaemonControlRpcId = 1
+	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_ALL_MUTATORS         DaemonControlRpcId = 2
+	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_ALL_EXECUTORS        DaemonControlRpcId = 3
+	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_BROKER_AUTH          DaemonControlRpcId = 4
+	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_PING                 DaemonControlRpcId = 5
+	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_STATUS           DaemonControlRpcId = 6
+	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_SUBSCRIBE_STATUS     DaemonControlRpcId = 7
+	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_RESET_PROXY_STATS    DaemonControlRpcId = 8
+	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_TOKEN            DaemonControlRpcId = 9
+	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_PROXY_ENV        DaemonControlRpcId = 10
+	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_REFRESH_TOKEN    DaemonControlRpcId = 11
+	DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_UPDATE_REFRESH_TOKEN DaemonControlRpcId = 12
 )
 
 // Enum value maps for DaemonControlRpcId.
@@ -353,30 +353,30 @@ var (
 		1:  "DAEMON_CONTROL_RPC_ID_ALL_ACCESSORS",
 		2:  "DAEMON_CONTROL_RPC_ID_ALL_MUTATORS",
 		3:  "DAEMON_CONTROL_RPC_ID_ALL_EXECUTORS",
-		4:  "DAEMON_CONTROL_RPC_ID_AUTH",
+		4:  "DAEMON_CONTROL_RPC_ID_BROKER_AUTH",
 		5:  "DAEMON_CONTROL_RPC_ID_PING",
-		6:  "DAEMON_CONTROL_RPC_ID_STATUS",
-		7:  "DAEMON_CONTROL_RPC_ID_WATCH_STATUS",
+		6:  "DAEMON_CONTROL_RPC_ID_GET_STATUS",
+		7:  "DAEMON_CONTROL_RPC_ID_SUBSCRIBE_STATUS",
 		8:  "DAEMON_CONTROL_RPC_ID_RESET_PROXY_STATS",
 		9:  "DAEMON_CONTROL_RPC_ID_GET_TOKEN",
 		10: "DAEMON_CONTROL_RPC_ID_GET_PROXY_ENV",
 		11: "DAEMON_CONTROL_RPC_ID_GET_REFRESH_TOKEN",
-		12: "DAEMON_CONTROL_RPC_ID_SET_REFRESH_TOKEN",
+		12: "DAEMON_CONTROL_RPC_ID_UPDATE_REFRESH_TOKEN",
 	}
 	DaemonControlRpcId_value = map[string]int32{
-		"DAEMON_CONTROL_RPC_ID_UNSPECIFIED":       0,
-		"DAEMON_CONTROL_RPC_ID_ALL_ACCESSORS":     1,
-		"DAEMON_CONTROL_RPC_ID_ALL_MUTATORS":      2,
-		"DAEMON_CONTROL_RPC_ID_ALL_EXECUTORS":     3,
-		"DAEMON_CONTROL_RPC_ID_AUTH":              4,
-		"DAEMON_CONTROL_RPC_ID_PING":              5,
-		"DAEMON_CONTROL_RPC_ID_STATUS":            6,
-		"DAEMON_CONTROL_RPC_ID_WATCH_STATUS":      7,
-		"DAEMON_CONTROL_RPC_ID_RESET_PROXY_STATS": 8,
-		"DAEMON_CONTROL_RPC_ID_GET_TOKEN":         9,
-		"DAEMON_CONTROL_RPC_ID_GET_PROXY_ENV":     10,
-		"DAEMON_CONTROL_RPC_ID_GET_REFRESH_TOKEN": 11,
-		"DAEMON_CONTROL_RPC_ID_SET_REFRESH_TOKEN": 12,
+		"DAEMON_CONTROL_RPC_ID_UNSPECIFIED":          0,
+		"DAEMON_CONTROL_RPC_ID_ALL_ACCESSORS":        1,
+		"DAEMON_CONTROL_RPC_ID_ALL_MUTATORS":         2,
+		"DAEMON_CONTROL_RPC_ID_ALL_EXECUTORS":        3,
+		"DAEMON_CONTROL_RPC_ID_BROKER_AUTH":          4,
+		"DAEMON_CONTROL_RPC_ID_PING":                 5,
+		"DAEMON_CONTROL_RPC_ID_GET_STATUS":           6,
+		"DAEMON_CONTROL_RPC_ID_SUBSCRIBE_STATUS":     7,
+		"DAEMON_CONTROL_RPC_ID_RESET_PROXY_STATS":    8,
+		"DAEMON_CONTROL_RPC_ID_GET_TOKEN":            9,
+		"DAEMON_CONTROL_RPC_ID_GET_PROXY_ENV":        10,
+		"DAEMON_CONTROL_RPC_ID_GET_REFRESH_TOKEN":    11,
+		"DAEMON_CONTROL_RPC_ID_UPDATE_REFRESH_TOKEN": 12,
 	}
 )
 
@@ -1826,6 +1826,7 @@ func (x *ResetProxyStatsRequest) GetNoop() bool {
 type ResetProxyStatsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ProxyStats    []*DaemonProxyStats    `protobuf:"bytes,1,rep,name=proxy_stats,json=proxyStats,proto3" json:"proxy_stats,omitempty"`
+	TimestampMs   int64                  `protobuf:"varint,2,opt,name=timestamp_ms,json=timestampMs,proto3" json:"timestamp_ms,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1867,6 +1868,13 @@ func (x *ResetProxyStatsResponse) GetProxyStats() []*DaemonProxyStats {
 		return x.ProxyStats
 	}
 	return nil
+}
+
+func (x *ResetProxyStatsResponse) GetTimestampMs() int64 {
+	if x != nil {
+		return x.TimestampMs
+	}
+	return 0
 }
 
 func (x *ResetProxyStatsResponse) GetTraceId() string {
@@ -2737,10 +2745,11 @@ const file_clients_cavalier_proto_rawDesc = "" +
 	"\vservice_ids\x18\x01 \x03(\tB\b\x90\xa7\x1d@\xb8\xa8\x1d@R\n" +
 	"serviceIds\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x8d\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb6\x01\n" +
 	"\x17ResetProxyStatsResponse\x12A\n" +
 	"\vproxy_stats\x18\x01 \x03(\v2\x1a.cavalier.DaemonProxyStatsB\x04\xb8\xa8\x1d@R\n" +
-	"proxyStats\x12\x1a\n" +
+	"proxyStats\x12'\n" +
+	"\ftimestamp_ms\x18\x02 \x01(\x03B\x04\xb0\xa7\x1d\x00R\vtimestampMs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"i\n" +
 	"\x0fGetTokenRequest\x12%\n" +
@@ -2846,38 +2855,39 @@ const file_clients_cavalier_proto_rawDesc = "" +
 	"!TYPE_ID_SET_REFRESH_TOKEN_REQUEST\x10\x16\x12&\n" +
 	"\"TYPE_ID_SET_REFRESH_TOKEN_RESPONSE\x10\x17\x12\x16\n" +
 	"\x12TYPE_ID_HOOK_EVENT\x10\x18\x12!\n" +
-	"\x1dTYPE_ID_PUBLISH_HOOK_RESPONSE\x10\x19*\x94\x04\n" +
+	"\x1dTYPE_ID_PUBLISH_HOOK_RESPONSE\x10\x19*\xa6\x04\n" +
 	"\x12DaemonControlRpcId\x12%\n" +
 	"!DAEMON_CONTROL_RPC_ID_UNSPECIFIED\x10\x00\x12'\n" +
 	"#DAEMON_CONTROL_RPC_ID_ALL_ACCESSORS\x10\x01\x12&\n" +
 	"\"DAEMON_CONTROL_RPC_ID_ALL_MUTATORS\x10\x02\x12'\n" +
-	"#DAEMON_CONTROL_RPC_ID_ALL_EXECUTORS\x10\x03\x12\x1e\n" +
-	"\x1aDAEMON_CONTROL_RPC_ID_AUTH\x10\x04\x12\x1e\n" +
-	"\x1aDAEMON_CONTROL_RPC_ID_PING\x10\x05\x12 \n" +
-	"\x1cDAEMON_CONTROL_RPC_ID_STATUS\x10\x06\x12&\n" +
-	"\"DAEMON_CONTROL_RPC_ID_WATCH_STATUS\x10\a\x12+\n" +
+	"#DAEMON_CONTROL_RPC_ID_ALL_EXECUTORS\x10\x03\x12%\n" +
+	"!DAEMON_CONTROL_RPC_ID_BROKER_AUTH\x10\x04\x12\x1e\n" +
+	"\x1aDAEMON_CONTROL_RPC_ID_PING\x10\x05\x12$\n" +
+	" DAEMON_CONTROL_RPC_ID_GET_STATUS\x10\x06\x12*\n" +
+	"&DAEMON_CONTROL_RPC_ID_SUBSCRIBE_STATUS\x10\a\x12+\n" +
 	"'DAEMON_CONTROL_RPC_ID_RESET_PROXY_STATS\x10\b\x12#\n" +
 	"\x1fDAEMON_CONTROL_RPC_ID_GET_TOKEN\x10\t\x12'\n" +
 	"#DAEMON_CONTROL_RPC_ID_GET_PROXY_ENV\x10\n" +
 	"\x12+\n" +
-	"'DAEMON_CONTROL_RPC_ID_GET_REFRESH_TOKEN\x10\v\x12+\n" +
-	"'DAEMON_CONTROL_RPC_ID_SET_REFRESH_TOKEN\x10\f*\xd7\x01\n" +
+	"'DAEMON_CONTROL_RPC_ID_GET_REFRESH_TOKEN\x10\v\x12.\n" +
+	"*DAEMON_CONTROL_RPC_ID_UPDATE_REFRESH_TOKEN\x10\f*\xd7\x01\n" +
 	"\x11HookReceiverRpcId\x12$\n" +
 	" HOOK_RECEIVER_RPC_ID_UNSPECIFIED\x10\x00\x12&\n" +
 	"\"HOOK_RECEIVER_RPC_ID_ALL_ACCESSORS\x10\x01\x12%\n" +
 	"!HOOK_RECEIVER_RPC_ID_ALL_MUTATORS\x10\x02\x12&\n" +
 	"\"HOOK_RECEIVER_RPC_ID_ALL_EXECUTORS\x10\x03\x12%\n" +
-	"!HOOK_RECEIVER_RPC_ID_PUBLISH_HOOK\x10\x042\xcb\x05\n" +
-	"\rDaemonControl\x12A\n" +
-	"\x04Auth\x12\x1b.cavalier.DaemonAuthRequest\x1a\x1c.cavalier.DaemonAuthResponse\x12A\n" +
-	"\x04Ping\x12\x1b.cavalier.DaemonPingRequest\x1a\x1c.cavalier.DaemonPingResponse\x12G\n" +
-	"\x06Status\x12\x1d.cavalier.DaemonStatusRequest\x1a\x1e.cavalier.DaemonStatusResponse\x12N\n" +
-	"\vWatchStatus\x12\x1d.cavalier.DaemonStatusRequest\x1a\x1e.cavalier.DaemonStatusResponse0\x01\x12V\n" +
+	"!HOOK_RECEIVER_RPC_ID_PUBLISH_HOOK\x10\x042\xdb\x05\n" +
+	"\rDaemonControl\x12G\n" +
+	"\n" +
+	"BrokerAuth\x12\x1b.cavalier.DaemonAuthRequest\x1a\x1c.cavalier.DaemonAuthResponse\x12A\n" +
+	"\x04Ping\x12\x1b.cavalier.DaemonPingRequest\x1a\x1c.cavalier.DaemonPingResponse\x12J\n" +
+	"\tGetStatus\x12\x1d.cavalier.DaemonStatusRequest\x1a\x1e.cavalier.DaemonStatusResponse\x12R\n" +
+	"\x0fSubscribeStatus\x12\x1d.cavalier.DaemonStatusRequest\x1a\x1e.cavalier.DaemonStatusResponse0\x01\x12V\n" +
 	"\x0fResetProxyStats\x12 .cavalier.ResetProxyStatsRequest\x1a!.cavalier.ResetProxyStatsResponse\x12A\n" +
 	"\bGetToken\x12\x19.cavalier.GetTokenRequest\x1a\x1a.cavalier.GetTokenResponse\x12J\n" +
 	"\vGetProxyEnv\x12\x1c.cavalier.GetProxyEnvRequest\x1a\x1d.cavalier.GetProxyEnvResponse\x12V\n" +
-	"\x0fGetRefreshToken\x12 .cavalier.GetRefreshTokenRequest\x1a!.cavalier.GetRefreshTokenResponse\x12V\n" +
-	"\x0fSetRefreshToken\x12 .cavalier.SetRefreshTokenRequest\x1a!.cavalier.SetRefreshTokenResponse\x1a\x04\xfa\x97\"\x002W\n" +
+	"\x0fGetRefreshToken\x12 .cavalier.GetRefreshTokenRequest\x1a!.cavalier.GetRefreshTokenResponse\x12Y\n" +
+	"\x12UpdateRefreshToken\x12 .cavalier.SetRefreshTokenRequest\x1a!.cavalier.SetRefreshTokenResponse\x1a\x04\xfa\x97\"\x002W\n" +
 	"\fHookReceiver\x12A\n" +
 	"\vPublishHook\x12\x13.cavalier.HookEvent\x1a\x1d.cavalier.PublishHookResponse\x1a\x04\xfa\x97\"\x00B\xb5\x02\x8a\xb5\x18\x15\n" +
 	"\bHOME_DIR\x12\t.cavalier\x8a\xb5\x18\x1a\n" +
@@ -2955,25 +2965,25 @@ var file_clients_cavalier_proto_depIdxs = []int32{
 	17, // 9: cavalier.DaemonStatusResponse.proxy_stats:type_name -> cavalier.DaemonProxyStats
 	17, // 10: cavalier.ResetProxyStatsResponse.proxy_stats:type_name -> cavalier.DaemonProxyStats
 	8,  // 11: cavalier.ProfileConfig.ProfilesEntry.value:type_name -> cavalier.Config
-	11, // 12: cavalier.DaemonControl.Auth:input_type -> cavalier.DaemonAuthRequest
+	11, // 12: cavalier.DaemonControl.BrokerAuth:input_type -> cavalier.DaemonAuthRequest
 	13, // 13: cavalier.DaemonControl.Ping:input_type -> cavalier.DaemonPingRequest
-	16, // 14: cavalier.DaemonControl.Status:input_type -> cavalier.DaemonStatusRequest
-	16, // 15: cavalier.DaemonControl.WatchStatus:input_type -> cavalier.DaemonStatusRequest
+	16, // 14: cavalier.DaemonControl.GetStatus:input_type -> cavalier.DaemonStatusRequest
+	16, // 15: cavalier.DaemonControl.SubscribeStatus:input_type -> cavalier.DaemonStatusRequest
 	19, // 16: cavalier.DaemonControl.ResetProxyStats:input_type -> cavalier.ResetProxyStatsRequest
 	21, // 17: cavalier.DaemonControl.GetToken:input_type -> cavalier.GetTokenRequest
 	23, // 18: cavalier.DaemonControl.GetProxyEnv:input_type -> cavalier.GetProxyEnvRequest
 	25, // 19: cavalier.DaemonControl.GetRefreshToken:input_type -> cavalier.GetRefreshTokenRequest
-	27, // 20: cavalier.DaemonControl.SetRefreshToken:input_type -> cavalier.SetRefreshTokenRequest
+	27, // 20: cavalier.DaemonControl.UpdateRefreshToken:input_type -> cavalier.SetRefreshTokenRequest
 	29, // 21: cavalier.HookReceiver.PublishHook:input_type -> cavalier.HookEvent
-	12, // 22: cavalier.DaemonControl.Auth:output_type -> cavalier.DaemonAuthResponse
+	12, // 22: cavalier.DaemonControl.BrokerAuth:output_type -> cavalier.DaemonAuthResponse
 	14, // 23: cavalier.DaemonControl.Ping:output_type -> cavalier.DaemonPingResponse
-	18, // 24: cavalier.DaemonControl.Status:output_type -> cavalier.DaemonStatusResponse
-	18, // 25: cavalier.DaemonControl.WatchStatus:output_type -> cavalier.DaemonStatusResponse
+	18, // 24: cavalier.DaemonControl.GetStatus:output_type -> cavalier.DaemonStatusResponse
+	18, // 25: cavalier.DaemonControl.SubscribeStatus:output_type -> cavalier.DaemonStatusResponse
 	20, // 26: cavalier.DaemonControl.ResetProxyStats:output_type -> cavalier.ResetProxyStatsResponse
 	22, // 27: cavalier.DaemonControl.GetToken:output_type -> cavalier.GetTokenResponse
 	24, // 28: cavalier.DaemonControl.GetProxyEnv:output_type -> cavalier.GetProxyEnvResponse
 	26, // 29: cavalier.DaemonControl.GetRefreshToken:output_type -> cavalier.GetRefreshTokenResponse
-	28, // 30: cavalier.DaemonControl.SetRefreshToken:output_type -> cavalier.SetRefreshTokenResponse
+	28, // 30: cavalier.DaemonControl.UpdateRefreshToken:output_type -> cavalier.SetRefreshTokenResponse
 	30, // 31: cavalier.HookReceiver.PublishHook:output_type -> cavalier.PublishHookResponse
 	22, // [22:32] is the sub-list for method output_type
 	12, // [12:22] is the sub-list for method input_type

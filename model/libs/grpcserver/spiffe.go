@@ -20,20 +20,12 @@ func IsAtOrBelow(caller, target string) bool {
 	if caller == "" || target == "" {
 		return false
 	}
-	prefix := wrapperSpiffe.Scheme + "://"
-	callerIsURI := strings.HasPrefix(caller, prefix)
-	targetIsURI := strings.HasPrefix(target, prefix)
-	if callerIsURI != targetIsURI {
-		// An identity URI and a bare namespace path are different universes.
-		return false
-	}
-	if callerIsURI {
-		c, err := wrapperSpiffe.ParseSpiffeID(caller)
-		if err != nil {
-			return false
-		}
-		t, err := wrapperSpiffe.ParseSpiffeID(target)
-		if err != nil {
+	c, cErr := wrapperSpiffe.ParseSpiffeID(caller)
+	t, tErr := wrapperSpiffe.ParseSpiffeID(target)
+	callerLooksURI := strings.Contains(caller, "://")
+	targetLooksURI := strings.Contains(target, "://")
+	if callerLooksURI || targetLooksURI {
+		if cErr != nil || tErr != nil {
 			return false
 		}
 		if c.TrustDomain != t.TrustDomain {

@@ -418,14 +418,14 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Connection is required")
 	}
 
-	// Validate CredPairId (assert_max_length: 128)
-	if len(m.CredPairId) > 128 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field CredPairId must be at most 128 characters, got: %d", len(m.CredPairId))
-	}
-
 	// Validate CredPairId (assert_required)
 	if m.CredPairId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field CredPairId is required")
+	}
+
+	// Validate CredPairId (assert_max_length: 128)
+	if len(m.CredPairId) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CredPairId must be at most 128 characters, got: %d", len(m.CredPairId))
 	}
 
 	// Validate Format (assert_enum_defined)

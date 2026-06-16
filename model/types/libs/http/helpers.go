@@ -177,119 +177,6 @@ func HttpMethodToSpecName(v HttpMethod) string {
 	}
 }
 
-// TypeIDValues returns all valid TypeID values (excluding UNDEFINED)
-func TypeIDValues() []TypeID {
-	return []TypeID{
-		TypeID_TYPE_ID_HTTP_HEADER,
-		TypeID_TYPE_ID_RAW_PROXY_REQUEST,
-		TypeID_TYPE_ID_RAW_PROXY_RESPONSE,
-	}
-}
-
-// TypeIDStringValues returns all valid TypeID names as strings
-func TypeIDStringValues() []string {
-	return []string{"http-header", "raw-proxy-request", "raw-proxy-response"}
-}
-
-// ParseTypeID converts a string to a TypeID enum value
-// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseTypeID(s string) (TypeID, error) {
-	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
-	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
-	switch normalized {
-	case "":
-		return TypeID_TYPE_ID_UNSPECIFIED, nil
-	case "http-header", "type-id-http-header":
-		return TypeID_TYPE_ID_HTTP_HEADER, nil
-	case "raw-proxy-request", "type-id-raw-proxy-request":
-		return TypeID_TYPE_ID_RAW_PROXY_REQUEST, nil
-	case "raw-proxy-response", "type-id-raw-proxy-response":
-		return TypeID_TYPE_ID_RAW_PROXY_RESPONSE, nil
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid typeid %s, expecting one of: %v", s, TypeIDStringValues())
-	}
-}
-
-// ParseTypeIDs converts a comma-separated string to a slice of TypeID enum values
-// Returns an error if any value is invalid
-func ParseTypeIDs(s string) ([]TypeID, error) {
-	if s == "" {
-		return nil, nil
-	}
-	parts := strings.Split(s, ",")
-	result := make([]TypeID, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed == "" {
-			continue
-		}
-		val, err := ParseTypeID(trimmed)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, val)
-	}
-	return result, nil
-}
-
-// TypeIDToString converts a TypeID to its lowercase string representation
-func TypeIDToString(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_HTTP_HEADER:
-		return "http-header"
-	case TypeID_TYPE_ID_RAW_PROXY_REQUEST:
-		return "raw-proxy-request"
-	case TypeID_TYPE_ID_RAW_PROXY_RESPONSE:
-		return "raw-proxy-response"
-	default:
-		return ""
-	}
-}
-
-// ParseTypeIDLiberal parses a TypeID liberally, accepting:
-// - Integer values (as string or int)
-// - Enum names in any case
-// - RFC-compliant JSON names
-func ParseTypeIDLiberal(s string) TypeID {
-	if s == "" {
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-	// Try parsing as integer
-	if num, err := strconv.Atoi(s); err == nil {
-		return TypeID(num)
-	}
-	// Normalize and try parsing
-	normalized := strings.ToLower(strings.TrimSpace(s))
-	normalized = strings.ReplaceAll(normalized, "_", "-")
-	normalized = strings.ReplaceAll(normalized, " ", "-")
-	switch normalized {
-	case "http-header", "type-id-http-header":
-		return TypeID_TYPE_ID_HTTP_HEADER
-	case "raw-proxy-request", "type-id-raw-proxy-request":
-		return TypeID_TYPE_ID_RAW_PROXY_REQUEST
-	case "raw-proxy-response", "type-id-raw-proxy-response":
-		return TypeID_TYPE_ID_RAW_PROXY_RESPONSE
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-}
-
-// TypeIDToSpecName converts a TypeID to its canonical protobuf spec name
-func TypeIDToSpecName(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_UNSPECIFIED:
-		return "TYPE_ID_UNSPECIFIED"
-	case TypeID_TYPE_ID_HTTP_HEADER:
-		return "TYPE_ID_HTTP_HEADER"
-	case TypeID_TYPE_ID_RAW_PROXY_REQUEST:
-		return "TYPE_ID_RAW_PROXY_REQUEST"
-	case TypeID_TYPE_ID_RAW_PROXY_RESPONSE:
-		return "TYPE_ID_RAW_PROXY_RESPONSE"
-	default:
-		return ""
-	}
-}
-
 // ============================================================
 // JSON/YAML/TOML Serialization Helpers
 // ============================================================
@@ -949,14 +836,14 @@ func ValidateHttpHeaderWithDepth(m *HttpHeader, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Name (assert_required)
-	if m.Name == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Name is required")
-	}
-
 	// Validate Name (assert_max_length: 256)
 	if len(m.Name) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Name must be at most 256 characters, got: %d", len(m.Name))
+	}
+
+	// Validate Name (assert_required)
+	if m.Name == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Name is required")
 	}
 
 	// Validate Value (assert_max_length: 8192)
@@ -1003,6 +890,11 @@ func ValidateRawProxyRequestWithDepth(m *RawProxyRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Method must be defined")
 	}
 
+	// Validate Path (assert_max_length: 4096)
+	if len(m.Path) > 4096 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Path must be at most 4096 characters, got: %d", len(m.Path))
+	}
+
 	// Validate Path (assert_required)
 	if m.Path == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Path is required")
@@ -1011,11 +903,6 @@ func ValidateRawProxyRequestWithDepth(m *RawProxyRequest, depth int) error {
 	// Validate Path (assert_min_length: 1)
 	if len(m.Path) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Path must be at least 1 characters, got: %d", len(m.Path))
-	}
-
-	// Validate Path (assert_max_length: 4096)
-	if len(m.Path) > 4096 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Path must be at most 4096 characters, got: %d", len(m.Path))
 	}
 
 	// Validate Headers (assert_max_size: 64)
@@ -1093,13 +980,13 @@ func ValidateRawProxyResponseWithDepth(m *RawProxyResponse, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate StatusCode (assert_le: 599)
-	if m.StatusCode > 599 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field StatusCode must be <= 599, got: %v", m.StatusCode)
-	}
 	// Validate StatusCode (assert_ge: 100)
 	if m.StatusCode < 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field StatusCode must be >= 100, got: %v", m.StatusCode)
+	}
+	// Validate StatusCode (assert_le: 599)
+	if m.StatusCode > 599 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field StatusCode must be <= 599, got: %v", m.StatusCode)
 	}
 	// Validate Headers (assert_max_size: 256)
 	if len(m.Headers) > 256 {

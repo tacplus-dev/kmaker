@@ -8,163 +8,278 @@
 // is byte-identical across the platform.
 package spiffe
 
-import "testing"
+import (
+	"encoding/json"
+	"os"
+	"path/filepath"
+	"testing"
+)
 
-func TestConstructionVectors(t *testing.T) {
+type sharedSpiffeVectors struct {
+	SchemeVersion string `json:"scheme_version"`
+	Construction  struct {
+		Service struct {
+			TrustDomain string `json:"trust_domain"`
+			Location    string `json:"location"`
+			Service     string `json:"service"`
+			Expect      string `json:"expect"`
+		} `json:"service"`
+		Workload struct {
+			Parent string `json:"parent"`
+			Child  string `json:"child"`
+			Expect string `json:"expect"`
+		} `json:"workload"`
+		Tenant struct {
+			TrustDomain string `json:"trust_domain"`
+			Tenant      string `json:"tenant"`
+			Expect      string `json:"expect"`
+		} `json:"tenant"`
+		Workspace struct {
+			TrustDomain string   `json:"trust_domain"`
+			Tenant      string   `json:"tenant"`
+			Workspace   []string `json:"workspace"`
+			Expect      string   `json:"expect"`
+		} `json:"workspace"`
+		Namespace struct {
+			TrustDomain string `json:"trust_domain"`
+			Namespace   string `json:"namespace"`
+			Expect      string `json:"expect"`
+		} `json:"namespace"`
+		User struct {
+			TrustDomain string `json:"trust_domain"`
+			Namespace   string `json:"namespace"`
+			StableUser  string `json:"stable_user"`
+			Expect      string `json:"expect"`
+		} `json:"user"`
+		Resource struct {
+			TrustDomain string `json:"trust_domain"`
+			Namespace   string `json:"namespace"`
+			Kind        string `json:"kind"`
+			ID          string `json:"id"`
+			Expect      string `json:"expect"`
+		} `json:"resource"`
+	} `json:"construction"`
+	Parse []struct {
+		Input        string `json:"input"`
+		TrustDomain  string `json:"trust_domain"`
+		SubjectKind  string `json:"subject_kind"`
+		LocationPath string `json:"location_path"`
+		Namespace    string `json:"namespace"`
+		SubjectPath  string `json:"subject_path"`
+		ResourceKind string `json:"resource_kind"`
+		ResourceID   string `json:"resource_id"`
+	} `json:"parse"`
+	RoundTrip  []string `json:"round_trip"`
+	Comparison struct {
+		IsAtOrBelow []struct {
+			Caller string `json:"caller"`
+			Target string `json:"target"`
+			Expect bool   `json:"expect"`
+		} `json:"is_at_or_below"`
+		SameTrustDomain []struct {
+			A      string `json:"a"`
+			B      string `json:"b"`
+			Expect bool   `json:"expect"`
+		} `json:"same_trust_domain"`
+		ServicePathLocationAgnostic []struct {
+			Input  string `json:"input"`
+			Expect string `json:"expect"`
+		} `json:"service_path_location_agnostic"`
+	} `json:"comparison"`
+	Normalization struct {
+		TrustDomain []struct {
+			Input  string `json:"input"`
+			Expect string `json:"expect"`
+		} `json:"trust_domain"`
+		Namespace []struct {
+			Input  string `json:"input"`
+			Expect string `json:"expect"`
+		} `json:"namespace"`
+	} `json:"normalization"`
+	InvalidParse     []string `json:"invalid_parse"`
+	InvalidConstruct []struct {
+		Fn   string   `json:"fn"`
+		Args []string `json:"args"`
+	} `json:"invalid_construct"`
+	ValidConstruct []struct {
+		Fn     string   `json:"fn"`
+		Args   []string `json:"args"`
+		Expect string   `json:"expect"`
+	} `json:"valid_construct"`
+	OpaqueSegment struct {
+		Length int `json:"length"`
+	} `json:"opaque_segment"`
+}
+
+func loadSharedSpiffeVectors(t *testing.T) sharedSpiffeVectors {
+	t.Helper()
+	var candidates []string
+	if override := os.Getenv("SPIFFE_VECTOR_FIXTURE"); override != "" {
+		candidates = append(candidates, override)
+	}
+	if cwd, err := os.Getwd(); err == nil {
+		for dir := cwd; ; dir = filepath.Dir(dir) {
+			candidates = append(candidates, filepath.Join(dir, "cross-test", "fixtures", "spiffe_vectors.json"))
+			parent := filepath.Dir(dir)
+			if parent == dir {
+				break
+			}
+		}
+	}
+	for _, path := range candidates {
+		data, err := os.ReadFile(path)
+		if err != nil {
+			continue
+		}
+		var vectors sharedSpiffeVectors
+		if err := json.Unmarshal(data, &vectors); err != nil {
+			t.Fatalf("parse shared SPIFFE vector fixture %s: %v", path, err)
+		}
+		return vectors
+	}
+	t.Skipf("shared SPIFFE vector fixture not found; set SPIFFE_VECTOR_FIXTURE")
+	return sharedSpiffeVectors{}
+}
+
+func TestSharedFixtureVectors(t *testing.T) {
+	v := loadSharedSpiffeVectors(t)
+	if v.SchemeVersion != SchemeVersion {
+		t.Fatalf("scheme_version = %q, want %q", v.SchemeVersion, SchemeVersion)
+	}
 	mustEq := func(name, got string, err error, want string) {
 		t.Helper()
 		if err != nil {
 			t.Fatalf("%s: unexpected error: %v", name, err)
 		}
 		if got != want {
-			t.Errorf("%s = %q, want %q", name, got, want)
+			t.Fatalf("%s = %q, want %q", name, got, want)
 		}
 	}
+	got, err := ServiceSpiffeID(v.Construction.Service.TrustDomain, v.Construction.Service.Location, v.Construction.Service.Service)
+	mustEq("fixture.construction.service", got, err, v.Construction.Service.Expect)
+	got, err = WorkloadSpiffeID(v.Construction.Workload.Parent, v.Construction.Workload.Child)
+	mustEq("fixture.construction.workload", got, err, v.Construction.Workload.Expect)
+	got, err = TenantSpiffeID(v.Construction.Tenant.TrustDomain, v.Construction.Tenant.Tenant)
+	mustEq("fixture.construction.tenant", got, err, v.Construction.Tenant.Expect)
+	got, err = WorkspaceSpiffeID(v.Construction.Workspace.TrustDomain, v.Construction.Workspace.Tenant, v.Construction.Workspace.Workspace...)
+	mustEq("fixture.construction.workspace", got, err, v.Construction.Workspace.Expect)
+	got, err = NamespaceSpiffeID(v.Construction.Namespace.TrustDomain, v.Construction.Namespace.Namespace)
+	mustEq("fixture.construction.namespace", got, err, v.Construction.Namespace.Expect)
+	got, err = UserSpiffeID(v.Construction.User.TrustDomain, v.Construction.User.Namespace, v.Construction.User.StableUser)
+	mustEq("fixture.construction.user", got, err, v.Construction.User.Expect)
+	got, err = ResourceSpiffeID(v.Construction.Resource.TrustDomain, v.Construction.Resource.Namespace, v.Construction.Resource.Kind, v.Construction.Resource.ID)
+	mustEq("fixture.construction.resource", got, err, v.Construction.Resource.Expect)
 
-	id, err := ServiceSpiffeID("example.com", "aws/us-east-1a/cluster-7/team-a", "mcp")
-	mustEq("service", id, err, "spiffe://example.com/system/aws/us-east-1a/cluster-7/team-a/services/mcp")
-
-	wl, err := WorkloadSpiffeID("spiffe://example.com/system/aws/us-east-1a/cluster-7/team-a/services/mcp", "agent-42")
-	mustEq("workload", wl, err, "spiffe://example.com/system/aws/us-east-1a/cluster-7/team-a/services/mcp/workloads/agent-42")
-
-	ns, err := NamespaceSpiffeID("example.com", "/tenants/acme/workspaces/dev")
-	mustEq("namespace", ns, err, "spiffe://example.com/tenants/acme/workspaces/dev")
-
-	u, err := UserSpiffeID("example.com", "/tenants/acme/workspaces/dev", "jody")
-	mustEq("user", u, err, "spiffe://example.com/tenants/acme/workspaces/dev/users/jody")
-
-	r, err := ResourceSpiffeID("example.com", "/tenants/acme/workspaces/dev", "gitlab-event", "evt-1")
-	mustEq("resource", r, err, "spiffe://example.com/tenants/acme/workspaces/dev/data/gitlab-event/evt-1")
-
-	tn, err := TenantSpiffeID("example.com", "acme")
-	mustEq("tenant", tn, err, "spiffe://example.com/tenants/acme")
-
-	ws, err := WorkspaceSpiffeID("example.com", "acme", "dev")
-	mustEq("workspace", ws, err, "spiffe://example.com/tenants/acme/workspaces/dev")
-}
-
-func TestParseVectors(t *testing.T) {
-	p, err := ParseSpiffeID("spiffe://example.com/system/aws/us-east-1a/cluster-7/team-a/services/mcp")
-	if err != nil {
-		t.Fatal(err)
+	wantKind := map[string]SubjectKind{
+		"service":  KindService,
+		"workload": KindWorkload,
+		"user":     KindUser,
+		"resource": KindResource,
 	}
-	if p.TrustDomain != "example.com" || p.SubjectKind != KindService ||
-		p.LocationPath != "aws/us-east-1a/cluster-7/team-a" || p.SubjectPath != "mcp" {
-		t.Errorf("service parse = %+v", p)
-	}
-
-	p, err = ParseSpiffeID("spiffe://example.com/system/aws/us-east-1a/cluster-7/team-a/services/mcp/workloads/agent-42")
-	if err != nil || p.SubjectKind != KindWorkload || p.SubjectPath != "mcp/workloads/agent-42" {
-		t.Errorf("workload parse = %+v err=%v", p, err)
-	}
-
-	p, err = ParseSpiffeID("spiffe://example.com/tenants/acme/workspaces/dev/users/jody")
-	if err != nil || p.SubjectKind != KindUser || p.Namespace != "/tenants/acme/workspaces/dev" || p.SubjectPath != "jody" {
-		t.Errorf("user parse = %+v err=%v", p, err)
-	}
-
-	p, err = ParseSpiffeID("spiffe://example.com/tenants/acme/workspaces/dev/data/gitlab-event/evt-1")
-	if err != nil || p.SubjectKind != KindResource || p.ResourceKind != "gitlab-event" || p.ResourceID != "evt-1" {
-		t.Errorf("resource parse = %+v err=%v", p, err)
-	}
-}
-
-func TestRoundTrip(t *testing.T) {
-	constructed := []string{
-		"spiffe://example.com/system/aws/us-east-1a/cluster-7/team-a/services/mcp",
-		"spiffe://example.com/system/aws/us-east-1a/cluster-7/team-a/services/mcp/workloads/agent-42",
-		"spiffe://example.com/tenants/acme/workspaces/dev",
-		"spiffe://example.com/tenants/acme/workspaces/dev/users/jody",
-		"spiffe://example.com/tenants/acme/workspaces/dev/data/gitlab-event/evt-1",
-	}
-	for _, c := range constructed {
-		p, err := ParseSpiffeID(c)
+	for _, tc := range v.Parse {
+		p, err := ParseSpiffeID(tc.Input)
 		if err != nil {
-			t.Fatalf("parse %q: %v", c, err)
+			t.Fatalf("fixture.parse %q: %v", tc.Input, err)
 		}
-		if got := p.Reconstruct(); got != c {
-			t.Errorf("round-trip %q -> %q", c, got)
+		if got := wantKind[tc.SubjectKind]; p.SubjectKind != got {
+			t.Fatalf("fixture.parse %q kind = %v, want %v", tc.Input, p.SubjectKind, got)
 		}
+		if tc.TrustDomain != "" && p.TrustDomain != tc.TrustDomain {
+			t.Fatalf("fixture.parse %q trust_domain = %q, want %q", tc.Input, p.TrustDomain, tc.TrustDomain)
+		}
+		if tc.LocationPath != "" && p.LocationPath != tc.LocationPath {
+			t.Fatalf("fixture.parse %q location_path = %q, want %q", tc.Input, p.LocationPath, tc.LocationPath)
+		}
+		if tc.Namespace != "" && p.Namespace != tc.Namespace {
+			t.Fatalf("fixture.parse %q namespace = %q, want %q", tc.Input, p.Namespace, tc.Namespace)
+		}
+		if tc.SubjectPath != "" && p.SubjectPath != tc.SubjectPath {
+			t.Fatalf("fixture.parse %q subject_path = %q, want %q", tc.Input, p.SubjectPath, tc.SubjectPath)
+		}
+		if tc.ResourceKind != "" && p.ResourceKind != tc.ResourceKind {
+			t.Fatalf("fixture.parse %q resource_kind = %q, want %q", tc.Input, p.ResourceKind, tc.ResourceKind)
+		}
+		if tc.ResourceID != "" && p.ResourceID != tc.ResourceID {
+			t.Fatalf("fixture.parse %q resource_id = %q, want %q", tc.Input, p.ResourceID, tc.ResourceID)
+		}
+	}
+	for _, input := range v.RoundTrip {
+		p, err := ParseSpiffeID(input)
+		if err != nil {
+			t.Fatalf("fixture.round_trip parse %q: %v", input, err)
+		}
+		if got := p.Reconstruct(); got != input {
+			t.Fatalf("fixture.round_trip %q -> %q", input, got)
+		}
+	}
+	for _, tc := range v.Comparison.IsAtOrBelow {
+		if got := IsAtOrBelow(tc.Caller, tc.Target); got != tc.Expect {
+			t.Fatalf("fixture.is_at_or_below(%q, %q) = %v, want %v", tc.Caller, tc.Target, got, tc.Expect)
+		}
+	}
+	for _, tc := range v.Comparison.SameTrustDomain {
+		if got := SameTrustDomain(tc.A, tc.B); got != tc.Expect {
+			t.Fatalf("fixture.same_trust_domain(%q, %q) = %v, want %v", tc.A, tc.B, got, tc.Expect)
+		}
+	}
+	for _, tc := range v.Comparison.ServicePathLocationAgnostic {
+		got, err := ServicePathFromSpiffe(tc.Input)
+		mustEq("fixture.service_path_location_agnostic", got, err, tc.Expect)
+	}
+	for _, tc := range v.Normalization.TrustDomain {
+		got, err := NormalizeTrustDomain(tc.Input)
+		mustEq("fixture.normalize_trust_domain", got, err, tc.Expect)
+	}
+	for _, tc := range v.Normalization.Namespace {
+		got, err := NormalizeNamespace(tc.Input)
+		mustEq("fixture.normalize_namespace", got, err, tc.Expect)
+	}
+	for _, input := range v.InvalidParse {
+		if _, err := ParseSpiffeID(input); err == nil {
+			t.Fatalf("fixture.invalid_parse %q should fail", input)
+		}
+	}
+	for _, tc := range v.InvalidConstruct {
+		if _, err := callSharedConstruct(tc.Fn, tc.Args); err == nil {
+			t.Fatalf("fixture.invalid_construct %s%v should fail", tc.Fn, tc.Args)
+		}
+	}
+	for _, tc := range v.ValidConstruct {
+		got, err := callSharedConstruct(tc.Fn, tc.Args)
+		mustEq("fixture.valid_construct."+tc.Fn, got, err, tc.Expect)
+	}
+	if got := len(OpaqueSegment("user", "issuer/user")); got != v.OpaqueSegment.Length {
+		t.Fatalf("fixture.opaque_segment length = %d, want %d", got, v.OpaqueSegment.Length)
 	}
 }
 
-func TestComparisonVectors(t *testing.T) {
-	if !IsAtOrBelow("/tenants/acme", "/tenants/acme/workspaces/dev") {
-		t.Error("acme should be at-or-above acme/workspaces/dev")
-	}
-	if IsAtOrBelow("/tenants/acme", "/tenants/acme2/workspaces/dev") {
-		t.Error("acme must NOT be at-or-above acme2 (segment-aware)")
-	}
-	if !SameTrustDomain("spiffe://example.com/tenants/a", "spiffe://example.com/tenants/b") {
-		t.Error("same trust domain expected")
-	}
-	if SameTrustDomain("spiffe://example.com/tenants/a", "spiffe://other.io/tenants/b") {
-		t.Error("different trust domain expected")
-	}
-
-	a, _ := ServicePathFromSpiffe("spiffe://example.com/system/aws/acct1/az1/cluster1/services/mcp")
-	b, _ := ServicePathFromSpiffe("spiffe://example.com/system/gcp/acct2/az9/cluster9/services/mcp")
-	if a != "mcp" || b != "mcp" {
-		t.Errorf("location-agnostic service path: a=%q b=%q, both want mcp", a, b)
+func callSharedConstruct(fn string, args []string) (string, error) {
+	switch fn {
+	case "normalize_trust_domain":
+		return NormalizeTrustDomain(args[0])
+	case "resource_spiffe_id":
+		return ResourceSpiffeID(args[0], args[1], args[2], args[3])
+	case "credential_spiffe_id":
+		return CredentialSpiffeID(args[0], args[1], args[2], args[3])
+	case "user_spiffe_id":
+		return UserSpiffeID(args[0], args[1], args[2])
+	case "namespace_spiffe_id":
+		return NamespaceSpiffeID(args[0], args[1])
+	default:
+		return "", &unsupportedSharedConstruct{fn: fn}
 	}
 }
 
-func TestInvalidVectors(t *testing.T) {
-	invalidParse := []string{
-		"",
-		"spiffe://",
-		"spiffe://example.com//system",
-		"spiffe://example.com/../system",
-		"spiffe://example.com/system?x=1",
-		"spiffe://example.com/system#frag",
-		"spiffe://example.com\\system",
-	}
-	for _, v := range invalidParse {
-		if _, err := ParseSpiffeID(v); err == nil {
-			t.Errorf("ParseSpiffeID(%q) should fail", v)
-		}
-	}
-
-	if _, err := NormalizeTrustDomain("example.com/x"); err == nil {
-		t.Error("trust domain with '/' should fail")
-	}
-
-	invalidConstruct := []func() (string, error){
-		func() (string, error) {
-			return ResourceSpiffeID("example.com", "/tenants/acme", "gitlab-event", "../evt-1")
-		},
-		func() (string, error) {
-			return ResourceSpiffeID("example.com", "/tenants/acme", "gitlab-event", "evt%2F1")
-		},
-		func() (string, error) {
-			return ResourceSpiffeID("example.com", "/tenants/acme", "gitlab/event", "evt-1")
-		},
-		func() (string, error) {
-			return CredentialSpiffeID("example.com", "/tenants/acme", "cred-pair", "cred:pair")
-		},
-		func() (string, error) {
-			return CredentialSpiffeID("example.com", "/tenants/acme", "cred-pair", "cred/pair")
-		},
-		func() (string, error) { return UserSpiffeID("example.com", "/tenants/acme", "issuer/user") },
-		func() (string, error) { return NamespaceSpiffeID("example.com", "/tenants/acme/data") },
-		func() (string, error) { return NamespaceSpiffeID("example.com", "/tenants/system") },
-	}
-	for i, f := range invalidConstruct {
-		if _, err := f(); err == nil {
-			t.Errorf("invalid construct #%d should fail", i)
-		}
-	}
-
-	if _, err := NamespaceSpiffeID("example.com", "/system/aws/acct1"); err != nil {
-		t.Errorf("/system/aws/acct1 should be valid: %v", err)
-	}
+type unsupportedSharedConstruct struct {
+	fn string
 }
 
-func TestOpaqueSegment(t *testing.T) {
+func (e *unsupportedSharedConstruct) Error() string {
+	return "unsupported shared construct: " + e.fn
+}
+
+func TestOpaqueSegmentProperties(t *testing.T) {
 	s := OpaqueSegment("user", "issuer/user")
-	if len(s) != 32 {
-		t.Fatalf("opaque segment len = %d, want 32 (%q)", len(s), s)
-	}
 	if _, err := NormalizeSegment(s); err != nil {
 		t.Errorf("opaque segment must satisfy the segment grammar: %v", err)
 	}

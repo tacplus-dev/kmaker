@@ -7,6 +7,7 @@ package healthreporter
 
 import (
 	"context"
+	"fmt"
 	"runtime"
 	"sync"
 	"time"
@@ -14,10 +15,27 @@ import (
 	healthreport_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/healthreport"
 	host_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/host"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // reportInterval is how often the health reporter publishes metrics.
 const reportInterval = 10 * time.Second
+const maxFirstPublishAttempts = 30
+
+func firstPublishDelay(attempt int) time.Duration {
+	if attempt < 1 {
+		attempt = 1
+	}
+	if attempt > 5 {
+		attempt = 5
+	}
+	delay := time.Duration(1<<attempt) * time.Second
+	if delay > 30*time.Second {
+		return 30 * time.Second
+	}
+	return delay
+}
 
 // InstanceStatus mirrors the proto enum for convenience.
 type InstanceStatus = healthreport_pb.InstanceStatus
@@ -144,11 +162,39 @@ func (hr *HealthReporter) StartWithReady(ctx context.Context, ready chan<- error
 		ready <- err
 	}
 
-	// Publish immediately on start.
-	if err := hr.publish(ctx); err != nil {
-		hr.logger.Warn("Failed to publish health report", zap.Error(err))
+	if ready != nil {
+		for attempt := 1; ; attempt++ {
+			err := hr.publish(ctx)
+			if err == nil {
+				signalReady(nil)
+				break
+			}
+			if isPermanentHealthPublishError(err) {
+				signalReady(fmt.Errorf("permanent first health publish failure: %w", err))
+				return
+			}
+			if attempt >= maxFirstPublishAttempts {
+				signalReady(fmt.Errorf("first health publish failed after %d attempts: %w", attempt, err))
+				return
+			}
+			delay := firstPublishDelay(attempt)
+			hr.logger.Warn("Failed to publish initial health report",
+				zap.Int("attempt", attempt),
+				zap.Int("max_attempts", maxFirstPublishAttempts),
+				zap.Duration("retry_in", delay),
+				zap.Error(err))
+			select {
+			case <-ctx.Done():
+				signalReady(ctx.Err())
+				return
+			case <-time.After(delay):
+			}
+		}
 	} else {
-		signalReady(nil)
+		// Publish immediately on start when no startup readiness channel is used.
+		if err := hr.publish(ctx); err != nil {
+			hr.logger.Warn("Failed to publish health report", zap.Error(err))
+		}
 	}
 
 	for {
@@ -183,7 +229,13 @@ func (hr *HealthReporter) publish(ctx context.Context) error {
 
 	// If a health checker is set and we're not draining, use its result.
 	if status != StatusDraining && checker != nil {
-		status = checker.CheckHealth()
+		checked, err := hr.checkHealthSafely(checker)
+		if err != nil {
+			hr.logger.Warn("HealthChecker failed; publishing UNHEALTHY", zap.Error(err))
+			status = StatusUnhealthy
+		} else {
+			status = checked
+		}
 	}
 
 	// Collect runtime metrics
@@ -223,8 +275,12 @@ func (hr *HealthReporter) publish(ctx context.Context) error {
 	// For now the typed bytes are built but not published — the state store doesn't support
 	// typed health storage yet. Only the base ServiceInstanceHealth is published.
 	if typedCollector != nil {
-		typedBytes := typedCollector.CollectTypedHealth(health)
-		hr.logger.Debug("Built typed health message", zap.Int("bytes", len(typedBytes)))
+		typedBytes, err := hr.collectTypedHealthSafely(typedCollector, health)
+		if err != nil {
+			hr.logger.Warn("Failed to collect typed health", zap.Error(err))
+		} else {
+			hr.logger.Debug("Built typed health message", zap.Int("bytes", len(typedBytes)))
+		}
 	}
 
 	if err := hr.publisher.SetInstances(ctx, health); err != nil {
@@ -234,4 +290,31 @@ func (hr *HealthReporter) publish(ctx context.Context) error {
 		zap.String("status", status.String()),
 		zap.Int64("memory_mb", int64(memStats.Alloc)/(1024*1024)))
 	return nil
+}
+
+func (hr *HealthReporter) checkHealthSafely(checker HealthChecker) (status InstanceStatus, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("panic in CheckHealth: %v", r)
+		}
+	}()
+	return checker.CheckHealth(), nil
+}
+
+func (hr *HealthReporter) collectTypedHealthSafely(collector TypedHealthCollector, base *healthreport_pb.ServiceInstanceHealth) (typed []byte, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("panic in CollectTypedHealth: %v", r)
+		}
+	}()
+	return collector.CollectTypedHealth(base), nil
+}
+
+func isPermanentHealthPublishError(err error) bool {
+	switch status.Code(err) {
+	case codes.InvalidArgument, codes.Unauthenticated, codes.PermissionDenied, codes.FailedPrecondition:
+		return true
+	default:
+		return false
+	}
 }

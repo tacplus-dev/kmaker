@@ -39,126 +39,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED         TypeID = 0
-	TypeID_TYPE_ID_TLS_CERT_CLIENT_MSG TypeID = 1
-	TypeID_TYPE_ID_TLS_CERT_INIT       TypeID = 2
-	TypeID_TYPE_ID_TLS_CERT_CSR        TypeID = 3
-	TypeID_TYPE_ID_TLS_CERT_SERVER_MSG TypeID = 4
-	TypeID_TYPE_ID_TLS_CERT_DELIVERY   TypeID = 5
-	TypeID_TYPE_ID_TLS_CERT_RENEW      TypeID = 6
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_TLS_CERT_CLIENT_MSG",
-		2: "TYPE_ID_TLS_CERT_INIT",
-		3: "TYPE_ID_TLS_CERT_CSR",
-		4: "TYPE_ID_TLS_CERT_SERVER_MSG",
-		5: "TYPE_ID_TLS_CERT_DELIVERY",
-		6: "TYPE_ID_TLS_CERT_RENEW",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":         0,
-		"TYPE_ID_TLS_CERT_CLIENT_MSG": 1,
-		"TYPE_ID_TLS_CERT_INIT":       2,
-		"TYPE_ID_TLS_CERT_CSR":        3,
-		"TYPE_ID_TLS_CERT_SERVER_MSG": 4,
-		"TYPE_ID_TLS_CERT_DELIVERY":   5,
-		"TYPE_ID_TLS_CERT_RENEW":      6,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_tlscert_proto_enumTypes[0].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_tlscert_proto_enumTypes[0]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_tlscert_proto_rawDescGZIP(), []int{0}
-}
-
-type TlsCertServiceRpcId int32
-
-const (
-	TlsCertServiceRpcId_TLS_CERT_SERVICE_RPC_ID_UNSPECIFIED   TlsCertServiceRpcId = 0
-	TlsCertServiceRpcId_TLS_CERT_SERVICE_RPC_ID_ALL_ACCESSORS TlsCertServiceRpcId = 1
-	TlsCertServiceRpcId_TLS_CERT_SERVICE_RPC_ID_ALL_MUTATORS  TlsCertServiceRpcId = 2
-	TlsCertServiceRpcId_TLS_CERT_SERVICE_RPC_ID_ALL_EXECUTORS TlsCertServiceRpcId = 3
-	TlsCertServiceRpcId_TLS_CERT_SERVICE_RPC_ID_MANAGE_CERT   TlsCertServiceRpcId = 4
-)
-
-// Enum value maps for TlsCertServiceRpcId.
-var (
-	TlsCertServiceRpcId_name = map[int32]string{
-		0: "TLS_CERT_SERVICE_RPC_ID_UNSPECIFIED",
-		1: "TLS_CERT_SERVICE_RPC_ID_ALL_ACCESSORS",
-		2: "TLS_CERT_SERVICE_RPC_ID_ALL_MUTATORS",
-		3: "TLS_CERT_SERVICE_RPC_ID_ALL_EXECUTORS",
-		4: "TLS_CERT_SERVICE_RPC_ID_MANAGE_CERT",
-	}
-	TlsCertServiceRpcId_value = map[string]int32{
-		"TLS_CERT_SERVICE_RPC_ID_UNSPECIFIED":   0,
-		"TLS_CERT_SERVICE_RPC_ID_ALL_ACCESSORS": 1,
-		"TLS_CERT_SERVICE_RPC_ID_ALL_MUTATORS":  2,
-		"TLS_CERT_SERVICE_RPC_ID_ALL_EXECUTORS": 3,
-		"TLS_CERT_SERVICE_RPC_ID_MANAGE_CERT":   4,
-	}
-)
-
-func (x TlsCertServiceRpcId) Enum() *TlsCertServiceRpcId {
-	p := new(TlsCertServiceRpcId)
-	*p = x
-	return p
-}
-
-func (x TlsCertServiceRpcId) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TlsCertServiceRpcId) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_tlscert_proto_enumTypes[1].Descriptor()
-}
-
-func (TlsCertServiceRpcId) Type() protoreflect.EnumType {
-	return &file_libs_tlscert_proto_enumTypes[1]
-}
-
-func (x TlsCertServiceRpcId) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TlsCertServiceRpcId.Descriptor instead.
-func (TlsCertServiceRpcId) EnumDescriptor() ([]byte, []int) {
-	return file_libs_tlscert_proto_rawDescGZIP(), []int{1}
-}
-
 // TlsCertClientMsg is sent by the service on the bidi stream.
 type TlsCertClientMsg struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -567,21 +447,7 @@ const file_libs_tlscert_proto_rawDesc = "" +
 	"\x0fTlsCertDelivery\x12/\n" +
 	"\x05chain\x18\x01 \x01(\v2\x13.x509.X509CertChainB\x04\x88\xa6\x1d\x01R\x05chain\"&\n" +
 	"\fTlsCertRenew\x12\x16\n" +
-	"\x06reason\x18\x01 \x01(\tR\x06reason*\xd3\x01\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x1f\n" +
-	"\x1bTYPE_ID_TLS_CERT_CLIENT_MSG\x10\x01\x12\x19\n" +
-	"\x15TYPE_ID_TLS_CERT_INIT\x10\x02\x12\x18\n" +
-	"\x14TYPE_ID_TLS_CERT_CSR\x10\x03\x12\x1f\n" +
-	"\x1bTYPE_ID_TLS_CERT_SERVER_MSG\x10\x04\x12\x1d\n" +
-	"\x19TYPE_ID_TLS_CERT_DELIVERY\x10\x05\x12\x1a\n" +
-	"\x16TYPE_ID_TLS_CERT_RENEW\x10\x06*\xe7\x01\n" +
-	"\x13TlsCertServiceRpcId\x12'\n" +
-	"#TLS_CERT_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x12)\n" +
-	"%TLS_CERT_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x12(\n" +
-	"$TLS_CERT_SERVICE_RPC_ID_ALL_MUTATORS\x10\x02\x12)\n" +
-	"%TLS_CERT_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x12'\n" +
-	"#TLS_CERT_SERVICE_RPC_ID_MANAGE_CERT\x10\x042a\n" +
+	"\x06reason\x18\x01 \x01(\tR\x06reason2a\n" +
 	"\x0eTlsCertService\x12O\n" +
 	"\n" +
 	"ManageCert\x12\x19.tlscert.TlsCertClientMsg\x1a\x19.tlscert.TlsCertServerMsg\"\a\xe2\x88'\x03\n" +
@@ -599,29 +465,26 @@ func file_libs_tlscert_proto_rawDescGZIP() []byte {
 	return file_libs_tlscert_proto_rawDescData
 }
 
-var file_libs_tlscert_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_libs_tlscert_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_libs_tlscert_proto_goTypes = []any{
-	(TypeID)(0),                // 0: tlscert.TypeID
-	(TlsCertServiceRpcId)(0),   // 1: tlscert.TlsCertServiceRpcId
-	(*TlsCertClientMsg)(nil),   // 2: tlscert.TlsCertClientMsg
-	(*TlsCertInit)(nil),        // 3: tlscert.TlsCertInit
-	(*TlsCertCsr)(nil),         // 4: tlscert.TlsCertCsr
-	(*TlsCertServerMsg)(nil),   // 5: tlscert.TlsCertServerMsg
-	(*TlsCertDelivery)(nil),    // 6: tlscert.TlsCertDelivery
-	(*TlsCertRenew)(nil),       // 7: tlscert.TlsCertRenew
-	(*key.PublicKey)(nil),      // 8: key.PublicKey
-	(*x509.X509CertChain)(nil), // 9: x509.X509CertChain
+	(*TlsCertClientMsg)(nil),   // 0: tlscert.TlsCertClientMsg
+	(*TlsCertInit)(nil),        // 1: tlscert.TlsCertInit
+	(*TlsCertCsr)(nil),         // 2: tlscert.TlsCertCsr
+	(*TlsCertServerMsg)(nil),   // 3: tlscert.TlsCertServerMsg
+	(*TlsCertDelivery)(nil),    // 4: tlscert.TlsCertDelivery
+	(*TlsCertRenew)(nil),       // 5: tlscert.TlsCertRenew
+	(*key.PublicKey)(nil),      // 6: key.PublicKey
+	(*x509.X509CertChain)(nil), // 7: x509.X509CertChain
 }
 var file_libs_tlscert_proto_depIdxs = []int32{
-	3, // 0: tlscert.TlsCertClientMsg.init:type_name -> tlscert.TlsCertInit
-	4, // 1: tlscert.TlsCertClientMsg.csr:type_name -> tlscert.TlsCertCsr
-	8, // 2: tlscert.TlsCertCsr.public_key:type_name -> key.PublicKey
-	6, // 3: tlscert.TlsCertServerMsg.cert:type_name -> tlscert.TlsCertDelivery
-	7, // 4: tlscert.TlsCertServerMsg.renew:type_name -> tlscert.TlsCertRenew
-	9, // 5: tlscert.TlsCertDelivery.chain:type_name -> x509.X509CertChain
-	2, // 6: tlscert.TlsCertService.ManageCert:input_type -> tlscert.TlsCertClientMsg
-	5, // 7: tlscert.TlsCertService.ManageCert:output_type -> tlscert.TlsCertServerMsg
+	1, // 0: tlscert.TlsCertClientMsg.init:type_name -> tlscert.TlsCertInit
+	2, // 1: tlscert.TlsCertClientMsg.csr:type_name -> tlscert.TlsCertCsr
+	6, // 2: tlscert.TlsCertCsr.public_key:type_name -> key.PublicKey
+	4, // 3: tlscert.TlsCertServerMsg.cert:type_name -> tlscert.TlsCertDelivery
+	5, // 4: tlscert.TlsCertServerMsg.renew:type_name -> tlscert.TlsCertRenew
+	7, // 5: tlscert.TlsCertDelivery.chain:type_name -> x509.X509CertChain
+	0, // 6: tlscert.TlsCertService.ManageCert:input_type -> tlscert.TlsCertClientMsg
+	3, // 7: tlscert.TlsCertService.ManageCert:output_type -> tlscert.TlsCertServerMsg
 	7, // [7:8] is the sub-list for method output_type
 	6, // [6:7] is the sub-list for method input_type
 	6, // [6:6] is the sub-list for extension type_name
@@ -648,14 +511,13 @@ func file_libs_tlscert_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_tlscert_proto_rawDesc), len(file_libs_tlscert_proto_rawDesc)),
-			NumEnums:      2,
+			NumEnums:      0,
 			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_libs_tlscert_proto_goTypes,
 		DependencyIndexes: file_libs_tlscert_proto_depIdxs,
-		EnumInfos:         file_libs_tlscert_proto_enumTypes,
 		MessageInfos:      file_libs_tlscert_proto_msgTypes,
 	}.Build()
 	File_libs_tlscert_proto = out.File

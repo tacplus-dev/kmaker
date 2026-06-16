@@ -173,7 +173,7 @@ message SearchSessionsResponse {
 // Scratchpad messages — persistent notes storage
 // ============================================================================
 
-// ScratchpadEntry is one key listing returned by ScratchpadList.
+// ScratchpadEntry is one key listing returned by ListScratchpads.
 message ScratchpadEntry {
   string key             = 1;
   int64  size_bytes      = 2;
@@ -713,7 +713,8 @@ service Argus {
   rpc GetDashboard(GetDashboardRequest) returns (GetDashboardResponse);
 
   // ListActiveSessions returns all currently active sessions, paginated.
-  rpc ListActiveSessions(ListActiveSessionsRequest) returns (ListActiveSessionsResponse);
+  rpc ListActiveSessions(ListActiveSessionsRequest) returns (ListActiveSessionsResponse) {
+  }
 
   // GetSessionDetail returns the summary and recent events for one session.
   rpc GetSessionDetail(GetSessionDetailRequest) returns (GetSessionDetailResponse);
@@ -721,28 +722,30 @@ service Argus {
   // GetUserActivity returns recent sessions and aggregate stats for one user.
   rpc GetUserActivity(GetUserActivityRequest) returns (GetUserActivityResponse);
 
-  // SearchSessions searches sessions by keyword or SQL fragment.
-  rpc SearchSessions(SearchSessionsRequest) returns (SearchSessionsResponse);
+  // ListSessionSearchResults searches sessions by keyword or SQL fragment.
+  rpc ListSessionSearchResults(SearchSessionsRequest) returns (SearchSessionsResponse) {
+  }
 
-  // WatchLiveSessions streams real-time session lifecycle events.
-  rpc WatchLiveSessions(claudesensor.WatchLiveSessionsRequest) returns (stream claudesensor.WatchLiveSessionsEvent);
+  // SubscribeLiveSessions streams real-time session lifecycle events.
+  rpc SubscribeLiveSessions(claudesensor.WatchLiveSessionsRequest) returns (stream claudesensor.WatchLiveSessionsEvent);
 
   // --- Scratchpad ---
 
-  // ScratchpadRead retrieves a persistent note by key.
-  rpc ScratchpadRead(ScratchpadReadRequest) returns (ScratchpadReadResponse);
+  // GetScratchpad retrieves a persistent note by key.
+  rpc GetScratchpad(ScratchpadReadRequest) returns (ScratchpadReadResponse);
 
-  // ScratchpadWrite stores or overwrites a persistent note.
-  rpc ScratchpadWrite(ScratchpadWriteRequest) returns (ScratchpadWriteResponse);
+  // UpdateScratchpad stores or overwrites a persistent note.
+  rpc UpdateScratchpad(ScratchpadWriteRequest) returns (ScratchpadWriteResponse);
 
-  // ScratchpadDelete removes a persistent note by key.
-  rpc ScratchpadDelete(ScratchpadDeleteRequest) returns (ScratchpadDeleteResponse);
+  // DeleteScratchpad removes a persistent note by key.
+  rpc DeleteScratchpad(ScratchpadDeleteRequest) returns (ScratchpadDeleteResponse);
 
-  // ScratchpadList lists all stored note keys with metadata.
-  rpc ScratchpadList(ScratchpadListRequest) returns (ScratchpadListResponse);
+  // ListScratchpads lists all stored note keys with metadata.
+  rpc ListScratchpads(ScratchpadListRequest) returns (ScratchpadListResponse) {
+  }
 
-  // ScratchpadClear removes all stored notes.
-  rpc ScratchpadClear(ScratchpadClearRequest) returns (ScratchpadClearResponse);
+  // DeleteScratchpads removes all stored notes.
+  rpc DeleteScratchpads(ScratchpadClearRequest) returns (ScratchpadClearResponse);
 
   // --- Supervisor context ---
 
@@ -752,28 +755,29 @@ service Argus {
 
   // --- Watch RPCs (server-streaming, push on change) ---
 
-  // WatchDashboard streams dashboard snapshots — pushed every ~2s as session state changes.
-  rpc WatchDashboard(WatchDashboardRequest) returns (stream GetDashboardResponse);
+  // SubscribeDashboard streams dashboard snapshots, pushed every ~2s as session state changes.
+  rpc SubscribeDashboard(WatchDashboardRequest) returns (stream GetDashboardResponse);
 
-  // WatchSessionDetail streams updates for one session as new events arrive.
-  rpc WatchSessionDetail(WatchSessionDetailRequest) returns (stream GetSessionDetailResponse);
+  // SubscribeSessionDetail streams updates for one session as new events arrive.
+  rpc SubscribeSessionDetail(WatchSessionDetailRequest) returns (stream GetSessionDetailResponse);
 
-  // WatchUserActivity streams updated activity stats for one user as sessions evolve.
-  rpc WatchUserActivity(WatchUserActivityRequest) returns (stream GetUserActivityResponse);
+  // SubscribeUserActivity streams updated activity stats for one user as sessions evolve.
+  rpc SubscribeUserActivity(WatchUserActivityRequest) returns (stream GetUserActivityResponse);
 
-  // WatchSupervisorContext streams updated context blocks when the scratchpad or sessions change.
-  rpc WatchSupervisorContext(WatchSupervisorContextRequest) returns (stream GetSupervisorContextResponse);
+  // SubscribeSupervisorContext streams updated context blocks when the scratchpad or sessions change.
+  rpc SubscribeSupervisorContext(WatchSupervisorContextRequest) returns (stream GetSupervisorContextResponse);
 
-  // WatchScratchpadList streams the key listing whenever an entry is added, updated, or removed.
-  rpc WatchScratchpadList(WatchScratchpadListRequest) returns (stream ScratchpadListResponse);
+  // SubscribeScratchpadList streams the key listing whenever an entry is added, updated, or removed.
+  rpc SubscribeScratchpadList(WatchScratchpadListRequest) returns (stream ScratchpadListResponse);
 
-  // WatchScratchpadRead streams the value for a key whenever it is written.
-  rpc WatchScratchpadRead(WatchScratchpadReadRequest) returns (stream ScratchpadReadResponse);
+  // SubscribeScratchpadRead streams the value for a key whenever it is written.
+  rpc SubscribeScratchpadRead(WatchScratchpadReadRequest) returns (stream ScratchpadReadResponse);
 
   // --- User listing and profiles ---
 
   // ListUsers returns all distinct users with aggregate stats over the given time range.
-  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
+  }
 
   // GetUserProfile returns rich per-user stats: tools, models, session duration, working dirs.
   rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse);
@@ -781,13 +785,14 @@ service Argus {
   // GetUserTokenStats returns prompt volume and length distribution for one user over time.
   rpc GetUserTokenStats(GetUserTokenStatsRequest) returns (GetUserTokenStatsResponse);
 
-  // WatchUserProfile streams updated profile snapshots as sessions evolve.
-  rpc WatchUserProfile(WatchUserProfileRequest) returns (stream GetUserProfileResponse);
+  // SubscribeUserProfile streams updated profile snapshots as sessions evolve.
+  rpc SubscribeUserProfile(WatchUserProfileRequest) returns (stream GetUserProfileResponse);
 
   // --- Commit and file activity ---
 
-  // GetUserCommitActivity returns git commit events extracted from the user's Bash tool uses.
-  rpc GetUserCommitActivity(GetUserCommitActivityRequest) returns (GetUserCommitActivityResponse);
+  // ListUserCommitActivity returns git commit events extracted from the user's Bash tool uses.
+  rpc ListUserCommitActivity(GetUserCommitActivityRequest) returns (GetUserCommitActivityResponse) {
+  }
 
   // GetFileActivity returns file create/modify/delete records across sessions.
   rpc GetFileActivity(GetFileActivityRequest) returns (GetFileActivityResponse);
@@ -805,28 +810,33 @@ service Argus {
   // GetSystemStats returns fleet-wide aggregates (users, sessions, events, tool stats).
   rpc GetSystemStats(GetSystemStatsRequest) returns (GetSystemStatsResponse);
 
-  // GetToolLeaderboard returns tools ranked by use count with failure rates and latencies.
-  rpc GetToolLeaderboard(GetToolLeaderboardRequest) returns (GetToolLeaderboardResponse);
+  // ListToolLeaderboard returns tools ranked by use count with failure rates and latencies.
+  rpc ListToolLeaderboard(GetToolLeaderboardRequest) returns (GetToolLeaderboardResponse) {
+  }
 
-  // GetModelUsage returns LLM model distribution across sessions.
-  rpc GetModelUsage(GetModelUsageRequest) returns (GetModelUsageResponse);
+  // ListModelUsage returns LLM model distribution across sessions.
+  rpc ListModelUsage(GetModelUsageRequest) returns (GetModelUsageResponse) {
+  }
 
-  // GetActivityTimeseries returns bucketed event/session/user counts over a time range.
-  rpc GetActivityTimeseries(GetActivityTimeseriesRequest) returns (GetActivityTimeseriesResponse);
+  // ListActivityTimeseries returns bucketed event/session/user counts over a time range.
+  rpc ListActivityTimeseries(GetActivityTimeseriesRequest) returns (GetActivityTimeseriesResponse) {
+  }
 
-  // WatchSystemStats streams fleet-wide stat snapshots every ~5s.
-  rpc WatchSystemStats(WatchSystemStatsRequest) returns (stream GetSystemStatsResponse);
+  // SubscribeSystemStats streams fleet-wide stat snapshots every ~5s.
+  rpc SubscribeSystemStats(WatchSystemStatsRequest) returns (stream GetSystemStatsResponse);
 
-  // WatchToolLeaderboard streams updated leaderboard snapshots.
-  rpc WatchToolLeaderboard(WatchToolLeaderboardRequest) returns (stream GetToolLeaderboardResponse);
+  // SubscribeToolLeaderboard streams updated leaderboard snapshots.
+  rpc SubscribeToolLeaderboard(WatchToolLeaderboardRequest) returns (stream GetToolLeaderboardResponse);
 
   // --- Search ---
 
-  // SearchEvents finds events matching a filter across the hot store.
-  rpc SearchEvents(SearchEventsRequest) returns (SearchEventsResponse);
+  // ListEventSearchResults finds events matching a filter across the hot store.
+  rpc ListEventSearchResults(SearchEventsRequest) returns (SearchEventsResponse) {
+  }
 
-  // SearchByFilePath finds all events that touched a given file path (prefix or glob).
-  rpc SearchByFilePath(SearchByFilePathRequest) returns (SearchByFilePathResponse);
+  // ListFilePathMatches finds all events that touched a given file path (prefix or glob).
+  rpc ListFilePathMatches(SearchByFilePathRequest) returns (SearchByFilePathResponse) {
+  }
 }
 
 // ArgusConfigState is the state boundary for argus service configuration.
@@ -952,36 +962,36 @@ enum ArgusRpcId {
   ARGUS_RPC_ID_LIST_ACTIVE_SESSIONS = 5;
   ARGUS_RPC_ID_GET_SESSION_DETAIL = 6;
   ARGUS_RPC_ID_GET_USER_ACTIVITY = 7;
-  ARGUS_RPC_ID_SEARCH_SESSIONS = 8;
-  ARGUS_RPC_ID_WATCH_LIVE_SESSIONS = 9;
-  ARGUS_RPC_ID_SCRATCHPAD_READ = 10;
-  ARGUS_RPC_ID_SCRATCHPAD_WRITE = 11;
-  ARGUS_RPC_ID_SCRATCHPAD_DELETE = 12;
-  ARGUS_RPC_ID_SCRATCHPAD_LIST = 13;
-  ARGUS_RPC_ID_SCRATCHPAD_CLEAR = 14;
+  ARGUS_RPC_ID_LIST_SESSION_SEARCH_RESULTS = 8;
+  ARGUS_RPC_ID_SUBSCRIBE_LIVE_SESSIONS = 9;
+  ARGUS_RPC_ID_GET_SCRATCHPAD = 10;
+  ARGUS_RPC_ID_UPDATE_SCRATCHPAD = 11;
+  ARGUS_RPC_ID_DELETE_SCRATCHPAD = 12;
+  ARGUS_RPC_ID_LIST_SCRATCHPADS = 13;
+  ARGUS_RPC_ID_DELETE_SCRATCHPADS = 14;
   ARGUS_RPC_ID_GET_SUPERVISOR_CONTEXT = 15;
-  ARGUS_RPC_ID_WATCH_DASHBOARD = 16;
-  ARGUS_RPC_ID_WATCH_SESSION_DETAIL = 17;
-  ARGUS_RPC_ID_WATCH_USER_ACTIVITY = 18;
-  ARGUS_RPC_ID_WATCH_SUPERVISOR_CONTEXT = 19;
-  ARGUS_RPC_ID_WATCH_SCRATCHPAD_LIST = 20;
-  ARGUS_RPC_ID_WATCH_SCRATCHPAD_READ = 21;
+  ARGUS_RPC_ID_SUBSCRIBE_DASHBOARD = 16;
+  ARGUS_RPC_ID_SUBSCRIBE_SESSION_DETAIL = 17;
+  ARGUS_RPC_ID_SUBSCRIBE_USER_ACTIVITY = 18;
+  ARGUS_RPC_ID_SUBSCRIBE_SUPERVISOR_CONTEXT = 19;
+  ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_LIST = 20;
+  ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_READ = 21;
   ARGUS_RPC_ID_LIST_USERS = 22;
   ARGUS_RPC_ID_GET_USER_PROFILE = 23;
   ARGUS_RPC_ID_GET_USER_TOKEN_STATS = 24;
-  ARGUS_RPC_ID_WATCH_USER_PROFILE = 25;
-  ARGUS_RPC_ID_GET_USER_COMMIT_ACTIVITY = 26;
+  ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE = 25;
+  ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY = 26;
   ARGUS_RPC_ID_GET_FILE_ACTIVITY = 27;
   ARGUS_RPC_ID_GET_SESSION_TIMELINE = 28;
   ARGUS_RPC_ID_GET_AGENT_TREE = 29;
   ARGUS_RPC_ID_GET_SYSTEM_STATS = 30;
-  ARGUS_RPC_ID_GET_TOOL_LEADERBOARD = 31;
-  ARGUS_RPC_ID_GET_MODEL_USAGE = 32;
-  ARGUS_RPC_ID_GET_ACTIVITY_TIMESERIES = 33;
-  ARGUS_RPC_ID_WATCH_SYSTEM_STATS = 34;
-  ARGUS_RPC_ID_WATCH_TOOL_LEADERBOARD = 35;
-  ARGUS_RPC_ID_SEARCH_EVENTS = 36;
-  ARGUS_RPC_ID_SEARCH_BY_FILE_PATH = 37;
+  ARGUS_RPC_ID_LIST_TOOL_LEADERBOARD = 31;
+  ARGUS_RPC_ID_LIST_MODEL_USAGE = 32;
+  ARGUS_RPC_ID_LIST_ACTIVITY_TIMESERIES = 33;
+  ARGUS_RPC_ID_SUBSCRIBE_SYSTEM_STATS = 34;
+  ARGUS_RPC_ID_SUBSCRIBE_TOOL_LEADERBOARD = 35;
+  ARGUS_RPC_ID_LIST_EVENT_SEARCH_RESULTS = 36;
+  ARGUS_RPC_ID_LIST_FILE_PATH_MATCHES = 37;
 }
 
 enum ArgusConfigStateServiceRpcId {

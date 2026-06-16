@@ -36,18 +36,18 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Messaging_RegisterUser_FullMethodName      = "/msggateway.Messaging/RegisterUser"
-	Messaging_UnregisterUser_FullMethodName    = "/msggateway.Messaging/UnregisterUser"
-	Messaging_Subscribe_FullMethodName         = "/msggateway.Messaging/Subscribe"
-	Messaging_Unsubscribe_FullMethodName       = "/msggateway.Messaging/Unsubscribe"
-	Messaging_Events_FullMethodName            = "/msggateway.Messaging/Events"
-	Messaging_SendMessage_FullMethodName       = "/msggateway.Messaging/SendMessage"
-	Messaging_SendThreadReply_FullMethodName   = "/msggateway.Messaging/SendThreadReply"
-	Messaging_GetThread_FullMethodName         = "/msggateway.Messaging/GetThread"
-	Messaging_GetChannelHistory_FullMethodName = "/msggateway.Messaging/GetChannelHistory"
-	Messaging_ListChannels_FullMethodName      = "/msggateway.Messaging/ListChannels"
-	Messaging_AddReaction_FullMethodName       = "/msggateway.Messaging/AddReaction"
-	Messaging_RemoveReaction_FullMethodName    = "/msggateway.Messaging/RemoveReaction"
+	Messaging_UpdateVirtualUser_FullMethodName  = "/msggateway.Messaging/UpdateVirtualUser"
+	Messaging_DeleteVirtualUser_FullMethodName  = "/msggateway.Messaging/DeleteVirtualUser"
+	Messaging_Subscribe_FullMethodName          = "/msggateway.Messaging/Subscribe"
+	Messaging_DeleteSubscription_FullMethodName = "/msggateway.Messaging/DeleteSubscription"
+	Messaging_SubscribeEvents_FullMethodName    = "/msggateway.Messaging/SubscribeEvents"
+	Messaging_SendMessage_FullMethodName        = "/msggateway.Messaging/SendMessage"
+	Messaging_SendThreadReply_FullMethodName    = "/msggateway.Messaging/SendThreadReply"
+	Messaging_ListThreadMessages_FullMethodName = "/msggateway.Messaging/ListThreadMessages"
+	Messaging_GetChannelHistory_FullMethodName  = "/msggateway.Messaging/GetChannelHistory"
+	Messaging_ListChannels_FullMethodName       = "/msggateway.Messaging/ListChannels"
+	Messaging_CreateReaction_FullMethodName     = "/msggateway.Messaging/CreateReaction"
+	Messaging_DeleteReaction_FullMethodName     = "/msggateway.Messaging/DeleteReaction"
 )
 
 // MessagingClient is the client API for Messaging service.
@@ -57,33 +57,33 @@ const (
 // Messaging provides gRPC access to messaging platforms for other services.
 // All RPCs are S2S — only authenticated services may use the gateway.
 type MessagingClient interface {
-	// RegisterUser registers a virtual user identity for posting messages.
+	// UpdateVirtualUser registers or updates a virtual user identity for posting messages.
 	// If the user ID already exists, the registration is updated.
-	RegisterUser(ctx context.Context, in *RegisterUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// UnregisterUser removes a virtual user identity.
-	UnregisterUser(ctx context.Context, in *UnregisterUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateVirtualUser(ctx context.Context, in *UpdateVirtualUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// DeleteVirtualUser removes a virtual user identity.
+	DeleteVirtualUser(ctx context.Context, in *DeleteVirtualUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// Subscribe binds a channel to a virtual user for inbound event delivery.
 	// A channel may have at most one subscriber.
 	Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// Unsubscribe removes a channel subscription.
-	Unsubscribe(ctx context.Context, in *UnsubscribeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// Events opens a server stream that delivers inbound events
+	// DeleteSubscription removes a channel subscription.
+	DeleteSubscription(ctx context.Context, in *DeleteSubscriptionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// SubscribeEvents opens a server stream that delivers inbound events
 	// for all channels the virtual user is subscribed to.
-	Events(ctx context.Context, in *EventsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Event], error)
+	SubscribeEvents(ctx context.Context, in *EventsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Event], error)
 	// SendMessage posts a message to a channel as a virtual user.
 	SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error)
 	// SendThreadReply posts a reply in a thread as a virtual user.
 	SendThreadReply(ctx context.Context, in *SendThreadReplyRequest, opts ...grpc.CallOption) (*SendMessageResponse, error)
-	// GetThread retrieves the full message history of a thread.
-	GetThread(ctx context.Context, in *GetThreadRequest, opts ...grpc.CallOption) (*GetThreadResponse, error)
+	// ListThreadMessages retrieves the full message history of a thread.
+	ListThreadMessages(ctx context.Context, in *GetThreadRequest, opts ...grpc.CallOption) (*GetThreadResponse, error)
 	// GetChannelHistory retrieves recent messages from a channel.
 	GetChannelHistory(ctx context.Context, in *GetChannelHistoryRequest, opts ...grpc.CallOption) (*GetChannelHistoryResponse, error)
 	// ListChannels lists channels in the workspace.
 	ListChannels(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*ListChannelsResponse, error)
-	// AddReaction adds an emoji reaction to a message.
-	AddReaction(ctx context.Context, in *ReactionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// RemoveReaction removes an emoji reaction from a message.
-	RemoveReaction(ctx context.Context, in *ReactionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// CreateReaction adds an emoji reaction to a message.
+	CreateReaction(ctx context.Context, in *ReactionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// DeleteReaction removes an emoji reaction from a message.
+	DeleteReaction(ctx context.Context, in *ReactionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type messagingClient struct {
@@ -94,20 +94,20 @@ func NewMessagingClient(cc grpc.ClientConnInterface) MessagingClient {
 	return &messagingClient{cc}
 }
 
-func (c *messagingClient) RegisterUser(ctx context.Context, in *RegisterUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *messagingClient) UpdateVirtualUser(ctx context.Context, in *UpdateVirtualUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Messaging_RegisterUser_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Messaging_UpdateVirtualUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *messagingClient) UnregisterUser(ctx context.Context, in *UnregisterUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *messagingClient) DeleteVirtualUser(ctx context.Context, in *DeleteVirtualUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Messaging_UnregisterUser_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Messaging_DeleteVirtualUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -124,19 +124,19 @@ func (c *messagingClient) Subscribe(ctx context.Context, in *SubscribeRequest, o
 	return out, nil
 }
 
-func (c *messagingClient) Unsubscribe(ctx context.Context, in *UnsubscribeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *messagingClient) DeleteSubscription(ctx context.Context, in *DeleteSubscriptionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Messaging_Unsubscribe_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Messaging_DeleteSubscription_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *messagingClient) Events(ctx context.Context, in *EventsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Event], error) {
+func (c *messagingClient) SubscribeEvents(ctx context.Context, in *EventsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Event], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Messaging_ServiceDesc.Streams[0], Messaging_Events_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Messaging_ServiceDesc.Streams[0], Messaging_SubscribeEvents_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -151,7 +151,7 @@ func (c *messagingClient) Events(ctx context.Context, in *EventsRequest, opts ..
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Messaging_EventsClient = grpc.ServerStreamingClient[Event]
+type Messaging_SubscribeEventsClient = grpc.ServerStreamingClient[Event]
 
 func (c *messagingClient) SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -173,10 +173,10 @@ func (c *messagingClient) SendThreadReply(ctx context.Context, in *SendThreadRep
 	return out, nil
 }
 
-func (c *messagingClient) GetThread(ctx context.Context, in *GetThreadRequest, opts ...grpc.CallOption) (*GetThreadResponse, error) {
+func (c *messagingClient) ListThreadMessages(ctx context.Context, in *GetThreadRequest, opts ...grpc.CallOption) (*GetThreadResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetThreadResponse)
-	err := c.cc.Invoke(ctx, Messaging_GetThread_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Messaging_ListThreadMessages_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -203,20 +203,20 @@ func (c *messagingClient) ListChannels(ctx context.Context, in *trace.TraceReque
 	return out, nil
 }
 
-func (c *messagingClient) AddReaction(ctx context.Context, in *ReactionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *messagingClient) CreateReaction(ctx context.Context, in *ReactionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Messaging_AddReaction_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Messaging_CreateReaction_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *messagingClient) RemoveReaction(ctx context.Context, in *ReactionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *messagingClient) DeleteReaction(ctx context.Context, in *ReactionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Messaging_RemoveReaction_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Messaging_DeleteReaction_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -230,33 +230,33 @@ func (c *messagingClient) RemoveReaction(ctx context.Context, in *ReactionReques
 // Messaging provides gRPC access to messaging platforms for other services.
 // All RPCs are S2S — only authenticated services may use the gateway.
 type MessagingServer interface {
-	// RegisterUser registers a virtual user identity for posting messages.
+	// UpdateVirtualUser registers or updates a virtual user identity for posting messages.
 	// If the user ID already exists, the registration is updated.
-	RegisterUser(context.Context, *RegisterUserRequest) (*emptypb.Empty, error)
-	// UnregisterUser removes a virtual user identity.
-	UnregisterUser(context.Context, *UnregisterUserRequest) (*emptypb.Empty, error)
+	UpdateVirtualUser(context.Context, *UpdateVirtualUserRequest) (*emptypb.Empty, error)
+	// DeleteVirtualUser removes a virtual user identity.
+	DeleteVirtualUser(context.Context, *DeleteVirtualUserRequest) (*emptypb.Empty, error)
 	// Subscribe binds a channel to a virtual user for inbound event delivery.
 	// A channel may have at most one subscriber.
 	Subscribe(context.Context, *SubscribeRequest) (*emptypb.Empty, error)
-	// Unsubscribe removes a channel subscription.
-	Unsubscribe(context.Context, *UnsubscribeRequest) (*emptypb.Empty, error)
-	// Events opens a server stream that delivers inbound events
+	// DeleteSubscription removes a channel subscription.
+	DeleteSubscription(context.Context, *DeleteSubscriptionRequest) (*emptypb.Empty, error)
+	// SubscribeEvents opens a server stream that delivers inbound events
 	// for all channels the virtual user is subscribed to.
-	Events(*EventsRequest, grpc.ServerStreamingServer[Event]) error
+	SubscribeEvents(*EventsRequest, grpc.ServerStreamingServer[Event]) error
 	// SendMessage posts a message to a channel as a virtual user.
 	SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error)
 	// SendThreadReply posts a reply in a thread as a virtual user.
 	SendThreadReply(context.Context, *SendThreadReplyRequest) (*SendMessageResponse, error)
-	// GetThread retrieves the full message history of a thread.
-	GetThread(context.Context, *GetThreadRequest) (*GetThreadResponse, error)
+	// ListThreadMessages retrieves the full message history of a thread.
+	ListThreadMessages(context.Context, *GetThreadRequest) (*GetThreadResponse, error)
 	// GetChannelHistory retrieves recent messages from a channel.
 	GetChannelHistory(context.Context, *GetChannelHistoryRequest) (*GetChannelHistoryResponse, error)
 	// ListChannels lists channels in the workspace.
 	ListChannels(context.Context, *trace.TraceRequest) (*ListChannelsResponse, error)
-	// AddReaction adds an emoji reaction to a message.
-	AddReaction(context.Context, *ReactionRequest) (*emptypb.Empty, error)
-	// RemoveReaction removes an emoji reaction from a message.
-	RemoveReaction(context.Context, *ReactionRequest) (*emptypb.Empty, error)
+	// CreateReaction adds an emoji reaction to a message.
+	CreateReaction(context.Context, *ReactionRequest) (*emptypb.Empty, error)
+	// DeleteReaction removes an emoji reaction from a message.
+	DeleteReaction(context.Context, *ReactionRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedMessagingServer()
 }
 
@@ -267,20 +267,20 @@ type MessagingServer interface {
 // pointer dereference when methods are called.
 type UnimplementedMessagingServer struct{}
 
-func (UnimplementedMessagingServer) RegisterUser(context.Context, *RegisterUserRequest) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method RegisterUser not implemented")
+func (UnimplementedMessagingServer) UpdateVirtualUser(context.Context, *UpdateVirtualUserRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateVirtualUser not implemented")
 }
-func (UnimplementedMessagingServer) UnregisterUser(context.Context, *UnregisterUserRequest) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method UnregisterUser not implemented")
+func (UnimplementedMessagingServer) DeleteVirtualUser(context.Context, *DeleteVirtualUserRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteVirtualUser not implemented")
 }
 func (UnimplementedMessagingServer) Subscribe(context.Context, *SubscribeRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Subscribe not implemented")
 }
-func (UnimplementedMessagingServer) Unsubscribe(context.Context, *UnsubscribeRequest) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method Unsubscribe not implemented")
+func (UnimplementedMessagingServer) DeleteSubscription(context.Context, *DeleteSubscriptionRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteSubscription not implemented")
 }
-func (UnimplementedMessagingServer) Events(*EventsRequest, grpc.ServerStreamingServer[Event]) error {
-	return status.Error(codes.Unimplemented, "method Events not implemented")
+func (UnimplementedMessagingServer) SubscribeEvents(*EventsRequest, grpc.ServerStreamingServer[Event]) error {
+	return status.Error(codes.Unimplemented, "method SubscribeEvents not implemented")
 }
 func (UnimplementedMessagingServer) SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method SendMessage not implemented")
@@ -288,8 +288,8 @@ func (UnimplementedMessagingServer) SendMessage(context.Context, *SendMessageReq
 func (UnimplementedMessagingServer) SendThreadReply(context.Context, *SendThreadReplyRequest) (*SendMessageResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method SendThreadReply not implemented")
 }
-func (UnimplementedMessagingServer) GetThread(context.Context, *GetThreadRequest) (*GetThreadResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetThread not implemented")
+func (UnimplementedMessagingServer) ListThreadMessages(context.Context, *GetThreadRequest) (*GetThreadResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListThreadMessages not implemented")
 }
 func (UnimplementedMessagingServer) GetChannelHistory(context.Context, *GetChannelHistoryRequest) (*GetChannelHistoryResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetChannelHistory not implemented")
@@ -297,11 +297,11 @@ func (UnimplementedMessagingServer) GetChannelHistory(context.Context, *GetChann
 func (UnimplementedMessagingServer) ListChannels(context.Context, *trace.TraceRequest) (*ListChannelsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListChannels not implemented")
 }
-func (UnimplementedMessagingServer) AddReaction(context.Context, *ReactionRequest) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method AddReaction not implemented")
+func (UnimplementedMessagingServer) CreateReaction(context.Context, *ReactionRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateReaction not implemented")
 }
-func (UnimplementedMessagingServer) RemoveReaction(context.Context, *ReactionRequest) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method RemoveReaction not implemented")
+func (UnimplementedMessagingServer) DeleteReaction(context.Context, *ReactionRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteReaction not implemented")
 }
 func (UnimplementedMessagingServer) mustEmbedUnimplementedMessagingServer() {}
 func (UnimplementedMessagingServer) testEmbeddedByValue()                   {}
@@ -324,38 +324,38 @@ func RegisterMessagingServer(s grpc.ServiceRegistrar, srv MessagingServer) {
 	s.RegisterService(&Messaging_ServiceDesc, srv)
 }
 
-func _Messaging_RegisterUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegisterUserRequest)
+func _Messaging_UpdateVirtualUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateVirtualUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessagingServer).RegisterUser(ctx, in)
+		return srv.(MessagingServer).UpdateVirtualUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Messaging_RegisterUser_FullMethodName,
+		FullMethod: Messaging_UpdateVirtualUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessagingServer).RegisterUser(ctx, req.(*RegisterUserRequest))
+		return srv.(MessagingServer).UpdateVirtualUser(ctx, req.(*UpdateVirtualUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Messaging_UnregisterUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UnregisterUserRequest)
+func _Messaging_DeleteVirtualUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteVirtualUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessagingServer).UnregisterUser(ctx, in)
+		return srv.(MessagingServer).DeleteVirtualUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Messaging_UnregisterUser_FullMethodName,
+		FullMethod: Messaging_DeleteVirtualUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessagingServer).UnregisterUser(ctx, req.(*UnregisterUserRequest))
+		return srv.(MessagingServer).DeleteVirtualUser(ctx, req.(*DeleteVirtualUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -378,34 +378,34 @@ func _Messaging_Subscribe_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Messaging_Unsubscribe_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UnsubscribeRequest)
+func _Messaging_DeleteSubscription_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteSubscriptionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessagingServer).Unsubscribe(ctx, in)
+		return srv.(MessagingServer).DeleteSubscription(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Messaging_Unsubscribe_FullMethodName,
+		FullMethod: Messaging_DeleteSubscription_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessagingServer).Unsubscribe(ctx, req.(*UnsubscribeRequest))
+		return srv.(MessagingServer).DeleteSubscription(ctx, req.(*DeleteSubscriptionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Messaging_Events_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Messaging_SubscribeEvents_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(EventsRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(MessagingServer).Events(m, &grpc.GenericServerStream[EventsRequest, Event]{ServerStream: stream})
+	return srv.(MessagingServer).SubscribeEvents(m, &grpc.GenericServerStream[EventsRequest, Event]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Messaging_EventsServer = grpc.ServerStreamingServer[Event]
+type Messaging_SubscribeEventsServer = grpc.ServerStreamingServer[Event]
 
 func _Messaging_SendMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SendMessageRequest)
@@ -443,20 +443,20 @@ func _Messaging_SendThreadReply_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Messaging_GetThread_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Messaging_ListThreadMessages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetThreadRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessagingServer).GetThread(ctx, in)
+		return srv.(MessagingServer).ListThreadMessages(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Messaging_GetThread_FullMethodName,
+		FullMethod: Messaging_ListThreadMessages_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessagingServer).GetThread(ctx, req.(*GetThreadRequest))
+		return srv.(MessagingServer).ListThreadMessages(ctx, req.(*GetThreadRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -497,38 +497,38 @@ func _Messaging_ListChannels_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Messaging_AddReaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Messaging_CreateReaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ReactionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessagingServer).AddReaction(ctx, in)
+		return srv.(MessagingServer).CreateReaction(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Messaging_AddReaction_FullMethodName,
+		FullMethod: Messaging_CreateReaction_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessagingServer).AddReaction(ctx, req.(*ReactionRequest))
+		return srv.(MessagingServer).CreateReaction(ctx, req.(*ReactionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Messaging_RemoveReaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Messaging_DeleteReaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ReactionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessagingServer).RemoveReaction(ctx, in)
+		return srv.(MessagingServer).DeleteReaction(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Messaging_RemoveReaction_FullMethodName,
+		FullMethod: Messaging_DeleteReaction_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessagingServer).RemoveReaction(ctx, req.(*ReactionRequest))
+		return srv.(MessagingServer).DeleteReaction(ctx, req.(*ReactionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -541,20 +541,20 @@ var Messaging_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*MessagingServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "RegisterUser",
-			Handler:    _Messaging_RegisterUser_Handler,
+			MethodName: "UpdateVirtualUser",
+			Handler:    _Messaging_UpdateVirtualUser_Handler,
 		},
 		{
-			MethodName: "UnregisterUser",
-			Handler:    _Messaging_UnregisterUser_Handler,
+			MethodName: "DeleteVirtualUser",
+			Handler:    _Messaging_DeleteVirtualUser_Handler,
 		},
 		{
 			MethodName: "Subscribe",
 			Handler:    _Messaging_Subscribe_Handler,
 		},
 		{
-			MethodName: "Unsubscribe",
-			Handler:    _Messaging_Unsubscribe_Handler,
+			MethodName: "DeleteSubscription",
+			Handler:    _Messaging_DeleteSubscription_Handler,
 		},
 		{
 			MethodName: "SendMessage",
@@ -565,8 +565,8 @@ var Messaging_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Messaging_SendThreadReply_Handler,
 		},
 		{
-			MethodName: "GetThread",
-			Handler:    _Messaging_GetThread_Handler,
+			MethodName: "ListThreadMessages",
+			Handler:    _Messaging_ListThreadMessages_Handler,
 		},
 		{
 			MethodName: "GetChannelHistory",
@@ -577,18 +577,18 @@ var Messaging_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Messaging_ListChannels_Handler,
 		},
 		{
-			MethodName: "AddReaction",
-			Handler:    _Messaging_AddReaction_Handler,
+			MethodName: "CreateReaction",
+			Handler:    _Messaging_CreateReaction_Handler,
 		},
 		{
-			MethodName: "RemoveReaction",
-			Handler:    _Messaging_RemoveReaction_Handler,
+			MethodName: "DeleteReaction",
+			Handler:    _Messaging_DeleteReaction_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "Events",
-			Handler:       _Messaging_Events_Handler,
+			StreamName:    "SubscribeEvents",
+			Handler:       _Messaging_SubscribeEvents_Handler,
 			ServerStreams: true,
 		},
 	},

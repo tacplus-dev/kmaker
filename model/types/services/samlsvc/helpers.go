@@ -293,14 +293,14 @@ func InboundRpcIdValues() []InboundRpcId {
 		InboundRpcId_INBOUND_RPC_ID_ALL_ACCESSORS,
 		InboundRpcId_INBOUND_RPC_ID_ALL_MUTATORS,
 		InboundRpcId_INBOUND_RPC_ID_ALL_EXECUTORS,
-		InboundRpcId_INBOUND_RPC_ID_ACS,
+		InboundRpcId_INBOUND_RPC_ID_MINT_ACS_TOKENS,
 		InboundRpcId_INBOUND_RPC_ID_AUTHORIZE,
 	}
 }
 
 // InboundRpcIdStringValues returns all valid InboundRpcId names as strings
 func InboundRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "acs", "authorize"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "mint-acs-tokens", "authorize"}
 }
 
 // ParseInboundRpcId converts a string to a InboundRpcId enum value
@@ -317,8 +317,8 @@ func ParseInboundRpcId(s string) (InboundRpcId, error) {
 		return InboundRpcId_INBOUND_RPC_ID_ALL_MUTATORS, nil
 	case "all-executors", "inbound-rpc-id-all-executors":
 		return InboundRpcId_INBOUND_RPC_ID_ALL_EXECUTORS, nil
-	case "acs", "inbound-rpc-id-acs":
-		return InboundRpcId_INBOUND_RPC_ID_ACS, nil
+	case "mint-acs-tokens", "inbound-rpc-id-mint-acs-tokens":
+		return InboundRpcId_INBOUND_RPC_ID_MINT_ACS_TOKENS, nil
 	case "authorize", "inbound-rpc-id-authorize":
 		return InboundRpcId_INBOUND_RPC_ID_AUTHORIZE, nil
 	default:
@@ -357,8 +357,8 @@ func InboundRpcIdToString(v InboundRpcId) string {
 		return "all-mutators"
 	case InboundRpcId_INBOUND_RPC_ID_ALL_EXECUTORS:
 		return "all-executors"
-	case InboundRpcId_INBOUND_RPC_ID_ACS:
-		return "acs"
+	case InboundRpcId_INBOUND_RPC_ID_MINT_ACS_TOKENS:
+		return "mint-acs-tokens"
 	case InboundRpcId_INBOUND_RPC_ID_AUTHORIZE:
 		return "authorize"
 	default:
@@ -389,8 +389,8 @@ func ParseInboundRpcIdLiberal(s string) InboundRpcId {
 		return InboundRpcId_INBOUND_RPC_ID_ALL_MUTATORS
 	case "all-executors", "inbound-rpc-id-all-executors":
 		return InboundRpcId_INBOUND_RPC_ID_ALL_EXECUTORS
-	case "acs", "inbound-rpc-id-acs":
-		return InboundRpcId_INBOUND_RPC_ID_ACS
+	case "mint-acs-tokens", "inbound-rpc-id-mint-acs-tokens":
+		return InboundRpcId_INBOUND_RPC_ID_MINT_ACS_TOKENS
 	case "authorize", "inbound-rpc-id-authorize":
 		return InboundRpcId_INBOUND_RPC_ID_AUTHORIZE
 	default:
@@ -409,8 +409,8 @@ func InboundRpcIdToSpecName(v InboundRpcId) string {
 		return "INBOUND_RPC_ID_ALL_MUTATORS"
 	case InboundRpcId_INBOUND_RPC_ID_ALL_EXECUTORS:
 		return "INBOUND_RPC_ID_ALL_EXECUTORS"
-	case InboundRpcId_INBOUND_RPC_ID_ACS:
-		return "INBOUND_RPC_ID_ACS"
+	case InboundRpcId_INBOUND_RPC_ID_MINT_ACS_TOKENS:
+		return "INBOUND_RPC_ID_MINT_ACS_TOKENS"
 	case InboundRpcId_INBOUND_RPC_ID_AUTHORIZE:
 		return "INBOUND_RPC_ID_AUTHORIZE"
 	default:
@@ -555,15 +555,15 @@ func MetadataRpcIdValues() []MetadataRpcId {
 		MetadataRpcId_METADATA_RPC_ID_ALL_ACCESSORS,
 		MetadataRpcId_METADATA_RPC_ID_ALL_MUTATORS,
 		MetadataRpcId_METADATA_RPC_ID_ALL_EXECUTORS,
-		MetadataRpcId_METADATA_RPC_ID_IDP_METADATA,
-		MetadataRpcId_METADATA_RPC_ID_SP_METADATA,
+		MetadataRpcId_METADATA_RPC_ID_GET_IDP_METADATA,
+		MetadataRpcId_METADATA_RPC_ID_GET_SP_METADATA,
 		MetadataRpcId_METADATA_RPC_ID_GET_IDP_DESCRIPTOR,
 	}
 }
 
 // MetadataRpcIdStringValues returns all valid MetadataRpcId names as strings
 func MetadataRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "idp-metadata", "sp-metadata", "get-idp-descriptor"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "get-idp-metadata", "get-sp-metadata", "get-idp-descriptor"}
 }
 
 // ParseMetadataRpcId converts a string to a MetadataRpcId enum value
@@ -580,10 +580,10 @@ func ParseMetadataRpcId(s string) (MetadataRpcId, error) {
 		return MetadataRpcId_METADATA_RPC_ID_ALL_MUTATORS, nil
 	case "all-executors", "metadata-rpc-id-all-executors":
 		return MetadataRpcId_METADATA_RPC_ID_ALL_EXECUTORS, nil
-	case "idp-metadata", "metadata-rpc-id-idp-metadata":
-		return MetadataRpcId_METADATA_RPC_ID_IDP_METADATA, nil
-	case "sp-metadata", "metadata-rpc-id-sp-metadata":
-		return MetadataRpcId_METADATA_RPC_ID_SP_METADATA, nil
+	case "get-idp-metadata", "metadata-rpc-id-get-idp-metadata":
+		return MetadataRpcId_METADATA_RPC_ID_GET_IDP_METADATA, nil
+	case "get-sp-metadata", "metadata-rpc-id-get-sp-metadata":
+		return MetadataRpcId_METADATA_RPC_ID_GET_SP_METADATA, nil
 	case "get-idp-descriptor", "metadata-rpc-id-get-idp-descriptor":
 		return MetadataRpcId_METADATA_RPC_ID_GET_IDP_DESCRIPTOR, nil
 	default:
@@ -622,10 +622,10 @@ func MetadataRpcIdToString(v MetadataRpcId) string {
 		return "all-mutators"
 	case MetadataRpcId_METADATA_RPC_ID_ALL_EXECUTORS:
 		return "all-executors"
-	case MetadataRpcId_METADATA_RPC_ID_IDP_METADATA:
-		return "idp-metadata"
-	case MetadataRpcId_METADATA_RPC_ID_SP_METADATA:
-		return "sp-metadata"
+	case MetadataRpcId_METADATA_RPC_ID_GET_IDP_METADATA:
+		return "get-idp-metadata"
+	case MetadataRpcId_METADATA_RPC_ID_GET_SP_METADATA:
+		return "get-sp-metadata"
 	case MetadataRpcId_METADATA_RPC_ID_GET_IDP_DESCRIPTOR:
 		return "get-idp-descriptor"
 	default:
@@ -656,10 +656,10 @@ func ParseMetadataRpcIdLiberal(s string) MetadataRpcId {
 		return MetadataRpcId_METADATA_RPC_ID_ALL_MUTATORS
 	case "all-executors", "metadata-rpc-id-all-executors":
 		return MetadataRpcId_METADATA_RPC_ID_ALL_EXECUTORS
-	case "idp-metadata", "metadata-rpc-id-idp-metadata":
-		return MetadataRpcId_METADATA_RPC_ID_IDP_METADATA
-	case "sp-metadata", "metadata-rpc-id-sp-metadata":
-		return MetadataRpcId_METADATA_RPC_ID_SP_METADATA
+	case "get-idp-metadata", "metadata-rpc-id-get-idp-metadata":
+		return MetadataRpcId_METADATA_RPC_ID_GET_IDP_METADATA
+	case "get-sp-metadata", "metadata-rpc-id-get-sp-metadata":
+		return MetadataRpcId_METADATA_RPC_ID_GET_SP_METADATA
 	case "get-idp-descriptor", "metadata-rpc-id-get-idp-descriptor":
 		return MetadataRpcId_METADATA_RPC_ID_GET_IDP_DESCRIPTOR
 	default:
@@ -678,10 +678,10 @@ func MetadataRpcIdToSpecName(v MetadataRpcId) string {
 		return "METADATA_RPC_ID_ALL_MUTATORS"
 	case MetadataRpcId_METADATA_RPC_ID_ALL_EXECUTORS:
 		return "METADATA_RPC_ID_ALL_EXECUTORS"
-	case MetadataRpcId_METADATA_RPC_ID_IDP_METADATA:
-		return "METADATA_RPC_ID_IDP_METADATA"
-	case MetadataRpcId_METADATA_RPC_ID_SP_METADATA:
-		return "METADATA_RPC_ID_SP_METADATA"
+	case MetadataRpcId_METADATA_RPC_ID_GET_IDP_METADATA:
+		return "METADATA_RPC_ID_GET_IDP_METADATA"
+	case MetadataRpcId_METADATA_RPC_ID_GET_SP_METADATA:
+		return "METADATA_RPC_ID_GET_SP_METADATA"
 	case MetadataRpcId_METADATA_RPC_ID_GET_IDP_DESCRIPTOR:
 		return "METADATA_RPC_ID_GET_IDP_DESCRIPTOR"
 	default:
@@ -4407,16 +4407,16 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
+	// Validate EntityId (assert_required)
+	if m.EntityId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field EntityId is required")
+	}
+
 	// Validate EntityId (assert_url: URL_SCHEME_HTTPS)
 	if m.EntityId != "" {
 		if err := utils.ValidateAssertURL_URL_SCHEME_HTTPS(m.EntityId); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field EntityId URL validation failed")
 		}
-	}
-
-	// Validate EntityId (assert_required)
-	if m.EntityId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field EntityId is required")
 	}
 
 	// Validate BaseUrl (assert_required)
@@ -4701,6 +4701,11 @@ func ValidateAcsRequestWithDepth(m *AcsRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
+	// Validate SamlResponse (assert_required)
+	if m.SamlResponse == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SamlResponse is required")
+	}
+
 	// Validate SamlResponse (assert_min_length: 1)
 	if len(m.SamlResponse) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SamlResponse must be at least 1 characters, got: %d", len(m.SamlResponse))
@@ -4709,11 +4714,6 @@ func ValidateAcsRequestWithDepth(m *AcsRequest, depth int) error {
 	// Validate SamlResponse (assert_max_length: 131072)
 	if len(m.SamlResponse) > 131072 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SamlResponse must be at most 131072 characters, got: %d", len(m.SamlResponse))
-	}
-
-	// Validate SamlResponse (assert_required)
-	if m.SamlResponse == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field SamlResponse is required")
 	}
 
 	// Validate RelayState (assert_max_length: 2048)
@@ -4765,14 +4765,14 @@ func ValidateAcsResponseWithDepth(m *AcsResponse, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field AccessToken must be at least 1 characters, got: %d", len(m.AccessToken))
 	}
 
-	// Validate RefreshToken (assert_min_length: 1)
-	if len(m.RefreshToken) < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field RefreshToken must be at least 1 characters, got: %d", len(m.RefreshToken))
-	}
-
 	// Validate RefreshToken (assert_required)
 	if m.RefreshToken == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field RefreshToken is required")
+	}
+
+	// Validate RefreshToken (assert_min_length: 1)
+	if len(m.RefreshToken) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RefreshToken must be at least 1 characters, got: %d", len(m.RefreshToken))
 	}
 
 	// Validate RelayState (assert_max_length: 2048)
@@ -5082,6 +5082,11 @@ func ValidateSpInfoWithDepth(m *SpInfo, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Name must be at least 1 characters, got: %d", len(m.Name))
 	}
 
+	// Validate Name (assert_max_length: 128)
+	if len(m.Name) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Name must be at most 128 characters, got: %d", len(m.Name))
+	}
+
 	// Validate EntityId (assert_required)
 	if m.EntityId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field EntityId is required")
@@ -5090,6 +5095,11 @@ func ValidateSpInfoWithDepth(m *SpInfo, depth int) error {
 	// Validate EntityId (assert_min_length: 1)
 	if len(m.EntityId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field EntityId must be at least 1 characters, got: %d", len(m.EntityId))
+	}
+
+	// Validate EntityId (assert_max_length: 2048)
+	if len(m.EntityId) > 2048 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field EntityId must be at most 2048 characters, got: %d", len(m.EntityId))
 	}
 
 	// Validate SpIndex (assert_ge: 0)
@@ -5154,14 +5164,14 @@ func ValidateMetadataResponseWithDepth(m *MetadataResponse, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Xml (assert_required)
-	if m.Xml == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Xml is required")
-	}
-
 	// Validate Xml (assert_min_length: 1)
 	if len(m.Xml) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Xml must be at least 1 characters, got: %d", len(m.Xml))
+	}
+
+	// Validate Xml (assert_required)
+	if m.Xml == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Xml is required")
 	}
 
 	// Validate Xml (default max size: 32768 bytes)

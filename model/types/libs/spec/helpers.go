@@ -1369,6 +1369,101 @@ func GraphModeToSpecName(v GraphMode) string {
 	}
 }
 
+// SmbRootValues returns all valid SmbRoot values (excluding UNDEFINED)
+func SmbRootValues() []SmbRoot {
+	return []SmbRoot{
+		SmbRoot_SMB_ROOT_CLUSTER,
+	}
+}
+
+// SmbRootStringValues returns all valid SmbRoot names as strings
+func SmbRootStringValues() []string {
+	return []string{"cluster"}
+}
+
+// ParseSmbRoot converts a string to a SmbRoot enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseSmbRoot(s string) (SmbRoot, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return SmbRoot_SMB_ROOT_ISOLATED, nil
+	case "cluster", "smb-root-cluster":
+		return SmbRoot_SMB_ROOT_CLUSTER, nil
+	default:
+		return SmbRoot_SMB_ROOT_ISOLATED, protoerrors.NewErrMissingInvalidData(nil, "invalid smbroot %s, expecting one of: %v", s, SmbRootStringValues())
+	}
+}
+
+// ParseSmbRoots converts a comma-separated string to a slice of SmbRoot enum values
+// Returns an error if any value is invalid
+func ParseSmbRoots(s string) ([]SmbRoot, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]SmbRoot, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseSmbRoot(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// SmbRootToString converts a SmbRoot to its lowercase string representation
+func SmbRootToString(v SmbRoot) string {
+	switch v {
+	case SmbRoot_SMB_ROOT_CLUSTER:
+		return "cluster"
+	default:
+		return ""
+	}
+}
+
+// ParseSmbRootLiberal parses a SmbRoot liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseSmbRootLiberal(s string) SmbRoot {
+	if s == "" {
+		return SmbRoot_SMB_ROOT_ISOLATED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return SmbRoot(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "cluster", "smb-root-cluster":
+		return SmbRoot_SMB_ROOT_CLUSTER
+	default:
+		return SmbRoot_SMB_ROOT_ISOLATED
+	}
+}
+
+// SmbRootToSpecName converts a SmbRoot to its canonical protobuf spec name
+func SmbRootToSpecName(v SmbRoot) string {
+	switch v {
+	case SmbRoot_SMB_ROOT_ISOLATED:
+		return "SMB_ROOT_ISOLATED"
+	case SmbRoot_SMB_ROOT_CLUSTER:
+		return "SMB_ROOT_CLUSTER"
+	default:
+		return ""
+	}
+}
+
 // CollectionModeValues returns all valid CollectionMode values (excluding UNDEFINED)
 func CollectionModeValues() []CollectionMode {
 	return []CollectionMode{
@@ -2056,6 +2151,110 @@ func TlsKeyTypeToSpecName(v TlsKeyType) string {
 	}
 }
 
+// ConfigSliceScopeValues returns all valid ConfigSliceScope values (excluding UNDEFINED)
+func ConfigSliceScopeValues() []ConfigSliceScope {
+	return []ConfigSliceScope{
+		ConfigSliceScope_CONFIG_SLICE_SCOPE_TENANT,
+		ConfigSliceScope_CONFIG_SLICE_SCOPE_PROJECT,
+	}
+}
+
+// ConfigSliceScopeStringValues returns all valid ConfigSliceScope names as strings
+func ConfigSliceScopeStringValues() []string {
+	return []string{"tenant", "project"}
+}
+
+// ParseConfigSliceScope converts a string to a ConfigSliceScope enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseConfigSliceScope(s string) (ConfigSliceScope, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return ConfigSliceScope_CONFIG_SLICE_SCOPE_UNSPECIFIED, nil
+	case "tenant", "config-slice-scope-tenant":
+		return ConfigSliceScope_CONFIG_SLICE_SCOPE_TENANT, nil
+	case "project", "config-slice-scope-project":
+		return ConfigSliceScope_CONFIG_SLICE_SCOPE_PROJECT, nil
+	default:
+		return ConfigSliceScope_CONFIG_SLICE_SCOPE_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid configslicescope %s, expecting one of: %v", s, ConfigSliceScopeStringValues())
+	}
+}
+
+// ParseConfigSliceScopes converts a comma-separated string to a slice of ConfigSliceScope enum values
+// Returns an error if any value is invalid
+func ParseConfigSliceScopes(s string) ([]ConfigSliceScope, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]ConfigSliceScope, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseConfigSliceScope(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// ConfigSliceScopeToString converts a ConfigSliceScope to its lowercase string representation
+func ConfigSliceScopeToString(v ConfigSliceScope) string {
+	switch v {
+	case ConfigSliceScope_CONFIG_SLICE_SCOPE_TENANT:
+		return "tenant"
+	case ConfigSliceScope_CONFIG_SLICE_SCOPE_PROJECT:
+		return "project"
+	default:
+		return ""
+	}
+}
+
+// ParseConfigSliceScopeLiberal parses a ConfigSliceScope liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseConfigSliceScopeLiberal(s string) ConfigSliceScope {
+	if s == "" {
+		return ConfigSliceScope_CONFIG_SLICE_SCOPE_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return ConfigSliceScope(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "tenant", "config-slice-scope-tenant":
+		return ConfigSliceScope_CONFIG_SLICE_SCOPE_TENANT
+	case "project", "config-slice-scope-project":
+		return ConfigSliceScope_CONFIG_SLICE_SCOPE_PROJECT
+	default:
+		return ConfigSliceScope_CONFIG_SLICE_SCOPE_UNSPECIFIED
+	}
+}
+
+// ConfigSliceScopeToSpecName converts a ConfigSliceScope to its canonical protobuf spec name
+func ConfigSliceScopeToSpecName(v ConfigSliceScope) string {
+	switch v {
+	case ConfigSliceScope_CONFIG_SLICE_SCOPE_UNSPECIFIED:
+		return "CONFIG_SLICE_SCOPE_UNSPECIFIED"
+	case ConfigSliceScope_CONFIG_SLICE_SCOPE_TENANT:
+		return "CONFIG_SLICE_SCOPE_TENANT"
+	case ConfigSliceScope_CONFIG_SLICE_SCOPE_PROJECT:
+		return "CONFIG_SLICE_SCOPE_PROJECT"
+	default:
+		return ""
+	}
+}
+
 // RestMethodValues returns all valid RestMethod values (excluding UNDEFINED)
 func RestMethodValues() []RestMethod {
 	return []RestMethod{
@@ -2173,551 +2372,6 @@ func RestMethodToSpecName(v RestMethod) string {
 		return "REST_METHOD_PUT"
 	case RestMethod_REST_METHOD_DELETE:
 		return "REST_METHOD_DELETE"
-	default:
-		return ""
-	}
-}
-
-// TypeIDValues returns all valid TypeID values (excluding UNDEFINED)
-func TypeIDValues() []TypeID {
-	return []TypeID{
-		TypeID_TYPE_ID_STRING_CONST,
-		TypeID_TYPE_ID_INT_CONST,
-		TypeID_TYPE_ID_FLOAT_CONST,
-		TypeID_TYPE_ID_BOOL_CONST,
-		TypeID_TYPE_ID_DEFAULT_HOST,
-		TypeID_TYPE_ID_NUMERIC_CONSTRAINT,
-		TypeID_TYPE_ID_FLOAT_CONSTRAINT,
-		TypeID_TYPE_ID_PARAM_MAP_CONFIG,
-		TypeID_TYPE_ID_SUBSCRIPTION_ANNOTATION,
-		TypeID_TYPE_ID_EVENT_PUBLISH_ANNOTATION,
-		TypeID_TYPE_ID_EVENT_WATCH_ANNOTATION,
-		TypeID_TYPE_ID_GRAPH_TYPE_ANNOTATION,
-		TypeID_TYPE_ID_EVENT_DB_ANNOTATION,
-		TypeID_TYPE_ID_GRAPH_PROJECTION,
-		TypeID_TYPE_ID_GRAPH_PROJECTION_FIELD,
-		TypeID_TYPE_ID_TIMESERIES_PROJECTION,
-		TypeID_TYPE_ID_TIMESERIES_PROJECTION_FIELD,
-		TypeID_TYPE_ID_GRAPH_FIELD_OPTION,
-		TypeID_TYPE_ID_TIMESERIES_TABLE_ANNOTATION,
-		TypeID_TYPE_ID_TIMESERIES_FIELD_OPTION,
-		TypeID_TYPE_ID_SERVICE_S2_S_ANNOTATION,
-		TypeID_TYPE_ID_SERVICE_C2_S_ANNOTATION,
-		TypeID_TYPE_ID_SERVICE_C2_D_ANNOTATION,
-		TypeID_TYPE_ID_IDENTITY_SPIFFE_RESOURCE,
-		TypeID_TYPE_ID_TOKEN_MINTER_ANNOTATION,
-		TypeID_TYPE_ID_SMB_AUTHORITY_ANNOTATION,
-		TypeID_TYPE_ID_METHOD_S2_S_ANNOTATION,
-		TypeID_TYPE_ID_METHOD_C2_S_ANNOTATION,
-		TypeID_TYPE_ID_METHOD_COLLECTION,
-		TypeID_TYPE_ID_SERVICE_EVENT_ANNOTATION,
-		TypeID_TYPE_ID_CONDITIONAL_REQUIREMENT,
-		TypeID_TYPE_ID_STATE_ANNOTATION,
-		TypeID_TYPE_ID_SERVICE_STORE_ANNOTATION,
-		TypeID_TYPE_ID_GRAPH_STORE_ANNOTATION,
-		TypeID_TYPE_ID_TIMESERIES_STORE_ANNOTATION,
-		TypeID_TYPE_ID_HOT_STORE_ANNOTATION,
-		TypeID_TYPE_ID_COLD_STORE_ANNOTATION,
-		TypeID_TYPE_ID_SERVICE_HEALTH_ANNOTATION,
-		TypeID_TYPE_ID_V_SERVICE_ANNOTATION,
-		TypeID_TYPE_ID_SERVICE_ANNOTATION,
-		TypeID_TYPE_ID_GRPC_CONFIG_ANNOTATION,
-		TypeID_TYPE_ID_STATE_PERMS,
-		TypeID_TYPE_ID_STATE_IMPORT,
-		TypeID_TYPE_ID_OPA_EVAL_ANNOTATION,
-		TypeID_TYPE_ID_OPA_IMPORT,
-		TypeID_TYPE_ID_GRAPH_IMPORT,
-		TypeID_TYPE_ID_TIMESERIES_IMPORT,
-		TypeID_TYPE_ID_GRPC_S2_S_CLIENT,
-		TypeID_TYPE_ID_GRPC_C2_S_CLIENT,
-		TypeID_TYPE_ID_GRPC_W2_S_CLIENT,
-		TypeID_TYPE_ID_REST_METHODS,
-	}
-}
-
-// TypeIDStringValues returns all valid TypeID names as strings
-func TypeIDStringValues() []string {
-	return []string{"string-const", "int-const", "float-const", "bool-const", "default-host", "numeric-constraint", "float-constraint", "param-map-config", "subscription-annotation", "event-publish-annotation", "event-watch-annotation", "graph-type-annotation", "event-db-annotation", "graph-projection", "graph-projection-field", "timeseries-projection", "timeseries-projection-field", "graph-field-option", "timeseries-table-annotation", "timeseries-field-option", "service-s2-s-annotation", "service-c2-s-annotation", "service-c2-d-annotation", "identity-spiffe-resource", "token-minter-annotation", "smb-authority-annotation", "method-s2-s-annotation", "method-c2-s-annotation", "method-collection", "service-event-annotation", "conditional-requirement", "state-annotation", "service-store-annotation", "graph-store-annotation", "timeseries-store-annotation", "hot-store-annotation", "cold-store-annotation", "service-health-annotation", "v-service-annotation", "service-annotation", "grpc-config-annotation", "state-perms", "state-import", "opa-eval-annotation", "opa-import", "graph-import", "timeseries-import", "grpc-s2-s-client", "grpc-c2-s-client", "grpc-w2-s-client", "rest-methods"}
-}
-
-// ParseTypeID converts a string to a TypeID enum value
-// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseTypeID(s string) (TypeID, error) {
-	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
-	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
-	switch normalized {
-	case "":
-		return TypeID_TYPE_ID_UNSPECIFIED, nil
-	case "string-const", "type-id-string-const":
-		return TypeID_TYPE_ID_STRING_CONST, nil
-	case "int-const", "type-id-int-const":
-		return TypeID_TYPE_ID_INT_CONST, nil
-	case "float-const", "type-id-float-const":
-		return TypeID_TYPE_ID_FLOAT_CONST, nil
-	case "bool-const", "type-id-bool-const":
-		return TypeID_TYPE_ID_BOOL_CONST, nil
-	case "default-host", "type-id-default-host":
-		return TypeID_TYPE_ID_DEFAULT_HOST, nil
-	case "numeric-constraint", "type-id-numeric-constraint":
-		return TypeID_TYPE_ID_NUMERIC_CONSTRAINT, nil
-	case "float-constraint", "type-id-float-constraint":
-		return TypeID_TYPE_ID_FLOAT_CONSTRAINT, nil
-	case "param-map-config", "type-id-param-map-config":
-		return TypeID_TYPE_ID_PARAM_MAP_CONFIG, nil
-	case "subscription-annotation", "type-id-subscription-annotation":
-		return TypeID_TYPE_ID_SUBSCRIPTION_ANNOTATION, nil
-	case "event-publish-annotation", "type-id-event-publish-annotation":
-		return TypeID_TYPE_ID_EVENT_PUBLISH_ANNOTATION, nil
-	case "event-watch-annotation", "type-id-event-watch-annotation":
-		return TypeID_TYPE_ID_EVENT_WATCH_ANNOTATION, nil
-	case "graph-type-annotation", "type-id-graph-type-annotation":
-		return TypeID_TYPE_ID_GRAPH_TYPE_ANNOTATION, nil
-	case "event-db-annotation", "type-id-event-db-annotation":
-		return TypeID_TYPE_ID_EVENT_DB_ANNOTATION, nil
-	case "graph-projection", "type-id-graph-projection":
-		return TypeID_TYPE_ID_GRAPH_PROJECTION, nil
-	case "graph-projection-field", "type-id-graph-projection-field":
-		return TypeID_TYPE_ID_GRAPH_PROJECTION_FIELD, nil
-	case "timeseries-projection", "type-id-timeseries-projection":
-		return TypeID_TYPE_ID_TIMESERIES_PROJECTION, nil
-	case "timeseries-projection-field", "type-id-timeseries-projection-field":
-		return TypeID_TYPE_ID_TIMESERIES_PROJECTION_FIELD, nil
-	case "graph-field-option", "type-id-graph-field-option":
-		return TypeID_TYPE_ID_GRAPH_FIELD_OPTION, nil
-	case "timeseries-table-annotation", "type-id-timeseries-table-annotation":
-		return TypeID_TYPE_ID_TIMESERIES_TABLE_ANNOTATION, nil
-	case "timeseries-field-option", "type-id-timeseries-field-option":
-		return TypeID_TYPE_ID_TIMESERIES_FIELD_OPTION, nil
-	case "service-s2-s-annotation", "type-id-service-s2-s-annotation":
-		return TypeID_TYPE_ID_SERVICE_S2_S_ANNOTATION, nil
-	case "service-c2-s-annotation", "type-id-service-c2-s-annotation":
-		return TypeID_TYPE_ID_SERVICE_C2_S_ANNOTATION, nil
-	case "service-c2-d-annotation", "type-id-service-c2-d-annotation":
-		return TypeID_TYPE_ID_SERVICE_C2_D_ANNOTATION, nil
-	case "identity-spiffe-resource", "type-id-identity-spiffe-resource":
-		return TypeID_TYPE_ID_IDENTITY_SPIFFE_RESOURCE, nil
-	case "token-minter-annotation", "type-id-token-minter-annotation":
-		return TypeID_TYPE_ID_TOKEN_MINTER_ANNOTATION, nil
-	case "smb-authority-annotation", "type-id-smb-authority-annotation":
-		return TypeID_TYPE_ID_SMB_AUTHORITY_ANNOTATION, nil
-	case "method-s2-s-annotation", "type-id-method-s2-s-annotation":
-		return TypeID_TYPE_ID_METHOD_S2_S_ANNOTATION, nil
-	case "method-c2-s-annotation", "type-id-method-c2-s-annotation":
-		return TypeID_TYPE_ID_METHOD_C2_S_ANNOTATION, nil
-	case "method-collection", "type-id-method-collection":
-		return TypeID_TYPE_ID_METHOD_COLLECTION, nil
-	case "service-event-annotation", "type-id-service-event-annotation":
-		return TypeID_TYPE_ID_SERVICE_EVENT_ANNOTATION, nil
-	case "conditional-requirement", "type-id-conditional-requirement":
-		return TypeID_TYPE_ID_CONDITIONAL_REQUIREMENT, nil
-	case "state-annotation", "type-id-state-annotation":
-		return TypeID_TYPE_ID_STATE_ANNOTATION, nil
-	case "service-store-annotation", "type-id-service-store-annotation":
-		return TypeID_TYPE_ID_SERVICE_STORE_ANNOTATION, nil
-	case "graph-store-annotation", "type-id-graph-store-annotation":
-		return TypeID_TYPE_ID_GRAPH_STORE_ANNOTATION, nil
-	case "timeseries-store-annotation", "type-id-timeseries-store-annotation":
-		return TypeID_TYPE_ID_TIMESERIES_STORE_ANNOTATION, nil
-	case "hot-store-annotation", "type-id-hot-store-annotation":
-		return TypeID_TYPE_ID_HOT_STORE_ANNOTATION, nil
-	case "cold-store-annotation", "type-id-cold-store-annotation":
-		return TypeID_TYPE_ID_COLD_STORE_ANNOTATION, nil
-	case "service-health-annotation", "type-id-service-health-annotation":
-		return TypeID_TYPE_ID_SERVICE_HEALTH_ANNOTATION, nil
-	case "v-service-annotation", "type-id-v-service-annotation":
-		return TypeID_TYPE_ID_V_SERVICE_ANNOTATION, nil
-	case "service-annotation", "type-id-service-annotation":
-		return TypeID_TYPE_ID_SERVICE_ANNOTATION, nil
-	case "grpc-config-annotation", "type-id-grpc-config-annotation":
-		return TypeID_TYPE_ID_GRPC_CONFIG_ANNOTATION, nil
-	case "state-perms", "type-id-state-perms":
-		return TypeID_TYPE_ID_STATE_PERMS, nil
-	case "state-import", "type-id-state-import":
-		return TypeID_TYPE_ID_STATE_IMPORT, nil
-	case "opa-eval-annotation", "type-id-opa-eval-annotation":
-		return TypeID_TYPE_ID_OPA_EVAL_ANNOTATION, nil
-	case "opa-import", "type-id-opa-import":
-		return TypeID_TYPE_ID_OPA_IMPORT, nil
-	case "graph-import", "type-id-graph-import":
-		return TypeID_TYPE_ID_GRAPH_IMPORT, nil
-	case "timeseries-import", "type-id-timeseries-import":
-		return TypeID_TYPE_ID_TIMESERIES_IMPORT, nil
-	case "grpc-s2-s-client", "type-id-grpc-s2-s-client":
-		return TypeID_TYPE_ID_GRPC_S2_S_CLIENT, nil
-	case "grpc-c2-s-client", "type-id-grpc-c2-s-client":
-		return TypeID_TYPE_ID_GRPC_C2_S_CLIENT, nil
-	case "grpc-w2-s-client", "type-id-grpc-w2-s-client":
-		return TypeID_TYPE_ID_GRPC_W2_S_CLIENT, nil
-	case "rest-methods", "type-id-rest-methods":
-		return TypeID_TYPE_ID_REST_METHODS, nil
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid typeid %s, expecting one of: %v", s, TypeIDStringValues())
-	}
-}
-
-// ParseTypeIDs converts a comma-separated string to a slice of TypeID enum values
-// Returns an error if any value is invalid
-func ParseTypeIDs(s string) ([]TypeID, error) {
-	if s == "" {
-		return nil, nil
-	}
-	parts := strings.Split(s, ",")
-	result := make([]TypeID, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed == "" {
-			continue
-		}
-		val, err := ParseTypeID(trimmed)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, val)
-	}
-	return result, nil
-}
-
-// TypeIDToString converts a TypeID to its lowercase string representation
-func TypeIDToString(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_STRING_CONST:
-		return "string-const"
-	case TypeID_TYPE_ID_INT_CONST:
-		return "int-const"
-	case TypeID_TYPE_ID_FLOAT_CONST:
-		return "float-const"
-	case TypeID_TYPE_ID_BOOL_CONST:
-		return "bool-const"
-	case TypeID_TYPE_ID_DEFAULT_HOST:
-		return "default-host"
-	case TypeID_TYPE_ID_NUMERIC_CONSTRAINT:
-		return "numeric-constraint"
-	case TypeID_TYPE_ID_FLOAT_CONSTRAINT:
-		return "float-constraint"
-	case TypeID_TYPE_ID_PARAM_MAP_CONFIG:
-		return "param-map-config"
-	case TypeID_TYPE_ID_SUBSCRIPTION_ANNOTATION:
-		return "subscription-annotation"
-	case TypeID_TYPE_ID_EVENT_PUBLISH_ANNOTATION:
-		return "event-publish-annotation"
-	case TypeID_TYPE_ID_EVENT_WATCH_ANNOTATION:
-		return "event-watch-annotation"
-	case TypeID_TYPE_ID_GRAPH_TYPE_ANNOTATION:
-		return "graph-type-annotation"
-	case TypeID_TYPE_ID_EVENT_DB_ANNOTATION:
-		return "event-db-annotation"
-	case TypeID_TYPE_ID_GRAPH_PROJECTION:
-		return "graph-projection"
-	case TypeID_TYPE_ID_GRAPH_PROJECTION_FIELD:
-		return "graph-projection-field"
-	case TypeID_TYPE_ID_TIMESERIES_PROJECTION:
-		return "timeseries-projection"
-	case TypeID_TYPE_ID_TIMESERIES_PROJECTION_FIELD:
-		return "timeseries-projection-field"
-	case TypeID_TYPE_ID_GRAPH_FIELD_OPTION:
-		return "graph-field-option"
-	case TypeID_TYPE_ID_TIMESERIES_TABLE_ANNOTATION:
-		return "timeseries-table-annotation"
-	case TypeID_TYPE_ID_TIMESERIES_FIELD_OPTION:
-		return "timeseries-field-option"
-	case TypeID_TYPE_ID_SERVICE_S2_S_ANNOTATION:
-		return "service-s2-s-annotation"
-	case TypeID_TYPE_ID_SERVICE_C2_S_ANNOTATION:
-		return "service-c2-s-annotation"
-	case TypeID_TYPE_ID_SERVICE_C2_D_ANNOTATION:
-		return "service-c2-d-annotation"
-	case TypeID_TYPE_ID_IDENTITY_SPIFFE_RESOURCE:
-		return "identity-spiffe-resource"
-	case TypeID_TYPE_ID_TOKEN_MINTER_ANNOTATION:
-		return "token-minter-annotation"
-	case TypeID_TYPE_ID_SMB_AUTHORITY_ANNOTATION:
-		return "smb-authority-annotation"
-	case TypeID_TYPE_ID_METHOD_S2_S_ANNOTATION:
-		return "method-s2-s-annotation"
-	case TypeID_TYPE_ID_METHOD_C2_S_ANNOTATION:
-		return "method-c2-s-annotation"
-	case TypeID_TYPE_ID_METHOD_COLLECTION:
-		return "method-collection"
-	case TypeID_TYPE_ID_SERVICE_EVENT_ANNOTATION:
-		return "service-event-annotation"
-	case TypeID_TYPE_ID_CONDITIONAL_REQUIREMENT:
-		return "conditional-requirement"
-	case TypeID_TYPE_ID_STATE_ANNOTATION:
-		return "state-annotation"
-	case TypeID_TYPE_ID_SERVICE_STORE_ANNOTATION:
-		return "service-store-annotation"
-	case TypeID_TYPE_ID_GRAPH_STORE_ANNOTATION:
-		return "graph-store-annotation"
-	case TypeID_TYPE_ID_TIMESERIES_STORE_ANNOTATION:
-		return "timeseries-store-annotation"
-	case TypeID_TYPE_ID_HOT_STORE_ANNOTATION:
-		return "hot-store-annotation"
-	case TypeID_TYPE_ID_COLD_STORE_ANNOTATION:
-		return "cold-store-annotation"
-	case TypeID_TYPE_ID_SERVICE_HEALTH_ANNOTATION:
-		return "service-health-annotation"
-	case TypeID_TYPE_ID_V_SERVICE_ANNOTATION:
-		return "v-service-annotation"
-	case TypeID_TYPE_ID_SERVICE_ANNOTATION:
-		return "service-annotation"
-	case TypeID_TYPE_ID_GRPC_CONFIG_ANNOTATION:
-		return "grpc-config-annotation"
-	case TypeID_TYPE_ID_STATE_PERMS:
-		return "state-perms"
-	case TypeID_TYPE_ID_STATE_IMPORT:
-		return "state-import"
-	case TypeID_TYPE_ID_OPA_EVAL_ANNOTATION:
-		return "opa-eval-annotation"
-	case TypeID_TYPE_ID_OPA_IMPORT:
-		return "opa-import"
-	case TypeID_TYPE_ID_GRAPH_IMPORT:
-		return "graph-import"
-	case TypeID_TYPE_ID_TIMESERIES_IMPORT:
-		return "timeseries-import"
-	case TypeID_TYPE_ID_GRPC_S2_S_CLIENT:
-		return "grpc-s2-s-client"
-	case TypeID_TYPE_ID_GRPC_C2_S_CLIENT:
-		return "grpc-c2-s-client"
-	case TypeID_TYPE_ID_GRPC_W2_S_CLIENT:
-		return "grpc-w2-s-client"
-	case TypeID_TYPE_ID_REST_METHODS:
-		return "rest-methods"
-	default:
-		return ""
-	}
-}
-
-// ParseTypeIDLiberal parses a TypeID liberally, accepting:
-// - Integer values (as string or int)
-// - Enum names in any case
-// - RFC-compliant JSON names
-func ParseTypeIDLiberal(s string) TypeID {
-	if s == "" {
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-	// Try parsing as integer
-	if num, err := strconv.Atoi(s); err == nil {
-		return TypeID(num)
-	}
-	// Normalize and try parsing
-	normalized := strings.ToLower(strings.TrimSpace(s))
-	normalized = strings.ReplaceAll(normalized, "_", "-")
-	normalized = strings.ReplaceAll(normalized, " ", "-")
-	switch normalized {
-	case "string-const", "type-id-string-const":
-		return TypeID_TYPE_ID_STRING_CONST
-	case "int-const", "type-id-int-const":
-		return TypeID_TYPE_ID_INT_CONST
-	case "float-const", "type-id-float-const":
-		return TypeID_TYPE_ID_FLOAT_CONST
-	case "bool-const", "type-id-bool-const":
-		return TypeID_TYPE_ID_BOOL_CONST
-	case "default-host", "type-id-default-host":
-		return TypeID_TYPE_ID_DEFAULT_HOST
-	case "numeric-constraint", "type-id-numeric-constraint":
-		return TypeID_TYPE_ID_NUMERIC_CONSTRAINT
-	case "float-constraint", "type-id-float-constraint":
-		return TypeID_TYPE_ID_FLOAT_CONSTRAINT
-	case "param-map-config", "type-id-param-map-config":
-		return TypeID_TYPE_ID_PARAM_MAP_CONFIG
-	case "subscription-annotation", "type-id-subscription-annotation":
-		return TypeID_TYPE_ID_SUBSCRIPTION_ANNOTATION
-	case "event-publish-annotation", "type-id-event-publish-annotation":
-		return TypeID_TYPE_ID_EVENT_PUBLISH_ANNOTATION
-	case "event-watch-annotation", "type-id-event-watch-annotation":
-		return TypeID_TYPE_ID_EVENT_WATCH_ANNOTATION
-	case "graph-type-annotation", "type-id-graph-type-annotation":
-		return TypeID_TYPE_ID_GRAPH_TYPE_ANNOTATION
-	case "event-db-annotation", "type-id-event-db-annotation":
-		return TypeID_TYPE_ID_EVENT_DB_ANNOTATION
-	case "graph-projection", "type-id-graph-projection":
-		return TypeID_TYPE_ID_GRAPH_PROJECTION
-	case "graph-projection-field", "type-id-graph-projection-field":
-		return TypeID_TYPE_ID_GRAPH_PROJECTION_FIELD
-	case "timeseries-projection", "type-id-timeseries-projection":
-		return TypeID_TYPE_ID_TIMESERIES_PROJECTION
-	case "timeseries-projection-field", "type-id-timeseries-projection-field":
-		return TypeID_TYPE_ID_TIMESERIES_PROJECTION_FIELD
-	case "graph-field-option", "type-id-graph-field-option":
-		return TypeID_TYPE_ID_GRAPH_FIELD_OPTION
-	case "timeseries-table-annotation", "type-id-timeseries-table-annotation":
-		return TypeID_TYPE_ID_TIMESERIES_TABLE_ANNOTATION
-	case "timeseries-field-option", "type-id-timeseries-field-option":
-		return TypeID_TYPE_ID_TIMESERIES_FIELD_OPTION
-	case "service-s2-s-annotation", "type-id-service-s2-s-annotation":
-		return TypeID_TYPE_ID_SERVICE_S2_S_ANNOTATION
-	case "service-c2-s-annotation", "type-id-service-c2-s-annotation":
-		return TypeID_TYPE_ID_SERVICE_C2_S_ANNOTATION
-	case "service-c2-d-annotation", "type-id-service-c2-d-annotation":
-		return TypeID_TYPE_ID_SERVICE_C2_D_ANNOTATION
-	case "identity-spiffe-resource", "type-id-identity-spiffe-resource":
-		return TypeID_TYPE_ID_IDENTITY_SPIFFE_RESOURCE
-	case "token-minter-annotation", "type-id-token-minter-annotation":
-		return TypeID_TYPE_ID_TOKEN_MINTER_ANNOTATION
-	case "smb-authority-annotation", "type-id-smb-authority-annotation":
-		return TypeID_TYPE_ID_SMB_AUTHORITY_ANNOTATION
-	case "method-s2-s-annotation", "type-id-method-s2-s-annotation":
-		return TypeID_TYPE_ID_METHOD_S2_S_ANNOTATION
-	case "method-c2-s-annotation", "type-id-method-c2-s-annotation":
-		return TypeID_TYPE_ID_METHOD_C2_S_ANNOTATION
-	case "method-collection", "type-id-method-collection":
-		return TypeID_TYPE_ID_METHOD_COLLECTION
-	case "service-event-annotation", "type-id-service-event-annotation":
-		return TypeID_TYPE_ID_SERVICE_EVENT_ANNOTATION
-	case "conditional-requirement", "type-id-conditional-requirement":
-		return TypeID_TYPE_ID_CONDITIONAL_REQUIREMENT
-	case "state-annotation", "type-id-state-annotation":
-		return TypeID_TYPE_ID_STATE_ANNOTATION
-	case "service-store-annotation", "type-id-service-store-annotation":
-		return TypeID_TYPE_ID_SERVICE_STORE_ANNOTATION
-	case "graph-store-annotation", "type-id-graph-store-annotation":
-		return TypeID_TYPE_ID_GRAPH_STORE_ANNOTATION
-	case "timeseries-store-annotation", "type-id-timeseries-store-annotation":
-		return TypeID_TYPE_ID_TIMESERIES_STORE_ANNOTATION
-	case "hot-store-annotation", "type-id-hot-store-annotation":
-		return TypeID_TYPE_ID_HOT_STORE_ANNOTATION
-	case "cold-store-annotation", "type-id-cold-store-annotation":
-		return TypeID_TYPE_ID_COLD_STORE_ANNOTATION
-	case "service-health-annotation", "type-id-service-health-annotation":
-		return TypeID_TYPE_ID_SERVICE_HEALTH_ANNOTATION
-	case "v-service-annotation", "type-id-v-service-annotation":
-		return TypeID_TYPE_ID_V_SERVICE_ANNOTATION
-	case "service-annotation", "type-id-service-annotation":
-		return TypeID_TYPE_ID_SERVICE_ANNOTATION
-	case "grpc-config-annotation", "type-id-grpc-config-annotation":
-		return TypeID_TYPE_ID_GRPC_CONFIG_ANNOTATION
-	case "state-perms", "type-id-state-perms":
-		return TypeID_TYPE_ID_STATE_PERMS
-	case "state-import", "type-id-state-import":
-		return TypeID_TYPE_ID_STATE_IMPORT
-	case "opa-eval-annotation", "type-id-opa-eval-annotation":
-		return TypeID_TYPE_ID_OPA_EVAL_ANNOTATION
-	case "opa-import", "type-id-opa-import":
-		return TypeID_TYPE_ID_OPA_IMPORT
-	case "graph-import", "type-id-graph-import":
-		return TypeID_TYPE_ID_GRAPH_IMPORT
-	case "timeseries-import", "type-id-timeseries-import":
-		return TypeID_TYPE_ID_TIMESERIES_IMPORT
-	case "grpc-s2-s-client", "type-id-grpc-s2-s-client":
-		return TypeID_TYPE_ID_GRPC_S2_S_CLIENT
-	case "grpc-c2-s-client", "type-id-grpc-c2-s-client":
-		return TypeID_TYPE_ID_GRPC_C2_S_CLIENT
-	case "grpc-w2-s-client", "type-id-grpc-w2-s-client":
-		return TypeID_TYPE_ID_GRPC_W2_S_CLIENT
-	case "rest-methods", "type-id-rest-methods":
-		return TypeID_TYPE_ID_REST_METHODS
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-}
-
-// TypeIDToSpecName converts a TypeID to its canonical protobuf spec name
-func TypeIDToSpecName(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_UNSPECIFIED:
-		return "TYPE_ID_UNSPECIFIED"
-	case TypeID_TYPE_ID_STRING_CONST:
-		return "TYPE_ID_STRING_CONST"
-	case TypeID_TYPE_ID_INT_CONST:
-		return "TYPE_ID_INT_CONST"
-	case TypeID_TYPE_ID_FLOAT_CONST:
-		return "TYPE_ID_FLOAT_CONST"
-	case TypeID_TYPE_ID_BOOL_CONST:
-		return "TYPE_ID_BOOL_CONST"
-	case TypeID_TYPE_ID_DEFAULT_HOST:
-		return "TYPE_ID_DEFAULT_HOST"
-	case TypeID_TYPE_ID_NUMERIC_CONSTRAINT:
-		return "TYPE_ID_NUMERIC_CONSTRAINT"
-	case TypeID_TYPE_ID_FLOAT_CONSTRAINT:
-		return "TYPE_ID_FLOAT_CONSTRAINT"
-	case TypeID_TYPE_ID_PARAM_MAP_CONFIG:
-		return "TYPE_ID_PARAM_MAP_CONFIG"
-	case TypeID_TYPE_ID_SUBSCRIPTION_ANNOTATION:
-		return "TYPE_ID_SUBSCRIPTION_ANNOTATION"
-	case TypeID_TYPE_ID_EVENT_PUBLISH_ANNOTATION:
-		return "TYPE_ID_EVENT_PUBLISH_ANNOTATION"
-	case TypeID_TYPE_ID_EVENT_WATCH_ANNOTATION:
-		return "TYPE_ID_EVENT_WATCH_ANNOTATION"
-	case TypeID_TYPE_ID_GRAPH_TYPE_ANNOTATION:
-		return "TYPE_ID_GRAPH_TYPE_ANNOTATION"
-	case TypeID_TYPE_ID_EVENT_DB_ANNOTATION:
-		return "TYPE_ID_EVENT_DB_ANNOTATION"
-	case TypeID_TYPE_ID_GRAPH_PROJECTION:
-		return "TYPE_ID_GRAPH_PROJECTION"
-	case TypeID_TYPE_ID_GRAPH_PROJECTION_FIELD:
-		return "TYPE_ID_GRAPH_PROJECTION_FIELD"
-	case TypeID_TYPE_ID_TIMESERIES_PROJECTION:
-		return "TYPE_ID_TIMESERIES_PROJECTION"
-	case TypeID_TYPE_ID_TIMESERIES_PROJECTION_FIELD:
-		return "TYPE_ID_TIMESERIES_PROJECTION_FIELD"
-	case TypeID_TYPE_ID_GRAPH_FIELD_OPTION:
-		return "TYPE_ID_GRAPH_FIELD_OPTION"
-	case TypeID_TYPE_ID_TIMESERIES_TABLE_ANNOTATION:
-		return "TYPE_ID_TIMESERIES_TABLE_ANNOTATION"
-	case TypeID_TYPE_ID_TIMESERIES_FIELD_OPTION:
-		return "TYPE_ID_TIMESERIES_FIELD_OPTION"
-	case TypeID_TYPE_ID_SERVICE_S2_S_ANNOTATION:
-		return "TYPE_ID_SERVICE_S2_S_ANNOTATION"
-	case TypeID_TYPE_ID_SERVICE_C2_S_ANNOTATION:
-		return "TYPE_ID_SERVICE_C2_S_ANNOTATION"
-	case TypeID_TYPE_ID_SERVICE_C2_D_ANNOTATION:
-		return "TYPE_ID_SERVICE_C2_D_ANNOTATION"
-	case TypeID_TYPE_ID_IDENTITY_SPIFFE_RESOURCE:
-		return "TYPE_ID_IDENTITY_SPIFFE_RESOURCE"
-	case TypeID_TYPE_ID_TOKEN_MINTER_ANNOTATION:
-		return "TYPE_ID_TOKEN_MINTER_ANNOTATION"
-	case TypeID_TYPE_ID_SMB_AUTHORITY_ANNOTATION:
-		return "TYPE_ID_SMB_AUTHORITY_ANNOTATION"
-	case TypeID_TYPE_ID_METHOD_S2_S_ANNOTATION:
-		return "TYPE_ID_METHOD_S2_S_ANNOTATION"
-	case TypeID_TYPE_ID_METHOD_C2_S_ANNOTATION:
-		return "TYPE_ID_METHOD_C2_S_ANNOTATION"
-	case TypeID_TYPE_ID_METHOD_COLLECTION:
-		return "TYPE_ID_METHOD_COLLECTION"
-	case TypeID_TYPE_ID_SERVICE_EVENT_ANNOTATION:
-		return "TYPE_ID_SERVICE_EVENT_ANNOTATION"
-	case TypeID_TYPE_ID_CONDITIONAL_REQUIREMENT:
-		return "TYPE_ID_CONDITIONAL_REQUIREMENT"
-	case TypeID_TYPE_ID_STATE_ANNOTATION:
-		return "TYPE_ID_STATE_ANNOTATION"
-	case TypeID_TYPE_ID_SERVICE_STORE_ANNOTATION:
-		return "TYPE_ID_SERVICE_STORE_ANNOTATION"
-	case TypeID_TYPE_ID_GRAPH_STORE_ANNOTATION:
-		return "TYPE_ID_GRAPH_STORE_ANNOTATION"
-	case TypeID_TYPE_ID_TIMESERIES_STORE_ANNOTATION:
-		return "TYPE_ID_TIMESERIES_STORE_ANNOTATION"
-	case TypeID_TYPE_ID_HOT_STORE_ANNOTATION:
-		return "TYPE_ID_HOT_STORE_ANNOTATION"
-	case TypeID_TYPE_ID_COLD_STORE_ANNOTATION:
-		return "TYPE_ID_COLD_STORE_ANNOTATION"
-	case TypeID_TYPE_ID_SERVICE_HEALTH_ANNOTATION:
-		return "TYPE_ID_SERVICE_HEALTH_ANNOTATION"
-	case TypeID_TYPE_ID_V_SERVICE_ANNOTATION:
-		return "TYPE_ID_V_SERVICE_ANNOTATION"
-	case TypeID_TYPE_ID_SERVICE_ANNOTATION:
-		return "TYPE_ID_SERVICE_ANNOTATION"
-	case TypeID_TYPE_ID_GRPC_CONFIG_ANNOTATION:
-		return "TYPE_ID_GRPC_CONFIG_ANNOTATION"
-	case TypeID_TYPE_ID_STATE_PERMS:
-		return "TYPE_ID_STATE_PERMS"
-	case TypeID_TYPE_ID_STATE_IMPORT:
-		return "TYPE_ID_STATE_IMPORT"
-	case TypeID_TYPE_ID_OPA_EVAL_ANNOTATION:
-		return "TYPE_ID_OPA_EVAL_ANNOTATION"
-	case TypeID_TYPE_ID_OPA_IMPORT:
-		return "TYPE_ID_OPA_IMPORT"
-	case TypeID_TYPE_ID_GRAPH_IMPORT:
-		return "TYPE_ID_GRAPH_IMPORT"
-	case TypeID_TYPE_ID_TIMESERIES_IMPORT:
-		return "TYPE_ID_TIMESERIES_IMPORT"
-	case TypeID_TYPE_ID_GRPC_S2_S_CLIENT:
-		return "TYPE_ID_GRPC_S2_S_CLIENT"
-	case TypeID_TYPE_ID_GRPC_C2_S_CLIENT:
-		return "TYPE_ID_GRPC_C2_S_CLIENT"
-	case TypeID_TYPE_ID_GRPC_W2_S_CLIENT:
-		return "TYPE_ID_GRPC_W2_S_CLIENT"
-	case TypeID_TYPE_ID_REST_METHODS:
-		return "TYPE_ID_REST_METHODS"
 	default:
 		return ""
 	}
@@ -6500,6 +6154,147 @@ func TokenMinterAnnotationToTOML(v *TokenMinterAnnotation) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
+// SmbAnnotationJSON represents SmbAnnotation in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type smbannotationJSON struct {
+	Root string `json:"root,omitempty"`
+}
+
+// SmbAnnotationToJSON converts SmbAnnotation to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func SmbAnnotationToJSON(v *SmbAnnotation) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "smbannotation is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := smbannotationJSON{
+		Root: SmbRootToString(v.Root),
+	}
+	return json.Marshal(helper)
+}
+
+// SmbAnnotationToJSONPretty converts SmbAnnotation to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func SmbAnnotationToJSONPretty(v *SmbAnnotation) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "smbannotation is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := smbannotationJSON{
+		Root: SmbRootToString(v.Root),
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// SmbAnnotationFromBytes creates SmbAnnotation from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func SmbAnnotationFromBytes(data []byte) (*SmbAnnotation, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := SmbAnnotationFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := SmbAnnotationFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := SmbAnnotationFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &SmbAnnotation{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse SmbAnnotation: unsupported format or invalid data")
+}
+
+// SmbAnnotationFromJSON creates SmbAnnotation from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func SmbAnnotationFromJSON(data []byte) (*SmbAnnotation, error) {
+	// Unmarshal into helper struct with string enums
+	var raw smbannotationJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &SmbAnnotation{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &SmbAnnotation{}
+	// Parse enum field: Root
+	if raw.Root != "" {
+		if parsed, err := ParseSmbRoot(raw.Root); err == nil {
+			result.Root = parsed
+		}
+	}
+	return result, nil
+}
+
+// SmbAnnotationToYAML converts SmbAnnotation to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func SmbAnnotationToYAML(v *SmbAnnotation) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "smbannotation is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := SmbAnnotationToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// SmbAnnotationToTOML converts SmbAnnotation to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func SmbAnnotationToTOML(v *SmbAnnotation) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "smbannotation is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := SmbAnnotationToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
 // SmbAuthorityAnnotationJSON represents SmbAuthorityAnnotation in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type smbauthorityannotationJSON struct {
@@ -8703,6 +8498,151 @@ func GrpcConfigAnnotationToTOML(v *GrpcConfigAnnotation) ([]byte, error) {
 	}
 	// Convert to JSON first
 	jsonData, err := GrpcConfigAnnotationToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// ConfigSliceAnnotationJSON represents ConfigSliceAnnotation in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type configsliceannotationJSON struct {
+	Scope       string `json:"scope,omitempty"`
+	ServiceName string `json:"service_name,omitempty"`
+}
+
+// ConfigSliceAnnotationToJSON converts ConfigSliceAnnotation to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func ConfigSliceAnnotationToJSON(v *ConfigSliceAnnotation) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "configsliceannotation is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := configsliceannotationJSON{
+		Scope:       ConfigSliceScopeToString(v.Scope),
+		ServiceName: v.ServiceName,
+	}
+	return json.Marshal(helper)
+}
+
+// ConfigSliceAnnotationToJSONPretty converts ConfigSliceAnnotation to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func ConfigSliceAnnotationToJSONPretty(v *ConfigSliceAnnotation) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "configsliceannotation is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := configsliceannotationJSON{
+		Scope:       ConfigSliceScopeToString(v.Scope),
+		ServiceName: v.ServiceName,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// ConfigSliceAnnotationFromBytes creates ConfigSliceAnnotation from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func ConfigSliceAnnotationFromBytes(data []byte) (*ConfigSliceAnnotation, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := ConfigSliceAnnotationFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := ConfigSliceAnnotationFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := ConfigSliceAnnotationFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &ConfigSliceAnnotation{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse ConfigSliceAnnotation: unsupported format or invalid data")
+}
+
+// ConfigSliceAnnotationFromJSON creates ConfigSliceAnnotation from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func ConfigSliceAnnotationFromJSON(data []byte) (*ConfigSliceAnnotation, error) {
+	// Unmarshal into helper struct with string enums
+	var raw configsliceannotationJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &ConfigSliceAnnotation{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &ConfigSliceAnnotation{}
+	// Parse enum field: Scope
+	if raw.Scope != "" {
+		if parsed, err := ParseConfigSliceScope(raw.Scope); err == nil {
+			result.Scope = parsed
+		}
+	}
+	result.ServiceName = raw.ServiceName
+	return result, nil
+}
+
+// ConfigSliceAnnotationToYAML converts ConfigSliceAnnotation to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func ConfigSliceAnnotationToYAML(v *ConfigSliceAnnotation) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "configsliceannotation is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := ConfigSliceAnnotationToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// ConfigSliceAnnotationToTOML converts ConfigSliceAnnotation to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func ConfigSliceAnnotationToTOML(v *ConfigSliceAnnotation) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "configsliceannotation is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := ConfigSliceAnnotationToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -11075,6 +11015,29 @@ func TokenMinterAnnotationFromEnvVar(env map[string]string) (*TokenMinterAnnotat
 	return result, nil
 }
 
+// SmbAnnotationToEnvVar converts SmbAnnotation to environment variable key-value pairs.
+func SmbAnnotationToEnvVar(v *SmbAnnotation) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_LIBS_SPEC_SMB_ANNOTATION_ROOT"] = SmbRootToString(v.Root)
+	return result
+}
+
+// SmbAnnotationFromEnvVar creates SmbAnnotation from environment variable key-value pairs.
+func SmbAnnotationFromEnvVar(env map[string]string) (*SmbAnnotation, error) {
+	result := &SmbAnnotation{}
+	if val, ok := env["PROTO_LIBS_SPEC_SMB_ANNOTATION_ROOT"]; ok && val != "" {
+		parsed, err := ParseSmbRoot(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Root = parsed
+	}
+	return result, nil
+}
+
 // SmbAuthorityAnnotationToEnvVar converts SmbAuthorityAnnotation to environment variable key-value pairs.
 func SmbAuthorityAnnotationToEnvVar(v *SmbAuthorityAnnotation) map[string]string {
 	if v == nil {
@@ -11474,6 +11437,33 @@ func GrpcConfigAnnotationToEnvVar(v *GrpcConfigAnnotation) map[string]string {
 func GrpcConfigAnnotationFromEnvVar(env map[string]string) (*GrpcConfigAnnotation, error) {
 	result := &GrpcConfigAnnotation{}
 	if val, ok := env["PROTO_LIBS_SPEC_GRPC_CONFIG_ANNOTATION_SERVICE_NAME"]; ok && val != "" {
+		result.ServiceName = val
+	}
+	return result, nil
+}
+
+// ConfigSliceAnnotationToEnvVar converts ConfigSliceAnnotation to environment variable key-value pairs.
+func ConfigSliceAnnotationToEnvVar(v *ConfigSliceAnnotation) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_LIBS_SPEC_CONFIG_SLICE_ANNOTATION_SCOPE"] = ConfigSliceScopeToString(v.Scope)
+	result["PROTO_LIBS_SPEC_CONFIG_SLICE_ANNOTATION_SERVICE_NAME"] = v.ServiceName
+	return result
+}
+
+// ConfigSliceAnnotationFromEnvVar creates ConfigSliceAnnotation from environment variable key-value pairs.
+func ConfigSliceAnnotationFromEnvVar(env map[string]string) (*ConfigSliceAnnotation, error) {
+	result := &ConfigSliceAnnotation{}
+	if val, ok := env["PROTO_LIBS_SPEC_CONFIG_SLICE_ANNOTATION_SCOPE"]; ok && val != "" {
+		parsed, err := ParseConfigSliceScope(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Scope = parsed
+	}
+	if val, ok := env["PROTO_LIBS_SPEC_CONFIG_SLICE_ANNOTATION_SERVICE_NAME"]; ok && val != "" {
 		result.ServiceName = val
 	}
 	return result, nil
@@ -12464,6 +12454,30 @@ func ValidateTokenMinterAnnotationWithDepth(m *TokenMinterAnnotation, depth int)
 	return nil
 }
 
+// ValidateSmbAnnotation validates all fields in SmbAnnotation according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateSmbAnnotation(m *SmbAnnotation) error {
+	return ValidateSmbAnnotationWithDepth(m, 0)
+}
+
+// ValidateSmbAnnotationWithDepth validates SmbAnnotation and carries nested-message depth across
+// generated package boundaries.
+func ValidateSmbAnnotationWithDepth(m *SmbAnnotation, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Root enum value is known
+	if _, ok := SmbRoot_name[int32(m.Root)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Root has unknown enum value %d", int32(m.Root))
+	}
+
+	return nil
+}
+
 // ValidateSmbAuthorityAnnotation validates all fields in SmbAuthorityAnnotation according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateSmbAuthorityAnnotation(m *SmbAuthorityAnnotation) error {
@@ -12858,6 +12872,35 @@ func ValidateGrpcConfigAnnotationWithDepth(m *GrpcConfigAnnotation, depth int) e
 	return nil
 }
 
+// ValidateConfigSliceAnnotation validates all fields in ConfigSliceAnnotation according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateConfigSliceAnnotation(m *ConfigSliceAnnotation) error {
+	return ValidateConfigSliceAnnotationWithDepth(m, 0)
+}
+
+// ValidateConfigSliceAnnotationWithDepth validates ConfigSliceAnnotation and carries nested-message depth across
+// generated package boundaries.
+func ValidateConfigSliceAnnotationWithDepth(m *ConfigSliceAnnotation, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate ServiceName (default max size: 32768 bytes)
+	if len(m.ServiceName) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ServiceName exceeds max size of 32768 bytes, got: %d", len(m.ServiceName))
+	}
+
+	// Validate Scope enum value is known
+	if _, ok := ConfigSliceScope_name[int32(m.Scope)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Scope has unknown enum value %d", int32(m.Scope))
+	}
+
+	return nil
+}
+
 // ValidateStatePerms validates all fields in StatePerms according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateStatePerms(m *StatePerms) error {
@@ -13182,6 +13225,7 @@ const (
 	MaxSizeVserviceannotationName                  int = 32768
 	MaxSizeServiceannotationName                   int = 32768
 	MaxSizeGrpcconfigannotationServiceName         int = 32768
+	MaxSizeConfigsliceannotationServiceName        int = 32768
 	MaxSizeStatepermsTarget                        int = 32768
 	MaxSizeStateimportSource                       int = 32768
 	MaxSizeOpaevalannotationEntryPoint             int = 32768
@@ -13447,6 +13491,16 @@ func TokenMinterAnnotationDefaults(v *TokenMinterAnnotation) {
 }
 
 // ============================================================
+// TypeDefaults: SmbAnnotation
+// ============================================================
+// SmbAnnotationDefaults applies field-level default values to zero-valued fields.
+func SmbAnnotationDefaults(v *SmbAnnotation) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
 // TypeDefaults: SmbAuthorityAnnotation
 // ============================================================
 // SmbAuthorityAnnotationDefaults applies field-level default values to zero-valued fields.
@@ -13601,6 +13655,16 @@ func ServiceAnnotationDefaults(v *ServiceAnnotation) {
 // ============================================================
 // GrpcConfigAnnotationDefaults applies field-level default values to zero-valued fields.
 func GrpcConfigAnnotationDefaults(v *GrpcConfigAnnotation) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: ConfigSliceAnnotation
+// ============================================================
+// ConfigSliceAnnotationDefaults applies field-level default values to zero-valued fields.
+func ConfigSliceAnnotationDefaults(v *ConfigSliceAnnotation) {
 	if v == nil {
 		return
 	}
@@ -13982,6 +14046,17 @@ func TokenMinterAnnotationUndefaults(v *TokenMinterAnnotation) {
 }
 
 // ============================================================
+// TypeUndefaults: SmbAnnotation
+// ============================================================
+// SmbAnnotationUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func SmbAnnotationUndefaults(v *SmbAnnotation) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
 // TypeUndefaults: SmbAuthorityAnnotation
 // ============================================================
 // SmbAuthorityAnnotationUndefaults resets fields that match their default values back to zero.
@@ -14152,6 +14227,17 @@ func ServiceAnnotationUndefaults(v *ServiceAnnotation) {
 // GrpcConfigAnnotationUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
 func GrpcConfigAnnotationUndefaults(v *GrpcConfigAnnotation) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: ConfigSliceAnnotation
+// ============================================================
+// ConfigSliceAnnotationUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func ConfigSliceAnnotationUndefaults(v *ConfigSliceAnnotation) {
 	if v == nil {
 		return
 	}
@@ -14687,6 +14773,16 @@ func MergeTokenMinterAnnotation(dst, src *TokenMinterAnnotation) {
 }
 
 // ============================================================
+// Merge: SmbAnnotation
+// ============================================================
+// MergeSmbAnnotation fills zero-valued fields in dst from src.
+func MergeSmbAnnotation(dst, src *SmbAnnotation) {
+	if dst.Root == 0 {
+		dst.Root = src.Root
+	}
+}
+
+// ============================================================
 // Merge: MethodS2SAnnotation
 // ============================================================
 // MergeMethodS2SAnnotation fills zero-valued fields in dst from src.
@@ -14829,6 +14925,19 @@ func MergeServiceAnnotation(dst, src *ServiceAnnotation) {
 // ============================================================
 // MergeGrpcConfigAnnotation fills zero-valued fields in dst from src.
 func MergeGrpcConfigAnnotation(dst, src *GrpcConfigAnnotation) {
+	if dst.ServiceName == "" {
+		dst.ServiceName = src.ServiceName
+	}
+}
+
+// ============================================================
+// Merge: ConfigSliceAnnotation
+// ============================================================
+// MergeConfigSliceAnnotation fills zero-valued fields in dst from src.
+func MergeConfigSliceAnnotation(dst, src *ConfigSliceAnnotation) {
+	if dst.Scope == 0 {
+		dst.Scope = src.Scope
+	}
 	if dst.ServiceName == "" {
 		dst.ServiceName = src.ServiceName
 	}

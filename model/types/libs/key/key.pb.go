@@ -149,59 +149,6 @@ func (UseType) EnumDescriptor() ([]byte, []int) {
 	return file_libs_key_proto_rawDescGZIP(), []int{1}
 }
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED TypeID = 0
-	TypeID_TYPE_ID_PUBLIC_KEY  TypeID = 1
-	TypeID_TYPE_ID_KEY         TypeID = 2
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_PUBLIC_KEY",
-		2: "TYPE_ID_KEY",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED": 0,
-		"TYPE_ID_PUBLIC_KEY":  1,
-		"TYPE_ID_KEY":         2,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_key_proto_enumTypes[2].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_key_proto_enumTypes[2]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_key_proto_rawDescGZIP(), []int{2}
-}
-
 // PublicKey represents a public cryptographic key.
 // The key is stored as a base64-encoded PEM block in PKIX format.
 // Use NewProtoPublicKey() in Go or similar constructors in other languages to create.
@@ -338,15 +285,15 @@ var File_libs_key_proto protoreflect.FileDescriptor
 
 const file_libs_key_proto_rawDesc = "" +
 	"\n" +
-	"\x0elibs/key.proto\x12\x03key\x1a\x0flibs/spec.proto\"w\n" +
-	"\tPublicKey\x12\x18\n" +
-	"\x02id\x18\x01 \x01(\tB\b\x88\xa6\x1d\x01\x88\xa7\x1d\x01R\x02id\x12 \n" +
-	"\x06base64\x18\x02 \x01(\tB\b\x88\xa6\x1d\x01\x80\xa7\x1d\x01R\x06base64\x12.\n" +
-	"\acreated\x18\x03 \x01(\x03B\x14\x88\xa6\x1d\x01\xb0\xa7\x1d\x80\x8bһ\x06\xc0\xa7\x1d\x80\x86\xc1\xfc\x1dR\acreated\"u\n" +
-	"\x03Key\x12\x18\n" +
-	"\x02id\x18\x01 \x01(\tB\b\x88\xa6\x1d\x01\x88\xa7\x1d\x01R\x02id\x12$\n" +
-	"\x06base64\x18\x02 \x01(\tB\f\x88\xa6\x1d\x01\x98\xa6\x1d\n" +
-	"\x80\xa7\x1d\x01R\x06base64\x12.\n" +
+	"\x0elibs/key.proto\x12\x03key\x1a\x0flibs/spec.proto\"\x81\x01\n" +
+	"\tPublicKey\x12\x1d\n" +
+	"\x02id\x18\x01 \x01(\tB\r\x88\xa6\x1d\x01\x88\xa7\x1d\x01\xb8\xa8\x1d\x80\x02R\x02id\x12%\n" +
+	"\x06base64\x18\x02 \x01(\tB\r\x88\xa6\x1d\x01\x80\xa7\x1d\x01\xb8\xa8\x1d\x80@R\x06base64\x12.\n" +
+	"\acreated\x18\x03 \x01(\x03B\x14\x88\xa6\x1d\x01\xb0\xa7\x1d\x80\x8bһ\x06\xc0\xa7\x1d\x80\x86\xc1\xfc\x1dR\acreated\"\x80\x01\n" +
+	"\x03Key\x12\x1d\n" +
+	"\x02id\x18\x01 \x01(\tB\r\x88\xa6\x1d\x01\x88\xa7\x1d\x01\xb8\xa8\x1d\x80\x02R\x02id\x12*\n" +
+	"\x06base64\x18\x02 \x01(\tB\x12\x88\xa6\x1d\x01\x98\xa6\x1d\n" +
+	"\x80\xa7\x1d\x01\xb8\xa8\x1d\x80\x80\x01R\x06base64\x12.\n" +
 	"\acreated\x18\x03 \x01(\x03B\x14\x88\xa6\x1d\x01\xb0\xa7\x1d\x80\x8bһ\x06\xc0\xa7\x1d\x80\x86\xc1\xfc\x1dR\acreated*p\n" +
 	"\aKeyType\x12\x16\n" +
 	"\x12KEY_TYPE_UNDEFINED\x10\x00\x12\x19\n" +
@@ -356,11 +303,7 @@ const file_libs_key_proto_rawDesc = "" +
 	"\aUseType\x12\x16\n" +
 	"\x12USE_TYPE_UNDEFINED\x10\x00\x12\x19\n" +
 	"\fUSE_TYPE_SIG\x10\x01\x1a\a\xaa\xb5\x18\x03sig\x12\x19\n" +
-	"\fUSE_TYPE_ENC\x10\x02\x1a\a\xaa\xb5\x18\x03enc*J\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x16\n" +
-	"\x12TYPE_ID_PUBLIC_KEY\x10\x01\x12\x0f\n" +
-	"\vTYPE_ID_KEY\x10\x02BUZSgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/keyb\x06proto3"
+	"\fUSE_TYPE_ENC\x10\x02\x1a\a\xaa\xb5\x18\x03encBUZSgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/keyb\x06proto3"
 
 var (
 	file_libs_key_proto_rawDescOnce sync.Once
@@ -374,14 +317,13 @@ func file_libs_key_proto_rawDescGZIP() []byte {
 	return file_libs_key_proto_rawDescData
 }
 
-var file_libs_key_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
+var file_libs_key_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_libs_key_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_libs_key_proto_goTypes = []any{
 	(KeyType)(0),      // 0: key.KeyType
 	(UseType)(0),      // 1: key.UseType
-	(TypeID)(0),       // 2: key.TypeID
-	(*PublicKey)(nil), // 3: key.PublicKey
-	(*Key)(nil),       // 4: key.Key
+	(*PublicKey)(nil), // 2: key.PublicKey
+	(*Key)(nil),       // 3: key.Key
 }
 var file_libs_key_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -401,7 +343,7 @@ func file_libs_key_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_key_proto_rawDesc), len(file_libs_key_proto_rawDesc)),
-			NumEnums:      3,
+			NumEnums:      2,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,

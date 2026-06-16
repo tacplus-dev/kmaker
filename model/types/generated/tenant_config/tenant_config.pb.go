@@ -115,7 +115,7 @@ var File_generated_tenant_config_proto protoreflect.FileDescriptor
 
 const file_generated_tenant_config_proto_rawDesc = "" +
 	"\n" +
-	"\x1dgenerated/tenant_config.proto\x12\rtenant_config\x1a\x0flibs/spec.proto\x1a\x18common/credentials.proto\x1a\x12services/opa.proto\x1a\x14services/oauth.proto\x1a\x1fservices/gitlab-connector.proto\"\x80\x02\n" +
+	"\x1dgenerated/tenant_config.proto\x12\rtenant_config\x1a\x0flibs/spec.proto\x1a\x18common/credentials.proto\x1a\x1fservices/gitlab-connector.proto\x1a\x14services/oauth.proto\x1a\x12services/opa.proto\"\x80\x02\n" +
 	"\fTenantConfig\x127\n" +
 	"\x06kernel\x18\x01 \x01(\v2\x1f.credentials.KernelTenantConfigR\x06kernel\x12&\n" +
 	"\x03opa\x18\x02 \x01(\v2\x14.opa.OpaTenantConfigR\x03opa\x12.\n" +

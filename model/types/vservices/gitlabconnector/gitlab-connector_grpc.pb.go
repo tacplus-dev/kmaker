@@ -51,7 +51,7 @@ const (
 type GitLabConnectorEventBusStateServiceClient interface {
 	// Topic: EventStream
 	PublishToEventStream(ctx context.Context, in *GitLabConnectorEvent, opts ...grpc.CallOption) (*TopicPublishReceipt, error)
-	SubscribeToEventStream(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GitLabConnectorEvent], error)
+	SubscribeToEventStream(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GitLabConnectorEventBusEventStreamSubscribeRecord], error)
 }
 
 type gitLabConnectorEventBusStateServiceClient struct {
@@ -72,13 +72,13 @@ func (c *gitLabConnectorEventBusStateServiceClient) PublishToEventStream(ctx con
 	return out, nil
 }
 
-func (c *gitLabConnectorEventBusStateServiceClient) SubscribeToEventStream(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GitLabConnectorEvent], error) {
+func (c *gitLabConnectorEventBusStateServiceClient) SubscribeToEventStream(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GitLabConnectorEventBusEventStreamSubscribeRecord], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	stream, err := c.cc.NewStream(ctx, &GitLabConnectorEventBusStateService_ServiceDesc.Streams[0], GitLabConnectorEventBusStateService_SubscribeToEventStream_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[trace.TraceRequest, GitLabConnectorEvent]{ClientStream: stream}
+	x := &grpc.GenericClientStream[trace.TraceRequest, GitLabConnectorEventBusEventStreamSubscribeRecord]{ClientStream: stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -89,7 +89,7 @@ func (c *gitLabConnectorEventBusStateServiceClient) SubscribeToEventStream(ctx c
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type GitLabConnectorEventBusStateService_SubscribeToEventStreamClient = grpc.ServerStreamingClient[GitLabConnectorEvent]
+type GitLabConnectorEventBusStateService_SubscribeToEventStreamClient = grpc.ServerStreamingClient[GitLabConnectorEventBusEventStreamSubscribeRecord]
 
 // GitLabConnectorEventBusStateServiceServer is the server API for GitLabConnectorEventBusStateService service.
 // All implementations must embed UnimplementedGitLabConnectorEventBusStateServiceServer
@@ -102,7 +102,7 @@ type GitLabConnectorEventBusStateService_SubscribeToEventStreamClient = grpc.Ser
 type GitLabConnectorEventBusStateServiceServer interface {
 	// Topic: EventStream
 	PublishToEventStream(context.Context, *GitLabConnectorEvent) (*TopicPublishReceipt, error)
-	SubscribeToEventStream(*trace.TraceRequest, grpc.ServerStreamingServer[GitLabConnectorEvent]) error
+	SubscribeToEventStream(*trace.TraceRequest, grpc.ServerStreamingServer[GitLabConnectorEventBusEventStreamSubscribeRecord]) error
 	mustEmbedUnimplementedGitLabConnectorEventBusStateServiceServer()
 }
 
@@ -116,7 +116,7 @@ type UnimplementedGitLabConnectorEventBusStateServiceServer struct{}
 func (UnimplementedGitLabConnectorEventBusStateServiceServer) PublishToEventStream(context.Context, *GitLabConnectorEvent) (*TopicPublishReceipt, error) {
 	return nil, status.Error(codes.Unimplemented, "method PublishToEventStream not implemented")
 }
-func (UnimplementedGitLabConnectorEventBusStateServiceServer) SubscribeToEventStream(*trace.TraceRequest, grpc.ServerStreamingServer[GitLabConnectorEvent]) error {
+func (UnimplementedGitLabConnectorEventBusStateServiceServer) SubscribeToEventStream(*trace.TraceRequest, grpc.ServerStreamingServer[GitLabConnectorEventBusEventStreamSubscribeRecord]) error {
 	return status.Error(codes.Unimplemented, "method SubscribeToEventStream not implemented")
 }
 func (UnimplementedGitLabConnectorEventBusStateServiceServer) mustEmbedUnimplementedGitLabConnectorEventBusStateServiceServer() {
@@ -164,11 +164,11 @@ func _GitLabConnectorEventBusStateService_SubscribeToEventStream_Handler(srv int
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(GitLabConnectorEventBusStateServiceServer).SubscribeToEventStream(m, &grpc.GenericServerStream[trace.TraceRequest, GitLabConnectorEvent]{ServerStream: stream})
+	return srv.(GitLabConnectorEventBusStateServiceServer).SubscribeToEventStream(m, &grpc.GenericServerStream[trace.TraceRequest, GitLabConnectorEventBusEventStreamSubscribeRecord]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type GitLabConnectorEventBusStateService_SubscribeToEventStreamServer = grpc.ServerStreamingServer[GitLabConnectorEvent]
+type GitLabConnectorEventBusStateService_SubscribeToEventStreamServer = grpc.ServerStreamingServer[GitLabConnectorEventBusEventStreamSubscribeRecord]
 
 // GitLabConnectorEventBusStateService_ServiceDesc is the grpc.ServiceDesc for GitLabConnectorEventBusStateService service.
 // It's only intended for direct use with grpc.RegisterService,

@@ -38,7 +38,7 @@ import (
 // The caller parameter provides the authenticated caller's identity.
 // It is nil when a method has disable_auth = true and no token is present.
 type KmakerHandler interface {
-	SignKernelCert(ctx context.Context, caller *servicemanager.Caller, req *types.SignKernelCertRequest) (*x509_pb.X509CertChain, error)
+	MintKernelCert(ctx context.Context, caller *servicemanager.Caller, req *types.MintKernelCertRequest) (*x509_pb.X509CertChain, error)
 }
 
 // Kmaker wraps a KmakerHandler with authorization and validation.
@@ -110,8 +110,8 @@ func (p *Kmaker) SetAuthorizeFunc(f func(ctx context.Context, fullMethod string,
 	p.authorizeFunc = f
 }
 
-// SetAuthenticateFunc sets the authentication-only function (token verification
-// without profiles/entitlements). Used for auth_any_user services.
+// SetAuthenticateFunc sets the authentication-only function used to verify a
+// stream token before per-message namespace authorization.
 func (p *Kmaker) SetAuthenticateFunc(f func(ctx context.Context) error) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
@@ -126,7 +126,7 @@ func (p *Kmaker) SetAuthenticateAtOrBelowFunc(f func(ctx context.Context, target
 	p.authenticateAtOrBelowFunc = f
 }
 
-// HasAuthorizer reports whether both authorization paths are wired.
+// HasAuthorizer reports whether all mandatory auth paths are wired.
 func (p *Kmaker) HasAuthorizer() bool {
 	p.mu.RLock()
 	defer p.mu.RUnlock()
@@ -147,7 +147,8 @@ func (p *Kmaker) authorize(ctx context.Context, fullMethod string, req any) erro
 	return f(ctx, fullMethod, req)
 }
 
-// authenticate checks token signature, audience, and expiry only (no profiles/entitlements).
+// authenticate checks token signature, audience, and expiry only. It is used as
+// a stream-open preflight before per-message namespace authorization.
 // Fail-closed: a nil authenticate func rejects rather than allows.
 func (p *Kmaker) authenticate(ctx context.Context) error {
 	p.mu.RLock()
@@ -260,10 +261,16 @@ func (s KmakerValidatingBidiStreamingServer[Req, Res]) Send(msg *Res) error {
 }
 
 // gRPC method implementations with validation
-// SignKernelCert implements Kmaker.SignKernelCert with authorization and optional validation
-func (p *Kmaker) SignKernelCert(ctx context.Context, req *types.SignKernelCertRequest) (*x509_pb.X509CertChain, error) {
-	// Trace v2: publish trace event, noop skips handler
+// MintKernelCert implements Kmaker.MintKernelCert with authorization and optional validation
+func (p *Kmaker) MintKernelCert(ctx context.Context, req *types.MintKernelCertRequest) (*x509_pb.X509CertChain, error) {
+	// Trace v2: publish trace event, noop skips handler but not validation
 	isTracing := req.TraceId != ""
+
+	// Validate request before invoking the handler.
+	if err := types.ValidateMintKernelCertRequest(req); err != nil {
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("validation failed: %v", err))
+	}
+
 	if isTracing {
 		round := p.traceRound()
 		p.publishTrace(ctx, &trace_pb.TraceEvent{
@@ -282,22 +289,17 @@ func (p *Kmaker) SignKernelCert(ctx context.Context, req *types.SignKernelCertRe
 	if tok := servicemanager.TokenFromContext(ctx); tok != nil {
 		caller = servicemanager.NewCaller(tok, requestID)
 		zap.L().Debug("rpc",
-			zap.String("method", "/services"+types.Kmaker_SignKernelCert_FullMethodName),
+			zap.String("method", "/services"+types.Kmaker_MintKernelCert_FullMethodName),
 			zap.String("request_id", requestID),
 			zap.String("sub", tok.GetSubject()),
 			zap.String("aud", tok.GetAudience()))
 	} else {
 		zap.L().Debug("rpc (no token)",
-			zap.String("method", "/services"+types.Kmaker_SignKernelCert_FullMethodName),
+			zap.String("method", "/services"+types.Kmaker_MintKernelCert_FullMethodName),
 			zap.String("request_id", requestID))
 	}
-	// Validate request before invoking the handler.
-	if err := types.ValidateSignKernelCertRequest(req); err != nil {
-		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("validation failed: %v", err))
-	}
-
 	// Call the handler
-	resp, err := p.handler.SignKernelCert(sanitizeContext(ctx), caller, req)
+	resp, err := p.handler.MintKernelCert(sanitizeContext(ctx), caller, req)
 	if err != nil {
 		if isTracing {
 			round := p.traceRound()

@@ -62,8 +62,15 @@ const defaultRebalanceInterval = 30 * time.Second
 // rebalanceThreshold is the minimum relative improvement required to switch active endpoints.
 const rebalanceThreshold = 0.3
 
-// tlsCertRenewalInterval is how often to renew the auto-obtained TLS certificate.
-const tlsCertRenewalInterval = 20 * time.Hour
+// TLS cert renewal starts before the leaf expires and retries with capped
+// backoff. If renewal is still failing inside the escalation window, the
+// ServiceManager context is cancelled so the service stops before serving with
+// an expired certificate.
+const tlsCertRenewalLeadTime = 4 * time.Hour
+const tlsCertRenewalFallbackInterval = 20 * time.Hour
+const tlsCertRenewalRetryInitialBackoff = 2 * time.Second
+const tlsCertRenewalRetryMaxBackoff = 30 * time.Second
+const tlsCertRenewalEscalationWindow = 30 * time.Minute
 
 // streamInitialBackoff / streamMaxBackoff bound the reconnect delays for the
 // cluster Log/Subscribe/WatchJwks streams.
@@ -483,7 +490,7 @@ func (bc *ServiceManager) obtainTLSCert() error {
 	mintCtx, mintCancel := context.WithTimeout(bc.ctx, exchangeTimeout)
 	defer mintCancel()
 
-	certChain, err := mintClient.X509Mint(mintCtx, mintReq)
+	certChain, err := mintClient.MintX509Cert(mintCtx, mintReq)
 	if err != nil {
 		return fmt.Errorf("X509Mint RPC: %w", err)
 	}
@@ -501,20 +508,89 @@ func (bc *ServiceManager) obtainTLSCert() error {
 	return nil
 }
 
-// tlsRenewalLoop periodically re-obtains the TLS certificate before expiry.
+func (bc *ServiceManager) tlsCertExpiry() (time.Time, error) {
+	bc.mu.RLock()
+	chain := bc.tlsCertChain
+	bc.mu.RUnlock()
+	if chain == nil || len(chain.GetChain()) == 0 {
+		return time.Time{}, fmt.Errorf("no active TLS certificate chain")
+	}
+	leaf, err := wrapperX509.NewImmutableX509Cert(chain.GetChain()[0])
+	if err != nil {
+		return time.Time{}, fmt.Errorf("parsing active TLS leaf: %w", err)
+	}
+	return leaf.X509Certificate().NotAfter, nil
+}
+
+func tlsCertRenewalDelay(expiry time.Time) time.Duration {
+	if expiry.IsZero() {
+		return tlsCertRenewalFallbackInterval
+	}
+	delay := time.Until(expiry.Add(-tlsCertRenewalLeadTime))
+	if delay < 0 {
+		return 0
+	}
+	return delay
+}
+
+func tlsRenewalRetryWait(ctx context.Context, backoff *time.Duration) bool {
+	jitter := time.Duration(mrand.Int63n(int64(*backoff)/4 + 1))
+	select {
+	case <-time.After(*backoff + jitter):
+	case <-ctx.Done():
+		return false
+	}
+	if *backoff < tlsCertRenewalRetryMaxBackoff {
+		*backoff *= 2
+		if *backoff > tlsCertRenewalRetryMaxBackoff {
+			*backoff = tlsCertRenewalRetryMaxBackoff
+		}
+	}
+	return ctx.Err() == nil
+}
+
+// tlsRenewalLoop re-obtains the TLS certificate before expiry and retries
+// transient renewal failures with capped backoff.
 func (bc *ServiceManager) tlsRenewalLoop() {
-	ticker := time.NewTicker(tlsCertRenewalInterval)
-	defer ticker.Stop()
 	for {
+		expiry, expErr := bc.tlsCertExpiry()
+		wait := tlsCertRenewalFallbackInterval
+		if expErr == nil {
+			wait = tlsCertRenewalDelay(expiry)
+		} else {
+			zap.L().Warn("Could not determine TLS cert expiry; using fallback renewal interval",
+				zap.Error(expErr),
+				zap.Duration("retry_in", wait))
+		}
+
 		select {
 		case <-bc.ctx.Done():
 			return
-		case <-ticker.C:
+		case <-time.After(wait):
+		}
+
+		backoff := tlsCertRenewalRetryInitialBackoff
+		for {
 			if err := bc.obtainTLSCert(); err != nil {
-				zap.L().Warn("Failed to renew TLS cert", zap.Error(err))
-			} else {
-				zap.L().Info("TLS certificate renewed via X509Mint")
+				expiry, expErr := bc.tlsCertExpiry()
+				if expErr == nil && time.Until(expiry) <= tlsCertRenewalEscalationWindow {
+					zap.L().Error("TLS certificate renewal failed inside escalation window; shutting down ServiceManager",
+						zap.Error(err),
+						zap.Time("expires_at", expiry),
+						zap.Duration("remaining", time.Until(expiry)))
+					bc.cancel()
+					return
+				}
+				zap.L().Warn("Failed to renew TLS cert; retrying",
+					zap.Error(err),
+					zap.Duration("retry_in", backoff))
+				if !tlsRenewalRetryWait(bc.ctx, &backoff) {
+					return
+				}
+				continue
 			}
+			zap.L().Info("TLS certificate renewed via X509Mint")
+			break
 		}
 	}
 }
@@ -551,7 +627,12 @@ func (bc *ServiceManager) InstanceID() string { return bc.config.GetInstanceId()
 
 // Close stops all background goroutines and closes all connections.
 func (bc *ServiceManager) Close() error {
-	bc.cancel()
+	if bc == nil {
+		return nil
+	}
+	if bc.cancel != nil {
+		bc.cancel()
+	}
 	if bc.logCancel != nil {
 		bc.logCancel()
 	}

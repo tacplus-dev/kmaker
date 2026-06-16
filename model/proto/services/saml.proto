@@ -158,11 +158,11 @@ message SpConfig {
 
 service Inbound {
 
-  // ACS (AssertionConsumerService) accepts an inbound SAML assertion from an
-  // external IDP, verifies it, and mints a Cavalier JWT.
+  // MintAcsTokens accepts an inbound SAML assertion from an external IDP,
+  // verifies it, and mints Cavalier tokens.
   // This is the POST endpoint that external IDPs redirect users to.
   // The SAMLResponse form field contains the base64-encoded signed XML.
-  rpc ACS(AcsRequest) returns (AcsResponse) {
+  rpc MintAcsTokens(AcsRequest) returns (AcsResponse) {
   }
 
   // Authorize initiates a SAML SP-initiated flow by building an AuthnRequest
@@ -197,14 +197,14 @@ service Outbound {
 
 service Metadata {
 
-  // IdpMetadata returns this entity's EntityDescriptor XML for the IDP role.
+  // GetIdpMetadata returns this entity's EntityDescriptor XML for the IDP role.
   // External SPs fetch this to discover our SSO endpoints and signing cert.
-  rpc IdpMetadata(MetadataRequest) returns (MetadataResponse) {
+  rpc GetIdpMetadata(MetadataRequest) returns (MetadataResponse) {
   }
 
-  // SpMetadata returns this entity's EntityDescriptor XML for the SP role.
+  // GetSpMetadata returns this entity's EntityDescriptor XML for the SP role.
   // External IDPs fetch this to discover our ACS endpoints and entity ID.
-  rpc SpMetadata(MetadataRequest) returns (MetadataResponse) {
+  rpc GetSpMetadata(MetadataRequest) returns (MetadataResponse) {
   }
 
   // GetIdpDescriptor returns the parsed EntityDescriptor for a named inbound IDP.
@@ -403,7 +403,7 @@ enum InboundRpcId {
   INBOUND_RPC_ID_ALL_ACCESSORS = 1;
   INBOUND_RPC_ID_ALL_MUTATORS = 2;
   INBOUND_RPC_ID_ALL_EXECUTORS = 3;
-  INBOUND_RPC_ID_ACS = 4;
+  INBOUND_RPC_ID_MINT_ACS_TOKENS = 4;
   INBOUND_RPC_ID_AUTHORIZE = 5;
 }
 
@@ -421,8 +421,8 @@ enum MetadataRpcId {
   METADATA_RPC_ID_ALL_ACCESSORS = 1;
   METADATA_RPC_ID_ALL_MUTATORS = 2;
   METADATA_RPC_ID_ALL_EXECUTORS = 3;
-  METADATA_RPC_ID_IDP_METADATA = 4;
-  METADATA_RPC_ID_SP_METADATA = 5;
+  METADATA_RPC_ID_GET_IDP_METADATA = 4;
+  METADATA_RPC_ID_GET_SP_METADATA = 5;
   METADATA_RPC_ID_GET_IDP_DESCRIPTOR = 6;
 }
 

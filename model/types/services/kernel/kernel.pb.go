@@ -1309,12 +1309,12 @@ const (
 	MintRpcId_MINT_RPC_ID_ALL_EXECUTORS       MintRpcId = 3
 	MintRpcId_MINT_RPC_ID_MINT_SERVICE_TOKEN  MintRpcId = 4
 	MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN     MintRpcId = 5
-	MintRpcId_MINT_RPC_ID_TOKEN_MINT          MintRpcId = 6
+	MintRpcId_MINT_RPC_ID_MINT_TOKEN          MintRpcId = 6
 	MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_TOKEN MintRpcId = 7
 	MintRpcId_MINT_RPC_ID_MINT_CLIENT_TOKEN   MintRpcId = 8
-	MintRpcId_MINT_RPC_ID_X509_MINT           MintRpcId = 9
-	MintRpcId_MINT_RPC_ID_WORKLOAD_MINT       MintRpcId = 10
-	MintRpcId_MINT_RPC_ID_WORKLOAD_REVOKE     MintRpcId = 11
+	MintRpcId_MINT_RPC_ID_MINT_X509_CERT      MintRpcId = 9
+	MintRpcId_MINT_RPC_ID_MINT_WORKLOAD       MintRpcId = 10
+	MintRpcId_MINT_RPC_ID_REVOKE_WORKLOAD     MintRpcId = 11
 )
 
 // Enum value maps for MintRpcId.
@@ -1326,12 +1326,12 @@ var (
 		3:  "MINT_RPC_ID_ALL_EXECUTORS",
 		4:  "MINT_RPC_ID_MINT_SERVICE_TOKEN",
 		5:  "MINT_RPC_ID_MINT_USER_TOKEN",
-		6:  "MINT_RPC_ID_TOKEN_MINT",
+		6:  "MINT_RPC_ID_MINT_TOKEN",
 		7:  "MINT_RPC_ID_MINT_EXTERNAL_TOKEN",
 		8:  "MINT_RPC_ID_MINT_CLIENT_TOKEN",
-		9:  "MINT_RPC_ID_X509_MINT",
-		10: "MINT_RPC_ID_WORKLOAD_MINT",
-		11: "MINT_RPC_ID_WORKLOAD_REVOKE",
+		9:  "MINT_RPC_ID_MINT_X509_CERT",
+		10: "MINT_RPC_ID_MINT_WORKLOAD",
+		11: "MINT_RPC_ID_REVOKE_WORKLOAD",
 	}
 	MintRpcId_value = map[string]int32{
 		"MINT_RPC_ID_UNSPECIFIED":         0,
@@ -1340,12 +1340,12 @@ var (
 		"MINT_RPC_ID_ALL_EXECUTORS":       3,
 		"MINT_RPC_ID_MINT_SERVICE_TOKEN":  4,
 		"MINT_RPC_ID_MINT_USER_TOKEN":     5,
-		"MINT_RPC_ID_TOKEN_MINT":          6,
+		"MINT_RPC_ID_MINT_TOKEN":          6,
 		"MINT_RPC_ID_MINT_EXTERNAL_TOKEN": 7,
 		"MINT_RPC_ID_MINT_CLIENT_TOKEN":   8,
-		"MINT_RPC_ID_X509_MINT":           9,
-		"MINT_RPC_ID_WORKLOAD_MINT":       10,
-		"MINT_RPC_ID_WORKLOAD_REVOKE":     11,
+		"MINT_RPC_ID_MINT_X509_CERT":      9,
+		"MINT_RPC_ID_MINT_WORKLOAD":       10,
+		"MINT_RPC_ID_REVOKE_WORKLOAD":     11,
 	}
 )
 
@@ -1434,19 +1434,19 @@ func (CliTokenBrokerRpcId) EnumDescriptor() ([]byte, []int) {
 type TenantAdminRpcId int32
 
 const (
-	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_UNSPECIFIED        TenantAdminRpcId = 0
-	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_ALL_ACCESSORS      TenantAdminRpcId = 1
-	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_ALL_MUTATORS       TenantAdminRpcId = 2
-	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_ALL_EXECUTORS      TenantAdminRpcId = 3
-	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_CREATE_TENANT      TenantAdminRpcId = 4
-	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_DELETE_TENANT      TenantAdminRpcId = 5
-	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_LIST_TENANTS       TenantAdminRpcId = 6
-	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_GET_TENANT_CONFIG  TenantAdminRpcId = 7
-	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_SET_TENANT_CONFIG  TenantAdminRpcId = 8
-	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_GET_PROJECT_CONFIG TenantAdminRpcId = 9
-	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_SET_PROJECT_CONFIG TenantAdminRpcId = 10
-	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_LIST_PROJECTS      TenantAdminRpcId = 11
-	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_DELETE_PROJECT     TenantAdminRpcId = 12
+	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_UNSPECIFIED           TenantAdminRpcId = 0
+	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_ALL_ACCESSORS         TenantAdminRpcId = 1
+	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_ALL_MUTATORS          TenantAdminRpcId = 2
+	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_ALL_EXECUTORS         TenantAdminRpcId = 3
+	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_CREATE_TENANT         TenantAdminRpcId = 4
+	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_DELETE_TENANT         TenantAdminRpcId = 5
+	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_LIST_TENANTS          TenantAdminRpcId = 6
+	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_GET_TENANT_CONFIG     TenantAdminRpcId = 7
+	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_UPDATE_TENANT_CONFIG  TenantAdminRpcId = 8
+	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_GET_PROJECT_CONFIG    TenantAdminRpcId = 9
+	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_UPDATE_PROJECT_CONFIG TenantAdminRpcId = 10
+	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_LIST_PROJECTS         TenantAdminRpcId = 11
+	TenantAdminRpcId_TENANT_ADMIN_RPC_ID_DELETE_PROJECT        TenantAdminRpcId = 12
 )
 
 // Enum value maps for TenantAdminRpcId.
@@ -1460,26 +1460,26 @@ var (
 		5:  "TENANT_ADMIN_RPC_ID_DELETE_TENANT",
 		6:  "TENANT_ADMIN_RPC_ID_LIST_TENANTS",
 		7:  "TENANT_ADMIN_RPC_ID_GET_TENANT_CONFIG",
-		8:  "TENANT_ADMIN_RPC_ID_SET_TENANT_CONFIG",
+		8:  "TENANT_ADMIN_RPC_ID_UPDATE_TENANT_CONFIG",
 		9:  "TENANT_ADMIN_RPC_ID_GET_PROJECT_CONFIG",
-		10: "TENANT_ADMIN_RPC_ID_SET_PROJECT_CONFIG",
+		10: "TENANT_ADMIN_RPC_ID_UPDATE_PROJECT_CONFIG",
 		11: "TENANT_ADMIN_RPC_ID_LIST_PROJECTS",
 		12: "TENANT_ADMIN_RPC_ID_DELETE_PROJECT",
 	}
 	TenantAdminRpcId_value = map[string]int32{
-		"TENANT_ADMIN_RPC_ID_UNSPECIFIED":        0,
-		"TENANT_ADMIN_RPC_ID_ALL_ACCESSORS":      1,
-		"TENANT_ADMIN_RPC_ID_ALL_MUTATORS":       2,
-		"TENANT_ADMIN_RPC_ID_ALL_EXECUTORS":      3,
-		"TENANT_ADMIN_RPC_ID_CREATE_TENANT":      4,
-		"TENANT_ADMIN_RPC_ID_DELETE_TENANT":      5,
-		"TENANT_ADMIN_RPC_ID_LIST_TENANTS":       6,
-		"TENANT_ADMIN_RPC_ID_GET_TENANT_CONFIG":  7,
-		"TENANT_ADMIN_RPC_ID_SET_TENANT_CONFIG":  8,
-		"TENANT_ADMIN_RPC_ID_GET_PROJECT_CONFIG": 9,
-		"TENANT_ADMIN_RPC_ID_SET_PROJECT_CONFIG": 10,
-		"TENANT_ADMIN_RPC_ID_LIST_PROJECTS":      11,
-		"TENANT_ADMIN_RPC_ID_DELETE_PROJECT":     12,
+		"TENANT_ADMIN_RPC_ID_UNSPECIFIED":           0,
+		"TENANT_ADMIN_RPC_ID_ALL_ACCESSORS":         1,
+		"TENANT_ADMIN_RPC_ID_ALL_MUTATORS":          2,
+		"TENANT_ADMIN_RPC_ID_ALL_EXECUTORS":         3,
+		"TENANT_ADMIN_RPC_ID_CREATE_TENANT":         4,
+		"TENANT_ADMIN_RPC_ID_DELETE_TENANT":         5,
+		"TENANT_ADMIN_RPC_ID_LIST_TENANTS":          6,
+		"TENANT_ADMIN_RPC_ID_GET_TENANT_CONFIG":     7,
+		"TENANT_ADMIN_RPC_ID_UPDATE_TENANT_CONFIG":  8,
+		"TENANT_ADMIN_RPC_ID_GET_PROJECT_CONFIG":    9,
+		"TENANT_ADMIN_RPC_ID_UPDATE_PROJECT_CONFIG": 10,
+		"TENANT_ADMIN_RPC_ID_LIST_PROJECTS":         11,
+		"TENANT_ADMIN_RPC_ID_DELETE_PROJECT":        12,
 	}
 )
 
@@ -2918,14 +2918,6 @@ type Config struct {
 	// delegates hold credentials for services that can request tokens.
 	// Each delegate identifies a service and its authorized target services.
 	Delegates []*Delegate `protobuf:"bytes,17,rep,name=delegates,proto3" json:"delegates,omitempty"`
-	// spiffe_prefix is the deployment prefix for SPIFFE URIs in this cluster.
-	// The attestation authority + deployment path, WITHOUT the service label.
-	// SPIFFE URIs are: spiffe://<spiffe_prefix>/<service_label>[/<child>/...]
-	//
-	// Cloud: derived from attestation (e.g., "aws/123456789012/us-east-1/prod/default")
-	// On-prem: from X509 cert chain (e.g., "x509/acme-corp/dc-west")
-	// Dev: from config (e.g., "local/dev")
-	SpiffePrefix string `protobuf:"bytes,19,opt,name=spiffe_prefix,json=spiffePrefix,proto3" json:"spiffe_prefix,omitempty"`
 	// fqdn is the fully qualified domain name for this cluster
 	// (e.g. "api.example.com"). Published to Identity state for
 	// services like letsencrypt. No default — must be set for production.
@@ -2970,8 +2962,26 @@ type Config struct {
 	// proof, exchange it via MintClientToken, and provision tenants/projects via
 	// TenantAdmin. Only the public half is carried here.
 	RootCredPairs []*credentials.CredPair `protobuf:"bytes,32,rep,name=root_cred_pairs,json=rootCredPairs,proto3" json:"root_cred_pairs,omitempty"`
-	TraceId       string                  `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                    `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	// spiffe_trust_domain is the SPIFFE URI authority: a globally unique instance
+	// name for this autonomous-system instance (need not be a DNS domain). It must
+	// not contain '/', a scheme, query, or fragment, and carries no path. Service
+	// identity is built by the generated libs/spiffe helper as:
+	//
+	//	spiffe://<spiffe_trust_domain>/system/<location_path...>/services/<service_label>
+	//
+	// If empty, SPIFFE IDs are not set on issued tokens or X509 URI SANs. Kernel
+	// copies this (with location_path) into the runtime grpcconfig.Config it seeds
+	// into ServiceConfigState, so every service shares one trust domain.
+	SpiffeTrustDomain string `protobuf:"bytes,33,opt,name=spiffe_trust_domain,json=spiffeTrustDomain,proto3" json:"spiffe_trust_domain,omitempty"`
+	// location_path is this deployment's topology path under /system — opaque,
+	// tag-delimited, slash-separated segments, arity not fixed (e.g.
+	// "aws/123456789012/us-east-1a/cluster-7/team-a"). Segments follow the SPIFFE
+	// segment grammar and must not be reserved tags. Supplied by the operator from
+	// runtime config (where the cluster runs); it is not a token claim. May be
+	// empty (no topology tiers).
+	LocationPath  string `protobuf:"bytes,34,opt,name=location_path,json=locationPath,proto3" json:"location_path,omitempty"`
+	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3125,13 +3135,6 @@ func (x *Config) GetDelegates() []*Delegate {
 	return nil
 }
 
-func (x *Config) GetSpiffePrefix() string {
-	if x != nil {
-		return x.SpiffePrefix
-	}
-	return ""
-}
-
 func (x *Config) GetFqdn() string {
 	if x != nil {
 		return x.Fqdn
@@ -3207,6 +3210,20 @@ func (x *Config) GetRootCredPairs() []*credentials.CredPair {
 		return x.RootCredPairs
 	}
 	return nil
+}
+
+func (x *Config) GetSpiffeTrustDomain() string {
+	if x != nil {
+		return x.SpiffeTrustDomain
+	}
+	return ""
+}
+
+func (x *Config) GetLocationPath() string {
+	if x != nil {
+		return x.LocationPath
+	}
+	return ""
 }
 
 func (x *Config) GetTraceId() string {
@@ -23459,7 +23476,7 @@ var File_services_kernel_proto protoreflect.FileDescriptor
 
 const file_services_kernel_proto_rawDesc = "" +
 	"\n" +
-	"\x15services/kernel.proto\x12\x06kernel\x1a\x0flibs/spec.proto\x1a\x0flibs/host.proto\x1a\x11libs/logger.proto\x1a\x17libs/outputformat.proto\x1a\x0elibs/key.proto\x1a\x0elibs/jwk.proto\x1a\x0flibs/x509.proto\x1a\x16libs/cloudvendor.proto\x1a\x19common/tokenrequest.proto\x1a\x16common/hazelcast.proto\x1a\x18common/credentials.proto\x1a\x17libs/healthreport.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x18generated/services.proto\x1a\x1cgenerated/entitlements.proto\x1a\x1fgenerated/services_config.proto\x1a\x1dgenerated/tenant_config.proto\x1a\x10libs/trace.proto\"\xa0\x0e\n" +
+	"\x15services/kernel.proto\x12\x06kernel\x1a\x0flibs/spec.proto\x1a\x0flibs/host.proto\x1a\x11libs/logger.proto\x1a\x17libs/outputformat.proto\x1a\x0elibs/key.proto\x1a\x0elibs/jwk.proto\x1a\x0flibs/x509.proto\x1a\x16libs/cloudvendor.proto\x1a\x19common/tokenrequest.proto\x1a\x16common/hazelcast.proto\x1a\x18common/credentials.proto\x1a\x17libs/healthreport.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x18generated/services.proto\x1a\x1cgenerated/entitlements.proto\x1a\x1fgenerated/services_config.proto\x1a\x1dgenerated/tenant_config.proto\x1a\x10libs/trace.proto\"\xf1\x0e\n" +
 	"\x06Config\x12'\n" +
 	"\fcluster_name\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\vclusterName\x12<\n" +
 	"\blistener\x18\x02 \x01(\v2\n" +
@@ -23488,8 +23505,7 @@ const file_services_kernel_proto_rawDesc = "" +
 	"\n" +
 	"rate_limit\x18\x0f \x01(\v2\x1a.hazelcast.RateLimitConfigB\x04\x88\xa6\x1d\x01R\trateLimit\x129\n" +
 	"\aconfigs\x18\x10 \x01(\v2\x19.services_config.ServicesB\x04\x88\xa6\x1d\x01R\aconfigs\x125\n" +
-	"\tdelegates\x18\x11 \x03(\v2\x10.kernel.DelegateB\x05\xb8\xa8\x1d\x80\x01R\tdelegates\x122\n" +
-	"\rspiffe_prefix\x18\x13 \x01(\tB\r\x8a\xa8\x1d\tlocal/devR\fspiffePrefix\x12\x18\n" +
+	"\tdelegates\x18\x11 \x03(\v2\x10.kernel.DelegateB\x05\xb8\xa8\x1d\x80\x01R\tdelegates\x12\x18\n" +
 	"\x04fqdn\x18\x14 \x01(\tB\x04\xb8\xa6\x1d\x01R\x04fqdn\x12\x16\n" +
 	"\x06issuer\x18\x15 \x01(\tR\x06issuer\x12I\n" +
 	"\x1dkey_rotation_interval_seconds\x18\x16 \x01(\x03B\x06\x90\xa8\x1d\x80\xa3\x05R\x1akeyRotationIntervalSeconds\x12F\n" +
@@ -23502,9 +23518,11 @@ const file_services_kernel_proto_rawDesc = "" +
 	"\xc0\xa6\x1d\x01\x90\xa8\x1d\x80\xa3\x05R\x16tlsCertLifetimeSeconds\x12H\n" +
 	"\x1amax_token_lifetime_seconds\x18\x1c \x01(\x03B\v\xc0\xa6\x1d\x01\x90\xa8\x1d\x80\x9a\x9e\x01R\x17maxTokenLifetimeSeconds\x12P\n" +
 	"\x1eoffline_token_lifetime_seconds\x18\x1f \x01(\x03B\v\xc0\xa6\x1d\x01\x90\xa8\x1d\x80\xce\xda\x03R\x1bofflineTokenLifetimeSeconds\x12C\n" +
-	"\x0froot_cred_pairs\x18  \x03(\v2\x15.credentials.CredPairB\x04\xb8\xa8\x1d@R\rrootCredPairs\x12\x1a\n" +
+	"\x0froot_cred_pairs\x18  \x03(\v2\x15.credentials.CredPairB\x04\xb8\xa8\x1d@R\rrootCredPairs\x12B\n" +
+	"\x13spiffe_trust_domain\x18! \x01(\tB\x12\x90\xa7\x1d\x80\x02\x8a\xa8\x1d\tlocal.devR\x11spiffeTrustDomain\x12*\n" +
+	"\rlocation_path\x18\" \x01(\tB\x05\x90\xa7\x1d\x80\x02R\flocationPath\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopJ\x04\b\x1d\x10\x1eJ\x04\b\x1e\x10\x1fR\x12cluster_cred_pairsR\x0ftrusted_issuers\"\xcc\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopJ\x04\b\x13\x10\x14J\x04\b\x1d\x10\x1eJ\x04\b\x1e\x10\x1fR\rspiffe_prefixR\x12cluster_cred_pairsR\x0ftrusted_issuers\"\xcc\x01\n" +
 	"\bIdentity\x12Q\n" +
 	"\x0everifying_keys\x18\x01 \x03(\v2\b.jwk.JwkB \xe0\xb6\x18\x01\x9a\xb7\x18\x14JwkVerifyingKeysView\xb8\xa8\x1d\x10R\rverifyingKeys\x12(\n" +
 	"\x04fqdn\x18\x02 \x01(\v2\x14.kernel.IdentityFqdnR\x04fqdn\x12\x1a\n" +
@@ -25340,7 +25358,7 @@ const file_services_kernel_proto_rawDesc = "" +
 	"%TYPE_ID_PROJECT_CONFIGS_SIZE_RESPONSE\x10\xc1\x02\x12*\n" +
 	"%TYPE_ID_PROJECT_CONFIGS_QUERY_REQUEST\x10\xc2\x02\x12+\n" +
 	"&TYPE_ID_PROJECT_CONFIGS_QUERY_RESPONSE\x10\xc3\x02\x12\x16\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10\xc4\x02*\x88\x03\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x10\xc4\x02*\x8d\x03\n" +
 	"\tMintRpcId\x12\x1b\n" +
 	"\x17MINT_RPC_ID_UNSPECIFIED\x10\x00\x12\x1d\n" +
 	"\x19MINT_RPC_ID_ALL_ACCESSORS\x10\x01\x12\x1c\n" +
@@ -25348,19 +25366,19 @@ const file_services_kernel_proto_rawDesc = "" +
 	"\x19MINT_RPC_ID_ALL_EXECUTORS\x10\x03\x12\"\n" +
 	"\x1eMINT_RPC_ID_MINT_SERVICE_TOKEN\x10\x04\x12\x1f\n" +
 	"\x1bMINT_RPC_ID_MINT_USER_TOKEN\x10\x05\x12\x1a\n" +
-	"\x16MINT_RPC_ID_TOKEN_MINT\x10\x06\x12#\n" +
+	"\x16MINT_RPC_ID_MINT_TOKEN\x10\x06\x12#\n" +
 	"\x1fMINT_RPC_ID_MINT_EXTERNAL_TOKEN\x10\a\x12!\n" +
-	"\x1dMINT_RPC_ID_MINT_CLIENT_TOKEN\x10\b\x12\x19\n" +
-	"\x15MINT_RPC_ID_X509_MINT\x10\t\x12\x1d\n" +
-	"\x19MINT_RPC_ID_WORKLOAD_MINT\x10\n" +
+	"\x1dMINT_RPC_ID_MINT_CLIENT_TOKEN\x10\b\x12\x1e\n" +
+	"\x1aMINT_RPC_ID_MINT_X509_CERT\x10\t\x12\x1d\n" +
+	"\x19MINT_RPC_ID_MINT_WORKLOAD\x10\n" +
 	"\x12\x1f\n" +
-	"\x1bMINT_RPC_ID_WORKLOAD_REVOKE\x10\v*\xe9\x01\n" +
+	"\x1bMINT_RPC_ID_REVOKE_WORKLOAD\x10\v*\xe9\x01\n" +
 	"\x13CliTokenBrokerRpcId\x12'\n" +
 	"#CLI_TOKEN_BROKER_RPC_ID_UNSPECIFIED\x10\x00\x12)\n" +
 	"%CLI_TOKEN_BROKER_RPC_ID_ALL_ACCESSORS\x10\x01\x12(\n" +
 	"$CLI_TOKEN_BROKER_RPC_ID_ALL_MUTATORS\x10\x02\x12)\n" +
 	"%CLI_TOKEN_BROKER_RPC_ID_ALL_EXECUTORS\x10\x03\x12)\n" +
-	"%CLI_TOKEN_BROKER_RPC_ID_BROKER_STREAM\x10\x04*\x9c\x04\n" +
+	"%CLI_TOKEN_BROKER_RPC_ID_BROKER_STREAM\x10\x04*\xa2\x04\n" +
 	"\x10TenantAdminRpcId\x12#\n" +
 	"\x1fTENANT_ADMIN_RPC_ID_UNSPECIFIED\x10\x00\x12%\n" +
 	"!TENANT_ADMIN_RPC_ID_ALL_ACCESSORS\x10\x01\x12$\n" +
@@ -25369,10 +25387,10 @@ const file_services_kernel_proto_rawDesc = "" +
 	"!TENANT_ADMIN_RPC_ID_CREATE_TENANT\x10\x04\x12%\n" +
 	"!TENANT_ADMIN_RPC_ID_DELETE_TENANT\x10\x05\x12$\n" +
 	" TENANT_ADMIN_RPC_ID_LIST_TENANTS\x10\x06\x12)\n" +
-	"%TENANT_ADMIN_RPC_ID_GET_TENANT_CONFIG\x10\a\x12)\n" +
-	"%TENANT_ADMIN_RPC_ID_SET_TENANT_CONFIG\x10\b\x12*\n" +
-	"&TENANT_ADMIN_RPC_ID_GET_PROJECT_CONFIG\x10\t\x12*\n" +
-	"&TENANT_ADMIN_RPC_ID_SET_PROJECT_CONFIG\x10\n" +
+	"%TENANT_ADMIN_RPC_ID_GET_TENANT_CONFIG\x10\a\x12,\n" +
+	"(TENANT_ADMIN_RPC_ID_UPDATE_TENANT_CONFIG\x10\b\x12*\n" +
+	"&TENANT_ADMIN_RPC_ID_GET_PROJECT_CONFIG\x10\t\x12-\n" +
+	")TENANT_ADMIN_RPC_ID_UPDATE_PROJECT_CONFIG\x10\n" +
 	"\x12%\n" +
 	"!TENANT_ADMIN_RPC_ID_LIST_PROJECTS\x10\v\x12&\n" +
 	"\"TENANT_ADMIN_RPC_ID_DELETE_PROJECT\x10\f*\x86\t\n" +
@@ -25745,37 +25763,37 @@ const file_services_kernel_proto_rawDesc = "" +
 	"9CONFIG_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PROJECT_CONFIGS\x10*\x125\n" +
 	"1CONFIG_STATE_SERVICE_RPC_ID_WATCH_PROJECT_CONFIGS\x10+\x125\n" +
 	"1CONFIG_STATE_SERVICE_RPC_ID_QUERY_PROJECT_CONFIGS\x10,\x12;\n" +
-	"7CONFIG_STATE_SERVICE_RPC_ID_WATCH_QUERY_PROJECT_CONFIGS\x10-2\xfe\x05\n" +
+	"7CONFIG_STATE_SERVICE_RPC_ID_WATCH_QUERY_PROJECT_CONFIGS\x10-2\x8a\x06\n" +
 	"\x04Mint\x12b\n" +
 	"\x10MintServiceToken\x12%.tokenrequest.MintServiceTokenRequest\x1a\x1f.tokenrequest.TokenMintResponse\"\x06\xe2\x88'\x02\x10\x01\x12g\n" +
 	"\rMintUserToken\x12\".tokenrequest.MintUserTokenRequest\x1a\x1f.tokenrequest.TokenMintResponse\"\x11\xe2\x88'\r\n" +
 	"\x05oauth\n" +
 	"\x04saml\x12T\n" +
-	"\tTokenMint\x12\x1e.tokenrequest.TokenMintRequest\x1a\x1f.tokenrequest.TokenMintResponse\"\x06\xe2\x88'\x02\x10\x01\x12m\n" +
+	"\tMintToken\x12\x1e.tokenrequest.TokenMintRequest\x1a\x1f.tokenrequest.TokenMintResponse\"\x06\xe2\x88'\x02\x10\x01\x12m\n" +
 	"\x11MintExternalToken\x12&.tokenrequest.ExternalTokenMintRequest\x1a'.tokenrequest.ExternalTokenMintResponse\"\a\xe2\x88'\x03\n" +
 	"\x01*\x12`\n" +
-	"\x0fMintClientToken\x12$.tokenrequest.MintClientTokenRequest\x1a\x1f.tokenrequest.TokenMintResponse\"\x06\xe2\x88'\x02\x10\x01\x12F\n" +
-	"\bX509Mint\x12\x1d.tokenrequest.X509MintRequest\x1a\x13.x509.X509CertChain\"\x06\xe2\x88'\x02\x10\x01\x12^\n" +
-	"\fWorkloadMint\x12!.tokenrequest.WorkloadMintRequest\x1a\".tokenrequest.WorkloadMintResponse\"\a\xe2\x88'\x03\n" +
+	"\x0fMintClientToken\x12$.tokenrequest.MintClientTokenRequest\x1a\x1f.tokenrequest.TokenMintResponse\"\x06\xe2\x88'\x02\x10\x01\x12J\n" +
+	"\fMintX509Cert\x12\x1d.tokenrequest.X509MintRequest\x1a\x13.x509.X509CertChain\"\x06\xe2\x88'\x02\x10\x01\x12^\n" +
+	"\fMintWorkload\x12!.tokenrequest.WorkloadMintRequest\x1a\".tokenrequest.WorkloadMintResponse\"\a\xe2\x88'\x03\n" +
 	"\x01*\x12P\n" +
-	"\x0eWorkloadRevoke\x12\x1d.kernel.WorkloadRevokeRequest\x1a\x16.google.protobuf.Empty\"\a\xe2\x88'\x03\n" +
-	"\x01*\x1a\b\xea\x97\"\x00\x82\x98\"\x002v\n" +
+	"\x0eRevokeWorkload\x12\x1d.kernel.WorkloadRevokeRequest\x1a\x16.google.protobuf.Empty\"\a\xe2\x88'\x03\n" +
+	"\x01*\x1a\x10\xea\x97\"\x00\x82\x98\"\x00\xa2\x98\"\x00\xaa\x98\"\x002v\n" +
 	"\x0eCliTokenBroker\x12^\n" +
 	"\fBrokerStream\x12\x1d.kernel.CliTokenBrokerRequest\x1a\x1e.kernel.CliTokenBrokerResponse\"\v\xe2\x88'\a\n" +
-	"\x05oauth(\x010\x01\x1a\x04\xea\x97\"\x002\xad\a\n" +
+	"\x05oauth(\x010\x01\x1a\x04\xea\x97\"\x002\xdf\a\n" +
 	"\vTenantAdmin\x12S\n" +
 	"\fCreateTenant\x12\x1b.kernel.CreateTenantRequest\x1a\x0e.kernel.Tenant\"\x16\xea\x88'\x12*\x10tenant_namespace\x12a\n" +
-	"\fDeleteTenant\x12\x1b.kernel.DeleteTenantRequest\x1a\x1c.kernel.DeleteTenantResponse\"\x16\xea\x88'\x12*\x10tenant_namespace\x12e\n" +
-	"\vListTenants\x12\x1a.kernel.ListTenantsRequest\x1a\x1b.kernel.ListTenantsResponse\"\x1dʈ'\x03\n" +
-	"\x01\x01\xea\x88'\x12*\x10parent_namespace\x12m\n" +
+	"\fDeleteTenant\x12\x1b.kernel.DeleteTenantRequest\x1a\x1c.kernel.DeleteTenantResponse\"\x16\xea\x88'\x12*\x10tenant_namespace\x12t\n" +
+	"\vListTenants\x12\x1a.kernel.ListTenantsRequest\x1a\x1b.kernel.ListTenantsResponse\",ʈ'\x03\n" +
+	"\x01\x01\xea\x88'\x12*\x10parent_namespace\xf2\x88'\v\b\x01\x12\x04name\x18\x80 \x12m\n" +
 	"\x0fGetTenantConfig\x12\x1e.kernel.GetTenantConfigRequest\x1a\x1b.tenant_config.TenantConfig\"\x1dʈ'\x03\n" +
-	"\x01\x01\xea\x88'\x12*\x10tenant_namespace\x12f\n" +
-	"\x0fSetTenantConfig\x12\x1e.kernel.SetTenantConfigRequest\x1a\x1b.tenant_config.TenantConfig\"\x16\xea\x88'\x12*\x10tenant_namespace\x12j\n" +
+	"\x01\x01\xea\x88'\x12*\x10tenant_namespace\x12i\n" +
+	"\x12UpdateTenantConfig\x12\x1e.kernel.SetTenantConfigRequest\x1a\x1b.tenant_config.TenantConfig\"\x16\xea\x88'\x12*\x10tenant_namespace\x12j\n" +
 	"\x10GetProjectConfig\x12\x1f.kernel.GetProjectConfigRequest\x1a\x15.kernel.ProjectConfig\"\x1eʈ'\x03\n" +
-	"\x01\x01\xea\x88'\x13*\x11project_namespace\x12c\n" +
-	"\x10SetProjectConfig\x12\x1f.kernel.SetProjectConfigRequest\x1a\x15.kernel.ProjectConfig\"\x17\xea\x88'\x13*\x11project_namespace\x12h\n" +
-	"\fListProjects\x12\x1b.kernel.ListProjectsRequest\x1a\x1c.kernel.ListProjectsResponse\"\x1dʈ'\x03\n" +
-	"\x01\x01\xea\x88'\x12*\x10tenant_namespace\x12e\n" +
+	"\x01\x01\xea\x88'\x13*\x11project_namespace\x12f\n" +
+	"\x13UpdateProjectConfig\x12\x1f.kernel.SetProjectConfigRequest\x1a\x15.kernel.ProjectConfig\"\x17\xea\x88'\x13*\x11project_namespace\x12\x84\x01\n" +
+	"\fListProjects\x12\x1b.kernel.ListProjectsRequest\x1a\x1c.kernel.ListProjectsResponse\"9ʈ'\x03\n" +
+	"\x01\x01\xea\x88'\x12*\x10tenant_namespace\xf2\x88'\x18\b\x01\x12\x11project_namespace\x18\x80 \x12e\n" +
 	"\rDeleteProject\x12\x1c.kernel.DeleteProjectRequest\x1a\x1d.kernel.DeleteProjectResponse\"\x17\xea\x88'\x13*\x11project_namespace\x1a\x06\xf2\x97\"\x02\x18\x012\x9a\v\n" +
 	"\x14IdentityStateService\x124\n" +
 	"\aGetFqdn\x12\x13.trace.TraceRequest\x1a\x14.kernel.IdentityFqdn\x125\n" +
@@ -26773,20 +26791,20 @@ var file_services_kernel_proto_depIdxs = []int32{
 	43,  // 221: kernel.ProjectConfigsEntriesResponse.EntriesEntry.value:type_name -> kernel.ProjectConfigEntry
 	396, // 222: kernel.Mint.MintServiceToken:input_type -> tokenrequest.MintServiceTokenRequest
 	397, // 223: kernel.Mint.MintUserToken:input_type -> tokenrequest.MintUserTokenRequest
-	398, // 224: kernel.Mint.TokenMint:input_type -> tokenrequest.TokenMintRequest
+	398, // 224: kernel.Mint.MintToken:input_type -> tokenrequest.TokenMintRequest
 	399, // 225: kernel.Mint.MintExternalToken:input_type -> tokenrequest.ExternalTokenMintRequest
 	400, // 226: kernel.Mint.MintClientToken:input_type -> tokenrequest.MintClientTokenRequest
-	401, // 227: kernel.Mint.X509Mint:input_type -> tokenrequest.X509MintRequest
-	402, // 228: kernel.Mint.WorkloadMint:input_type -> tokenrequest.WorkloadMintRequest
-	34,  // 229: kernel.Mint.WorkloadRevoke:input_type -> kernel.WorkloadRevokeRequest
+	401, // 227: kernel.Mint.MintX509Cert:input_type -> tokenrequest.X509MintRequest
+	402, // 228: kernel.Mint.MintWorkload:input_type -> tokenrequest.WorkloadMintRequest
+	34,  // 229: kernel.Mint.RevokeWorkload:input_type -> kernel.WorkloadRevokeRequest
 	20,  // 230: kernel.CliTokenBroker.BrokerStream:input_type -> kernel.CliTokenBrokerRequest
 	46,  // 231: kernel.TenantAdmin.CreateTenant:input_type -> kernel.CreateTenantRequest
 	47,  // 232: kernel.TenantAdmin.DeleteTenant:input_type -> kernel.DeleteTenantRequest
 	49,  // 233: kernel.TenantAdmin.ListTenants:input_type -> kernel.ListTenantsRequest
 	51,  // 234: kernel.TenantAdmin.GetTenantConfig:input_type -> kernel.GetTenantConfigRequest
-	52,  // 235: kernel.TenantAdmin.SetTenantConfig:input_type -> kernel.SetTenantConfigRequest
+	52,  // 235: kernel.TenantAdmin.UpdateTenantConfig:input_type -> kernel.SetTenantConfigRequest
 	53,  // 236: kernel.TenantAdmin.GetProjectConfig:input_type -> kernel.GetProjectConfigRequest
-	54,  // 237: kernel.TenantAdmin.SetProjectConfig:input_type -> kernel.SetProjectConfigRequest
+	54,  // 237: kernel.TenantAdmin.UpdateProjectConfig:input_type -> kernel.SetProjectConfigRequest
 	55,  // 238: kernel.TenantAdmin.ListProjects:input_type -> kernel.ListProjectsRequest
 	57,  // 239: kernel.TenantAdmin.DeleteProject:input_type -> kernel.DeleteProjectRequest
 	403, // 240: kernel.IdentityStateService.GetFqdn:input_type -> trace.TraceRequest
@@ -27119,20 +27137,20 @@ var file_services_kernel_proto_depIdxs = []int32{
 	336, // 567: kernel.ConfigStateService.WatchQueryProjectConfigs:input_type -> kernel.ProjectConfigsQueryRequest
 	404, // 568: kernel.Mint.MintServiceToken:output_type -> tokenrequest.TokenMintResponse
 	404, // 569: kernel.Mint.MintUserToken:output_type -> tokenrequest.TokenMintResponse
-	404, // 570: kernel.Mint.TokenMint:output_type -> tokenrequest.TokenMintResponse
+	404, // 570: kernel.Mint.MintToken:output_type -> tokenrequest.TokenMintResponse
 	405, // 571: kernel.Mint.MintExternalToken:output_type -> tokenrequest.ExternalTokenMintResponse
 	404, // 572: kernel.Mint.MintClientToken:output_type -> tokenrequest.TokenMintResponse
-	367, // 573: kernel.Mint.X509Mint:output_type -> x509.X509CertChain
-	406, // 574: kernel.Mint.WorkloadMint:output_type -> tokenrequest.WorkloadMintResponse
-	407, // 575: kernel.Mint.WorkloadRevoke:output_type -> google.protobuf.Empty
+	367, // 573: kernel.Mint.MintX509Cert:output_type -> x509.X509CertChain
+	406, // 574: kernel.Mint.MintWorkload:output_type -> tokenrequest.WorkloadMintResponse
+	407, // 575: kernel.Mint.RevokeWorkload:output_type -> google.protobuf.Empty
 	21,  // 576: kernel.CliTokenBroker.BrokerStream:output_type -> kernel.CliTokenBrokerResponse
 	40,  // 577: kernel.TenantAdmin.CreateTenant:output_type -> kernel.Tenant
 	48,  // 578: kernel.TenantAdmin.DeleteTenant:output_type -> kernel.DeleteTenantResponse
 	50,  // 579: kernel.TenantAdmin.ListTenants:output_type -> kernel.ListTenantsResponse
 	395, // 580: kernel.TenantAdmin.GetTenantConfig:output_type -> tenant_config.TenantConfig
-	395, // 581: kernel.TenantAdmin.SetTenantConfig:output_type -> tenant_config.TenantConfig
+	395, // 581: kernel.TenantAdmin.UpdateTenantConfig:output_type -> tenant_config.TenantConfig
 	42,  // 582: kernel.TenantAdmin.GetProjectConfig:output_type -> kernel.ProjectConfig
-	42,  // 583: kernel.TenantAdmin.SetProjectConfig:output_type -> kernel.ProjectConfig
+	42,  // 583: kernel.TenantAdmin.UpdateProjectConfig:output_type -> kernel.ProjectConfig
 	56,  // 584: kernel.TenantAdmin.ListProjects:output_type -> kernel.ListProjectsResponse
 	58,  // 585: kernel.TenantAdmin.DeleteProject:output_type -> kernel.DeleteProjectResponse
 	17,  // 586: kernel.IdentityStateService.GetFqdn:output_type -> kernel.IdentityFqdn

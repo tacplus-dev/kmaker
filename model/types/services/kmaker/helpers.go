@@ -45,7 +45,7 @@ func TypeIDValues() []TypeID {
 	return []TypeID{
 		TypeID_TYPE_ID_CONFIG,
 		TypeID_TYPE_ID_KERNEL_SERVICE_ACCOUNT,
-		TypeID_TYPE_ID_SIGN_KERNEL_CERT_REQUEST,
+		TypeID_TYPE_ID_MINT_KERNEL_CERT_REQUEST,
 		TypeID_TYPE_ID_KMAKER_CONFIG_STATE,
 		TypeID_TYPE_ID_MAP_EMPTY,
 	}
@@ -53,7 +53,7 @@ func TypeIDValues() []TypeID {
 
 // TypeIDStringValues returns all valid TypeID names as strings
 func TypeIDStringValues() []string {
-	return []string{"config", "kernel-service-account", "sign-kernel-cert-request", "kmaker-config-state", "map-empty"}
+	return []string{"config", "kernel-service-account", "mint-kernel-cert-request", "kmaker-config-state", "map-empty"}
 }
 
 // ParseTypeID converts a string to a TypeID enum value
@@ -68,8 +68,8 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_CONFIG, nil
 	case "kernel-service-account", "type-id-kernel-service-account":
 		return TypeID_TYPE_ID_KERNEL_SERVICE_ACCOUNT, nil
-	case "sign-kernel-cert-request", "type-id-sign-kernel-cert-request":
-		return TypeID_TYPE_ID_SIGN_KERNEL_CERT_REQUEST, nil
+	case "mint-kernel-cert-request", "type-id-mint-kernel-cert-request":
+		return TypeID_TYPE_ID_MINT_KERNEL_CERT_REQUEST, nil
 	case "kmaker-config-state", "type-id-kmaker-config-state":
 		return TypeID_TYPE_ID_KMAKER_CONFIG_STATE, nil
 	case "map-empty", "type-id-map-empty":
@@ -108,8 +108,8 @@ func TypeIDToString(v TypeID) string {
 		return "config"
 	case TypeID_TYPE_ID_KERNEL_SERVICE_ACCOUNT:
 		return "kernel-service-account"
-	case TypeID_TYPE_ID_SIGN_KERNEL_CERT_REQUEST:
-		return "sign-kernel-cert-request"
+	case TypeID_TYPE_ID_MINT_KERNEL_CERT_REQUEST:
+		return "mint-kernel-cert-request"
 	case TypeID_TYPE_ID_KMAKER_CONFIG_STATE:
 		return "kmaker-config-state"
 	case TypeID_TYPE_ID_MAP_EMPTY:
@@ -140,8 +140,8 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_CONFIG
 	case "kernel-service-account", "type-id-kernel-service-account":
 		return TypeID_TYPE_ID_KERNEL_SERVICE_ACCOUNT
-	case "sign-kernel-cert-request", "type-id-sign-kernel-cert-request":
-		return TypeID_TYPE_ID_SIGN_KERNEL_CERT_REQUEST
+	case "mint-kernel-cert-request", "type-id-mint-kernel-cert-request":
+		return TypeID_TYPE_ID_MINT_KERNEL_CERT_REQUEST
 	case "kmaker-config-state", "type-id-kmaker-config-state":
 		return TypeID_TYPE_ID_KMAKER_CONFIG_STATE
 	case "map-empty", "type-id-map-empty":
@@ -160,8 +160,8 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_CONFIG"
 	case TypeID_TYPE_ID_KERNEL_SERVICE_ACCOUNT:
 		return "TYPE_ID_KERNEL_SERVICE_ACCOUNT"
-	case TypeID_TYPE_ID_SIGN_KERNEL_CERT_REQUEST:
-		return "TYPE_ID_SIGN_KERNEL_CERT_REQUEST"
+	case TypeID_TYPE_ID_MINT_KERNEL_CERT_REQUEST:
+		return "TYPE_ID_MINT_KERNEL_CERT_REQUEST"
 	case TypeID_TYPE_ID_KMAKER_CONFIG_STATE:
 		return "TYPE_ID_KMAKER_CONFIG_STATE"
 	case TypeID_TYPE_ID_MAP_EMPTY:
@@ -177,13 +177,13 @@ func KmakerRpcIdValues() []KmakerRpcId {
 		KmakerRpcId_KMAKER_RPC_ID_ALL_ACCESSORS,
 		KmakerRpcId_KMAKER_RPC_ID_ALL_MUTATORS,
 		KmakerRpcId_KMAKER_RPC_ID_ALL_EXECUTORS,
-		KmakerRpcId_KMAKER_RPC_ID_SIGN_KERNEL_CERT,
+		KmakerRpcId_KMAKER_RPC_ID_MINT_KERNEL_CERT,
 	}
 }
 
 // KmakerRpcIdStringValues returns all valid KmakerRpcId names as strings
 func KmakerRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "sign-kernel-cert"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "mint-kernel-cert"}
 }
 
 // ParseKmakerRpcId converts a string to a KmakerRpcId enum value
@@ -200,8 +200,8 @@ func ParseKmakerRpcId(s string) (KmakerRpcId, error) {
 		return KmakerRpcId_KMAKER_RPC_ID_ALL_MUTATORS, nil
 	case "all-executors", "kmaker-rpc-id-all-executors":
 		return KmakerRpcId_KMAKER_RPC_ID_ALL_EXECUTORS, nil
-	case "sign-kernel-cert", "kmaker-rpc-id-sign-kernel-cert":
-		return KmakerRpcId_KMAKER_RPC_ID_SIGN_KERNEL_CERT, nil
+	case "mint-kernel-cert", "kmaker-rpc-id-mint-kernel-cert":
+		return KmakerRpcId_KMAKER_RPC_ID_MINT_KERNEL_CERT, nil
 	default:
 		return KmakerRpcId_KMAKER_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid kmakerrpcid %s, expecting one of: %v", s, KmakerRpcIdStringValues())
 	}
@@ -238,8 +238,8 @@ func KmakerRpcIdToString(v KmakerRpcId) string {
 		return "all-mutators"
 	case KmakerRpcId_KMAKER_RPC_ID_ALL_EXECUTORS:
 		return "all-executors"
-	case KmakerRpcId_KMAKER_RPC_ID_SIGN_KERNEL_CERT:
-		return "sign-kernel-cert"
+	case KmakerRpcId_KMAKER_RPC_ID_MINT_KERNEL_CERT:
+		return "mint-kernel-cert"
 	default:
 		return ""
 	}
@@ -268,8 +268,8 @@ func ParseKmakerRpcIdLiberal(s string) KmakerRpcId {
 		return KmakerRpcId_KMAKER_RPC_ID_ALL_MUTATORS
 	case "all-executors", "kmaker-rpc-id-all-executors":
 		return KmakerRpcId_KMAKER_RPC_ID_ALL_EXECUTORS
-	case "sign-kernel-cert", "kmaker-rpc-id-sign-kernel-cert":
-		return KmakerRpcId_KMAKER_RPC_ID_SIGN_KERNEL_CERT
+	case "mint-kernel-cert", "kmaker-rpc-id-mint-kernel-cert":
+		return KmakerRpcId_KMAKER_RPC_ID_MINT_KERNEL_CERT
 	default:
 		return KmakerRpcId_KMAKER_RPC_ID_UNSPECIFIED
 	}
@@ -286,8 +286,8 @@ func KmakerRpcIdToSpecName(v KmakerRpcId) string {
 		return "KMAKER_RPC_ID_ALL_MUTATORS"
 	case KmakerRpcId_KMAKER_RPC_ID_ALL_EXECUTORS:
 		return "KMAKER_RPC_ID_ALL_EXECUTORS"
-	case KmakerRpcId_KMAKER_RPC_ID_SIGN_KERNEL_CERT:
-		return "KMAKER_RPC_ID_SIGN_KERNEL_CERT"
+	case KmakerRpcId_KMAKER_RPC_ID_MINT_KERNEL_CERT:
+		return "KMAKER_RPC_ID_MINT_KERNEL_CERT"
 	default:
 		return ""
 	}
@@ -911,9 +911,9 @@ func KernelServiceAccountToTOML(v *KernelServiceAccount) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// SignKernelCertRequestJSON represents SignKernelCertRequest in external JSON format (with string enums)
+// MintKernelCertRequestJSON represents MintKernelCertRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type signkernelcertrequestJSON struct {
+type mintkernelcertrequestJSON struct {
 	K8SToken    string          `json:"k8s_token,omitempty"`
 	CertRequest json.RawMessage `json:"cert_request,omitempty"`
 	PodName     string          `json:"pod_name,omitempty"`
@@ -923,14 +923,14 @@ type signkernelcertrequestJSON struct {
 	Noop        bool            `json:"noop,omitempty"`
 }
 
-// SignKernelCertRequestToJSON converts SignKernelCertRequest to JSON bytes.
+// MintKernelCertRequestToJSON converts MintKernelCertRequest to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func SignKernelCertRequestToJSON(v *SignKernelCertRequest) ([]byte, error) {
+func MintKernelCertRequestToJSON(v *MintKernelCertRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "signkernelcertrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "mintkernelcertrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := signkernelcertrequestJSON{
+	helper := mintkernelcertrequestJSON{
 		K8SToken: v.K8SToken,
 		CertRequest: func() json.RawMessage {
 			if v.CertRequest == nil {
@@ -948,14 +948,14 @@ func SignKernelCertRequestToJSON(v *SignKernelCertRequest) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// SignKernelCertRequestToJSONPretty converts SignKernelCertRequest to indented JSON bytes.
+// MintKernelCertRequestToJSONPretty converts MintKernelCertRequest to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func SignKernelCertRequestToJSONPretty(v *SignKernelCertRequest) ([]byte, error) {
+func MintKernelCertRequestToJSONPretty(v *MintKernelCertRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "signkernelcertrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "mintkernelcertrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := signkernelcertrequestJSON{
+	helper := mintkernelcertrequestJSON{
 		K8SToken: v.K8SToken,
 		CertRequest: func() json.RawMessage {
 			if v.CertRequest == nil {
@@ -973,9 +973,9 @@ func SignKernelCertRequestToJSONPretty(v *SignKernelCertRequest) ([]byte, error)
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// SignKernelCertRequestFromBytes creates SignKernelCertRequest from bytes, auto-detecting the format.
+// MintKernelCertRequestFromBytes creates MintKernelCertRequest from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func SignKernelCertRequestFromBytes(data []byte) (*SignKernelCertRequest, error) {
+func MintKernelCertRequestFromBytes(data []byte) (*MintKernelCertRequest, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -983,7 +983,7 @@ func SignKernelCertRequestFromBytes(data []byte) (*SignKernelCertRequest, error)
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := SignKernelCertRequestFromJSON(data); err == nil {
+		if result, err := MintKernelCertRequestFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -993,7 +993,7 @@ func SignKernelCertRequestFromBytes(data []byte) (*SignKernelCertRequest, error)
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := SignKernelCertRequestFromJSON(jsonData); err == nil {
+			if result, err := MintKernelCertRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -1004,35 +1004,35 @@ func SignKernelCertRequestFromBytes(data []byte) (*SignKernelCertRequest, error)
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := SignKernelCertRequestFromJSON(jsonData); err == nil {
+			if result, err := MintKernelCertRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &SignKernelCertRequest{}
+	v := &MintKernelCertRequest{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse SignKernelCertRequest: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse MintKernelCertRequest: unsupported format or invalid data")
 }
 
-// SignKernelCertRequestFromJSON creates SignKernelCertRequest from JSON bytes.
+// MintKernelCertRequestFromJSON creates MintKernelCertRequest from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func SignKernelCertRequestFromJSON(data []byte) (*SignKernelCertRequest, error) {
+func MintKernelCertRequestFromJSON(data []byte) (*MintKernelCertRequest, error) {
 	// Unmarshal into helper struct with string enums
-	var raw signkernelcertrequestJSON
+	var raw mintkernelcertrequestJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &SignKernelCertRequest{}
+		v := &MintKernelCertRequest{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &SignKernelCertRequest{}
+	result := &MintKernelCertRequest{}
 	result.K8SToken = raw.K8SToken
 	// Parse message field: CertRequest
 	if len(raw.CertRequest) > 0 {
@@ -1049,14 +1049,14 @@ func SignKernelCertRequestFromJSON(data []byte) (*SignKernelCertRequest, error) 
 	return result, nil
 }
 
-// SignKernelCertRequestToYAML converts SignKernelCertRequest to YAML bytes.
+// MintKernelCertRequestToYAML converts MintKernelCertRequest to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func SignKernelCertRequestToYAML(v *SignKernelCertRequest) ([]byte, error) {
+func MintKernelCertRequestToYAML(v *MintKernelCertRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "signkernelcertrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "mintkernelcertrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := SignKernelCertRequestToJSON(v)
+	jsonData, err := MintKernelCertRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -1070,14 +1070,14 @@ func SignKernelCertRequestToYAML(v *SignKernelCertRequest) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// SignKernelCertRequestToTOML converts SignKernelCertRequest to TOML bytes.
+// MintKernelCertRequestToTOML converts MintKernelCertRequest to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func SignKernelCertRequestToTOML(v *SignKernelCertRequest) ([]byte, error) {
+func MintKernelCertRequestToTOML(v *MintKernelCertRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "signkernelcertrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "mintkernelcertrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := SignKernelCertRequestToJSON(v)
+	jsonData, err := MintKernelCertRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -1545,30 +1545,30 @@ func KernelServiceAccountFromEnvVar(env map[string]string) (*KernelServiceAccoun
 	return result, nil
 }
 
-// SignKernelCertRequestToEnvVar converts SignKernelCertRequest to environment variable key-value pairs.
-func SignKernelCertRequestToEnvVar(v *SignKernelCertRequest) map[string]string {
+// MintKernelCertRequestToEnvVar converts MintKernelCertRequest to environment variable key-value pairs.
+func MintKernelCertRequestToEnvVar(v *MintKernelCertRequest) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_SERVICES_KMAKER_SIGN_KERNEL_CERT_REQUEST_K8S_TOKEN"] = v.K8SToken
+	result["PROTO_SERVICES_KMAKER_MINT_KERNEL_CERT_REQUEST_K8S_TOKEN"] = v.K8SToken
 	if v.CertRequest != nil {
 		for k, val := range x509.X509CertRequestToEnvVar(v.CertRequest) {
 			result[k] = val
 		}
 	}
-	result["PROTO_SERVICES_KMAKER_SIGN_KERNEL_CERT_REQUEST_POD_NAME"] = v.PodName
-	result["PROTO_SERVICES_KMAKER_SIGN_KERNEL_CERT_REQUEST_POD_UID"] = v.PodUid
-	result["PROTO_SERVICES_KMAKER_SIGN_KERNEL_CERT_REQUEST_INSTANCE_ID"] = v.InstanceId
-	result["PROTO_SERVICES_KMAKER_SIGN_KERNEL_CERT_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_SERVICES_KMAKER_SIGN_KERNEL_CERT_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_SERVICES_KMAKER_MINT_KERNEL_CERT_REQUEST_POD_NAME"] = v.PodName
+	result["PROTO_SERVICES_KMAKER_MINT_KERNEL_CERT_REQUEST_POD_UID"] = v.PodUid
+	result["PROTO_SERVICES_KMAKER_MINT_KERNEL_CERT_REQUEST_INSTANCE_ID"] = v.InstanceId
+	result["PROTO_SERVICES_KMAKER_MINT_KERNEL_CERT_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KMAKER_MINT_KERNEL_CERT_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// SignKernelCertRequestFromEnvVar creates SignKernelCertRequest from environment variable key-value pairs.
-func SignKernelCertRequestFromEnvVar(env map[string]string) (*SignKernelCertRequest, error) {
-	result := &SignKernelCertRequest{}
-	if val, ok := env["PROTO_SERVICES_KMAKER_SIGN_KERNEL_CERT_REQUEST_K8S_TOKEN"]; ok && val != "" {
+// MintKernelCertRequestFromEnvVar creates MintKernelCertRequest from environment variable key-value pairs.
+func MintKernelCertRequestFromEnvVar(env map[string]string) (*MintKernelCertRequest, error) {
+	result := &MintKernelCertRequest{}
+	if val, ok := env["PROTO_SERVICES_KMAKER_MINT_KERNEL_CERT_REQUEST_K8S_TOKEN"]; ok && val != "" {
 		result.K8SToken = val
 	}
 	if sub, err := x509.X509CertRequestFromEnvVar(env); err != nil {
@@ -1576,19 +1576,19 @@ func SignKernelCertRequestFromEnvVar(env map[string]string) (*SignKernelCertRequ
 	} else if sub != nil {
 		result.CertRequest = sub
 	}
-	if val, ok := env["PROTO_SERVICES_KMAKER_SIGN_KERNEL_CERT_REQUEST_POD_NAME"]; ok && val != "" {
+	if val, ok := env["PROTO_SERVICES_KMAKER_MINT_KERNEL_CERT_REQUEST_POD_NAME"]; ok && val != "" {
 		result.PodName = val
 	}
-	if val, ok := env["PROTO_SERVICES_KMAKER_SIGN_KERNEL_CERT_REQUEST_POD_UID"]; ok && val != "" {
+	if val, ok := env["PROTO_SERVICES_KMAKER_MINT_KERNEL_CERT_REQUEST_POD_UID"]; ok && val != "" {
 		result.PodUid = val
 	}
-	if val, ok := env["PROTO_SERVICES_KMAKER_SIGN_KERNEL_CERT_REQUEST_INSTANCE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_SERVICES_KMAKER_MINT_KERNEL_CERT_REQUEST_INSTANCE_ID"]; ok && val != "" {
 		result.InstanceId = val
 	}
-	if val, ok := env["PROTO_SERVICES_KMAKER_SIGN_KERNEL_CERT_REQUEST_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_SERVICES_KMAKER_MINT_KERNEL_CERT_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_SERVICES_KMAKER_SIGN_KERNEL_CERT_REQUEST_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_SERVICES_KMAKER_MINT_KERNEL_CERT_REQUEST_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -1830,15 +1830,15 @@ func ValidateKernelServiceAccountWithDepth(m *KernelServiceAccount, depth int) e
 	return nil
 }
 
-// ValidateSignKernelCertRequest validates all fields in SignKernelCertRequest according to their annotations.
+// ValidateMintKernelCertRequest validates all fields in MintKernelCertRequest according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateSignKernelCertRequest(m *SignKernelCertRequest) error {
-	return ValidateSignKernelCertRequestWithDepth(m, 0)
+func ValidateMintKernelCertRequest(m *MintKernelCertRequest) error {
+	return ValidateMintKernelCertRequestWithDepth(m, 0)
 }
 
-// ValidateSignKernelCertRequestWithDepth validates SignKernelCertRequest and carries nested-message depth across
+// ValidateMintKernelCertRequestWithDepth validates MintKernelCertRequest and carries nested-message depth across
 // generated package boundaries.
-func ValidateSignKernelCertRequestWithDepth(m *SignKernelCertRequest, depth int) error {
+func ValidateMintKernelCertRequestWithDepth(m *MintKernelCertRequest, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -1985,11 +1985,11 @@ const (
 	MaxSizeKernelserviceaccountNamespace   int = 32768
 	MaxSizeKernelserviceaccountName        int = 32768
 	MaxSizeKernelserviceaccountTraceId     int = 32768
-	MaxSizeSignkernelcertrequestK8sToken   int = 65536
-	MaxSizeSignkernelcertrequestPodName    int = 32768
-	MaxSizeSignkernelcertrequestPodUid     int = 32768
-	MaxSizeSignkernelcertrequestInstanceId int = 32768
-	MaxSizeSignkernelcertrequestTraceId    int = 32768
+	MaxSizeMintkernelcertrequestK8sToken   int = 65536
+	MaxSizeMintkernelcertrequestPodName    int = 32768
+	MaxSizeMintkernelcertrequestPodUid     int = 32768
+	MaxSizeMintkernelcertrequestInstanceId int = 32768
+	MaxSizeMintkernelcertrequestTraceId    int = 32768
 	MaxSizeKmakerconfigstateTraceId        int = 32768
 	MaxSizeMapemptyTraceId                 int = 32768
 )
@@ -2027,10 +2027,10 @@ func KernelServiceAccountDefaults(v *KernelServiceAccount) {
 }
 
 // ============================================================
-// TypeDefaults: SignKernelCertRequest
+// TypeDefaults: MintKernelCertRequest
 // ============================================================
-// SignKernelCertRequestDefaults applies field-level default values to zero-valued fields.
-func SignKernelCertRequestDefaults(v *SignKernelCertRequest) {
+// MintKernelCertRequestDefaults applies field-level default values to zero-valued fields.
+func MintKernelCertRequestDefaults(v *MintKernelCertRequest) {
 	if v == nil {
 		return
 	}
@@ -2094,11 +2094,11 @@ func KernelServiceAccountUndefaults(v *KernelServiceAccount) {
 }
 
 // ============================================================
-// TypeUndefaults: SignKernelCertRequest
+// TypeUndefaults: MintKernelCertRequest
 // ============================================================
-// SignKernelCertRequestUndefaults resets fields that match their default values back to zero.
+// MintKernelCertRequestUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func SignKernelCertRequestUndefaults(v *SignKernelCertRequest) {
+func MintKernelCertRequestUndefaults(v *MintKernelCertRequest) {
 	if v == nil {
 		return
 	}
@@ -2192,10 +2192,10 @@ func MergeKernelServiceAccount(dst, src *KernelServiceAccount) {
 }
 
 // ============================================================
-// Merge: SignKernelCertRequest
+// Merge: MintKernelCertRequest
 // ============================================================
-// MergeSignKernelCertRequest fills zero-valued fields in dst from src.
-func MergeSignKernelCertRequest(dst, src *SignKernelCertRequest) {
+// MergeMintKernelCertRequest fills zero-valued fields in dst from src.
+func MergeMintKernelCertRequest(dst, src *MintKernelCertRequest) {
 	if dst.K8SToken == "" {
 		dst.K8SToken = src.K8SToken
 	}

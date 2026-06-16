@@ -25,7 +25,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"strconv"
-	"strings"
 
 	"github.com/pelletier/go-toml/v2"
 	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/errors"
@@ -33,104 +32,6 @@ import (
 	"google.golang.org/protobuf/proto"
 	"gopkg.in/yaml.v3"
 )
-
-// ============================================================
-// Enum Helpers
-// ============================================================
-// TypeIDValues returns all valid TypeID values (excluding UNDEFINED)
-func TypeIDValues() []TypeID {
-	return []TypeID{
-		TypeID_TYPE_ID_CONFIG,
-	}
-}
-
-// TypeIDStringValues returns all valid TypeID names as strings
-func TypeIDStringValues() []string {
-	return []string{"config"}
-}
-
-// ParseTypeID converts a string to a TypeID enum value
-// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseTypeID(s string) (TypeID, error) {
-	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
-	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
-	switch normalized {
-	case "":
-		return TypeID_TYPE_ID_UNSPECIFIED, nil
-	case "config", "type-id-config":
-		return TypeID_TYPE_ID_CONFIG, nil
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid typeid %s, expecting one of: %v", s, TypeIDStringValues())
-	}
-}
-
-// ParseTypeIDs converts a comma-separated string to a slice of TypeID enum values
-// Returns an error if any value is invalid
-func ParseTypeIDs(s string) ([]TypeID, error) {
-	if s == "" {
-		return nil, nil
-	}
-	parts := strings.Split(s, ",")
-	result := make([]TypeID, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed == "" {
-			continue
-		}
-		val, err := ParseTypeID(trimmed)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, val)
-	}
-	return result, nil
-}
-
-// TypeIDToString converts a TypeID to its lowercase string representation
-func TypeIDToString(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_CONFIG:
-		return "config"
-	default:
-		return ""
-	}
-}
-
-// ParseTypeIDLiberal parses a TypeID liberally, accepting:
-// - Integer values (as string or int)
-// - Enum names in any case
-// - RFC-compliant JSON names
-func ParseTypeIDLiberal(s string) TypeID {
-	if s == "" {
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-	// Try parsing as integer
-	if num, err := strconv.Atoi(s); err == nil {
-		return TypeID(num)
-	}
-	// Normalize and try parsing
-	normalized := strings.ToLower(strings.TrimSpace(s))
-	normalized = strings.ReplaceAll(normalized, "_", "-")
-	normalized = strings.ReplaceAll(normalized, " ", "-")
-	switch normalized {
-	case "config", "type-id-config":
-		return TypeID_TYPE_ID_CONFIG
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-}
-
-// TypeIDToSpecName converts a TypeID to its canonical protobuf spec name
-func TypeIDToSpecName(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_UNSPECIFIED:
-		return "TYPE_ID_UNSPECIFIED"
-	case TypeID_TYPE_ID_CONFIG:
-		return "TYPE_ID_CONFIG"
-	default:
-		return ""
-	}
-}
 
 // ============================================================
 // JSON/YAML/TOML Serialization Helpers

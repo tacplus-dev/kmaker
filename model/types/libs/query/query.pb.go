@@ -210,68 +210,6 @@ func (LogicalOp) EnumDescriptor() ([]byte, []int) {
 	return file_libs_query_proto_rawDescGZIP(), []int{2}
 }
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED      TypeID = 0
-	TypeID_TYPE_ID_QUERY_VALUE      TypeID = 1
-	TypeID_TYPE_ID_PREDICATE        TypeID = 2
-	TypeID_TYPE_ID_PREDICATE_GROUP  TypeID = 3
-	TypeID_TYPE_ID_SORT_FIELD       TypeID = 4
-	TypeID_TYPE_ID_COLLECTION_QUERY TypeID = 5
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_QUERY_VALUE",
-		2: "TYPE_ID_PREDICATE",
-		3: "TYPE_ID_PREDICATE_GROUP",
-		4: "TYPE_ID_SORT_FIELD",
-		5: "TYPE_ID_COLLECTION_QUERY",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":      0,
-		"TYPE_ID_QUERY_VALUE":      1,
-		"TYPE_ID_PREDICATE":        2,
-		"TYPE_ID_PREDICATE_GROUP":  3,
-		"TYPE_ID_SORT_FIELD":       4,
-		"TYPE_ID_COLLECTION_QUERY": 5,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_query_proto_enumTypes[3].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_query_proto_enumTypes[3]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_query_proto_rawDescGZIP(), []int{3}
-}
-
 type QueryValue struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Types that are valid to be assigned to Value:
@@ -689,14 +627,7 @@ const file_libs_query_proto_rawDesc = "" +
 	"\tLogicalOp\x12\x1a\n" +
 	"\x16LOGICAL_OP_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eLOGICAL_OP_AND\x10\x01\x12\x11\n" +
-	"\rLOGICAL_OP_OR\x10\x02*\xa4\x01\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x17\n" +
-	"\x13TYPE_ID_QUERY_VALUE\x10\x01\x12\x15\n" +
-	"\x11TYPE_ID_PREDICATE\x10\x02\x12\x1b\n" +
-	"\x17TYPE_ID_PREDICATE_GROUP\x10\x03\x12\x16\n" +
-	"\x12TYPE_ID_SORT_FIELD\x10\x04\x12\x1c\n" +
-	"\x18TYPE_ID_COLLECTION_QUERY\x10\x05BWZUgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/queryb\x06proto3"
+	"\rLOGICAL_OP_OR\x10\x02BWZUgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/queryb\x06proto3"
 
 var (
 	file_libs_query_proto_rawDescOnce sync.Once
@@ -710,29 +641,28 @@ func file_libs_query_proto_rawDescGZIP() []byte {
 	return file_libs_query_proto_rawDescData
 }
 
-var file_libs_query_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
+var file_libs_query_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_libs_query_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_libs_query_proto_goTypes = []any{
 	(ComparisonOp)(0),       // 0: query.ComparisonOp
 	(SortDirection)(0),      // 1: query.SortDirection
 	(LogicalOp)(0),          // 2: query.LogicalOp
-	(TypeID)(0),             // 3: query.TypeID
-	(*QueryValue)(nil),      // 4: query.QueryValue
-	(*Predicate)(nil),       // 5: query.Predicate
-	(*PredicateGroup)(nil),  // 6: query.PredicateGroup
-	(*SortField)(nil),       // 7: query.SortField
-	(*CollectionQuery)(nil), // 8: query.CollectionQuery
+	(*QueryValue)(nil),      // 3: query.QueryValue
+	(*Predicate)(nil),       // 4: query.Predicate
+	(*PredicateGroup)(nil),  // 5: query.PredicateGroup
+	(*SortField)(nil),       // 6: query.SortField
+	(*CollectionQuery)(nil), // 7: query.CollectionQuery
 }
 var file_libs_query_proto_depIdxs = []int32{
 	0, // 0: query.Predicate.op:type_name -> query.ComparisonOp
-	4, // 1: query.Predicate.value:type_name -> query.QueryValue
-	4, // 2: query.Predicate.values:type_name -> query.QueryValue
+	3, // 1: query.Predicate.value:type_name -> query.QueryValue
+	3, // 2: query.Predicate.values:type_name -> query.QueryValue
 	2, // 3: query.PredicateGroup.op:type_name -> query.LogicalOp
-	5, // 4: query.PredicateGroup.predicates:type_name -> query.Predicate
-	6, // 5: query.PredicateGroup.groups:type_name -> query.PredicateGroup
+	4, // 4: query.PredicateGroup.predicates:type_name -> query.Predicate
+	5, // 5: query.PredicateGroup.groups:type_name -> query.PredicateGroup
 	1, // 6: query.SortField.direction:type_name -> query.SortDirection
-	6, // 7: query.CollectionQuery.where:type_name -> query.PredicateGroup
-	7, // 8: query.CollectionQuery.order_by:type_name -> query.SortField
+	5, // 7: query.CollectionQuery.where:type_name -> query.PredicateGroup
+	6, // 8: query.CollectionQuery.order_by:type_name -> query.SortField
 	9, // [9:9] is the sub-list for method output_type
 	9, // [9:9] is the sub-list for method input_type
 	9, // [9:9] is the sub-list for extension type_name
@@ -756,7 +686,7 @@ func file_libs_query_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_query_proto_rawDesc), len(file_libs_query_proto_rawDesc)),
-			NumEnums:      4,
+			NumEnums:      3,
 			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   0,

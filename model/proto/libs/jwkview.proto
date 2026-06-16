@@ -41,23 +41,3 @@ message JwkViewGetResponse {
   jwk.Jwk value = 1;
   bool found = 2;
 }
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-enum TypeID {
-  TYPE_ID_UNSPECIFIED = 0;
-  TYPE_ID_JWK_VIEW_RESPONSE = 1;
-  TYPE_ID_JWK_VIEW_GET_REQUEST = 2;
-  TYPE_ID_JWK_VIEW_GET_RESPONSE = 3;
-}
-
-enum JwkVerifyingKeysViewServiceRpcId {
-  JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_UNSPECIFIED = 0;
-  JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_ALL_ACCESSORS = 1;
-  JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_ALL_MUTATORS = 2;
-  JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_ALL_EXECUTORS = 3;
-  JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_WATCH = 4;
-  JWK_VERIFYING_KEYS_VIEW_SERVICE_RPC_ID_GET = 5;
-}

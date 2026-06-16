@@ -111,8 +111,8 @@ func (p *KmakerConfigStateService) SetAuthorizeFunc(f func(ctx context.Context, 
 	p.authorizeFunc = f
 }
 
-// SetAuthenticateFunc sets the authentication-only function (token verification
-// without profiles/entitlements). Used for auth_any_user services.
+// SetAuthenticateFunc sets the authentication-only function used to verify a
+// stream token before per-message namespace authorization.
 func (p *KmakerConfigStateService) SetAuthenticateFunc(f func(ctx context.Context) error) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
@@ -127,7 +127,7 @@ func (p *KmakerConfigStateService) SetAuthenticateAtOrBelowFunc(f func(ctx conte
 	p.authenticateAtOrBelowFunc = f
 }
 
-// HasAuthorizer reports whether both authorization paths are wired.
+// HasAuthorizer reports whether all mandatory auth paths are wired.
 func (p *KmakerConfigStateService) HasAuthorizer() bool {
 	p.mu.RLock()
 	defer p.mu.RUnlock()
@@ -148,7 +148,8 @@ func (p *KmakerConfigStateService) authorize(ctx context.Context, fullMethod str
 	return f(ctx, fullMethod, req)
 }
 
-// authenticate checks token signature, audience, and expiry only (no profiles/entitlements).
+// authenticate checks token signature, audience, and expiry only. It is used as
+// a stream-open preflight before per-message namespace authorization.
 // Fail-closed: a nil authenticate func rejects rather than allows.
 func (p *KmakerConfigStateService) authenticate(ctx context.Context) error {
 	p.mu.RLock()
@@ -263,7 +264,7 @@ func (s KmakerConfigStateServiceValidatingBidiStreamingServer[Req, Res]) Send(ms
 // gRPC method implementations with validation
 // GetConfig implements KmakerConfigStateService.GetConfig with authorization and optional validation
 func (p *KmakerConfigStateService) GetConfig(ctx context.Context, req *trace_pb.TraceRequest) (*types.Config, error) {
-	// Trace v2: publish trace event, noop skips handler but not auth
+	// Trace v2: publish trace event, noop skips handler but not auth/validation
 	isTracing := req.TraceId != ""
 	isNoop := isTracing && req.Noop
 
@@ -341,13 +342,18 @@ func (p *KmakerConfigStateService) GetConfig(ctx context.Context, req *trace_pb.
 
 // SetConfig implements KmakerConfigStateService.SetConfig with authorization and optional validation
 func (p *KmakerConfigStateService) SetConfig(ctx context.Context, req *types.Config) (*types.Config, error) {
-	// Trace v2: publish trace event, noop skips handler but not auth
+	// Trace v2: publish trace event, noop skips handler but not auth/validation
 	isTracing := req.TraceId != ""
 	isNoop := isTracing && req.Noop
 
 	if err := p.authorize(ctx, "/services"+types.KmakerConfigStateService_SetConfig_FullMethodName, req); err != nil {
 		return nil, err
 	}
+	// Validate request before invoking the handler.
+	if err := types.ValidateConfig(req); err != nil {
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("validation failed: %v", err))
+	}
+
 	if isTracing {
 		round := p.traceRound()
 		p.publishTrace(ctx, &trace_pb.TraceEvent{
@@ -375,11 +381,6 @@ func (p *KmakerConfigStateService) SetConfig(ctx context.Context, req *types.Con
 			zap.String("method", "/services"+types.KmakerConfigStateService_SetConfig_FullMethodName),
 			zap.String("request_id", requestID))
 	}
-	// Validate request before invoking the handler.
-	if err := types.ValidateConfig(req); err != nil {
-		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("validation failed: %v", err))
-	}
-
 	// Call the handler
 	resp, err := p.handler.SetConfig(sanitizeContext(ctx), caller, req)
 	if err != nil {

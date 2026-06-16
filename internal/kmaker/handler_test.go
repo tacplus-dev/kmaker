@@ -59,14 +59,14 @@ func TestHandlerSignsKernelCert(t *testing.T) {
 		t.Fatalf("NewHandler: %v", err)
 	}
 
-	req := &pb.SignKernelCertRequest{
+	req := &pb.MintKernelCertRequest{
 		K8SToken:    "token",
 		InstanceId:  "kernel-0",
 		CertRequest: testCertRequest(t, false),
 	}
-	chain, err := handler.SignKernelCert(context.Background(), nil, req)
+	chain, err := handler.MintKernelCert(context.Background(), nil, req)
 	if err != nil {
-		t.Fatalf("SignKernelCert: %v", err)
+		t.Fatalf("MintKernelCert: %v", err)
 	}
 	if got := len(chain.GetChain()); got != 2 {
 		t.Fatalf("expected leaf + CA chain, got %d certs", got)
@@ -104,7 +104,7 @@ func TestHandlerRejectsWrongServiceAccount(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewHandler: %v", err)
 	}
-	_, err = handler.SignKernelCert(context.Background(), nil, &pb.SignKernelCertRequest{
+	_, err = handler.MintKernelCert(context.Background(), nil, &pb.MintKernelCertRequest{
 		K8SToken:    "token",
 		CertRequest: testCertRequest(t, false),
 	})
@@ -119,11 +119,11 @@ func TestSignerRejectsOutOfScopeURISAN(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewSigner: %v", err)
 	}
-	req := &pb.SignKernelCertRequest{
+	req := &pb.MintKernelCertRequest{
 		CertRequest: testCertRequest(t, false),
 	}
 	req.CertRequest.UriSans = []string{"spiffe://local/dev/oauth"}
-	if _, err := signer.SignKernelCertificate(req); err == nil {
+	if _, err := signer.MintKernelCertificate(req); err == nil {
 		t.Fatal("expected out-of-scope URI SAN to fail")
 	}
 }
@@ -134,13 +134,13 @@ func TestSignerAllowsKernelPathLenZeroCA(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewSigner: %v", err)
 	}
-	req := &pb.SignKernelCertRequest{
+	req := &pb.MintKernelCertRequest{
 		InstanceId:  "kernel-ca-0",
 		CertRequest: testCertRequest(t, true),
 	}
-	chain, err := signer.SignKernelCertificate(req)
+	chain, err := signer.MintKernelCertificate(req)
 	if err != nil {
-		t.Fatalf("SignKernelCertificate: %v", err)
+		t.Fatalf("MintKernelCertificate: %v", err)
 	}
 	cert, err := parseCertProto(chain.GetChain()[0])
 	if err != nil {

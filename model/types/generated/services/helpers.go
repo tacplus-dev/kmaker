@@ -149,22 +149,22 @@ func SentinelRPCsValues() []SentinelRPCs {
 	return []SentinelRPCs{
 		SentinelRPCs_SENTINEL_RPCS_GET_CLUSTER_INFO,
 		SentinelRPCs_SENTINEL_RPCS_GET_CLUSTER_HEALTH,
-		SentinelRPCs_SENTINEL_RPCS_GET_NODE_METRICS,
-		SentinelRPCs_SENTINEL_RPCS_GET_GRPC_STATS,
-		SentinelRPCs_SENTINEL_RPCS_GET_PERSISTENCE_STATUS,
-		SentinelRPCs_SENTINEL_RPCS_GET_NETWORK_STATS,
-		SentinelRPCs_SENTINEL_RPCS_GET_THREAD_INFO,
-		SentinelRPCs_SENTINEL_RPCS_GET_TOKEN_CACHE_STATS,
-		SentinelRPCs_SENTINEL_RPCS_GET_MAP_STATS,
+		SentinelRPCs_SENTINEL_RPCS_LIST_NODE_METRICS,
+		SentinelRPCs_SENTINEL_RPCS_LIST_GRPC_STATS,
+		SentinelRPCs_SENTINEL_RPCS_LIST_PERSISTENCE_STATUS,
+		SentinelRPCs_SENTINEL_RPCS_LIST_NETWORK_STATS,
+		SentinelRPCs_SENTINEL_RPCS_LIST_THREAD_INFO,
+		SentinelRPCs_SENTINEL_RPCS_LIST_TOKEN_CACHE_STATS,
+		SentinelRPCs_SENTINEL_RPCS_LIST_MAP_STATS,
 		SentinelRPCs_SENTINEL_RPCS_GET_DASHBOARD,
-		SentinelRPCs_SENTINEL_RPCS_WATCH_DASHBOARD,
+		SentinelRPCs_SENTINEL_RPCS_SUBSCRIBE_DASHBOARD,
 		SentinelRPCs_SENTINEL_RPCS_ANY,
 	}
 }
 
 // SentinelRPCsStringValues returns all valid SentinelRPCs names as strings
 func SentinelRPCsStringValues() []string {
-	return []string{"sentinel-rpcs-get-cluster-info", "sentinel-rpcs-get-cluster-health", "sentinel-rpcs-get-node-metrics", "sentinel-rpcs-get-grpc-stats", "sentinel-rpcs-get-persistence-status", "sentinel-rpcs-get-network-stats", "sentinel-rpcs-get-thread-info", "sentinel-rpcs-get-token-cache-stats", "sentinel-rpcs-get-map-stats", "sentinel-rpcs-get-dashboard", "sentinel-rpcs-watch-dashboard", "sentinel-rpcs-any"}
+	return []string{"sentinel-rpcs-get-cluster-info", "sentinel-rpcs-get-cluster-health", "sentinel-rpcs-list-node-metrics", "sentinel-rpcs-list-grpc-stats", "sentinel-rpcs-list-persistence-status", "sentinel-rpcs-list-network-stats", "sentinel-rpcs-list-thread-info", "sentinel-rpcs-list-token-cache-stats", "sentinel-rpcs-list-map-stats", "sentinel-rpcs-get-dashboard", "sentinel-rpcs-subscribe-dashboard", "sentinel-rpcs-any"}
 }
 
 // ParseSentinelRPCs converts a string to a SentinelRPCs enum value
@@ -179,24 +179,24 @@ func ParseSentinelRPCs(s string) (SentinelRPCs, error) {
 		return SentinelRPCs_SENTINEL_RPCS_GET_CLUSTER_INFO, nil
 	case "sentinel-rpcs-get-cluster-health":
 		return SentinelRPCs_SENTINEL_RPCS_GET_CLUSTER_HEALTH, nil
-	case "sentinel-rpcs-get-node-metrics":
-		return SentinelRPCs_SENTINEL_RPCS_GET_NODE_METRICS, nil
-	case "sentinel-rpcs-get-grpc-stats":
-		return SentinelRPCs_SENTINEL_RPCS_GET_GRPC_STATS, nil
-	case "sentinel-rpcs-get-persistence-status":
-		return SentinelRPCs_SENTINEL_RPCS_GET_PERSISTENCE_STATUS, nil
-	case "sentinel-rpcs-get-network-stats":
-		return SentinelRPCs_SENTINEL_RPCS_GET_NETWORK_STATS, nil
-	case "sentinel-rpcs-get-thread-info":
-		return SentinelRPCs_SENTINEL_RPCS_GET_THREAD_INFO, nil
-	case "sentinel-rpcs-get-token-cache-stats":
-		return SentinelRPCs_SENTINEL_RPCS_GET_TOKEN_CACHE_STATS, nil
-	case "sentinel-rpcs-get-map-stats":
-		return SentinelRPCs_SENTINEL_RPCS_GET_MAP_STATS, nil
+	case "sentinel-rpcs-list-node-metrics":
+		return SentinelRPCs_SENTINEL_RPCS_LIST_NODE_METRICS, nil
+	case "sentinel-rpcs-list-grpc-stats":
+		return SentinelRPCs_SENTINEL_RPCS_LIST_GRPC_STATS, nil
+	case "sentinel-rpcs-list-persistence-status":
+		return SentinelRPCs_SENTINEL_RPCS_LIST_PERSISTENCE_STATUS, nil
+	case "sentinel-rpcs-list-network-stats":
+		return SentinelRPCs_SENTINEL_RPCS_LIST_NETWORK_STATS, nil
+	case "sentinel-rpcs-list-thread-info":
+		return SentinelRPCs_SENTINEL_RPCS_LIST_THREAD_INFO, nil
+	case "sentinel-rpcs-list-token-cache-stats":
+		return SentinelRPCs_SENTINEL_RPCS_LIST_TOKEN_CACHE_STATS, nil
+	case "sentinel-rpcs-list-map-stats":
+		return SentinelRPCs_SENTINEL_RPCS_LIST_MAP_STATS, nil
 	case "sentinel-rpcs-get-dashboard":
 		return SentinelRPCs_SENTINEL_RPCS_GET_DASHBOARD, nil
-	case "sentinel-rpcs-watch-dashboard":
-		return SentinelRPCs_SENTINEL_RPCS_WATCH_DASHBOARD, nil
+	case "sentinel-rpcs-subscribe-dashboard":
+		return SentinelRPCs_SENTINEL_RPCS_SUBSCRIBE_DASHBOARD, nil
 	case "sentinel-rpcs-any":
 		return SentinelRPCs_SENTINEL_RPCS_ANY, nil
 	default:
@@ -233,24 +233,24 @@ func SentinelRPCsToString(v SentinelRPCs) string {
 		return "sentinel-rpcs-get-cluster-info"
 	case SentinelRPCs_SENTINEL_RPCS_GET_CLUSTER_HEALTH:
 		return "sentinel-rpcs-get-cluster-health"
-	case SentinelRPCs_SENTINEL_RPCS_GET_NODE_METRICS:
-		return "sentinel-rpcs-get-node-metrics"
-	case SentinelRPCs_SENTINEL_RPCS_GET_GRPC_STATS:
-		return "sentinel-rpcs-get-grpc-stats"
-	case SentinelRPCs_SENTINEL_RPCS_GET_PERSISTENCE_STATUS:
-		return "sentinel-rpcs-get-persistence-status"
-	case SentinelRPCs_SENTINEL_RPCS_GET_NETWORK_STATS:
-		return "sentinel-rpcs-get-network-stats"
-	case SentinelRPCs_SENTINEL_RPCS_GET_THREAD_INFO:
-		return "sentinel-rpcs-get-thread-info"
-	case SentinelRPCs_SENTINEL_RPCS_GET_TOKEN_CACHE_STATS:
-		return "sentinel-rpcs-get-token-cache-stats"
-	case SentinelRPCs_SENTINEL_RPCS_GET_MAP_STATS:
-		return "sentinel-rpcs-get-map-stats"
+	case SentinelRPCs_SENTINEL_RPCS_LIST_NODE_METRICS:
+		return "sentinel-rpcs-list-node-metrics"
+	case SentinelRPCs_SENTINEL_RPCS_LIST_GRPC_STATS:
+		return "sentinel-rpcs-list-grpc-stats"
+	case SentinelRPCs_SENTINEL_RPCS_LIST_PERSISTENCE_STATUS:
+		return "sentinel-rpcs-list-persistence-status"
+	case SentinelRPCs_SENTINEL_RPCS_LIST_NETWORK_STATS:
+		return "sentinel-rpcs-list-network-stats"
+	case SentinelRPCs_SENTINEL_RPCS_LIST_THREAD_INFO:
+		return "sentinel-rpcs-list-thread-info"
+	case SentinelRPCs_SENTINEL_RPCS_LIST_TOKEN_CACHE_STATS:
+		return "sentinel-rpcs-list-token-cache-stats"
+	case SentinelRPCs_SENTINEL_RPCS_LIST_MAP_STATS:
+		return "sentinel-rpcs-list-map-stats"
 	case SentinelRPCs_SENTINEL_RPCS_GET_DASHBOARD:
 		return "sentinel-rpcs-get-dashboard"
-	case SentinelRPCs_SENTINEL_RPCS_WATCH_DASHBOARD:
-		return "sentinel-rpcs-watch-dashboard"
+	case SentinelRPCs_SENTINEL_RPCS_SUBSCRIBE_DASHBOARD:
+		return "sentinel-rpcs-subscribe-dashboard"
 	case SentinelRPCs_SENTINEL_RPCS_ANY:
 		return "sentinel-rpcs-any"
 	default:
@@ -279,24 +279,24 @@ func ParseSentinelRPCsLiberal(s string) SentinelRPCs {
 		return SentinelRPCs_SENTINEL_RPCS_GET_CLUSTER_INFO
 	case "sentinel-rpcs-get-cluster-health":
 		return SentinelRPCs_SENTINEL_RPCS_GET_CLUSTER_HEALTH
-	case "sentinel-rpcs-get-node-metrics":
-		return SentinelRPCs_SENTINEL_RPCS_GET_NODE_METRICS
-	case "sentinel-rpcs-get-grpc-stats":
-		return SentinelRPCs_SENTINEL_RPCS_GET_GRPC_STATS
-	case "sentinel-rpcs-get-persistence-status":
-		return SentinelRPCs_SENTINEL_RPCS_GET_PERSISTENCE_STATUS
-	case "sentinel-rpcs-get-network-stats":
-		return SentinelRPCs_SENTINEL_RPCS_GET_NETWORK_STATS
-	case "sentinel-rpcs-get-thread-info":
-		return SentinelRPCs_SENTINEL_RPCS_GET_THREAD_INFO
-	case "sentinel-rpcs-get-token-cache-stats":
-		return SentinelRPCs_SENTINEL_RPCS_GET_TOKEN_CACHE_STATS
-	case "sentinel-rpcs-get-map-stats":
-		return SentinelRPCs_SENTINEL_RPCS_GET_MAP_STATS
+	case "sentinel-rpcs-list-node-metrics":
+		return SentinelRPCs_SENTINEL_RPCS_LIST_NODE_METRICS
+	case "sentinel-rpcs-list-grpc-stats":
+		return SentinelRPCs_SENTINEL_RPCS_LIST_GRPC_STATS
+	case "sentinel-rpcs-list-persistence-status":
+		return SentinelRPCs_SENTINEL_RPCS_LIST_PERSISTENCE_STATUS
+	case "sentinel-rpcs-list-network-stats":
+		return SentinelRPCs_SENTINEL_RPCS_LIST_NETWORK_STATS
+	case "sentinel-rpcs-list-thread-info":
+		return SentinelRPCs_SENTINEL_RPCS_LIST_THREAD_INFO
+	case "sentinel-rpcs-list-token-cache-stats":
+		return SentinelRPCs_SENTINEL_RPCS_LIST_TOKEN_CACHE_STATS
+	case "sentinel-rpcs-list-map-stats":
+		return SentinelRPCs_SENTINEL_RPCS_LIST_MAP_STATS
 	case "sentinel-rpcs-get-dashboard":
 		return SentinelRPCs_SENTINEL_RPCS_GET_DASHBOARD
-	case "sentinel-rpcs-watch-dashboard":
-		return SentinelRPCs_SENTINEL_RPCS_WATCH_DASHBOARD
+	case "sentinel-rpcs-subscribe-dashboard":
+		return SentinelRPCs_SENTINEL_RPCS_SUBSCRIBE_DASHBOARD
 	case "sentinel-rpcs-any":
 		return SentinelRPCs_SENTINEL_RPCS_ANY
 	default:
@@ -313,24 +313,24 @@ func SentinelRPCsToSpecName(v SentinelRPCs) string {
 		return "SENTINEL_RPCS_GET_CLUSTER_INFO"
 	case SentinelRPCs_SENTINEL_RPCS_GET_CLUSTER_HEALTH:
 		return "SENTINEL_RPCS_GET_CLUSTER_HEALTH"
-	case SentinelRPCs_SENTINEL_RPCS_GET_NODE_METRICS:
-		return "SENTINEL_RPCS_GET_NODE_METRICS"
-	case SentinelRPCs_SENTINEL_RPCS_GET_GRPC_STATS:
-		return "SENTINEL_RPCS_GET_GRPC_STATS"
-	case SentinelRPCs_SENTINEL_RPCS_GET_PERSISTENCE_STATUS:
-		return "SENTINEL_RPCS_GET_PERSISTENCE_STATUS"
-	case SentinelRPCs_SENTINEL_RPCS_GET_NETWORK_STATS:
-		return "SENTINEL_RPCS_GET_NETWORK_STATS"
-	case SentinelRPCs_SENTINEL_RPCS_GET_THREAD_INFO:
-		return "SENTINEL_RPCS_GET_THREAD_INFO"
-	case SentinelRPCs_SENTINEL_RPCS_GET_TOKEN_CACHE_STATS:
-		return "SENTINEL_RPCS_GET_TOKEN_CACHE_STATS"
-	case SentinelRPCs_SENTINEL_RPCS_GET_MAP_STATS:
-		return "SENTINEL_RPCS_GET_MAP_STATS"
+	case SentinelRPCs_SENTINEL_RPCS_LIST_NODE_METRICS:
+		return "SENTINEL_RPCS_LIST_NODE_METRICS"
+	case SentinelRPCs_SENTINEL_RPCS_LIST_GRPC_STATS:
+		return "SENTINEL_RPCS_LIST_GRPC_STATS"
+	case SentinelRPCs_SENTINEL_RPCS_LIST_PERSISTENCE_STATUS:
+		return "SENTINEL_RPCS_LIST_PERSISTENCE_STATUS"
+	case SentinelRPCs_SENTINEL_RPCS_LIST_NETWORK_STATS:
+		return "SENTINEL_RPCS_LIST_NETWORK_STATS"
+	case SentinelRPCs_SENTINEL_RPCS_LIST_THREAD_INFO:
+		return "SENTINEL_RPCS_LIST_THREAD_INFO"
+	case SentinelRPCs_SENTINEL_RPCS_LIST_TOKEN_CACHE_STATS:
+		return "SENTINEL_RPCS_LIST_TOKEN_CACHE_STATS"
+	case SentinelRPCs_SENTINEL_RPCS_LIST_MAP_STATS:
+		return "SENTINEL_RPCS_LIST_MAP_STATS"
 	case SentinelRPCs_SENTINEL_RPCS_GET_DASHBOARD:
 		return "SENTINEL_RPCS_GET_DASHBOARD"
-	case SentinelRPCs_SENTINEL_RPCS_WATCH_DASHBOARD:
-		return "SENTINEL_RPCS_WATCH_DASHBOARD"
+	case SentinelRPCs_SENTINEL_RPCS_SUBSCRIBE_DASHBOARD:
+		return "SENTINEL_RPCS_SUBSCRIBE_DASHBOARD"
 	case SentinelRPCs_SENTINEL_RPCS_ANY:
 		return "SENTINEL_RPCS_ANY"
 	default:
@@ -341,18 +341,18 @@ func SentinelRPCsToSpecName(v SentinelRPCs) string {
 // GatewayRPCsValues returns all valid GatewayRPCs values (excluding UNDEFINED)
 func GatewayRPCsValues() []GatewayRPCs {
 	return []GatewayRPCs{
-		GatewayRPCs_GATEWAY_RPCS_OPEN_ID_CONFIG,
-		GatewayRPCs_GATEWAY_RPCS_JWKS,
-		GatewayRPCs_GATEWAY_RPCS_TOKEN_MINT,
-		GatewayRPCs_GATEWAY_RPCS_X509_MINT,
-		GatewayRPCs_GATEWAY_RPCS_PUBLIC_CA,
+		GatewayRPCs_GATEWAY_RPCS_GET_OPEN_ID_CONFIG,
+		GatewayRPCs_GATEWAY_RPCS_LIST_JWKS,
+		GatewayRPCs_GATEWAY_RPCS_MINT_TOKEN,
+		GatewayRPCs_GATEWAY_RPCS_MINT_X509_CERT,
+		GatewayRPCs_GATEWAY_RPCS_LIST_PUBLIC_CA,
 		GatewayRPCs_GATEWAY_RPCS_ANY,
 	}
 }
 
 // GatewayRPCsStringValues returns all valid GatewayRPCs names as strings
 func GatewayRPCsStringValues() []string {
-	return []string{"gateway-rpcs-open-id-config", "gateway-rpcs-jwks", "gateway-rpcs-token-mint", "gateway-rpcs-x509-mint", "gateway-rpcs-public-ca", "gateway-rpcs-any"}
+	return []string{"gateway-rpcs-get-open-id-config", "gateway-rpcs-list-jwks", "gateway-rpcs-mint-token", "gateway-rpcs-mint-x509-cert", "gateway-rpcs-list-public-ca", "gateway-rpcs-any"}
 }
 
 // ParseGatewayRPCs converts a string to a GatewayRPCs enum value
@@ -363,16 +363,16 @@ func ParseGatewayRPCs(s string) (GatewayRPCs, error) {
 	switch normalized {
 	case "":
 		return GatewayRPCs_GATEWAY_RPCS_UNSPECIFIED, nil
-	case "gateway-rpcs-open-id-config":
-		return GatewayRPCs_GATEWAY_RPCS_OPEN_ID_CONFIG, nil
-	case "gateway-rpcs-jwks":
-		return GatewayRPCs_GATEWAY_RPCS_JWKS, nil
-	case "gateway-rpcs-token-mint":
-		return GatewayRPCs_GATEWAY_RPCS_TOKEN_MINT, nil
-	case "gateway-rpcs-x509-mint":
-		return GatewayRPCs_GATEWAY_RPCS_X509_MINT, nil
-	case "gateway-rpcs-public-ca":
-		return GatewayRPCs_GATEWAY_RPCS_PUBLIC_CA, nil
+	case "gateway-rpcs-get-open-id-config":
+		return GatewayRPCs_GATEWAY_RPCS_GET_OPEN_ID_CONFIG, nil
+	case "gateway-rpcs-list-jwks":
+		return GatewayRPCs_GATEWAY_RPCS_LIST_JWKS, nil
+	case "gateway-rpcs-mint-token":
+		return GatewayRPCs_GATEWAY_RPCS_MINT_TOKEN, nil
+	case "gateway-rpcs-mint-x509-cert":
+		return GatewayRPCs_GATEWAY_RPCS_MINT_X509_CERT, nil
+	case "gateway-rpcs-list-public-ca":
+		return GatewayRPCs_GATEWAY_RPCS_LIST_PUBLIC_CA, nil
 	case "gateway-rpcs-any":
 		return GatewayRPCs_GATEWAY_RPCS_ANY, nil
 	default:
@@ -405,16 +405,16 @@ func ParseGatewayRPCss(s string) ([]GatewayRPCs, error) {
 // GatewayRPCsToString converts a GatewayRPCs to its lowercase string representation
 func GatewayRPCsToString(v GatewayRPCs) string {
 	switch v {
-	case GatewayRPCs_GATEWAY_RPCS_OPEN_ID_CONFIG:
-		return "gateway-rpcs-open-id-config"
-	case GatewayRPCs_GATEWAY_RPCS_JWKS:
-		return "gateway-rpcs-jwks"
-	case GatewayRPCs_GATEWAY_RPCS_TOKEN_MINT:
-		return "gateway-rpcs-token-mint"
-	case GatewayRPCs_GATEWAY_RPCS_X509_MINT:
-		return "gateway-rpcs-x509-mint"
-	case GatewayRPCs_GATEWAY_RPCS_PUBLIC_CA:
-		return "gateway-rpcs-public-ca"
+	case GatewayRPCs_GATEWAY_RPCS_GET_OPEN_ID_CONFIG:
+		return "gateway-rpcs-get-open-id-config"
+	case GatewayRPCs_GATEWAY_RPCS_LIST_JWKS:
+		return "gateway-rpcs-list-jwks"
+	case GatewayRPCs_GATEWAY_RPCS_MINT_TOKEN:
+		return "gateway-rpcs-mint-token"
+	case GatewayRPCs_GATEWAY_RPCS_MINT_X509_CERT:
+		return "gateway-rpcs-mint-x509-cert"
+	case GatewayRPCs_GATEWAY_RPCS_LIST_PUBLIC_CA:
+		return "gateway-rpcs-list-public-ca"
 	case GatewayRPCs_GATEWAY_RPCS_ANY:
 		return "gateway-rpcs-any"
 	default:
@@ -439,16 +439,16 @@ func ParseGatewayRPCsLiberal(s string) GatewayRPCs {
 	normalized = strings.ReplaceAll(normalized, "_", "-")
 	normalized = strings.ReplaceAll(normalized, " ", "-")
 	switch normalized {
-	case "gateway-rpcs-open-id-config":
-		return GatewayRPCs_GATEWAY_RPCS_OPEN_ID_CONFIG
-	case "gateway-rpcs-jwks":
-		return GatewayRPCs_GATEWAY_RPCS_JWKS
-	case "gateway-rpcs-token-mint":
-		return GatewayRPCs_GATEWAY_RPCS_TOKEN_MINT
-	case "gateway-rpcs-x509-mint":
-		return GatewayRPCs_GATEWAY_RPCS_X509_MINT
-	case "gateway-rpcs-public-ca":
-		return GatewayRPCs_GATEWAY_RPCS_PUBLIC_CA
+	case "gateway-rpcs-get-open-id-config":
+		return GatewayRPCs_GATEWAY_RPCS_GET_OPEN_ID_CONFIG
+	case "gateway-rpcs-list-jwks":
+		return GatewayRPCs_GATEWAY_RPCS_LIST_JWKS
+	case "gateway-rpcs-mint-token":
+		return GatewayRPCs_GATEWAY_RPCS_MINT_TOKEN
+	case "gateway-rpcs-mint-x509-cert":
+		return GatewayRPCs_GATEWAY_RPCS_MINT_X509_CERT
+	case "gateway-rpcs-list-public-ca":
+		return GatewayRPCs_GATEWAY_RPCS_LIST_PUBLIC_CA
 	case "gateway-rpcs-any":
 		return GatewayRPCs_GATEWAY_RPCS_ANY
 	default:
@@ -461,16 +461,16 @@ func GatewayRPCsToSpecName(v GatewayRPCs) string {
 	switch v {
 	case GatewayRPCs_GATEWAY_RPCS_UNSPECIFIED:
 		return "GATEWAY_RPCS_UNSPECIFIED"
-	case GatewayRPCs_GATEWAY_RPCS_OPEN_ID_CONFIG:
-		return "GATEWAY_RPCS_OPEN_ID_CONFIG"
-	case GatewayRPCs_GATEWAY_RPCS_JWKS:
-		return "GATEWAY_RPCS_JWKS"
-	case GatewayRPCs_GATEWAY_RPCS_TOKEN_MINT:
-		return "GATEWAY_RPCS_TOKEN_MINT"
-	case GatewayRPCs_GATEWAY_RPCS_X509_MINT:
-		return "GATEWAY_RPCS_X509_MINT"
-	case GatewayRPCs_GATEWAY_RPCS_PUBLIC_CA:
-		return "GATEWAY_RPCS_PUBLIC_CA"
+	case GatewayRPCs_GATEWAY_RPCS_GET_OPEN_ID_CONFIG:
+		return "GATEWAY_RPCS_GET_OPEN_ID_CONFIG"
+	case GatewayRPCs_GATEWAY_RPCS_LIST_JWKS:
+		return "GATEWAY_RPCS_LIST_JWKS"
+	case GatewayRPCs_GATEWAY_RPCS_MINT_TOKEN:
+		return "GATEWAY_RPCS_MINT_TOKEN"
+	case GatewayRPCs_GATEWAY_RPCS_MINT_X509_CERT:
+		return "GATEWAY_RPCS_MINT_X509_CERT"
+	case GatewayRPCs_GATEWAY_RPCS_LIST_PUBLIC_CA:
+		return "GATEWAY_RPCS_LIST_PUBLIC_CA"
 	case GatewayRPCs_GATEWAY_RPCS_ANY:
 		return "GATEWAY_RPCS_ANY"
 	default:
@@ -485,9 +485,9 @@ func KernelRPCsValues() []KernelRPCs {
 		KernelRPCs_KERNEL_RPCS_DELETE_TENANT,
 		KernelRPCs_KERNEL_RPCS_LIST_TENANTS,
 		KernelRPCs_KERNEL_RPCS_GET_TENANT_CONFIG,
-		KernelRPCs_KERNEL_RPCS_SET_TENANT_CONFIG,
+		KernelRPCs_KERNEL_RPCS_UPDATE_TENANT_CONFIG,
 		KernelRPCs_KERNEL_RPCS_GET_PROJECT_CONFIG,
-		KernelRPCs_KERNEL_RPCS_SET_PROJECT_CONFIG,
+		KernelRPCs_KERNEL_RPCS_UPDATE_PROJECT_CONFIG,
 		KernelRPCs_KERNEL_RPCS_LIST_PROJECTS,
 		KernelRPCs_KERNEL_RPCS_DELETE_PROJECT,
 		KernelRPCs_KERNEL_RPCS_ANY,
@@ -496,7 +496,7 @@ func KernelRPCsValues() []KernelRPCs {
 
 // KernelRPCsStringValues returns all valid KernelRPCs names as strings
 func KernelRPCsStringValues() []string {
-	return []string{"kernel-rpcs-create-tenant", "kernel-rpcs-delete-tenant", "kernel-rpcs-list-tenants", "kernel-rpcs-get-tenant-config", "kernel-rpcs-set-tenant-config", "kernel-rpcs-get-project-config", "kernel-rpcs-set-project-config", "kernel-rpcs-list-projects", "kernel-rpcs-delete-project", "kernel-rpcs-any"}
+	return []string{"kernel-rpcs-create-tenant", "kernel-rpcs-delete-tenant", "kernel-rpcs-list-tenants", "kernel-rpcs-get-tenant-config", "kernel-rpcs-update-tenant-config", "kernel-rpcs-get-project-config", "kernel-rpcs-update-project-config", "kernel-rpcs-list-projects", "kernel-rpcs-delete-project", "kernel-rpcs-any"}
 }
 
 // ParseKernelRPCs converts a string to a KernelRPCs enum value
@@ -515,12 +515,12 @@ func ParseKernelRPCs(s string) (KernelRPCs, error) {
 		return KernelRPCs_KERNEL_RPCS_LIST_TENANTS, nil
 	case "kernel-rpcs-get-tenant-config":
 		return KernelRPCs_KERNEL_RPCS_GET_TENANT_CONFIG, nil
-	case "kernel-rpcs-set-tenant-config":
-		return KernelRPCs_KERNEL_RPCS_SET_TENANT_CONFIG, nil
+	case "kernel-rpcs-update-tenant-config":
+		return KernelRPCs_KERNEL_RPCS_UPDATE_TENANT_CONFIG, nil
 	case "kernel-rpcs-get-project-config":
 		return KernelRPCs_KERNEL_RPCS_GET_PROJECT_CONFIG, nil
-	case "kernel-rpcs-set-project-config":
-		return KernelRPCs_KERNEL_RPCS_SET_PROJECT_CONFIG, nil
+	case "kernel-rpcs-update-project-config":
+		return KernelRPCs_KERNEL_RPCS_UPDATE_PROJECT_CONFIG, nil
 	case "kernel-rpcs-list-projects":
 		return KernelRPCs_KERNEL_RPCS_LIST_PROJECTS, nil
 	case "kernel-rpcs-delete-project":
@@ -565,12 +565,12 @@ func KernelRPCsToString(v KernelRPCs) string {
 		return "kernel-rpcs-list-tenants"
 	case KernelRPCs_KERNEL_RPCS_GET_TENANT_CONFIG:
 		return "kernel-rpcs-get-tenant-config"
-	case KernelRPCs_KERNEL_RPCS_SET_TENANT_CONFIG:
-		return "kernel-rpcs-set-tenant-config"
+	case KernelRPCs_KERNEL_RPCS_UPDATE_TENANT_CONFIG:
+		return "kernel-rpcs-update-tenant-config"
 	case KernelRPCs_KERNEL_RPCS_GET_PROJECT_CONFIG:
 		return "kernel-rpcs-get-project-config"
-	case KernelRPCs_KERNEL_RPCS_SET_PROJECT_CONFIG:
-		return "kernel-rpcs-set-project-config"
+	case KernelRPCs_KERNEL_RPCS_UPDATE_PROJECT_CONFIG:
+		return "kernel-rpcs-update-project-config"
 	case KernelRPCs_KERNEL_RPCS_LIST_PROJECTS:
 		return "kernel-rpcs-list-projects"
 	case KernelRPCs_KERNEL_RPCS_DELETE_PROJECT:
@@ -607,12 +607,12 @@ func ParseKernelRPCsLiberal(s string) KernelRPCs {
 		return KernelRPCs_KERNEL_RPCS_LIST_TENANTS
 	case "kernel-rpcs-get-tenant-config":
 		return KernelRPCs_KERNEL_RPCS_GET_TENANT_CONFIG
-	case "kernel-rpcs-set-tenant-config":
-		return KernelRPCs_KERNEL_RPCS_SET_TENANT_CONFIG
+	case "kernel-rpcs-update-tenant-config":
+		return KernelRPCs_KERNEL_RPCS_UPDATE_TENANT_CONFIG
 	case "kernel-rpcs-get-project-config":
 		return KernelRPCs_KERNEL_RPCS_GET_PROJECT_CONFIG
-	case "kernel-rpcs-set-project-config":
-		return KernelRPCs_KERNEL_RPCS_SET_PROJECT_CONFIG
+	case "kernel-rpcs-update-project-config":
+		return KernelRPCs_KERNEL_RPCS_UPDATE_PROJECT_CONFIG
 	case "kernel-rpcs-list-projects":
 		return KernelRPCs_KERNEL_RPCS_LIST_PROJECTS
 	case "kernel-rpcs-delete-project":
@@ -637,12 +637,12 @@ func KernelRPCsToSpecName(v KernelRPCs) string {
 		return "KERNEL_RPCS_LIST_TENANTS"
 	case KernelRPCs_KERNEL_RPCS_GET_TENANT_CONFIG:
 		return "KERNEL_RPCS_GET_TENANT_CONFIG"
-	case KernelRPCs_KERNEL_RPCS_SET_TENANT_CONFIG:
-		return "KERNEL_RPCS_SET_TENANT_CONFIG"
+	case KernelRPCs_KERNEL_RPCS_UPDATE_TENANT_CONFIG:
+		return "KERNEL_RPCS_UPDATE_TENANT_CONFIG"
 	case KernelRPCs_KERNEL_RPCS_GET_PROJECT_CONFIG:
 		return "KERNEL_RPCS_GET_PROJECT_CONFIG"
-	case KernelRPCs_KERNEL_RPCS_SET_PROJECT_CONFIG:
-		return "KERNEL_RPCS_SET_PROJECT_CONFIG"
+	case KernelRPCs_KERNEL_RPCS_UPDATE_PROJECT_CONFIG:
+		return "KERNEL_RPCS_UPDATE_PROJECT_CONFIG"
 	case KernelRPCs_KERNEL_RPCS_LIST_PROJECTS:
 		return "KERNEL_RPCS_LIST_PROJECTS"
 	case KernelRPCs_KERNEL_RPCS_DELETE_PROJECT:
@@ -761,14 +761,14 @@ func McpRPCsToSpecName(v McpRPCs) string {
 // EventbusRPCsValues returns all valid EventbusRPCs values (excluding UNDEFINED)
 func EventbusRPCsValues() []EventbusRPCs {
 	return []EventbusRPCs{
-		EventbusRPCs_EVENTBUS_RPCS_WATCH_TRACE,
+		EventbusRPCs_EVENTBUS_RPCS_SUBSCRIBE_TRACE,
 		EventbusRPCs_EVENTBUS_RPCS_ANY,
 	}
 }
 
 // EventbusRPCsStringValues returns all valid EventbusRPCs names as strings
 func EventbusRPCsStringValues() []string {
-	return []string{"eventbus-rpcs-watch-trace", "eventbus-rpcs-any"}
+	return []string{"eventbus-rpcs-subscribe-trace", "eventbus-rpcs-any"}
 }
 
 // ParseEventbusRPCs converts a string to a EventbusRPCs enum value
@@ -779,8 +779,8 @@ func ParseEventbusRPCs(s string) (EventbusRPCs, error) {
 	switch normalized {
 	case "":
 		return EventbusRPCs_EVENTBUS_RPCS_UNSPECIFIED, nil
-	case "eventbus-rpcs-watch-trace":
-		return EventbusRPCs_EVENTBUS_RPCS_WATCH_TRACE, nil
+	case "eventbus-rpcs-subscribe-trace":
+		return EventbusRPCs_EVENTBUS_RPCS_SUBSCRIBE_TRACE, nil
 	case "eventbus-rpcs-any":
 		return EventbusRPCs_EVENTBUS_RPCS_ANY, nil
 	default:
@@ -813,8 +813,8 @@ func ParseEventbusRPCss(s string) ([]EventbusRPCs, error) {
 // EventbusRPCsToString converts a EventbusRPCs to its lowercase string representation
 func EventbusRPCsToString(v EventbusRPCs) string {
 	switch v {
-	case EventbusRPCs_EVENTBUS_RPCS_WATCH_TRACE:
-		return "eventbus-rpcs-watch-trace"
+	case EventbusRPCs_EVENTBUS_RPCS_SUBSCRIBE_TRACE:
+		return "eventbus-rpcs-subscribe-trace"
 	case EventbusRPCs_EVENTBUS_RPCS_ANY:
 		return "eventbus-rpcs-any"
 	default:
@@ -839,8 +839,8 @@ func ParseEventbusRPCsLiberal(s string) EventbusRPCs {
 	normalized = strings.ReplaceAll(normalized, "_", "-")
 	normalized = strings.ReplaceAll(normalized, " ", "-")
 	switch normalized {
-	case "eventbus-rpcs-watch-trace":
-		return EventbusRPCs_EVENTBUS_RPCS_WATCH_TRACE
+	case "eventbus-rpcs-subscribe-trace":
+		return EventbusRPCs_EVENTBUS_RPCS_SUBSCRIBE_TRACE
 	case "eventbus-rpcs-any":
 		return EventbusRPCs_EVENTBUS_RPCS_ANY
 	default:
@@ -853,8 +853,8 @@ func EventbusRPCsToSpecName(v EventbusRPCs) string {
 	switch v {
 	case EventbusRPCs_EVENTBUS_RPCS_UNSPECIFIED:
 		return "EVENTBUS_RPCS_UNSPECIFIED"
-	case EventbusRPCs_EVENTBUS_RPCS_WATCH_TRACE:
-		return "EVENTBUS_RPCS_WATCH_TRACE"
+	case EventbusRPCs_EVENTBUS_RPCS_SUBSCRIBE_TRACE:
+		return "EVENTBUS_RPCS_SUBSCRIBE_TRACE"
 	case EventbusRPCs_EVENTBUS_RPCS_ANY:
 		return "EVENTBUS_RPCS_ANY"
 	default:
@@ -865,19 +865,19 @@ func EventbusRPCsToSpecName(v EventbusRPCs) string {
 // OauthRPCsValues returns all valid OauthRPCs values (excluding UNDEFINED)
 func OauthRPCsValues() []OauthRPCs {
 	return []OauthRPCs{
-		OauthRPCs_OAUTH_RPCS_SESSION,
+		OauthRPCs_OAUTH_RPCS_BROKER_SESSION,
 		OauthRPCs_OAUTH_RPCS_LIST_PROVIDERS,
 		OauthRPCs_OAUTH_RPCS_AUTHORIZE,
-		OauthRPCs_OAUTH_RPCS_CALLBACK,
-		OauthRPCs_OAUTH_RPCS_LOGOUT,
-		OauthRPCs_OAUTH_RPCS_COMPLETE_CLI_AUTH,
+		OauthRPCs_OAUTH_RPCS_MINT_CALLBACK_TOKENS,
+		OauthRPCs_OAUTH_RPCS_REVOKE_SESSION,
+		OauthRPCs_OAUTH_RPCS_BROKER_CLI_AUTH,
 		OauthRPCs_OAUTH_RPCS_ANY,
 	}
 }
 
 // OauthRPCsStringValues returns all valid OauthRPCs names as strings
 func OauthRPCsStringValues() []string {
-	return []string{"oauth-rpcs-session", "oauth-rpcs-list-providers", "oauth-rpcs-authorize", "oauth-rpcs-callback", "oauth-rpcs-logout", "oauth-rpcs-complete-cli-auth", "oauth-rpcs-any"}
+	return []string{"oauth-rpcs-broker-session", "oauth-rpcs-list-providers", "oauth-rpcs-authorize", "oauth-rpcs-mint-callback-tokens", "oauth-rpcs-revoke-session", "oauth-rpcs-broker-cli-auth", "oauth-rpcs-any"}
 }
 
 // ParseOauthRPCs converts a string to a OauthRPCs enum value
@@ -888,18 +888,18 @@ func ParseOauthRPCs(s string) (OauthRPCs, error) {
 	switch normalized {
 	case "":
 		return OauthRPCs_OAUTH_RPCS_UNSPECIFIED, nil
-	case "oauth-rpcs-session":
-		return OauthRPCs_OAUTH_RPCS_SESSION, nil
+	case "oauth-rpcs-broker-session":
+		return OauthRPCs_OAUTH_RPCS_BROKER_SESSION, nil
 	case "oauth-rpcs-list-providers":
 		return OauthRPCs_OAUTH_RPCS_LIST_PROVIDERS, nil
 	case "oauth-rpcs-authorize":
 		return OauthRPCs_OAUTH_RPCS_AUTHORIZE, nil
-	case "oauth-rpcs-callback":
-		return OauthRPCs_OAUTH_RPCS_CALLBACK, nil
-	case "oauth-rpcs-logout":
-		return OauthRPCs_OAUTH_RPCS_LOGOUT, nil
-	case "oauth-rpcs-complete-cli-auth":
-		return OauthRPCs_OAUTH_RPCS_COMPLETE_CLI_AUTH, nil
+	case "oauth-rpcs-mint-callback-tokens":
+		return OauthRPCs_OAUTH_RPCS_MINT_CALLBACK_TOKENS, nil
+	case "oauth-rpcs-revoke-session":
+		return OauthRPCs_OAUTH_RPCS_REVOKE_SESSION, nil
+	case "oauth-rpcs-broker-cli-auth":
+		return OauthRPCs_OAUTH_RPCS_BROKER_CLI_AUTH, nil
 	case "oauth-rpcs-any":
 		return OauthRPCs_OAUTH_RPCS_ANY, nil
 	default:
@@ -932,18 +932,18 @@ func ParseOauthRPCss(s string) ([]OauthRPCs, error) {
 // OauthRPCsToString converts a OauthRPCs to its lowercase string representation
 func OauthRPCsToString(v OauthRPCs) string {
 	switch v {
-	case OauthRPCs_OAUTH_RPCS_SESSION:
-		return "oauth-rpcs-session"
+	case OauthRPCs_OAUTH_RPCS_BROKER_SESSION:
+		return "oauth-rpcs-broker-session"
 	case OauthRPCs_OAUTH_RPCS_LIST_PROVIDERS:
 		return "oauth-rpcs-list-providers"
 	case OauthRPCs_OAUTH_RPCS_AUTHORIZE:
 		return "oauth-rpcs-authorize"
-	case OauthRPCs_OAUTH_RPCS_CALLBACK:
-		return "oauth-rpcs-callback"
-	case OauthRPCs_OAUTH_RPCS_LOGOUT:
-		return "oauth-rpcs-logout"
-	case OauthRPCs_OAUTH_RPCS_COMPLETE_CLI_AUTH:
-		return "oauth-rpcs-complete-cli-auth"
+	case OauthRPCs_OAUTH_RPCS_MINT_CALLBACK_TOKENS:
+		return "oauth-rpcs-mint-callback-tokens"
+	case OauthRPCs_OAUTH_RPCS_REVOKE_SESSION:
+		return "oauth-rpcs-revoke-session"
+	case OauthRPCs_OAUTH_RPCS_BROKER_CLI_AUTH:
+		return "oauth-rpcs-broker-cli-auth"
 	case OauthRPCs_OAUTH_RPCS_ANY:
 		return "oauth-rpcs-any"
 	default:
@@ -968,18 +968,18 @@ func ParseOauthRPCsLiberal(s string) OauthRPCs {
 	normalized = strings.ReplaceAll(normalized, "_", "-")
 	normalized = strings.ReplaceAll(normalized, " ", "-")
 	switch normalized {
-	case "oauth-rpcs-session":
-		return OauthRPCs_OAUTH_RPCS_SESSION
+	case "oauth-rpcs-broker-session":
+		return OauthRPCs_OAUTH_RPCS_BROKER_SESSION
 	case "oauth-rpcs-list-providers":
 		return OauthRPCs_OAUTH_RPCS_LIST_PROVIDERS
 	case "oauth-rpcs-authorize":
 		return OauthRPCs_OAUTH_RPCS_AUTHORIZE
-	case "oauth-rpcs-callback":
-		return OauthRPCs_OAUTH_RPCS_CALLBACK
-	case "oauth-rpcs-logout":
-		return OauthRPCs_OAUTH_RPCS_LOGOUT
-	case "oauth-rpcs-complete-cli-auth":
-		return OauthRPCs_OAUTH_RPCS_COMPLETE_CLI_AUTH
+	case "oauth-rpcs-mint-callback-tokens":
+		return OauthRPCs_OAUTH_RPCS_MINT_CALLBACK_TOKENS
+	case "oauth-rpcs-revoke-session":
+		return OauthRPCs_OAUTH_RPCS_REVOKE_SESSION
+	case "oauth-rpcs-broker-cli-auth":
+		return OauthRPCs_OAUTH_RPCS_BROKER_CLI_AUTH
 	case "oauth-rpcs-any":
 		return OauthRPCs_OAUTH_RPCS_ANY
 	default:
@@ -992,18 +992,18 @@ func OauthRPCsToSpecName(v OauthRPCs) string {
 	switch v {
 	case OauthRPCs_OAUTH_RPCS_UNSPECIFIED:
 		return "OAUTH_RPCS_UNSPECIFIED"
-	case OauthRPCs_OAUTH_RPCS_SESSION:
-		return "OAUTH_RPCS_SESSION"
+	case OauthRPCs_OAUTH_RPCS_BROKER_SESSION:
+		return "OAUTH_RPCS_BROKER_SESSION"
 	case OauthRPCs_OAUTH_RPCS_LIST_PROVIDERS:
 		return "OAUTH_RPCS_LIST_PROVIDERS"
 	case OauthRPCs_OAUTH_RPCS_AUTHORIZE:
 		return "OAUTH_RPCS_AUTHORIZE"
-	case OauthRPCs_OAUTH_RPCS_CALLBACK:
-		return "OAUTH_RPCS_CALLBACK"
-	case OauthRPCs_OAUTH_RPCS_LOGOUT:
-		return "OAUTH_RPCS_LOGOUT"
-	case OauthRPCs_OAUTH_RPCS_COMPLETE_CLI_AUTH:
-		return "OAUTH_RPCS_COMPLETE_CLI_AUTH"
+	case OauthRPCs_OAUTH_RPCS_MINT_CALLBACK_TOKENS:
+		return "OAUTH_RPCS_MINT_CALLBACK_TOKENS"
+	case OauthRPCs_OAUTH_RPCS_REVOKE_SESSION:
+		return "OAUTH_RPCS_REVOKE_SESSION"
+	case OauthRPCs_OAUTH_RPCS_BROKER_CLI_AUTH:
+		return "OAUTH_RPCS_BROKER_CLI_AUTH"
 	case OauthRPCs_OAUTH_RPCS_ANY:
 		return "OAUTH_RPCS_ANY"
 	default:
@@ -1015,14 +1015,14 @@ func OauthRPCsToSpecName(v OauthRPCs) string {
 func AnthropicRPCsValues() []AnthropicRPCs {
 	return []AnthropicRPCs{
 		AnthropicRPCs_ANTHROPIC_RPCS_CREATE_MESSAGE,
-		AnthropicRPCs_ANTHROPIC_RPCS_CREATE_MESSAGE_STREAM,
+		AnthropicRPCs_ANTHROPIC_RPCS_GENERATE_MESSAGE_STREAM,
 		AnthropicRPCs_ANTHROPIC_RPCS_ANY,
 	}
 }
 
 // AnthropicRPCsStringValues returns all valid AnthropicRPCs names as strings
 func AnthropicRPCsStringValues() []string {
-	return []string{"anthropic-rpcs-create-message", "anthropic-rpcs-create-message-stream", "anthropic-rpcs-any"}
+	return []string{"anthropic-rpcs-create-message", "anthropic-rpcs-generate-message-stream", "anthropic-rpcs-any"}
 }
 
 // ParseAnthropicRPCs converts a string to a AnthropicRPCs enum value
@@ -1035,8 +1035,8 @@ func ParseAnthropicRPCs(s string) (AnthropicRPCs, error) {
 		return AnthropicRPCs_ANTHROPIC_RPCS_UNSPECIFIED, nil
 	case "anthropic-rpcs-create-message":
 		return AnthropicRPCs_ANTHROPIC_RPCS_CREATE_MESSAGE, nil
-	case "anthropic-rpcs-create-message-stream":
-		return AnthropicRPCs_ANTHROPIC_RPCS_CREATE_MESSAGE_STREAM, nil
+	case "anthropic-rpcs-generate-message-stream":
+		return AnthropicRPCs_ANTHROPIC_RPCS_GENERATE_MESSAGE_STREAM, nil
 	case "anthropic-rpcs-any":
 		return AnthropicRPCs_ANTHROPIC_RPCS_ANY, nil
 	default:
@@ -1071,8 +1071,8 @@ func AnthropicRPCsToString(v AnthropicRPCs) string {
 	switch v {
 	case AnthropicRPCs_ANTHROPIC_RPCS_CREATE_MESSAGE:
 		return "anthropic-rpcs-create-message"
-	case AnthropicRPCs_ANTHROPIC_RPCS_CREATE_MESSAGE_STREAM:
-		return "anthropic-rpcs-create-message-stream"
+	case AnthropicRPCs_ANTHROPIC_RPCS_GENERATE_MESSAGE_STREAM:
+		return "anthropic-rpcs-generate-message-stream"
 	case AnthropicRPCs_ANTHROPIC_RPCS_ANY:
 		return "anthropic-rpcs-any"
 	default:
@@ -1099,8 +1099,8 @@ func ParseAnthropicRPCsLiberal(s string) AnthropicRPCs {
 	switch normalized {
 	case "anthropic-rpcs-create-message":
 		return AnthropicRPCs_ANTHROPIC_RPCS_CREATE_MESSAGE
-	case "anthropic-rpcs-create-message-stream":
-		return AnthropicRPCs_ANTHROPIC_RPCS_CREATE_MESSAGE_STREAM
+	case "anthropic-rpcs-generate-message-stream":
+		return AnthropicRPCs_ANTHROPIC_RPCS_GENERATE_MESSAGE_STREAM
 	case "anthropic-rpcs-any":
 		return AnthropicRPCs_ANTHROPIC_RPCS_ANY
 	default:
@@ -1115,8 +1115,8 @@ func AnthropicRPCsToSpecName(v AnthropicRPCs) string {
 		return "ANTHROPIC_RPCS_UNSPECIFIED"
 	case AnthropicRPCs_ANTHROPIC_RPCS_CREATE_MESSAGE:
 		return "ANTHROPIC_RPCS_CREATE_MESSAGE"
-	case AnthropicRPCs_ANTHROPIC_RPCS_CREATE_MESSAGE_STREAM:
-		return "ANTHROPIC_RPCS_CREATE_MESSAGE_STREAM"
+	case AnthropicRPCs_ANTHROPIC_RPCS_GENERATE_MESSAGE_STREAM:
+		return "ANTHROPIC_RPCS_GENERATE_MESSAGE_STREAM"
 	case AnthropicRPCs_ANTHROPIC_RPCS_ANY:
 		return "ANTHROPIC_RPCS_ANY"
 	default:
@@ -1144,14 +1144,14 @@ func GithubRPCsValues() []GithubRPCs {
 		GithubRPCs_GITHUB_RPCS_LIST_BRANCHES,
 		GithubRPCs_GITHUB_RPCS_CREATE_BRANCH,
 		GithubRPCs_GITHUB_RPCS_LIST_COMMITS,
-		GithubRPCs_GITHUB_RPCS_SEARCH_CODE,
+		GithubRPCs_GITHUB_RPCS_LIST_CODE_SEARCH_RESULTS,
 		GithubRPCs_GITHUB_RPCS_ANY,
 	}
 }
 
 // GithubRPCsStringValues returns all valid GithubRPCs names as strings
 func GithubRPCsStringValues() []string {
-	return []string{"github-rpcs-proxy", "github-rpcs-get-repository", "github-rpcs-list-issues", "github-rpcs-get-issue", "github-rpcs-create-issue", "github-rpcs-update-issue", "github-rpcs-create-issue-comment", "github-rpcs-list-pull-requests", "github-rpcs-get-pull-request", "github-rpcs-create-pull-request", "github-rpcs-merge-pull-request", "github-rpcs-list-pull-request-files", "github-rpcs-get-content", "github-rpcs-create-or-update-file", "github-rpcs-list-branches", "github-rpcs-create-branch", "github-rpcs-list-commits", "github-rpcs-search-code", "github-rpcs-any"}
+	return []string{"github-rpcs-proxy", "github-rpcs-get-repository", "github-rpcs-list-issues", "github-rpcs-get-issue", "github-rpcs-create-issue", "github-rpcs-update-issue", "github-rpcs-create-issue-comment", "github-rpcs-list-pull-requests", "github-rpcs-get-pull-request", "github-rpcs-create-pull-request", "github-rpcs-merge-pull-request", "github-rpcs-list-pull-request-files", "github-rpcs-get-content", "github-rpcs-create-or-update-file", "github-rpcs-list-branches", "github-rpcs-create-branch", "github-rpcs-list-commits", "github-rpcs-list-code-search-results", "github-rpcs-any"}
 }
 
 // ParseGithubRPCs converts a string to a GithubRPCs enum value
@@ -1196,8 +1196,8 @@ func ParseGithubRPCs(s string) (GithubRPCs, error) {
 		return GithubRPCs_GITHUB_RPCS_CREATE_BRANCH, nil
 	case "github-rpcs-list-commits":
 		return GithubRPCs_GITHUB_RPCS_LIST_COMMITS, nil
-	case "github-rpcs-search-code":
-		return GithubRPCs_GITHUB_RPCS_SEARCH_CODE, nil
+	case "github-rpcs-list-code-search-results":
+		return GithubRPCs_GITHUB_RPCS_LIST_CODE_SEARCH_RESULTS, nil
 	case "github-rpcs-any":
 		return GithubRPCs_GITHUB_RPCS_ANY, nil
 	default:
@@ -1264,8 +1264,8 @@ func GithubRPCsToString(v GithubRPCs) string {
 		return "github-rpcs-create-branch"
 	case GithubRPCs_GITHUB_RPCS_LIST_COMMITS:
 		return "github-rpcs-list-commits"
-	case GithubRPCs_GITHUB_RPCS_SEARCH_CODE:
-		return "github-rpcs-search-code"
+	case GithubRPCs_GITHUB_RPCS_LIST_CODE_SEARCH_RESULTS:
+		return "github-rpcs-list-code-search-results"
 	case GithubRPCs_GITHUB_RPCS_ANY:
 		return "github-rpcs-any"
 	default:
@@ -1324,8 +1324,8 @@ func ParseGithubRPCsLiberal(s string) GithubRPCs {
 		return GithubRPCs_GITHUB_RPCS_CREATE_BRANCH
 	case "github-rpcs-list-commits":
 		return GithubRPCs_GITHUB_RPCS_LIST_COMMITS
-	case "github-rpcs-search-code":
-		return GithubRPCs_GITHUB_RPCS_SEARCH_CODE
+	case "github-rpcs-list-code-search-results":
+		return GithubRPCs_GITHUB_RPCS_LIST_CODE_SEARCH_RESULTS
 	case "github-rpcs-any":
 		return GithubRPCs_GITHUB_RPCS_ANY
 	default:
@@ -1372,8 +1372,8 @@ func GithubRPCsToSpecName(v GithubRPCs) string {
 		return "GITHUB_RPCS_CREATE_BRANCH"
 	case GithubRPCs_GITHUB_RPCS_LIST_COMMITS:
 		return "GITHUB_RPCS_LIST_COMMITS"
-	case GithubRPCs_GITHUB_RPCS_SEARCH_CODE:
-		return "GITHUB_RPCS_SEARCH_CODE"
+	case GithubRPCs_GITHUB_RPCS_LIST_CODE_SEARCH_RESULTS:
+		return "GITHUB_RPCS_LIST_CODE_SEARCH_RESULTS"
 	case GithubRPCs_GITHUB_RPCS_ANY:
 		return "GITHUB_RPCS_ANY"
 	default:
@@ -1410,14 +1410,14 @@ func GitlabRPCsValues() []GitlabRPCs {
 		GitlabRPCs_GITLAB_RPCS_LIST_BRANCHES,
 		GitlabRPCs_GITLAB_RPCS_CREATE_BRANCH,
 		GitlabRPCs_GITLAB_RPCS_LIST_COMMITS,
-		GitlabRPCs_GITLAB_RPCS_SEARCH_BLOBS,
+		GitlabRPCs_GITLAB_RPCS_LIST_BLOB_SEARCH_RESULTS,
 		GitlabRPCs_GITLAB_RPCS_ANY,
 	}
 }
 
 // GitlabRPCsStringValues returns all valid GitlabRPCs names as strings
 func GitlabRPCsStringValues() []string {
-	return []string{"gitlab-rpcs-proxy", "gitlab-rpcs-get-project", "gitlab-rpcs-list-issues", "gitlab-rpcs-get-issue", "gitlab-rpcs-create-issue", "gitlab-rpcs-update-issue", "gitlab-rpcs-create-issue-note", "gitlab-rpcs-list-merge-requests", "gitlab-rpcs-get-merge-request", "gitlab-rpcs-create-merge-request", "gitlab-rpcs-update-merge-request", "gitlab-rpcs-merge-merge-request", "gitlab-rpcs-list-merge-request-changes", "gitlab-rpcs-create-merge-request-note", "gitlab-rpcs-list-pipelines", "gitlab-rpcs-get-pipeline", "gitlab-rpcs-create-pipeline", "gitlab-rpcs-cancel-pipeline", "gitlab-rpcs-retry-pipeline", "gitlab-rpcs-list-pipeline-jobs", "gitlab-rpcs-get-repository-file", "gitlab-rpcs-create-repository-file", "gitlab-rpcs-update-repository-file", "gitlab-rpcs-list-branches", "gitlab-rpcs-create-branch", "gitlab-rpcs-list-commits", "gitlab-rpcs-search-blobs", "gitlab-rpcs-any"}
+	return []string{"gitlab-rpcs-proxy", "gitlab-rpcs-get-project", "gitlab-rpcs-list-issues", "gitlab-rpcs-get-issue", "gitlab-rpcs-create-issue", "gitlab-rpcs-update-issue", "gitlab-rpcs-create-issue-note", "gitlab-rpcs-list-merge-requests", "gitlab-rpcs-get-merge-request", "gitlab-rpcs-create-merge-request", "gitlab-rpcs-update-merge-request", "gitlab-rpcs-merge-merge-request", "gitlab-rpcs-list-merge-request-changes", "gitlab-rpcs-create-merge-request-note", "gitlab-rpcs-list-pipelines", "gitlab-rpcs-get-pipeline", "gitlab-rpcs-create-pipeline", "gitlab-rpcs-cancel-pipeline", "gitlab-rpcs-retry-pipeline", "gitlab-rpcs-list-pipeline-jobs", "gitlab-rpcs-get-repository-file", "gitlab-rpcs-create-repository-file", "gitlab-rpcs-update-repository-file", "gitlab-rpcs-list-branches", "gitlab-rpcs-create-branch", "gitlab-rpcs-list-commits", "gitlab-rpcs-list-blob-search-results", "gitlab-rpcs-any"}
 }
 
 // ParseGitlabRPCs converts a string to a GitlabRPCs enum value
@@ -1480,8 +1480,8 @@ func ParseGitlabRPCs(s string) (GitlabRPCs, error) {
 		return GitlabRPCs_GITLAB_RPCS_CREATE_BRANCH, nil
 	case "gitlab-rpcs-list-commits":
 		return GitlabRPCs_GITLAB_RPCS_LIST_COMMITS, nil
-	case "gitlab-rpcs-search-blobs":
-		return GitlabRPCs_GITLAB_RPCS_SEARCH_BLOBS, nil
+	case "gitlab-rpcs-list-blob-search-results":
+		return GitlabRPCs_GITLAB_RPCS_LIST_BLOB_SEARCH_RESULTS, nil
 	case "gitlab-rpcs-any":
 		return GitlabRPCs_GITLAB_RPCS_ANY, nil
 	default:
@@ -1566,8 +1566,8 @@ func GitlabRPCsToString(v GitlabRPCs) string {
 		return "gitlab-rpcs-create-branch"
 	case GitlabRPCs_GITLAB_RPCS_LIST_COMMITS:
 		return "gitlab-rpcs-list-commits"
-	case GitlabRPCs_GITLAB_RPCS_SEARCH_BLOBS:
-		return "gitlab-rpcs-search-blobs"
+	case GitlabRPCs_GITLAB_RPCS_LIST_BLOB_SEARCH_RESULTS:
+		return "gitlab-rpcs-list-blob-search-results"
 	case GitlabRPCs_GITLAB_RPCS_ANY:
 		return "gitlab-rpcs-any"
 	default:
@@ -1644,8 +1644,8 @@ func ParseGitlabRPCsLiberal(s string) GitlabRPCs {
 		return GitlabRPCs_GITLAB_RPCS_CREATE_BRANCH
 	case "gitlab-rpcs-list-commits":
 		return GitlabRPCs_GITLAB_RPCS_LIST_COMMITS
-	case "gitlab-rpcs-search-blobs":
-		return GitlabRPCs_GITLAB_RPCS_SEARCH_BLOBS
+	case "gitlab-rpcs-list-blob-search-results":
+		return GitlabRPCs_GITLAB_RPCS_LIST_BLOB_SEARCH_RESULTS
 	case "gitlab-rpcs-any":
 		return GitlabRPCs_GITLAB_RPCS_ANY
 	default:
@@ -1710,8 +1710,8 @@ func GitlabRPCsToSpecName(v GitlabRPCs) string {
 		return "GITLAB_RPCS_CREATE_BRANCH"
 	case GitlabRPCs_GITLAB_RPCS_LIST_COMMITS:
 		return "GITLAB_RPCS_LIST_COMMITS"
-	case GitlabRPCs_GITLAB_RPCS_SEARCH_BLOBS:
-		return "GITLAB_RPCS_SEARCH_BLOBS"
+	case GitlabRPCs_GITLAB_RPCS_LIST_BLOB_SEARCH_RESULTS:
+		return "GITLAB_RPCS_LIST_BLOB_SEARCH_RESULTS"
 	case GitlabRPCs_GITLAB_RPCS_ANY:
 		return "GITLAB_RPCS_ANY"
 	default:
@@ -1723,14 +1723,14 @@ func GitlabRPCsToSpecName(v GitlabRPCs) string {
 func OpenaiRPCsValues() []OpenaiRPCs {
 	return []OpenaiRPCs{
 		OpenaiRPCs_OPENAI_RPCS_CREATE_CHAT_COMPLETION,
-		OpenaiRPCs_OPENAI_RPCS_CREATE_CHAT_COMPLETION_STREAM,
+		OpenaiRPCs_OPENAI_RPCS_GENERATE_CHAT_COMPLETION_STREAM,
 		OpenaiRPCs_OPENAI_RPCS_ANY,
 	}
 }
 
 // OpenaiRPCsStringValues returns all valid OpenaiRPCs names as strings
 func OpenaiRPCsStringValues() []string {
-	return []string{"openai-rpcs-create-chat-completion", "openai-rpcs-create-chat-completion-stream", "openai-rpcs-any"}
+	return []string{"openai-rpcs-create-chat-completion", "openai-rpcs-generate-chat-completion-stream", "openai-rpcs-any"}
 }
 
 // ParseOpenaiRPCs converts a string to a OpenaiRPCs enum value
@@ -1743,8 +1743,8 @@ func ParseOpenaiRPCs(s string) (OpenaiRPCs, error) {
 		return OpenaiRPCs_OPENAI_RPCS_UNSPECIFIED, nil
 	case "openai-rpcs-create-chat-completion":
 		return OpenaiRPCs_OPENAI_RPCS_CREATE_CHAT_COMPLETION, nil
-	case "openai-rpcs-create-chat-completion-stream":
-		return OpenaiRPCs_OPENAI_RPCS_CREATE_CHAT_COMPLETION_STREAM, nil
+	case "openai-rpcs-generate-chat-completion-stream":
+		return OpenaiRPCs_OPENAI_RPCS_GENERATE_CHAT_COMPLETION_STREAM, nil
 	case "openai-rpcs-any":
 		return OpenaiRPCs_OPENAI_RPCS_ANY, nil
 	default:
@@ -1779,8 +1779,8 @@ func OpenaiRPCsToString(v OpenaiRPCs) string {
 	switch v {
 	case OpenaiRPCs_OPENAI_RPCS_CREATE_CHAT_COMPLETION:
 		return "openai-rpcs-create-chat-completion"
-	case OpenaiRPCs_OPENAI_RPCS_CREATE_CHAT_COMPLETION_STREAM:
-		return "openai-rpcs-create-chat-completion-stream"
+	case OpenaiRPCs_OPENAI_RPCS_GENERATE_CHAT_COMPLETION_STREAM:
+		return "openai-rpcs-generate-chat-completion-stream"
 	case OpenaiRPCs_OPENAI_RPCS_ANY:
 		return "openai-rpcs-any"
 	default:
@@ -1807,8 +1807,8 @@ func ParseOpenaiRPCsLiberal(s string) OpenaiRPCs {
 	switch normalized {
 	case "openai-rpcs-create-chat-completion":
 		return OpenaiRPCs_OPENAI_RPCS_CREATE_CHAT_COMPLETION
-	case "openai-rpcs-create-chat-completion-stream":
-		return OpenaiRPCs_OPENAI_RPCS_CREATE_CHAT_COMPLETION_STREAM
+	case "openai-rpcs-generate-chat-completion-stream":
+		return OpenaiRPCs_OPENAI_RPCS_GENERATE_CHAT_COMPLETION_STREAM
 	case "openai-rpcs-any":
 		return OpenaiRPCs_OPENAI_RPCS_ANY
 	default:
@@ -1823,8 +1823,8 @@ func OpenaiRPCsToSpecName(v OpenaiRPCs) string {
 		return "OPENAI_RPCS_UNSPECIFIED"
 	case OpenaiRPCs_OPENAI_RPCS_CREATE_CHAT_COMPLETION:
 		return "OPENAI_RPCS_CREATE_CHAT_COMPLETION"
-	case OpenaiRPCs_OPENAI_RPCS_CREATE_CHAT_COMPLETION_STREAM:
-		return "OPENAI_RPCS_CREATE_CHAT_COMPLETION_STREAM"
+	case OpenaiRPCs_OPENAI_RPCS_GENERATE_CHAT_COMPLETION_STREAM:
+		return "OPENAI_RPCS_GENERATE_CHAT_COMPLETION_STREAM"
 	case OpenaiRPCs_OPENAI_RPCS_ANY:
 		return "OPENAI_RPCS_ANY"
 	default:
@@ -1839,43 +1839,43 @@ func ArgusRPCsValues() []ArgusRPCs {
 		ArgusRPCs_ARGUS_RPCS_LIST_ACTIVE_SESSIONS,
 		ArgusRPCs_ARGUS_RPCS_GET_SESSION_DETAIL,
 		ArgusRPCs_ARGUS_RPCS_GET_USER_ACTIVITY,
-		ArgusRPCs_ARGUS_RPCS_SEARCH_SESSIONS,
-		ArgusRPCs_ARGUS_RPCS_WATCH_LIVE_SESSIONS,
-		ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_READ,
-		ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_WRITE,
-		ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_DELETE,
-		ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_LIST,
-		ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_CLEAR,
+		ArgusRPCs_ARGUS_RPCS_LIST_SESSION_SEARCH_RESULTS,
+		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_LIVE_SESSIONS,
+		ArgusRPCs_ARGUS_RPCS_GET_SCRATCHPAD,
+		ArgusRPCs_ARGUS_RPCS_UPDATE_SCRATCHPAD,
+		ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPAD,
+		ArgusRPCs_ARGUS_RPCS_LIST_SCRATCHPADS,
+		ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPADS,
 		ArgusRPCs_ARGUS_RPCS_GET_SUPERVISOR_CONTEXT,
-		ArgusRPCs_ARGUS_RPCS_WATCH_DASHBOARD,
-		ArgusRPCs_ARGUS_RPCS_WATCH_SESSION_DETAIL,
-		ArgusRPCs_ARGUS_RPCS_WATCH_USER_ACTIVITY,
-		ArgusRPCs_ARGUS_RPCS_WATCH_SUPERVISOR_CONTEXT,
-		ArgusRPCs_ARGUS_RPCS_WATCH_SCRATCHPAD_LIST,
-		ArgusRPCs_ARGUS_RPCS_WATCH_SCRATCHPAD_READ,
+		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_DASHBOARD,
+		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SESSION_DETAIL,
+		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_ACTIVITY,
+		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SUPERVISOR_CONTEXT,
+		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_LIST,
+		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_READ,
 		ArgusRPCs_ARGUS_RPCS_LIST_USERS,
 		ArgusRPCs_ARGUS_RPCS_GET_USER_PROFILE,
 		ArgusRPCs_ARGUS_RPCS_GET_USER_TOKEN_STATS,
-		ArgusRPCs_ARGUS_RPCS_WATCH_USER_PROFILE,
-		ArgusRPCs_ARGUS_RPCS_GET_USER_COMMIT_ACTIVITY,
+		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_PROFILE,
+		ArgusRPCs_ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY,
 		ArgusRPCs_ARGUS_RPCS_GET_FILE_ACTIVITY,
 		ArgusRPCs_ARGUS_RPCS_GET_SESSION_TIMELINE,
 		ArgusRPCs_ARGUS_RPCS_GET_AGENT_TREE,
 		ArgusRPCs_ARGUS_RPCS_GET_SYSTEM_STATS,
-		ArgusRPCs_ARGUS_RPCS_GET_TOOL_LEADERBOARD,
-		ArgusRPCs_ARGUS_RPCS_GET_MODEL_USAGE,
-		ArgusRPCs_ARGUS_RPCS_GET_ACTIVITY_TIMESERIES,
-		ArgusRPCs_ARGUS_RPCS_WATCH_SYSTEM_STATS,
-		ArgusRPCs_ARGUS_RPCS_WATCH_TOOL_LEADERBOARD,
-		ArgusRPCs_ARGUS_RPCS_SEARCH_EVENTS,
-		ArgusRPCs_ARGUS_RPCS_SEARCH_BY_FILE_PATH,
+		ArgusRPCs_ARGUS_RPCS_LIST_TOOL_LEADERBOARD,
+		ArgusRPCs_ARGUS_RPCS_LIST_MODEL_USAGE,
+		ArgusRPCs_ARGUS_RPCS_LIST_ACTIVITY_TIMESERIES,
+		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SYSTEM_STATS,
+		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_TOOL_LEADERBOARD,
+		ArgusRPCs_ARGUS_RPCS_LIST_EVENT_SEARCH_RESULTS,
+		ArgusRPCs_ARGUS_RPCS_LIST_FILE_PATH_MATCHES,
 		ArgusRPCs_ARGUS_RPCS_ANY,
 	}
 }
 
 // ArgusRPCsStringValues returns all valid ArgusRPCs names as strings
 func ArgusRPCsStringValues() []string {
-	return []string{"argus-rpcs-get-dashboard", "argus-rpcs-list-active-sessions", "argus-rpcs-get-session-detail", "argus-rpcs-get-user-activity", "argus-rpcs-search-sessions", "argus-rpcs-watch-live-sessions", "argus-rpcs-scratchpad-read", "argus-rpcs-scratchpad-write", "argus-rpcs-scratchpad-delete", "argus-rpcs-scratchpad-list", "argus-rpcs-scratchpad-clear", "argus-rpcs-get-supervisor-context", "argus-rpcs-watch-dashboard", "argus-rpcs-watch-session-detail", "argus-rpcs-watch-user-activity", "argus-rpcs-watch-supervisor-context", "argus-rpcs-watch-scratchpad-list", "argus-rpcs-watch-scratchpad-read", "argus-rpcs-list-users", "argus-rpcs-get-user-profile", "argus-rpcs-get-user-token-stats", "argus-rpcs-watch-user-profile", "argus-rpcs-get-user-commit-activity", "argus-rpcs-get-file-activity", "argus-rpcs-get-session-timeline", "argus-rpcs-get-agent-tree", "argus-rpcs-get-system-stats", "argus-rpcs-get-tool-leaderboard", "argus-rpcs-get-model-usage", "argus-rpcs-get-activity-timeseries", "argus-rpcs-watch-system-stats", "argus-rpcs-watch-tool-leaderboard", "argus-rpcs-search-events", "argus-rpcs-search-by-file-path", "argus-rpcs-any"}
+	return []string{"argus-rpcs-get-dashboard", "argus-rpcs-list-active-sessions", "argus-rpcs-get-session-detail", "argus-rpcs-get-user-activity", "argus-rpcs-list-session-search-results", "argus-rpcs-subscribe-live-sessions", "argus-rpcs-get-scratchpad", "argus-rpcs-update-scratchpad", "argus-rpcs-delete-scratchpad", "argus-rpcs-list-scratchpads", "argus-rpcs-delete-scratchpads", "argus-rpcs-get-supervisor-context", "argus-rpcs-subscribe-dashboard", "argus-rpcs-subscribe-session-detail", "argus-rpcs-subscribe-user-activity", "argus-rpcs-subscribe-supervisor-context", "argus-rpcs-subscribe-scratchpad-list", "argus-rpcs-subscribe-scratchpad-read", "argus-rpcs-list-users", "argus-rpcs-get-user-profile", "argus-rpcs-get-user-token-stats", "argus-rpcs-subscribe-user-profile", "argus-rpcs-list-user-commit-activity", "argus-rpcs-get-file-activity", "argus-rpcs-get-session-timeline", "argus-rpcs-get-agent-tree", "argus-rpcs-get-system-stats", "argus-rpcs-list-tool-leaderboard", "argus-rpcs-list-model-usage", "argus-rpcs-list-activity-timeseries", "argus-rpcs-subscribe-system-stats", "argus-rpcs-subscribe-tool-leaderboard", "argus-rpcs-list-event-search-results", "argus-rpcs-list-file-path-matches", "argus-rpcs-any"}
 }
 
 // ParseArgusRPCs converts a string to a ArgusRPCs enum value
@@ -1894,44 +1894,44 @@ func ParseArgusRPCs(s string) (ArgusRPCs, error) {
 		return ArgusRPCs_ARGUS_RPCS_GET_SESSION_DETAIL, nil
 	case "argus-rpcs-get-user-activity":
 		return ArgusRPCs_ARGUS_RPCS_GET_USER_ACTIVITY, nil
-	case "argus-rpcs-search-sessions":
-		return ArgusRPCs_ARGUS_RPCS_SEARCH_SESSIONS, nil
-	case "argus-rpcs-watch-live-sessions":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_LIVE_SESSIONS, nil
-	case "argus-rpcs-scratchpad-read":
-		return ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_READ, nil
-	case "argus-rpcs-scratchpad-write":
-		return ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_WRITE, nil
-	case "argus-rpcs-scratchpad-delete":
-		return ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_DELETE, nil
-	case "argus-rpcs-scratchpad-list":
-		return ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_LIST, nil
-	case "argus-rpcs-scratchpad-clear":
-		return ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_CLEAR, nil
+	case "argus-rpcs-list-session-search-results":
+		return ArgusRPCs_ARGUS_RPCS_LIST_SESSION_SEARCH_RESULTS, nil
+	case "argus-rpcs-subscribe-live-sessions":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_LIVE_SESSIONS, nil
+	case "argus-rpcs-get-scratchpad":
+		return ArgusRPCs_ARGUS_RPCS_GET_SCRATCHPAD, nil
+	case "argus-rpcs-update-scratchpad":
+		return ArgusRPCs_ARGUS_RPCS_UPDATE_SCRATCHPAD, nil
+	case "argus-rpcs-delete-scratchpad":
+		return ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPAD, nil
+	case "argus-rpcs-list-scratchpads":
+		return ArgusRPCs_ARGUS_RPCS_LIST_SCRATCHPADS, nil
+	case "argus-rpcs-delete-scratchpads":
+		return ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPADS, nil
 	case "argus-rpcs-get-supervisor-context":
 		return ArgusRPCs_ARGUS_RPCS_GET_SUPERVISOR_CONTEXT, nil
-	case "argus-rpcs-watch-dashboard":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_DASHBOARD, nil
-	case "argus-rpcs-watch-session-detail":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_SESSION_DETAIL, nil
-	case "argus-rpcs-watch-user-activity":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_USER_ACTIVITY, nil
-	case "argus-rpcs-watch-supervisor-context":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_SUPERVISOR_CONTEXT, nil
-	case "argus-rpcs-watch-scratchpad-list":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_SCRATCHPAD_LIST, nil
-	case "argus-rpcs-watch-scratchpad-read":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_SCRATCHPAD_READ, nil
+	case "argus-rpcs-subscribe-dashboard":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_DASHBOARD, nil
+	case "argus-rpcs-subscribe-session-detail":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SESSION_DETAIL, nil
+	case "argus-rpcs-subscribe-user-activity":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_ACTIVITY, nil
+	case "argus-rpcs-subscribe-supervisor-context":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SUPERVISOR_CONTEXT, nil
+	case "argus-rpcs-subscribe-scratchpad-list":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_LIST, nil
+	case "argus-rpcs-subscribe-scratchpad-read":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_READ, nil
 	case "argus-rpcs-list-users":
 		return ArgusRPCs_ARGUS_RPCS_LIST_USERS, nil
 	case "argus-rpcs-get-user-profile":
 		return ArgusRPCs_ARGUS_RPCS_GET_USER_PROFILE, nil
 	case "argus-rpcs-get-user-token-stats":
 		return ArgusRPCs_ARGUS_RPCS_GET_USER_TOKEN_STATS, nil
-	case "argus-rpcs-watch-user-profile":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_USER_PROFILE, nil
-	case "argus-rpcs-get-user-commit-activity":
-		return ArgusRPCs_ARGUS_RPCS_GET_USER_COMMIT_ACTIVITY, nil
+	case "argus-rpcs-subscribe-user-profile":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_PROFILE, nil
+	case "argus-rpcs-list-user-commit-activity":
+		return ArgusRPCs_ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY, nil
 	case "argus-rpcs-get-file-activity":
 		return ArgusRPCs_ARGUS_RPCS_GET_FILE_ACTIVITY, nil
 	case "argus-rpcs-get-session-timeline":
@@ -1940,20 +1940,20 @@ func ParseArgusRPCs(s string) (ArgusRPCs, error) {
 		return ArgusRPCs_ARGUS_RPCS_GET_AGENT_TREE, nil
 	case "argus-rpcs-get-system-stats":
 		return ArgusRPCs_ARGUS_RPCS_GET_SYSTEM_STATS, nil
-	case "argus-rpcs-get-tool-leaderboard":
-		return ArgusRPCs_ARGUS_RPCS_GET_TOOL_LEADERBOARD, nil
-	case "argus-rpcs-get-model-usage":
-		return ArgusRPCs_ARGUS_RPCS_GET_MODEL_USAGE, nil
-	case "argus-rpcs-get-activity-timeseries":
-		return ArgusRPCs_ARGUS_RPCS_GET_ACTIVITY_TIMESERIES, nil
-	case "argus-rpcs-watch-system-stats":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_SYSTEM_STATS, nil
-	case "argus-rpcs-watch-tool-leaderboard":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_TOOL_LEADERBOARD, nil
-	case "argus-rpcs-search-events":
-		return ArgusRPCs_ARGUS_RPCS_SEARCH_EVENTS, nil
-	case "argus-rpcs-search-by-file-path":
-		return ArgusRPCs_ARGUS_RPCS_SEARCH_BY_FILE_PATH, nil
+	case "argus-rpcs-list-tool-leaderboard":
+		return ArgusRPCs_ARGUS_RPCS_LIST_TOOL_LEADERBOARD, nil
+	case "argus-rpcs-list-model-usage":
+		return ArgusRPCs_ARGUS_RPCS_LIST_MODEL_USAGE, nil
+	case "argus-rpcs-list-activity-timeseries":
+		return ArgusRPCs_ARGUS_RPCS_LIST_ACTIVITY_TIMESERIES, nil
+	case "argus-rpcs-subscribe-system-stats":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SYSTEM_STATS, nil
+	case "argus-rpcs-subscribe-tool-leaderboard":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_TOOL_LEADERBOARD, nil
+	case "argus-rpcs-list-event-search-results":
+		return ArgusRPCs_ARGUS_RPCS_LIST_EVENT_SEARCH_RESULTS, nil
+	case "argus-rpcs-list-file-path-matches":
+		return ArgusRPCs_ARGUS_RPCS_LIST_FILE_PATH_MATCHES, nil
 	case "argus-rpcs-any":
 		return ArgusRPCs_ARGUS_RPCS_ANY, nil
 	default:
@@ -1994,44 +1994,44 @@ func ArgusRPCsToString(v ArgusRPCs) string {
 		return "argus-rpcs-get-session-detail"
 	case ArgusRPCs_ARGUS_RPCS_GET_USER_ACTIVITY:
 		return "argus-rpcs-get-user-activity"
-	case ArgusRPCs_ARGUS_RPCS_SEARCH_SESSIONS:
-		return "argus-rpcs-search-sessions"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_LIVE_SESSIONS:
-		return "argus-rpcs-watch-live-sessions"
-	case ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_READ:
-		return "argus-rpcs-scratchpad-read"
-	case ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_WRITE:
-		return "argus-rpcs-scratchpad-write"
-	case ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_DELETE:
-		return "argus-rpcs-scratchpad-delete"
-	case ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_LIST:
-		return "argus-rpcs-scratchpad-list"
-	case ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_CLEAR:
-		return "argus-rpcs-scratchpad-clear"
+	case ArgusRPCs_ARGUS_RPCS_LIST_SESSION_SEARCH_RESULTS:
+		return "argus-rpcs-list-session-search-results"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_LIVE_SESSIONS:
+		return "argus-rpcs-subscribe-live-sessions"
+	case ArgusRPCs_ARGUS_RPCS_GET_SCRATCHPAD:
+		return "argus-rpcs-get-scratchpad"
+	case ArgusRPCs_ARGUS_RPCS_UPDATE_SCRATCHPAD:
+		return "argus-rpcs-update-scratchpad"
+	case ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPAD:
+		return "argus-rpcs-delete-scratchpad"
+	case ArgusRPCs_ARGUS_RPCS_LIST_SCRATCHPADS:
+		return "argus-rpcs-list-scratchpads"
+	case ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPADS:
+		return "argus-rpcs-delete-scratchpads"
 	case ArgusRPCs_ARGUS_RPCS_GET_SUPERVISOR_CONTEXT:
 		return "argus-rpcs-get-supervisor-context"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_DASHBOARD:
-		return "argus-rpcs-watch-dashboard"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_SESSION_DETAIL:
-		return "argus-rpcs-watch-session-detail"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_USER_ACTIVITY:
-		return "argus-rpcs-watch-user-activity"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_SUPERVISOR_CONTEXT:
-		return "argus-rpcs-watch-supervisor-context"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_SCRATCHPAD_LIST:
-		return "argus-rpcs-watch-scratchpad-list"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_SCRATCHPAD_READ:
-		return "argus-rpcs-watch-scratchpad-read"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_DASHBOARD:
+		return "argus-rpcs-subscribe-dashboard"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SESSION_DETAIL:
+		return "argus-rpcs-subscribe-session-detail"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_ACTIVITY:
+		return "argus-rpcs-subscribe-user-activity"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SUPERVISOR_CONTEXT:
+		return "argus-rpcs-subscribe-supervisor-context"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_LIST:
+		return "argus-rpcs-subscribe-scratchpad-list"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_READ:
+		return "argus-rpcs-subscribe-scratchpad-read"
 	case ArgusRPCs_ARGUS_RPCS_LIST_USERS:
 		return "argus-rpcs-list-users"
 	case ArgusRPCs_ARGUS_RPCS_GET_USER_PROFILE:
 		return "argus-rpcs-get-user-profile"
 	case ArgusRPCs_ARGUS_RPCS_GET_USER_TOKEN_STATS:
 		return "argus-rpcs-get-user-token-stats"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_USER_PROFILE:
-		return "argus-rpcs-watch-user-profile"
-	case ArgusRPCs_ARGUS_RPCS_GET_USER_COMMIT_ACTIVITY:
-		return "argus-rpcs-get-user-commit-activity"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_PROFILE:
+		return "argus-rpcs-subscribe-user-profile"
+	case ArgusRPCs_ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY:
+		return "argus-rpcs-list-user-commit-activity"
 	case ArgusRPCs_ARGUS_RPCS_GET_FILE_ACTIVITY:
 		return "argus-rpcs-get-file-activity"
 	case ArgusRPCs_ARGUS_RPCS_GET_SESSION_TIMELINE:
@@ -2040,20 +2040,20 @@ func ArgusRPCsToString(v ArgusRPCs) string {
 		return "argus-rpcs-get-agent-tree"
 	case ArgusRPCs_ARGUS_RPCS_GET_SYSTEM_STATS:
 		return "argus-rpcs-get-system-stats"
-	case ArgusRPCs_ARGUS_RPCS_GET_TOOL_LEADERBOARD:
-		return "argus-rpcs-get-tool-leaderboard"
-	case ArgusRPCs_ARGUS_RPCS_GET_MODEL_USAGE:
-		return "argus-rpcs-get-model-usage"
-	case ArgusRPCs_ARGUS_RPCS_GET_ACTIVITY_TIMESERIES:
-		return "argus-rpcs-get-activity-timeseries"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_SYSTEM_STATS:
-		return "argus-rpcs-watch-system-stats"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_TOOL_LEADERBOARD:
-		return "argus-rpcs-watch-tool-leaderboard"
-	case ArgusRPCs_ARGUS_RPCS_SEARCH_EVENTS:
-		return "argus-rpcs-search-events"
-	case ArgusRPCs_ARGUS_RPCS_SEARCH_BY_FILE_PATH:
-		return "argus-rpcs-search-by-file-path"
+	case ArgusRPCs_ARGUS_RPCS_LIST_TOOL_LEADERBOARD:
+		return "argus-rpcs-list-tool-leaderboard"
+	case ArgusRPCs_ARGUS_RPCS_LIST_MODEL_USAGE:
+		return "argus-rpcs-list-model-usage"
+	case ArgusRPCs_ARGUS_RPCS_LIST_ACTIVITY_TIMESERIES:
+		return "argus-rpcs-list-activity-timeseries"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SYSTEM_STATS:
+		return "argus-rpcs-subscribe-system-stats"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_TOOL_LEADERBOARD:
+		return "argus-rpcs-subscribe-tool-leaderboard"
+	case ArgusRPCs_ARGUS_RPCS_LIST_EVENT_SEARCH_RESULTS:
+		return "argus-rpcs-list-event-search-results"
+	case ArgusRPCs_ARGUS_RPCS_LIST_FILE_PATH_MATCHES:
+		return "argus-rpcs-list-file-path-matches"
 	case ArgusRPCs_ARGUS_RPCS_ANY:
 		return "argus-rpcs-any"
 	default:
@@ -2086,44 +2086,44 @@ func ParseArgusRPCsLiberal(s string) ArgusRPCs {
 		return ArgusRPCs_ARGUS_RPCS_GET_SESSION_DETAIL
 	case "argus-rpcs-get-user-activity":
 		return ArgusRPCs_ARGUS_RPCS_GET_USER_ACTIVITY
-	case "argus-rpcs-search-sessions":
-		return ArgusRPCs_ARGUS_RPCS_SEARCH_SESSIONS
-	case "argus-rpcs-watch-live-sessions":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_LIVE_SESSIONS
-	case "argus-rpcs-scratchpad-read":
-		return ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_READ
-	case "argus-rpcs-scratchpad-write":
-		return ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_WRITE
-	case "argus-rpcs-scratchpad-delete":
-		return ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_DELETE
-	case "argus-rpcs-scratchpad-list":
-		return ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_LIST
-	case "argus-rpcs-scratchpad-clear":
-		return ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_CLEAR
+	case "argus-rpcs-list-session-search-results":
+		return ArgusRPCs_ARGUS_RPCS_LIST_SESSION_SEARCH_RESULTS
+	case "argus-rpcs-subscribe-live-sessions":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_LIVE_SESSIONS
+	case "argus-rpcs-get-scratchpad":
+		return ArgusRPCs_ARGUS_RPCS_GET_SCRATCHPAD
+	case "argus-rpcs-update-scratchpad":
+		return ArgusRPCs_ARGUS_RPCS_UPDATE_SCRATCHPAD
+	case "argus-rpcs-delete-scratchpad":
+		return ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPAD
+	case "argus-rpcs-list-scratchpads":
+		return ArgusRPCs_ARGUS_RPCS_LIST_SCRATCHPADS
+	case "argus-rpcs-delete-scratchpads":
+		return ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPADS
 	case "argus-rpcs-get-supervisor-context":
 		return ArgusRPCs_ARGUS_RPCS_GET_SUPERVISOR_CONTEXT
-	case "argus-rpcs-watch-dashboard":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_DASHBOARD
-	case "argus-rpcs-watch-session-detail":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_SESSION_DETAIL
-	case "argus-rpcs-watch-user-activity":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_USER_ACTIVITY
-	case "argus-rpcs-watch-supervisor-context":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_SUPERVISOR_CONTEXT
-	case "argus-rpcs-watch-scratchpad-list":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_SCRATCHPAD_LIST
-	case "argus-rpcs-watch-scratchpad-read":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_SCRATCHPAD_READ
+	case "argus-rpcs-subscribe-dashboard":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_DASHBOARD
+	case "argus-rpcs-subscribe-session-detail":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SESSION_DETAIL
+	case "argus-rpcs-subscribe-user-activity":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_ACTIVITY
+	case "argus-rpcs-subscribe-supervisor-context":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SUPERVISOR_CONTEXT
+	case "argus-rpcs-subscribe-scratchpad-list":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_LIST
+	case "argus-rpcs-subscribe-scratchpad-read":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_READ
 	case "argus-rpcs-list-users":
 		return ArgusRPCs_ARGUS_RPCS_LIST_USERS
 	case "argus-rpcs-get-user-profile":
 		return ArgusRPCs_ARGUS_RPCS_GET_USER_PROFILE
 	case "argus-rpcs-get-user-token-stats":
 		return ArgusRPCs_ARGUS_RPCS_GET_USER_TOKEN_STATS
-	case "argus-rpcs-watch-user-profile":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_USER_PROFILE
-	case "argus-rpcs-get-user-commit-activity":
-		return ArgusRPCs_ARGUS_RPCS_GET_USER_COMMIT_ACTIVITY
+	case "argus-rpcs-subscribe-user-profile":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_PROFILE
+	case "argus-rpcs-list-user-commit-activity":
+		return ArgusRPCs_ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY
 	case "argus-rpcs-get-file-activity":
 		return ArgusRPCs_ARGUS_RPCS_GET_FILE_ACTIVITY
 	case "argus-rpcs-get-session-timeline":
@@ -2132,20 +2132,20 @@ func ParseArgusRPCsLiberal(s string) ArgusRPCs {
 		return ArgusRPCs_ARGUS_RPCS_GET_AGENT_TREE
 	case "argus-rpcs-get-system-stats":
 		return ArgusRPCs_ARGUS_RPCS_GET_SYSTEM_STATS
-	case "argus-rpcs-get-tool-leaderboard":
-		return ArgusRPCs_ARGUS_RPCS_GET_TOOL_LEADERBOARD
-	case "argus-rpcs-get-model-usage":
-		return ArgusRPCs_ARGUS_RPCS_GET_MODEL_USAGE
-	case "argus-rpcs-get-activity-timeseries":
-		return ArgusRPCs_ARGUS_RPCS_GET_ACTIVITY_TIMESERIES
-	case "argus-rpcs-watch-system-stats":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_SYSTEM_STATS
-	case "argus-rpcs-watch-tool-leaderboard":
-		return ArgusRPCs_ARGUS_RPCS_WATCH_TOOL_LEADERBOARD
-	case "argus-rpcs-search-events":
-		return ArgusRPCs_ARGUS_RPCS_SEARCH_EVENTS
-	case "argus-rpcs-search-by-file-path":
-		return ArgusRPCs_ARGUS_RPCS_SEARCH_BY_FILE_PATH
+	case "argus-rpcs-list-tool-leaderboard":
+		return ArgusRPCs_ARGUS_RPCS_LIST_TOOL_LEADERBOARD
+	case "argus-rpcs-list-model-usage":
+		return ArgusRPCs_ARGUS_RPCS_LIST_MODEL_USAGE
+	case "argus-rpcs-list-activity-timeseries":
+		return ArgusRPCs_ARGUS_RPCS_LIST_ACTIVITY_TIMESERIES
+	case "argus-rpcs-subscribe-system-stats":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SYSTEM_STATS
+	case "argus-rpcs-subscribe-tool-leaderboard":
+		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_TOOL_LEADERBOARD
+	case "argus-rpcs-list-event-search-results":
+		return ArgusRPCs_ARGUS_RPCS_LIST_EVENT_SEARCH_RESULTS
+	case "argus-rpcs-list-file-path-matches":
+		return ArgusRPCs_ARGUS_RPCS_LIST_FILE_PATH_MATCHES
 	case "argus-rpcs-any":
 		return ArgusRPCs_ARGUS_RPCS_ANY
 	default:
@@ -2166,44 +2166,44 @@ func ArgusRPCsToSpecName(v ArgusRPCs) string {
 		return "ARGUS_RPCS_GET_SESSION_DETAIL"
 	case ArgusRPCs_ARGUS_RPCS_GET_USER_ACTIVITY:
 		return "ARGUS_RPCS_GET_USER_ACTIVITY"
-	case ArgusRPCs_ARGUS_RPCS_SEARCH_SESSIONS:
-		return "ARGUS_RPCS_SEARCH_SESSIONS"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_LIVE_SESSIONS:
-		return "ARGUS_RPCS_WATCH_LIVE_SESSIONS"
-	case ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_READ:
-		return "ARGUS_RPCS_SCRATCHPAD_READ"
-	case ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_WRITE:
-		return "ARGUS_RPCS_SCRATCHPAD_WRITE"
-	case ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_DELETE:
-		return "ARGUS_RPCS_SCRATCHPAD_DELETE"
-	case ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_LIST:
-		return "ARGUS_RPCS_SCRATCHPAD_LIST"
-	case ArgusRPCs_ARGUS_RPCS_SCRATCHPAD_CLEAR:
-		return "ARGUS_RPCS_SCRATCHPAD_CLEAR"
+	case ArgusRPCs_ARGUS_RPCS_LIST_SESSION_SEARCH_RESULTS:
+		return "ARGUS_RPCS_LIST_SESSION_SEARCH_RESULTS"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_LIVE_SESSIONS:
+		return "ARGUS_RPCS_SUBSCRIBE_LIVE_SESSIONS"
+	case ArgusRPCs_ARGUS_RPCS_GET_SCRATCHPAD:
+		return "ARGUS_RPCS_GET_SCRATCHPAD"
+	case ArgusRPCs_ARGUS_RPCS_UPDATE_SCRATCHPAD:
+		return "ARGUS_RPCS_UPDATE_SCRATCHPAD"
+	case ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPAD:
+		return "ARGUS_RPCS_DELETE_SCRATCHPAD"
+	case ArgusRPCs_ARGUS_RPCS_LIST_SCRATCHPADS:
+		return "ARGUS_RPCS_LIST_SCRATCHPADS"
+	case ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPADS:
+		return "ARGUS_RPCS_DELETE_SCRATCHPADS"
 	case ArgusRPCs_ARGUS_RPCS_GET_SUPERVISOR_CONTEXT:
 		return "ARGUS_RPCS_GET_SUPERVISOR_CONTEXT"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_DASHBOARD:
-		return "ARGUS_RPCS_WATCH_DASHBOARD"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_SESSION_DETAIL:
-		return "ARGUS_RPCS_WATCH_SESSION_DETAIL"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_USER_ACTIVITY:
-		return "ARGUS_RPCS_WATCH_USER_ACTIVITY"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_SUPERVISOR_CONTEXT:
-		return "ARGUS_RPCS_WATCH_SUPERVISOR_CONTEXT"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_SCRATCHPAD_LIST:
-		return "ARGUS_RPCS_WATCH_SCRATCHPAD_LIST"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_SCRATCHPAD_READ:
-		return "ARGUS_RPCS_WATCH_SCRATCHPAD_READ"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_DASHBOARD:
+		return "ARGUS_RPCS_SUBSCRIBE_DASHBOARD"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SESSION_DETAIL:
+		return "ARGUS_RPCS_SUBSCRIBE_SESSION_DETAIL"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_ACTIVITY:
+		return "ARGUS_RPCS_SUBSCRIBE_USER_ACTIVITY"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SUPERVISOR_CONTEXT:
+		return "ARGUS_RPCS_SUBSCRIBE_SUPERVISOR_CONTEXT"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_LIST:
+		return "ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_LIST"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_READ:
+		return "ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_READ"
 	case ArgusRPCs_ARGUS_RPCS_LIST_USERS:
 		return "ARGUS_RPCS_LIST_USERS"
 	case ArgusRPCs_ARGUS_RPCS_GET_USER_PROFILE:
 		return "ARGUS_RPCS_GET_USER_PROFILE"
 	case ArgusRPCs_ARGUS_RPCS_GET_USER_TOKEN_STATS:
 		return "ARGUS_RPCS_GET_USER_TOKEN_STATS"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_USER_PROFILE:
-		return "ARGUS_RPCS_WATCH_USER_PROFILE"
-	case ArgusRPCs_ARGUS_RPCS_GET_USER_COMMIT_ACTIVITY:
-		return "ARGUS_RPCS_GET_USER_COMMIT_ACTIVITY"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_PROFILE:
+		return "ARGUS_RPCS_SUBSCRIBE_USER_PROFILE"
+	case ArgusRPCs_ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY:
+		return "ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY"
 	case ArgusRPCs_ARGUS_RPCS_GET_FILE_ACTIVITY:
 		return "ARGUS_RPCS_GET_FILE_ACTIVITY"
 	case ArgusRPCs_ARGUS_RPCS_GET_SESSION_TIMELINE:
@@ -2212,20 +2212,20 @@ func ArgusRPCsToSpecName(v ArgusRPCs) string {
 		return "ARGUS_RPCS_GET_AGENT_TREE"
 	case ArgusRPCs_ARGUS_RPCS_GET_SYSTEM_STATS:
 		return "ARGUS_RPCS_GET_SYSTEM_STATS"
-	case ArgusRPCs_ARGUS_RPCS_GET_TOOL_LEADERBOARD:
-		return "ARGUS_RPCS_GET_TOOL_LEADERBOARD"
-	case ArgusRPCs_ARGUS_RPCS_GET_MODEL_USAGE:
-		return "ARGUS_RPCS_GET_MODEL_USAGE"
-	case ArgusRPCs_ARGUS_RPCS_GET_ACTIVITY_TIMESERIES:
-		return "ARGUS_RPCS_GET_ACTIVITY_TIMESERIES"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_SYSTEM_STATS:
-		return "ARGUS_RPCS_WATCH_SYSTEM_STATS"
-	case ArgusRPCs_ARGUS_RPCS_WATCH_TOOL_LEADERBOARD:
-		return "ARGUS_RPCS_WATCH_TOOL_LEADERBOARD"
-	case ArgusRPCs_ARGUS_RPCS_SEARCH_EVENTS:
-		return "ARGUS_RPCS_SEARCH_EVENTS"
-	case ArgusRPCs_ARGUS_RPCS_SEARCH_BY_FILE_PATH:
-		return "ARGUS_RPCS_SEARCH_BY_FILE_PATH"
+	case ArgusRPCs_ARGUS_RPCS_LIST_TOOL_LEADERBOARD:
+		return "ARGUS_RPCS_LIST_TOOL_LEADERBOARD"
+	case ArgusRPCs_ARGUS_RPCS_LIST_MODEL_USAGE:
+		return "ARGUS_RPCS_LIST_MODEL_USAGE"
+	case ArgusRPCs_ARGUS_RPCS_LIST_ACTIVITY_TIMESERIES:
+		return "ARGUS_RPCS_LIST_ACTIVITY_TIMESERIES"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SYSTEM_STATS:
+		return "ARGUS_RPCS_SUBSCRIBE_SYSTEM_STATS"
+	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_TOOL_LEADERBOARD:
+		return "ARGUS_RPCS_SUBSCRIBE_TOOL_LEADERBOARD"
+	case ArgusRPCs_ARGUS_RPCS_LIST_EVENT_SEARCH_RESULTS:
+		return "ARGUS_RPCS_LIST_EVENT_SEARCH_RESULTS"
+	case ArgusRPCs_ARGUS_RPCS_LIST_FILE_PATH_MATCHES:
+		return "ARGUS_RPCS_LIST_FILE_PATH_MATCHES"
 	case ArgusRPCs_ARGUS_RPCS_ANY:
 		return "ARGUS_RPCS_ANY"
 	default:
@@ -2236,12 +2236,12 @@ func ArgusRPCsToSpecName(v ArgusRPCs) string {
 // SamlRPCsValues returns all valid SamlRPCs values (excluding UNDEFINED)
 func SamlRPCsValues() []SamlRPCs {
 	return []SamlRPCs{
-		SamlRPCs_SAML_RPCS_ACS,
+		SamlRPCs_SAML_RPCS_MINT_ACS_TOKENS,
 		SamlRPCs_SAML_RPCS_AUTHORIZE,
 		SamlRPCs_SAML_RPCS_MINT_ASSERTION,
 		SamlRPCs_SAML_RPCS_LIST_S_PS,
-		SamlRPCs_SAML_RPCS_IDP_METADATA,
-		SamlRPCs_SAML_RPCS_SP_METADATA,
+		SamlRPCs_SAML_RPCS_GET_IDP_METADATA,
+		SamlRPCs_SAML_RPCS_GET_SP_METADATA,
 		SamlRPCs_SAML_RPCS_GET_IDP_DESCRIPTOR,
 		SamlRPCs_SAML_RPCS_ANY,
 	}
@@ -2249,7 +2249,7 @@ func SamlRPCsValues() []SamlRPCs {
 
 // SamlRPCsStringValues returns all valid SamlRPCs names as strings
 func SamlRPCsStringValues() []string {
-	return []string{"saml-rpcs-acs", "saml-rpcs-authorize", "saml-rpcs-mint-assertion", "saml-rpcs-list-s-ps", "saml-rpcs-idp-metadata", "saml-rpcs-sp-metadata", "saml-rpcs-get-idp-descriptor", "saml-rpcs-any"}
+	return []string{"saml-rpcs-mint-acs-tokens", "saml-rpcs-authorize", "saml-rpcs-mint-assertion", "saml-rpcs-list-s-ps", "saml-rpcs-get-idp-metadata", "saml-rpcs-get-sp-metadata", "saml-rpcs-get-idp-descriptor", "saml-rpcs-any"}
 }
 
 // ParseSamlRPCs converts a string to a SamlRPCs enum value
@@ -2260,18 +2260,18 @@ func ParseSamlRPCs(s string) (SamlRPCs, error) {
 	switch normalized {
 	case "":
 		return SamlRPCs_SAML_RPCS_UNSPECIFIED, nil
-	case "saml-rpcs-acs":
-		return SamlRPCs_SAML_RPCS_ACS, nil
+	case "saml-rpcs-mint-acs-tokens":
+		return SamlRPCs_SAML_RPCS_MINT_ACS_TOKENS, nil
 	case "saml-rpcs-authorize":
 		return SamlRPCs_SAML_RPCS_AUTHORIZE, nil
 	case "saml-rpcs-mint-assertion":
 		return SamlRPCs_SAML_RPCS_MINT_ASSERTION, nil
 	case "saml-rpcs-list-s-ps":
 		return SamlRPCs_SAML_RPCS_LIST_S_PS, nil
-	case "saml-rpcs-idp-metadata":
-		return SamlRPCs_SAML_RPCS_IDP_METADATA, nil
-	case "saml-rpcs-sp-metadata":
-		return SamlRPCs_SAML_RPCS_SP_METADATA, nil
+	case "saml-rpcs-get-idp-metadata":
+		return SamlRPCs_SAML_RPCS_GET_IDP_METADATA, nil
+	case "saml-rpcs-get-sp-metadata":
+		return SamlRPCs_SAML_RPCS_GET_SP_METADATA, nil
 	case "saml-rpcs-get-idp-descriptor":
 		return SamlRPCs_SAML_RPCS_GET_IDP_DESCRIPTOR, nil
 	case "saml-rpcs-any":
@@ -2306,18 +2306,18 @@ func ParseSamlRPCss(s string) ([]SamlRPCs, error) {
 // SamlRPCsToString converts a SamlRPCs to its lowercase string representation
 func SamlRPCsToString(v SamlRPCs) string {
 	switch v {
-	case SamlRPCs_SAML_RPCS_ACS:
-		return "saml-rpcs-acs"
+	case SamlRPCs_SAML_RPCS_MINT_ACS_TOKENS:
+		return "saml-rpcs-mint-acs-tokens"
 	case SamlRPCs_SAML_RPCS_AUTHORIZE:
 		return "saml-rpcs-authorize"
 	case SamlRPCs_SAML_RPCS_MINT_ASSERTION:
 		return "saml-rpcs-mint-assertion"
 	case SamlRPCs_SAML_RPCS_LIST_S_PS:
 		return "saml-rpcs-list-s-ps"
-	case SamlRPCs_SAML_RPCS_IDP_METADATA:
-		return "saml-rpcs-idp-metadata"
-	case SamlRPCs_SAML_RPCS_SP_METADATA:
-		return "saml-rpcs-sp-metadata"
+	case SamlRPCs_SAML_RPCS_GET_IDP_METADATA:
+		return "saml-rpcs-get-idp-metadata"
+	case SamlRPCs_SAML_RPCS_GET_SP_METADATA:
+		return "saml-rpcs-get-sp-metadata"
 	case SamlRPCs_SAML_RPCS_GET_IDP_DESCRIPTOR:
 		return "saml-rpcs-get-idp-descriptor"
 	case SamlRPCs_SAML_RPCS_ANY:
@@ -2344,18 +2344,18 @@ func ParseSamlRPCsLiberal(s string) SamlRPCs {
 	normalized = strings.ReplaceAll(normalized, "_", "-")
 	normalized = strings.ReplaceAll(normalized, " ", "-")
 	switch normalized {
-	case "saml-rpcs-acs":
-		return SamlRPCs_SAML_RPCS_ACS
+	case "saml-rpcs-mint-acs-tokens":
+		return SamlRPCs_SAML_RPCS_MINT_ACS_TOKENS
 	case "saml-rpcs-authorize":
 		return SamlRPCs_SAML_RPCS_AUTHORIZE
 	case "saml-rpcs-mint-assertion":
 		return SamlRPCs_SAML_RPCS_MINT_ASSERTION
 	case "saml-rpcs-list-s-ps":
 		return SamlRPCs_SAML_RPCS_LIST_S_PS
-	case "saml-rpcs-idp-metadata":
-		return SamlRPCs_SAML_RPCS_IDP_METADATA
-	case "saml-rpcs-sp-metadata":
-		return SamlRPCs_SAML_RPCS_SP_METADATA
+	case "saml-rpcs-get-idp-metadata":
+		return SamlRPCs_SAML_RPCS_GET_IDP_METADATA
+	case "saml-rpcs-get-sp-metadata":
+		return SamlRPCs_SAML_RPCS_GET_SP_METADATA
 	case "saml-rpcs-get-idp-descriptor":
 		return SamlRPCs_SAML_RPCS_GET_IDP_DESCRIPTOR
 	case "saml-rpcs-any":
@@ -2370,18 +2370,18 @@ func SamlRPCsToSpecName(v SamlRPCs) string {
 	switch v {
 	case SamlRPCs_SAML_RPCS_UNSPECIFIED:
 		return "SAML_RPCS_UNSPECIFIED"
-	case SamlRPCs_SAML_RPCS_ACS:
-		return "SAML_RPCS_ACS"
+	case SamlRPCs_SAML_RPCS_MINT_ACS_TOKENS:
+		return "SAML_RPCS_MINT_ACS_TOKENS"
 	case SamlRPCs_SAML_RPCS_AUTHORIZE:
 		return "SAML_RPCS_AUTHORIZE"
 	case SamlRPCs_SAML_RPCS_MINT_ASSERTION:
 		return "SAML_RPCS_MINT_ASSERTION"
 	case SamlRPCs_SAML_RPCS_LIST_S_PS:
 		return "SAML_RPCS_LIST_S_PS"
-	case SamlRPCs_SAML_RPCS_IDP_METADATA:
-		return "SAML_RPCS_IDP_METADATA"
-	case SamlRPCs_SAML_RPCS_SP_METADATA:
-		return "SAML_RPCS_SP_METADATA"
+	case SamlRPCs_SAML_RPCS_GET_IDP_METADATA:
+		return "SAML_RPCS_GET_IDP_METADATA"
+	case SamlRPCs_SAML_RPCS_GET_SP_METADATA:
+		return "SAML_RPCS_GET_SP_METADATA"
 	case SamlRPCs_SAML_RPCS_GET_IDP_DESCRIPTOR:
 		return "SAML_RPCS_GET_IDP_DESCRIPTOR"
 	case SamlRPCs_SAML_RPCS_ANY:

@@ -22,6 +22,7 @@ import "libs/logger.proto";
 import "libs/spec.proto";
 import "libs/x509.proto";
 import "libs/trace.proto";
+import "libs/diskstore.proto";
 
 // Environment variable name for bootstrap config file path.
 
@@ -159,6 +160,14 @@ message Config {
   // not a token claim. May be empty (no topology tiers).
   string location_path = 17;
 
+  // disk_persistence is an init-time/bootstrap setting that enables
+  // ServiceManager-owned redo-log lifecycle for generated service_store stores.
+  // When present at ServiceManager creation, the generated ServiceManager opens
+  // the per-store redo logs, exposes those handles to service code, and owns
+  // scheduled compaction/roll. It is not hot-reloaded; when absent, typed
+  // diskstore helpers remain available but no managed roll loop is started.
+  diskstore.DiskPersistenceConfig disk_persistence = 18;
+
 }
 
 // ============================================================================
@@ -256,40 +265,3 @@ service ServiceConfigStateService {
 }
 
 message MapEmpty {}
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-enum TypeID {
-  TYPE_ID_UNSPECIFIED = 0;
-  TYPE_ID_CONFIG = 1;
-  TYPE_ID_LOG_MESSAGE = 2;
-  TYPE_ID_CLUSTER_MEMBER = 3;
-  TYPE_ID_CLUSTER_INFO = 4;
-  TYPE_ID_CLUSTER_STATE = 5;
-  TYPE_ID_PING_RESPONSE = 6;
-  TYPE_ID_SERVICE_CONFIG_STATE = 7;
-  TYPE_ID_MAP_EMPTY = 8;
-}
-
-enum ClusterServiceRpcId {
-  CLUSTER_SERVICE_RPC_ID_UNSPECIFIED = 0;
-  CLUSTER_SERVICE_RPC_ID_ALL_ACCESSORS = 1;
-  CLUSTER_SERVICE_RPC_ID_ALL_MUTATORS = 2;
-  CLUSTER_SERVICE_RPC_ID_ALL_EXECUTORS = 3;
-  CLUSTER_SERVICE_RPC_ID_LOG = 4;
-  CLUSTER_SERVICE_RPC_ID_PING = 5;
-  CLUSTER_SERVICE_RPC_ID_SUBSCRIBE = 6;
-  CLUSTER_SERVICE_RPC_ID_WATCH_JWKS = 7;
-}
-
-enum ServiceConfigStateServiceRpcId {
-  SERVICE_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED = 0;
-  SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS = 1;
-  SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_MUTATORS = 2;
-  SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS = 3;
-  SERVICE_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG = 4;
-  SERVICE_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG = 5;
-  SERVICE_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG = 6;
-}

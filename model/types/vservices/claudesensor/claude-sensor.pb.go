@@ -27,6 +27,7 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -284,70 +285,73 @@ func (FileOperation) EnumDescriptor() ([]byte, []int) {
 type TypeID int32
 
 const (
-	TypeID_TYPE_ID_UNSPECIFIED                   TypeID = 0
-	TypeID_TYPE_ID_SESSION_EVENT                 TypeID = 1
-	TypeID_TYPE_ID_TOOL_USE_EVENT                TypeID = 2
-	TypeID_TYPE_ID_SUBAGENT_EVENT                TypeID = 3
-	TypeID_TYPE_ID_FILE_EVENT                    TypeID = 4
-	TypeID_TYPE_ID_PROMPT_EVENT                  TypeID = 5
-	TypeID_TYPE_ID_STOP_EVENT                    TypeID = 6
-	TypeID_TYPE_ID_SENSOR_EVENT                  TypeID = 7
-	TypeID_TYPE_ID_AGENTIC_CODE_EVENT_BUS        TypeID = 8
-	TypeID_TYPE_ID_TRACE_EVENT_BUS               TypeID = 9
-	TypeID_TYPE_ID_MAP_ENTRY                     TypeID = 10
-	TypeID_TYPE_ID_MAP_DETAIL                    TypeID = 11
-	TypeID_TYPE_ID_SESSION_SUMMARY               TypeID = 12
-	TypeID_TYPE_ID_EVENT_TIME_RANGE              TypeID = 13
-	TypeID_TYPE_ID_NEW_MAP_REQUEST               TypeID = 14
-	TypeID_TYPE_ID_NEW_MAP_RESPONSE              TypeID = 15
-	TypeID_TYPE_ID_DELETE_MAP_REQUEST            TypeID = 16
-	TypeID_TYPE_ID_DELETE_MAP_RESPONSE           TypeID = 17
-	TypeID_TYPE_ID_LIST_MAPS_REQUEST             TypeID = 18
-	TypeID_TYPE_ID_LIST_MAPS_RESPONSE            TypeID = 19
-	TypeID_TYPE_ID_DESCRIBE_MAP_REQUEST          TypeID = 20
-	TypeID_TYPE_ID_DESCRIBE_MAP_RESPONSE         TypeID = 21
-	TypeID_TYPE_ID_MAP_SIZE_REQUEST              TypeID = 22
-	TypeID_TYPE_ID_MAP_SIZE_RESPONSE             TypeID = 23
-	TypeID_TYPE_ID_LOAD_BY_IDS_REQUEST           TypeID = 24
-	TypeID_TYPE_ID_LOAD_BY_IDS_RESPONSE          TypeID = 25
-	TypeID_TYPE_ID_LOAD_BY_SQL_REQUEST           TypeID = 26
-	TypeID_TYPE_ID_LOAD_BY_SQL_RESPONSE          TypeID = 27
-	TypeID_TYPE_ID_LOAD_BY_TIMEDB_REQUEST        TypeID = 28
-	TypeID_TYPE_ID_LOAD_BY_TIMEDB_RESPONSE       TypeID = 29
-	TypeID_TYPE_ID_LOAD_BY_GRAPHDB_REQUEST       TypeID = 30
-	TypeID_TYPE_ID_LOAD_BY_GRAPHDB_RESPONSE      TypeID = 31
-	TypeID_TYPE_ID_FILTER_MAP_REQUEST            TypeID = 32
-	TypeID_TYPE_ID_FILTER_MAP_RESPONSE           TypeID = 33
-	TypeID_TYPE_ID_MERGE_REQUEST                 TypeID = 34
-	TypeID_TYPE_ID_MERGE_RESPONSE                TypeID = 35
-	TypeID_TYPE_ID_QUERY_MAP_REQUEST             TypeID = 36
-	TypeID_TYPE_ID_QUERY_MAP_RESPONSE            TypeID = 37
-	TypeID_TYPE_ID_LIST_ACTIVE_SESSIONS_REQUEST  TypeID = 38
-	TypeID_TYPE_ID_LIST_ACTIVE_SESSIONS_RESPONSE TypeID = 39
-	TypeID_TYPE_ID_GET_SESSION_EVENTS_REQUEST    TypeID = 40
-	TypeID_TYPE_ID_GET_SESSION_EVENTS_RESPONSE   TypeID = 41
-	TypeID_TYPE_ID_GET_USER_SESSIONS_REQUEST     TypeID = 42
-	TypeID_TYPE_ID_GET_USER_SESSIONS_RESPONSE    TypeID = 43
-	TypeID_TYPE_ID_QUERY_BY_TIME_RANGE_REQUEST   TypeID = 44
-	TypeID_TYPE_ID_QUERY_BY_TIME_RANGE_RESPONSE  TypeID = 45
-	TypeID_TYPE_ID_QUERY_BY_EMAIL_REQUEST        TypeID = 46
-	TypeID_TYPE_ID_QUERY_BY_EMAIL_RESPONSE       TypeID = 47
-	TypeID_TYPE_ID_WATCH_LIVE_SESSIONS_REQUEST   TypeID = 48
-	TypeID_TYPE_ID_WATCH_LIVE_SESSIONS_EVENT     TypeID = 49
-	TypeID_TYPE_ID_TIMEDB_QUERY_REQUEST          TypeID = 50
-	TypeID_TYPE_ID_TIMEDB_QUERY_RESPONSE         TypeID = 51
-	TypeID_TYPE_ID_DQL_QUERY_REQUEST             TypeID = 52
-	TypeID_TYPE_ID_DQL_QUERY_RESPONSE            TypeID = 53
-	TypeID_TYPE_ID_MAP_EMPTY                     TypeID = 54
-	TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT         TypeID = 55
-	TypeID_TYPE_ID_SESSION_NODE                  TypeID = 56
-	TypeID_TYPE_ID_AGENT_NODE                    TypeID = 57
-	TypeID_TYPE_ID_TOOL_USE_NODE                 TypeID = 58
-	TypeID_TYPE_ID_SESSION_RECORD                TypeID = 59
-	TypeID_TYPE_ID_TOOL_USE_RECORD               TypeID = 60
-	TypeID_TYPE_ID_SUBAGENT_RECORD               TypeID = 61
-	TypeID_TYPE_ID_PROMPT_RECORD                 TypeID = 62
-	TypeID_TYPE_ID_STOP_RECORD                   TypeID = 63
+	TypeID_TYPE_ID_UNSPECIFIED                                          TypeID = 0
+	TypeID_TYPE_ID_SESSION_EVENT                                        TypeID = 1
+	TypeID_TYPE_ID_TOOL_USE_EVENT                                       TypeID = 2
+	TypeID_TYPE_ID_SUBAGENT_EVENT                                       TypeID = 3
+	TypeID_TYPE_ID_FILE_EVENT                                           TypeID = 4
+	TypeID_TYPE_ID_PROMPT_EVENT                                         TypeID = 5
+	TypeID_TYPE_ID_STOP_EVENT                                           TypeID = 6
+	TypeID_TYPE_ID_SENSOR_EVENT                                         TypeID = 7
+	TypeID_TYPE_ID_AGENTIC_CODE_EVENT_BUS                               TypeID = 8
+	TypeID_TYPE_ID_TRACE_EVENT_BUS                                      TypeID = 9
+	TypeID_TYPE_ID_MAP_ENTRY                                            TypeID = 10
+	TypeID_TYPE_ID_MAP_DETAIL                                           TypeID = 11
+	TypeID_TYPE_ID_SESSION_SUMMARY                                      TypeID = 12
+	TypeID_TYPE_ID_EVENT_TIME_RANGE                                     TypeID = 13
+	TypeID_TYPE_ID_CREATE_MAP_REQUEST                                   TypeID = 14
+	TypeID_TYPE_ID_CREATE_MAP_RESPONSE                                  TypeID = 15
+	TypeID_TYPE_ID_DELETE_MAP_REQUEST                                   TypeID = 16
+	TypeID_TYPE_ID_DELETE_MAP_RESPONSE                                  TypeID = 17
+	TypeID_TYPE_ID_LIST_MAPS_REQUEST                                    TypeID = 18
+	TypeID_TYPE_ID_LIST_MAPS_RESPONSE                                   TypeID = 19
+	TypeID_TYPE_ID_GET_MAP_DETAIL_REQUEST                               TypeID = 20
+	TypeID_TYPE_ID_GET_MAP_DETAIL_RESPONSE                              TypeID = 21
+	TypeID_TYPE_ID_MAP_SIZE_REQUEST                                     TypeID = 22
+	TypeID_TYPE_ID_MAP_SIZE_RESPONSE                                    TypeID = 23
+	TypeID_TYPE_ID_UPDATE_MAP_BY_IDS_REQUEST                            TypeID = 24
+	TypeID_TYPE_ID_UPDATE_MAP_BY_IDS_RESPONSE                           TypeID = 25
+	TypeID_TYPE_ID_UPDATE_MAP_BY_SQL_REQUEST                            TypeID = 26
+	TypeID_TYPE_ID_UPDATE_MAP_BY_SQL_RESPONSE                           TypeID = 27
+	TypeID_TYPE_ID_UPDATE_MAP_BY_TIMEDB_REQUEST                         TypeID = 28
+	TypeID_TYPE_ID_UPDATE_MAP_BY_TIMEDB_RESPONSE                        TypeID = 29
+	TypeID_TYPE_ID_UPDATE_MAP_BY_GRAPHDB_REQUEST                        TypeID = 30
+	TypeID_TYPE_ID_UPDATE_MAP_BY_GRAPHDB_RESPONSE                       TypeID = 31
+	TypeID_TYPE_ID_UPDATE_MAP_FILTER_REQUEST                            TypeID = 32
+	TypeID_TYPE_ID_UPDATE_MAP_FILTER_RESPONSE                           TypeID = 33
+	TypeID_TYPE_ID_MERGE_REQUEST                                        TypeID = 34
+	TypeID_TYPE_ID_MERGE_RESPONSE                                       TypeID = 35
+	TypeID_TYPE_ID_EXECUTE_MAP_QUERY_REQUEST                            TypeID = 36
+	TypeID_TYPE_ID_EXECUTE_MAP_QUERY_RESPONSE                           TypeID = 37
+	TypeID_TYPE_ID_LIST_ACTIVE_SESSIONS_REQUEST                         TypeID = 38
+	TypeID_TYPE_ID_LIST_ACTIVE_SESSIONS_RESPONSE                        TypeID = 39
+	TypeID_TYPE_ID_GET_SESSION_EVENTS_REQUEST                           TypeID = 40
+	TypeID_TYPE_ID_GET_SESSION_EVENTS_RESPONSE                          TypeID = 41
+	TypeID_TYPE_ID_GET_USER_SESSIONS_REQUEST                            TypeID = 42
+	TypeID_TYPE_ID_GET_USER_SESSIONS_RESPONSE                           TypeID = 43
+	TypeID_TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_REQUEST                    TypeID = 44
+	TypeID_TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_RESPONSE                   TypeID = 45
+	TypeID_TYPE_ID_LIST_EVENTS_BY_EMAIL_REQUEST                         TypeID = 46
+	TypeID_TYPE_ID_LIST_EVENTS_BY_EMAIL_RESPONSE                        TypeID = 47
+	TypeID_TYPE_ID_WATCH_LIVE_SESSIONS_REQUEST                          TypeID = 48
+	TypeID_TYPE_ID_WATCH_LIVE_SESSIONS_EVENT                            TypeID = 49
+	TypeID_TYPE_ID_TIMEDB_QUERY_REQUEST                                 TypeID = 50
+	TypeID_TYPE_ID_TIMEDB_QUERY_RESPONSE                                TypeID = 51
+	TypeID_TYPE_ID_DQL_QUERY_REQUEST                                    TypeID = 52
+	TypeID_TYPE_ID_DQL_QUERY_RESPONSE                                   TypeID = 53
+	TypeID_TYPE_ID_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD TypeID = 54
+	TypeID_TYPE_ID_TRACE_EVENT_BUS_TRACE_EVENTS_SUBSCRIBE_RECORD        TypeID = 55
+	TypeID_TYPE_ID_MAP_EMPTY                                            TypeID = 56
+	TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT                                TypeID = 57
+	TypeID_TYPE_ID_EVENT_BUS_RECORD_META                                TypeID = 58
+	TypeID_TYPE_ID_SESSION_NODE                                         TypeID = 59
+	TypeID_TYPE_ID_AGENT_NODE                                           TypeID = 60
+	TypeID_TYPE_ID_TOOL_USE_NODE                                        TypeID = 61
+	TypeID_TYPE_ID_SESSION_RECORD                                       TypeID = 62
+	TypeID_TYPE_ID_TOOL_USE_RECORD                                      TypeID = 63
+	TypeID_TYPE_ID_SUBAGENT_RECORD                                      TypeID = 64
+	TypeID_TYPE_ID_PROMPT_RECORD                                        TypeID = 65
+	TypeID_TYPE_ID_STOP_RECORD                                          TypeID = 66
 )
 
 // Enum value maps for TypeID.
@@ -367,122 +371,128 @@ var (
 		11: "TYPE_ID_MAP_DETAIL",
 		12: "TYPE_ID_SESSION_SUMMARY",
 		13: "TYPE_ID_EVENT_TIME_RANGE",
-		14: "TYPE_ID_NEW_MAP_REQUEST",
-		15: "TYPE_ID_NEW_MAP_RESPONSE",
+		14: "TYPE_ID_CREATE_MAP_REQUEST",
+		15: "TYPE_ID_CREATE_MAP_RESPONSE",
 		16: "TYPE_ID_DELETE_MAP_REQUEST",
 		17: "TYPE_ID_DELETE_MAP_RESPONSE",
 		18: "TYPE_ID_LIST_MAPS_REQUEST",
 		19: "TYPE_ID_LIST_MAPS_RESPONSE",
-		20: "TYPE_ID_DESCRIBE_MAP_REQUEST",
-		21: "TYPE_ID_DESCRIBE_MAP_RESPONSE",
+		20: "TYPE_ID_GET_MAP_DETAIL_REQUEST",
+		21: "TYPE_ID_GET_MAP_DETAIL_RESPONSE",
 		22: "TYPE_ID_MAP_SIZE_REQUEST",
 		23: "TYPE_ID_MAP_SIZE_RESPONSE",
-		24: "TYPE_ID_LOAD_BY_IDS_REQUEST",
-		25: "TYPE_ID_LOAD_BY_IDS_RESPONSE",
-		26: "TYPE_ID_LOAD_BY_SQL_REQUEST",
-		27: "TYPE_ID_LOAD_BY_SQL_RESPONSE",
-		28: "TYPE_ID_LOAD_BY_TIMEDB_REQUEST",
-		29: "TYPE_ID_LOAD_BY_TIMEDB_RESPONSE",
-		30: "TYPE_ID_LOAD_BY_GRAPHDB_REQUEST",
-		31: "TYPE_ID_LOAD_BY_GRAPHDB_RESPONSE",
-		32: "TYPE_ID_FILTER_MAP_REQUEST",
-		33: "TYPE_ID_FILTER_MAP_RESPONSE",
+		24: "TYPE_ID_UPDATE_MAP_BY_IDS_REQUEST",
+		25: "TYPE_ID_UPDATE_MAP_BY_IDS_RESPONSE",
+		26: "TYPE_ID_UPDATE_MAP_BY_SQL_REQUEST",
+		27: "TYPE_ID_UPDATE_MAP_BY_SQL_RESPONSE",
+		28: "TYPE_ID_UPDATE_MAP_BY_TIMEDB_REQUEST",
+		29: "TYPE_ID_UPDATE_MAP_BY_TIMEDB_RESPONSE",
+		30: "TYPE_ID_UPDATE_MAP_BY_GRAPHDB_REQUEST",
+		31: "TYPE_ID_UPDATE_MAP_BY_GRAPHDB_RESPONSE",
+		32: "TYPE_ID_UPDATE_MAP_FILTER_REQUEST",
+		33: "TYPE_ID_UPDATE_MAP_FILTER_RESPONSE",
 		34: "TYPE_ID_MERGE_REQUEST",
 		35: "TYPE_ID_MERGE_RESPONSE",
-		36: "TYPE_ID_QUERY_MAP_REQUEST",
-		37: "TYPE_ID_QUERY_MAP_RESPONSE",
+		36: "TYPE_ID_EXECUTE_MAP_QUERY_REQUEST",
+		37: "TYPE_ID_EXECUTE_MAP_QUERY_RESPONSE",
 		38: "TYPE_ID_LIST_ACTIVE_SESSIONS_REQUEST",
 		39: "TYPE_ID_LIST_ACTIVE_SESSIONS_RESPONSE",
 		40: "TYPE_ID_GET_SESSION_EVENTS_REQUEST",
 		41: "TYPE_ID_GET_SESSION_EVENTS_RESPONSE",
 		42: "TYPE_ID_GET_USER_SESSIONS_REQUEST",
 		43: "TYPE_ID_GET_USER_SESSIONS_RESPONSE",
-		44: "TYPE_ID_QUERY_BY_TIME_RANGE_REQUEST",
-		45: "TYPE_ID_QUERY_BY_TIME_RANGE_RESPONSE",
-		46: "TYPE_ID_QUERY_BY_EMAIL_REQUEST",
-		47: "TYPE_ID_QUERY_BY_EMAIL_RESPONSE",
+		44: "TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_REQUEST",
+		45: "TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_RESPONSE",
+		46: "TYPE_ID_LIST_EVENTS_BY_EMAIL_REQUEST",
+		47: "TYPE_ID_LIST_EVENTS_BY_EMAIL_RESPONSE",
 		48: "TYPE_ID_WATCH_LIVE_SESSIONS_REQUEST",
 		49: "TYPE_ID_WATCH_LIVE_SESSIONS_EVENT",
 		50: "TYPE_ID_TIMEDB_QUERY_REQUEST",
 		51: "TYPE_ID_TIMEDB_QUERY_RESPONSE",
 		52: "TYPE_ID_DQL_QUERY_REQUEST",
 		53: "TYPE_ID_DQL_QUERY_RESPONSE",
-		54: "TYPE_ID_MAP_EMPTY",
-		55: "TYPE_ID_TOPIC_PUBLISH_RECEIPT",
-		56: "TYPE_ID_SESSION_NODE",
-		57: "TYPE_ID_AGENT_NODE",
-		58: "TYPE_ID_TOOL_USE_NODE",
-		59: "TYPE_ID_SESSION_RECORD",
-		60: "TYPE_ID_TOOL_USE_RECORD",
-		61: "TYPE_ID_SUBAGENT_RECORD",
-		62: "TYPE_ID_PROMPT_RECORD",
-		63: "TYPE_ID_STOP_RECORD",
+		54: "TYPE_ID_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD",
+		55: "TYPE_ID_TRACE_EVENT_BUS_TRACE_EVENTS_SUBSCRIBE_RECORD",
+		56: "TYPE_ID_MAP_EMPTY",
+		57: "TYPE_ID_TOPIC_PUBLISH_RECEIPT",
+		58: "TYPE_ID_EVENT_BUS_RECORD_META",
+		59: "TYPE_ID_SESSION_NODE",
+		60: "TYPE_ID_AGENT_NODE",
+		61: "TYPE_ID_TOOL_USE_NODE",
+		62: "TYPE_ID_SESSION_RECORD",
+		63: "TYPE_ID_TOOL_USE_RECORD",
+		64: "TYPE_ID_SUBAGENT_RECORD",
+		65: "TYPE_ID_PROMPT_RECORD",
+		66: "TYPE_ID_STOP_RECORD",
 	}
 	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":                   0,
-		"TYPE_ID_SESSION_EVENT":                 1,
-		"TYPE_ID_TOOL_USE_EVENT":                2,
-		"TYPE_ID_SUBAGENT_EVENT":                3,
-		"TYPE_ID_FILE_EVENT":                    4,
-		"TYPE_ID_PROMPT_EVENT":                  5,
-		"TYPE_ID_STOP_EVENT":                    6,
-		"TYPE_ID_SENSOR_EVENT":                  7,
-		"TYPE_ID_AGENTIC_CODE_EVENT_BUS":        8,
-		"TYPE_ID_TRACE_EVENT_BUS":               9,
-		"TYPE_ID_MAP_ENTRY":                     10,
-		"TYPE_ID_MAP_DETAIL":                    11,
-		"TYPE_ID_SESSION_SUMMARY":               12,
-		"TYPE_ID_EVENT_TIME_RANGE":              13,
-		"TYPE_ID_NEW_MAP_REQUEST":               14,
-		"TYPE_ID_NEW_MAP_RESPONSE":              15,
-		"TYPE_ID_DELETE_MAP_REQUEST":            16,
-		"TYPE_ID_DELETE_MAP_RESPONSE":           17,
-		"TYPE_ID_LIST_MAPS_REQUEST":             18,
-		"TYPE_ID_LIST_MAPS_RESPONSE":            19,
-		"TYPE_ID_DESCRIBE_MAP_REQUEST":          20,
-		"TYPE_ID_DESCRIBE_MAP_RESPONSE":         21,
-		"TYPE_ID_MAP_SIZE_REQUEST":              22,
-		"TYPE_ID_MAP_SIZE_RESPONSE":             23,
-		"TYPE_ID_LOAD_BY_IDS_REQUEST":           24,
-		"TYPE_ID_LOAD_BY_IDS_RESPONSE":          25,
-		"TYPE_ID_LOAD_BY_SQL_REQUEST":           26,
-		"TYPE_ID_LOAD_BY_SQL_RESPONSE":          27,
-		"TYPE_ID_LOAD_BY_TIMEDB_REQUEST":        28,
-		"TYPE_ID_LOAD_BY_TIMEDB_RESPONSE":       29,
-		"TYPE_ID_LOAD_BY_GRAPHDB_REQUEST":       30,
-		"TYPE_ID_LOAD_BY_GRAPHDB_RESPONSE":      31,
-		"TYPE_ID_FILTER_MAP_REQUEST":            32,
-		"TYPE_ID_FILTER_MAP_RESPONSE":           33,
-		"TYPE_ID_MERGE_REQUEST":                 34,
-		"TYPE_ID_MERGE_RESPONSE":                35,
-		"TYPE_ID_QUERY_MAP_REQUEST":             36,
-		"TYPE_ID_QUERY_MAP_RESPONSE":            37,
-		"TYPE_ID_LIST_ACTIVE_SESSIONS_REQUEST":  38,
-		"TYPE_ID_LIST_ACTIVE_SESSIONS_RESPONSE": 39,
-		"TYPE_ID_GET_SESSION_EVENTS_REQUEST":    40,
-		"TYPE_ID_GET_SESSION_EVENTS_RESPONSE":   41,
-		"TYPE_ID_GET_USER_SESSIONS_REQUEST":     42,
-		"TYPE_ID_GET_USER_SESSIONS_RESPONSE":    43,
-		"TYPE_ID_QUERY_BY_TIME_RANGE_REQUEST":   44,
-		"TYPE_ID_QUERY_BY_TIME_RANGE_RESPONSE":  45,
-		"TYPE_ID_QUERY_BY_EMAIL_REQUEST":        46,
-		"TYPE_ID_QUERY_BY_EMAIL_RESPONSE":       47,
-		"TYPE_ID_WATCH_LIVE_SESSIONS_REQUEST":   48,
-		"TYPE_ID_WATCH_LIVE_SESSIONS_EVENT":     49,
-		"TYPE_ID_TIMEDB_QUERY_REQUEST":          50,
-		"TYPE_ID_TIMEDB_QUERY_RESPONSE":         51,
-		"TYPE_ID_DQL_QUERY_REQUEST":             52,
-		"TYPE_ID_DQL_QUERY_RESPONSE":            53,
-		"TYPE_ID_MAP_EMPTY":                     54,
-		"TYPE_ID_TOPIC_PUBLISH_RECEIPT":         55,
-		"TYPE_ID_SESSION_NODE":                  56,
-		"TYPE_ID_AGENT_NODE":                    57,
-		"TYPE_ID_TOOL_USE_NODE":                 58,
-		"TYPE_ID_SESSION_RECORD":                59,
-		"TYPE_ID_TOOL_USE_RECORD":               60,
-		"TYPE_ID_SUBAGENT_RECORD":               61,
-		"TYPE_ID_PROMPT_RECORD":                 62,
-		"TYPE_ID_STOP_RECORD":                   63,
+		"TYPE_ID_UNSPECIFIED":                                          0,
+		"TYPE_ID_SESSION_EVENT":                                        1,
+		"TYPE_ID_TOOL_USE_EVENT":                                       2,
+		"TYPE_ID_SUBAGENT_EVENT":                                       3,
+		"TYPE_ID_FILE_EVENT":                                           4,
+		"TYPE_ID_PROMPT_EVENT":                                         5,
+		"TYPE_ID_STOP_EVENT":                                           6,
+		"TYPE_ID_SENSOR_EVENT":                                         7,
+		"TYPE_ID_AGENTIC_CODE_EVENT_BUS":                               8,
+		"TYPE_ID_TRACE_EVENT_BUS":                                      9,
+		"TYPE_ID_MAP_ENTRY":                                            10,
+		"TYPE_ID_MAP_DETAIL":                                           11,
+		"TYPE_ID_SESSION_SUMMARY":                                      12,
+		"TYPE_ID_EVENT_TIME_RANGE":                                     13,
+		"TYPE_ID_CREATE_MAP_REQUEST":                                   14,
+		"TYPE_ID_CREATE_MAP_RESPONSE":                                  15,
+		"TYPE_ID_DELETE_MAP_REQUEST":                                   16,
+		"TYPE_ID_DELETE_MAP_RESPONSE":                                  17,
+		"TYPE_ID_LIST_MAPS_REQUEST":                                    18,
+		"TYPE_ID_LIST_MAPS_RESPONSE":                                   19,
+		"TYPE_ID_GET_MAP_DETAIL_REQUEST":                               20,
+		"TYPE_ID_GET_MAP_DETAIL_RESPONSE":                              21,
+		"TYPE_ID_MAP_SIZE_REQUEST":                                     22,
+		"TYPE_ID_MAP_SIZE_RESPONSE":                                    23,
+		"TYPE_ID_UPDATE_MAP_BY_IDS_REQUEST":                            24,
+		"TYPE_ID_UPDATE_MAP_BY_IDS_RESPONSE":                           25,
+		"TYPE_ID_UPDATE_MAP_BY_SQL_REQUEST":                            26,
+		"TYPE_ID_UPDATE_MAP_BY_SQL_RESPONSE":                           27,
+		"TYPE_ID_UPDATE_MAP_BY_TIMEDB_REQUEST":                         28,
+		"TYPE_ID_UPDATE_MAP_BY_TIMEDB_RESPONSE":                        29,
+		"TYPE_ID_UPDATE_MAP_BY_GRAPHDB_REQUEST":                        30,
+		"TYPE_ID_UPDATE_MAP_BY_GRAPHDB_RESPONSE":                       31,
+		"TYPE_ID_UPDATE_MAP_FILTER_REQUEST":                            32,
+		"TYPE_ID_UPDATE_MAP_FILTER_RESPONSE":                           33,
+		"TYPE_ID_MERGE_REQUEST":                                        34,
+		"TYPE_ID_MERGE_RESPONSE":                                       35,
+		"TYPE_ID_EXECUTE_MAP_QUERY_REQUEST":                            36,
+		"TYPE_ID_EXECUTE_MAP_QUERY_RESPONSE":                           37,
+		"TYPE_ID_LIST_ACTIVE_SESSIONS_REQUEST":                         38,
+		"TYPE_ID_LIST_ACTIVE_SESSIONS_RESPONSE":                        39,
+		"TYPE_ID_GET_SESSION_EVENTS_REQUEST":                           40,
+		"TYPE_ID_GET_SESSION_EVENTS_RESPONSE":                          41,
+		"TYPE_ID_GET_USER_SESSIONS_REQUEST":                            42,
+		"TYPE_ID_GET_USER_SESSIONS_RESPONSE":                           43,
+		"TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_REQUEST":                    44,
+		"TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_RESPONSE":                   45,
+		"TYPE_ID_LIST_EVENTS_BY_EMAIL_REQUEST":                         46,
+		"TYPE_ID_LIST_EVENTS_BY_EMAIL_RESPONSE":                        47,
+		"TYPE_ID_WATCH_LIVE_SESSIONS_REQUEST":                          48,
+		"TYPE_ID_WATCH_LIVE_SESSIONS_EVENT":                            49,
+		"TYPE_ID_TIMEDB_QUERY_REQUEST":                                 50,
+		"TYPE_ID_TIMEDB_QUERY_RESPONSE":                                51,
+		"TYPE_ID_DQL_QUERY_REQUEST":                                    52,
+		"TYPE_ID_DQL_QUERY_RESPONSE":                                   53,
+		"TYPE_ID_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD": 54,
+		"TYPE_ID_TRACE_EVENT_BUS_TRACE_EVENTS_SUBSCRIBE_RECORD":        55,
+		"TYPE_ID_MAP_EMPTY":                                            56,
+		"TYPE_ID_TOPIC_PUBLISH_RECEIPT":                                57,
+		"TYPE_ID_EVENT_BUS_RECORD_META":                                58,
+		"TYPE_ID_SESSION_NODE":                                         59,
+		"TYPE_ID_AGENT_NODE":                                           60,
+		"TYPE_ID_TOOL_USE_NODE":                                        61,
+		"TYPE_ID_SESSION_RECORD":                                       62,
+		"TYPE_ID_TOOL_USE_RECORD":                                      63,
+		"TYPE_ID_SUBAGENT_RECORD":                                      64,
+		"TYPE_ID_PROMPT_RECORD":                                        65,
+		"TYPE_ID_STOP_RECORD":                                          66,
 	}
 )
 
@@ -516,28 +526,28 @@ func (TypeID) EnumDescriptor() ([]byte, []int) {
 type StratumQueryRpcId int32
 
 const (
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UNSPECIFIED          StratumQueryRpcId = 0
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_ALL_ACCESSORS        StratumQueryRpcId = 1
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_ALL_MUTATORS         StratumQueryRpcId = 2
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_ALL_EXECUTORS        StratumQueryRpcId = 3
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_NEW_MAP              StratumQueryRpcId = 4
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_DELETE_MAP           StratumQueryRpcId = 5
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_MAPS            StratumQueryRpcId = 6
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_DESCRIBE_MAP         StratumQueryRpcId = 7
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_MAP_SIZE             StratumQueryRpcId = 8
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_IDS          StratumQueryRpcId = 9
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_SQL          StratumQueryRpcId = 10
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_TIMEDB       StratumQueryRpcId = 11
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_GRAPHDB      StratumQueryRpcId = 12
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_FILTER_MAP           StratumQueryRpcId = 13
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_MERGE                StratumQueryRpcId = 14
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_QUERY_MAP            StratumQueryRpcId = 15
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_ACTIVE_SESSIONS StratumQueryRpcId = 16
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_SESSION_EVENTS   StratumQueryRpcId = 17
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_USER_SESSIONS    StratumQueryRpcId = 18
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_QUERY_BY_TIME_RANGE  StratumQueryRpcId = 19
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_QUERY_BY_EMAIL       StratumQueryRpcId = 20
-	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_WATCH_LIVE_SESSIONS  StratumQueryRpcId = 21
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UNSPECIFIED               StratumQueryRpcId = 0
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_ALL_ACCESSORS             StratumQueryRpcId = 1
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_ALL_MUTATORS              StratumQueryRpcId = 2
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_ALL_EXECUTORS             StratumQueryRpcId = 3
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_CREATE_MAP                StratumQueryRpcId = 4
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_DELETE_MAP                StratumQueryRpcId = 5
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_MAPS                 StratumQueryRpcId = 6
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_MAP_DETAIL            StratumQueryRpcId = 7
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_MAP_SIZE              StratumQueryRpcId = 8
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_IDS         StratumQueryRpcId = 9
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_SQL         StratumQueryRpcId = 10
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_TIMEDB      StratumQueryRpcId = 11
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_GRAPHDB     StratumQueryRpcId = 12
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_FILTER         StratumQueryRpcId = 13
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_MERGE                     StratumQueryRpcId = 14
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_EXECUTE_MAP_QUERY         StratumQueryRpcId = 15
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_ACTIVE_SESSIONS      StratumQueryRpcId = 16
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_SESSION_EVENTS        StratumQueryRpcId = 17
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_USER_SESSIONS         StratumQueryRpcId = 18
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_TIME_RANGE StratumQueryRpcId = 19
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_EMAIL      StratumQueryRpcId = 20
+	StratumQueryRpcId_STRATUM_QUERY_RPC_ID_SUBSCRIBE_LIVE_SESSIONS   StratumQueryRpcId = 21
 )
 
 // Enum value maps for StratumQueryRpcId.
@@ -547,48 +557,48 @@ var (
 		1:  "STRATUM_QUERY_RPC_ID_ALL_ACCESSORS",
 		2:  "STRATUM_QUERY_RPC_ID_ALL_MUTATORS",
 		3:  "STRATUM_QUERY_RPC_ID_ALL_EXECUTORS",
-		4:  "STRATUM_QUERY_RPC_ID_NEW_MAP",
+		4:  "STRATUM_QUERY_RPC_ID_CREATE_MAP",
 		5:  "STRATUM_QUERY_RPC_ID_DELETE_MAP",
 		6:  "STRATUM_QUERY_RPC_ID_LIST_MAPS",
-		7:  "STRATUM_QUERY_RPC_ID_DESCRIBE_MAP",
-		8:  "STRATUM_QUERY_RPC_ID_MAP_SIZE",
-		9:  "STRATUM_QUERY_RPC_ID_LOAD_BY_IDS",
-		10: "STRATUM_QUERY_RPC_ID_LOAD_BY_SQL",
-		11: "STRATUM_QUERY_RPC_ID_LOAD_BY_TIMEDB",
-		12: "STRATUM_QUERY_RPC_ID_LOAD_BY_GRAPHDB",
-		13: "STRATUM_QUERY_RPC_ID_FILTER_MAP",
+		7:  "STRATUM_QUERY_RPC_ID_GET_MAP_DETAIL",
+		8:  "STRATUM_QUERY_RPC_ID_GET_MAP_SIZE",
+		9:  "STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_IDS",
+		10: "STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_SQL",
+		11: "STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_TIMEDB",
+		12: "STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_GRAPHDB",
+		13: "STRATUM_QUERY_RPC_ID_UPDATE_MAP_FILTER",
 		14: "STRATUM_QUERY_RPC_ID_MERGE",
-		15: "STRATUM_QUERY_RPC_ID_QUERY_MAP",
+		15: "STRATUM_QUERY_RPC_ID_EXECUTE_MAP_QUERY",
 		16: "STRATUM_QUERY_RPC_ID_LIST_ACTIVE_SESSIONS",
 		17: "STRATUM_QUERY_RPC_ID_GET_SESSION_EVENTS",
 		18: "STRATUM_QUERY_RPC_ID_GET_USER_SESSIONS",
-		19: "STRATUM_QUERY_RPC_ID_QUERY_BY_TIME_RANGE",
-		20: "STRATUM_QUERY_RPC_ID_QUERY_BY_EMAIL",
-		21: "STRATUM_QUERY_RPC_ID_WATCH_LIVE_SESSIONS",
+		19: "STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_TIME_RANGE",
+		20: "STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_EMAIL",
+		21: "STRATUM_QUERY_RPC_ID_SUBSCRIBE_LIVE_SESSIONS",
 	}
 	StratumQueryRpcId_value = map[string]int32{
-		"STRATUM_QUERY_RPC_ID_UNSPECIFIED":          0,
-		"STRATUM_QUERY_RPC_ID_ALL_ACCESSORS":        1,
-		"STRATUM_QUERY_RPC_ID_ALL_MUTATORS":         2,
-		"STRATUM_QUERY_RPC_ID_ALL_EXECUTORS":        3,
-		"STRATUM_QUERY_RPC_ID_NEW_MAP":              4,
-		"STRATUM_QUERY_RPC_ID_DELETE_MAP":           5,
-		"STRATUM_QUERY_RPC_ID_LIST_MAPS":            6,
-		"STRATUM_QUERY_RPC_ID_DESCRIBE_MAP":         7,
-		"STRATUM_QUERY_RPC_ID_MAP_SIZE":             8,
-		"STRATUM_QUERY_RPC_ID_LOAD_BY_IDS":          9,
-		"STRATUM_QUERY_RPC_ID_LOAD_BY_SQL":          10,
-		"STRATUM_QUERY_RPC_ID_LOAD_BY_TIMEDB":       11,
-		"STRATUM_QUERY_RPC_ID_LOAD_BY_GRAPHDB":      12,
-		"STRATUM_QUERY_RPC_ID_FILTER_MAP":           13,
-		"STRATUM_QUERY_RPC_ID_MERGE":                14,
-		"STRATUM_QUERY_RPC_ID_QUERY_MAP":            15,
-		"STRATUM_QUERY_RPC_ID_LIST_ACTIVE_SESSIONS": 16,
-		"STRATUM_QUERY_RPC_ID_GET_SESSION_EVENTS":   17,
-		"STRATUM_QUERY_RPC_ID_GET_USER_SESSIONS":    18,
-		"STRATUM_QUERY_RPC_ID_QUERY_BY_TIME_RANGE":  19,
-		"STRATUM_QUERY_RPC_ID_QUERY_BY_EMAIL":       20,
-		"STRATUM_QUERY_RPC_ID_WATCH_LIVE_SESSIONS":  21,
+		"STRATUM_QUERY_RPC_ID_UNSPECIFIED":               0,
+		"STRATUM_QUERY_RPC_ID_ALL_ACCESSORS":             1,
+		"STRATUM_QUERY_RPC_ID_ALL_MUTATORS":              2,
+		"STRATUM_QUERY_RPC_ID_ALL_EXECUTORS":             3,
+		"STRATUM_QUERY_RPC_ID_CREATE_MAP":                4,
+		"STRATUM_QUERY_RPC_ID_DELETE_MAP":                5,
+		"STRATUM_QUERY_RPC_ID_LIST_MAPS":                 6,
+		"STRATUM_QUERY_RPC_ID_GET_MAP_DETAIL":            7,
+		"STRATUM_QUERY_RPC_ID_GET_MAP_SIZE":              8,
+		"STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_IDS":         9,
+		"STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_SQL":         10,
+		"STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_TIMEDB":      11,
+		"STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_GRAPHDB":     12,
+		"STRATUM_QUERY_RPC_ID_UPDATE_MAP_FILTER":         13,
+		"STRATUM_QUERY_RPC_ID_MERGE":                     14,
+		"STRATUM_QUERY_RPC_ID_EXECUTE_MAP_QUERY":         15,
+		"STRATUM_QUERY_RPC_ID_LIST_ACTIVE_SESSIONS":      16,
+		"STRATUM_QUERY_RPC_ID_GET_SESSION_EVENTS":        17,
+		"STRATUM_QUERY_RPC_ID_GET_USER_SESSIONS":         18,
+		"STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_TIME_RANGE": 19,
+		"STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_EMAIL":      20,
+		"STRATUM_QUERY_RPC_ID_SUBSCRIBE_LIVE_SESSIONS":   21,
 	}
 )
 
@@ -626,7 +636,7 @@ const (
 	TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_ALL_ACCESSORS TimedbQueryRpcId = 1
 	TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_ALL_MUTATORS  TimedbQueryRpcId = 2
 	TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_ALL_EXECUTORS TimedbQueryRpcId = 3
-	TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_QUERY         TimedbQueryRpcId = 4
+	TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_EXECUTE_QUERY TimedbQueryRpcId = 4
 )
 
 // Enum value maps for TimedbQueryRpcId.
@@ -636,14 +646,14 @@ var (
 		1: "TIMEDB_QUERY_RPC_ID_ALL_ACCESSORS",
 		2: "TIMEDB_QUERY_RPC_ID_ALL_MUTATORS",
 		3: "TIMEDB_QUERY_RPC_ID_ALL_EXECUTORS",
-		4: "TIMEDB_QUERY_RPC_ID_QUERY",
+		4: "TIMEDB_QUERY_RPC_ID_EXECUTE_QUERY",
 	}
 	TimedbQueryRpcId_value = map[string]int32{
 		"TIMEDB_QUERY_RPC_ID_UNSPECIFIED":   0,
 		"TIMEDB_QUERY_RPC_ID_ALL_ACCESSORS": 1,
 		"TIMEDB_QUERY_RPC_ID_ALL_MUTATORS":  2,
 		"TIMEDB_QUERY_RPC_ID_ALL_EXECUTORS": 3,
-		"TIMEDB_QUERY_RPC_ID_QUERY":         4,
+		"TIMEDB_QUERY_RPC_ID_EXECUTE_QUERY": 4,
 	}
 )
 
@@ -2296,7 +2306,7 @@ func (x *EventTimeRange) GetNoop() bool {
 	return false
 }
 
-type NewMapRequest struct {
+type CreateMapRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// map_id is the caller-chosen name (e.g. "login-failures-march").
 	// Must be unique. Returns an error if the name is already in use.
@@ -2307,20 +2317,20 @@ type NewMapRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *NewMapRequest) Reset() {
-	*x = NewMapRequest{}
+func (x *CreateMapRequest) Reset() {
+	*x = CreateMapRequest{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *NewMapRequest) String() string {
+func (x *CreateMapRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*NewMapRequest) ProtoMessage() {}
+func (*CreateMapRequest) ProtoMessage() {}
 
-func (x *NewMapRequest) ProtoReflect() protoreflect.Message {
+func (x *CreateMapRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2332,33 +2342,33 @@ func (x *NewMapRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use NewMapRequest.ProtoReflect.Descriptor instead.
-func (*NewMapRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateMapRequest.ProtoReflect.Descriptor instead.
+func (*CreateMapRequest) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *NewMapRequest) GetMapId() string {
+func (x *CreateMapRequest) GetMapId() string {
 	if x != nil {
 		return x.MapId
 	}
 	return ""
 }
 
-func (x *NewMapRequest) GetTraceId() string {
+func (x *CreateMapRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *NewMapRequest) GetNoop() bool {
+func (x *CreateMapRequest) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
 	return false
 }
 
-type NewMapResponse struct {
+type CreateMapResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
@@ -2366,20 +2376,20 @@ type NewMapResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *NewMapResponse) Reset() {
-	*x = NewMapResponse{}
+func (x *CreateMapResponse) Reset() {
+	*x = CreateMapResponse{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *NewMapResponse) String() string {
+func (x *CreateMapResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*NewMapResponse) ProtoMessage() {}
+func (*CreateMapResponse) ProtoMessage() {}
 
-func (x *NewMapResponse) ProtoReflect() protoreflect.Message {
+func (x *CreateMapResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2391,19 +2401,19 @@ func (x *NewMapResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use NewMapResponse.ProtoReflect.Descriptor instead.
-func (*NewMapResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateMapResponse.ProtoReflect.Descriptor instead.
+func (*CreateMapResponse) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *NewMapResponse) GetTraceId() string {
+func (x *CreateMapResponse) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *NewMapResponse) GetNoop() bool {
+func (x *CreateMapResponse) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
@@ -2634,7 +2644,7 @@ func (x *ListMapsResponse) GetNoop() bool {
 	return false
 }
 
-type DescribeMapRequest struct {
+type GetMapDetailRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	MapId         string                 `protobuf:"bytes,1,opt,name=map_id,json=mapId,proto3" json:"map_id,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -2643,20 +2653,20 @@ type DescribeMapRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *DescribeMapRequest) Reset() {
-	*x = DescribeMapRequest{}
+func (x *GetMapDetailRequest) Reset() {
+	*x = GetMapDetailRequest{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *DescribeMapRequest) String() string {
+func (x *GetMapDetailRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DescribeMapRequest) ProtoMessage() {}
+func (*GetMapDetailRequest) ProtoMessage() {}
 
-func (x *DescribeMapRequest) ProtoReflect() protoreflect.Message {
+func (x *GetMapDetailRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2668,33 +2678,33 @@ func (x *DescribeMapRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DescribeMapRequest.ProtoReflect.Descriptor instead.
-func (*DescribeMapRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetMapDetailRequest.ProtoReflect.Descriptor instead.
+func (*GetMapDetailRequest) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{19}
 }
 
-func (x *DescribeMapRequest) GetMapId() string {
+func (x *GetMapDetailRequest) GetMapId() string {
 	if x != nil {
 		return x.MapId
 	}
 	return ""
 }
 
-func (x *DescribeMapRequest) GetTraceId() string {
+func (x *GetMapDetailRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *DescribeMapRequest) GetNoop() bool {
+func (x *GetMapDetailRequest) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
 	return false
 }
 
-type DescribeMapResponse struct {
+type GetMapDetailResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Detail        *MapDetail             `protobuf:"bytes,1,opt,name=detail,proto3" json:"detail,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -2703,20 +2713,20 @@ type DescribeMapResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *DescribeMapResponse) Reset() {
-	*x = DescribeMapResponse{}
+func (x *GetMapDetailResponse) Reset() {
+	*x = GetMapDetailResponse{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *DescribeMapResponse) String() string {
+func (x *GetMapDetailResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DescribeMapResponse) ProtoMessage() {}
+func (*GetMapDetailResponse) ProtoMessage() {}
 
-func (x *DescribeMapResponse) ProtoReflect() protoreflect.Message {
+func (x *GetMapDetailResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2728,26 +2738,26 @@ func (x *DescribeMapResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DescribeMapResponse.ProtoReflect.Descriptor instead.
-func (*DescribeMapResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetMapDetailResponse.ProtoReflect.Descriptor instead.
+func (*GetMapDetailResponse) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{20}
 }
 
-func (x *DescribeMapResponse) GetDetail() *MapDetail {
+func (x *GetMapDetailResponse) GetDetail() *MapDetail {
 	if x != nil {
 		return x.Detail
 	}
 	return nil
 }
 
-func (x *DescribeMapResponse) GetTraceId() string {
+func (x *GetMapDetailResponse) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *DescribeMapResponse) GetNoop() bool {
+func (x *GetMapDetailResponse) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
@@ -2883,7 +2893,7 @@ func (x *MapSizeResponse) GetNoop() bool {
 	return false
 }
 
-type LoadByIdsRequest struct {
+type UpdateMapByIdsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	MapId         string                 `protobuf:"bytes,1,opt,name=map_id,json=mapId,proto3" json:"map_id,omitempty"`
 	EventIds      []string               `protobuf:"bytes,2,rep,name=event_ids,json=eventIds,proto3" json:"event_ids,omitempty"`
@@ -2893,20 +2903,20 @@ type LoadByIdsRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *LoadByIdsRequest) Reset() {
-	*x = LoadByIdsRequest{}
+func (x *UpdateMapByIdsRequest) Reset() {
+	*x = UpdateMapByIdsRequest{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *LoadByIdsRequest) String() string {
+func (x *UpdateMapByIdsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LoadByIdsRequest) ProtoMessage() {}
+func (*UpdateMapByIdsRequest) ProtoMessage() {}
 
-func (x *LoadByIdsRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateMapByIdsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2918,40 +2928,40 @@ func (x *LoadByIdsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LoadByIdsRequest.ProtoReflect.Descriptor instead.
-func (*LoadByIdsRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateMapByIdsRequest.ProtoReflect.Descriptor instead.
+func (*UpdateMapByIdsRequest) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{23}
 }
 
-func (x *LoadByIdsRequest) GetMapId() string {
+func (x *UpdateMapByIdsRequest) GetMapId() string {
 	if x != nil {
 		return x.MapId
 	}
 	return ""
 }
 
-func (x *LoadByIdsRequest) GetEventIds() []string {
+func (x *UpdateMapByIdsRequest) GetEventIds() []string {
 	if x != nil {
 		return x.EventIds
 	}
 	return nil
 }
 
-func (x *LoadByIdsRequest) GetTraceId() string {
+func (x *UpdateMapByIdsRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *LoadByIdsRequest) GetNoop() bool {
+func (x *UpdateMapByIdsRequest) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
 	return false
 }
 
-type LoadByIdsResponse struct {
+type UpdateMapByIdsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	EventsAdded   int64                  `protobuf:"varint,1,opt,name=events_added,json=eventsAdded,proto3" json:"events_added,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -2960,20 +2970,20 @@ type LoadByIdsResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *LoadByIdsResponse) Reset() {
-	*x = LoadByIdsResponse{}
+func (x *UpdateMapByIdsResponse) Reset() {
+	*x = UpdateMapByIdsResponse{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *LoadByIdsResponse) String() string {
+func (x *UpdateMapByIdsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LoadByIdsResponse) ProtoMessage() {}
+func (*UpdateMapByIdsResponse) ProtoMessage() {}
 
-func (x *LoadByIdsResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateMapByIdsResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2985,33 +2995,33 @@ func (x *LoadByIdsResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LoadByIdsResponse.ProtoReflect.Descriptor instead.
-func (*LoadByIdsResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateMapByIdsResponse.ProtoReflect.Descriptor instead.
+func (*UpdateMapByIdsResponse) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{24}
 }
 
-func (x *LoadByIdsResponse) GetEventsAdded() int64 {
+func (x *UpdateMapByIdsResponse) GetEventsAdded() int64 {
 	if x != nil {
 		return x.EventsAdded
 	}
 	return 0
 }
 
-func (x *LoadByIdsResponse) GetTraceId() string {
+func (x *UpdateMapByIdsResponse) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *LoadByIdsResponse) GetNoop() bool {
+func (x *UpdateMapByIdsResponse) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
 	return false
 }
 
-type LoadBySqlRequest struct {
+type UpdateMapBySqlRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	MapId string                 `protobuf:"bytes,1,opt,name=map_id,json=mapId,proto3" json:"map_id,omitempty"`
 	// sql is a SQL SELECT against the hot event store (Apache Calcite).
@@ -3025,20 +3035,20 @@ type LoadBySqlRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *LoadBySqlRequest) Reset() {
-	*x = LoadBySqlRequest{}
+func (x *UpdateMapBySqlRequest) Reset() {
+	*x = UpdateMapBySqlRequest{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *LoadBySqlRequest) String() string {
+func (x *UpdateMapBySqlRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LoadBySqlRequest) ProtoMessage() {}
+func (*UpdateMapBySqlRequest) ProtoMessage() {}
 
-func (x *LoadBySqlRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateMapBySqlRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3050,40 +3060,40 @@ func (x *LoadBySqlRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LoadBySqlRequest.ProtoReflect.Descriptor instead.
-func (*LoadBySqlRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateMapBySqlRequest.ProtoReflect.Descriptor instead.
+func (*UpdateMapBySqlRequest) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{25}
 }
 
-func (x *LoadBySqlRequest) GetMapId() string {
+func (x *UpdateMapBySqlRequest) GetMapId() string {
 	if x != nil {
 		return x.MapId
 	}
 	return ""
 }
 
-func (x *LoadBySqlRequest) GetSql() string {
+func (x *UpdateMapBySqlRequest) GetSql() string {
 	if x != nil {
 		return x.Sql
 	}
 	return ""
 }
 
-func (x *LoadBySqlRequest) GetTraceId() string {
+func (x *UpdateMapBySqlRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *LoadBySqlRequest) GetNoop() bool {
+func (x *UpdateMapBySqlRequest) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
 	return false
 }
 
-type LoadBySqlResponse struct {
+type UpdateMapBySqlResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	EventsAdded   int64                  `protobuf:"varint,1,opt,name=events_added,json=eventsAdded,proto3" json:"events_added,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -3092,20 +3102,20 @@ type LoadBySqlResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *LoadBySqlResponse) Reset() {
-	*x = LoadBySqlResponse{}
+func (x *UpdateMapBySqlResponse) Reset() {
+	*x = UpdateMapBySqlResponse{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *LoadBySqlResponse) String() string {
+func (x *UpdateMapBySqlResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LoadBySqlResponse) ProtoMessage() {}
+func (*UpdateMapBySqlResponse) ProtoMessage() {}
 
-func (x *LoadBySqlResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateMapBySqlResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3117,33 +3127,33 @@ func (x *LoadBySqlResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LoadBySqlResponse.ProtoReflect.Descriptor instead.
-func (*LoadBySqlResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateMapBySqlResponse.ProtoReflect.Descriptor instead.
+func (*UpdateMapBySqlResponse) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{26}
 }
 
-func (x *LoadBySqlResponse) GetEventsAdded() int64 {
+func (x *UpdateMapBySqlResponse) GetEventsAdded() int64 {
 	if x != nil {
 		return x.EventsAdded
 	}
 	return 0
 }
 
-func (x *LoadBySqlResponse) GetTraceId() string {
+func (x *UpdateMapBySqlResponse) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *LoadBySqlResponse) GetNoop() bool {
+func (x *UpdateMapBySqlResponse) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
 	return false
 }
 
-type LoadByTimedbRequest struct {
+type UpdateMapByTimedbRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	MapId string                 `protobuf:"bytes,1,opt,name=map_id,json=mapId,proto3" json:"map_id,omitempty"`
 	// sql is a ClickHouse SQL query against TimeDB's event projection tables.
@@ -3157,20 +3167,20 @@ type LoadByTimedbRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *LoadByTimedbRequest) Reset() {
-	*x = LoadByTimedbRequest{}
+func (x *UpdateMapByTimedbRequest) Reset() {
+	*x = UpdateMapByTimedbRequest{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *LoadByTimedbRequest) String() string {
+func (x *UpdateMapByTimedbRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LoadByTimedbRequest) ProtoMessage() {}
+func (*UpdateMapByTimedbRequest) ProtoMessage() {}
 
-func (x *LoadByTimedbRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateMapByTimedbRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3182,40 +3192,40 @@ func (x *LoadByTimedbRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LoadByTimedbRequest.ProtoReflect.Descriptor instead.
-func (*LoadByTimedbRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateMapByTimedbRequest.ProtoReflect.Descriptor instead.
+func (*UpdateMapByTimedbRequest) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{27}
 }
 
-func (x *LoadByTimedbRequest) GetMapId() string {
+func (x *UpdateMapByTimedbRequest) GetMapId() string {
 	if x != nil {
 		return x.MapId
 	}
 	return ""
 }
 
-func (x *LoadByTimedbRequest) GetSql() string {
+func (x *UpdateMapByTimedbRequest) GetSql() string {
 	if x != nil {
 		return x.Sql
 	}
 	return ""
 }
 
-func (x *LoadByTimedbRequest) GetTraceId() string {
+func (x *UpdateMapByTimedbRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *LoadByTimedbRequest) GetNoop() bool {
+func (x *UpdateMapByTimedbRequest) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
 	return false
 }
 
-type LoadByTimedbResponse struct {
+type UpdateMapByTimedbResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	EventsAdded   int64                  `protobuf:"varint,1,opt,name=events_added,json=eventsAdded,proto3" json:"events_added,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -3224,20 +3234,20 @@ type LoadByTimedbResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *LoadByTimedbResponse) Reset() {
-	*x = LoadByTimedbResponse{}
+func (x *UpdateMapByTimedbResponse) Reset() {
+	*x = UpdateMapByTimedbResponse{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *LoadByTimedbResponse) String() string {
+func (x *UpdateMapByTimedbResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LoadByTimedbResponse) ProtoMessage() {}
+func (*UpdateMapByTimedbResponse) ProtoMessage() {}
 
-func (x *LoadByTimedbResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateMapByTimedbResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3249,33 +3259,33 @@ func (x *LoadByTimedbResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LoadByTimedbResponse.ProtoReflect.Descriptor instead.
-func (*LoadByTimedbResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateMapByTimedbResponse.ProtoReflect.Descriptor instead.
+func (*UpdateMapByTimedbResponse) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{28}
 }
 
-func (x *LoadByTimedbResponse) GetEventsAdded() int64 {
+func (x *UpdateMapByTimedbResponse) GetEventsAdded() int64 {
 	if x != nil {
 		return x.EventsAdded
 	}
 	return 0
 }
 
-func (x *LoadByTimedbResponse) GetTraceId() string {
+func (x *UpdateMapByTimedbResponse) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *LoadByTimedbResponse) GetNoop() bool {
+func (x *UpdateMapByTimedbResponse) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
 	return false
 }
 
-type LoadByGraphdbRequest struct {
+type UpdateMapByGraphdbRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	MapId string                 `protobuf:"bytes,1,opt,name=map_id,json=mapId,proto3" json:"map_id,omitempty"`
 	// dql is a DQL query against Dgraph's graph projection nodes.
@@ -3289,20 +3299,20 @@ type LoadByGraphdbRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *LoadByGraphdbRequest) Reset() {
-	*x = LoadByGraphdbRequest{}
+func (x *UpdateMapByGraphdbRequest) Reset() {
+	*x = UpdateMapByGraphdbRequest{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *LoadByGraphdbRequest) String() string {
+func (x *UpdateMapByGraphdbRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LoadByGraphdbRequest) ProtoMessage() {}
+func (*UpdateMapByGraphdbRequest) ProtoMessage() {}
 
-func (x *LoadByGraphdbRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateMapByGraphdbRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3314,40 +3324,40 @@ func (x *LoadByGraphdbRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LoadByGraphdbRequest.ProtoReflect.Descriptor instead.
-func (*LoadByGraphdbRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateMapByGraphdbRequest.ProtoReflect.Descriptor instead.
+func (*UpdateMapByGraphdbRequest) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{29}
 }
 
-func (x *LoadByGraphdbRequest) GetMapId() string {
+func (x *UpdateMapByGraphdbRequest) GetMapId() string {
 	if x != nil {
 		return x.MapId
 	}
 	return ""
 }
 
-func (x *LoadByGraphdbRequest) GetDql() string {
+func (x *UpdateMapByGraphdbRequest) GetDql() string {
 	if x != nil {
 		return x.Dql
 	}
 	return ""
 }
 
-func (x *LoadByGraphdbRequest) GetTraceId() string {
+func (x *UpdateMapByGraphdbRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *LoadByGraphdbRequest) GetNoop() bool {
+func (x *UpdateMapByGraphdbRequest) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
 	return false
 }
 
-type LoadByGraphdbResponse struct {
+type UpdateMapByGraphdbResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	EventsAdded   int64                  `protobuf:"varint,1,opt,name=events_added,json=eventsAdded,proto3" json:"events_added,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -3356,20 +3366,20 @@ type LoadByGraphdbResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *LoadByGraphdbResponse) Reset() {
-	*x = LoadByGraphdbResponse{}
+func (x *UpdateMapByGraphdbResponse) Reset() {
+	*x = UpdateMapByGraphdbResponse{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *LoadByGraphdbResponse) String() string {
+func (x *UpdateMapByGraphdbResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LoadByGraphdbResponse) ProtoMessage() {}
+func (*UpdateMapByGraphdbResponse) ProtoMessage() {}
 
-func (x *LoadByGraphdbResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateMapByGraphdbResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3381,33 +3391,33 @@ func (x *LoadByGraphdbResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LoadByGraphdbResponse.ProtoReflect.Descriptor instead.
-func (*LoadByGraphdbResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateMapByGraphdbResponse.ProtoReflect.Descriptor instead.
+func (*UpdateMapByGraphdbResponse) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{30}
 }
 
-func (x *LoadByGraphdbResponse) GetEventsAdded() int64 {
+func (x *UpdateMapByGraphdbResponse) GetEventsAdded() int64 {
 	if x != nil {
 		return x.EventsAdded
 	}
 	return 0
 }
 
-func (x *LoadByGraphdbResponse) GetTraceId() string {
+func (x *UpdateMapByGraphdbResponse) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *LoadByGraphdbResponse) GetNoop() bool {
+func (x *UpdateMapByGraphdbResponse) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
 	return false
 }
 
-type FilterMapRequest struct {
+type UpdateMapFilterRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	MapId string                 `protobuf:"bytes,1,opt,name=map_id,json=mapId,proto3" json:"map_id,omitempty"`
 	// sql is a SQL SELECT against the map. Events NOT in the result are removed.
@@ -3418,20 +3428,20 @@ type FilterMapRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *FilterMapRequest) Reset() {
-	*x = FilterMapRequest{}
+func (x *UpdateMapFilterRequest) Reset() {
+	*x = UpdateMapFilterRequest{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *FilterMapRequest) String() string {
+func (x *UpdateMapFilterRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*FilterMapRequest) ProtoMessage() {}
+func (*UpdateMapFilterRequest) ProtoMessage() {}
 
-func (x *FilterMapRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateMapFilterRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3443,40 +3453,40 @@ func (x *FilterMapRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FilterMapRequest.ProtoReflect.Descriptor instead.
-func (*FilterMapRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateMapFilterRequest.ProtoReflect.Descriptor instead.
+func (*UpdateMapFilterRequest) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{31}
 }
 
-func (x *FilterMapRequest) GetMapId() string {
+func (x *UpdateMapFilterRequest) GetMapId() string {
 	if x != nil {
 		return x.MapId
 	}
 	return ""
 }
 
-func (x *FilterMapRequest) GetSql() string {
+func (x *UpdateMapFilterRequest) GetSql() string {
 	if x != nil {
 		return x.Sql
 	}
 	return ""
 }
 
-func (x *FilterMapRequest) GetTraceId() string {
+func (x *UpdateMapFilterRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *FilterMapRequest) GetNoop() bool {
+func (x *UpdateMapFilterRequest) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
 	return false
 }
 
-type FilterMapResponse struct {
+type UpdateMapFilterResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	EventsRemoved int64                  `protobuf:"varint,1,opt,name=events_removed,json=eventsRemoved,proto3" json:"events_removed,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -3485,20 +3495,20 @@ type FilterMapResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *FilterMapResponse) Reset() {
-	*x = FilterMapResponse{}
+func (x *UpdateMapFilterResponse) Reset() {
+	*x = UpdateMapFilterResponse{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *FilterMapResponse) String() string {
+func (x *UpdateMapFilterResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*FilterMapResponse) ProtoMessage() {}
+func (*UpdateMapFilterResponse) ProtoMessage() {}
 
-func (x *FilterMapResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateMapFilterResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3510,26 +3520,26 @@ func (x *FilterMapResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FilterMapResponse.ProtoReflect.Descriptor instead.
-func (*FilterMapResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateMapFilterResponse.ProtoReflect.Descriptor instead.
+func (*UpdateMapFilterResponse) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{32}
 }
 
-func (x *FilterMapResponse) GetEventsRemoved() int64 {
+func (x *UpdateMapFilterResponse) GetEventsRemoved() int64 {
 	if x != nil {
 		return x.EventsRemoved
 	}
 	return 0
 }
 
-func (x *FilterMapResponse) GetTraceId() string {
+func (x *UpdateMapFilterResponse) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *FilterMapResponse) GetNoop() bool {
+func (x *UpdateMapFilterResponse) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
@@ -3665,7 +3675,7 @@ func (x *MergeResponse) GetNoop() bool {
 	return false
 }
 
-type QueryMapRequest struct {
+type ExecuteMapQueryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	MapId string                 `protobuf:"bytes,1,opt,name=map_id,json=mapId,proto3" json:"map_id,omitempty"`
 	// sql is a SQL SELECT over the working-set map (Apache Calcite).
@@ -3677,20 +3687,20 @@ type QueryMapRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *QueryMapRequest) Reset() {
-	*x = QueryMapRequest{}
+func (x *ExecuteMapQueryRequest) Reset() {
+	*x = ExecuteMapQueryRequest{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *QueryMapRequest) String() string {
+func (x *ExecuteMapQueryRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueryMapRequest) ProtoMessage() {}
+func (*ExecuteMapQueryRequest) ProtoMessage() {}
 
-func (x *QueryMapRequest) ProtoReflect() protoreflect.Message {
+func (x *ExecuteMapQueryRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3702,47 +3712,47 @@ func (x *QueryMapRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use QueryMapRequest.ProtoReflect.Descriptor instead.
-func (*QueryMapRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use ExecuteMapQueryRequest.ProtoReflect.Descriptor instead.
+func (*ExecuteMapQueryRequest) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{35}
 }
 
-func (x *QueryMapRequest) GetMapId() string {
+func (x *ExecuteMapQueryRequest) GetMapId() string {
 	if x != nil {
 		return x.MapId
 	}
 	return ""
 }
 
-func (x *QueryMapRequest) GetSql() string {
+func (x *ExecuteMapQueryRequest) GetSql() string {
 	if x != nil {
 		return x.Sql
 	}
 	return ""
 }
 
-func (x *QueryMapRequest) GetLimit() int32 {
+func (x *ExecuteMapQueryRequest) GetLimit() int32 {
 	if x != nil {
 		return x.Limit
 	}
 	return 0
 }
 
-func (x *QueryMapRequest) GetTraceId() string {
+func (x *ExecuteMapQueryRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *QueryMapRequest) GetNoop() bool {
+func (x *ExecuteMapQueryRequest) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
 	return false
 }
 
-type QueryMapResponse struct {
+type ExecuteMapQueryResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// results_json is a JSON array of row objects.
 	ResultsJson   string `protobuf:"bytes,1,opt,name=results_json,json=resultsJson,proto3" json:"results_json,omitempty"`
@@ -3753,20 +3763,20 @@ type QueryMapResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *QueryMapResponse) Reset() {
-	*x = QueryMapResponse{}
+func (x *ExecuteMapQueryResponse) Reset() {
+	*x = ExecuteMapQueryResponse{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *QueryMapResponse) String() string {
+func (x *ExecuteMapQueryResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueryMapResponse) ProtoMessage() {}
+func (*ExecuteMapQueryResponse) ProtoMessage() {}
 
-func (x *QueryMapResponse) ProtoReflect() protoreflect.Message {
+func (x *ExecuteMapQueryResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3778,33 +3788,33 @@ func (x *QueryMapResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use QueryMapResponse.ProtoReflect.Descriptor instead.
-func (*QueryMapResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ExecuteMapQueryResponse.ProtoReflect.Descriptor instead.
+func (*ExecuteMapQueryResponse) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{36}
 }
 
-func (x *QueryMapResponse) GetResultsJson() string {
+func (x *ExecuteMapQueryResponse) GetResultsJson() string {
 	if x != nil {
 		return x.ResultsJson
 	}
 	return ""
 }
 
-func (x *QueryMapResponse) GetTotalRows() int64 {
+func (x *ExecuteMapQueryResponse) GetTotalRows() int64 {
 	if x != nil {
 		return x.TotalRows
 	}
 	return 0
 }
 
-func (x *QueryMapResponse) GetTraceId() string {
+func (x *ExecuteMapQueryResponse) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *QueryMapResponse) GetNoop() bool {
+func (x *ExecuteMapQueryResponse) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
@@ -4255,7 +4265,7 @@ func (x *GetUserSessionsResponse) GetNoop() bool {
 	return false
 }
 
-type QueryByTimeRangeRequest struct {
+type ListEventsByTimeRangeRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TimeRange     *EventTimeRange        `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
 	PageToken     string                 `protobuf:"bytes,2,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
@@ -4266,20 +4276,20 @@ type QueryByTimeRangeRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *QueryByTimeRangeRequest) Reset() {
-	*x = QueryByTimeRangeRequest{}
+func (x *ListEventsByTimeRangeRequest) Reset() {
+	*x = ListEventsByTimeRangeRequest{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *QueryByTimeRangeRequest) String() string {
+func (x *ListEventsByTimeRangeRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueryByTimeRangeRequest) ProtoMessage() {}
+func (*ListEventsByTimeRangeRequest) ProtoMessage() {}
 
-func (x *QueryByTimeRangeRequest) ProtoReflect() protoreflect.Message {
+func (x *ListEventsByTimeRangeRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -4291,47 +4301,47 @@ func (x *QueryByTimeRangeRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use QueryByTimeRangeRequest.ProtoReflect.Descriptor instead.
-func (*QueryByTimeRangeRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListEventsByTimeRangeRequest.ProtoReflect.Descriptor instead.
+func (*ListEventsByTimeRangeRequest) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{43}
 }
 
-func (x *QueryByTimeRangeRequest) GetTimeRange() *EventTimeRange {
+func (x *ListEventsByTimeRangeRequest) GetTimeRange() *EventTimeRange {
 	if x != nil {
 		return x.TimeRange
 	}
 	return nil
 }
 
-func (x *QueryByTimeRangeRequest) GetPageToken() string {
+func (x *ListEventsByTimeRangeRequest) GetPageToken() string {
 	if x != nil {
 		return x.PageToken
 	}
 	return ""
 }
 
-func (x *QueryByTimeRangeRequest) GetPageSize() int32 {
+func (x *ListEventsByTimeRangeRequest) GetPageSize() int32 {
 	if x != nil {
 		return x.PageSize
 	}
 	return 0
 }
 
-func (x *QueryByTimeRangeRequest) GetTraceId() string {
+func (x *ListEventsByTimeRangeRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *QueryByTimeRangeRequest) GetNoop() bool {
+func (x *ListEventsByTimeRangeRequest) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
 	return false
 }
 
-type QueryByTimeRangeResponse struct {
+type ListEventsByTimeRangeResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Events        []*SensorEvent         `protobuf:"bytes,1,rep,name=events,proto3" json:"events,omitempty"`
 	NextPageToken string                 `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
@@ -4341,20 +4351,20 @@ type QueryByTimeRangeResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *QueryByTimeRangeResponse) Reset() {
-	*x = QueryByTimeRangeResponse{}
+func (x *ListEventsByTimeRangeResponse) Reset() {
+	*x = ListEventsByTimeRangeResponse{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *QueryByTimeRangeResponse) String() string {
+func (x *ListEventsByTimeRangeResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueryByTimeRangeResponse) ProtoMessage() {}
+func (*ListEventsByTimeRangeResponse) ProtoMessage() {}
 
-func (x *QueryByTimeRangeResponse) ProtoReflect() protoreflect.Message {
+func (x *ListEventsByTimeRangeResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -4366,40 +4376,40 @@ func (x *QueryByTimeRangeResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use QueryByTimeRangeResponse.ProtoReflect.Descriptor instead.
-func (*QueryByTimeRangeResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListEventsByTimeRangeResponse.ProtoReflect.Descriptor instead.
+func (*ListEventsByTimeRangeResponse) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{44}
 }
 
-func (x *QueryByTimeRangeResponse) GetEvents() []*SensorEvent {
+func (x *ListEventsByTimeRangeResponse) GetEvents() []*SensorEvent {
 	if x != nil {
 		return x.Events
 	}
 	return nil
 }
 
-func (x *QueryByTimeRangeResponse) GetNextPageToken() string {
+func (x *ListEventsByTimeRangeResponse) GetNextPageToken() string {
 	if x != nil {
 		return x.NextPageToken
 	}
 	return ""
 }
 
-func (x *QueryByTimeRangeResponse) GetTraceId() string {
+func (x *ListEventsByTimeRangeResponse) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *QueryByTimeRangeResponse) GetNoop() bool {
+func (x *ListEventsByTimeRangeResponse) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
 	return false
 }
 
-type QueryByEmailRequest struct {
+type ListEventsByEmailRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
 	TimeRange     *EventTimeRange        `protobuf:"bytes,2,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
@@ -4411,20 +4421,20 @@ type QueryByEmailRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *QueryByEmailRequest) Reset() {
-	*x = QueryByEmailRequest{}
+func (x *ListEventsByEmailRequest) Reset() {
+	*x = ListEventsByEmailRequest{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *QueryByEmailRequest) String() string {
+func (x *ListEventsByEmailRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueryByEmailRequest) ProtoMessage() {}
+func (*ListEventsByEmailRequest) ProtoMessage() {}
 
-func (x *QueryByEmailRequest) ProtoReflect() protoreflect.Message {
+func (x *ListEventsByEmailRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -4436,54 +4446,54 @@ func (x *QueryByEmailRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use QueryByEmailRequest.ProtoReflect.Descriptor instead.
-func (*QueryByEmailRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListEventsByEmailRequest.ProtoReflect.Descriptor instead.
+func (*ListEventsByEmailRequest) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{45}
 }
 
-func (x *QueryByEmailRequest) GetEmail() string {
+func (x *ListEventsByEmailRequest) GetEmail() string {
 	if x != nil {
 		return x.Email
 	}
 	return ""
 }
 
-func (x *QueryByEmailRequest) GetTimeRange() *EventTimeRange {
+func (x *ListEventsByEmailRequest) GetTimeRange() *EventTimeRange {
 	if x != nil {
 		return x.TimeRange
 	}
 	return nil
 }
 
-func (x *QueryByEmailRequest) GetPageToken() string {
+func (x *ListEventsByEmailRequest) GetPageToken() string {
 	if x != nil {
 		return x.PageToken
 	}
 	return ""
 }
 
-func (x *QueryByEmailRequest) GetPageSize() int32 {
+func (x *ListEventsByEmailRequest) GetPageSize() int32 {
 	if x != nil {
 		return x.PageSize
 	}
 	return 0
 }
 
-func (x *QueryByEmailRequest) GetTraceId() string {
+func (x *ListEventsByEmailRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *QueryByEmailRequest) GetNoop() bool {
+func (x *ListEventsByEmailRequest) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
 	return false
 }
 
-type QueryByEmailResponse struct {
+type ListEventsByEmailResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Events        []*SensorEvent         `protobuf:"bytes,1,rep,name=events,proto3" json:"events,omitempty"`
 	NextPageToken string                 `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
@@ -4493,20 +4503,20 @@ type QueryByEmailResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *QueryByEmailResponse) Reset() {
-	*x = QueryByEmailResponse{}
+func (x *ListEventsByEmailResponse) Reset() {
+	*x = ListEventsByEmailResponse{}
 	mi := &file_vservices_claude_sensor_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *QueryByEmailResponse) String() string {
+func (x *ListEventsByEmailResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueryByEmailResponse) ProtoMessage() {}
+func (*ListEventsByEmailResponse) ProtoMessage() {}
 
-func (x *QueryByEmailResponse) ProtoReflect() protoreflect.Message {
+func (x *ListEventsByEmailResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_vservices_claude_sensor_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -4518,33 +4528,33 @@ func (x *QueryByEmailResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use QueryByEmailResponse.ProtoReflect.Descriptor instead.
-func (*QueryByEmailResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListEventsByEmailResponse.ProtoReflect.Descriptor instead.
+func (*ListEventsByEmailResponse) Descriptor() ([]byte, []int) {
 	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{46}
 }
 
-func (x *QueryByEmailResponse) GetEvents() []*SensorEvent {
+func (x *ListEventsByEmailResponse) GetEvents() []*SensorEvent {
 	if x != nil {
 		return x.Events
 	}
 	return nil
 }
 
-func (x *QueryByEmailResponse) GetNextPageToken() string {
+func (x *ListEventsByEmailResponse) GetNextPageToken() string {
 	if x != nil {
 		return x.NextPageToken
 	}
 	return ""
 }
 
-func (x *QueryByEmailResponse) GetTraceId() string {
+func (x *ListEventsByEmailResponse) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *QueryByEmailResponse) GetNoop() bool {
+func (x *ListEventsByEmailResponse) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
@@ -5071,6 +5081,142 @@ func (x *DqlQueryResponse) GetNoop() bool {
 	return false
 }
 
+type AgenticCodeEventBusEventStreamSubscribeRecord struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Meta          *EventBusRecordMeta    `protobuf:"bytes,1,opt,name=meta,proto3" json:"meta,omitempty"`
+	Payload       *SensorEvent           `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AgenticCodeEventBusEventStreamSubscribeRecord) Reset() {
+	*x = AgenticCodeEventBusEventStreamSubscribeRecord{}
+	mi := &file_vservices_claude_sensor_proto_msgTypes[53]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AgenticCodeEventBusEventStreamSubscribeRecord) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AgenticCodeEventBusEventStreamSubscribeRecord) ProtoMessage() {}
+
+func (x *AgenticCodeEventBusEventStreamSubscribeRecord) ProtoReflect() protoreflect.Message {
+	mi := &file_vservices_claude_sensor_proto_msgTypes[53]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AgenticCodeEventBusEventStreamSubscribeRecord.ProtoReflect.Descriptor instead.
+func (*AgenticCodeEventBusEventStreamSubscribeRecord) Descriptor() ([]byte, []int) {
+	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{53}
+}
+
+func (x *AgenticCodeEventBusEventStreamSubscribeRecord) GetMeta() *EventBusRecordMeta {
+	if x != nil {
+		return x.Meta
+	}
+	return nil
+}
+
+func (x *AgenticCodeEventBusEventStreamSubscribeRecord) GetPayload() *SensorEvent {
+	if x != nil {
+		return x.Payload
+	}
+	return nil
+}
+
+func (x *AgenticCodeEventBusEventStreamSubscribeRecord) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *AgenticCodeEventBusEventStreamSubscribeRecord) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type TraceEventBusTraceEventsSubscribeRecord struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Meta          *EventBusRecordMeta    `protobuf:"bytes,1,opt,name=meta,proto3" json:"meta,omitempty"`
+	Payload       *trace.TraceEvent      `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TraceEventBusTraceEventsSubscribeRecord) Reset() {
+	*x = TraceEventBusTraceEventsSubscribeRecord{}
+	mi := &file_vservices_claude_sensor_proto_msgTypes[54]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TraceEventBusTraceEventsSubscribeRecord) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TraceEventBusTraceEventsSubscribeRecord) ProtoMessage() {}
+
+func (x *TraceEventBusTraceEventsSubscribeRecord) ProtoReflect() protoreflect.Message {
+	mi := &file_vservices_claude_sensor_proto_msgTypes[54]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TraceEventBusTraceEventsSubscribeRecord.ProtoReflect.Descriptor instead.
+func (*TraceEventBusTraceEventsSubscribeRecord) Descriptor() ([]byte, []int) {
+	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{54}
+}
+
+func (x *TraceEventBusTraceEventsSubscribeRecord) GetMeta() *EventBusRecordMeta {
+	if x != nil {
+		return x.Meta
+	}
+	return nil
+}
+
+func (x *TraceEventBusTraceEventsSubscribeRecord) GetPayload() *trace.TraceEvent {
+	if x != nil {
+		return x.Payload
+	}
+	return nil
+}
+
+func (x *TraceEventBusTraceEventsSubscribeRecord) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *TraceEventBusTraceEventsSubscribeRecord) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
 type MapEmpty struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -5081,7 +5227,7 @@ type MapEmpty struct {
 
 func (x *MapEmpty) Reset() {
 	*x = MapEmpty{}
-	mi := &file_vservices_claude_sensor_proto_msgTypes[53]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5093,7 +5239,7 @@ func (x *MapEmpty) String() string {
 func (*MapEmpty) ProtoMessage() {}
 
 func (x *MapEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_claude_sensor_proto_msgTypes[53]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5106,7 +5252,7 @@ func (x *MapEmpty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MapEmpty.ProtoReflect.Descriptor instead.
 func (*MapEmpty) Descriptor() ([]byte, []int) {
-	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{53}
+	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *MapEmpty) GetTraceId() string {
@@ -5134,7 +5280,7 @@ type TopicPublishReceipt struct {
 
 func (x *TopicPublishReceipt) Reset() {
 	*x = TopicPublishReceipt{}
-	mi := &file_vservices_claude_sensor_proto_msgTypes[54]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5146,7 +5292,7 @@ func (x *TopicPublishReceipt) String() string {
 func (*TopicPublishReceipt) ProtoMessage() {}
 
 func (x *TopicPublishReceipt) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_claude_sensor_proto_msgTypes[54]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5159,7 +5305,7 @@ func (x *TopicPublishReceipt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TopicPublishReceipt.ProtoReflect.Descriptor instead.
 func (*TopicPublishReceipt) Descriptor() ([]byte, []int) {
-	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{54}
+	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *TopicPublishReceipt) GetPublished() bool {
@@ -5183,6 +5329,98 @@ func (x *TopicPublishReceipt) GetNoop() bool {
 	return false
 }
 
+type EventBusRecordMeta struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Key           []byte                 `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	Topic         string                 `protobuf:"bytes,2,opt,name=topic,proto3" json:"topic,omitempty"`
+	Partition     int32                  `protobuf:"varint,3,opt,name=partition,proto3" json:"partition,omitempty"`
+	Offset        int64                  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`
+	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EventBusRecordMeta) Reset() {
+	*x = EventBusRecordMeta{}
+	mi := &file_vservices_claude_sensor_proto_msgTypes[57]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EventBusRecordMeta) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EventBusRecordMeta) ProtoMessage() {}
+
+func (x *EventBusRecordMeta) ProtoReflect() protoreflect.Message {
+	mi := &file_vservices_claude_sensor_proto_msgTypes[57]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EventBusRecordMeta.ProtoReflect.Descriptor instead.
+func (*EventBusRecordMeta) Descriptor() ([]byte, []int) {
+	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{57}
+}
+
+func (x *EventBusRecordMeta) GetKey() []byte {
+	if x != nil {
+		return x.Key
+	}
+	return nil
+}
+
+func (x *EventBusRecordMeta) GetTopic() string {
+	if x != nil {
+		return x.Topic
+	}
+	return ""
+}
+
+func (x *EventBusRecordMeta) GetPartition() int32 {
+	if x != nil {
+		return x.Partition
+	}
+	return 0
+}
+
+func (x *EventBusRecordMeta) GetOffset() int64 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
+}
+
+func (x *EventBusRecordMeta) GetTimestamp() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Timestamp
+	}
+	return nil
+}
+
+func (x *EventBusRecordMeta) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *EventBusRecordMeta) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
 // SessionNode — auto-generated graph projection of claudesensor.SensorEvent.
 type SessionNode struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
@@ -5200,7 +5438,7 @@ type SessionNode struct {
 
 func (x *SessionNode) Reset() {
 	*x = SessionNode{}
-	mi := &file_vservices_claude_sensor_proto_msgTypes[55]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5212,7 +5450,7 @@ func (x *SessionNode) String() string {
 func (*SessionNode) ProtoMessage() {}
 
 func (x *SessionNode) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_claude_sensor_proto_msgTypes[55]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5225,7 +5463,7 @@ func (x *SessionNode) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SessionNode.ProtoReflect.Descriptor instead.
 func (*SessionNode) Descriptor() ([]byte, []int) {
-	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{55}
+	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *SessionNode) GetSessionId() string {
@@ -5302,7 +5540,7 @@ type AgentNode struct {
 
 func (x *AgentNode) Reset() {
 	*x = AgentNode{}
-	mi := &file_vservices_claude_sensor_proto_msgTypes[56]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5314,7 +5552,7 @@ func (x *AgentNode) String() string {
 func (*AgentNode) ProtoMessage() {}
 
 func (x *AgentNode) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_claude_sensor_proto_msgTypes[56]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5327,7 +5565,7 @@ func (x *AgentNode) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AgentNode.ProtoReflect.Descriptor instead.
 func (*AgentNode) Descriptor() ([]byte, []int) {
-	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{56}
+	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *AgentNode) GetAgentId() string {
@@ -5413,7 +5651,7 @@ type ToolUseNode struct {
 
 func (x *ToolUseNode) Reset() {
 	*x = ToolUseNode{}
-	mi := &file_vservices_claude_sensor_proto_msgTypes[57]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5425,7 +5663,7 @@ func (x *ToolUseNode) String() string {
 func (*ToolUseNode) ProtoMessage() {}
 
 func (x *ToolUseNode) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_claude_sensor_proto_msgTypes[57]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5438,7 +5676,7 @@ func (x *ToolUseNode) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ToolUseNode.ProtoReflect.Descriptor instead.
 func (*ToolUseNode) Descriptor() ([]byte, []int) {
-	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{57}
+	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *ToolUseNode) GetToolUseId() string {
@@ -5540,7 +5778,7 @@ type SessionRecord struct {
 
 func (x *SessionRecord) Reset() {
 	*x = SessionRecord{}
-	mi := &file_vservices_claude_sensor_proto_msgTypes[58]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5552,7 +5790,7 @@ func (x *SessionRecord) String() string {
 func (*SessionRecord) ProtoMessage() {}
 
 func (x *SessionRecord) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_claude_sensor_proto_msgTypes[58]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5565,7 +5803,7 @@ func (x *SessionRecord) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SessionRecord.ProtoReflect.Descriptor instead.
 func (*SessionRecord) Descriptor() ([]byte, []int) {
-	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{58}
+	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *SessionRecord) GetSessionId() string {
@@ -5682,7 +5920,7 @@ type ToolUseRecord struct {
 
 func (x *ToolUseRecord) Reset() {
 	*x = ToolUseRecord{}
-	mi := &file_vservices_claude_sensor_proto_msgTypes[59]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5694,7 +5932,7 @@ func (x *ToolUseRecord) String() string {
 func (*ToolUseRecord) ProtoMessage() {}
 
 func (x *ToolUseRecord) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_claude_sensor_proto_msgTypes[59]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5707,7 +5945,7 @@ func (x *ToolUseRecord) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ToolUseRecord.ProtoReflect.Descriptor instead.
 func (*ToolUseRecord) Descriptor() ([]byte, []int) {
-	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{59}
+	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{62}
 }
 
 func (x *ToolUseRecord) GetSessionId() string {
@@ -5832,7 +6070,7 @@ type SubagentRecord struct {
 
 func (x *SubagentRecord) Reset() {
 	*x = SubagentRecord{}
-	mi := &file_vservices_claude_sensor_proto_msgTypes[60]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[63]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5844,7 +6082,7 @@ func (x *SubagentRecord) String() string {
 func (*SubagentRecord) ProtoMessage() {}
 
 func (x *SubagentRecord) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_claude_sensor_proto_msgTypes[60]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[63]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5857,7 +6095,7 @@ func (x *SubagentRecord) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubagentRecord.ProtoReflect.Descriptor instead.
 func (*SubagentRecord) Descriptor() ([]byte, []int) {
-	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{60}
+	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{63}
 }
 
 func (x *SubagentRecord) GetSessionId() string {
@@ -5986,7 +6224,7 @@ type PromptRecord struct {
 
 func (x *PromptRecord) Reset() {
 	*x = PromptRecord{}
-	mi := &file_vservices_claude_sensor_proto_msgTypes[61]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[64]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5998,7 +6236,7 @@ func (x *PromptRecord) String() string {
 func (*PromptRecord) ProtoMessage() {}
 
 func (x *PromptRecord) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_claude_sensor_proto_msgTypes[61]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[64]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6011,7 +6249,7 @@ func (x *PromptRecord) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PromptRecord.ProtoReflect.Descriptor instead.
 func (*PromptRecord) Descriptor() ([]byte, []int) {
-	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{61}
+	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{64}
 }
 
 func (x *PromptRecord) GetSessionId() string {
@@ -6118,7 +6356,7 @@ type StopRecord struct {
 
 func (x *StopRecord) Reset() {
 	*x = StopRecord{}
-	mi := &file_vservices_claude_sensor_proto_msgTypes[62]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6130,7 +6368,7 @@ func (x *StopRecord) String() string {
 func (*StopRecord) ProtoMessage() {}
 
 func (x *StopRecord) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_claude_sensor_proto_msgTypes[62]
+	mi := &file_vservices_claude_sensor_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6143,7 +6381,7 @@ func (x *StopRecord) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StopRecord.ProtoReflect.Descriptor instead.
 func (*StopRecord) Descriptor() ([]byte, []int) {
-	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{62}
+	return file_vservices_claude_sensor_proto_rawDescGZIP(), []int{65}
 }
 
 func (x *StopRecord) GetSessionId() string {
@@ -6227,7 +6465,7 @@ var File_vservices_claude_sensor_proto protoreflect.FileDescriptor
 
 const file_vservices_claude_sensor_proto_rawDesc = "" +
 	"\n" +
-	"\x1dvservices/claude-sensor.proto\x12\fclaudesensor\x1a\x0flibs/spec.proto\x1a\x10libs/trace.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xad\x01\n" +
+	"\x1dvservices/claude-sensor.proto\x12\fclaudesensor\x1a\x0flibs/spec.proto\x1a\x10libs/trace.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xad\x01\n" +
 	"\fSessionEvent\x12 \n" +
 	"\x06source\x18\x01 \x01(\tB\b\x88\xa6\x1d\x01\x90\xa7\x1d@R\x06source\x12\x1b\n" +
 	"\x05model\x18\x02 \x01(\tB\x05\x90\xa7\x1d\x80\x01R\x05model\x12-\n" +
@@ -6473,12 +6711,12 @@ const file_vservices_claude_sensor_proto_rawDesc = "" +
 	"\bstart_ms\x18\x01 \x01(\x03B\x04\x88\xa6\x1d\x01R\astartMs\x12\x1b\n" +
 	"\x06end_ms\x18\x02 \x01(\x03B\x04\x88\xa6\x1d\x01R\x05endMs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"b\n" +
-	"\rNewMapRequest\x12 \n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"e\n" +
+	"\x10CreateMapRequest\x12 \n" +
 	"\x06map_id\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x01R\x05mapId\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"A\n" +
-	"\x0eNewMapResponse\x12\x1a\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"D\n" +
+	"\x11CreateMapResponse\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"`\n" +
 	"\x10DeleteMapRequest\x12\x1b\n" +
@@ -6494,12 +6732,12 @@ const file_vservices_claude_sensor_proto_rawDesc = "" +
 	"\x10ListMapsResponse\x121\n" +
 	"\x04maps\x18\x01 \x03(\v2\x16.claudesensor.MapEntryB\x05\xb8\xa8\x1d\x90NR\x04maps\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"b\n" +
-	"\x12DescribeMapRequest\x12\x1b\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"c\n" +
+	"\x13GetMapDetailRequest\x12\x1b\n" +
 	"\x06map_id\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\x05mapId\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"w\n" +
-	"\x13DescribeMapResponse\x12/\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"x\n" +
+	"\x14GetMapDetailResponse\x12/\n" +
 	"\x06detail\x18\x01 \x01(\v2\x17.claudesensor.MapDetailR\x06detail\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"^\n" +
@@ -6512,49 +6750,49 @@ const file_vservices_claude_sensor_proto_rawDesc = "" +
 	"eventCount\x12\x17\n" +
 	"\asize_mb\x18\x02 \x01(\x03R\x06sizeMb\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x88\x01\n" +
-	"\x10LoadByIdsRequest\x12\x1b\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x8d\x01\n" +
+	"\x15UpdateMapByIdsRequest\x12\x1b\n" +
 	"\x06map_id\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\x05mapId\x12&\n" +
 	"\tevent_ids\x18\x02 \x03(\tB\t\xb8\xa8\x1d\x90N\xa0\xa9\x1d\x01R\beventIds\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"g\n" +
-	"\x11LoadByIdsResponse\x12!\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"l\n" +
+	"\x16UpdateMapByIdsResponse\x12!\n" +
 	"\fevents_added\x18\x01 \x01(\x03R\veventsAdded\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"x\n" +
-	"\x10LoadBySqlRequest\x12\x1b\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"}\n" +
+	"\x15UpdateMapBySqlRequest\x12\x1b\n" +
 	"\x06map_id\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\x05mapId\x12\x16\n" +
 	"\x03sql\x18\x02 \x01(\tB\x04\x88\xa6\x1d\x01R\x03sql\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"g\n" +
-	"\x11LoadBySqlResponse\x12!\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"l\n" +
+	"\x16UpdateMapBySqlResponse\x12!\n" +
 	"\fevents_added\x18\x01 \x01(\x03R\veventsAdded\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"{\n" +
-	"\x13LoadByTimedbRequest\x12\x1b\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x80\x01\n" +
+	"\x18UpdateMapByTimedbRequest\x12\x1b\n" +
 	"\x06map_id\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\x05mapId\x12\x16\n" +
 	"\x03sql\x18\x02 \x01(\tB\x04\x88\xa6\x1d\x01R\x03sql\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"j\n" +
-	"\x14LoadByTimedbResponse\x12!\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"o\n" +
+	"\x19UpdateMapByTimedbResponse\x12!\n" +
 	"\fevents_added\x18\x01 \x01(\x03R\veventsAdded\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"|\n" +
-	"\x14LoadByGraphdbRequest\x12\x1b\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x81\x01\n" +
+	"\x19UpdateMapByGraphdbRequest\x12\x1b\n" +
 	"\x06map_id\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\x05mapId\x12\x16\n" +
 	"\x03dql\x18\x02 \x01(\tB\x04\x88\xa6\x1d\x01R\x03dql\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"k\n" +
-	"\x15LoadByGraphdbResponse\x12!\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"p\n" +
+	"\x1aUpdateMapByGraphdbResponse\x12!\n" +
 	"\fevents_added\x18\x01 \x01(\x03R\veventsAdded\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"x\n" +
-	"\x10FilterMapRequest\x12\x1b\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"~\n" +
+	"\x16UpdateMapFilterRequest\x12\x1b\n" +
 	"\x06map_id\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\x05mapId\x12\x16\n" +
 	"\x03sql\x18\x02 \x01(\tB\x04\x88\xa6\x1d\x01R\x03sql\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"k\n" +
-	"\x11FilterMapResponse\x12%\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"q\n" +
+	"\x17UpdateMapFilterResponse\x12%\n" +
 	"\x0eevents_removed\x18\x01 \x01(\x03R\reventsRemoved\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x89\x01\n" +
@@ -6567,14 +6805,14 @@ const file_vservices_claude_sensor_proto_rawDesc = "" +
 	"\rMergeResponse\x12!\n" +
 	"\fevents_added\x18\x01 \x01(\x03R\veventsAdded\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x97\x01\n" +
-	"\x0fQueryMapRequest\x12\x1b\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9e\x01\n" +
+	"\x16ExecuteMapQueryRequest\x12\x1b\n" +
 	"\x06map_id\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\x05mapId\x12\x16\n" +
 	"\x03sql\x18\x02 \x01(\tB\x04\x88\xa6\x1d\x01R\x03sql\x12\x1e\n" +
 	"\x05limit\x18\x03 \x01(\x05B\b\xb0\xa7\x1d\x01\x90\xa8\x1ddR\x05limit\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x85\x01\n" +
-	"\x10QueryMapResponse\x12!\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x8c\x01\n" +
+	"\x17ExecuteMapQueryResponse\x12!\n" +
 	"\fresults_json\x18\x01 \x01(\tR\vresultsJson\x12\x1d\n" +
 	"\n" +
 	"total_rows\x18\x02 \x01(\x03R\ttotalRows\x12\x1a\n" +
@@ -6619,21 +6857,21 @@ const file_vservices_claude_sensor_proto_rawDesc = "" +
 	"\bsessions\x18\x01 \x03(\v2\x1c.claudesensor.SessionSummaryB\x05\xb8\xa8\x1d\x90NR\bsessions\x12&\n" +
 	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd8\x01\n" +
-	"\x17QueryByTimeRangeRequest\x12A\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xdd\x01\n" +
+	"\x1cListEventsByTimeRangeRequest\x12A\n" +
 	"\n" +
 	"time_range\x18\x01 \x01(\v2\x1c.claudesensor.EventTimeRangeB\x04\x88\xa6\x1d\x01R\ttimeRange\x12\x1d\n" +
 	"\n" +
 	"page_token\x18\x02 \x01(\tR\tpageToken\x12*\n" +
 	"\tpage_size\x18\x03 \x01(\x05B\r\xb0\xa7\x1d\x01\xc0\xa7\x1d\xe8\a\x90\xa8\x1ddR\bpageSize\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xad\x01\n" +
-	"\x18QueryByTimeRangeResponse\x128\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb2\x01\n" +
+	"\x1dListEventsByTimeRangeResponse\x128\n" +
 	"\x06events\x18\x01 \x03(\v2\x19.claudesensor.SensorEventB\x05\xb8\xa8\x1d\x90NR\x06events\x12&\n" +
 	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xea\x01\n" +
-	"\x13QueryByEmailRequest\x12\x1a\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xef\x01\n" +
+	"\x18ListEventsByEmailRequest\x12\x1a\n" +
 	"\x05email\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\x05email\x12;\n" +
 	"\n" +
 	"time_range\x18\x02 \x01(\v2\x1c.claudesensor.EventTimeRangeR\ttimeRange\x12\x1d\n" +
@@ -6641,8 +6879,8 @@ const file_vservices_claude_sensor_proto_rawDesc = "" +
 	"page_token\x18\x03 \x01(\tR\tpageToken\x12*\n" +
 	"\tpage_size\x18\x04 \x01(\x05B\r\xb0\xa7\x1d\x01\xc0\xa7\x1d\xe8\a\x90\xa8\x1ddR\bpageSize\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa9\x01\n" +
-	"\x14QueryByEmailResponse\x128\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xae\x01\n" +
+	"\x19ListEventsByEmailResponse\x128\n" +
 	"\x06events\x18\x01 \x03(\v2\x19.claudesensor.SensorEventB\x05\xb8\xa8\x1d\x90NR\x06events\x12&\n" +
 	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
@@ -6690,12 +6928,30 @@ const file_vservices_claude_sensor_proto_rawDesc = "" +
 	"latency_ms\x18\x02 \x01(\x03R\tlatencyMs\x12\x1b\n" +
 	"\tuid_count\x18\x03 \x01(\x03R\buidCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xcb\x01\n" +
+	"-AgenticCodeEventBusEventStreamSubscribeRecord\x124\n" +
+	"\x04meta\x18\x01 \x01(\v2 .claudesensor.EventBusRecordMetaR\x04meta\x123\n" +
+	"\apayload\x18\x02 \x01(\v2\x19.claudesensor.SensorEventR\apayload\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xbd\x01\n" +
+	"'TraceEventBusTraceEventsSubscribeRecord\x124\n" +
+	"\x04meta\x18\x01 \x01(\v2 .claudesensor.EventBusRecordMetaR\x04meta\x12+\n" +
+	"\apayload\x18\x02 \x01(\v2\x11.trace.TraceEventR\apayload\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"d\n" +
 	"\x13TopicPublishReceipt\x12\x1c\n" +
 	"\tpublished\x18\x01 \x01(\bR\tpublished\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xdd\x01\n" +
+	"\x12EventBusRecordMeta\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\fR\x03key\x12\x14\n" +
+	"\x05topic\x18\x02 \x01(\tR\x05topic\x12\x1c\n" +
+	"\tpartition\x18\x03 \x01(\x05R\tpartition\x12\x16\n" +
+	"\x06offset\x18\x04 \x01(\x03R\x06offset\x128\n" +
+	"\ttimestamp\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa2\x04\n" +
 	"\vSessionNode\x12E\n" +
@@ -6870,7 +7126,7 @@ const file_vservices_claude_sensor_proto_rawDesc = "" +
 	"\x15FILE_OPERATION_CREATE\x10\x01\x12\x19\n" +
 	"\x15FILE_OPERATION_MODIFY\x10\x02\x12\x19\n" +
 	"\x15FILE_OPERATION_DELETE\x10\x03\x12\x17\n" +
-	"\x13FILE_OPERATION_READ\x10\x04*\x87\x10\n" +
+	"\x13FILE_OPERATION_READ\x10\x04*\x97\x12\n" +
 	"\x06TypeID\x12\x17\n" +
 	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15TYPE_ID_SESSION_EVENT\x10\x01\x12\x1a\n" +
@@ -6886,87 +7142,90 @@ const file_vservices_claude_sensor_proto_rawDesc = "" +
 	"\x12\x16\n" +
 	"\x12TYPE_ID_MAP_DETAIL\x10\v\x12\x1b\n" +
 	"\x17TYPE_ID_SESSION_SUMMARY\x10\f\x12\x1c\n" +
-	"\x18TYPE_ID_EVENT_TIME_RANGE\x10\r\x12\x1b\n" +
-	"\x17TYPE_ID_NEW_MAP_REQUEST\x10\x0e\x12\x1c\n" +
-	"\x18TYPE_ID_NEW_MAP_RESPONSE\x10\x0f\x12\x1e\n" +
+	"\x18TYPE_ID_EVENT_TIME_RANGE\x10\r\x12\x1e\n" +
+	"\x1aTYPE_ID_CREATE_MAP_REQUEST\x10\x0e\x12\x1f\n" +
+	"\x1bTYPE_ID_CREATE_MAP_RESPONSE\x10\x0f\x12\x1e\n" +
 	"\x1aTYPE_ID_DELETE_MAP_REQUEST\x10\x10\x12\x1f\n" +
 	"\x1bTYPE_ID_DELETE_MAP_RESPONSE\x10\x11\x12\x1d\n" +
 	"\x19TYPE_ID_LIST_MAPS_REQUEST\x10\x12\x12\x1e\n" +
-	"\x1aTYPE_ID_LIST_MAPS_RESPONSE\x10\x13\x12 \n" +
-	"\x1cTYPE_ID_DESCRIBE_MAP_REQUEST\x10\x14\x12!\n" +
-	"\x1dTYPE_ID_DESCRIBE_MAP_RESPONSE\x10\x15\x12\x1c\n" +
+	"\x1aTYPE_ID_LIST_MAPS_RESPONSE\x10\x13\x12\"\n" +
+	"\x1eTYPE_ID_GET_MAP_DETAIL_REQUEST\x10\x14\x12#\n" +
+	"\x1fTYPE_ID_GET_MAP_DETAIL_RESPONSE\x10\x15\x12\x1c\n" +
 	"\x18TYPE_ID_MAP_SIZE_REQUEST\x10\x16\x12\x1d\n" +
-	"\x19TYPE_ID_MAP_SIZE_RESPONSE\x10\x17\x12\x1f\n" +
-	"\x1bTYPE_ID_LOAD_BY_IDS_REQUEST\x10\x18\x12 \n" +
-	"\x1cTYPE_ID_LOAD_BY_IDS_RESPONSE\x10\x19\x12\x1f\n" +
-	"\x1bTYPE_ID_LOAD_BY_SQL_REQUEST\x10\x1a\x12 \n" +
-	"\x1cTYPE_ID_LOAD_BY_SQL_RESPONSE\x10\x1b\x12\"\n" +
-	"\x1eTYPE_ID_LOAD_BY_TIMEDB_REQUEST\x10\x1c\x12#\n" +
-	"\x1fTYPE_ID_LOAD_BY_TIMEDB_RESPONSE\x10\x1d\x12#\n" +
-	"\x1fTYPE_ID_LOAD_BY_GRAPHDB_REQUEST\x10\x1e\x12$\n" +
-	" TYPE_ID_LOAD_BY_GRAPHDB_RESPONSE\x10\x1f\x12\x1e\n" +
-	"\x1aTYPE_ID_FILTER_MAP_REQUEST\x10 \x12\x1f\n" +
-	"\x1bTYPE_ID_FILTER_MAP_RESPONSE\x10!\x12\x19\n" +
+	"\x19TYPE_ID_MAP_SIZE_RESPONSE\x10\x17\x12%\n" +
+	"!TYPE_ID_UPDATE_MAP_BY_IDS_REQUEST\x10\x18\x12&\n" +
+	"\"TYPE_ID_UPDATE_MAP_BY_IDS_RESPONSE\x10\x19\x12%\n" +
+	"!TYPE_ID_UPDATE_MAP_BY_SQL_REQUEST\x10\x1a\x12&\n" +
+	"\"TYPE_ID_UPDATE_MAP_BY_SQL_RESPONSE\x10\x1b\x12(\n" +
+	"$TYPE_ID_UPDATE_MAP_BY_TIMEDB_REQUEST\x10\x1c\x12)\n" +
+	"%TYPE_ID_UPDATE_MAP_BY_TIMEDB_RESPONSE\x10\x1d\x12)\n" +
+	"%TYPE_ID_UPDATE_MAP_BY_GRAPHDB_REQUEST\x10\x1e\x12*\n" +
+	"&TYPE_ID_UPDATE_MAP_BY_GRAPHDB_RESPONSE\x10\x1f\x12%\n" +
+	"!TYPE_ID_UPDATE_MAP_FILTER_REQUEST\x10 \x12&\n" +
+	"\"TYPE_ID_UPDATE_MAP_FILTER_RESPONSE\x10!\x12\x19\n" +
 	"\x15TYPE_ID_MERGE_REQUEST\x10\"\x12\x1a\n" +
-	"\x16TYPE_ID_MERGE_RESPONSE\x10#\x12\x1d\n" +
-	"\x19TYPE_ID_QUERY_MAP_REQUEST\x10$\x12\x1e\n" +
-	"\x1aTYPE_ID_QUERY_MAP_RESPONSE\x10%\x12(\n" +
+	"\x16TYPE_ID_MERGE_RESPONSE\x10#\x12%\n" +
+	"!TYPE_ID_EXECUTE_MAP_QUERY_REQUEST\x10$\x12&\n" +
+	"\"TYPE_ID_EXECUTE_MAP_QUERY_RESPONSE\x10%\x12(\n" +
 	"$TYPE_ID_LIST_ACTIVE_SESSIONS_REQUEST\x10&\x12)\n" +
 	"%TYPE_ID_LIST_ACTIVE_SESSIONS_RESPONSE\x10'\x12&\n" +
 	"\"TYPE_ID_GET_SESSION_EVENTS_REQUEST\x10(\x12'\n" +
 	"#TYPE_ID_GET_SESSION_EVENTS_RESPONSE\x10)\x12%\n" +
 	"!TYPE_ID_GET_USER_SESSIONS_REQUEST\x10*\x12&\n" +
-	"\"TYPE_ID_GET_USER_SESSIONS_RESPONSE\x10+\x12'\n" +
-	"#TYPE_ID_QUERY_BY_TIME_RANGE_REQUEST\x10,\x12(\n" +
-	"$TYPE_ID_QUERY_BY_TIME_RANGE_RESPONSE\x10-\x12\"\n" +
-	"\x1eTYPE_ID_QUERY_BY_EMAIL_REQUEST\x10.\x12#\n" +
-	"\x1fTYPE_ID_QUERY_BY_EMAIL_RESPONSE\x10/\x12'\n" +
+	"\"TYPE_ID_GET_USER_SESSIONS_RESPONSE\x10+\x12-\n" +
+	")TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_REQUEST\x10,\x12.\n" +
+	"*TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_RESPONSE\x10-\x12(\n" +
+	"$TYPE_ID_LIST_EVENTS_BY_EMAIL_REQUEST\x10.\x12)\n" +
+	"%TYPE_ID_LIST_EVENTS_BY_EMAIL_RESPONSE\x10/\x12'\n" +
 	"#TYPE_ID_WATCH_LIVE_SESSIONS_REQUEST\x100\x12%\n" +
 	"!TYPE_ID_WATCH_LIVE_SESSIONS_EVENT\x101\x12 \n" +
 	"\x1cTYPE_ID_TIMEDB_QUERY_REQUEST\x102\x12!\n" +
 	"\x1dTYPE_ID_TIMEDB_QUERY_RESPONSE\x103\x12\x1d\n" +
 	"\x19TYPE_ID_DQL_QUERY_REQUEST\x104\x12\x1e\n" +
-	"\x1aTYPE_ID_DQL_QUERY_RESPONSE\x105\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x106\x12!\n" +
-	"\x1dTYPE_ID_TOPIC_PUBLISH_RECEIPT\x107\x12\x18\n" +
-	"\x14TYPE_ID_SESSION_NODE\x108\x12\x16\n" +
-	"\x12TYPE_ID_AGENT_NODE\x109\x12\x19\n" +
-	"\x15TYPE_ID_TOOL_USE_NODE\x10:\x12\x1a\n" +
-	"\x16TYPE_ID_SESSION_RECORD\x10;\x12\x1b\n" +
-	"\x17TYPE_ID_TOOL_USE_RECORD\x10<\x12\x1b\n" +
-	"\x17TYPE_ID_SUBAGENT_RECORD\x10=\x12\x19\n" +
-	"\x15TYPE_ID_PROMPT_RECORD\x10>\x12\x17\n" +
-	"\x13TYPE_ID_STOP_RECORD\x10?*\xfa\x06\n" +
+	"\x1aTYPE_ID_DQL_QUERY_RESPONSE\x105\x12@\n" +
+	"<TYPE_ID_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD\x106\x129\n" +
+	"5TYPE_ID_TRACE_EVENT_BUS_TRACE_EVENTS_SUBSCRIBE_RECORD\x107\x12\x15\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x108\x12!\n" +
+	"\x1dTYPE_ID_TOPIC_PUBLISH_RECEIPT\x109\x12!\n" +
+	"\x1dTYPE_ID_EVENT_BUS_RECORD_META\x10:\x12\x18\n" +
+	"\x14TYPE_ID_SESSION_NODE\x10;\x12\x16\n" +
+	"\x12TYPE_ID_AGENT_NODE\x10<\x12\x19\n" +
+	"\x15TYPE_ID_TOOL_USE_NODE\x10=\x12\x1a\n" +
+	"\x16TYPE_ID_SESSION_RECORD\x10>\x12\x1b\n" +
+	"\x17TYPE_ID_TOOL_USE_RECORD\x10?\x12\x1b\n" +
+	"\x17TYPE_ID_SUBAGENT_RECORD\x10@\x12\x19\n" +
+	"\x15TYPE_ID_PROMPT_RECORD\x10A\x12\x17\n" +
+	"\x13TYPE_ID_STOP_RECORD\x10B*\xba\a\n" +
 	"\x11StratumQueryRpcId\x12$\n" +
 	" STRATUM_QUERY_RPC_ID_UNSPECIFIED\x10\x00\x12&\n" +
 	"\"STRATUM_QUERY_RPC_ID_ALL_ACCESSORS\x10\x01\x12%\n" +
 	"!STRATUM_QUERY_RPC_ID_ALL_MUTATORS\x10\x02\x12&\n" +
-	"\"STRATUM_QUERY_RPC_ID_ALL_EXECUTORS\x10\x03\x12 \n" +
-	"\x1cSTRATUM_QUERY_RPC_ID_NEW_MAP\x10\x04\x12#\n" +
+	"\"STRATUM_QUERY_RPC_ID_ALL_EXECUTORS\x10\x03\x12#\n" +
+	"\x1fSTRATUM_QUERY_RPC_ID_CREATE_MAP\x10\x04\x12#\n" +
 	"\x1fSTRATUM_QUERY_RPC_ID_DELETE_MAP\x10\x05\x12\"\n" +
-	"\x1eSTRATUM_QUERY_RPC_ID_LIST_MAPS\x10\x06\x12%\n" +
-	"!STRATUM_QUERY_RPC_ID_DESCRIBE_MAP\x10\a\x12!\n" +
-	"\x1dSTRATUM_QUERY_RPC_ID_MAP_SIZE\x10\b\x12$\n" +
-	" STRATUM_QUERY_RPC_ID_LOAD_BY_IDS\x10\t\x12$\n" +
-	" STRATUM_QUERY_RPC_ID_LOAD_BY_SQL\x10\n" +
-	"\x12'\n" +
-	"#STRATUM_QUERY_RPC_ID_LOAD_BY_TIMEDB\x10\v\x12(\n" +
-	"$STRATUM_QUERY_RPC_ID_LOAD_BY_GRAPHDB\x10\f\x12#\n" +
-	"\x1fSTRATUM_QUERY_RPC_ID_FILTER_MAP\x10\r\x12\x1e\n" +
-	"\x1aSTRATUM_QUERY_RPC_ID_MERGE\x10\x0e\x12\"\n" +
-	"\x1eSTRATUM_QUERY_RPC_ID_QUERY_MAP\x10\x0f\x12-\n" +
+	"\x1eSTRATUM_QUERY_RPC_ID_LIST_MAPS\x10\x06\x12'\n" +
+	"#STRATUM_QUERY_RPC_ID_GET_MAP_DETAIL\x10\a\x12%\n" +
+	"!STRATUM_QUERY_RPC_ID_GET_MAP_SIZE\x10\b\x12*\n" +
+	"&STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_IDS\x10\t\x12*\n" +
+	"&STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_SQL\x10\n" +
+	"\x12-\n" +
+	")STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_TIMEDB\x10\v\x12.\n" +
+	"*STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_GRAPHDB\x10\f\x12*\n" +
+	"&STRATUM_QUERY_RPC_ID_UPDATE_MAP_FILTER\x10\r\x12\x1e\n" +
+	"\x1aSTRATUM_QUERY_RPC_ID_MERGE\x10\x0e\x12*\n" +
+	"&STRATUM_QUERY_RPC_ID_EXECUTE_MAP_QUERY\x10\x0f\x12-\n" +
 	")STRATUM_QUERY_RPC_ID_LIST_ACTIVE_SESSIONS\x10\x10\x12+\n" +
 	"'STRATUM_QUERY_RPC_ID_GET_SESSION_EVENTS\x10\x11\x12*\n" +
-	"&STRATUM_QUERY_RPC_ID_GET_USER_SESSIONS\x10\x12\x12,\n" +
-	"(STRATUM_QUERY_RPC_ID_QUERY_BY_TIME_RANGE\x10\x13\x12'\n" +
-	"#STRATUM_QUERY_RPC_ID_QUERY_BY_EMAIL\x10\x14\x12,\n" +
-	"(STRATUM_QUERY_RPC_ID_WATCH_LIVE_SESSIONS\x10\x15*\xca\x01\n" +
+	"&STRATUM_QUERY_RPC_ID_GET_USER_SESSIONS\x10\x12\x122\n" +
+	".STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_TIME_RANGE\x10\x13\x12-\n" +
+	")STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_EMAIL\x10\x14\x120\n" +
+	",STRATUM_QUERY_RPC_ID_SUBSCRIBE_LIVE_SESSIONS\x10\x15*\xd2\x01\n" +
 	"\x10TimedbQueryRpcId\x12#\n" +
 	"\x1fTIMEDB_QUERY_RPC_ID_UNSPECIFIED\x10\x00\x12%\n" +
 	"!TIMEDB_QUERY_RPC_ID_ALL_ACCESSORS\x10\x01\x12$\n" +
 	" TIMEDB_QUERY_RPC_ID_ALL_MUTATORS\x10\x02\x12%\n" +
-	"!TIMEDB_QUERY_RPC_ID_ALL_EXECUTORS\x10\x03\x12\x1d\n" +
-	"\x19TIMEDB_QUERY_RPC_ID_QUERY\x10\x04*\xd6\x01\n" +
+	"!TIMEDB_QUERY_RPC_ID_ALL_EXECUTORS\x10\x03\x12%\n" +
+	"!TIMEDB_QUERY_RPC_ID_EXECUTE_QUERY\x10\x04*\xd6\x01\n" +
 	"\x11GraphdbQueryRpcId\x12$\n" +
 	" GRAPHDB_QUERY_RPC_ID_UNSPECIFIED\x10\x00\x12&\n" +
 	"\"GRAPHDB_QUERY_RPC_ID_ALL_ACCESSORS\x10\x01\x12%\n" +
@@ -7004,37 +7263,40 @@ const file_vservices_claude_sensor_proto_rawDesc = "" +
 	"0TIMESERIES_MUTATION_RPC_ID_INSERT_SESSION_RECORD\x10\x05\x121\n" +
 	"-TIMESERIES_MUTATION_RPC_ID_INSERT_STOP_RECORD\x10\x06\x125\n" +
 	"1TIMESERIES_MUTATION_RPC_ID_INSERT_SUBAGENT_RECORD\x10\a\x125\n" +
-	"1TIMESERIES_MUTATION_RPC_ID_INSERT_TOOL_USE_RECORD\x10\b2\x8a\f\n" +
-	"\fStratumQuery\x12C\n" +
-	"\x06NewMap\x12\x1b.claudesensor.NewMapRequest\x1a\x1c.claudesensor.NewMapResponse\x12L\n" +
-	"\tDeleteMap\x12\x1e.claudesensor.DeleteMapRequest\x1a\x1f.claudesensor.DeleteMapResponse\x12I\n" +
-	"\bListMaps\x12\x1d.claudesensor.ListMapsRequest\x1a\x1e.claudesensor.ListMapsResponse\x12R\n" +
-	"\vDescribeMap\x12 .claudesensor.DescribeMapRequest\x1a!.claudesensor.DescribeMapResponse\x12F\n" +
-	"\aMapSize\x12\x1c.claudesensor.MapSizeRequest\x1a\x1d.claudesensor.MapSizeResponse\x12L\n" +
-	"\tLoadByIds\x12\x1e.claudesensor.LoadByIdsRequest\x1a\x1f.claudesensor.LoadByIdsResponse\x12L\n" +
-	"\tLoadBySql\x12\x1e.claudesensor.LoadBySqlRequest\x1a\x1f.claudesensor.LoadBySqlResponse\x12U\n" +
-	"\fLoadByTimedb\x12!.claudesensor.LoadByTimedbRequest\x1a\".claudesensor.LoadByTimedbResponse\x12X\n" +
-	"\rLoadByGraphdb\x12\".claudesensor.LoadByGraphdbRequest\x1a#.claudesensor.LoadByGraphdbResponse\x12L\n" +
-	"\tFilterMap\x12\x1e.claudesensor.FilterMapRequest\x1a\x1f.claudesensor.FilterMapResponse\x12@\n" +
-	"\x05Merge\x12\x1a.claudesensor.MergeRequest\x1a\x1b.claudesensor.MergeResponse\x12I\n" +
-	"\bQueryMap\x12\x1d.claudesensor.QueryMapRequest\x1a\x1e.claudesensor.QueryMapResponse\x12g\n" +
-	"\x12ListActiveSessions\x12'.claudesensor.ListActiveSessionsRequest\x1a(.claudesensor.ListActiveSessionsResponse\x12a\n" +
+	"1TIMESERIES_MUTATION_RPC_ID_INSERT_TOOL_USE_RECORD\x10\b2\xa9\x0e\n" +
+	"\fStratumQuery\x12L\n" +
+	"\tCreateMap\x12\x1e.claudesensor.CreateMapRequest\x1a\x1f.claudesensor.CreateMapResponse\x12L\n" +
+	"\tDeleteMap\x12\x1e.claudesensor.DeleteMapRequest\x1a\x1f.claudesensor.DeleteMapResponse\x12h\n" +
+	"\bListMaps\x12\x1d.claudesensor.ListMapsRequest\x1a\x1e.claudesensor.ListMapsResponse\"\x1d\xf2\x88'\x19\b\x01\x12\n" +
+	"created_ms\x12\x06map_id\x18\x90N\x12U\n" +
+	"\fGetMapDetail\x12!.claudesensor.GetMapDetailRequest\x1a\".claudesensor.GetMapDetailResponse\x12I\n" +
+	"\n" +
+	"GetMapSize\x12\x1c.claudesensor.MapSizeRequest\x1a\x1d.claudesensor.MapSizeResponse\x12[\n" +
+	"\x0eUpdateMapByIds\x12#.claudesensor.UpdateMapByIdsRequest\x1a$.claudesensor.UpdateMapByIdsResponse\x12[\n" +
+	"\x0eUpdateMapBySql\x12#.claudesensor.UpdateMapBySqlRequest\x1a$.claudesensor.UpdateMapBySqlResponse\x12d\n" +
+	"\x11UpdateMapByTimedb\x12&.claudesensor.UpdateMapByTimedbRequest\x1a'.claudesensor.UpdateMapByTimedbResponse\x12g\n" +
+	"\x12UpdateMapByGraphdb\x12'.claudesensor.UpdateMapByGraphdbRequest\x1a(.claudesensor.UpdateMapByGraphdbResponse\x12^\n" +
+	"\x0fUpdateMapFilter\x12$.claudesensor.UpdateMapFilterRequest\x1a%.claudesensor.UpdateMapFilterResponse\x12@\n" +
+	"\x05Merge\x12\x1a.claudesensor.MergeRequest\x1a\x1b.claudesensor.MergeResponse\x12^\n" +
+	"\x0fExecuteMapQuery\x12$.claudesensor.ExecuteMapQueryRequest\x1a%.claudesensor.ExecuteMapQueryResponse\x12\x8c\x01\n" +
+	"\x12ListActiveSessions\x12'.claudesensor.ListActiveSessionsRequest\x1a(.claudesensor.ListActiveSessionsResponse\"#\xf2\x88'\x1f\b\x01\x12\flast_seen_ms\x12\n" +
+	"session_id\x18\x90N\x12a\n" +
 	"\x10GetSessionEvents\x12%.claudesensor.GetSessionEventsRequest\x1a&.claudesensor.GetSessionEventsResponse\x12^\n" +
-	"\x0fGetUserSessions\x12$.claudesensor.GetUserSessionsRequest\x1a%.claudesensor.GetUserSessionsResponse\x12a\n" +
-	"\x10QueryByTimeRange\x12%.claudesensor.QueryByTimeRangeRequest\x1a&.claudesensor.QueryByTimeRangeResponse\x12U\n" +
-	"\fQueryByEmail\x12!.claudesensor.QueryByEmailRequest\x1a\".claudesensor.QueryByEmailResponse\x12c\n" +
-	"\x11WatchLiveSessions\x12&.claudesensor.WatchLiveSessionsRequest\x1a$.claudesensor.WatchLiveSessionsEvent0\x01\x1a\r\xea\x97\"\t\x1a\astratum2k\n" +
-	"\vTimedbQuery\x12N\n" +
-	"\x05Query\x12 .claudesensor.TimedbQueryRequest\x1a!.claudesensor.TimedbQueryResponse0\x01\x1a\f\xea\x97\"\b\x1a\x06timedb2j\n" +
+	"\x0fGetUserSessions\x12$.claudesensor.GetUserSessionsRequest\x1a%.claudesensor.GetUserSessionsResponse\x12\x92\x01\n" +
+	"\x15ListEventsByTimeRange\x12*.claudesensor.ListEventsByTimeRangeRequest\x1a+.claudesensor.ListEventsByTimeRangeResponse\" \xf2\x88'\x1c\b\x03\x12\ftimestamp_ms\x12\bevent_id(d\x12\x86\x01\n" +
+	"\x11ListEventsByEmail\x12&.claudesensor.ListEventsByEmailRequest\x1a'.claudesensor.ListEventsByEmailResponse\" \xf2\x88'\x1c\b\x03\x12\ftimestamp_ms\x12\bevent_id(d\x12g\n" +
+	"\x15SubscribeLiveSessions\x12&.claudesensor.WatchLiveSessionsRequest\x1a$.claudesensor.WatchLiveSessionsEvent0\x01\x1a\r\xea\x97\"\t\x1a\astratum2r\n" +
+	"\vTimedbQuery\x12U\n" +
+	"\fExecuteQuery\x12 .claudesensor.TimedbQueryRequest\x1a!.claudesensor.TimedbQueryResponse0\x01\x1a\f\xea\x97\"\b\x1a\x06timedb2j\n" +
 	"\fGraphdbQuery\x12K\n" +
 	"\n" +
-	"ExecuteDQL\x12\x1d.claudesensor.DqlQueryRequest\x1a\x1e.claudesensor.DqlQueryResponse\x1a\r\xea\x97\"\t\x1a\agraphdb2\xd5\x01\n" +
+	"ExecuteDQL\x12\x1d.claudesensor.DqlQueryRequest\x1a\x1e.claudesensor.DqlQueryResponse\x1a\r\xea\x97\"\t\x1a\agraphdb2\xf7\x01\n" +
 	"\x1fAgenticCodeEventBusStateService\x12T\n" +
-	"\x14PublishToEventStream\x12\x19.claudesensor.SensorEvent\x1a!.claudesensor.TopicPublishReceipt\x12J\n" +
-	"\x16SubscribeToEventStream\x12\x13.trace.TraceRequest\x1a\x19.claudesensor.SensorEvent0\x01\x1a\x10\xe2\x97\"\beventbus\xea\x97\"\x002\xbf\x01\n" +
+	"\x14PublishToEventStream\x12\x19.claudesensor.SensorEvent\x1a!.claudesensor.TopicPublishReceipt\x12l\n" +
+	"\x16SubscribeToEventStream\x12\x13.trace.TraceRequest\x1a;.claudesensor.AgenticCodeEventBusEventStreamSubscribeRecord0\x01\x1a\x10\xe2\x97\"\beventbus\xea\x97\"\x002\xe3\x01\n" +
 	"\x19TraceEventBusStateService\x12L\n" +
-	"\x14PublishToTraceEvents\x12\x11.trace.TraceEvent\x1a!.claudesensor.TopicPublishReceipt\x12B\n" +
-	"\x16SubscribeToTraceEvents\x12\x13.trace.TraceRequest\x1a\x11.trace.TraceEvent0\x01\x1a\x10\xe2\x97\"\beventbus\xea\x97\"\x002\xe9\x01\n" +
+	"\x14PublishToTraceEvents\x12\x11.trace.TraceEvent\x1a!.claudesensor.TopicPublishReceipt\x12f\n" +
+	"\x16SubscribeToTraceEvents\x12\x13.trace.TraceRequest\x1a5.claudesensor.TraceEventBusTraceEventsSubscribeRecord0\x01\x1a\x10\xe2\x97\"\beventbus\xea\x97\"\x002\xe9\x01\n" +
 	"\rGraphMutation\x12B\n" +
 	"\x0fInsertAgentNode\x12\x17.claudesensor.AgentNode\x1a\x16.google.protobuf.Empty\x12F\n" +
 	"\x11InsertSessionNode\x12\x19.claudesensor.SessionNode\x1a\x16.google.protobuf.Empty\x12F\n" +
@@ -7060,87 +7322,91 @@ func file_vservices_claude_sensor_proto_rawDescGZIP() []byte {
 }
 
 var file_vservices_claude_sensor_proto_enumTypes = make([]protoimpl.EnumInfo, 12)
-var file_vservices_claude_sensor_proto_msgTypes = make([]protoimpl.MessageInfo, 64)
+var file_vservices_claude_sensor_proto_msgTypes = make([]protoimpl.MessageInfo, 67)
 var file_vservices_claude_sensor_proto_goTypes = []any{
-	(SensorEventType)(0),                      // 0: claudesensor.SensorEventType
-	(SensorType)(0),                           // 1: claudesensor.SensorType
-	(HookPhase)(0),                            // 2: claudesensor.HookPhase
-	(FileOperation)(0),                        // 3: claudesensor.FileOperation
-	(TypeID)(0),                               // 4: claudesensor.TypeID
-	(StratumQueryRpcId)(0),                    // 5: claudesensor.StratumQueryRpcId
-	(TimedbQueryRpcId)(0),                     // 6: claudesensor.TimedbQueryRpcId
-	(GraphdbQueryRpcId)(0),                    // 7: claudesensor.GraphdbQueryRpcId
-	(AgenticCodeEventBusStateServiceRpcId)(0), // 8: claudesensor.AgenticCodeEventBusStateServiceRpcId
-	(TraceEventBusStateServiceRpcId)(0),       // 9: claudesensor.TraceEventBusStateServiceRpcId
-	(GraphMutationRpcId)(0),                   // 10: claudesensor.GraphMutationRpcId
-	(TimeseriesMutationRpcId)(0),              // 11: claudesensor.TimeseriesMutationRpcId
-	(*SessionEvent)(nil),                      // 12: claudesensor.SessionEvent
-	(*ToolUseEvent)(nil),                      // 13: claudesensor.ToolUseEvent
-	(*SubagentEvent)(nil),                     // 14: claudesensor.SubagentEvent
-	(*FileEvent)(nil),                         // 15: claudesensor.FileEvent
-	(*PromptEvent)(nil),                       // 16: claudesensor.PromptEvent
-	(*StopEvent)(nil),                         // 17: claudesensor.StopEvent
-	(*SensorEvent)(nil),                       // 18: claudesensor.SensorEvent
-	(*AgenticCodeEventBus)(nil),               // 19: claudesensor.AgenticCodeEventBus
-	(*TraceEventBus)(nil),                     // 20: claudesensor.TraceEventBus
-	(*MapEntry)(nil),                          // 21: claudesensor.MapEntry
-	(*MapDetail)(nil),                         // 22: claudesensor.MapDetail
-	(*SessionSummary)(nil),                    // 23: claudesensor.SessionSummary
-	(*EventTimeRange)(nil),                    // 24: claudesensor.EventTimeRange
-	(*NewMapRequest)(nil),                     // 25: claudesensor.NewMapRequest
-	(*NewMapResponse)(nil),                    // 26: claudesensor.NewMapResponse
-	(*DeleteMapRequest)(nil),                  // 27: claudesensor.DeleteMapRequest
-	(*DeleteMapResponse)(nil),                 // 28: claudesensor.DeleteMapResponse
-	(*ListMapsRequest)(nil),                   // 29: claudesensor.ListMapsRequest
-	(*ListMapsResponse)(nil),                  // 30: claudesensor.ListMapsResponse
-	(*DescribeMapRequest)(nil),                // 31: claudesensor.DescribeMapRequest
-	(*DescribeMapResponse)(nil),               // 32: claudesensor.DescribeMapResponse
-	(*MapSizeRequest)(nil),                    // 33: claudesensor.MapSizeRequest
-	(*MapSizeResponse)(nil),                   // 34: claudesensor.MapSizeResponse
-	(*LoadByIdsRequest)(nil),                  // 35: claudesensor.LoadByIdsRequest
-	(*LoadByIdsResponse)(nil),                 // 36: claudesensor.LoadByIdsResponse
-	(*LoadBySqlRequest)(nil),                  // 37: claudesensor.LoadBySqlRequest
-	(*LoadBySqlResponse)(nil),                 // 38: claudesensor.LoadBySqlResponse
-	(*LoadByTimedbRequest)(nil),               // 39: claudesensor.LoadByTimedbRequest
-	(*LoadByTimedbResponse)(nil),              // 40: claudesensor.LoadByTimedbResponse
-	(*LoadByGraphdbRequest)(nil),              // 41: claudesensor.LoadByGraphdbRequest
-	(*LoadByGraphdbResponse)(nil),             // 42: claudesensor.LoadByGraphdbResponse
-	(*FilterMapRequest)(nil),                  // 43: claudesensor.FilterMapRequest
-	(*FilterMapResponse)(nil),                 // 44: claudesensor.FilterMapResponse
-	(*MergeRequest)(nil),                      // 45: claudesensor.MergeRequest
-	(*MergeResponse)(nil),                     // 46: claudesensor.MergeResponse
-	(*QueryMapRequest)(nil),                   // 47: claudesensor.QueryMapRequest
-	(*QueryMapResponse)(nil),                  // 48: claudesensor.QueryMapResponse
-	(*ListActiveSessionsRequest)(nil),         // 49: claudesensor.ListActiveSessionsRequest
-	(*ListActiveSessionsResponse)(nil),        // 50: claudesensor.ListActiveSessionsResponse
-	(*GetSessionEventsRequest)(nil),           // 51: claudesensor.GetSessionEventsRequest
-	(*GetSessionEventsResponse)(nil),          // 52: claudesensor.GetSessionEventsResponse
-	(*GetUserSessionsRequest)(nil),            // 53: claudesensor.GetUserSessionsRequest
-	(*GetUserSessionsResponse)(nil),           // 54: claudesensor.GetUserSessionsResponse
-	(*QueryByTimeRangeRequest)(nil),           // 55: claudesensor.QueryByTimeRangeRequest
-	(*QueryByTimeRangeResponse)(nil),          // 56: claudesensor.QueryByTimeRangeResponse
-	(*QueryByEmailRequest)(nil),               // 57: claudesensor.QueryByEmailRequest
-	(*QueryByEmailResponse)(nil),              // 58: claudesensor.QueryByEmailResponse
-	(*WatchLiveSessionsRequest)(nil),          // 59: claudesensor.WatchLiveSessionsRequest
-	(*WatchLiveSessionsEvent)(nil),            // 60: claudesensor.WatchLiveSessionsEvent
-	(*TimedbQueryRequest)(nil),                // 61: claudesensor.TimedbQueryRequest
-	(*TimedbQueryResponse)(nil),               // 62: claudesensor.TimedbQueryResponse
-	(*DqlQueryRequest)(nil),                   // 63: claudesensor.DqlQueryRequest
-	(*DqlQueryResponse)(nil),                  // 64: claudesensor.DqlQueryResponse
-	(*MapEmpty)(nil),                          // 65: claudesensor.MapEmpty
-	(*TopicPublishReceipt)(nil),               // 66: claudesensor.TopicPublishReceipt
-	(*SessionNode)(nil),                       // 67: claudesensor.SessionNode
-	(*AgentNode)(nil),                         // 68: claudesensor.AgentNode
-	(*ToolUseNode)(nil),                       // 69: claudesensor.ToolUseNode
-	(*SessionRecord)(nil),                     // 70: claudesensor.SessionRecord
-	(*ToolUseRecord)(nil),                     // 71: claudesensor.ToolUseRecord
-	(*SubagentRecord)(nil),                    // 72: claudesensor.SubagentRecord
-	(*PromptRecord)(nil),                      // 73: claudesensor.PromptRecord
-	(*StopRecord)(nil),                        // 74: claudesensor.StopRecord
-	nil,                                       // 75: claudesensor.MapDetail.EventTypeBreakdownEntry
-	(*trace.TraceEvent)(nil),                  // 76: trace.TraceEvent
-	(*trace.TraceRequest)(nil),                // 77: trace.TraceRequest
-	(*emptypb.Empty)(nil),                     // 78: google.protobuf.Empty
+	(SensorEventType)(0),                                  // 0: claudesensor.SensorEventType
+	(SensorType)(0),                                       // 1: claudesensor.SensorType
+	(HookPhase)(0),                                        // 2: claudesensor.HookPhase
+	(FileOperation)(0),                                    // 3: claudesensor.FileOperation
+	(TypeID)(0),                                           // 4: claudesensor.TypeID
+	(StratumQueryRpcId)(0),                                // 5: claudesensor.StratumQueryRpcId
+	(TimedbQueryRpcId)(0),                                 // 6: claudesensor.TimedbQueryRpcId
+	(GraphdbQueryRpcId)(0),                                // 7: claudesensor.GraphdbQueryRpcId
+	(AgenticCodeEventBusStateServiceRpcId)(0),             // 8: claudesensor.AgenticCodeEventBusStateServiceRpcId
+	(TraceEventBusStateServiceRpcId)(0),                   // 9: claudesensor.TraceEventBusStateServiceRpcId
+	(GraphMutationRpcId)(0),                               // 10: claudesensor.GraphMutationRpcId
+	(TimeseriesMutationRpcId)(0),                          // 11: claudesensor.TimeseriesMutationRpcId
+	(*SessionEvent)(nil),                                  // 12: claudesensor.SessionEvent
+	(*ToolUseEvent)(nil),                                  // 13: claudesensor.ToolUseEvent
+	(*SubagentEvent)(nil),                                 // 14: claudesensor.SubagentEvent
+	(*FileEvent)(nil),                                     // 15: claudesensor.FileEvent
+	(*PromptEvent)(nil),                                   // 16: claudesensor.PromptEvent
+	(*StopEvent)(nil),                                     // 17: claudesensor.StopEvent
+	(*SensorEvent)(nil),                                   // 18: claudesensor.SensorEvent
+	(*AgenticCodeEventBus)(nil),                           // 19: claudesensor.AgenticCodeEventBus
+	(*TraceEventBus)(nil),                                 // 20: claudesensor.TraceEventBus
+	(*MapEntry)(nil),                                      // 21: claudesensor.MapEntry
+	(*MapDetail)(nil),                                     // 22: claudesensor.MapDetail
+	(*SessionSummary)(nil),                                // 23: claudesensor.SessionSummary
+	(*EventTimeRange)(nil),                                // 24: claudesensor.EventTimeRange
+	(*CreateMapRequest)(nil),                              // 25: claudesensor.CreateMapRequest
+	(*CreateMapResponse)(nil),                             // 26: claudesensor.CreateMapResponse
+	(*DeleteMapRequest)(nil),                              // 27: claudesensor.DeleteMapRequest
+	(*DeleteMapResponse)(nil),                             // 28: claudesensor.DeleteMapResponse
+	(*ListMapsRequest)(nil),                               // 29: claudesensor.ListMapsRequest
+	(*ListMapsResponse)(nil),                              // 30: claudesensor.ListMapsResponse
+	(*GetMapDetailRequest)(nil),                           // 31: claudesensor.GetMapDetailRequest
+	(*GetMapDetailResponse)(nil),                          // 32: claudesensor.GetMapDetailResponse
+	(*MapSizeRequest)(nil),                                // 33: claudesensor.MapSizeRequest
+	(*MapSizeResponse)(nil),                               // 34: claudesensor.MapSizeResponse
+	(*UpdateMapByIdsRequest)(nil),                         // 35: claudesensor.UpdateMapByIdsRequest
+	(*UpdateMapByIdsResponse)(nil),                        // 36: claudesensor.UpdateMapByIdsResponse
+	(*UpdateMapBySqlRequest)(nil),                         // 37: claudesensor.UpdateMapBySqlRequest
+	(*UpdateMapBySqlResponse)(nil),                        // 38: claudesensor.UpdateMapBySqlResponse
+	(*UpdateMapByTimedbRequest)(nil),                      // 39: claudesensor.UpdateMapByTimedbRequest
+	(*UpdateMapByTimedbResponse)(nil),                     // 40: claudesensor.UpdateMapByTimedbResponse
+	(*UpdateMapByGraphdbRequest)(nil),                     // 41: claudesensor.UpdateMapByGraphdbRequest
+	(*UpdateMapByGraphdbResponse)(nil),                    // 42: claudesensor.UpdateMapByGraphdbResponse
+	(*UpdateMapFilterRequest)(nil),                        // 43: claudesensor.UpdateMapFilterRequest
+	(*UpdateMapFilterResponse)(nil),                       // 44: claudesensor.UpdateMapFilterResponse
+	(*MergeRequest)(nil),                                  // 45: claudesensor.MergeRequest
+	(*MergeResponse)(nil),                                 // 46: claudesensor.MergeResponse
+	(*ExecuteMapQueryRequest)(nil),                        // 47: claudesensor.ExecuteMapQueryRequest
+	(*ExecuteMapQueryResponse)(nil),                       // 48: claudesensor.ExecuteMapQueryResponse
+	(*ListActiveSessionsRequest)(nil),                     // 49: claudesensor.ListActiveSessionsRequest
+	(*ListActiveSessionsResponse)(nil),                    // 50: claudesensor.ListActiveSessionsResponse
+	(*GetSessionEventsRequest)(nil),                       // 51: claudesensor.GetSessionEventsRequest
+	(*GetSessionEventsResponse)(nil),                      // 52: claudesensor.GetSessionEventsResponse
+	(*GetUserSessionsRequest)(nil),                        // 53: claudesensor.GetUserSessionsRequest
+	(*GetUserSessionsResponse)(nil),                       // 54: claudesensor.GetUserSessionsResponse
+	(*ListEventsByTimeRangeRequest)(nil),                  // 55: claudesensor.ListEventsByTimeRangeRequest
+	(*ListEventsByTimeRangeResponse)(nil),                 // 56: claudesensor.ListEventsByTimeRangeResponse
+	(*ListEventsByEmailRequest)(nil),                      // 57: claudesensor.ListEventsByEmailRequest
+	(*ListEventsByEmailResponse)(nil),                     // 58: claudesensor.ListEventsByEmailResponse
+	(*WatchLiveSessionsRequest)(nil),                      // 59: claudesensor.WatchLiveSessionsRequest
+	(*WatchLiveSessionsEvent)(nil),                        // 60: claudesensor.WatchLiveSessionsEvent
+	(*TimedbQueryRequest)(nil),                            // 61: claudesensor.TimedbQueryRequest
+	(*TimedbQueryResponse)(nil),                           // 62: claudesensor.TimedbQueryResponse
+	(*DqlQueryRequest)(nil),                               // 63: claudesensor.DqlQueryRequest
+	(*DqlQueryResponse)(nil),                              // 64: claudesensor.DqlQueryResponse
+	(*AgenticCodeEventBusEventStreamSubscribeRecord)(nil), // 65: claudesensor.AgenticCodeEventBusEventStreamSubscribeRecord
+	(*TraceEventBusTraceEventsSubscribeRecord)(nil),       // 66: claudesensor.TraceEventBusTraceEventsSubscribeRecord
+	(*MapEmpty)(nil),                                      // 67: claudesensor.MapEmpty
+	(*TopicPublishReceipt)(nil),                           // 68: claudesensor.TopicPublishReceipt
+	(*EventBusRecordMeta)(nil),                            // 69: claudesensor.EventBusRecordMeta
+	(*SessionNode)(nil),                                   // 70: claudesensor.SessionNode
+	(*AgentNode)(nil),                                     // 71: claudesensor.AgentNode
+	(*ToolUseNode)(nil),                                   // 72: claudesensor.ToolUseNode
+	(*SessionRecord)(nil),                                 // 73: claudesensor.SessionRecord
+	(*ToolUseRecord)(nil),                                 // 74: claudesensor.ToolUseRecord
+	(*SubagentRecord)(nil),                                // 75: claudesensor.SubagentRecord
+	(*PromptRecord)(nil),                                  // 76: claudesensor.PromptRecord
+	(*StopRecord)(nil),                                    // 77: claudesensor.StopRecord
+	nil,                                                   // 78: claudesensor.MapDetail.EventTypeBreakdownEntry
+	(*trace.TraceEvent)(nil),                              // 79: trace.TraceEvent
+	(*timestamppb.Timestamp)(nil),                         // 80: google.protobuf.Timestamp
+	(*trace.TraceRequest)(nil),                            // 81: trace.TraceRequest
+	(*emptypb.Empty)(nil),                                 // 82: google.protobuf.Empty
 }
 var file_vservices_claude_sensor_proto_depIdxs = []int32{
 	15, // 0: claudesensor.ToolUseEvent.file_events:type_name -> claudesensor.FileEvent
@@ -7154,106 +7420,111 @@ var file_vservices_claude_sensor_proto_depIdxs = []int32{
 	16, // 8: claudesensor.SensorEvent.prompt:type_name -> claudesensor.PromptEvent
 	17, // 9: claudesensor.SensorEvent.stop:type_name -> claudesensor.StopEvent
 	18, // 10: claudesensor.AgenticCodeEventBus.event_stream:type_name -> claudesensor.SensorEvent
-	76, // 11: claudesensor.TraceEventBus.trace_events:type_name -> trace.TraceEvent
-	75, // 12: claudesensor.MapDetail.event_type_breakdown:type_name -> claudesensor.MapDetail.EventTypeBreakdownEntry
+	79, // 11: claudesensor.TraceEventBus.trace_events:type_name -> trace.TraceEvent
+	78, // 12: claudesensor.MapDetail.event_type_breakdown:type_name -> claudesensor.MapDetail.EventTypeBreakdownEntry
 	1,  // 13: claudesensor.SessionSummary.sensor_type:type_name -> claudesensor.SensorType
 	0,  // 14: claudesensor.SessionSummary.latest_event_type:type_name -> claudesensor.SensorEventType
 	21, // 15: claudesensor.ListMapsResponse.maps:type_name -> claudesensor.MapEntry
-	22, // 16: claudesensor.DescribeMapResponse.detail:type_name -> claudesensor.MapDetail
+	22, // 16: claudesensor.GetMapDetailResponse.detail:type_name -> claudesensor.MapDetail
 	23, // 17: claudesensor.ListActiveSessionsResponse.sessions:type_name -> claudesensor.SessionSummary
 	24, // 18: claudesensor.GetSessionEventsRequest.time_range:type_name -> claudesensor.EventTimeRange
 	18, // 19: claudesensor.GetSessionEventsResponse.events:type_name -> claudesensor.SensorEvent
 	24, // 20: claudesensor.GetUserSessionsRequest.time_range:type_name -> claudesensor.EventTimeRange
 	23, // 21: claudesensor.GetUserSessionsResponse.sessions:type_name -> claudesensor.SessionSummary
-	24, // 22: claudesensor.QueryByTimeRangeRequest.time_range:type_name -> claudesensor.EventTimeRange
-	18, // 23: claudesensor.QueryByTimeRangeResponse.events:type_name -> claudesensor.SensorEvent
-	24, // 24: claudesensor.QueryByEmailRequest.time_range:type_name -> claudesensor.EventTimeRange
-	18, // 25: claudesensor.QueryByEmailResponse.events:type_name -> claudesensor.SensorEvent
+	24, // 22: claudesensor.ListEventsByTimeRangeRequest.time_range:type_name -> claudesensor.EventTimeRange
+	18, // 23: claudesensor.ListEventsByTimeRangeResponse.events:type_name -> claudesensor.SensorEvent
+	24, // 24: claudesensor.ListEventsByEmailRequest.time_range:type_name -> claudesensor.EventTimeRange
+	18, // 25: claudesensor.ListEventsByEmailResponse.events:type_name -> claudesensor.SensorEvent
 	23, // 26: claudesensor.WatchLiveSessionsEvent.session_started:type_name -> claudesensor.SessionSummary
 	23, // 27: claudesensor.WatchLiveSessionsEvent.session_updated:type_name -> claudesensor.SessionSummary
 	23, // 28: claudesensor.WatchLiveSessionsEvent.session_ended:type_name -> claudesensor.SessionSummary
 	18, // 29: claudesensor.WatchLiveSessionsEvent.live_event:type_name -> claudesensor.SensorEvent
 	24, // 30: claudesensor.TimedbQueryRequest.time_range:type_name -> claudesensor.EventTimeRange
-	1,  // 31: claudesensor.SessionNode.sensor_type:type_name -> claudesensor.SensorType
-	0,  // 32: claudesensor.SessionRecord.event_type:type_name -> claudesensor.SensorEventType
-	1,  // 33: claudesensor.SessionRecord.sensor_type:type_name -> claudesensor.SensorType
-	0,  // 34: claudesensor.ToolUseRecord.event_type:type_name -> claudesensor.SensorEventType
-	1,  // 35: claudesensor.ToolUseRecord.sensor_type:type_name -> claudesensor.SensorType
-	0,  // 36: claudesensor.SubagentRecord.event_type:type_name -> claudesensor.SensorEventType
-	1,  // 37: claudesensor.SubagentRecord.sensor_type:type_name -> claudesensor.SensorType
-	0,  // 38: claudesensor.PromptRecord.event_type:type_name -> claudesensor.SensorEventType
-	1,  // 39: claudesensor.PromptRecord.sensor_type:type_name -> claudesensor.SensorType
-	0,  // 40: claudesensor.StopRecord.event_type:type_name -> claudesensor.SensorEventType
-	1,  // 41: claudesensor.StopRecord.sensor_type:type_name -> claudesensor.SensorType
-	25, // 42: claudesensor.StratumQuery.NewMap:input_type -> claudesensor.NewMapRequest
-	27, // 43: claudesensor.StratumQuery.DeleteMap:input_type -> claudesensor.DeleteMapRequest
-	29, // 44: claudesensor.StratumQuery.ListMaps:input_type -> claudesensor.ListMapsRequest
-	31, // 45: claudesensor.StratumQuery.DescribeMap:input_type -> claudesensor.DescribeMapRequest
-	33, // 46: claudesensor.StratumQuery.MapSize:input_type -> claudesensor.MapSizeRequest
-	35, // 47: claudesensor.StratumQuery.LoadByIds:input_type -> claudesensor.LoadByIdsRequest
-	37, // 48: claudesensor.StratumQuery.LoadBySql:input_type -> claudesensor.LoadBySqlRequest
-	39, // 49: claudesensor.StratumQuery.LoadByTimedb:input_type -> claudesensor.LoadByTimedbRequest
-	41, // 50: claudesensor.StratumQuery.LoadByGraphdb:input_type -> claudesensor.LoadByGraphdbRequest
-	43, // 51: claudesensor.StratumQuery.FilterMap:input_type -> claudesensor.FilterMapRequest
-	45, // 52: claudesensor.StratumQuery.Merge:input_type -> claudesensor.MergeRequest
-	47, // 53: claudesensor.StratumQuery.QueryMap:input_type -> claudesensor.QueryMapRequest
-	49, // 54: claudesensor.StratumQuery.ListActiveSessions:input_type -> claudesensor.ListActiveSessionsRequest
-	51, // 55: claudesensor.StratumQuery.GetSessionEvents:input_type -> claudesensor.GetSessionEventsRequest
-	53, // 56: claudesensor.StratumQuery.GetUserSessions:input_type -> claudesensor.GetUserSessionsRequest
-	55, // 57: claudesensor.StratumQuery.QueryByTimeRange:input_type -> claudesensor.QueryByTimeRangeRequest
-	57, // 58: claudesensor.StratumQuery.QueryByEmail:input_type -> claudesensor.QueryByEmailRequest
-	59, // 59: claudesensor.StratumQuery.WatchLiveSessions:input_type -> claudesensor.WatchLiveSessionsRequest
-	61, // 60: claudesensor.TimedbQuery.Query:input_type -> claudesensor.TimedbQueryRequest
-	63, // 61: claudesensor.GraphdbQuery.ExecuteDQL:input_type -> claudesensor.DqlQueryRequest
-	18, // 62: claudesensor.AgenticCodeEventBusStateService.PublishToEventStream:input_type -> claudesensor.SensorEvent
-	77, // 63: claudesensor.AgenticCodeEventBusStateService.SubscribeToEventStream:input_type -> trace.TraceRequest
-	76, // 64: claudesensor.TraceEventBusStateService.PublishToTraceEvents:input_type -> trace.TraceEvent
-	77, // 65: claudesensor.TraceEventBusStateService.SubscribeToTraceEvents:input_type -> trace.TraceRequest
-	68, // 66: claudesensor.GraphMutation.InsertAgentNode:input_type -> claudesensor.AgentNode
-	67, // 67: claudesensor.GraphMutation.InsertSessionNode:input_type -> claudesensor.SessionNode
-	69, // 68: claudesensor.GraphMutation.InsertToolUseNode:input_type -> claudesensor.ToolUseNode
-	73, // 69: claudesensor.TimeseriesMutation.InsertPromptRecord:input_type -> claudesensor.PromptRecord
-	70, // 70: claudesensor.TimeseriesMutation.InsertSessionRecord:input_type -> claudesensor.SessionRecord
-	74, // 71: claudesensor.TimeseriesMutation.InsertStopRecord:input_type -> claudesensor.StopRecord
-	72, // 72: claudesensor.TimeseriesMutation.InsertSubagentRecord:input_type -> claudesensor.SubagentRecord
-	71, // 73: claudesensor.TimeseriesMutation.InsertToolUseRecord:input_type -> claudesensor.ToolUseRecord
-	26, // 74: claudesensor.StratumQuery.NewMap:output_type -> claudesensor.NewMapResponse
-	28, // 75: claudesensor.StratumQuery.DeleteMap:output_type -> claudesensor.DeleteMapResponse
-	30, // 76: claudesensor.StratumQuery.ListMaps:output_type -> claudesensor.ListMapsResponse
-	32, // 77: claudesensor.StratumQuery.DescribeMap:output_type -> claudesensor.DescribeMapResponse
-	34, // 78: claudesensor.StratumQuery.MapSize:output_type -> claudesensor.MapSizeResponse
-	36, // 79: claudesensor.StratumQuery.LoadByIds:output_type -> claudesensor.LoadByIdsResponse
-	38, // 80: claudesensor.StratumQuery.LoadBySql:output_type -> claudesensor.LoadBySqlResponse
-	40, // 81: claudesensor.StratumQuery.LoadByTimedb:output_type -> claudesensor.LoadByTimedbResponse
-	42, // 82: claudesensor.StratumQuery.LoadByGraphdb:output_type -> claudesensor.LoadByGraphdbResponse
-	44, // 83: claudesensor.StratumQuery.FilterMap:output_type -> claudesensor.FilterMapResponse
-	46, // 84: claudesensor.StratumQuery.Merge:output_type -> claudesensor.MergeResponse
-	48, // 85: claudesensor.StratumQuery.QueryMap:output_type -> claudesensor.QueryMapResponse
-	50, // 86: claudesensor.StratumQuery.ListActiveSessions:output_type -> claudesensor.ListActiveSessionsResponse
-	52, // 87: claudesensor.StratumQuery.GetSessionEvents:output_type -> claudesensor.GetSessionEventsResponse
-	54, // 88: claudesensor.StratumQuery.GetUserSessions:output_type -> claudesensor.GetUserSessionsResponse
-	56, // 89: claudesensor.StratumQuery.QueryByTimeRange:output_type -> claudesensor.QueryByTimeRangeResponse
-	58, // 90: claudesensor.StratumQuery.QueryByEmail:output_type -> claudesensor.QueryByEmailResponse
-	60, // 91: claudesensor.StratumQuery.WatchLiveSessions:output_type -> claudesensor.WatchLiveSessionsEvent
-	62, // 92: claudesensor.TimedbQuery.Query:output_type -> claudesensor.TimedbQueryResponse
-	64, // 93: claudesensor.GraphdbQuery.ExecuteDQL:output_type -> claudesensor.DqlQueryResponse
-	66, // 94: claudesensor.AgenticCodeEventBusStateService.PublishToEventStream:output_type -> claudesensor.TopicPublishReceipt
-	18, // 95: claudesensor.AgenticCodeEventBusStateService.SubscribeToEventStream:output_type -> claudesensor.SensorEvent
-	66, // 96: claudesensor.TraceEventBusStateService.PublishToTraceEvents:output_type -> claudesensor.TopicPublishReceipt
-	76, // 97: claudesensor.TraceEventBusStateService.SubscribeToTraceEvents:output_type -> trace.TraceEvent
-	78, // 98: claudesensor.GraphMutation.InsertAgentNode:output_type -> google.protobuf.Empty
-	78, // 99: claudesensor.GraphMutation.InsertSessionNode:output_type -> google.protobuf.Empty
-	78, // 100: claudesensor.GraphMutation.InsertToolUseNode:output_type -> google.protobuf.Empty
-	78, // 101: claudesensor.TimeseriesMutation.InsertPromptRecord:output_type -> google.protobuf.Empty
-	78, // 102: claudesensor.TimeseriesMutation.InsertSessionRecord:output_type -> google.protobuf.Empty
-	78, // 103: claudesensor.TimeseriesMutation.InsertStopRecord:output_type -> google.protobuf.Empty
-	78, // 104: claudesensor.TimeseriesMutation.InsertSubagentRecord:output_type -> google.protobuf.Empty
-	78, // 105: claudesensor.TimeseriesMutation.InsertToolUseRecord:output_type -> google.protobuf.Empty
-	74, // [74:106] is the sub-list for method output_type
-	42, // [42:74] is the sub-list for method input_type
-	42, // [42:42] is the sub-list for extension type_name
-	42, // [42:42] is the sub-list for extension extendee
-	0,  // [0:42] is the sub-list for field type_name
+	69, // 31: claudesensor.AgenticCodeEventBusEventStreamSubscribeRecord.meta:type_name -> claudesensor.EventBusRecordMeta
+	18, // 32: claudesensor.AgenticCodeEventBusEventStreamSubscribeRecord.payload:type_name -> claudesensor.SensorEvent
+	69, // 33: claudesensor.TraceEventBusTraceEventsSubscribeRecord.meta:type_name -> claudesensor.EventBusRecordMeta
+	79, // 34: claudesensor.TraceEventBusTraceEventsSubscribeRecord.payload:type_name -> trace.TraceEvent
+	80, // 35: claudesensor.EventBusRecordMeta.timestamp:type_name -> google.protobuf.Timestamp
+	1,  // 36: claudesensor.SessionNode.sensor_type:type_name -> claudesensor.SensorType
+	0,  // 37: claudesensor.SessionRecord.event_type:type_name -> claudesensor.SensorEventType
+	1,  // 38: claudesensor.SessionRecord.sensor_type:type_name -> claudesensor.SensorType
+	0,  // 39: claudesensor.ToolUseRecord.event_type:type_name -> claudesensor.SensorEventType
+	1,  // 40: claudesensor.ToolUseRecord.sensor_type:type_name -> claudesensor.SensorType
+	0,  // 41: claudesensor.SubagentRecord.event_type:type_name -> claudesensor.SensorEventType
+	1,  // 42: claudesensor.SubagentRecord.sensor_type:type_name -> claudesensor.SensorType
+	0,  // 43: claudesensor.PromptRecord.event_type:type_name -> claudesensor.SensorEventType
+	1,  // 44: claudesensor.PromptRecord.sensor_type:type_name -> claudesensor.SensorType
+	0,  // 45: claudesensor.StopRecord.event_type:type_name -> claudesensor.SensorEventType
+	1,  // 46: claudesensor.StopRecord.sensor_type:type_name -> claudesensor.SensorType
+	25, // 47: claudesensor.StratumQuery.CreateMap:input_type -> claudesensor.CreateMapRequest
+	27, // 48: claudesensor.StratumQuery.DeleteMap:input_type -> claudesensor.DeleteMapRequest
+	29, // 49: claudesensor.StratumQuery.ListMaps:input_type -> claudesensor.ListMapsRequest
+	31, // 50: claudesensor.StratumQuery.GetMapDetail:input_type -> claudesensor.GetMapDetailRequest
+	33, // 51: claudesensor.StratumQuery.GetMapSize:input_type -> claudesensor.MapSizeRequest
+	35, // 52: claudesensor.StratumQuery.UpdateMapByIds:input_type -> claudesensor.UpdateMapByIdsRequest
+	37, // 53: claudesensor.StratumQuery.UpdateMapBySql:input_type -> claudesensor.UpdateMapBySqlRequest
+	39, // 54: claudesensor.StratumQuery.UpdateMapByTimedb:input_type -> claudesensor.UpdateMapByTimedbRequest
+	41, // 55: claudesensor.StratumQuery.UpdateMapByGraphdb:input_type -> claudesensor.UpdateMapByGraphdbRequest
+	43, // 56: claudesensor.StratumQuery.UpdateMapFilter:input_type -> claudesensor.UpdateMapFilterRequest
+	45, // 57: claudesensor.StratumQuery.Merge:input_type -> claudesensor.MergeRequest
+	47, // 58: claudesensor.StratumQuery.ExecuteMapQuery:input_type -> claudesensor.ExecuteMapQueryRequest
+	49, // 59: claudesensor.StratumQuery.ListActiveSessions:input_type -> claudesensor.ListActiveSessionsRequest
+	51, // 60: claudesensor.StratumQuery.GetSessionEvents:input_type -> claudesensor.GetSessionEventsRequest
+	53, // 61: claudesensor.StratumQuery.GetUserSessions:input_type -> claudesensor.GetUserSessionsRequest
+	55, // 62: claudesensor.StratumQuery.ListEventsByTimeRange:input_type -> claudesensor.ListEventsByTimeRangeRequest
+	57, // 63: claudesensor.StratumQuery.ListEventsByEmail:input_type -> claudesensor.ListEventsByEmailRequest
+	59, // 64: claudesensor.StratumQuery.SubscribeLiveSessions:input_type -> claudesensor.WatchLiveSessionsRequest
+	61, // 65: claudesensor.TimedbQuery.ExecuteQuery:input_type -> claudesensor.TimedbQueryRequest
+	63, // 66: claudesensor.GraphdbQuery.ExecuteDQL:input_type -> claudesensor.DqlQueryRequest
+	18, // 67: claudesensor.AgenticCodeEventBusStateService.PublishToEventStream:input_type -> claudesensor.SensorEvent
+	81, // 68: claudesensor.AgenticCodeEventBusStateService.SubscribeToEventStream:input_type -> trace.TraceRequest
+	79, // 69: claudesensor.TraceEventBusStateService.PublishToTraceEvents:input_type -> trace.TraceEvent
+	81, // 70: claudesensor.TraceEventBusStateService.SubscribeToTraceEvents:input_type -> trace.TraceRequest
+	71, // 71: claudesensor.GraphMutation.InsertAgentNode:input_type -> claudesensor.AgentNode
+	70, // 72: claudesensor.GraphMutation.InsertSessionNode:input_type -> claudesensor.SessionNode
+	72, // 73: claudesensor.GraphMutation.InsertToolUseNode:input_type -> claudesensor.ToolUseNode
+	76, // 74: claudesensor.TimeseriesMutation.InsertPromptRecord:input_type -> claudesensor.PromptRecord
+	73, // 75: claudesensor.TimeseriesMutation.InsertSessionRecord:input_type -> claudesensor.SessionRecord
+	77, // 76: claudesensor.TimeseriesMutation.InsertStopRecord:input_type -> claudesensor.StopRecord
+	75, // 77: claudesensor.TimeseriesMutation.InsertSubagentRecord:input_type -> claudesensor.SubagentRecord
+	74, // 78: claudesensor.TimeseriesMutation.InsertToolUseRecord:input_type -> claudesensor.ToolUseRecord
+	26, // 79: claudesensor.StratumQuery.CreateMap:output_type -> claudesensor.CreateMapResponse
+	28, // 80: claudesensor.StratumQuery.DeleteMap:output_type -> claudesensor.DeleteMapResponse
+	30, // 81: claudesensor.StratumQuery.ListMaps:output_type -> claudesensor.ListMapsResponse
+	32, // 82: claudesensor.StratumQuery.GetMapDetail:output_type -> claudesensor.GetMapDetailResponse
+	34, // 83: claudesensor.StratumQuery.GetMapSize:output_type -> claudesensor.MapSizeResponse
+	36, // 84: claudesensor.StratumQuery.UpdateMapByIds:output_type -> claudesensor.UpdateMapByIdsResponse
+	38, // 85: claudesensor.StratumQuery.UpdateMapBySql:output_type -> claudesensor.UpdateMapBySqlResponse
+	40, // 86: claudesensor.StratumQuery.UpdateMapByTimedb:output_type -> claudesensor.UpdateMapByTimedbResponse
+	42, // 87: claudesensor.StratumQuery.UpdateMapByGraphdb:output_type -> claudesensor.UpdateMapByGraphdbResponse
+	44, // 88: claudesensor.StratumQuery.UpdateMapFilter:output_type -> claudesensor.UpdateMapFilterResponse
+	46, // 89: claudesensor.StratumQuery.Merge:output_type -> claudesensor.MergeResponse
+	48, // 90: claudesensor.StratumQuery.ExecuteMapQuery:output_type -> claudesensor.ExecuteMapQueryResponse
+	50, // 91: claudesensor.StratumQuery.ListActiveSessions:output_type -> claudesensor.ListActiveSessionsResponse
+	52, // 92: claudesensor.StratumQuery.GetSessionEvents:output_type -> claudesensor.GetSessionEventsResponse
+	54, // 93: claudesensor.StratumQuery.GetUserSessions:output_type -> claudesensor.GetUserSessionsResponse
+	56, // 94: claudesensor.StratumQuery.ListEventsByTimeRange:output_type -> claudesensor.ListEventsByTimeRangeResponse
+	58, // 95: claudesensor.StratumQuery.ListEventsByEmail:output_type -> claudesensor.ListEventsByEmailResponse
+	60, // 96: claudesensor.StratumQuery.SubscribeLiveSessions:output_type -> claudesensor.WatchLiveSessionsEvent
+	62, // 97: claudesensor.TimedbQuery.ExecuteQuery:output_type -> claudesensor.TimedbQueryResponse
+	64, // 98: claudesensor.GraphdbQuery.ExecuteDQL:output_type -> claudesensor.DqlQueryResponse
+	68, // 99: claudesensor.AgenticCodeEventBusStateService.PublishToEventStream:output_type -> claudesensor.TopicPublishReceipt
+	65, // 100: claudesensor.AgenticCodeEventBusStateService.SubscribeToEventStream:output_type -> claudesensor.AgenticCodeEventBusEventStreamSubscribeRecord
+	68, // 101: claudesensor.TraceEventBusStateService.PublishToTraceEvents:output_type -> claudesensor.TopicPublishReceipt
+	66, // 102: claudesensor.TraceEventBusStateService.SubscribeToTraceEvents:output_type -> claudesensor.TraceEventBusTraceEventsSubscribeRecord
+	82, // 103: claudesensor.GraphMutation.InsertAgentNode:output_type -> google.protobuf.Empty
+	82, // 104: claudesensor.GraphMutation.InsertSessionNode:output_type -> google.protobuf.Empty
+	82, // 105: claudesensor.GraphMutation.InsertToolUseNode:output_type -> google.protobuf.Empty
+	82, // 106: claudesensor.TimeseriesMutation.InsertPromptRecord:output_type -> google.protobuf.Empty
+	82, // 107: claudesensor.TimeseriesMutation.InsertSessionRecord:output_type -> google.protobuf.Empty
+	82, // 108: claudesensor.TimeseriesMutation.InsertStopRecord:output_type -> google.protobuf.Empty
+	82, // 109: claudesensor.TimeseriesMutation.InsertSubagentRecord:output_type -> google.protobuf.Empty
+	82, // 110: claudesensor.TimeseriesMutation.InsertToolUseRecord:output_type -> google.protobuf.Empty
+	79, // [79:111] is the sub-list for method output_type
+	47, // [47:79] is the sub-list for method input_type
+	47, // [47:47] is the sub-list for extension type_name
+	47, // [47:47] is the sub-list for extension extendee
+	0,  // [0:47] is the sub-list for field type_name
 }
 
 func init() { file_vservices_claude_sensor_proto_init() }
@@ -7280,7 +7551,7 @@ func file_vservices_claude_sensor_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_vservices_claude_sensor_proto_rawDesc), len(file_vservices_claude_sensor_proto_rawDesc)),
 			NumEnums:      12,
-			NumMessages:   64,
+			NumMessages:   67,
 			NumExtensions: 0,
 			NumServices:   7,
 		},

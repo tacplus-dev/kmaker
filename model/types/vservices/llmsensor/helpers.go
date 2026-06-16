@@ -23,6 +23,7 @@ package llmsensor
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"strconv"
 	"strings"
@@ -31,6 +32,7 @@ import (
 	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/errors"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	"gopkg.in/yaml.v3"
 )
 
@@ -268,8 +270,10 @@ func TypeIDValues() []TypeID {
 	return []TypeID{
 		TypeID_TYPE_ID_LLM_EVENT,
 		TypeID_TYPE_ID_LLM_EVENT_BUS,
+		TypeID_TYPE_ID_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD,
 		TypeID_TYPE_ID_MAP_EMPTY,
 		TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT,
+		TypeID_TYPE_ID_EVENT_BUS_RECORD_META,
 		TypeID_TYPE_ID_LLM_MODEL_NODE,
 		TypeID_TYPE_ID_LLM_CALL_NODE,
 		TypeID_TYPE_ID_LLM_CALL_RECORD,
@@ -278,7 +282,7 @@ func TypeIDValues() []TypeID {
 
 // TypeIDStringValues returns all valid TypeID names as strings
 func TypeIDStringValues() []string {
-	return []string{"llm-event", "llm-event-bus", "map-empty", "topic-publish-receipt", "llm-model-node", "llm-call-node", "llm-call-record"}
+	return []string{"llm-event", "llm-event-bus", "llm-event-bus-event-stream-subscribe-record", "map-empty", "topic-publish-receipt", "event-bus-record-meta", "llm-model-node", "llm-call-node", "llm-call-record"}
 }
 
 // ParseTypeID converts a string to a TypeID enum value
@@ -293,10 +297,14 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_LLM_EVENT, nil
 	case "llm-event-bus", "type-id-llm-event-bus":
 		return TypeID_TYPE_ID_LLM_EVENT_BUS, nil
+	case "llm-event-bus-event-stream-subscribe-record", "type-id-llm-event-bus-event-stream-subscribe-record":
+		return TypeID_TYPE_ID_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD, nil
 	case "map-empty", "type-id-map-empty":
 		return TypeID_TYPE_ID_MAP_EMPTY, nil
 	case "topic-publish-receipt", "type-id-topic-publish-receipt":
 		return TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT, nil
+	case "event-bus-record-meta", "type-id-event-bus-record-meta":
+		return TypeID_TYPE_ID_EVENT_BUS_RECORD_META, nil
 	case "llm-model-node", "type-id-llm-model-node":
 		return TypeID_TYPE_ID_LLM_MODEL_NODE, nil
 	case "llm-call-node", "type-id-llm-call-node":
@@ -337,10 +345,14 @@ func TypeIDToString(v TypeID) string {
 		return "llm-event"
 	case TypeID_TYPE_ID_LLM_EVENT_BUS:
 		return "llm-event-bus"
+	case TypeID_TYPE_ID_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD:
+		return "llm-event-bus-event-stream-subscribe-record"
 	case TypeID_TYPE_ID_MAP_EMPTY:
 		return "map-empty"
 	case TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT:
 		return "topic-publish-receipt"
+	case TypeID_TYPE_ID_EVENT_BUS_RECORD_META:
+		return "event-bus-record-meta"
 	case TypeID_TYPE_ID_LLM_MODEL_NODE:
 		return "llm-model-node"
 	case TypeID_TYPE_ID_LLM_CALL_NODE:
@@ -373,10 +385,14 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_LLM_EVENT
 	case "llm-event-bus", "type-id-llm-event-bus":
 		return TypeID_TYPE_ID_LLM_EVENT_BUS
+	case "llm-event-bus-event-stream-subscribe-record", "type-id-llm-event-bus-event-stream-subscribe-record":
+		return TypeID_TYPE_ID_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD
 	case "map-empty", "type-id-map-empty":
 		return TypeID_TYPE_ID_MAP_EMPTY
 	case "topic-publish-receipt", "type-id-topic-publish-receipt":
 		return TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT
+	case "event-bus-record-meta", "type-id-event-bus-record-meta":
+		return TypeID_TYPE_ID_EVENT_BUS_RECORD_META
 	case "llm-model-node", "type-id-llm-model-node":
 		return TypeID_TYPE_ID_LLM_MODEL_NODE
 	case "llm-call-node", "type-id-llm-call-node":
@@ -397,10 +413,14 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_LLM_EVENT"
 	case TypeID_TYPE_ID_LLM_EVENT_BUS:
 		return "TYPE_ID_LLM_EVENT_BUS"
+	case TypeID_TYPE_ID_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD:
+		return "TYPE_ID_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD"
 	case TypeID_TYPE_ID_MAP_EMPTY:
 		return "TYPE_ID_MAP_EMPTY"
 	case TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT:
 		return "TYPE_ID_TOPIC_PUBLISH_RECEIPT"
+	case TypeID_TYPE_ID_EVENT_BUS_RECORD_META:
+		return "TYPE_ID_EVENT_BUS_RECORD_META"
 	case TypeID_TYPE_ID_LLM_MODEL_NODE:
 		return "TYPE_ID_LLM_MODEL_NODE"
 	case TypeID_TYPE_ID_LLM_CALL_NODE:
@@ -1188,6 +1208,190 @@ func LlmEventBusToTOML(v *LlmEventBus) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
+// LlmEventBusEventStreamSubscribeRecordJSON represents LlmEventBusEventStreamSubscribeRecord in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type llmeventbuseventstreamsubscriberecordJSON struct {
+	Meta    json.RawMessage `json:"meta,omitempty"`
+	Payload json.RawMessage `json:"payload,omitempty"`
+	TraceId string          `json:"trace_id,omitempty"`
+	Noop    bool            `json:"noop,omitempty"`
+}
+
+// LlmEventBusEventStreamSubscribeRecordToJSON converts LlmEventBusEventStreamSubscribeRecord to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func LlmEventBusEventStreamSubscribeRecordToJSON(v *LlmEventBusEventStreamSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "llmeventbuseventstreamsubscriberecord is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := llmeventbuseventstreamsubscriberecordJSON{
+		Meta: func() json.RawMessage {
+			if v.Meta == nil {
+				return nil
+			}
+			data, _ := EventBusRecordMetaToJSON(v.Meta)
+			return data
+		}(),
+		Payload: func() json.RawMessage {
+			if v.Payload == nil {
+				return nil
+			}
+			data, _ := LlmEventToJSON(v.Payload)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// LlmEventBusEventStreamSubscribeRecordToJSONPretty converts LlmEventBusEventStreamSubscribeRecord to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func LlmEventBusEventStreamSubscribeRecordToJSONPretty(v *LlmEventBusEventStreamSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "llmeventbuseventstreamsubscriberecord is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := llmeventbuseventstreamsubscriberecordJSON{
+		Meta: func() json.RawMessage {
+			if v.Meta == nil {
+				return nil
+			}
+			data, _ := EventBusRecordMetaToJSON(v.Meta)
+			return data
+		}(),
+		Payload: func() json.RawMessage {
+			if v.Payload == nil {
+				return nil
+			}
+			data, _ := LlmEventToJSON(v.Payload)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// LlmEventBusEventStreamSubscribeRecordFromBytes creates LlmEventBusEventStreamSubscribeRecord from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func LlmEventBusEventStreamSubscribeRecordFromBytes(data []byte) (*LlmEventBusEventStreamSubscribeRecord, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := LlmEventBusEventStreamSubscribeRecordFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := LlmEventBusEventStreamSubscribeRecordFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := LlmEventBusEventStreamSubscribeRecordFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &LlmEventBusEventStreamSubscribeRecord{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse LlmEventBusEventStreamSubscribeRecord: unsupported format or invalid data")
+}
+
+// LlmEventBusEventStreamSubscribeRecordFromJSON creates LlmEventBusEventStreamSubscribeRecord from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func LlmEventBusEventStreamSubscribeRecordFromJSON(data []byte) (*LlmEventBusEventStreamSubscribeRecord, error) {
+	// Unmarshal into helper struct with string enums
+	var raw llmeventbuseventstreamsubscriberecordJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &LlmEventBusEventStreamSubscribeRecord{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &LlmEventBusEventStreamSubscribeRecord{}
+	// Parse message field: Meta
+	if len(raw.Meta) > 0 {
+		parsed, err := EventBusRecordMetaFromJSON(raw.Meta)
+		if err == nil {
+			result.Meta = parsed
+		}
+	}
+	// Parse message field: Payload
+	if len(raw.Payload) > 0 {
+		parsed, err := LlmEventFromJSON(raw.Payload)
+		if err == nil {
+			result.Payload = parsed
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// LlmEventBusEventStreamSubscribeRecordToYAML converts LlmEventBusEventStreamSubscribeRecord to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func LlmEventBusEventStreamSubscribeRecordToYAML(v *LlmEventBusEventStreamSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "llmeventbuseventstreamsubscriberecord is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := LlmEventBusEventStreamSubscribeRecordToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// LlmEventBusEventStreamSubscribeRecordToTOML converts LlmEventBusEventStreamSubscribeRecord to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func LlmEventBusEventStreamSubscribeRecordToTOML(v *LlmEventBusEventStreamSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "llmeventbuseventstreamsubscriberecord is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := LlmEventBusEventStreamSubscribeRecordToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
 // MapEmptyJSON represents MapEmpty in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type mapemptyJSON struct {
@@ -1461,6 +1665,184 @@ func TopicPublishReceiptToTOML(v *TopicPublishReceipt) ([]byte, error) {
 	}
 	// Convert to JSON first
 	jsonData, err := TopicPublishReceiptToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// EventBusRecordMetaJSON represents EventBusRecordMeta in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type eventbusrecordmetaJSON struct {
+	Key       []byte          `json:"key,omitempty"`
+	Topic     string          `json:"topic,omitempty"`
+	Partition int32           `json:"partition,omitempty"`
+	Offset    int64           `json:"offset,omitempty"`
+	Timestamp json.RawMessage `json:"timestamp,omitempty"`
+	TraceId   string          `json:"trace_id,omitempty"`
+	Noop      bool            `json:"noop,omitempty"`
+}
+
+// EventBusRecordMetaToJSON converts EventBusRecordMeta to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func EventBusRecordMetaToJSON(v *EventBusRecordMeta) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusrecordmeta is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := eventbusrecordmetaJSON{
+		Key:       v.Key,
+		Topic:     v.Topic,
+		Partition: v.Partition,
+		Offset:    v.Offset,
+		Timestamp: func() json.RawMessage {
+			if v.Timestamp == nil {
+				return nil
+			}
+			data, _ := protojson.Marshal(v.Timestamp)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// EventBusRecordMetaToJSONPretty converts EventBusRecordMeta to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func EventBusRecordMetaToJSONPretty(v *EventBusRecordMeta) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusrecordmeta is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := eventbusrecordmetaJSON{
+		Key:       v.Key,
+		Topic:     v.Topic,
+		Partition: v.Partition,
+		Offset:    v.Offset,
+		Timestamp: func() json.RawMessage {
+			if v.Timestamp == nil {
+				return nil
+			}
+			data, _ := protojson.Marshal(v.Timestamp)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// EventBusRecordMetaFromBytes creates EventBusRecordMeta from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func EventBusRecordMetaFromBytes(data []byte) (*EventBusRecordMeta, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := EventBusRecordMetaFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := EventBusRecordMetaFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := EventBusRecordMetaFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &EventBusRecordMeta{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse EventBusRecordMeta: unsupported format or invalid data")
+}
+
+// EventBusRecordMetaFromJSON creates EventBusRecordMeta from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func EventBusRecordMetaFromJSON(data []byte) (*EventBusRecordMeta, error) {
+	// Unmarshal into helper struct with string enums
+	var raw eventbusrecordmetaJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &EventBusRecordMeta{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &EventBusRecordMeta{}
+	result.Key = raw.Key
+	result.Topic = raw.Topic
+	result.Partition = raw.Partition
+	result.Offset = raw.Offset
+	// Parse well-known type: Timestamp
+	if len(raw.Timestamp) > 0 {
+		result.Timestamp = &timestamppb.Timestamp{}
+		if err := protojson.Unmarshal(raw.Timestamp, result.Timestamp); err != nil {
+			result.Timestamp = nil
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// EventBusRecordMetaToYAML converts EventBusRecordMeta to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func EventBusRecordMetaToYAML(v *EventBusRecordMeta) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusrecordmeta is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := EventBusRecordMetaToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// EventBusRecordMetaToTOML converts EventBusRecordMeta to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func EventBusRecordMetaToTOML(v *EventBusRecordMeta) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusrecordmeta is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := EventBusRecordMetaToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -2281,6 +2663,53 @@ func LlmEventBusFromEnvVar(env map[string]string) (*LlmEventBus, error) {
 	return result, nil
 }
 
+// LlmEventBusEventStreamSubscribeRecordToEnvVar converts LlmEventBusEventStreamSubscribeRecord to environment variable key-value pairs.
+func LlmEventBusEventStreamSubscribeRecordToEnvVar(v *LlmEventBusEventStreamSubscribeRecord) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.Meta != nil {
+		for k, val := range EventBusRecordMetaToEnvVar(v.Meta) {
+			result[k] = val
+		}
+	}
+	if v.Payload != nil {
+		for k, val := range LlmEventToEnvVar(v.Payload) {
+			result[k] = val
+		}
+	}
+	result["PROTO_VSERVICES_LLM-SENSOR_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_LLM-SENSOR_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// LlmEventBusEventStreamSubscribeRecordFromEnvVar creates LlmEventBusEventStreamSubscribeRecord from environment variable key-value pairs.
+func LlmEventBusEventStreamSubscribeRecordFromEnvVar(env map[string]string) (*LlmEventBusEventStreamSubscribeRecord, error) {
+	result := &LlmEventBusEventStreamSubscribeRecord{}
+	if sub, err := EventBusRecordMetaFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Meta = sub
+	}
+	if sub, err := LlmEventFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Payload = sub
+	}
+	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
 // MapEmptyToEnvVar converts MapEmpty to environment variable key-value pairs.
 func MapEmptyToEnvVar(v *MapEmpty) map[string]string {
 	if v == nil {
@@ -2334,6 +2763,61 @@ func TopicPublishReceiptFromEnvVar(env map[string]string) (*TopicPublishReceipt,
 		result.TraceId = val
 	}
 	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_TOPIC_PUBLISH_RECEIPT_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// EventBusRecordMetaToEnvVar converts EventBusRecordMeta to environment variable key-value pairs.
+func EventBusRecordMetaToEnvVar(v *EventBusRecordMeta) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_KEY"] = base64.StdEncoding.EncodeToString(v.Key)
+	result["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_TOPIC"] = v.Topic
+	result["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_PARTITION"] = strconv.FormatInt(int64(v.Partition), 10)
+	result["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_OFFSET"] = strconv.FormatInt(v.Offset, 10)
+	result["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// EventBusRecordMetaFromEnvVar creates EventBusRecordMeta from environment variable key-value pairs.
+func EventBusRecordMetaFromEnvVar(env map[string]string) (*EventBusRecordMeta, error) {
+	result := &EventBusRecordMeta{}
+	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_KEY"]; ok && val != "" {
+		parsed, err := base64.StdEncoding.DecodeString(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Key = parsed
+	}
+	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_TOPIC"]; ok && val != "" {
+		result.Topic = val
+	}
+	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_PARTITION"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.Partition = int32(parsed)
+	}
+	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_OFFSET"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.Offset = parsed
+	}
+	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -2676,14 +3160,14 @@ func ValidateLlmEventWithDepth(m *LlmEvent, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Email must be at most 256 characters, got: %d", len(m.Email))
 	}
 
-	// Validate EventId (assert_required)
-	if m.EventId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field EventId is required")
-	}
-
 	// Validate EventId (assert_max_length: 512)
 	if len(m.EventId) > 512 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field EventId must be at most 512 characters, got: %d", len(m.EventId))
+	}
+
+	// Validate EventId (assert_required)
+	if m.EventId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field EventId is required")
 	}
 
 	// Validate TimestampMs (assert_gt: 0)
@@ -2827,6 +3311,44 @@ func ValidateLlmEventBusWithDepth(m *LlmEventBus, depth int) error {
 	return nil
 }
 
+// ValidateLlmEventBusEventStreamSubscribeRecord validates all fields in LlmEventBusEventStreamSubscribeRecord according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateLlmEventBusEventStreamSubscribeRecord(m *LlmEventBusEventStreamSubscribeRecord) error {
+	return ValidateLlmEventBusEventStreamSubscribeRecordWithDepth(m, 0)
+}
+
+// ValidateLlmEventBusEventStreamSubscribeRecordWithDepth validates LlmEventBusEventStreamSubscribeRecord and carries nested-message depth across
+// generated package boundaries.
+func ValidateLlmEventBusEventStreamSubscribeRecordWithDepth(m *LlmEventBusEventStreamSubscribeRecord, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Meta nested message
+	if m.Meta != nil {
+		if err := ValidateEventBusRecordMetaWithDepth(m.Meta, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Meta validation failed")
+		}
+	}
+
+	// Validate Payload nested message
+	if m.Payload != nil {
+		if err := ValidateLlmEventWithDepth(m.Payload, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Payload validation failed")
+		}
+	}
+
+	return nil
+}
+
 // ValidateMapEmpty validates all fields in MapEmpty according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateMapEmpty(m *MapEmpty) error {
@@ -2865,6 +3387,40 @@ func ValidateTopicPublishReceiptWithDepth(m *TopicPublishReceipt, depth int) err
 	}
 	if depth > 24 {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateEventBusRecordMeta validates all fields in EventBusRecordMeta according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateEventBusRecordMeta(m *EventBusRecordMeta) error {
+	return ValidateEventBusRecordMetaWithDepth(m, 0)
+}
+
+// ValidateEventBusRecordMetaWithDepth validates EventBusRecordMeta and carries nested-message depth across
+// generated package boundaries.
+func ValidateEventBusRecordMetaWithDepth(m *EventBusRecordMeta, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Key (default max size: 32768 bytes)
+	if len(m.Key) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key exceeds max size of 32768 bytes, got: %d", len(m.Key))
+	}
+
+	// Validate Topic (default max size: 32768 bytes)
+	if len(m.Topic) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Topic exceeds max size of 32768 bytes, got: %d", len(m.Topic))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -3041,32 +3597,36 @@ func ValidateLlmCallRecordWithDepth(m *LlmCallRecord, depth int) error {
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizeLlmeventEmail              int = 32768
-	MaxSizeLlmeventEventId            int = 32768
-	MaxSizeLlmeventApiEndpoint        int = 32768
-	MaxSizeLlmeventModel              int = 32768
-	MaxSizeLlmeventModelKey           int = 32768
-	MaxSizeLlmeventErrorMessage       int = 32768
-	MaxSizeLlmeventTraceId            int = 32768
-	MaxSizeLlmeventbusTraceId         int = 32768
-	MaxSizeMapemptyTraceId            int = 32768
-	MaxSizeTopicpublishreceiptTraceId int = 32768
-	MaxSizeLlmmodelnodeModelKey       int = 32768
-	MaxSizeLlmmodelnodeModel          int = 32768
-	MaxSizeLlmmodelnodeApiEndpoint    int = 32768
-	MaxSizeLlmmodelnodeEventId        int = 32768
-	MaxSizeLlmmodelnodeTraceId        int = 32768
-	MaxSizeLlmcallnodeEventId         int = 32768
-	MaxSizeLlmcallnodeModel           int = 32768
-	MaxSizeLlmcallnodeEmail           int = 32768
-	MaxSizeLlmcallnodeTraceId         int = 32768
-	MaxSizeLlmcallrecordModelKey      int = 32768
-	MaxSizeLlmcallrecordEventId       int = 32768
-	MaxSizeLlmcallrecordEmail         int = 32768
-	MaxSizeLlmcallrecordApiEndpoint   int = 32768
-	MaxSizeLlmcallrecordModel         int = 32768
-	MaxSizeLlmcallrecordErrorMessage  int = 32768
-	MaxSizeLlmcallrecordTraceId       int = 32768
+	MaxSizeLlmeventEmail                                int = 32768
+	MaxSizeLlmeventEventId                              int = 32768
+	MaxSizeLlmeventApiEndpoint                          int = 32768
+	MaxSizeLlmeventModel                                int = 32768
+	MaxSizeLlmeventModelKey                             int = 32768
+	MaxSizeLlmeventErrorMessage                         int = 32768
+	MaxSizeLlmeventTraceId                              int = 32768
+	MaxSizeLlmeventbusTraceId                           int = 32768
+	MaxSizeLlmeventbuseventstreamsubscriberecordTraceId int = 32768
+	MaxSizeMapemptyTraceId                              int = 32768
+	MaxSizeTopicpublishreceiptTraceId                   int = 32768
+	MaxSizeEventbusrecordmetaKey                        int = 32768
+	MaxSizeEventbusrecordmetaTopic                      int = 32768
+	MaxSizeEventbusrecordmetaTraceId                    int = 32768
+	MaxSizeLlmmodelnodeModelKey                         int = 32768
+	MaxSizeLlmmodelnodeModel                            int = 32768
+	MaxSizeLlmmodelnodeApiEndpoint                      int = 32768
+	MaxSizeLlmmodelnodeEventId                          int = 32768
+	MaxSizeLlmmodelnodeTraceId                          int = 32768
+	MaxSizeLlmcallnodeEventId                           int = 32768
+	MaxSizeLlmcallnodeModel                             int = 32768
+	MaxSizeLlmcallnodeEmail                             int = 32768
+	MaxSizeLlmcallnodeTraceId                           int = 32768
+	MaxSizeLlmcallrecordModelKey                        int = 32768
+	MaxSizeLlmcallrecordEventId                         int = 32768
+	MaxSizeLlmcallrecordEmail                           int = 32768
+	MaxSizeLlmcallrecordApiEndpoint                     int = 32768
+	MaxSizeLlmcallrecordModel                           int = 32768
+	MaxSizeLlmcallrecordErrorMessage                    int = 32768
+	MaxSizeLlmcallrecordTraceId                         int = 32768
 )
 
 // ============================================================
@@ -3090,6 +3650,16 @@ func LlmEventBusDefaults(v *LlmEventBus) {
 }
 
 // ============================================================
+// TypeDefaults: LlmEventBusEventStreamSubscribeRecord
+// ============================================================
+// LlmEventBusEventStreamSubscribeRecordDefaults applies field-level default values to zero-valued fields.
+func LlmEventBusEventStreamSubscribeRecordDefaults(v *LlmEventBusEventStreamSubscribeRecord) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
 // TypeDefaults: MapEmpty
 // ============================================================
 // MapEmptyDefaults applies field-level default values to zero-valued fields.
@@ -3104,6 +3674,16 @@ func MapEmptyDefaults(v *MapEmpty) {
 // ============================================================
 // TopicPublishReceiptDefaults applies field-level default values to zero-valued fields.
 func TopicPublishReceiptDefaults(v *TopicPublishReceipt) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: EventBusRecordMeta
+// ============================================================
+// EventBusRecordMetaDefaults applies field-level default values to zero-valued fields.
+func EventBusRecordMetaDefaults(v *EventBusRecordMeta) {
 	if v == nil {
 		return
 	}
@@ -3162,6 +3742,17 @@ func LlmEventBusUndefaults(v *LlmEventBus) {
 }
 
 // ============================================================
+// TypeUndefaults: LlmEventBusEventStreamSubscribeRecord
+// ============================================================
+// LlmEventBusEventStreamSubscribeRecordUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func LlmEventBusEventStreamSubscribeRecordUndefaults(v *LlmEventBusEventStreamSubscribeRecord) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
 // TypeUndefaults: MapEmpty
 // ============================================================
 // MapEmptyUndefaults resets fields that match their default values back to zero.
@@ -3178,6 +3769,17 @@ func MapEmptyUndefaults(v *MapEmpty) {
 // TopicPublishReceiptUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
 func TopicPublishReceiptUndefaults(v *TopicPublishReceipt) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: EventBusRecordMeta
+// ============================================================
+// EventBusRecordMetaUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func EventBusRecordMetaUndefaults(v *EventBusRecordMeta) {
 	if v == nil {
 		return
 	}
@@ -3305,6 +3907,29 @@ func MergeLlmEventBus(dst, src *LlmEventBus) {
 }
 
 // ============================================================
+// Merge: LlmEventBusEventStreamSubscribeRecord
+// ============================================================
+// MergeLlmEventBusEventStreamSubscribeRecord fills zero-valued fields in dst from src.
+func MergeLlmEventBusEventStreamSubscribeRecord(dst, src *LlmEventBusEventStreamSubscribeRecord) {
+	if dst.Meta == nil {
+		dst.Meta = src.Meta
+	} else if src.Meta != nil {
+		MergeEventBusRecordMeta(dst.Meta, src.Meta)
+	}
+	if dst.Payload == nil {
+		dst.Payload = src.Payload
+	} else if src.Payload != nil {
+		MergeLlmEvent(dst.Payload, src.Payload)
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
 // Merge: MapEmpty
 // ============================================================
 // MergeMapEmpty fills zero-valued fields in dst from src.
@@ -3324,6 +3949,34 @@ func MergeMapEmpty(dst, src *MapEmpty) {
 func MergeTopicPublishReceipt(dst, src *TopicPublishReceipt) {
 	if !dst.Published {
 		dst.Published = src.Published
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: EventBusRecordMeta
+// ============================================================
+// MergeEventBusRecordMeta fills zero-valued fields in dst from src.
+func MergeEventBusRecordMeta(dst, src *EventBusRecordMeta) {
+	if len(dst.Key) == 0 {
+		dst.Key = src.Key
+	}
+	if dst.Topic == "" {
+		dst.Topic = src.Topic
+	}
+	if dst.Partition == 0 {
+		dst.Partition = src.Partition
+	}
+	if dst.Offset == 0 {
+		dst.Offset = src.Offset
+	}
+	if dst.Timestamp == nil {
+		dst.Timestamp = src.Timestamp
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

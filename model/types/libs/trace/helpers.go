@@ -160,119 +160,6 @@ func TraceEventKindToSpecName(v TraceEventKind) string {
 	}
 }
 
-// TypeIDValues returns all valid TypeID values (excluding UNDEFINED)
-func TypeIDValues() []TypeID {
-	return []TypeID{
-		TypeID_TYPE_ID_TRACE_ROUND,
-		TypeID_TYPE_ID_TRACE_REQUEST,
-		TypeID_TYPE_ID_TRACE_EVENT,
-	}
-}
-
-// TypeIDStringValues returns all valid TypeID names as strings
-func TypeIDStringValues() []string {
-	return []string{"trace-round", "trace-request", "trace-event"}
-}
-
-// ParseTypeID converts a string to a TypeID enum value
-// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseTypeID(s string) (TypeID, error) {
-	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
-	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
-	switch normalized {
-	case "":
-		return TypeID_TYPE_ID_UNSPECIFIED, nil
-	case "trace-round", "type-id-trace-round":
-		return TypeID_TYPE_ID_TRACE_ROUND, nil
-	case "trace-request", "type-id-trace-request":
-		return TypeID_TYPE_ID_TRACE_REQUEST, nil
-	case "trace-event", "type-id-trace-event":
-		return TypeID_TYPE_ID_TRACE_EVENT, nil
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid typeid %s, expecting one of: %v", s, TypeIDStringValues())
-	}
-}
-
-// ParseTypeIDs converts a comma-separated string to a slice of TypeID enum values
-// Returns an error if any value is invalid
-func ParseTypeIDs(s string) ([]TypeID, error) {
-	if s == "" {
-		return nil, nil
-	}
-	parts := strings.Split(s, ",")
-	result := make([]TypeID, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed == "" {
-			continue
-		}
-		val, err := ParseTypeID(trimmed)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, val)
-	}
-	return result, nil
-}
-
-// TypeIDToString converts a TypeID to its lowercase string representation
-func TypeIDToString(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_TRACE_ROUND:
-		return "trace-round"
-	case TypeID_TYPE_ID_TRACE_REQUEST:
-		return "trace-request"
-	case TypeID_TYPE_ID_TRACE_EVENT:
-		return "trace-event"
-	default:
-		return ""
-	}
-}
-
-// ParseTypeIDLiberal parses a TypeID liberally, accepting:
-// - Integer values (as string or int)
-// - Enum names in any case
-// - RFC-compliant JSON names
-func ParseTypeIDLiberal(s string) TypeID {
-	if s == "" {
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-	// Try parsing as integer
-	if num, err := strconv.Atoi(s); err == nil {
-		return TypeID(num)
-	}
-	// Normalize and try parsing
-	normalized := strings.ToLower(strings.TrimSpace(s))
-	normalized = strings.ReplaceAll(normalized, "_", "-")
-	normalized = strings.ReplaceAll(normalized, " ", "-")
-	switch normalized {
-	case "trace-round", "type-id-trace-round":
-		return TypeID_TYPE_ID_TRACE_ROUND
-	case "trace-request", "type-id-trace-request":
-		return TypeID_TYPE_ID_TRACE_REQUEST
-	case "trace-event", "type-id-trace-event":
-		return TypeID_TYPE_ID_TRACE_EVENT
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-}
-
-// TypeIDToSpecName converts a TypeID to its canonical protobuf spec name
-func TypeIDToSpecName(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_UNSPECIFIED:
-		return "TYPE_ID_UNSPECIFIED"
-	case TypeID_TYPE_ID_TRACE_ROUND:
-		return "TYPE_ID_TRACE_ROUND"
-	case TypeID_TYPE_ID_TRACE_REQUEST:
-		return "TYPE_ID_TRACE_REQUEST"
-	case TypeID_TYPE_ID_TRACE_EVENT:
-		return "TYPE_ID_TRACE_EVENT"
-	default:
-		return ""
-	}
-}
-
 // ============================================================
 // JSON/YAML/TOML Serialization Helpers
 // ============================================================
@@ -982,14 +869,14 @@ func ValidateTraceEventWithDepth(m *TraceEvent, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate TraceId (assert_max_length: 64)
-	if len(m.TraceId) > 64 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId must be at most 64 characters, got: %d", len(m.TraceId))
-	}
-
 	// Validate TraceId (assert_required)
 	if m.TraceId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId is required")
+	}
+
+	// Validate TraceId (assert_max_length: 64)
+	if len(m.TraceId) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId must be at most 64 characters, got: %d", len(m.TraceId))
 	}
 
 	// Validate Round (assert_required)

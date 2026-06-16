@@ -37,56 +37,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED TypeID = 0
-	TypeID_TYPE_ID_ERROR       TypeID = 1
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_ERROR",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED": 0,
-		"TYPE_ID_ERROR":       1,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_errors_proto_enumTypes[0].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_errors_proto_enumTypes[0]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_errors_proto_rawDescGZIP(), []int{0}
-}
-
 // Error represents a structured error with status information.
 // This message is designed to work as a Go error type and follows the Google RPC error model.
 // The generated code will have an Error() string method added to implement the error interface.
@@ -166,10 +116,7 @@ const file_libs_errors_proto_rawDesc = "" +
 	"\x05Error\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x05R\x04code\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12.\n" +
-	"\adetails\x18\x03 \x03(\v2\x14.google.protobuf.AnyR\adetails*4\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x11\n" +
-	"\rTYPE_ID_ERROR\x10\x01BXZVgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/errorsb\x06proto3"
+	"\adetails\x18\x03 \x03(\v2\x14.google.protobuf.AnyR\adetailsBXZVgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/errorsb\x06proto3"
 
 var (
 	file_libs_errors_proto_rawDescOnce sync.Once
@@ -183,15 +130,13 @@ func file_libs_errors_proto_rawDescGZIP() []byte {
 	return file_libs_errors_proto_rawDescData
 }
 
-var file_libs_errors_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_libs_errors_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_libs_errors_proto_goTypes = []any{
-	(TypeID)(0),       // 0: errors.TypeID
-	(*Error)(nil),     // 1: errors.Error
-	(*anypb.Any)(nil), // 2: google.protobuf.Any
+	(*Error)(nil),     // 0: errors.Error
+	(*anypb.Any)(nil), // 1: google.protobuf.Any
 }
 var file_libs_errors_proto_depIdxs = []int32{
-	2, // 0: errors.Error.details:type_name -> google.protobuf.Any
+	1, // 0: errors.Error.details:type_name -> google.protobuf.Any
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -209,14 +154,13 @@ func file_libs_errors_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_errors_proto_rawDesc), len(file_libs_errors_proto_rawDesc)),
-			NumEnums:      1,
+			NumEnums:      0,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_libs_errors_proto_goTypes,
 		DependencyIndexes: file_libs_errors_proto_depIdxs,
-		EnumInfos:         file_libs_errors_proto_enumTypes,
 		MessageInfos:      file_libs_errors_proto_msgTypes,
 	}.Build()
 	File_libs_errors_proto = out.File

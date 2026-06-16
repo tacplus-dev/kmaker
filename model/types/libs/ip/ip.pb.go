@@ -37,71 +37,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED TypeID = 0
-	TypeID_TYPE_ID_I_PV4       TypeID = 1
-	TypeID_TYPE_ID_I_PV6       TypeID = 2
-	TypeID_TYPE_ID_IP_ADDR     TypeID = 3
-	TypeID_TYPE_ID_IP_NET      TypeID = 4
-	TypeID_TYPE_ID_IP_PORT     TypeID = 5
-	TypeID_TYPE_ID_IP_NETS     TypeID = 6
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_I_PV4",
-		2: "TYPE_ID_I_PV6",
-		3: "TYPE_ID_IP_ADDR",
-		4: "TYPE_ID_IP_NET",
-		5: "TYPE_ID_IP_PORT",
-		6: "TYPE_ID_IP_NETS",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED": 0,
-		"TYPE_ID_I_PV4":       1,
-		"TYPE_ID_I_PV6":       2,
-		"TYPE_ID_IP_ADDR":     3,
-		"TYPE_ID_IP_NET":      4,
-		"TYPE_ID_IP_PORT":     5,
-		"TYPE_ID_IP_NETS":     6,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_ip_proto_enumTypes[0].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_ip_proto_enumTypes[0]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_ip_proto_rawDescGZIP(), []int{0}
-}
-
 // IPv4 stores an IPv4 address as a single fixed32 (4 bytes on the wire).
 // Stored in network byte order (big-endian).
 // Example: 192.168.1.100 → {addr: 0xC0A80164}
@@ -544,15 +479,7 @@ const file_libs_ip_proto_rawDesc = "" +
 	"\x04port\x18\x03 \x01(\rB\x06\xc0\xa7\x1d\xff\xff\x03R\x04portB\t\n" +
 	"\aaddress\"'\n" +
 	"\x06IPNets\x12\x1d\n" +
-	"\x04nets\x18\x01 \x03(\v2\t.ip.IPNetR\x04nets*\x9a\x01\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x11\n" +
-	"\rTYPE_ID_I_PV4\x10\x01\x12\x11\n" +
-	"\rTYPE_ID_I_PV6\x10\x02\x12\x13\n" +
-	"\x0fTYPE_ID_IP_ADDR\x10\x03\x12\x12\n" +
-	"\x0eTYPE_ID_IP_NET\x10\x04\x12\x13\n" +
-	"\x0fTYPE_ID_IP_PORT\x10\x05\x12\x13\n" +
-	"\x0fTYPE_ID_IP_NETS\x10\x06BTZRgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/ipb\x06proto3"
+	"\x04nets\x18\x01 \x03(\v2\t.ip.IPNetR\x04netsBTZRgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/ipb\x06proto3"
 
 var (
 	file_libs_ip_proto_rawDescOnce sync.Once
@@ -566,25 +493,23 @@ func file_libs_ip_proto_rawDescGZIP() []byte {
 	return file_libs_ip_proto_rawDescData
 }
 
-var file_libs_ip_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_libs_ip_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_libs_ip_proto_goTypes = []any{
-	(TypeID)(0),    // 0: ip.TypeID
-	(*IPv4)(nil),   // 1: ip.IPv4
-	(*IPv6)(nil),   // 2: ip.IPv6
-	(*IPAddr)(nil), // 3: ip.IPAddr
-	(*IPNet)(nil),  // 4: ip.IPNet
-	(*IPPort)(nil), // 5: ip.IPPort
-	(*IPNets)(nil), // 6: ip.IPNets
+	(*IPv4)(nil),   // 0: ip.IPv4
+	(*IPv6)(nil),   // 1: ip.IPv6
+	(*IPAddr)(nil), // 2: ip.IPAddr
+	(*IPNet)(nil),  // 3: ip.IPNet
+	(*IPPort)(nil), // 4: ip.IPPort
+	(*IPNets)(nil), // 5: ip.IPNets
 }
 var file_libs_ip_proto_depIdxs = []int32{
-	1, // 0: ip.IPAddr.ipv4:type_name -> ip.IPv4
-	2, // 1: ip.IPAddr.ipv6:type_name -> ip.IPv6
-	1, // 2: ip.IPNet.ipv4:type_name -> ip.IPv4
-	2, // 3: ip.IPNet.ipv6:type_name -> ip.IPv6
-	1, // 4: ip.IPPort.ipv4:type_name -> ip.IPv4
-	2, // 5: ip.IPPort.ipv6:type_name -> ip.IPv6
-	4, // 6: ip.IPNets.nets:type_name -> ip.IPNet
+	0, // 0: ip.IPAddr.ipv4:type_name -> ip.IPv4
+	1, // 1: ip.IPAddr.ipv6:type_name -> ip.IPv6
+	0, // 2: ip.IPNet.ipv4:type_name -> ip.IPv4
+	1, // 3: ip.IPNet.ipv6:type_name -> ip.IPv6
+	0, // 4: ip.IPPort.ipv4:type_name -> ip.IPv4
+	1, // 5: ip.IPPort.ipv6:type_name -> ip.IPv6
+	3, // 6: ip.IPNets.nets:type_name -> ip.IPNet
 	7, // [7:7] is the sub-list for method output_type
 	7, // [7:7] is the sub-list for method input_type
 	7, // [7:7] is the sub-list for extension type_name
@@ -614,14 +539,13 @@ func file_libs_ip_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_ip_proto_rawDesc), len(file_libs_ip_proto_rawDesc)),
-			NumEnums:      1,
+			NumEnums:      0,
 			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_libs_ip_proto_goTypes,
 		DependencyIndexes: file_libs_ip_proto_depIdxs,
-		EnumInfos:         file_libs_ip_proto_enumTypes,
 		MessageInfos:      file_libs_ip_proto_msgTypes,
 	}.Build()
 	File_libs_ip_proto = out.File

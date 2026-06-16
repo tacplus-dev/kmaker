@@ -37,62 +37,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED TypeID = 0
-	TypeID_TYPE_ID_PERMISSION  TypeID = 1
-	TypeID_TYPE_ID_FILE        TypeID = 2
-	TypeID_TYPE_ID_DIRECTORY   TypeID = 3
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_PERMISSION",
-		2: "TYPE_ID_FILE",
-		3: "TYPE_ID_DIRECTORY",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED": 0,
-		"TYPE_ID_PERMISSION":  1,
-		"TYPE_ID_FILE":        2,
-		"TYPE_ID_DIRECTORY":   3,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_filesystem_proto_enumTypes[0].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_filesystem_proto_enumTypes[0]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_filesystem_proto_rawDescGZIP(), []int{0}
-}
-
 // Permission represents Unix-style file permissions (e.g., 755).
 // Each field is a 3-bit mask: read (4) + write (2) + execute (1).
 type Permission struct {
@@ -319,12 +263,7 @@ const file_libs_filesystem_proto_rawDesc = "" +
 	"permission\x18\x02 \x01(\v2\x16.filesystem.PermissionR\n" +
 	"permission\x12>\n" +
 	"\vdirectories\x18\x03 \x03(\v2\x15.filesystem.DirectoryB\x05\xb8\xa8\x1d\x90NR\vdirectories\x12-\n" +
-	"\x05files\x18\x04 \x03(\v2\x10.filesystem.FileB\x05\xb8\xa8\x1d\x90NR\x05files*b\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x16\n" +
-	"\x12TYPE_ID_PERMISSION\x10\x01\x12\x10\n" +
-	"\fTYPE_ID_FILE\x10\x02\x12\x15\n" +
-	"\x11TYPE_ID_DIRECTORY\x10\x03B\\ZZgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/filesystemb\x06proto3"
+	"\x05files\x18\x04 \x03(\v2\x10.filesystem.FileB\x05\xb8\xa8\x1d\x90NR\x05filesB\\ZZgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/filesystemb\x06proto3"
 
 var (
 	file_libs_filesystem_proto_rawDescOnce sync.Once
@@ -338,19 +277,17 @@ func file_libs_filesystem_proto_rawDescGZIP() []byte {
 	return file_libs_filesystem_proto_rawDescData
 }
 
-var file_libs_filesystem_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_libs_filesystem_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_libs_filesystem_proto_goTypes = []any{
-	(TypeID)(0),        // 0: filesystem.TypeID
-	(*Permission)(nil), // 1: filesystem.Permission
-	(*File)(nil),       // 2: filesystem.File
-	(*Directory)(nil),  // 3: filesystem.Directory
+	(*Permission)(nil), // 0: filesystem.Permission
+	(*File)(nil),       // 1: filesystem.File
+	(*Directory)(nil),  // 2: filesystem.Directory
 }
 var file_libs_filesystem_proto_depIdxs = []int32{
-	1, // 0: filesystem.File.permission:type_name -> filesystem.Permission
-	1, // 1: filesystem.Directory.permission:type_name -> filesystem.Permission
-	3, // 2: filesystem.Directory.directories:type_name -> filesystem.Directory
-	2, // 3: filesystem.Directory.files:type_name -> filesystem.File
+	0, // 0: filesystem.File.permission:type_name -> filesystem.Permission
+	0, // 1: filesystem.Directory.permission:type_name -> filesystem.Permission
+	2, // 2: filesystem.Directory.directories:type_name -> filesystem.Directory
+	1, // 3: filesystem.Directory.files:type_name -> filesystem.File
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
@@ -368,14 +305,13 @@ func file_libs_filesystem_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_filesystem_proto_rawDesc), len(file_libs_filesystem_proto_rawDesc)),
-			NumEnums:      1,
+			NumEnums:      0,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_libs_filesystem_proto_goTypes,
 		DependencyIndexes: file_libs_filesystem_proto_depIdxs,
-		EnumInfos:         file_libs_filesystem_proto_enumTypes,
 		MessageInfos:      file_libs_filesystem_proto_msgTypes,
 	}.Build()
 	File_libs_filesystem_proto = out.File

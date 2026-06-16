@@ -6073,14 +6073,14 @@ func ValidateNamespaceEntitlementsPolicyWithDepth(m *NamespaceEntitlementsPolicy
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Namespace (assert_min_length: 1)
-	if len(m.Namespace) < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Namespace must be at least 1 characters, got: %d", len(m.Namespace))
-	}
-
 	// Validate Namespace (assert_required)
 	if m.Namespace == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Namespace is required")
+	}
+
+	// Validate Namespace (assert_min_length: 1)
+	if len(m.Namespace) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Namespace must be at least 1 characters, got: %d", len(m.Namespace))
 	}
 
 	// Validate Namespace (default max size: 32768 bytes)

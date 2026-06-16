@@ -76,8 +76,9 @@ extend google.protobuf.FileOptions {
   // This is the source of truth for the generated service schema injected into libs/tacplus.proto.
   ServiceAnnotation service = 50011;
 
-  // state_imports declares read-only dependencies on other services' exported state roots.
-  // Each entry references a "package.StateName" that must have export=true on its service_state.
+  // state_imports is a legacy file-level mirror for field-level state_import roots.
+  // Prefer field-level state_import; if this option is present, it must exactly
+  // mirror the imported "package.StateName" roots derived from those fields.
   repeated StateImport state_imports = 50012;
 
   // opa_import declares dependencies on OPA eval definitions.
@@ -509,30 +510,15 @@ extend google.protobuf.MessageOptions {
   //   }
   bool per_service_config = 60068;
 
-  // tenant_config_slice marks a message as a per-service slice of the auto-generated
-  // TenantConfig message. tacplus collects all messages with this annotation and
-  // generates generated/tenant_config.proto deterministically.
-  // The field name in TenantConfig is derived from the service package name.
-  // The field number is looked up (or auto-assigned) in registry.yaml.
+  // config_slice marks a message as one per-service configuration slice with an
+  // explicit owner and scope.
+  // Example: option (spec.config_slice) = {scope: CONFIG_SLICE_SCOPE_TENANT, service_name: "identity"};
+  ConfigSliceAnnotation config_slice = 60075;
+
+  // Legacy aliases accepted for older downstream protos. Prefer config_slice.
   bool tenant_config_slice = 60069;
-
-  // tenant_config_service overrides the service name for a tenant_config_slice message.
-  // Use this when the slice is defined in a file with a different proto package than
-  // the service name (e.g., to avoid Go import cycles).
-  // Example: option (spec.tenant_config_service) = "identity";
   string tenant_config_service = 60070;
-
-  // project_config_slice marks a message as a per-service slice of the auto-generated
-  // ProjectConfig message. tacplus collects all messages with this annotation and
-  // generates generated/project_config.proto deterministically.
-  // The field name in ProjectConfig is derived from the service package name.
-  // The field number is looked up (or auto-assigned) in registry.yaml.
   bool project_config_slice = 60071;
-
-  // project_config_service overrides the service name for a project_config_slice message.
-  // Use this when the slice is defined in a file with a different proto package than
-  // the service name (e.g., to avoid Go import cycles).
-  // Example: option (spec.project_config_service) = "identity";
   string project_config_service = 60072;
 
   // event_publish declares that this actor publishes an EventBus topic. The
@@ -875,8 +861,22 @@ message TokenMinterAnnotation {
   bool proxy = 1;
 }
 
-// SmbAuthorityAnnotation marks the consumer service that issues isolated per-SMB
-// CAs and member certs for spec.smb services (SPIFFE plan D7), declared
+// SmbRoot selects which trust root backs an SMB service's member certificates.
+enum SmbRoot {
+  // SMB_ROOT_ISOLATED uses a self-signed per-SMB CA, scoped only to this SMB.
+  SMB_ROOT_ISOLATED = 0;
+  // SMB_ROOT_CLUSTER signs the per-SMB intermediate under the cluster CA.
+  SMB_ROOT_CLUSTER = 1;
+}
+
+// SmbAnnotation marks a Service Mesh Blackbox service and selects its trust root.
+// The default root is SMB_ROOT_ISOLATED.
+message SmbAnnotation {
+  SmbRoot root = 1;
+}
+
+// SmbAuthorityAnnotation marks the consumer service that issues per-SMB CAs and
+// member certs for spec.smb services (SPIFFE plan D7), declared
 // EXPLICITLY rather than inferred. tacplus resolves the fully-qualified
 // package.Service carrying this annotation as the SMB cert authority and fails
 // generation if any spec.smb service exists with no authority declared. tacplus
@@ -939,7 +939,7 @@ enum CollectionMode {
   // PAGE: a client-driven, resumable, windowed GET (unary). The caller pages
   // through a finite set with an opaque keyset page_token over order_by; each
   // page is bounded by page_size (capped at the trust-tier ceiling). Forbids
-  // max_items/replay_depth. See docs/RPC_PATTERNS_AND_VERBS_PLAN.md §4.
+  // max_items/replay_depth. See docs/archive/RPC_PATTERNS_AND_VERBS_PLAN.md §4.
   COLLECTION_MODE_PAGE = 3;
 }
 
@@ -1133,7 +1133,10 @@ extend google.protobuf.FieldOptions {
   // Statedb private: field can never be accessed by other services (owner RW only)
   bool private = 50013;
 
-  // state_import declares that this field's value comes from another service's state.
+  // state_import declares that this field's value comes from another service's
+  // exported state. This is the canonical source for read-only cross-service
+  // state imports; the imported root is derived from "package.StateName.field".
+  // The projection currently supports singular message fields.
   // Example: [(spec.state_import) = "football.FootballState.roster"];
   string state_import = 50014;
 
@@ -1611,6 +1614,20 @@ message GrpcConfigAnnotation {
   string service_name = 1;
 }
 
+// ConfigSliceScope identifies the aggregate config message that receives a
+// per-service config slice.
+enum ConfigSliceScope {
+  CONFIG_SLICE_SCOPE_UNSPECIFIED = 0;
+  CONFIG_SLICE_SCOPE_TENANT = 1;
+  CONFIG_SLICE_SCOPE_PROJECT = 2;
+}
+
+// ConfigSliceAnnotation declares one per-service config slice and its owner.
+message ConfigSliceAnnotation {
+  ConfigSliceScope scope = 1;
+  string service_name = 2;
+}
+
 // StatePerms declares a state service's access to another state root.
 message StatePerms {
   // target is the fully qualified name of the state root being accessed (e.g., "woodstock.WoodstockState").
@@ -1620,9 +1637,8 @@ message StatePerms {
   StatePermsMode mode = 2;
 }
 
-// StateImport declares a read-only dependency on another service's exported state.
-// Used as a file-level option so each proto package can declare which external
-// states it imports. The target state must have export=true on its service_state.
+// StateImport is the legacy file-level mirror for field-level state_import
+// declarations. The target state must have export=true on its service_state.
 message StateImport {
   // source is "package.StateName" (e.g. "identity.Identity", "aegis.AegisState").
   string source = 1;
@@ -1762,16 +1778,14 @@ extend google.protobuf.ServiceOptions {
 
   // smb (Service Mesh Blackbox) marks a service whose OWN INSTANCES communicate
   // over a black-box peer protocol (e.g. Hazelcast gossip/replication) within a
-  // single cluster (SPIFFE plan D7). Because the black box's own TLS/SPIFFE
-  // handling is not trusted, this channel does NOT reuse the cluster's true ROOT
-  // CA. Each instance obtains an isolated per-SMB CA + its own member cert from
-  // the SMB CA authority (the consumer service designated by spec.smb_authority)
-  // and the instances mutually authenticate (mTLS) under that isolated root. The
-  // true ROOT CA must never enter black-box config. (Annotation lands now; the
-  // authority contract + client seam are built separately per the plan's
-  // execution note.)
-  // Example: option (spec.smb) = true;
-  bool smb = 70020;
+  // single cluster (SPIFFE plan D7). Each instance obtains a per-SMB CA + its
+  // own member cert from the SMB CA authority (the consumer service designated
+  // by spec.smb_authority). By default that per-SMB CA is isolated from the
+  // cluster root; bootstrap-constrained members may request a cluster-rooted
+  // per-SMB intermediate with root: SMB_ROOT_CLUSTER.
+  // Example: option (spec.smb) = {};
+  //          option (spec.smb) = {root: SMB_ROOT_CLUSTER};
+  SmbAnnotation smb = 70020;
 
   // smb_authority marks the consumer service that issues isolated per-SMB CAs and
   // member certs for spec.smb services — declared EXPLICITLY (like token_minter),
@@ -1830,62 +1844,3 @@ extend google.protobuf.MethodOptions {
 
 // Collection query types are in libs/query.proto.
 // Lock and LockService are in libs/lock.proto.
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-enum TypeID {
-  TYPE_ID_UNSPECIFIED = 0;
-  TYPE_ID_STRING_CONST = 1;
-  TYPE_ID_INT_CONST = 2;
-  TYPE_ID_FLOAT_CONST = 3;
-  TYPE_ID_BOOL_CONST = 4;
-  TYPE_ID_DEFAULT_HOST = 5;
-  TYPE_ID_NUMERIC_CONSTRAINT = 6;
-  TYPE_ID_FLOAT_CONSTRAINT = 7;
-  TYPE_ID_PARAM_MAP_CONFIG = 8;
-  TYPE_ID_SUBSCRIPTION_ANNOTATION = 9;
-  TYPE_ID_EVENT_PUBLISH_ANNOTATION = 10;
-  TYPE_ID_EVENT_WATCH_ANNOTATION = 11;
-  TYPE_ID_GRAPH_TYPE_ANNOTATION = 12;
-  TYPE_ID_EVENT_DB_ANNOTATION = 13;
-  TYPE_ID_GRAPH_PROJECTION = 14;
-  TYPE_ID_GRAPH_PROJECTION_FIELD = 15;
-  TYPE_ID_TIMESERIES_PROJECTION = 16;
-  TYPE_ID_TIMESERIES_PROJECTION_FIELD = 17;
-  TYPE_ID_GRAPH_FIELD_OPTION = 18;
-  TYPE_ID_TIMESERIES_TABLE_ANNOTATION = 19;
-  TYPE_ID_TIMESERIES_FIELD_OPTION = 20;
-  TYPE_ID_SERVICE_S2_S_ANNOTATION = 21;
-  TYPE_ID_SERVICE_C2_S_ANNOTATION = 22;
-  TYPE_ID_SERVICE_C2_D_ANNOTATION = 23;
-  TYPE_ID_IDENTITY_SPIFFE_RESOURCE = 24;
-  TYPE_ID_TOKEN_MINTER_ANNOTATION = 25;
-  TYPE_ID_SMB_AUTHORITY_ANNOTATION = 26;
-  TYPE_ID_METHOD_S2_S_ANNOTATION = 27;
-  TYPE_ID_METHOD_C2_S_ANNOTATION = 28;
-  TYPE_ID_METHOD_COLLECTION = 29;
-  TYPE_ID_SERVICE_EVENT_ANNOTATION = 30;
-  TYPE_ID_CONDITIONAL_REQUIREMENT = 31;
-  TYPE_ID_STATE_ANNOTATION = 32;
-  TYPE_ID_SERVICE_STORE_ANNOTATION = 33;
-  TYPE_ID_GRAPH_STORE_ANNOTATION = 34;
-  TYPE_ID_TIMESERIES_STORE_ANNOTATION = 35;
-  TYPE_ID_HOT_STORE_ANNOTATION = 36;
-  TYPE_ID_COLD_STORE_ANNOTATION = 37;
-  TYPE_ID_SERVICE_HEALTH_ANNOTATION = 38;
-  TYPE_ID_V_SERVICE_ANNOTATION = 39;
-  TYPE_ID_SERVICE_ANNOTATION = 40;
-  TYPE_ID_GRPC_CONFIG_ANNOTATION = 41;
-  TYPE_ID_STATE_PERMS = 42;
-  TYPE_ID_STATE_IMPORT = 43;
-  TYPE_ID_OPA_EVAL_ANNOTATION = 44;
-  TYPE_ID_OPA_IMPORT = 45;
-  TYPE_ID_GRAPH_IMPORT = 46;
-  TYPE_ID_TIMESERIES_IMPORT = 47;
-  TYPE_ID_GRPC_S2_S_CLIENT = 48;
-  TYPE_ID_GRPC_C2_S_CLIENT = 49;
-  TYPE_ID_GRPC_W2_S_CLIENT = 50;
-  TYPE_ID_REST_METHODS = 51;
-}

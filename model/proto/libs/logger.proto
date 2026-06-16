@@ -101,12 +101,3 @@ message LoggerConfig {
   // Example: {"service": "api", "version": "1.0.0", "environment": "production"}
   map<string, string> initial_fields = 10;
 }
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-enum TypeID {
-  TYPE_ID_UNSPECIFIED = 0;
-  TYPE_ID_LOGGER_CONFIG = 1;
-}

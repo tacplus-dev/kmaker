@@ -51,7 +51,7 @@ const (
 	TypeID_TYPE_ID_UNSPECIFIED              TypeID = 0
 	TypeID_TYPE_ID_CONFIG                   TypeID = 1
 	TypeID_TYPE_ID_KERNEL_SERVICE_ACCOUNT   TypeID = 2
-	TypeID_TYPE_ID_SIGN_KERNEL_CERT_REQUEST TypeID = 3
+	TypeID_TYPE_ID_MINT_KERNEL_CERT_REQUEST TypeID = 3
 	TypeID_TYPE_ID_KMAKER_CONFIG_STATE      TypeID = 4
 	TypeID_TYPE_ID_MAP_EMPTY                TypeID = 5
 )
@@ -62,7 +62,7 @@ var (
 		0: "TYPE_ID_UNSPECIFIED",
 		1: "TYPE_ID_CONFIG",
 		2: "TYPE_ID_KERNEL_SERVICE_ACCOUNT",
-		3: "TYPE_ID_SIGN_KERNEL_CERT_REQUEST",
+		3: "TYPE_ID_MINT_KERNEL_CERT_REQUEST",
 		4: "TYPE_ID_KMAKER_CONFIG_STATE",
 		5: "TYPE_ID_MAP_EMPTY",
 	}
@@ -70,7 +70,7 @@ var (
 		"TYPE_ID_UNSPECIFIED":              0,
 		"TYPE_ID_CONFIG":                   1,
 		"TYPE_ID_KERNEL_SERVICE_ACCOUNT":   2,
-		"TYPE_ID_SIGN_KERNEL_CERT_REQUEST": 3,
+		"TYPE_ID_MINT_KERNEL_CERT_REQUEST": 3,
 		"TYPE_ID_KMAKER_CONFIG_STATE":      4,
 		"TYPE_ID_MAP_EMPTY":                5,
 	}
@@ -110,7 +110,7 @@ const (
 	KmakerRpcId_KMAKER_RPC_ID_ALL_ACCESSORS    KmakerRpcId = 1
 	KmakerRpcId_KMAKER_RPC_ID_ALL_MUTATORS     KmakerRpcId = 2
 	KmakerRpcId_KMAKER_RPC_ID_ALL_EXECUTORS    KmakerRpcId = 3
-	KmakerRpcId_KMAKER_RPC_ID_SIGN_KERNEL_CERT KmakerRpcId = 4
+	KmakerRpcId_KMAKER_RPC_ID_MINT_KERNEL_CERT KmakerRpcId = 4
 )
 
 // Enum value maps for KmakerRpcId.
@@ -120,14 +120,14 @@ var (
 		1: "KMAKER_RPC_ID_ALL_ACCESSORS",
 		2: "KMAKER_RPC_ID_ALL_MUTATORS",
 		3: "KMAKER_RPC_ID_ALL_EXECUTORS",
-		4: "KMAKER_RPC_ID_SIGN_KERNEL_CERT",
+		4: "KMAKER_RPC_ID_MINT_KERNEL_CERT",
 	}
 	KmakerRpcId_value = map[string]int32{
 		"KMAKER_RPC_ID_UNSPECIFIED":      0,
 		"KMAKER_RPC_ID_ALL_ACCESSORS":    1,
 		"KMAKER_RPC_ID_ALL_MUTATORS":     2,
 		"KMAKER_RPC_ID_ALL_EXECUTORS":    3,
-		"KMAKER_RPC_ID_SIGN_KERNEL_CERT": 4,
+		"KMAKER_RPC_ID_MINT_KERNEL_CERT": 4,
 	}
 )
 
@@ -435,7 +435,7 @@ func (x *KernelServiceAccount) GetNoop() bool {
 	return false
 }
 
-type SignKernelCertRequest struct {
+type MintKernelCertRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// k8s_token is a projected Kubernetes service account token for a kernel pod.
 	K8SToken string `protobuf:"bytes,1,opt,name=k8s_token,json=k8sToken,proto3" json:"k8s_token,omitempty"`
@@ -453,20 +453,20 @@ type SignKernelCertRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *SignKernelCertRequest) Reset() {
-	*x = SignKernelCertRequest{}
+func (x *MintKernelCertRequest) Reset() {
+	*x = MintKernelCertRequest{}
 	mi := &file_services_kmaker_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *SignKernelCertRequest) String() string {
+func (x *MintKernelCertRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SignKernelCertRequest) ProtoMessage() {}
+func (*MintKernelCertRequest) ProtoMessage() {}
 
-func (x *SignKernelCertRequest) ProtoReflect() protoreflect.Message {
+func (x *MintKernelCertRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_services_kmaker_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -478,54 +478,54 @@ func (x *SignKernelCertRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SignKernelCertRequest.ProtoReflect.Descriptor instead.
-func (*SignKernelCertRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use MintKernelCertRequest.ProtoReflect.Descriptor instead.
+func (*MintKernelCertRequest) Descriptor() ([]byte, []int) {
 	return file_services_kmaker_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *SignKernelCertRequest) GetK8SToken() string {
+func (x *MintKernelCertRequest) GetK8SToken() string {
 	if x != nil {
 		return x.K8SToken
 	}
 	return ""
 }
 
-func (x *SignKernelCertRequest) GetCertRequest() *x509.X509CertRequest {
+func (x *MintKernelCertRequest) GetCertRequest() *x509.X509CertRequest {
 	if x != nil {
 		return x.CertRequest
 	}
 	return nil
 }
 
-func (x *SignKernelCertRequest) GetPodName() string {
+func (x *MintKernelCertRequest) GetPodName() string {
 	if x != nil {
 		return x.PodName
 	}
 	return ""
 }
 
-func (x *SignKernelCertRequest) GetPodUid() string {
+func (x *MintKernelCertRequest) GetPodUid() string {
 	if x != nil {
 		return x.PodUid
 	}
 	return ""
 }
 
-func (x *SignKernelCertRequest) GetInstanceId() string {
+func (x *MintKernelCertRequest) GetInstanceId() string {
 	if x != nil {
 		return x.InstanceId
 	}
 	return ""
 }
 
-func (x *SignKernelCertRequest) GetTraceId() string {
+func (x *MintKernelCertRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *SignKernelCertRequest) GetNoop() bool {
+func (x *MintKernelCertRequest) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
@@ -677,7 +677,7 @@ const file_services_kmaker_proto_rawDesc = "" +
 	"\x04name\x18\x02 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x01R\x04name\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9b\x02\n" +
-	"\x15SignKernelCertRequest\x12'\n" +
+	"\x15MintKernelCertRequest\x12'\n" +
 	"\tk8s_token\x18\x01 \x01(\tB\n" +
 	"\x88\xa6\x1d\x01\xb8\xa8\x1d\x80\x80\x04R\bk8sToken\x12>\n" +
 	"\fcert_request\x18\x02 \x01(\v2\x15.x509.X509CertRequestB\x04\x88\xa6\x1d\x01R\vcertRequest\x12 \n" +
@@ -686,12 +686,12 @@ const file_services_kmaker_proto_rawDesc = "" +
 	"\vinstance_id\x18\x05 \x01(\tB\x05\x90\xa7\x1d\x80\x02R\n" +
 	"instanceId\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9b\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9d\x01\n" +
 	"\x11KmakerConfigState\x120\n" +
 	"\x06config\x18\x01 \x01(\v2\x0e.kmaker.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:#\x9a\xa8\x1d\x1b\n" +
-	"\x11KmakerConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:%\x9a\xa8\x1d\x1d\n" +
+	"\x11KmakerConfigState\x1a\beventbus\xa0\xa8\x1d\x02\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\xb7\x01\n" +
@@ -699,7 +699,7 @@ const file_services_kmaker_proto_rawDesc = "" +
 	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eTYPE_ID_CONFIG\x10\x01\x12\"\n" +
 	"\x1eTYPE_ID_KERNEL_SERVICE_ACCOUNT\x10\x02\x12$\n" +
-	" TYPE_ID_SIGN_KERNEL_CERT_REQUEST\x10\x03\x12\x1f\n" +
+	" TYPE_ID_MINT_KERNEL_CERT_REQUEST\x10\x03\x12\x1f\n" +
 	"\x1bTYPE_ID_KMAKER_CONFIG_STATE\x10\x04\x12\x15\n" +
 	"\x11TYPE_ID_MAP_EMPTY\x10\x05*\xb2\x01\n" +
 	"\vKmakerRpcId\x12\x1d\n" +
@@ -707,7 +707,7 @@ const file_services_kmaker_proto_rawDesc = "" +
 	"\x1bKMAKER_RPC_ID_ALL_ACCESSORS\x10\x01\x12\x1e\n" +
 	"\x1aKMAKER_RPC_ID_ALL_MUTATORS\x10\x02\x12\x1f\n" +
 	"\x1bKMAKER_RPC_ID_ALL_EXECUTORS\x10\x03\x12\"\n" +
-	"\x1eKMAKER_RPC_ID_SIGN_KERNEL_CERT\x10\x04*\x8f\x03\n" +
+	"\x1eKMAKER_RPC_ID_MINT_KERNEL_CERT\x10\x04*\x8f\x03\n" +
 	"\x1dKmakerConfigStateServiceRpcId\x122\n" +
 	".KMAKER_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x124\n" +
 	"0KMAKER_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x123\n" +
@@ -717,7 +717,7 @@ const file_services_kmaker_proto_rawDesc = "" +
 	"-KMAKER_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x123\n" +
 	"/KMAKER_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\\\n" +
 	"\x06Kmaker\x12L\n" +
-	"\x0eSignKernelCert\x12\x1d.kmaker.SignKernelCertRequest\x1a\x13.x509.X509CertChain\"\x06\xe2\x88'\x02\x10\x01\x1a\x04\xea\x97\"\x002\xb5\x01\n" +
+	"\x0eMintKernelCert\x12\x1d.kmaker.MintKernelCertRequest\x1a\x13.x509.X509CertChain\"\x06\xe2\x88'\x02\x10\x01\x1a\x04\xea\x97\"\x002\xb5\x01\n" +
 	"\x18KmakerConfigStateService\x120\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x0e.kmaker.Config\x12+\n" +
 	"\tSetConfig\x12\x0e.kmaker.Config\x1a\x0e.kmaker.Config\x124\n" +
@@ -745,7 +745,7 @@ var file_services_kmaker_proto_goTypes = []any{
 	(KmakerConfigStateServiceRpcId)(0), // 2: kmaker.KmakerConfigStateServiceRpcId
 	(*Config)(nil),                     // 3: kmaker.Config
 	(*KernelServiceAccount)(nil),       // 4: kmaker.KernelServiceAccount
-	(*SignKernelCertRequest)(nil),      // 5: kmaker.SignKernelCertRequest
+	(*MintKernelCertRequest)(nil),      // 5: kmaker.MintKernelCertRequest
 	(*KmakerConfigState)(nil),          // 6: kmaker.KmakerConfigState
 	(*MapEmpty)(nil),                   // 7: kmaker.MapEmpty
 	(*host.Host)(nil),                  // 8: host.Host
@@ -762,13 +762,13 @@ var file_services_kmaker_proto_depIdxs = []int32{
 	11, // 3: kmaker.Config.signing_ca:type_name -> x509.X509CertChain
 	4,  // 4: kmaker.Config.kernel_service_accounts:type_name -> kmaker.KernelServiceAccount
 	11, // 5: kmaker.Config.tls:type_name -> x509.X509CertChain
-	12, // 6: kmaker.SignKernelCertRequest.cert_request:type_name -> x509.X509CertRequest
+	12, // 6: kmaker.MintKernelCertRequest.cert_request:type_name -> x509.X509CertRequest
 	3,  // 7: kmaker.KmakerConfigState.config:type_name -> kmaker.Config
-	5,  // 8: kmaker.Kmaker.SignKernelCert:input_type -> kmaker.SignKernelCertRequest
+	5,  // 8: kmaker.Kmaker.MintKernelCert:input_type -> kmaker.MintKernelCertRequest
 	13, // 9: kmaker.KmakerConfigStateService.GetConfig:input_type -> trace.TraceRequest
 	3,  // 10: kmaker.KmakerConfigStateService.SetConfig:input_type -> kmaker.Config
 	13, // 11: kmaker.KmakerConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	11, // 12: kmaker.Kmaker.SignKernelCert:output_type -> x509.X509CertChain
+	11, // 12: kmaker.Kmaker.MintKernelCert:output_type -> x509.X509CertChain
 	3,  // 13: kmaker.KmakerConfigStateService.GetConfig:output_type -> kmaker.Config
 	3,  // 14: kmaker.KmakerConfigStateService.SetConfig:output_type -> kmaker.Config
 	3,  // 15: kmaker.KmakerConfigStateService.WatchConfig:output_type -> kmaker.Config

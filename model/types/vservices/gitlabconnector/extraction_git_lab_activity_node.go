@@ -29,6 +29,7 @@ func ExtractGitLabActivityNodeFromGitLabConnectorEvent(event *GitLabConnectorEve
 	return &GitLabActivityNode{
 		EventId:         event.EventId,
 		OwnerSpiffe:     event.OwnerSpiffe,
+		SchemeVersion:   event.SchemeVersion,
 		TenantNamespace: event.TenantNamespace,
 		Project:         event.ProjectKey,
 		ActorSub:        event.ActorSub,

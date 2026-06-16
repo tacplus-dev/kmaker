@@ -47,23 +47,3 @@ message GatewayJwksViewGetResponse {
   jwk.Jwk value = 1;
   bool found = 2;
 }
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-enum TypeID {
-  TYPE_ID_UNSPECIFIED = 0;
-  TYPE_ID_GATEWAY_JWKS_VIEW_RESPONSE = 1;
-  TYPE_ID_GATEWAY_JWKS_VIEW_GET_REQUEST = 2;
-  TYPE_ID_GATEWAY_JWKS_VIEW_GET_RESPONSE = 3;
-}
-
-enum GatewayJwksViewServiceRpcId {
-  GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_UNSPECIFIED = 0;
-  GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_ALL_ACCESSORS = 1;
-  GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_ALL_MUTATORS = 2;
-  GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_ALL_EXECUTORS = 3;
-  GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_WATCH = 4;
-  GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_GET = 5;
-}

@@ -160,628 +160,6 @@ func (KafkaNodeRole) EnumDescriptor() ([]byte, []int) {
 	return file_services_eventbus_proto_rawDescGZIP(), []int{1}
 }
 
-// Collection query types (auto-injected)
-type ComparisonOp int32
-
-const (
-	ComparisonOp_COMPARISON_OP_UNSPECIFIED ComparisonOp = 0
-	ComparisonOp_COMPARISON_OP_EQ          ComparisonOp = 1
-	ComparisonOp_COMPARISON_OP_NE          ComparisonOp = 2
-	ComparisonOp_COMPARISON_OP_GT          ComparisonOp = 3
-	ComparisonOp_COMPARISON_OP_GE          ComparisonOp = 4
-	ComparisonOp_COMPARISON_OP_LT          ComparisonOp = 5
-	ComparisonOp_COMPARISON_OP_LE          ComparisonOp = 6
-	ComparisonOp_COMPARISON_OP_IN          ComparisonOp = 7
-	ComparisonOp_COMPARISON_OP_NOT_IN      ComparisonOp = 8
-	ComparisonOp_COMPARISON_OP_LIKE        ComparisonOp = 9
-	ComparisonOp_COMPARISON_OP_IS_NULL     ComparisonOp = 10
-	ComparisonOp_COMPARISON_OP_IS_NOT_NULL ComparisonOp = 11
-)
-
-// Enum value maps for ComparisonOp.
-var (
-	ComparisonOp_name = map[int32]string{
-		0:  "COMPARISON_OP_UNSPECIFIED",
-		1:  "COMPARISON_OP_EQ",
-		2:  "COMPARISON_OP_NE",
-		3:  "COMPARISON_OP_GT",
-		4:  "COMPARISON_OP_GE",
-		5:  "COMPARISON_OP_LT",
-		6:  "COMPARISON_OP_LE",
-		7:  "COMPARISON_OP_IN",
-		8:  "COMPARISON_OP_NOT_IN",
-		9:  "COMPARISON_OP_LIKE",
-		10: "COMPARISON_OP_IS_NULL",
-		11: "COMPARISON_OP_IS_NOT_NULL",
-	}
-	ComparisonOp_value = map[string]int32{
-		"COMPARISON_OP_UNSPECIFIED": 0,
-		"COMPARISON_OP_EQ":          1,
-		"COMPARISON_OP_NE":          2,
-		"COMPARISON_OP_GT":          3,
-		"COMPARISON_OP_GE":          4,
-		"COMPARISON_OP_LT":          5,
-		"COMPARISON_OP_LE":          6,
-		"COMPARISON_OP_IN":          7,
-		"COMPARISON_OP_NOT_IN":      8,
-		"COMPARISON_OP_LIKE":        9,
-		"COMPARISON_OP_IS_NULL":     10,
-		"COMPARISON_OP_IS_NOT_NULL": 11,
-	}
-)
-
-func (x ComparisonOp) Enum() *ComparisonOp {
-	p := new(ComparisonOp)
-	*p = x
-	return p
-}
-
-func (x ComparisonOp) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ComparisonOp) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_eventbus_proto_enumTypes[2].Descriptor()
-}
-
-func (ComparisonOp) Type() protoreflect.EnumType {
-	return &file_services_eventbus_proto_enumTypes[2]
-}
-
-func (x ComparisonOp) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use ComparisonOp.Descriptor instead.
-func (ComparisonOp) EnumDescriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{2}
-}
-
-type SortDirection int32
-
-const (
-	SortDirection_SORT_DIRECTION_UNSPECIFIED SortDirection = 0
-	SortDirection_SORT_DIRECTION_ASC         SortDirection = 1
-	SortDirection_SORT_DIRECTION_DESC        SortDirection = 2
-)
-
-// Enum value maps for SortDirection.
-var (
-	SortDirection_name = map[int32]string{
-		0: "SORT_DIRECTION_UNSPECIFIED",
-		1: "SORT_DIRECTION_ASC",
-		2: "SORT_DIRECTION_DESC",
-	}
-	SortDirection_value = map[string]int32{
-		"SORT_DIRECTION_UNSPECIFIED": 0,
-		"SORT_DIRECTION_ASC":         1,
-		"SORT_DIRECTION_DESC":        2,
-	}
-)
-
-func (x SortDirection) Enum() *SortDirection {
-	p := new(SortDirection)
-	*p = x
-	return p
-}
-
-func (x SortDirection) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (SortDirection) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_eventbus_proto_enumTypes[3].Descriptor()
-}
-
-func (SortDirection) Type() protoreflect.EnumType {
-	return &file_services_eventbus_proto_enumTypes[3]
-}
-
-func (x SortDirection) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use SortDirection.Descriptor instead.
-func (SortDirection) EnumDescriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{3}
-}
-
-type LogicalOp int32
-
-const (
-	LogicalOp_LOGICAL_OP_UNSPECIFIED LogicalOp = 0
-	LogicalOp_LOGICAL_OP_AND         LogicalOp = 1
-	LogicalOp_LOGICAL_OP_OR          LogicalOp = 2
-)
-
-// Enum value maps for LogicalOp.
-var (
-	LogicalOp_name = map[int32]string{
-		0: "LOGICAL_OP_UNSPECIFIED",
-		1: "LOGICAL_OP_AND",
-		2: "LOGICAL_OP_OR",
-	}
-	LogicalOp_value = map[string]int32{
-		"LOGICAL_OP_UNSPECIFIED": 0,
-		"LOGICAL_OP_AND":         1,
-		"LOGICAL_OP_OR":          2,
-	}
-)
-
-func (x LogicalOp) Enum() *LogicalOp {
-	p := new(LogicalOp)
-	*p = x
-	return p
-}
-
-func (x LogicalOp) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (LogicalOp) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_eventbus_proto_enumTypes[4].Descriptor()
-}
-
-func (LogicalOp) Type() protoreflect.EnumType {
-	return &file_services_eventbus_proto_enumTypes[4]
-}
-
-func (x LogicalOp) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use LogicalOp.Descriptor instead.
-func (LogicalOp) EnumDescriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{4}
-}
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED                          TypeID = 0
-	TypeID_TYPE_ID_SUBSCRIBE_REQUEST                    TypeID = 1
-	TypeID_TYPE_ID_PUBLISH_RESPONSE                     TypeID = 2
-	TypeID_TYPE_ID_RECORD_META                          TypeID = 3
-	TypeID_TYPE_ID_TOPIC_INFO                           TypeID = 4
-	TypeID_TYPE_ID_TOPIC_INFO_REQUEST                   TypeID = 5
-	TypeID_TYPE_ID_LIST_TOPICS_RESPONSE                 TypeID = 6
-	TypeID_TYPE_ID_DELETE_TOPIC_REQUEST                 TypeID = 7
-	TypeID_TYPE_ID_ALTER_TOPIC_CONFIG_REQUEST           TypeID = 8
-	TypeID_TYPE_ID_PARTITION_LAG                        TypeID = 9
-	TypeID_TYPE_ID_CONSUMER_GROUP_INFO                  TypeID = 10
-	TypeID_TYPE_ID_CONSUMER_GROUP_REQUEST               TypeID = 11
-	TypeID_TYPE_ID_LIST_CONSUMER_GROUPS_RESPONSE        TypeID = 12
-	TypeID_TYPE_ID_RESET_CONSUMER_GROUP_OFFSETS_REQUEST TypeID = 13
-	TypeID_TYPE_ID_BROKER_INFO                          TypeID = 14
-	TypeID_TYPE_ID_CLUSTER_HEALTH_RESPONSE              TypeID = 15
-	TypeID_TYPE_ID_CONFIG                               TypeID = 16
-	TypeID_TYPE_ID_EVENTBUS_NODE                        TypeID = 17
-	TypeID_TYPE_ID_EVENTBUS_STATE                       TypeID = 18
-	TypeID_TYPE_ID_EVENTBUS_CONFIG_STATE                TypeID = 19
-	TypeID_TYPE_ID_QUERY_VALUE                          TypeID = 20
-	TypeID_TYPE_ID_PREDICATE                            TypeID = 21
-	TypeID_TYPE_ID_PREDICATE_GROUP                      TypeID = 22
-	TypeID_TYPE_ID_SORT_FIELD                           TypeID = 23
-	TypeID_TYPE_ID_COLLECTION_QUERY                     TypeID = 24
-	TypeID_TYPE_ID_NODES_GET_REQUEST                    TypeID = 25
-	TypeID_TYPE_ID_NODES_PUT_REQUEST                    TypeID = 26
-	TypeID_TYPE_ID_NODES_GET_ALL_REQUEST                TypeID = 27
-	TypeID_TYPE_ID_NODES_KEYS_REQUEST                   TypeID = 28
-	TypeID_TYPE_ID_NODES_SIZE_REQUEST                   TypeID = 29
-	TypeID_TYPE_ID_NODES_CLEAR_REQUEST                  TypeID = 30
-	TypeID_TYPE_ID_NODES_VALUE_RESPONSE                 TypeID = 31
-	TypeID_TYPE_ID_NODES_ENTRIES_RESPONSE               TypeID = 32
-	TypeID_TYPE_ID_NODES_KEYS_RESPONSE                  TypeID = 33
-	TypeID_TYPE_ID_NODES_SIZE_RESPONSE                  TypeID = 34
-	TypeID_TYPE_ID_NODES_QUERY_REQUEST                  TypeID = 35
-	TypeID_TYPE_ID_NODES_QUERY_RESPONSE                 TypeID = 36
-	TypeID_TYPE_ID_MAP_EMPTY                            TypeID = 37
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0:  "TYPE_ID_UNSPECIFIED",
-		1:  "TYPE_ID_SUBSCRIBE_REQUEST",
-		2:  "TYPE_ID_PUBLISH_RESPONSE",
-		3:  "TYPE_ID_RECORD_META",
-		4:  "TYPE_ID_TOPIC_INFO",
-		5:  "TYPE_ID_TOPIC_INFO_REQUEST",
-		6:  "TYPE_ID_LIST_TOPICS_RESPONSE",
-		7:  "TYPE_ID_DELETE_TOPIC_REQUEST",
-		8:  "TYPE_ID_ALTER_TOPIC_CONFIG_REQUEST",
-		9:  "TYPE_ID_PARTITION_LAG",
-		10: "TYPE_ID_CONSUMER_GROUP_INFO",
-		11: "TYPE_ID_CONSUMER_GROUP_REQUEST",
-		12: "TYPE_ID_LIST_CONSUMER_GROUPS_RESPONSE",
-		13: "TYPE_ID_RESET_CONSUMER_GROUP_OFFSETS_REQUEST",
-		14: "TYPE_ID_BROKER_INFO",
-		15: "TYPE_ID_CLUSTER_HEALTH_RESPONSE",
-		16: "TYPE_ID_CONFIG",
-		17: "TYPE_ID_EVENTBUS_NODE",
-		18: "TYPE_ID_EVENTBUS_STATE",
-		19: "TYPE_ID_EVENTBUS_CONFIG_STATE",
-		20: "TYPE_ID_QUERY_VALUE",
-		21: "TYPE_ID_PREDICATE",
-		22: "TYPE_ID_PREDICATE_GROUP",
-		23: "TYPE_ID_SORT_FIELD",
-		24: "TYPE_ID_COLLECTION_QUERY",
-		25: "TYPE_ID_NODES_GET_REQUEST",
-		26: "TYPE_ID_NODES_PUT_REQUEST",
-		27: "TYPE_ID_NODES_GET_ALL_REQUEST",
-		28: "TYPE_ID_NODES_KEYS_REQUEST",
-		29: "TYPE_ID_NODES_SIZE_REQUEST",
-		30: "TYPE_ID_NODES_CLEAR_REQUEST",
-		31: "TYPE_ID_NODES_VALUE_RESPONSE",
-		32: "TYPE_ID_NODES_ENTRIES_RESPONSE",
-		33: "TYPE_ID_NODES_KEYS_RESPONSE",
-		34: "TYPE_ID_NODES_SIZE_RESPONSE",
-		35: "TYPE_ID_NODES_QUERY_REQUEST",
-		36: "TYPE_ID_NODES_QUERY_RESPONSE",
-		37: "TYPE_ID_MAP_EMPTY",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":                          0,
-		"TYPE_ID_SUBSCRIBE_REQUEST":                    1,
-		"TYPE_ID_PUBLISH_RESPONSE":                     2,
-		"TYPE_ID_RECORD_META":                          3,
-		"TYPE_ID_TOPIC_INFO":                           4,
-		"TYPE_ID_TOPIC_INFO_REQUEST":                   5,
-		"TYPE_ID_LIST_TOPICS_RESPONSE":                 6,
-		"TYPE_ID_DELETE_TOPIC_REQUEST":                 7,
-		"TYPE_ID_ALTER_TOPIC_CONFIG_REQUEST":           8,
-		"TYPE_ID_PARTITION_LAG":                        9,
-		"TYPE_ID_CONSUMER_GROUP_INFO":                  10,
-		"TYPE_ID_CONSUMER_GROUP_REQUEST":               11,
-		"TYPE_ID_LIST_CONSUMER_GROUPS_RESPONSE":        12,
-		"TYPE_ID_RESET_CONSUMER_GROUP_OFFSETS_REQUEST": 13,
-		"TYPE_ID_BROKER_INFO":                          14,
-		"TYPE_ID_CLUSTER_HEALTH_RESPONSE":              15,
-		"TYPE_ID_CONFIG":                               16,
-		"TYPE_ID_EVENTBUS_NODE":                        17,
-		"TYPE_ID_EVENTBUS_STATE":                       18,
-		"TYPE_ID_EVENTBUS_CONFIG_STATE":                19,
-		"TYPE_ID_QUERY_VALUE":                          20,
-		"TYPE_ID_PREDICATE":                            21,
-		"TYPE_ID_PREDICATE_GROUP":                      22,
-		"TYPE_ID_SORT_FIELD":                           23,
-		"TYPE_ID_COLLECTION_QUERY":                     24,
-		"TYPE_ID_NODES_GET_REQUEST":                    25,
-		"TYPE_ID_NODES_PUT_REQUEST":                    26,
-		"TYPE_ID_NODES_GET_ALL_REQUEST":                27,
-		"TYPE_ID_NODES_KEYS_REQUEST":                   28,
-		"TYPE_ID_NODES_SIZE_REQUEST":                   29,
-		"TYPE_ID_NODES_CLEAR_REQUEST":                  30,
-		"TYPE_ID_NODES_VALUE_RESPONSE":                 31,
-		"TYPE_ID_NODES_ENTRIES_RESPONSE":               32,
-		"TYPE_ID_NODES_KEYS_RESPONSE":                  33,
-		"TYPE_ID_NODES_SIZE_RESPONSE":                  34,
-		"TYPE_ID_NODES_QUERY_REQUEST":                  35,
-		"TYPE_ID_NODES_QUERY_RESPONSE":                 36,
-		"TYPE_ID_MAP_EMPTY":                            37,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_eventbus_proto_enumTypes[5].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_services_eventbus_proto_enumTypes[5]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{5}
-}
-
-type AdminRpcId int32
-
-const (
-	AdminRpcId_ADMIN_RPC_ID_UNSPECIFIED                  AdminRpcId = 0
-	AdminRpcId_ADMIN_RPC_ID_ALL_ACCESSORS                AdminRpcId = 1
-	AdminRpcId_ADMIN_RPC_ID_ALL_MUTATORS                 AdminRpcId = 2
-	AdminRpcId_ADMIN_RPC_ID_ALL_EXECUTORS                AdminRpcId = 3
-	AdminRpcId_ADMIN_RPC_ID_LIST_TOPICS                  AdminRpcId = 4
-	AdminRpcId_ADMIN_RPC_ID_GET_TOPIC_INFO               AdminRpcId = 5
-	AdminRpcId_ADMIN_RPC_ID_DELETE_TOPIC                 AdminRpcId = 6
-	AdminRpcId_ADMIN_RPC_ID_ALTER_TOPIC_CONFIG           AdminRpcId = 7
-	AdminRpcId_ADMIN_RPC_ID_GET_CONSUMER_GROUP_LAG       AdminRpcId = 8
-	AdminRpcId_ADMIN_RPC_ID_LIST_CONSUMER_GROUPS         AdminRpcId = 9
-	AdminRpcId_ADMIN_RPC_ID_RESET_CONSUMER_GROUP_OFFSETS AdminRpcId = 10
-	AdminRpcId_ADMIN_RPC_ID_DELETE_CONSUMER_GROUP        AdminRpcId = 11
-	AdminRpcId_ADMIN_RPC_ID_GET_CLUSTER_HEALTH           AdminRpcId = 12
-)
-
-// Enum value maps for AdminRpcId.
-var (
-	AdminRpcId_name = map[int32]string{
-		0:  "ADMIN_RPC_ID_UNSPECIFIED",
-		1:  "ADMIN_RPC_ID_ALL_ACCESSORS",
-		2:  "ADMIN_RPC_ID_ALL_MUTATORS",
-		3:  "ADMIN_RPC_ID_ALL_EXECUTORS",
-		4:  "ADMIN_RPC_ID_LIST_TOPICS",
-		5:  "ADMIN_RPC_ID_GET_TOPIC_INFO",
-		6:  "ADMIN_RPC_ID_DELETE_TOPIC",
-		7:  "ADMIN_RPC_ID_ALTER_TOPIC_CONFIG",
-		8:  "ADMIN_RPC_ID_GET_CONSUMER_GROUP_LAG",
-		9:  "ADMIN_RPC_ID_LIST_CONSUMER_GROUPS",
-		10: "ADMIN_RPC_ID_RESET_CONSUMER_GROUP_OFFSETS",
-		11: "ADMIN_RPC_ID_DELETE_CONSUMER_GROUP",
-		12: "ADMIN_RPC_ID_GET_CLUSTER_HEALTH",
-	}
-	AdminRpcId_value = map[string]int32{
-		"ADMIN_RPC_ID_UNSPECIFIED":                  0,
-		"ADMIN_RPC_ID_ALL_ACCESSORS":                1,
-		"ADMIN_RPC_ID_ALL_MUTATORS":                 2,
-		"ADMIN_RPC_ID_ALL_EXECUTORS":                3,
-		"ADMIN_RPC_ID_LIST_TOPICS":                  4,
-		"ADMIN_RPC_ID_GET_TOPIC_INFO":               5,
-		"ADMIN_RPC_ID_DELETE_TOPIC":                 6,
-		"ADMIN_RPC_ID_ALTER_TOPIC_CONFIG":           7,
-		"ADMIN_RPC_ID_GET_CONSUMER_GROUP_LAG":       8,
-		"ADMIN_RPC_ID_LIST_CONSUMER_GROUPS":         9,
-		"ADMIN_RPC_ID_RESET_CONSUMER_GROUP_OFFSETS": 10,
-		"ADMIN_RPC_ID_DELETE_CONSUMER_GROUP":        11,
-		"ADMIN_RPC_ID_GET_CLUSTER_HEALTH":           12,
-	}
-)
-
-func (x AdminRpcId) Enum() *AdminRpcId {
-	p := new(AdminRpcId)
-	*p = x
-	return p
-}
-
-func (x AdminRpcId) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (AdminRpcId) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_eventbus_proto_enumTypes[6].Descriptor()
-}
-
-func (AdminRpcId) Type() protoreflect.EnumType {
-	return &file_services_eventbus_proto_enumTypes[6]
-}
-
-func (x AdminRpcId) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use AdminRpcId.Descriptor instead.
-func (AdminRpcId) EnumDescriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{6}
-}
-
-type TraceSessionRpcId int32
-
-const (
-	TraceSessionRpcId_TRACE_SESSION_RPC_ID_UNSPECIFIED   TraceSessionRpcId = 0
-	TraceSessionRpcId_TRACE_SESSION_RPC_ID_ALL_ACCESSORS TraceSessionRpcId = 1
-	TraceSessionRpcId_TRACE_SESSION_RPC_ID_ALL_MUTATORS  TraceSessionRpcId = 2
-	TraceSessionRpcId_TRACE_SESSION_RPC_ID_ALL_EXECUTORS TraceSessionRpcId = 3
-	TraceSessionRpcId_TRACE_SESSION_RPC_ID_WATCH_TRACE   TraceSessionRpcId = 4
-)
-
-// Enum value maps for TraceSessionRpcId.
-var (
-	TraceSessionRpcId_name = map[int32]string{
-		0: "TRACE_SESSION_RPC_ID_UNSPECIFIED",
-		1: "TRACE_SESSION_RPC_ID_ALL_ACCESSORS",
-		2: "TRACE_SESSION_RPC_ID_ALL_MUTATORS",
-		3: "TRACE_SESSION_RPC_ID_ALL_EXECUTORS",
-		4: "TRACE_SESSION_RPC_ID_WATCH_TRACE",
-	}
-	TraceSessionRpcId_value = map[string]int32{
-		"TRACE_SESSION_RPC_ID_UNSPECIFIED":   0,
-		"TRACE_SESSION_RPC_ID_ALL_ACCESSORS": 1,
-		"TRACE_SESSION_RPC_ID_ALL_MUTATORS":  2,
-		"TRACE_SESSION_RPC_ID_ALL_EXECUTORS": 3,
-		"TRACE_SESSION_RPC_ID_WATCH_TRACE":   4,
-	}
-)
-
-func (x TraceSessionRpcId) Enum() *TraceSessionRpcId {
-	p := new(TraceSessionRpcId)
-	*p = x
-	return p
-}
-
-func (x TraceSessionRpcId) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TraceSessionRpcId) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_eventbus_proto_enumTypes[7].Descriptor()
-}
-
-func (TraceSessionRpcId) Type() protoreflect.EnumType {
-	return &file_services_eventbus_proto_enumTypes[7]
-}
-
-func (x TraceSessionRpcId) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TraceSessionRpcId.Descriptor instead.
-func (TraceSessionRpcId) EnumDescriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{7}
-}
-
-type EventbusStateServiceRpcId int32
-
-const (
-	EventbusStateServiceRpcId_EVENTBUS_STATE_SERVICE_RPC_ID_UNSPECIFIED         EventbusStateServiceRpcId = 0
-	EventbusStateServiceRpcId_EVENTBUS_STATE_SERVICE_RPC_ID_ALL_ACCESSORS       EventbusStateServiceRpcId = 1
-	EventbusStateServiceRpcId_EVENTBUS_STATE_SERVICE_RPC_ID_ALL_MUTATORS        EventbusStateServiceRpcId = 2
-	EventbusStateServiceRpcId_EVENTBUS_STATE_SERVICE_RPC_ID_ALL_EXECUTORS       EventbusStateServiceRpcId = 3
-	EventbusStateServiceRpcId_EVENTBUS_STATE_SERVICE_RPC_ID_GET_NODES           EventbusStateServiceRpcId = 4
-	EventbusStateServiceRpcId_EVENTBUS_STATE_SERVICE_RPC_ID_PUT_NODES           EventbusStateServiceRpcId = 5
-	EventbusStateServiceRpcId_EVENTBUS_STATE_SERVICE_RPC_ID_SET_NODES           EventbusStateServiceRpcId = 6
-	EventbusStateServiceRpcId_EVENTBUS_STATE_SERVICE_RPC_ID_REMOVE_NODES        EventbusStateServiceRpcId = 7
-	EventbusStateServiceRpcId_EVENTBUS_STATE_SERVICE_RPC_ID_DELETE_NODES        EventbusStateServiceRpcId = 8
-	EventbusStateServiceRpcId_EVENTBUS_STATE_SERVICE_RPC_ID_CONTAINS_KEY_NODES  EventbusStateServiceRpcId = 9
-	EventbusStateServiceRpcId_EVENTBUS_STATE_SERVICE_RPC_ID_GET_ALL_NODES       EventbusStateServiceRpcId = 10
-	EventbusStateServiceRpcId_EVENTBUS_STATE_SERVICE_RPC_ID_KEY_SET_NODES       EventbusStateServiceRpcId = 11
-	EventbusStateServiceRpcId_EVENTBUS_STATE_SERVICE_RPC_ID_SIZE_NODES          EventbusStateServiceRpcId = 12
-	EventbusStateServiceRpcId_EVENTBUS_STATE_SERVICE_RPC_ID_CLEAR_NODES         EventbusStateServiceRpcId = 13
-	EventbusStateServiceRpcId_EVENTBUS_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_NODES EventbusStateServiceRpcId = 14
-	EventbusStateServiceRpcId_EVENTBUS_STATE_SERVICE_RPC_ID_WATCH_NODES         EventbusStateServiceRpcId = 15
-	EventbusStateServiceRpcId_EVENTBUS_STATE_SERVICE_RPC_ID_QUERY_NODES         EventbusStateServiceRpcId = 16
-	EventbusStateServiceRpcId_EVENTBUS_STATE_SERVICE_RPC_ID_WATCH_QUERY_NODES   EventbusStateServiceRpcId = 17
-)
-
-// Enum value maps for EventbusStateServiceRpcId.
-var (
-	EventbusStateServiceRpcId_name = map[int32]string{
-		0:  "EVENTBUS_STATE_SERVICE_RPC_ID_UNSPECIFIED",
-		1:  "EVENTBUS_STATE_SERVICE_RPC_ID_ALL_ACCESSORS",
-		2:  "EVENTBUS_STATE_SERVICE_RPC_ID_ALL_MUTATORS",
-		3:  "EVENTBUS_STATE_SERVICE_RPC_ID_ALL_EXECUTORS",
-		4:  "EVENTBUS_STATE_SERVICE_RPC_ID_GET_NODES",
-		5:  "EVENTBUS_STATE_SERVICE_RPC_ID_PUT_NODES",
-		6:  "EVENTBUS_STATE_SERVICE_RPC_ID_SET_NODES",
-		7:  "EVENTBUS_STATE_SERVICE_RPC_ID_REMOVE_NODES",
-		8:  "EVENTBUS_STATE_SERVICE_RPC_ID_DELETE_NODES",
-		9:  "EVENTBUS_STATE_SERVICE_RPC_ID_CONTAINS_KEY_NODES",
-		10: "EVENTBUS_STATE_SERVICE_RPC_ID_GET_ALL_NODES",
-		11: "EVENTBUS_STATE_SERVICE_RPC_ID_KEY_SET_NODES",
-		12: "EVENTBUS_STATE_SERVICE_RPC_ID_SIZE_NODES",
-		13: "EVENTBUS_STATE_SERVICE_RPC_ID_CLEAR_NODES",
-		14: "EVENTBUS_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_NODES",
-		15: "EVENTBUS_STATE_SERVICE_RPC_ID_WATCH_NODES",
-		16: "EVENTBUS_STATE_SERVICE_RPC_ID_QUERY_NODES",
-		17: "EVENTBUS_STATE_SERVICE_RPC_ID_WATCH_QUERY_NODES",
-	}
-	EventbusStateServiceRpcId_value = map[string]int32{
-		"EVENTBUS_STATE_SERVICE_RPC_ID_UNSPECIFIED":         0,
-		"EVENTBUS_STATE_SERVICE_RPC_ID_ALL_ACCESSORS":       1,
-		"EVENTBUS_STATE_SERVICE_RPC_ID_ALL_MUTATORS":        2,
-		"EVENTBUS_STATE_SERVICE_RPC_ID_ALL_EXECUTORS":       3,
-		"EVENTBUS_STATE_SERVICE_RPC_ID_GET_NODES":           4,
-		"EVENTBUS_STATE_SERVICE_RPC_ID_PUT_NODES":           5,
-		"EVENTBUS_STATE_SERVICE_RPC_ID_SET_NODES":           6,
-		"EVENTBUS_STATE_SERVICE_RPC_ID_REMOVE_NODES":        7,
-		"EVENTBUS_STATE_SERVICE_RPC_ID_DELETE_NODES":        8,
-		"EVENTBUS_STATE_SERVICE_RPC_ID_CONTAINS_KEY_NODES":  9,
-		"EVENTBUS_STATE_SERVICE_RPC_ID_GET_ALL_NODES":       10,
-		"EVENTBUS_STATE_SERVICE_RPC_ID_KEY_SET_NODES":       11,
-		"EVENTBUS_STATE_SERVICE_RPC_ID_SIZE_NODES":          12,
-		"EVENTBUS_STATE_SERVICE_RPC_ID_CLEAR_NODES":         13,
-		"EVENTBUS_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_NODES": 14,
-		"EVENTBUS_STATE_SERVICE_RPC_ID_WATCH_NODES":         15,
-		"EVENTBUS_STATE_SERVICE_RPC_ID_QUERY_NODES":         16,
-		"EVENTBUS_STATE_SERVICE_RPC_ID_WATCH_QUERY_NODES":   17,
-	}
-)
-
-func (x EventbusStateServiceRpcId) Enum() *EventbusStateServiceRpcId {
-	p := new(EventbusStateServiceRpcId)
-	*p = x
-	return p
-}
-
-func (x EventbusStateServiceRpcId) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (EventbusStateServiceRpcId) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_eventbus_proto_enumTypes[8].Descriptor()
-}
-
-func (EventbusStateServiceRpcId) Type() protoreflect.EnumType {
-	return &file_services_eventbus_proto_enumTypes[8]
-}
-
-func (x EventbusStateServiceRpcId) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use EventbusStateServiceRpcId.Descriptor instead.
-func (EventbusStateServiceRpcId) EnumDescriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{8}
-}
-
-type EventbusConfigStateServiceRpcId int32
-
-const (
-	EventbusConfigStateServiceRpcId_EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED   EventbusConfigStateServiceRpcId = 0
-	EventbusConfigStateServiceRpcId_EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS EventbusConfigStateServiceRpcId = 1
-	EventbusConfigStateServiceRpcId_EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_ALL_MUTATORS  EventbusConfigStateServiceRpcId = 2
-	EventbusConfigStateServiceRpcId_EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS EventbusConfigStateServiceRpcId = 3
-	EventbusConfigStateServiceRpcId_EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG    EventbusConfigStateServiceRpcId = 4
-	EventbusConfigStateServiceRpcId_EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG    EventbusConfigStateServiceRpcId = 5
-	EventbusConfigStateServiceRpcId_EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG  EventbusConfigStateServiceRpcId = 6
-)
-
-// Enum value maps for EventbusConfigStateServiceRpcId.
-var (
-	EventbusConfigStateServiceRpcId_name = map[int32]string{
-		0: "EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED",
-		1: "EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS",
-		2: "EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_ALL_MUTATORS",
-		3: "EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS",
-		4: "EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG",
-		5: "EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG",
-		6: "EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG",
-	}
-	EventbusConfigStateServiceRpcId_value = map[string]int32{
-		"EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED":   0,
-		"EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS": 1,
-		"EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_ALL_MUTATORS":  2,
-		"EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS": 3,
-		"EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG":    4,
-		"EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG":    5,
-		"EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG":  6,
-	}
-)
-
-func (x EventbusConfigStateServiceRpcId) Enum() *EventbusConfigStateServiceRpcId {
-	p := new(EventbusConfigStateServiceRpcId)
-	*p = x
-	return p
-}
-
-func (x EventbusConfigStateServiceRpcId) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (EventbusConfigStateServiceRpcId) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_eventbus_proto_enumTypes[9].Descriptor()
-}
-
-func (EventbusConfigStateServiceRpcId) Type() protoreflect.EnumType {
-	return &file_services_eventbus_proto_enumTypes[9]
-}
-
-func (x EventbusConfigStateServiceRpcId) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use EventbusConfigStateServiceRpcId.Descriptor instead.
-func (EventbusConfigStateServiceRpcId) EnumDescriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{9}
-}
-
 // SubscribeRequest is sent on the bidi stream to control replay.
 // The first message establishes the session; subsequent messages adjust
 // position, speed, pause state, or backpressure without closing the stream.
@@ -821,8 +199,6 @@ type SubscribeRequest struct {
 	// Empty = subscribe to all partitions (default, uses consumer-group rebalancing).
 	// When set, uses manual assignment (no rebalancing).
 	Partitions    []int32 `protobuf:"varint,10,rep,packed,name=partitions,proto3" json:"partitions,omitempty"`
-	TraceId       string  `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool    `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -942,20 +318,6 @@ func (x *SubscribeRequest) GetPartitions() []int32 {
 	return nil
 }
 
-func (x *SubscribeRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *SubscribeRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 type isSubscribeRequest_StartFrom interface {
 	isSubscribeRequest_StartFrom()
 }
@@ -990,8 +352,6 @@ type PublishResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Partition     int32                  `protobuf:"varint,1,opt,name=partition,proto3" json:"partition,omitempty"`
 	Offset        int64                  `protobuf:"varint,2,opt,name=offset,proto3" json:"offset,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1040,20 +400,6 @@ func (x *PublishResponse) GetOffset() int64 {
 	return 0
 }
 
-func (x *PublishResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *PublishResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 // RecordMeta carries Kafka record metadata alongside typed payloads.
 // Used by generated Subscribe response wrappers:
 //
@@ -1076,8 +422,6 @@ type RecordMeta struct {
 	Partition      int32                  `protobuf:"varint,3,opt,name=partition,proto3" json:"partition,omitempty"`
 	Offset         int64                  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`
 	EventTimestamp *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=event_timestamp,json=eventTimestamp,proto3" json:"event_timestamp,omitempty"`
-	TraceId        string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop           bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1147,20 +491,6 @@ func (x *RecordMeta) GetEventTimestamp() *timestamppb.Timestamp {
 	return nil
 }
 
-func (x *RecordMeta) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *RecordMeta) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 // TopicInfo describes a Kafka topic.
 type TopicInfo struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
@@ -1169,8 +499,6 @@ type TopicInfo struct {
 	RetentionMs     int64                  `protobuf:"varint,3,opt,name=retention_ms,json=retentionMs,proto3" json:"retention_ms,omitempty"`
 	EarliestOffsets map[int32]int64        `protobuf:"bytes,4,rep,name=earliest_offsets,json=earliestOffsets,proto3" json:"earliest_offsets,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
 	LatestOffsets   map[int32]int64        `protobuf:"bytes,5,rep,name=latest_offsets,json=latestOffsets,proto3" json:"latest_offsets,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	TraceId         string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop            bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -1240,25 +568,9 @@ func (x *TopicInfo) GetLatestOffsets() map[int32]int64 {
 	return nil
 }
 
-func (x *TopicInfo) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *TopicInfo) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 type TopicInfoRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Topic         string                 `protobuf:"bytes,1,opt,name=topic,proto3" json:"topic,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1300,25 +612,9 @@ func (x *TopicInfoRequest) GetTopic() string {
 	return ""
 }
 
-func (x *TopicInfoRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *TopicInfoRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 type ListTopicsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Topics        []*TopicInfo           `protobuf:"bytes,1,rep,name=topics,proto3" json:"topics,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1360,25 +656,9 @@ func (x *ListTopicsResponse) GetTopics() []*TopicInfo {
 	return nil
 }
 
-func (x *ListTopicsResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *ListTopicsResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 type DeleteTopicRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Topic         string                 `protobuf:"bytes,1,opt,name=topic,proto3" json:"topic,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1420,48 +700,32 @@ func (x *DeleteTopicRequest) GetTopic() string {
 	return ""
 }
 
-func (x *DeleteTopicRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *DeleteTopicRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type AlterTopicConfigRequest struct {
+type UpdateTopicConfigRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Topic string                 `protobuf:"bytes,1,opt,name=topic,proto3" json:"topic,omitempty"`
 	// retention_ms: new retention in milliseconds. -1 = infinite. 0 = no change.
 	RetentionMs int64 `protobuf:"varint,2,opt,name=retention_ms,json=retentionMs,proto3" json:"retention_ms,omitempty"`
 	// partition_count: new total partition count. Must be >= current count.
 	// Kafka does not support decreasing partitions. 0 = no change.
-	PartitionCount int32  `protobuf:"varint,3,opt,name=partition_count,json=partitionCount,proto3" json:"partition_count,omitempty"`
-	TraceId        string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop           bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	PartitionCount int32 `protobuf:"varint,3,opt,name=partition_count,json=partitionCount,proto3" json:"partition_count,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
 
-func (x *AlterTopicConfigRequest) Reset() {
-	*x = AlterTopicConfigRequest{}
+func (x *UpdateTopicConfigRequest) Reset() {
+	*x = UpdateTopicConfigRequest{}
 	mi := &file_services_eventbus_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AlterTopicConfigRequest) String() string {
+func (x *UpdateTopicConfigRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AlterTopicConfigRequest) ProtoMessage() {}
+func (*UpdateTopicConfigRequest) ProtoMessage() {}
 
-func (x *AlterTopicConfigRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateTopicConfigRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_services_eventbus_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1473,44 +737,30 @@ func (x *AlterTopicConfigRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AlterTopicConfigRequest.ProtoReflect.Descriptor instead.
-func (*AlterTopicConfigRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateTopicConfigRequest.ProtoReflect.Descriptor instead.
+func (*UpdateTopicConfigRequest) Descriptor() ([]byte, []int) {
 	return file_services_eventbus_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *AlterTopicConfigRequest) GetTopic() string {
+func (x *UpdateTopicConfigRequest) GetTopic() string {
 	if x != nil {
 		return x.Topic
 	}
 	return ""
 }
 
-func (x *AlterTopicConfigRequest) GetRetentionMs() int64 {
+func (x *UpdateTopicConfigRequest) GetRetentionMs() int64 {
 	if x != nil {
 		return x.RetentionMs
 	}
 	return 0
 }
 
-func (x *AlterTopicConfigRequest) GetPartitionCount() int32 {
+func (x *UpdateTopicConfigRequest) GetPartitionCount() int32 {
 	if x != nil {
 		return x.PartitionCount
 	}
 	return 0
-}
-
-func (x *AlterTopicConfigRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *AlterTopicConfigRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
 }
 
 type PartitionLag struct {
@@ -1520,8 +770,6 @@ type PartitionLag struct {
 	CommittedOffset int64                  `protobuf:"varint,3,opt,name=committed_offset,json=committedOffset,proto3" json:"committed_offset,omitempty"`
 	EndOffset       int64                  `protobuf:"varint,4,opt,name=end_offset,json=endOffset,proto3" json:"end_offset,omitempty"`
 	Lag             int64                  `protobuf:"varint,5,opt,name=lag,proto3" json:"lag,omitempty"`
-	TraceId         string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop            bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -1591,20 +839,6 @@ func (x *PartitionLag) GetLag() int64 {
 	return 0
 }
 
-func (x *PartitionLag) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *PartitionLag) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 type ConsumerGroupInfo struct {
 	state   protoimpl.MessageState `protogen:"open.v1"`
 	GroupId string                 `protobuf:"bytes,1,opt,name=group_id,json=groupId,proto3" json:"group_id,omitempty"`
@@ -1612,8 +846,6 @@ type ConsumerGroupInfo struct {
 	State         string          `protobuf:"bytes,2,opt,name=state,proto3" json:"state,omitempty"`
 	Partitions    []*PartitionLag `protobuf:"bytes,3,rep,name=partitions,proto3" json:"partitions,omitempty"`
 	TotalLag      int64           `protobuf:"varint,4,opt,name=total_lag,json=totalLag,proto3" json:"total_lag,omitempty"`
-	TraceId       string          `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool            `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1676,25 +908,9 @@ func (x *ConsumerGroupInfo) GetTotalLag() int64 {
 	return 0
 }
 
-func (x *ConsumerGroupInfo) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *ConsumerGroupInfo) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 type ConsumerGroupRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	GroupId       string                 `protobuf:"bytes,1,opt,name=group_id,json=groupId,proto3" json:"group_id,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1736,25 +952,9 @@ func (x *ConsumerGroupRequest) GetGroupId() string {
 	return ""
 }
 
-func (x *ConsumerGroupRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *ConsumerGroupRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 type ListConsumerGroupsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Groups        []*ConsumerGroupInfo   `protobuf:"bytes,1,rep,name=groups,proto3" json:"groups,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1796,20 +996,6 @@ func (x *ListConsumerGroupsResponse) GetGroups() []*ConsumerGroupInfo {
 	return nil
 }
 
-func (x *ListConsumerGroupsResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *ListConsumerGroupsResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 type ResetConsumerGroupOffsetsRequest struct {
 	state   protoimpl.MessageState `protogen:"open.v1"`
 	GroupId string                 `protobuf:"bytes,1,opt,name=group_id,json=groupId,proto3" json:"group_id,omitempty"`
@@ -1821,8 +1007,6 @@ type ResetConsumerGroupOffsetsRequest struct {
 	//	*ResetConsumerGroupOffsetsRequest_ToLatest
 	//	*ResetConsumerGroupOffsetsRequest_ToEarliest
 	ResetTo       isResetConsumerGroupOffsetsRequest_ResetTo `protobuf_oneof:"reset_to"`
-	TraceId       string                                     `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                                       `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1914,20 +1098,6 @@ func (x *ResetConsumerGroupOffsetsRequest) GetToEarliest() bool {
 	return false
 }
 
-func (x *ResetConsumerGroupOffsetsRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *ResetConsumerGroupOffsetsRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 type isResetConsumerGroupOffsetsRequest_ResetTo interface {
 	isResetConsumerGroupOffsetsRequest_ResetTo()
 }
@@ -1962,8 +1132,6 @@ type BrokerInfo struct {
 	Host          string                 `protobuf:"bytes,2,opt,name=host,proto3" json:"host,omitempty"`
 	Port          int32                  `protobuf:"varint,3,opt,name=port,proto3" json:"port,omitempty"`
 	IsController  bool                   `protobuf:"varint,4,opt,name=is_controller,json=isController,proto3" json:"is_controller,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2026,27 +1194,11 @@ func (x *BrokerInfo) GetIsController() bool {
 	return false
 }
 
-func (x *BrokerInfo) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *BrokerInfo) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 type ClusterHealthResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	BrokerCount   int32                  `protobuf:"varint,1,opt,name=broker_count,json=brokerCount,proto3" json:"broker_count,omitempty"`
 	Brokers       []*BrokerInfo          `protobuf:"bytes,2,rep,name=brokers,proto3" json:"brokers,omitempty"`
 	ControllerId  int32                  `protobuf:"varint,3,opt,name=controller_id,json=controllerId,proto3" json:"controller_id,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2102,20 +1254,6 @@ func (x *ClusterHealthResponse) GetControllerId() int32 {
 	return 0
 }
 
-func (x *ClusterHealthResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *ClusterHealthResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 // Config for the event-bus service. Stored in kernel via grpc_config.
 // At boot, eventbus connects to kernel to fetch this config, then merges
 // with env vars (env takes precedence via PROTO_CONFIG_* env var mappings).
@@ -2144,9 +1282,7 @@ type Config struct {
 	// cluster_seed is a stable string used to deterministically derive the KRaft cluster UUID.
 	ClusterSeed string `protobuf:"bytes,11,opt,name=cluster_seed,json=clusterSeed,proto3" json:"cluster_seed,omitempty"`
 	// state_refresh_interval_seconds controls how often this node re-registers in EventbusState.
-	StateRefreshIntervalSeconds int32  `protobuf:"varint,12,opt,name=state_refresh_interval_seconds,json=stateRefreshIntervalSeconds,proto3" json:"state_refresh_interval_seconds,omitempty"`
-	TraceId                     string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop                        bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	StateRefreshIntervalSeconds int32 `protobuf:"varint,12,opt,name=state_refresh_interval_seconds,json=stateRefreshIntervalSeconds,proto3" json:"state_refresh_interval_seconds,omitempty"`
 	unknownFields               protoimpl.UnknownFields
 	sizeCache                   protoimpl.SizeCache
 }
@@ -2265,20 +1401,6 @@ func (x *Config) GetStateRefreshIntervalSeconds() int32 {
 	return 0
 }
 
-func (x *Config) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *Config) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 // EventbusNode represents a single eventbus (Kafka) instance registered in shared state.
 // Each node publishes its own entry on startup and refreshes it periodically.
 type EventbusNode struct {
@@ -2289,8 +1411,6 @@ type EventbusNode struct {
 	Role KafkaNodeRole `protobuf:"varint,2,opt,name=role,proto3,enum=eventbus.KafkaNodeRole" json:"role,omitempty"`
 	// endpoint is the host + controller port other nodes use for KRaft consensus.
 	Endpoint      *host.Host `protobuf:"bytes,3,opt,name=endpoint,proto3" json:"endpoint,omitempty"`
-	TraceId       string     `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool       `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2346,20 +1466,6 @@ func (x *EventbusNode) GetEndpoint() *host.Host {
 	return nil
 }
 
-func (x *EventbusNode) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *EventbusNode) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 // EventbusState holds shared state for eventbus node discovery.
 // Each instance writes its own EventbusNode entry on startup.
 // Peers discover each other via Watch on this collection for KRaft voter list construction.
@@ -2368,8 +1474,6 @@ type EventbusState struct {
 	// nodes is the collection of registered eventbus instances.
 	// Keyed by node_id, evicted after 120s if not refreshed.
 	Nodes         []*EventbusNode `protobuf:"bytes,1,rep,name=nodes,proto3" json:"nodes,omitempty"`
-	TraceId       string          `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool            `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2411,1301 +1515,11 @@ func (x *EventbusState) GetNodes() []*EventbusNode {
 	return nil
 }
 
-func (x *EventbusState) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *EventbusState) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-// EventbusConfigState is the state boundary for eventbus service configuration.
-// Auto-injected by tacplus from (spec.grpc_config) annotation.
-type EventbusConfigState struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Config        *Config                `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *EventbusConfigState) Reset() {
-	*x = EventbusConfigState{}
-	mi := &file_services_eventbus_proto_msgTypes[18]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EventbusConfigState) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EventbusConfigState) ProtoMessage() {}
-
-func (x *EventbusConfigState) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[18]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use EventbusConfigState.ProtoReflect.Descriptor instead.
-func (*EventbusConfigState) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{18}
-}
-
-func (x *EventbusConfigState) GetConfig() *Config {
-	if x != nil {
-		return x.Config
-	}
-	return nil
-}
-
-func (x *EventbusConfigState) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *EventbusConfigState) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type QueryValue struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Types that are valid to be assigned to Value:
-	//
-	//	*QueryValue_StringValue
-	//	*QueryValue_IntValue
-	//	*QueryValue_DoubleValue
-	//	*QueryValue_BoolValue
-	Value         isQueryValue_Value `protobuf_oneof:"value"`
-	TraceId       string             `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool               `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *QueryValue) Reset() {
-	*x = QueryValue{}
-	mi := &file_services_eventbus_proto_msgTypes[19]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *QueryValue) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*QueryValue) ProtoMessage() {}
-
-func (x *QueryValue) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[19]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use QueryValue.ProtoReflect.Descriptor instead.
-func (*QueryValue) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{19}
-}
-
-func (x *QueryValue) GetValue() isQueryValue_Value {
-	if x != nil {
-		return x.Value
-	}
-	return nil
-}
-
-func (x *QueryValue) GetStringValue() string {
-	if x != nil {
-		if x, ok := x.Value.(*QueryValue_StringValue); ok {
-			return x.StringValue
-		}
-	}
-	return ""
-}
-
-func (x *QueryValue) GetIntValue() int64 {
-	if x != nil {
-		if x, ok := x.Value.(*QueryValue_IntValue); ok {
-			return x.IntValue
-		}
-	}
-	return 0
-}
-
-func (x *QueryValue) GetDoubleValue() float64 {
-	if x != nil {
-		if x, ok := x.Value.(*QueryValue_DoubleValue); ok {
-			return x.DoubleValue
-		}
-	}
-	return 0
-}
-
-func (x *QueryValue) GetBoolValue() bool {
-	if x != nil {
-		if x, ok := x.Value.(*QueryValue_BoolValue); ok {
-			return x.BoolValue
-		}
-	}
-	return false
-}
-
-func (x *QueryValue) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *QueryValue) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type isQueryValue_Value interface {
-	isQueryValue_Value()
-}
-
-type QueryValue_StringValue struct {
-	StringValue string `protobuf:"bytes,1,opt,name=string_value,json=stringValue,proto3,oneof"`
-}
-
-type QueryValue_IntValue struct {
-	IntValue int64 `protobuf:"varint,2,opt,name=int_value,json=intValue,proto3,oneof"`
-}
-
-type QueryValue_DoubleValue struct {
-	DoubleValue float64 `protobuf:"fixed64,3,opt,name=double_value,json=doubleValue,proto3,oneof"`
-}
-
-type QueryValue_BoolValue struct {
-	BoolValue bool `protobuf:"varint,4,opt,name=bool_value,json=boolValue,proto3,oneof"`
-}
-
-func (*QueryValue_StringValue) isQueryValue_Value() {}
-
-func (*QueryValue_IntValue) isQueryValue_Value() {}
-
-func (*QueryValue_DoubleValue) isQueryValue_Value() {}
-
-func (*QueryValue_BoolValue) isQueryValue_Value() {}
-
-type Predicate struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	FieldName     string                 `protobuf:"bytes,1,opt,name=field_name,json=fieldName,proto3" json:"field_name,omitempty"`
-	Op            ComparisonOp           `protobuf:"varint,2,opt,name=op,proto3,enum=eventbus.ComparisonOp" json:"op,omitempty"`
-	Value         *QueryValue            `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`
-	Values        []*QueryValue          `protobuf:"bytes,4,rep,name=values,proto3" json:"values,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Predicate) Reset() {
-	*x = Predicate{}
-	mi := &file_services_eventbus_proto_msgTypes[20]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Predicate) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Predicate) ProtoMessage() {}
-
-func (x *Predicate) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[20]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Predicate.ProtoReflect.Descriptor instead.
-func (*Predicate) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{20}
-}
-
-func (x *Predicate) GetFieldName() string {
-	if x != nil {
-		return x.FieldName
-	}
-	return ""
-}
-
-func (x *Predicate) GetOp() ComparisonOp {
-	if x != nil {
-		return x.Op
-	}
-	return ComparisonOp_COMPARISON_OP_UNSPECIFIED
-}
-
-func (x *Predicate) GetValue() *QueryValue {
-	if x != nil {
-		return x.Value
-	}
-	return nil
-}
-
-func (x *Predicate) GetValues() []*QueryValue {
-	if x != nil {
-		return x.Values
-	}
-	return nil
-}
-
-func (x *Predicate) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *Predicate) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type PredicateGroup struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Op            LogicalOp              `protobuf:"varint,1,opt,name=op,proto3,enum=eventbus.LogicalOp" json:"op,omitempty"`
-	Predicates    []*Predicate           `protobuf:"bytes,2,rep,name=predicates,proto3" json:"predicates,omitempty"`
-	Groups        []*PredicateGroup      `protobuf:"bytes,3,rep,name=groups,proto3" json:"groups,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PredicateGroup) Reset() {
-	*x = PredicateGroup{}
-	mi := &file_services_eventbus_proto_msgTypes[21]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PredicateGroup) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PredicateGroup) ProtoMessage() {}
-
-func (x *PredicateGroup) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[21]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PredicateGroup.ProtoReflect.Descriptor instead.
-func (*PredicateGroup) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{21}
-}
-
-func (x *PredicateGroup) GetOp() LogicalOp {
-	if x != nil {
-		return x.Op
-	}
-	return LogicalOp_LOGICAL_OP_UNSPECIFIED
-}
-
-func (x *PredicateGroup) GetPredicates() []*Predicate {
-	if x != nil {
-		return x.Predicates
-	}
-	return nil
-}
-
-func (x *PredicateGroup) GetGroups() []*PredicateGroup {
-	if x != nil {
-		return x.Groups
-	}
-	return nil
-}
-
-func (x *PredicateGroup) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *PredicateGroup) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type SortField struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	FieldName     string                 `protobuf:"bytes,1,opt,name=field_name,json=fieldName,proto3" json:"field_name,omitempty"`
-	Direction     SortDirection          `protobuf:"varint,2,opt,name=direction,proto3,enum=eventbus.SortDirection" json:"direction,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SortField) Reset() {
-	*x = SortField{}
-	mi := &file_services_eventbus_proto_msgTypes[22]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SortField) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SortField) ProtoMessage() {}
-
-func (x *SortField) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[22]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SortField.ProtoReflect.Descriptor instead.
-func (*SortField) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{22}
-}
-
-func (x *SortField) GetFieldName() string {
-	if x != nil {
-		return x.FieldName
-	}
-	return ""
-}
-
-func (x *SortField) GetDirection() SortDirection {
-	if x != nil {
-		return x.Direction
-	}
-	return SortDirection_SORT_DIRECTION_UNSPECIFIED
-}
-
-func (x *SortField) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *SortField) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type CollectionQuery struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Where         *PredicateGroup        `protobuf:"bytes,1,opt,name=where,proto3" json:"where,omitempty"`
-	OrderBy       []*SortField           `protobuf:"bytes,2,rep,name=order_by,json=orderBy,proto3" json:"order_by,omitempty"`
-	Limit         int32                  `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`
-	Offset        int32                  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CollectionQuery) Reset() {
-	*x = CollectionQuery{}
-	mi := &file_services_eventbus_proto_msgTypes[23]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CollectionQuery) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CollectionQuery) ProtoMessage() {}
-
-func (x *CollectionQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[23]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CollectionQuery.ProtoReflect.Descriptor instead.
-func (*CollectionQuery) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{23}
-}
-
-func (x *CollectionQuery) GetWhere() *PredicateGroup {
-	if x != nil {
-		return x.Where
-	}
-	return nil
-}
-
-func (x *CollectionQuery) GetOrderBy() []*SortField {
-	if x != nil {
-		return x.OrderBy
-	}
-	return nil
-}
-
-func (x *CollectionQuery) GetLimit() int32 {
-	if x != nil {
-		return x.Limit
-	}
-	return 0
-}
-
-func (x *CollectionQuery) GetOffset() int32 {
-	if x != nil {
-		return x.Offset
-	}
-	return 0
-}
-
-func (x *CollectionQuery) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *CollectionQuery) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type NodesGetRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Key           string                 `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *NodesGetRequest) Reset() {
-	*x = NodesGetRequest{}
-	mi := &file_services_eventbus_proto_msgTypes[24]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *NodesGetRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*NodesGetRequest) ProtoMessage() {}
-
-func (x *NodesGetRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[24]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use NodesGetRequest.ProtoReflect.Descriptor instead.
-func (*NodesGetRequest) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{24}
-}
-
-func (x *NodesGetRequest) GetKey() string {
-	if x != nil {
-		return x.Key
-	}
-	return ""
-}
-
-func (x *NodesGetRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *NodesGetRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type NodesPutRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Key           string                 `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
-	Value         *EventbusNode          `protobuf:"bytes,2,opt,name=value,proto3" json:"value,omitempty"`
-	LockCounter   int64                  `protobuf:"varint,3,opt,name=lock_counter,json=lockCounter,proto3" json:"lock_counter,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *NodesPutRequest) Reset() {
-	*x = NodesPutRequest{}
-	mi := &file_services_eventbus_proto_msgTypes[25]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *NodesPutRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*NodesPutRequest) ProtoMessage() {}
-
-func (x *NodesPutRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[25]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use NodesPutRequest.ProtoReflect.Descriptor instead.
-func (*NodesPutRequest) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{25}
-}
-
-func (x *NodesPutRequest) GetKey() string {
-	if x != nil {
-		return x.Key
-	}
-	return ""
-}
-
-func (x *NodesPutRequest) GetValue() *EventbusNode {
-	if x != nil {
-		return x.Value
-	}
-	return nil
-}
-
-func (x *NodesPutRequest) GetLockCounter() int64 {
-	if x != nil {
-		return x.LockCounter
-	}
-	return 0
-}
-
-func (x *NodesPutRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *NodesPutRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type NodesGetAllRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *NodesGetAllRequest) Reset() {
-	*x = NodesGetAllRequest{}
-	mi := &file_services_eventbus_proto_msgTypes[26]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *NodesGetAllRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*NodesGetAllRequest) ProtoMessage() {}
-
-func (x *NodesGetAllRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[26]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use NodesGetAllRequest.ProtoReflect.Descriptor instead.
-func (*NodesGetAllRequest) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{26}
-}
-
-func (x *NodesGetAllRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *NodesGetAllRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type NodesKeysRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *NodesKeysRequest) Reset() {
-	*x = NodesKeysRequest{}
-	mi := &file_services_eventbus_proto_msgTypes[27]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *NodesKeysRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*NodesKeysRequest) ProtoMessage() {}
-
-func (x *NodesKeysRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[27]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use NodesKeysRequest.ProtoReflect.Descriptor instead.
-func (*NodesKeysRequest) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{27}
-}
-
-func (x *NodesKeysRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *NodesKeysRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type NodesSizeRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *NodesSizeRequest) Reset() {
-	*x = NodesSizeRequest{}
-	mi := &file_services_eventbus_proto_msgTypes[28]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *NodesSizeRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*NodesSizeRequest) ProtoMessage() {}
-
-func (x *NodesSizeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[28]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use NodesSizeRequest.ProtoReflect.Descriptor instead.
-func (*NodesSizeRequest) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{28}
-}
-
-func (x *NodesSizeRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *NodesSizeRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type NodesClearRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *NodesClearRequest) Reset() {
-	*x = NodesClearRequest{}
-	mi := &file_services_eventbus_proto_msgTypes[29]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *NodesClearRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*NodesClearRequest) ProtoMessage() {}
-
-func (x *NodesClearRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[29]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use NodesClearRequest.ProtoReflect.Descriptor instead.
-func (*NodesClearRequest) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{29}
-}
-
-func (x *NodesClearRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *NodesClearRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type NodesValueResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Value         *EventbusNode          `protobuf:"bytes,1,opt,name=value,proto3" json:"value,omitempty"`
-	Found         bool                   `protobuf:"varint,2,opt,name=found,proto3" json:"found,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *NodesValueResponse) Reset() {
-	*x = NodesValueResponse{}
-	mi := &file_services_eventbus_proto_msgTypes[30]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *NodesValueResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*NodesValueResponse) ProtoMessage() {}
-
-func (x *NodesValueResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[30]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use NodesValueResponse.ProtoReflect.Descriptor instead.
-func (*NodesValueResponse) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{30}
-}
-
-func (x *NodesValueResponse) GetValue() *EventbusNode {
-	if x != nil {
-		return x.Value
-	}
-	return nil
-}
-
-func (x *NodesValueResponse) GetFound() bool {
-	if x != nil {
-		return x.Found
-	}
-	return false
-}
-
-func (x *NodesValueResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *NodesValueResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type NodesEntriesResponse struct {
-	state         protoimpl.MessageState   `protogen:"open.v1"`
-	Entries       map[string]*EventbusNode `protobuf:"bytes,1,rep,name=entries,proto3" json:"entries,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	TraceId       string                   `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                     `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *NodesEntriesResponse) Reset() {
-	*x = NodesEntriesResponse{}
-	mi := &file_services_eventbus_proto_msgTypes[31]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *NodesEntriesResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*NodesEntriesResponse) ProtoMessage() {}
-
-func (x *NodesEntriesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[31]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use NodesEntriesResponse.ProtoReflect.Descriptor instead.
-func (*NodesEntriesResponse) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{31}
-}
-
-func (x *NodesEntriesResponse) GetEntries() map[string]*EventbusNode {
-	if x != nil {
-		return x.Entries
-	}
-	return nil
-}
-
-func (x *NodesEntriesResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *NodesEntriesResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type NodesKeysResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Keys          []string               `protobuf:"bytes,1,rep,name=keys,proto3" json:"keys,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *NodesKeysResponse) Reset() {
-	*x = NodesKeysResponse{}
-	mi := &file_services_eventbus_proto_msgTypes[32]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *NodesKeysResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*NodesKeysResponse) ProtoMessage() {}
-
-func (x *NodesKeysResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[32]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use NodesKeysResponse.ProtoReflect.Descriptor instead.
-func (*NodesKeysResponse) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{32}
-}
-
-func (x *NodesKeysResponse) GetKeys() []string {
-	if x != nil {
-		return x.Keys
-	}
-	return nil
-}
-
-func (x *NodesKeysResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *NodesKeysResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type NodesSizeResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Size          int32                  `protobuf:"varint,1,opt,name=size,proto3" json:"size,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *NodesSizeResponse) Reset() {
-	*x = NodesSizeResponse{}
-	mi := &file_services_eventbus_proto_msgTypes[33]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *NodesSizeResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*NodesSizeResponse) ProtoMessage() {}
-
-func (x *NodesSizeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[33]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use NodesSizeResponse.ProtoReflect.Descriptor instead.
-func (*NodesSizeResponse) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{33}
-}
-
-func (x *NodesSizeResponse) GetSize() int32 {
-	if x != nil {
-		return x.Size
-	}
-	return 0
-}
-
-func (x *NodesSizeResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *NodesSizeResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type NodesQueryRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Query         *CollectionQuery       `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *NodesQueryRequest) Reset() {
-	*x = NodesQueryRequest{}
-	mi := &file_services_eventbus_proto_msgTypes[34]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *NodesQueryRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*NodesQueryRequest) ProtoMessage() {}
-
-func (x *NodesQueryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[34]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use NodesQueryRequest.ProtoReflect.Descriptor instead.
-func (*NodesQueryRequest) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{34}
-}
-
-func (x *NodesQueryRequest) GetQuery() *CollectionQuery {
-	if x != nil {
-		return x.Query
-	}
-	return nil
-}
-
-func (x *NodesQueryRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *NodesQueryRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type NodesQueryResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Results       []*EventbusNode        `protobuf:"bytes,1,rep,name=results,proto3" json:"results,omitempty"`
-	TotalCount    int32                  `protobuf:"varint,2,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *NodesQueryResponse) Reset() {
-	*x = NodesQueryResponse{}
-	mi := &file_services_eventbus_proto_msgTypes[35]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *NodesQueryResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*NodesQueryResponse) ProtoMessage() {}
-
-func (x *NodesQueryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[35]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use NodesQueryResponse.ProtoReflect.Descriptor instead.
-func (*NodesQueryResponse) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{35}
-}
-
-func (x *NodesQueryResponse) GetResults() []*EventbusNode {
-	if x != nil {
-		return x.Results
-	}
-	return nil
-}
-
-func (x *NodesQueryResponse) GetTotalCount() int32 {
-	if x != nil {
-		return x.TotalCount
-	}
-	return 0
-}
-
-func (x *NodesQueryResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *NodesQueryResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type MapEmpty struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *MapEmpty) Reset() {
-	*x = MapEmpty{}
-	mi := &file_services_eventbus_proto_msgTypes[36]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *MapEmpty) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*MapEmpty) ProtoMessage() {}
-
-func (x *MapEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[36]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use MapEmpty.ProtoReflect.Descriptor instead.
-func (*MapEmpty) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{36}
-}
-
-func (x *MapEmpty) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *MapEmpty) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 var File_services_eventbus_proto protoreflect.FileDescriptor
 
 const file_services_eventbus_proto_rawDesc = "" +
 	"\n" +
-	"\x17services/eventbus.proto\x12\beventbus\x1a\x0flibs/spec.proto\x1a\x0flibs/host.proto\x1a\x10libs/trace.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x93\x04\n" +
+	"\x17services/eventbus.proto\x12\beventbus\x1a\x0flibs/spec.proto\x1a\x0flibs/host.proto\x1a\x10libs/trace.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xe2\x03\n" +
 	"\x10SubscribeRequest\x12\x1e\n" +
 	"\x06offset\x18\x01 \x01(\x03B\x04\xb0\xa7\x1d\x00H\x00R\x06offset\x12:\n" +
 	"\ttimestamp\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\ttimestamp\x12\x18\n" +
@@ -3719,86 +1533,62 @@ const file_services_eventbus_proto_rawDesc = "" +
 	"\n" +
 	"partitions\x18\n" +
 	" \x03(\x05B\x05\xb8\xa8\x1d\x80\x02R\n" +
-	"partitions\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopB\f\n" +
+	"partitionsB\f\n" +
 	"\n" +
-	"start_from\"\x84\x01\n" +
+	"start_from\"S\n" +
 	"\x0fPublishResponse\x12\"\n" +
 	"\tpartition\x18\x01 \x01(\x05B\x04\xb0\xa7\x1d\x00R\tpartition\x12\x1c\n" +
-	"\x06offset\x18\x02 \x01(\x03B\x04\xb0\xa7\x1d\x00R\x06offset\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xdc\x02\n" +
+	"\x06offset\x18\x02 \x01(\x03B\x04\xb0\xa7\x1d\x00R\x06offset\"\xab\x02\n" +
 	"\n" +
 	"RecordMeta\x12\x17\n" +
 	"\x03key\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x02R\x03key\x12A\n" +
 	"\aheaders\x18\x02 \x03(\v2!.eventbus.RecordMeta.HeadersEntryB\x04\xb8\xa8\x1d@R\aheaders\x12\"\n" +
 	"\tpartition\x18\x03 \x01(\x05B\x04\xb0\xa7\x1d\x00R\tpartition\x12\x1c\n" +
 	"\x06offset\x18\x04 \x01(\x03B\x04\xb0\xa7\x1d\x00R\x06offset\x12C\n" +
-	"\x0fevent_timestamp\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\x0eeventTimestamp\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\x1a:\n" +
+	"\x0fevent_timestamp\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\x0eeventTimestamp\x1a:\n" +
 	"\fHeadersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xf4\x03\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xc3\x03\n" +
 	"\tTopicInfo\x12\x1d\n" +
 	"\x04name\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x04name\x12-\n" +
 	"\x0fpartition_count\x18\x02 \x01(\x05B\x04\xb0\xa7\x1d\x01R\x0epartitionCount\x120\n" +
 	"\fretention_ms\x18\x03 \x01(\x03B\r\xb0\xa7\x1d\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01R\vretentionMs\x12Z\n" +
 	"\x10earliest_offsets\x18\x04 \x03(\v2(.eventbus.TopicInfo.EarliestOffsetsEntryB\x05\xb8\xa8\x1d\x80\x02R\x0fearliestOffsets\x12T\n" +
-	"\x0elatest_offsets\x18\x05 \x03(\v2&.eventbus.TopicInfo.LatestOffsetsEntryB\x05\xb8\xa8\x1d\x80\x02R\rlatestOffsets\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\x1aB\n" +
+	"\x0elatest_offsets\x18\x05 \x03(\v2&.eventbus.TopicInfo.LatestOffsetsEntryB\x05\xb8\xa8\x1d\x80\x02R\rlatestOffsets\x1aB\n" +
 	"\x14EarliestOffsetsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\x03R\x05value:\x028\x01\x1a@\n" +
 	"\x12LatestOffsetsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x03R\x05value:\x028\x01\"d\n" +
+	"\x05value\x18\x02 \x01(\x03R\x05value:\x028\x01\"3\n" +
 	"\x10TopicInfoRequest\x12\x1f\n" +
-	"\x05topic\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x05topic\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"y\n" +
+	"\x05topic\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x05topic\"H\n" +
 	"\x12ListTopicsResponse\x122\n" +
-	"\x06topics\x18\x01 \x03(\v2\x13.eventbus.TopicInfoB\x05\xb8\xa8\x1d\x80\bR\x06topics\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"f\n" +
+	"\x06topics\x18\x01 \x03(\v2\x13.eventbus.TopicInfoB\x05\xb8\xa8\x1d\x80\bR\x06topics\"5\n" +
 	"\x12DeleteTopicRequest\x12\x1f\n" +
-	"\x05topic\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x05topic\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd1\x01\n" +
-	"\x17AlterTopicConfigRequest\x12\x1f\n" +
+	"\x05topic\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x05topic\"\xa1\x01\n" +
+	"\x18UpdateTopicConfigRequest\x12\x1f\n" +
 	"\x05topic\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x05topic\x120\n" +
 	"\fretention_ms\x18\x02 \x01(\x03B\r\xb0\xa7\x1d\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01R\vretentionMs\x122\n" +
-	"\x0fpartition_count\x18\x03 \x01(\x05B\t\xb0\xa7\x1d\x00\xc0\xa7\x1d\x80\x02R\x0epartitionCount\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xfb\x01\n" +
+	"\x0fpartition_count\x18\x03 \x01(\x05B\t\xb0\xa7\x1d\x00\xc0\xa7\x1d\x80\x02R\x0epartitionCount\"\xca\x01\n" +
 	"\fPartitionLag\x12\x1f\n" +
 	"\x05topic\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x05topic\x12\"\n" +
 	"\tpartition\x18\x02 \x01(\x05B\x04\xb0\xa7\x1d\x00R\tpartition\x128\n" +
 	"\x10committed_offset\x18\x03 \x01(\x03B\r\xb0\xa7\x1d\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01R\x0fcommittedOffset\x12#\n" +
 	"\n" +
 	"end_offset\x18\x04 \x01(\x03B\x04\xb0\xa7\x1d\x00R\tendOffset\x12\x16\n" +
-	"\x03lag\x18\x05 \x01(\x03B\x04\xb0\xa7\x1d\x00R\x03lag\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe8\x01\n" +
+	"\x03lag\x18\x05 \x01(\x03B\x04\xb0\xa7\x1d\x00R\x03lag\"\xb7\x01\n" +
 	"\x11ConsumerGroupInfo\x12$\n" +
 	"\bgroup_id\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\agroupId\x12\x1a\n" +
 	"\x05state\x18\x02 \x01(\tB\x04\x90\xa7\x1d@R\x05state\x12=\n" +
 	"\n" +
 	"partitions\x18\x03 \x03(\v2\x16.eventbus.PartitionLagB\x05\xb8\xa8\x1d\x80\bR\n" +
 	"partitions\x12!\n" +
-	"\ttotal_lag\x18\x04 \x01(\x03B\x04\xb0\xa7\x1d\x00R\btotalLag\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"m\n" +
+	"\ttotal_lag\x18\x04 \x01(\x03B\x04\xb0\xa7\x1d\x00R\btotalLag\"<\n" +
 	"\x14ConsumerGroupRequest\x12$\n" +
-	"\bgroup_id\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\agroupId\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x89\x01\n" +
+	"\bgroup_id\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\agroupId\"X\n" +
 	"\x1aListConsumerGroupsResponse\x12:\n" +
-	"\x06groups\x18\x01 \x03(\v2\x1b.eventbus.ConsumerGroupInfoB\x05\xb8\xa8\x1d\x80\bR\x06groups\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc4\x02\n" +
+	"\x06groups\x18\x01 \x03(\v2\x1b.eventbus.ConsumerGroupInfoB\x05\xb8\xa8\x1d\x80\bR\x06groups\"\x93\x02\n" +
 	" ResetConsumerGroupOffsetsRequest\x12$\n" +
 	"\bgroup_id\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\agroupId\x12\x1f\n" +
 	"\x05topic\x18\x02 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x05topic\x12\x1e\n" +
@@ -3806,26 +1596,20 @@ const file_services_eventbus_proto_rawDesc = "" +
 	"\ttimestamp\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\ttimestamp\x12\x1d\n" +
 	"\tto_latest\x18\x05 \x01(\bH\x00R\btoLatest\x12!\n" +
 	"\vto_earliest\x18\x06 \x01(\bH\x00R\n" +
-	"toEarliest\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopB\n" +
+	"toEarliestB\n" +
 	"\n" +
-	"\breset_to\"\xb7\x01\n" +
+	"\breset_to\"\x86\x01\n" +
 	"\n" +
 	"BrokerInfo\x12\x14\n" +
 	"\x02id\x18\x01 \x01(\x05B\x04\xb0\xa7\x1d\x00R\x02id\x12\x1d\n" +
 	"\x04host\x18\x02 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x04host\x12\x1e\n" +
 	"\x04port\x18\x03 \x01(\x05B\n" +
 	"\xb0\xa7\x1d\x01\xc0\xa7\x1d\xff\xff\x03R\x04port\x12#\n" +
-	"\ris_controller\x18\x04 \x01(\bR\fisController\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xdb\x01\n" +
+	"\ris_controller\x18\x04 \x01(\bR\fisController\"\xaa\x01\n" +
 	"\x15ClusterHealthResponse\x12'\n" +
 	"\fbroker_count\x18\x01 \x01(\x05B\x04\xb0\xa7\x1d\x00R\vbrokerCount\x124\n" +
 	"\abrokers\x18\x02 \x03(\v2\x14.eventbus.BrokerInfoB\x04\xb8\xa8\x1d@R\abrokers\x122\n" +
-	"\rcontroller_id\x18\x03 \x01(\x05B\r\xb0\xa7\x1d\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01R\fcontrollerId\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xf7\x05\n" +
+	"\rcontroller_id\x18\x03 \x01(\x05B\r\xb0\xa7\x1d\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01R\fcontrollerId\"\xc6\x05\n" +
 	"\x06Config\x12:\n" +
 	"\tnode_role\x18\x01 \x01(\x0e2\x17.eventbus.KafkaNodeRoleB\x04\x98\xa7\x1d\x01R\bnodeRole\x129\n" +
 	"\bdata_dir\x18\x02 \x01(\tB\x1e\xa0\xa7\x1d\x04\x8a\xa8\x1d\x16/var/lib/eventbus/dataR\adataDir\x12A\n" +
@@ -3841,122 +1625,17 @@ const file_services_eventbus_proto_rawDesc = "" +
 	"\anode_id\x18\n" +
 	" \x01(\x05B\x04\xb0\xa7\x1d\x00R\x06nodeId\x12,\n" +
 	"\fcluster_seed\x18\v \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\vclusterSeed\x12M\n" +
-	"\x1estate_refresh_interval_seconds\x18\f \x01(\x05B\b\xb0\xa7\x1d\x05\x90\xa8\x1d<R\x1bstateRefreshIntervalSeconds\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0eҨ\x1d\n" +
+	"\x1estate_refresh_interval_seconds\x18\f \x01(\x05B\b\xb0\xa7\x1d\x05\x90\xa8\x1d<R\x1bstateRefreshIntervalSeconds:\x0eҨ\x1d\n" +
 	"\n" +
-	"\beventbus\"\xc3\x01\n" +
+	"\beventbus\"\x92\x01\n" +
 	"\fEventbusNode\x12!\n" +
 	"\anode_id\x18\x01 \x01(\x05B\bе\x18\x01\xb0\xa7\x1d\x00R\x06nodeId\x121\n" +
 	"\x04role\x18\x02 \x01(\x0e2\x17.eventbus.KafkaNodeRoleB\x04\x88\xa6\x1d\x01R\x04role\x12,\n" +
 	"\bendpoint\x18\x03 \x01(\v2\n" +
-	".host.HostB\x04\x88\xa6\x1d\x01R\bendpoint\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x88\x01\n" +
+	".host.HostB\x04\x88\xa6\x1d\x01R\bendpoint\"W\n" +
 	"\rEventbusState\x126\n" +
-	"\x05nodes\x18\x01 \x03(\v2\x16.eventbus.EventbusNodeB\bȶ\x18x\xb8\xa8\x1d R\x05nodes\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0e\x9a\xa8\x1d\n" +
-	"\x1a\x06kernel \x02\"\xa1\x01\n" +
-	"\x13EventbusConfigState\x122\n" +
-	"\x06config\x18\x01 \x01(\v2\x10.eventbus.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:%\x9a\xa8\x1d\x1d\n" +
-	"\x13EventbusConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\"\xd0\x01\n" +
-	"\n" +
-	"QueryValue\x12#\n" +
-	"\fstring_value\x18\x01 \x01(\tH\x00R\vstringValue\x12\x1d\n" +
-	"\tint_value\x18\x02 \x01(\x03H\x00R\bintValue\x12#\n" +
-	"\fdouble_value\x18\x03 \x01(\x01H\x00R\vdoubleValue\x12\x1f\n" +
-	"\n" +
-	"bool_value\x18\x04 \x01(\bH\x00R\tboolValue\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopB\a\n" +
-	"\x05value\"\xdd\x01\n" +
-	"\tPredicate\x12\x1d\n" +
-	"\n" +
-	"field_name\x18\x01 \x01(\tR\tfieldName\x12&\n" +
-	"\x02op\x18\x02 \x01(\x0e2\x16.eventbus.ComparisonOpR\x02op\x12*\n" +
-	"\x05value\x18\x03 \x01(\v2\x14.eventbus.QueryValueR\x05value\x12,\n" +
-	"\x06values\x18\x04 \x03(\v2\x14.eventbus.QueryValueR\x06values\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xcd\x01\n" +
-	"\x0ePredicateGroup\x12#\n" +
-	"\x02op\x18\x01 \x01(\x0e2\x13.eventbus.LogicalOpR\x02op\x123\n" +
-	"\n" +
-	"predicates\x18\x02 \x03(\v2\x13.eventbus.PredicateR\n" +
-	"predicates\x120\n" +
-	"\x06groups\x18\x03 \x03(\v2\x18.eventbus.PredicateGroupR\x06groups\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x92\x01\n" +
-	"\tSortField\x12\x1d\n" +
-	"\n" +
-	"field_name\x18\x01 \x01(\tR\tfieldName\x125\n" +
-	"\tdirection\x18\x02 \x01(\x0e2\x17.eventbus.SortDirectionR\tdirection\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd0\x01\n" +
-	"\x0fCollectionQuery\x12.\n" +
-	"\x05where\x18\x01 \x01(\v2\x18.eventbus.PredicateGroupR\x05where\x12.\n" +
-	"\border_by\x18\x02 \x03(\v2\x13.eventbus.SortFieldR\aorderBy\x12\x14\n" +
-	"\x05limit\x18\x03 \x01(\x05R\x05limit\x12\x16\n" +
-	"\x06offset\x18\x04 \x01(\x05R\x06offset\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"T\n" +
-	"\x0fNodesGetRequest\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa5\x01\n" +
-	"\x0fNodesPutRequest\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12,\n" +
-	"\x05value\x18\x02 \x01(\v2\x16.eventbus.EventbusNodeR\x05value\x12!\n" +
-	"\flock_counter\x18\x03 \x01(\x03R\vlockCounter\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"E\n" +
-	"\x12NodesGetAllRequest\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"C\n" +
-	"\x10NodesKeysRequest\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"C\n" +
-	"\x10NodesSizeRequest\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"D\n" +
-	"\x11NodesClearRequest\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x89\x01\n" +
-	"\x12NodesValueResponse\x12,\n" +
-	"\x05value\x18\x01 \x01(\v2\x16.eventbus.EventbusNodeR\x05value\x12\x14\n" +
-	"\x05found\x18\x02 \x01(\bR\x05found\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe2\x01\n" +
-	"\x14NodesEntriesResponse\x12E\n" +
-	"\aentries\x18\x01 \x03(\v2+.eventbus.NodesEntriesResponse.EntriesEntryR\aentries\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\x1aR\n" +
-	"\fEntriesEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12,\n" +
-	"\x05value\x18\x02 \x01(\v2\x16.eventbus.EventbusNodeR\x05value:\x028\x01\"X\n" +
-	"\x11NodesKeysResponse\x12\x12\n" +
-	"\x04keys\x18\x01 \x03(\tR\x04keys\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"X\n" +
-	"\x11NodesSizeResponse\x12\x12\n" +
-	"\x04size\x18\x01 \x01(\x05R\x04size\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"u\n" +
-	"\x11NodesQueryRequest\x12/\n" +
-	"\x05query\x18\x01 \x01(\v2\x19.eventbus.CollectionQueryR\x05query\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x98\x01\n" +
-	"\x12NodesQueryResponse\x120\n" +
-	"\aresults\x18\x01 \x03(\v2\x16.eventbus.EventbusNodeR\aresults\x12\x1f\n" +
-	"\vtotal_count\x18\x02 \x01(\x05R\n" +
-	"totalCount\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\";\n" +
-	"\bMapEmpty\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*a\n" +
+	"\x05nodes\x18\x01 \x03(\v2\x16.eventbus.EventbusNodeB\bȶ\x18x\xb8\xa8\x1d R\x05nodes:\x0e\x9a\xa8\x1d\n" +
+	"\x1a\x06kernel \x02*a\n" +
 	"\x12BackpressurePolicy\x12\x17\n" +
 	"\x13BACKPRESSURE_BUFFER\x10\x00\x12\x19\n" +
 	"\x15BACKPRESSURE_DROP_OLD\x10\x01\x12\x17\n" +
@@ -3965,156 +1644,21 @@ const file_services_eventbus_proto_rawDesc = "" +
 	"\x14KAFKA_ROLE_UNDEFINED\x10\x00\x12\x17\n" +
 	"\x13KAFKA_ROLE_COMBINED\x10\x01\x12\x15\n" +
 	"\x11KAFKA_ROLE_BROKER\x10\x02\x12\x19\n" +
-	"\x15KAFKA_ROLE_CONTROLLER\x10\x03*\xb3\x02\n" +
-	"\fComparisonOp\x12\x1d\n" +
-	"\x19COMPARISON_OP_UNSPECIFIED\x10\x00\x12\x14\n" +
-	"\x10COMPARISON_OP_EQ\x10\x01\x12\x14\n" +
-	"\x10COMPARISON_OP_NE\x10\x02\x12\x14\n" +
-	"\x10COMPARISON_OP_GT\x10\x03\x12\x14\n" +
-	"\x10COMPARISON_OP_GE\x10\x04\x12\x14\n" +
-	"\x10COMPARISON_OP_LT\x10\x05\x12\x14\n" +
-	"\x10COMPARISON_OP_LE\x10\x06\x12\x14\n" +
-	"\x10COMPARISON_OP_IN\x10\a\x12\x18\n" +
-	"\x14COMPARISON_OP_NOT_IN\x10\b\x12\x16\n" +
-	"\x12COMPARISON_OP_LIKE\x10\t\x12\x19\n" +
-	"\x15COMPARISON_OP_IS_NULL\x10\n" +
-	"\x12\x1d\n" +
-	"\x19COMPARISON_OP_IS_NOT_NULL\x10\v*`\n" +
-	"\rSortDirection\x12\x1e\n" +
-	"\x1aSORT_DIRECTION_UNSPECIFIED\x10\x00\x12\x16\n" +
-	"\x12SORT_DIRECTION_ASC\x10\x01\x12\x17\n" +
-	"\x13SORT_DIRECTION_DESC\x10\x02*N\n" +
-	"\tLogicalOp\x12\x1a\n" +
-	"\x16LOGICAL_OP_UNSPECIFIED\x10\x00\x12\x12\n" +
-	"\x0eLOGICAL_OP_AND\x10\x01\x12\x11\n" +
-	"\rLOGICAL_OP_OR\x10\x02*\xab\t\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x1d\n" +
-	"\x19TYPE_ID_SUBSCRIBE_REQUEST\x10\x01\x12\x1c\n" +
-	"\x18TYPE_ID_PUBLISH_RESPONSE\x10\x02\x12\x17\n" +
-	"\x13TYPE_ID_RECORD_META\x10\x03\x12\x16\n" +
-	"\x12TYPE_ID_TOPIC_INFO\x10\x04\x12\x1e\n" +
-	"\x1aTYPE_ID_TOPIC_INFO_REQUEST\x10\x05\x12 \n" +
-	"\x1cTYPE_ID_LIST_TOPICS_RESPONSE\x10\x06\x12 \n" +
-	"\x1cTYPE_ID_DELETE_TOPIC_REQUEST\x10\a\x12&\n" +
-	"\"TYPE_ID_ALTER_TOPIC_CONFIG_REQUEST\x10\b\x12\x19\n" +
-	"\x15TYPE_ID_PARTITION_LAG\x10\t\x12\x1f\n" +
-	"\x1bTYPE_ID_CONSUMER_GROUP_INFO\x10\n" +
-	"\x12\"\n" +
-	"\x1eTYPE_ID_CONSUMER_GROUP_REQUEST\x10\v\x12)\n" +
-	"%TYPE_ID_LIST_CONSUMER_GROUPS_RESPONSE\x10\f\x120\n" +
-	",TYPE_ID_RESET_CONSUMER_GROUP_OFFSETS_REQUEST\x10\r\x12\x17\n" +
-	"\x13TYPE_ID_BROKER_INFO\x10\x0e\x12#\n" +
-	"\x1fTYPE_ID_CLUSTER_HEALTH_RESPONSE\x10\x0f\x12\x12\n" +
-	"\x0eTYPE_ID_CONFIG\x10\x10\x12\x19\n" +
-	"\x15TYPE_ID_EVENTBUS_NODE\x10\x11\x12\x1a\n" +
-	"\x16TYPE_ID_EVENTBUS_STATE\x10\x12\x12!\n" +
-	"\x1dTYPE_ID_EVENTBUS_CONFIG_STATE\x10\x13\x12\x17\n" +
-	"\x13TYPE_ID_QUERY_VALUE\x10\x14\x12\x15\n" +
-	"\x11TYPE_ID_PREDICATE\x10\x15\x12\x1b\n" +
-	"\x17TYPE_ID_PREDICATE_GROUP\x10\x16\x12\x16\n" +
-	"\x12TYPE_ID_SORT_FIELD\x10\x17\x12\x1c\n" +
-	"\x18TYPE_ID_COLLECTION_QUERY\x10\x18\x12\x1d\n" +
-	"\x19TYPE_ID_NODES_GET_REQUEST\x10\x19\x12\x1d\n" +
-	"\x19TYPE_ID_NODES_PUT_REQUEST\x10\x1a\x12!\n" +
-	"\x1dTYPE_ID_NODES_GET_ALL_REQUEST\x10\x1b\x12\x1e\n" +
-	"\x1aTYPE_ID_NODES_KEYS_REQUEST\x10\x1c\x12\x1e\n" +
-	"\x1aTYPE_ID_NODES_SIZE_REQUEST\x10\x1d\x12\x1f\n" +
-	"\x1bTYPE_ID_NODES_CLEAR_REQUEST\x10\x1e\x12 \n" +
-	"\x1cTYPE_ID_NODES_VALUE_RESPONSE\x10\x1f\x12\"\n" +
-	"\x1eTYPE_ID_NODES_ENTRIES_RESPONSE\x10 \x12\x1f\n" +
-	"\x1bTYPE_ID_NODES_KEYS_RESPONSE\x10!\x12\x1f\n" +
-	"\x1bTYPE_ID_NODES_SIZE_RESPONSE\x10\"\x12\x1f\n" +
-	"\x1bTYPE_ID_NODES_QUERY_REQUEST\x10#\x12 \n" +
-	"\x1cTYPE_ID_NODES_QUERY_RESPONSE\x10$\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10%*\xd8\x03\n" +
+	"\x15KAFKA_ROLE_CONTROLLER\x10\x032\xf3\x05\n" +
+	"\x05Admin\x12S\n" +
 	"\n" +
-	"AdminRpcId\x12\x1c\n" +
-	"\x18ADMIN_RPC_ID_UNSPECIFIED\x10\x00\x12\x1e\n" +
-	"\x1aADMIN_RPC_ID_ALL_ACCESSORS\x10\x01\x12\x1d\n" +
-	"\x19ADMIN_RPC_ID_ALL_MUTATORS\x10\x02\x12\x1e\n" +
-	"\x1aADMIN_RPC_ID_ALL_EXECUTORS\x10\x03\x12\x1c\n" +
-	"\x18ADMIN_RPC_ID_LIST_TOPICS\x10\x04\x12\x1f\n" +
-	"\x1bADMIN_RPC_ID_GET_TOPIC_INFO\x10\x05\x12\x1d\n" +
-	"\x19ADMIN_RPC_ID_DELETE_TOPIC\x10\x06\x12#\n" +
-	"\x1fADMIN_RPC_ID_ALTER_TOPIC_CONFIG\x10\a\x12'\n" +
-	"#ADMIN_RPC_ID_GET_CONSUMER_GROUP_LAG\x10\b\x12%\n" +
-	"!ADMIN_RPC_ID_LIST_CONSUMER_GROUPS\x10\t\x12-\n" +
-	")ADMIN_RPC_ID_RESET_CONSUMER_GROUP_OFFSETS\x10\n" +
-	"\x12&\n" +
-	"\"ADMIN_RPC_ID_DELETE_CONSUMER_GROUP\x10\v\x12#\n" +
-	"\x1fADMIN_RPC_ID_GET_CLUSTER_HEALTH\x10\f*\xd6\x01\n" +
-	"\x11TraceSessionRpcId\x12$\n" +
-	" TRACE_SESSION_RPC_ID_UNSPECIFIED\x10\x00\x12&\n" +
-	"\"TRACE_SESSION_RPC_ID_ALL_ACCESSORS\x10\x01\x12%\n" +
-	"!TRACE_SESSION_RPC_ID_ALL_MUTATORS\x10\x02\x12&\n" +
-	"\"TRACE_SESSION_RPC_ID_ALL_EXECUTORS\x10\x03\x12$\n" +
-	" TRACE_SESSION_RPC_ID_WATCH_TRACE\x10\x04*\x82\a\n" +
-	"\x19EventbusStateServiceRpcId\x12-\n" +
-	")EVENTBUS_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x12/\n" +
-	"+EVENTBUS_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x12.\n" +
-	"*EVENTBUS_STATE_SERVICE_RPC_ID_ALL_MUTATORS\x10\x02\x12/\n" +
-	"+EVENTBUS_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x12+\n" +
-	"'EVENTBUS_STATE_SERVICE_RPC_ID_GET_NODES\x10\x04\x12+\n" +
-	"'EVENTBUS_STATE_SERVICE_RPC_ID_PUT_NODES\x10\x05\x12+\n" +
-	"'EVENTBUS_STATE_SERVICE_RPC_ID_SET_NODES\x10\x06\x12.\n" +
-	"*EVENTBUS_STATE_SERVICE_RPC_ID_REMOVE_NODES\x10\a\x12.\n" +
-	"*EVENTBUS_STATE_SERVICE_RPC_ID_DELETE_NODES\x10\b\x124\n" +
-	"0EVENTBUS_STATE_SERVICE_RPC_ID_CONTAINS_KEY_NODES\x10\t\x12/\n" +
-	"+EVENTBUS_STATE_SERVICE_RPC_ID_GET_ALL_NODES\x10\n" +
-	"\x12/\n" +
-	"+EVENTBUS_STATE_SERVICE_RPC_ID_KEY_SET_NODES\x10\v\x12,\n" +
-	"(EVENTBUS_STATE_SERVICE_RPC_ID_SIZE_NODES\x10\f\x12-\n" +
-	")EVENTBUS_STATE_SERVICE_RPC_ID_CLEAR_NODES\x10\r\x125\n" +
-	"1EVENTBUS_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_NODES\x10\x0e\x12-\n" +
-	")EVENTBUS_STATE_SERVICE_RPC_ID_WATCH_NODES\x10\x0f\x12-\n" +
-	")EVENTBUS_STATE_SERVICE_RPC_ID_QUERY_NODES\x10\x10\x123\n" +
-	"/EVENTBUS_STATE_SERVICE_RPC_ID_WATCH_QUERY_NODES\x10\x11*\x9f\x03\n" +
-	"\x1fEventbusConfigStateServiceRpcId\x124\n" +
-	"0EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x126\n" +
-	"2EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x125\n" +
-	"1EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_ALL_MUTATORS\x10\x02\x126\n" +
-	"2EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x123\n" +
-	"/EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x123\n" +
-	"/EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x125\n" +
-	"1EVENTBUS_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xc2\x05\n" +
-	"\x05Admin\x12?\n" +
-	"\n" +
-	"ListTopics\x12\x13.trace.TraceRequest\x1a\x1c.eventbus.ListTopicsResponse\x12?\n" +
+	"ListTopics\x12\x16.google.protobuf.Empty\x1a\x1c.eventbus.ListTopicsResponse\"\x0f\xf2\x88'\v\b\x01\x12\x04name\x18\x80\b\x12?\n" +
 	"\fGetTopicInfo\x12\x1a.eventbus.TopicInfoRequest\x1a\x13.eventbus.TopicInfo\x12C\n" +
-	"\vDeleteTopic\x12\x1c.eventbus.DeleteTopicRequest\x1a\x16.google.protobuf.Empty\x12J\n" +
-	"\x10AlterTopicConfig\x12!.eventbus.AlterTopicConfigRequest\x1a\x13.eventbus.TopicInfo\x12R\n" +
-	"\x13GetConsumerGroupLag\x12\x1e.eventbus.ConsumerGroupRequest\x1a\x1b.eventbus.ConsumerGroupInfo\x12O\n" +
-	"\x12ListConsumerGroups\x12\x13.trace.TraceRequest\x1a$.eventbus.ListConsumerGroupsResponse\x12_\n" +
+	"\vDeleteTopic\x12\x1c.eventbus.DeleteTopicRequest\x1a\x16.google.protobuf.Empty\x12L\n" +
+	"\x11UpdateTopicConfig\x12\".eventbus.UpdateTopicConfigRequest\x1a\x13.eventbus.TopicInfo\x12R\n" +
+	"\x13GetConsumerGroupLag\x12\x1e.eventbus.ConsumerGroupRequest\x1a\x1b.eventbus.ConsumerGroupInfo\x12g\n" +
+	"\x12ListConsumerGroups\x12\x16.google.protobuf.Empty\x1a$.eventbus.ListConsumerGroupsResponse\"\x13\xf2\x88'\x0f\b\x01\x12\bgroup_id\x18\x80\b\x12_\n" +
 	"\x19ResetConsumerGroupOffsets\x12*.eventbus.ResetConsumerGroupOffsetsRequest\x1a\x16.google.protobuf.Empty\x12M\n" +
-	"\x13DeleteConsumerGroup\x12\x1e.eventbus.ConsumerGroupRequest\x1a\x16.google.protobuf.Empty\x12H\n" +
-	"\x10GetClusterHealth\x12\x13.trace.TraceRequest\x1a\x1f.eventbus.ClusterHealthResponse\x1a\a\xea\x97\"\x03\n" +
-	"\x01*2T\n" +
-	"\fTraceSession\x12>\n" +
-	"\n" +
-	"WatchTrace\x12\x13.trace.TraceRequest\x1a\x11.trace.TraceEvent\"\x06\xea\x88'\x02\b\x010\x01\x1a\x04\xf2\x97\"\x002\xf9\a\n" +
-	"\x14EventbusStateService\x12C\n" +
-	"\bGetNodes\x12\x19.eventbus.NodesGetRequest\x1a\x1c.eventbus.NodesValueResponse\x12C\n" +
-	"\bPutNodes\x12\x19.eventbus.NodesPutRequest\x1a\x1c.eventbus.NodesValueResponse\x129\n" +
-	"\bSetNodes\x12\x19.eventbus.NodesPutRequest\x1a\x12.eventbus.MapEmpty\x12F\n" +
-	"\vRemoveNodes\x12\x19.eventbus.NodesGetRequest\x1a\x1c.eventbus.NodesValueResponse\x12<\n" +
-	"\vDeleteNodes\x12\x19.eventbus.NodesGetRequest\x1a\x12.eventbus.MapEmpty\x12K\n" +
-	"\x10ContainsKeyNodes\x12\x19.eventbus.NodesGetRequest\x1a\x1c.eventbus.NodesValueResponse\x12K\n" +
-	"\vGetAllNodes\x12\x1c.eventbus.NodesGetAllRequest\x1a\x1e.eventbus.NodesEntriesResponse\x12F\n" +
-	"\vKeySetNodes\x12\x1a.eventbus.NodesKeysRequest\x1a\x1b.eventbus.NodesKeysResponse\x12D\n" +
-	"\tSizeNodes\x12\x1a.eventbus.NodesSizeRequest\x1a\x1b.eventbus.NodesSizeResponse\x12=\n" +
-	"\n" +
-	"ClearNodes\x12\x1b.eventbus.NodesClearRequest\x1a\x12.eventbus.MapEmpty\x12K\n" +
-	"\x10PutIfAbsentNodes\x12\x19.eventbus.NodesPutRequest\x1a\x1c.eventbus.NodesValueResponse\x12C\n" +
-	"\n" +
-	"WatchNodes\x12\x13.trace.TraceRequest\x1a\x1e.eventbus.NodesEntriesResponse0\x01\x12G\n" +
-	"\n" +
-	"QueryNodes\x12\x1b.eventbus.NodesQueryRequest\x1a\x1c.eventbus.NodesQueryResponse\x12N\n" +
-	"\x0fWatchQueryNodes\x12\x1b.eventbus.NodesQueryRequest\x1a\x1c.eventbus.NodesQueryResponse0\x01\x1a\x04\xea\x97\"\x002\xbf\x01\n" +
-	"\x1aEventbusConfigStateService\x122\n" +
-	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x10.eventbus.Config\x12/\n" +
-	"\tSetConfig\x12\x10.eventbus.Config\x1a\x10.eventbus.Config\x126\n" +
-	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x10.eventbus.Config0\x01\x1a\x04\xea\x97\"\x00Buڵ\x18\x02\x18\x01\x92\xb6\x18\r\n" +
+	"\x13DeleteConsumerGroup\x12\x1e.eventbus.ConsumerGroupRequest\x1a\x16.google.protobuf.Empty\x12K\n" +
+	"\x10GetClusterHealth\x12\x16.google.protobuf.Empty\x1a\x1f.eventbus.ClusterHealthResponse\x1a\a\xea\x97\"\x03\n" +
+	"\x01*2X\n" +
+	"\fTraceSession\x12B\n" +
+	"\x0eSubscribeTrace\x12\x13.trace.TraceRequest\x1a\x11.trace.TraceEvent\"\x06\xea\x88'\x02\b\x010\x01\x1a\x04\xf2\x97\"\x00Buڵ\x18\x02\x18\x01\x92\xb6\x18\r\n" +
 	"\vkernel.MintZ\\gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/eventbusb\x06proto3"
 
 var (
@@ -4129,157 +1673,79 @@ func file_services_eventbus_proto_rawDescGZIP() []byte {
 	return file_services_eventbus_proto_rawDescData
 }
 
-var file_services_eventbus_proto_enumTypes = make([]protoimpl.EnumInfo, 10)
-var file_services_eventbus_proto_msgTypes = make([]protoimpl.MessageInfo, 41)
+var file_services_eventbus_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_services_eventbus_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
 var file_services_eventbus_proto_goTypes = []any{
 	(BackpressurePolicy)(0),                  // 0: eventbus.BackpressurePolicy
 	(KafkaNodeRole)(0),                       // 1: eventbus.KafkaNodeRole
-	(ComparisonOp)(0),                        // 2: eventbus.ComparisonOp
-	(SortDirection)(0),                       // 3: eventbus.SortDirection
-	(LogicalOp)(0),                           // 4: eventbus.LogicalOp
-	(TypeID)(0),                              // 5: eventbus.TypeID
-	(AdminRpcId)(0),                          // 6: eventbus.AdminRpcId
-	(TraceSessionRpcId)(0),                   // 7: eventbus.TraceSessionRpcId
-	(EventbusStateServiceRpcId)(0),           // 8: eventbus.EventbusStateServiceRpcId
-	(EventbusConfigStateServiceRpcId)(0),     // 9: eventbus.EventbusConfigStateServiceRpcId
-	(*SubscribeRequest)(nil),                 // 10: eventbus.SubscribeRequest
-	(*PublishResponse)(nil),                  // 11: eventbus.PublishResponse
-	(*RecordMeta)(nil),                       // 12: eventbus.RecordMeta
-	(*TopicInfo)(nil),                        // 13: eventbus.TopicInfo
-	(*TopicInfoRequest)(nil),                 // 14: eventbus.TopicInfoRequest
-	(*ListTopicsResponse)(nil),               // 15: eventbus.ListTopicsResponse
-	(*DeleteTopicRequest)(nil),               // 16: eventbus.DeleteTopicRequest
-	(*AlterTopicConfigRequest)(nil),          // 17: eventbus.AlterTopicConfigRequest
-	(*PartitionLag)(nil),                     // 18: eventbus.PartitionLag
-	(*ConsumerGroupInfo)(nil),                // 19: eventbus.ConsumerGroupInfo
-	(*ConsumerGroupRequest)(nil),             // 20: eventbus.ConsumerGroupRequest
-	(*ListConsumerGroupsResponse)(nil),       // 21: eventbus.ListConsumerGroupsResponse
-	(*ResetConsumerGroupOffsetsRequest)(nil), // 22: eventbus.ResetConsumerGroupOffsetsRequest
-	(*BrokerInfo)(nil),                       // 23: eventbus.BrokerInfo
-	(*ClusterHealthResponse)(nil),            // 24: eventbus.ClusterHealthResponse
-	(*Config)(nil),                           // 25: eventbus.Config
-	(*EventbusNode)(nil),                     // 26: eventbus.EventbusNode
-	(*EventbusState)(nil),                    // 27: eventbus.EventbusState
-	(*EventbusConfigState)(nil),              // 28: eventbus.EventbusConfigState
-	(*QueryValue)(nil),                       // 29: eventbus.QueryValue
-	(*Predicate)(nil),                        // 30: eventbus.Predicate
-	(*PredicateGroup)(nil),                   // 31: eventbus.PredicateGroup
-	(*SortField)(nil),                        // 32: eventbus.SortField
-	(*CollectionQuery)(nil),                  // 33: eventbus.CollectionQuery
-	(*NodesGetRequest)(nil),                  // 34: eventbus.NodesGetRequest
-	(*NodesPutRequest)(nil),                  // 35: eventbus.NodesPutRequest
-	(*NodesGetAllRequest)(nil),               // 36: eventbus.NodesGetAllRequest
-	(*NodesKeysRequest)(nil),                 // 37: eventbus.NodesKeysRequest
-	(*NodesSizeRequest)(nil),                 // 38: eventbus.NodesSizeRequest
-	(*NodesClearRequest)(nil),                // 39: eventbus.NodesClearRequest
-	(*NodesValueResponse)(nil),               // 40: eventbus.NodesValueResponse
-	(*NodesEntriesResponse)(nil),             // 41: eventbus.NodesEntriesResponse
-	(*NodesKeysResponse)(nil),                // 42: eventbus.NodesKeysResponse
-	(*NodesSizeResponse)(nil),                // 43: eventbus.NodesSizeResponse
-	(*NodesQueryRequest)(nil),                // 44: eventbus.NodesQueryRequest
-	(*NodesQueryResponse)(nil),               // 45: eventbus.NodesQueryResponse
-	(*MapEmpty)(nil),                         // 46: eventbus.MapEmpty
-	nil,                                      // 47: eventbus.RecordMeta.HeadersEntry
-	nil,                                      // 48: eventbus.TopicInfo.EarliestOffsetsEntry
-	nil,                                      // 49: eventbus.TopicInfo.LatestOffsetsEntry
-	nil,                                      // 50: eventbus.NodesEntriesResponse.EntriesEntry
-	(*timestamppb.Timestamp)(nil),            // 51: google.protobuf.Timestamp
-	(*host.Host)(nil),                        // 52: host.Host
-	(*trace.TraceRequest)(nil),               // 53: trace.TraceRequest
-	(*emptypb.Empty)(nil),                    // 54: google.protobuf.Empty
-	(*trace.TraceEvent)(nil),                 // 55: trace.TraceEvent
+	(*SubscribeRequest)(nil),                 // 2: eventbus.SubscribeRequest
+	(*PublishResponse)(nil),                  // 3: eventbus.PublishResponse
+	(*RecordMeta)(nil),                       // 4: eventbus.RecordMeta
+	(*TopicInfo)(nil),                        // 5: eventbus.TopicInfo
+	(*TopicInfoRequest)(nil),                 // 6: eventbus.TopicInfoRequest
+	(*ListTopicsResponse)(nil),               // 7: eventbus.ListTopicsResponse
+	(*DeleteTopicRequest)(nil),               // 8: eventbus.DeleteTopicRequest
+	(*UpdateTopicConfigRequest)(nil),         // 9: eventbus.UpdateTopicConfigRequest
+	(*PartitionLag)(nil),                     // 10: eventbus.PartitionLag
+	(*ConsumerGroupInfo)(nil),                // 11: eventbus.ConsumerGroupInfo
+	(*ConsumerGroupRequest)(nil),             // 12: eventbus.ConsumerGroupRequest
+	(*ListConsumerGroupsResponse)(nil),       // 13: eventbus.ListConsumerGroupsResponse
+	(*ResetConsumerGroupOffsetsRequest)(nil), // 14: eventbus.ResetConsumerGroupOffsetsRequest
+	(*BrokerInfo)(nil),                       // 15: eventbus.BrokerInfo
+	(*ClusterHealthResponse)(nil),            // 16: eventbus.ClusterHealthResponse
+	(*Config)(nil),                           // 17: eventbus.Config
+	(*EventbusNode)(nil),                     // 18: eventbus.EventbusNode
+	(*EventbusState)(nil),                    // 19: eventbus.EventbusState
+	nil,                                      // 20: eventbus.RecordMeta.HeadersEntry
+	nil,                                      // 21: eventbus.TopicInfo.EarliestOffsetsEntry
+	nil,                                      // 22: eventbus.TopicInfo.LatestOffsetsEntry
+	(*timestamppb.Timestamp)(nil),            // 23: google.protobuf.Timestamp
+	(*host.Host)(nil),                        // 24: host.Host
+	(*emptypb.Empty)(nil),                    // 25: google.protobuf.Empty
+	(*trace.TraceRequest)(nil),               // 26: trace.TraceRequest
+	(*trace.TraceEvent)(nil),                 // 27: trace.TraceEvent
 }
 var file_services_eventbus_proto_depIdxs = []int32{
-	51, // 0: eventbus.SubscribeRequest.timestamp:type_name -> google.protobuf.Timestamp
+	23, // 0: eventbus.SubscribeRequest.timestamp:type_name -> google.protobuf.Timestamp
 	0,  // 1: eventbus.SubscribeRequest.backpressure:type_name -> eventbus.BackpressurePolicy
-	47, // 2: eventbus.RecordMeta.headers:type_name -> eventbus.RecordMeta.HeadersEntry
-	51, // 3: eventbus.RecordMeta.event_timestamp:type_name -> google.protobuf.Timestamp
-	48, // 4: eventbus.TopicInfo.earliest_offsets:type_name -> eventbus.TopicInfo.EarliestOffsetsEntry
-	49, // 5: eventbus.TopicInfo.latest_offsets:type_name -> eventbus.TopicInfo.LatestOffsetsEntry
-	13, // 6: eventbus.ListTopicsResponse.topics:type_name -> eventbus.TopicInfo
-	18, // 7: eventbus.ConsumerGroupInfo.partitions:type_name -> eventbus.PartitionLag
-	19, // 8: eventbus.ListConsumerGroupsResponse.groups:type_name -> eventbus.ConsumerGroupInfo
-	51, // 9: eventbus.ResetConsumerGroupOffsetsRequest.timestamp:type_name -> google.protobuf.Timestamp
-	23, // 10: eventbus.ClusterHealthResponse.brokers:type_name -> eventbus.BrokerInfo
+	20, // 2: eventbus.RecordMeta.headers:type_name -> eventbus.RecordMeta.HeadersEntry
+	23, // 3: eventbus.RecordMeta.event_timestamp:type_name -> google.protobuf.Timestamp
+	21, // 4: eventbus.TopicInfo.earliest_offsets:type_name -> eventbus.TopicInfo.EarliestOffsetsEntry
+	22, // 5: eventbus.TopicInfo.latest_offsets:type_name -> eventbus.TopicInfo.LatestOffsetsEntry
+	5,  // 6: eventbus.ListTopicsResponse.topics:type_name -> eventbus.TopicInfo
+	10, // 7: eventbus.ConsumerGroupInfo.partitions:type_name -> eventbus.PartitionLag
+	11, // 8: eventbus.ListConsumerGroupsResponse.groups:type_name -> eventbus.ConsumerGroupInfo
+	23, // 9: eventbus.ResetConsumerGroupOffsetsRequest.timestamp:type_name -> google.protobuf.Timestamp
+	15, // 10: eventbus.ClusterHealthResponse.brokers:type_name -> eventbus.BrokerInfo
 	1,  // 11: eventbus.Config.node_role:type_name -> eventbus.KafkaNodeRole
 	1,  // 12: eventbus.EventbusNode.role:type_name -> eventbus.KafkaNodeRole
-	52, // 13: eventbus.EventbusNode.endpoint:type_name -> host.Host
-	26, // 14: eventbus.EventbusState.nodes:type_name -> eventbus.EventbusNode
-	25, // 15: eventbus.EventbusConfigState.config:type_name -> eventbus.Config
-	2,  // 16: eventbus.Predicate.op:type_name -> eventbus.ComparisonOp
-	29, // 17: eventbus.Predicate.value:type_name -> eventbus.QueryValue
-	29, // 18: eventbus.Predicate.values:type_name -> eventbus.QueryValue
-	4,  // 19: eventbus.PredicateGroup.op:type_name -> eventbus.LogicalOp
-	30, // 20: eventbus.PredicateGroup.predicates:type_name -> eventbus.Predicate
-	31, // 21: eventbus.PredicateGroup.groups:type_name -> eventbus.PredicateGroup
-	3,  // 22: eventbus.SortField.direction:type_name -> eventbus.SortDirection
-	31, // 23: eventbus.CollectionQuery.where:type_name -> eventbus.PredicateGroup
-	32, // 24: eventbus.CollectionQuery.order_by:type_name -> eventbus.SortField
-	26, // 25: eventbus.NodesPutRequest.value:type_name -> eventbus.EventbusNode
-	26, // 26: eventbus.NodesValueResponse.value:type_name -> eventbus.EventbusNode
-	50, // 27: eventbus.NodesEntriesResponse.entries:type_name -> eventbus.NodesEntriesResponse.EntriesEntry
-	33, // 28: eventbus.NodesQueryRequest.query:type_name -> eventbus.CollectionQuery
-	26, // 29: eventbus.NodesQueryResponse.results:type_name -> eventbus.EventbusNode
-	26, // 30: eventbus.NodesEntriesResponse.EntriesEntry.value:type_name -> eventbus.EventbusNode
-	53, // 31: eventbus.Admin.ListTopics:input_type -> trace.TraceRequest
-	14, // 32: eventbus.Admin.GetTopicInfo:input_type -> eventbus.TopicInfoRequest
-	16, // 33: eventbus.Admin.DeleteTopic:input_type -> eventbus.DeleteTopicRequest
-	17, // 34: eventbus.Admin.AlterTopicConfig:input_type -> eventbus.AlterTopicConfigRequest
-	20, // 35: eventbus.Admin.GetConsumerGroupLag:input_type -> eventbus.ConsumerGroupRequest
-	53, // 36: eventbus.Admin.ListConsumerGroups:input_type -> trace.TraceRequest
-	22, // 37: eventbus.Admin.ResetConsumerGroupOffsets:input_type -> eventbus.ResetConsumerGroupOffsetsRequest
-	20, // 38: eventbus.Admin.DeleteConsumerGroup:input_type -> eventbus.ConsumerGroupRequest
-	53, // 39: eventbus.Admin.GetClusterHealth:input_type -> trace.TraceRequest
-	53, // 40: eventbus.TraceSession.WatchTrace:input_type -> trace.TraceRequest
-	34, // 41: eventbus.EventbusStateService.GetNodes:input_type -> eventbus.NodesGetRequest
-	35, // 42: eventbus.EventbusStateService.PutNodes:input_type -> eventbus.NodesPutRequest
-	35, // 43: eventbus.EventbusStateService.SetNodes:input_type -> eventbus.NodesPutRequest
-	34, // 44: eventbus.EventbusStateService.RemoveNodes:input_type -> eventbus.NodesGetRequest
-	34, // 45: eventbus.EventbusStateService.DeleteNodes:input_type -> eventbus.NodesGetRequest
-	34, // 46: eventbus.EventbusStateService.ContainsKeyNodes:input_type -> eventbus.NodesGetRequest
-	36, // 47: eventbus.EventbusStateService.GetAllNodes:input_type -> eventbus.NodesGetAllRequest
-	37, // 48: eventbus.EventbusStateService.KeySetNodes:input_type -> eventbus.NodesKeysRequest
-	38, // 49: eventbus.EventbusStateService.SizeNodes:input_type -> eventbus.NodesSizeRequest
-	39, // 50: eventbus.EventbusStateService.ClearNodes:input_type -> eventbus.NodesClearRequest
-	35, // 51: eventbus.EventbusStateService.PutIfAbsentNodes:input_type -> eventbus.NodesPutRequest
-	53, // 52: eventbus.EventbusStateService.WatchNodes:input_type -> trace.TraceRequest
-	44, // 53: eventbus.EventbusStateService.QueryNodes:input_type -> eventbus.NodesQueryRequest
-	44, // 54: eventbus.EventbusStateService.WatchQueryNodes:input_type -> eventbus.NodesQueryRequest
-	53, // 55: eventbus.EventbusConfigStateService.GetConfig:input_type -> trace.TraceRequest
-	25, // 56: eventbus.EventbusConfigStateService.SetConfig:input_type -> eventbus.Config
-	53, // 57: eventbus.EventbusConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	15, // 58: eventbus.Admin.ListTopics:output_type -> eventbus.ListTopicsResponse
-	13, // 59: eventbus.Admin.GetTopicInfo:output_type -> eventbus.TopicInfo
-	54, // 60: eventbus.Admin.DeleteTopic:output_type -> google.protobuf.Empty
-	13, // 61: eventbus.Admin.AlterTopicConfig:output_type -> eventbus.TopicInfo
-	19, // 62: eventbus.Admin.GetConsumerGroupLag:output_type -> eventbus.ConsumerGroupInfo
-	21, // 63: eventbus.Admin.ListConsumerGroups:output_type -> eventbus.ListConsumerGroupsResponse
-	54, // 64: eventbus.Admin.ResetConsumerGroupOffsets:output_type -> google.protobuf.Empty
-	54, // 65: eventbus.Admin.DeleteConsumerGroup:output_type -> google.protobuf.Empty
-	24, // 66: eventbus.Admin.GetClusterHealth:output_type -> eventbus.ClusterHealthResponse
-	55, // 67: eventbus.TraceSession.WatchTrace:output_type -> trace.TraceEvent
-	40, // 68: eventbus.EventbusStateService.GetNodes:output_type -> eventbus.NodesValueResponse
-	40, // 69: eventbus.EventbusStateService.PutNodes:output_type -> eventbus.NodesValueResponse
-	46, // 70: eventbus.EventbusStateService.SetNodes:output_type -> eventbus.MapEmpty
-	40, // 71: eventbus.EventbusStateService.RemoveNodes:output_type -> eventbus.NodesValueResponse
-	46, // 72: eventbus.EventbusStateService.DeleteNodes:output_type -> eventbus.MapEmpty
-	40, // 73: eventbus.EventbusStateService.ContainsKeyNodes:output_type -> eventbus.NodesValueResponse
-	41, // 74: eventbus.EventbusStateService.GetAllNodes:output_type -> eventbus.NodesEntriesResponse
-	42, // 75: eventbus.EventbusStateService.KeySetNodes:output_type -> eventbus.NodesKeysResponse
-	43, // 76: eventbus.EventbusStateService.SizeNodes:output_type -> eventbus.NodesSizeResponse
-	46, // 77: eventbus.EventbusStateService.ClearNodes:output_type -> eventbus.MapEmpty
-	40, // 78: eventbus.EventbusStateService.PutIfAbsentNodes:output_type -> eventbus.NodesValueResponse
-	41, // 79: eventbus.EventbusStateService.WatchNodes:output_type -> eventbus.NodesEntriesResponse
-	45, // 80: eventbus.EventbusStateService.QueryNodes:output_type -> eventbus.NodesQueryResponse
-	45, // 81: eventbus.EventbusStateService.WatchQueryNodes:output_type -> eventbus.NodesQueryResponse
-	25, // 82: eventbus.EventbusConfigStateService.GetConfig:output_type -> eventbus.Config
-	25, // 83: eventbus.EventbusConfigStateService.SetConfig:output_type -> eventbus.Config
-	25, // 84: eventbus.EventbusConfigStateService.WatchConfig:output_type -> eventbus.Config
-	58, // [58:85] is the sub-list for method output_type
-	31, // [31:58] is the sub-list for method input_type
-	31, // [31:31] is the sub-list for extension type_name
-	31, // [31:31] is the sub-list for extension extendee
-	0,  // [0:31] is the sub-list for field type_name
+	24, // 13: eventbus.EventbusNode.endpoint:type_name -> host.Host
+	18, // 14: eventbus.EventbusState.nodes:type_name -> eventbus.EventbusNode
+	25, // 15: eventbus.Admin.ListTopics:input_type -> google.protobuf.Empty
+	6,  // 16: eventbus.Admin.GetTopicInfo:input_type -> eventbus.TopicInfoRequest
+	8,  // 17: eventbus.Admin.DeleteTopic:input_type -> eventbus.DeleteTopicRequest
+	9,  // 18: eventbus.Admin.UpdateTopicConfig:input_type -> eventbus.UpdateTopicConfigRequest
+	12, // 19: eventbus.Admin.GetConsumerGroupLag:input_type -> eventbus.ConsumerGroupRequest
+	25, // 20: eventbus.Admin.ListConsumerGroups:input_type -> google.protobuf.Empty
+	14, // 21: eventbus.Admin.ResetConsumerGroupOffsets:input_type -> eventbus.ResetConsumerGroupOffsetsRequest
+	12, // 22: eventbus.Admin.DeleteConsumerGroup:input_type -> eventbus.ConsumerGroupRequest
+	25, // 23: eventbus.Admin.GetClusterHealth:input_type -> google.protobuf.Empty
+	26, // 24: eventbus.TraceSession.SubscribeTrace:input_type -> trace.TraceRequest
+	7,  // 25: eventbus.Admin.ListTopics:output_type -> eventbus.ListTopicsResponse
+	5,  // 26: eventbus.Admin.GetTopicInfo:output_type -> eventbus.TopicInfo
+	25, // 27: eventbus.Admin.DeleteTopic:output_type -> google.protobuf.Empty
+	5,  // 28: eventbus.Admin.UpdateTopicConfig:output_type -> eventbus.TopicInfo
+	11, // 29: eventbus.Admin.GetConsumerGroupLag:output_type -> eventbus.ConsumerGroupInfo
+	13, // 30: eventbus.Admin.ListConsumerGroups:output_type -> eventbus.ListConsumerGroupsResponse
+	25, // 31: eventbus.Admin.ResetConsumerGroupOffsets:output_type -> google.protobuf.Empty
+	25, // 32: eventbus.Admin.DeleteConsumerGroup:output_type -> google.protobuf.Empty
+	16, // 33: eventbus.Admin.GetClusterHealth:output_type -> eventbus.ClusterHealthResponse
+	27, // 34: eventbus.TraceSession.SubscribeTrace:output_type -> trace.TraceEvent
+	25, // [25:35] is the sub-list for method output_type
+	15, // [15:25] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_services_eventbus_proto_init() }
@@ -4299,21 +1765,15 @@ func file_services_eventbus_proto_init() {
 		(*ResetConsumerGroupOffsetsRequest_ToLatest)(nil),
 		(*ResetConsumerGroupOffsetsRequest_ToEarliest)(nil),
 	}
-	file_services_eventbus_proto_msgTypes[19].OneofWrappers = []any{
-		(*QueryValue_StringValue)(nil),
-		(*QueryValue_IntValue)(nil),
-		(*QueryValue_DoubleValue)(nil),
-		(*QueryValue_BoolValue)(nil),
-	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_services_eventbus_proto_rawDesc), len(file_services_eventbus_proto_rawDesc)),
-			NumEnums:      10,
-			NumMessages:   41,
+			NumEnums:      2,
+			NumMessages:   21,
 			NumExtensions: 0,
-			NumServices:   4,
+			NumServices:   2,
 		},
 		GoTypes:           file_services_eventbus_proto_goTypes,
 		DependencyIndexes: file_services_eventbus_proto_depIdxs,

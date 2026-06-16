@@ -249,21 +249,21 @@ func DashboardRpcIdValues() []DashboardRpcId {
 		DashboardRpcId_DASHBOARD_RPC_ID_ALL_EXECUTORS,
 		DashboardRpcId_DASHBOARD_RPC_ID_GET_CLUSTER_INFO,
 		DashboardRpcId_DASHBOARD_RPC_ID_GET_CLUSTER_HEALTH,
-		DashboardRpcId_DASHBOARD_RPC_ID_GET_NODE_METRICS,
-		DashboardRpcId_DASHBOARD_RPC_ID_GET_GRPC_STATS,
-		DashboardRpcId_DASHBOARD_RPC_ID_GET_PERSISTENCE_STATUS,
-		DashboardRpcId_DASHBOARD_RPC_ID_GET_NETWORK_STATS,
-		DashboardRpcId_DASHBOARD_RPC_ID_GET_THREAD_INFO,
-		DashboardRpcId_DASHBOARD_RPC_ID_GET_TOKEN_CACHE_STATS,
-		DashboardRpcId_DASHBOARD_RPC_ID_GET_MAP_STATS,
+		DashboardRpcId_DASHBOARD_RPC_ID_LIST_NODE_METRICS,
+		DashboardRpcId_DASHBOARD_RPC_ID_LIST_GRPC_STATS,
+		DashboardRpcId_DASHBOARD_RPC_ID_LIST_PERSISTENCE_STATUS,
+		DashboardRpcId_DASHBOARD_RPC_ID_LIST_NETWORK_STATS,
+		DashboardRpcId_DASHBOARD_RPC_ID_LIST_THREAD_INFO,
+		DashboardRpcId_DASHBOARD_RPC_ID_LIST_TOKEN_CACHE_STATS,
+		DashboardRpcId_DASHBOARD_RPC_ID_LIST_MAP_STATS,
 		DashboardRpcId_DASHBOARD_RPC_ID_GET_DASHBOARD,
-		DashboardRpcId_DASHBOARD_RPC_ID_WATCH_DASHBOARD,
+		DashboardRpcId_DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD,
 	}
 }
 
 // DashboardRpcIdStringValues returns all valid DashboardRpcId names as strings
 func DashboardRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "get-cluster-info", "get-cluster-health", "get-node-metrics", "get-grpc-stats", "get-persistence-status", "get-network-stats", "get-thread-info", "get-token-cache-stats", "get-map-stats", "get-dashboard", "watch-dashboard"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "get-cluster-info", "get-cluster-health", "list-node-metrics", "list-grpc-stats", "list-persistence-status", "list-network-stats", "list-thread-info", "list-token-cache-stats", "list-map-stats", "get-dashboard", "subscribe-dashboard"}
 }
 
 // ParseDashboardRpcId converts a string to a DashboardRpcId enum value
@@ -284,24 +284,24 @@ func ParseDashboardRpcId(s string) (DashboardRpcId, error) {
 		return DashboardRpcId_DASHBOARD_RPC_ID_GET_CLUSTER_INFO, nil
 	case "get-cluster-health", "dashboard-rpc-id-get-cluster-health":
 		return DashboardRpcId_DASHBOARD_RPC_ID_GET_CLUSTER_HEALTH, nil
-	case "get-node-metrics", "dashboard-rpc-id-get-node-metrics":
-		return DashboardRpcId_DASHBOARD_RPC_ID_GET_NODE_METRICS, nil
-	case "get-grpc-stats", "dashboard-rpc-id-get-grpc-stats":
-		return DashboardRpcId_DASHBOARD_RPC_ID_GET_GRPC_STATS, nil
-	case "get-persistence-status", "dashboard-rpc-id-get-persistence-status":
-		return DashboardRpcId_DASHBOARD_RPC_ID_GET_PERSISTENCE_STATUS, nil
-	case "get-network-stats", "dashboard-rpc-id-get-network-stats":
-		return DashboardRpcId_DASHBOARD_RPC_ID_GET_NETWORK_STATS, nil
-	case "get-thread-info", "dashboard-rpc-id-get-thread-info":
-		return DashboardRpcId_DASHBOARD_RPC_ID_GET_THREAD_INFO, nil
-	case "get-token-cache-stats", "dashboard-rpc-id-get-token-cache-stats":
-		return DashboardRpcId_DASHBOARD_RPC_ID_GET_TOKEN_CACHE_STATS, nil
-	case "get-map-stats", "dashboard-rpc-id-get-map-stats":
-		return DashboardRpcId_DASHBOARD_RPC_ID_GET_MAP_STATS, nil
+	case "list-node-metrics", "dashboard-rpc-id-list-node-metrics":
+		return DashboardRpcId_DASHBOARD_RPC_ID_LIST_NODE_METRICS, nil
+	case "list-grpc-stats", "dashboard-rpc-id-list-grpc-stats":
+		return DashboardRpcId_DASHBOARD_RPC_ID_LIST_GRPC_STATS, nil
+	case "list-persistence-status", "dashboard-rpc-id-list-persistence-status":
+		return DashboardRpcId_DASHBOARD_RPC_ID_LIST_PERSISTENCE_STATUS, nil
+	case "list-network-stats", "dashboard-rpc-id-list-network-stats":
+		return DashboardRpcId_DASHBOARD_RPC_ID_LIST_NETWORK_STATS, nil
+	case "list-thread-info", "dashboard-rpc-id-list-thread-info":
+		return DashboardRpcId_DASHBOARD_RPC_ID_LIST_THREAD_INFO, nil
+	case "list-token-cache-stats", "dashboard-rpc-id-list-token-cache-stats":
+		return DashboardRpcId_DASHBOARD_RPC_ID_LIST_TOKEN_CACHE_STATS, nil
+	case "list-map-stats", "dashboard-rpc-id-list-map-stats":
+		return DashboardRpcId_DASHBOARD_RPC_ID_LIST_MAP_STATS, nil
 	case "get-dashboard", "dashboard-rpc-id-get-dashboard":
 		return DashboardRpcId_DASHBOARD_RPC_ID_GET_DASHBOARD, nil
-	case "watch-dashboard", "dashboard-rpc-id-watch-dashboard":
-		return DashboardRpcId_DASHBOARD_RPC_ID_WATCH_DASHBOARD, nil
+	case "subscribe-dashboard", "dashboard-rpc-id-subscribe-dashboard":
+		return DashboardRpcId_DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD, nil
 	default:
 		return DashboardRpcId_DASHBOARD_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid dashboardrpcid %s, expecting one of: %v", s, DashboardRpcIdStringValues())
 	}
@@ -342,24 +342,24 @@ func DashboardRpcIdToString(v DashboardRpcId) string {
 		return "get-cluster-info"
 	case DashboardRpcId_DASHBOARD_RPC_ID_GET_CLUSTER_HEALTH:
 		return "get-cluster-health"
-	case DashboardRpcId_DASHBOARD_RPC_ID_GET_NODE_METRICS:
-		return "get-node-metrics"
-	case DashboardRpcId_DASHBOARD_RPC_ID_GET_GRPC_STATS:
-		return "get-grpc-stats"
-	case DashboardRpcId_DASHBOARD_RPC_ID_GET_PERSISTENCE_STATUS:
-		return "get-persistence-status"
-	case DashboardRpcId_DASHBOARD_RPC_ID_GET_NETWORK_STATS:
-		return "get-network-stats"
-	case DashboardRpcId_DASHBOARD_RPC_ID_GET_THREAD_INFO:
-		return "get-thread-info"
-	case DashboardRpcId_DASHBOARD_RPC_ID_GET_TOKEN_CACHE_STATS:
-		return "get-token-cache-stats"
-	case DashboardRpcId_DASHBOARD_RPC_ID_GET_MAP_STATS:
-		return "get-map-stats"
+	case DashboardRpcId_DASHBOARD_RPC_ID_LIST_NODE_METRICS:
+		return "list-node-metrics"
+	case DashboardRpcId_DASHBOARD_RPC_ID_LIST_GRPC_STATS:
+		return "list-grpc-stats"
+	case DashboardRpcId_DASHBOARD_RPC_ID_LIST_PERSISTENCE_STATUS:
+		return "list-persistence-status"
+	case DashboardRpcId_DASHBOARD_RPC_ID_LIST_NETWORK_STATS:
+		return "list-network-stats"
+	case DashboardRpcId_DASHBOARD_RPC_ID_LIST_THREAD_INFO:
+		return "list-thread-info"
+	case DashboardRpcId_DASHBOARD_RPC_ID_LIST_TOKEN_CACHE_STATS:
+		return "list-token-cache-stats"
+	case DashboardRpcId_DASHBOARD_RPC_ID_LIST_MAP_STATS:
+		return "list-map-stats"
 	case DashboardRpcId_DASHBOARD_RPC_ID_GET_DASHBOARD:
 		return "get-dashboard"
-	case DashboardRpcId_DASHBOARD_RPC_ID_WATCH_DASHBOARD:
-		return "watch-dashboard"
+	case DashboardRpcId_DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD:
+		return "subscribe-dashboard"
 	default:
 		return ""
 	}
@@ -392,24 +392,24 @@ func ParseDashboardRpcIdLiberal(s string) DashboardRpcId {
 		return DashboardRpcId_DASHBOARD_RPC_ID_GET_CLUSTER_INFO
 	case "get-cluster-health", "dashboard-rpc-id-get-cluster-health":
 		return DashboardRpcId_DASHBOARD_RPC_ID_GET_CLUSTER_HEALTH
-	case "get-node-metrics", "dashboard-rpc-id-get-node-metrics":
-		return DashboardRpcId_DASHBOARD_RPC_ID_GET_NODE_METRICS
-	case "get-grpc-stats", "dashboard-rpc-id-get-grpc-stats":
-		return DashboardRpcId_DASHBOARD_RPC_ID_GET_GRPC_STATS
-	case "get-persistence-status", "dashboard-rpc-id-get-persistence-status":
-		return DashboardRpcId_DASHBOARD_RPC_ID_GET_PERSISTENCE_STATUS
-	case "get-network-stats", "dashboard-rpc-id-get-network-stats":
-		return DashboardRpcId_DASHBOARD_RPC_ID_GET_NETWORK_STATS
-	case "get-thread-info", "dashboard-rpc-id-get-thread-info":
-		return DashboardRpcId_DASHBOARD_RPC_ID_GET_THREAD_INFO
-	case "get-token-cache-stats", "dashboard-rpc-id-get-token-cache-stats":
-		return DashboardRpcId_DASHBOARD_RPC_ID_GET_TOKEN_CACHE_STATS
-	case "get-map-stats", "dashboard-rpc-id-get-map-stats":
-		return DashboardRpcId_DASHBOARD_RPC_ID_GET_MAP_STATS
+	case "list-node-metrics", "dashboard-rpc-id-list-node-metrics":
+		return DashboardRpcId_DASHBOARD_RPC_ID_LIST_NODE_METRICS
+	case "list-grpc-stats", "dashboard-rpc-id-list-grpc-stats":
+		return DashboardRpcId_DASHBOARD_RPC_ID_LIST_GRPC_STATS
+	case "list-persistence-status", "dashboard-rpc-id-list-persistence-status":
+		return DashboardRpcId_DASHBOARD_RPC_ID_LIST_PERSISTENCE_STATUS
+	case "list-network-stats", "dashboard-rpc-id-list-network-stats":
+		return DashboardRpcId_DASHBOARD_RPC_ID_LIST_NETWORK_STATS
+	case "list-thread-info", "dashboard-rpc-id-list-thread-info":
+		return DashboardRpcId_DASHBOARD_RPC_ID_LIST_THREAD_INFO
+	case "list-token-cache-stats", "dashboard-rpc-id-list-token-cache-stats":
+		return DashboardRpcId_DASHBOARD_RPC_ID_LIST_TOKEN_CACHE_STATS
+	case "list-map-stats", "dashboard-rpc-id-list-map-stats":
+		return DashboardRpcId_DASHBOARD_RPC_ID_LIST_MAP_STATS
 	case "get-dashboard", "dashboard-rpc-id-get-dashboard":
 		return DashboardRpcId_DASHBOARD_RPC_ID_GET_DASHBOARD
-	case "watch-dashboard", "dashboard-rpc-id-watch-dashboard":
-		return DashboardRpcId_DASHBOARD_RPC_ID_WATCH_DASHBOARD
+	case "subscribe-dashboard", "dashboard-rpc-id-subscribe-dashboard":
+		return DashboardRpcId_DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD
 	default:
 		return DashboardRpcId_DASHBOARD_RPC_ID_UNSPECIFIED
 	}
@@ -430,24 +430,24 @@ func DashboardRpcIdToSpecName(v DashboardRpcId) string {
 		return "DASHBOARD_RPC_ID_GET_CLUSTER_INFO"
 	case DashboardRpcId_DASHBOARD_RPC_ID_GET_CLUSTER_HEALTH:
 		return "DASHBOARD_RPC_ID_GET_CLUSTER_HEALTH"
-	case DashboardRpcId_DASHBOARD_RPC_ID_GET_NODE_METRICS:
-		return "DASHBOARD_RPC_ID_GET_NODE_METRICS"
-	case DashboardRpcId_DASHBOARD_RPC_ID_GET_GRPC_STATS:
-		return "DASHBOARD_RPC_ID_GET_GRPC_STATS"
-	case DashboardRpcId_DASHBOARD_RPC_ID_GET_PERSISTENCE_STATUS:
-		return "DASHBOARD_RPC_ID_GET_PERSISTENCE_STATUS"
-	case DashboardRpcId_DASHBOARD_RPC_ID_GET_NETWORK_STATS:
-		return "DASHBOARD_RPC_ID_GET_NETWORK_STATS"
-	case DashboardRpcId_DASHBOARD_RPC_ID_GET_THREAD_INFO:
-		return "DASHBOARD_RPC_ID_GET_THREAD_INFO"
-	case DashboardRpcId_DASHBOARD_RPC_ID_GET_TOKEN_CACHE_STATS:
-		return "DASHBOARD_RPC_ID_GET_TOKEN_CACHE_STATS"
-	case DashboardRpcId_DASHBOARD_RPC_ID_GET_MAP_STATS:
-		return "DASHBOARD_RPC_ID_GET_MAP_STATS"
+	case DashboardRpcId_DASHBOARD_RPC_ID_LIST_NODE_METRICS:
+		return "DASHBOARD_RPC_ID_LIST_NODE_METRICS"
+	case DashboardRpcId_DASHBOARD_RPC_ID_LIST_GRPC_STATS:
+		return "DASHBOARD_RPC_ID_LIST_GRPC_STATS"
+	case DashboardRpcId_DASHBOARD_RPC_ID_LIST_PERSISTENCE_STATUS:
+		return "DASHBOARD_RPC_ID_LIST_PERSISTENCE_STATUS"
+	case DashboardRpcId_DASHBOARD_RPC_ID_LIST_NETWORK_STATS:
+		return "DASHBOARD_RPC_ID_LIST_NETWORK_STATS"
+	case DashboardRpcId_DASHBOARD_RPC_ID_LIST_THREAD_INFO:
+		return "DASHBOARD_RPC_ID_LIST_THREAD_INFO"
+	case DashboardRpcId_DASHBOARD_RPC_ID_LIST_TOKEN_CACHE_STATS:
+		return "DASHBOARD_RPC_ID_LIST_TOKEN_CACHE_STATS"
+	case DashboardRpcId_DASHBOARD_RPC_ID_LIST_MAP_STATS:
+		return "DASHBOARD_RPC_ID_LIST_MAP_STATS"
 	case DashboardRpcId_DASHBOARD_RPC_ID_GET_DASHBOARD:
 		return "DASHBOARD_RPC_ID_GET_DASHBOARD"
-	case DashboardRpcId_DASHBOARD_RPC_ID_WATCH_DASHBOARD:
-		return "DASHBOARD_RPC_ID_WATCH_DASHBOARD"
+	case DashboardRpcId_DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD:
+		return "DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD"
 	default:
 		return ""
 	}

@@ -2,7 +2,7 @@
 
 Kmaker is the bootstrap certificate authority for kernel instances.
 Kernel pods present Kubernetes projected service account tokens to
-`Kmaker.SignKernelCert`; kmaker validates the token with the Kubernetes
+`Kmaker.MintKernelCert`; kmaker validates the token with the Kubernetes
 TokenReview API and signs a Cavalier `x509.X509CertRequest` under the
 operator-provisioned cluster signing CA.
 

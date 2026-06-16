@@ -244,149 +244,6 @@ func (LeaseType) EnumDescriptor() ([]byte, []int) {
 	return file_libs_graph_proto_rawDescGZIP(), []int{3}
 }
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED                                  TypeID = 0
-	TypeID_TYPE_ID_REQUEST                                      TypeID = 1
-	TypeID_TYPE_ID_UIDS                                         TypeID = 2
-	TypeID_TYPE_ID_LIST_OF_STRING                               TypeID = 3
-	TypeID_TYPE_ID_RESPONSE                                     TypeID = 4
-	TypeID_TYPE_ID_MUTATION                                     TypeID = 5
-	TypeID_TYPE_ID_OPERATION                                    TypeID = 6
-	TypeID_TYPE_ID_PAYLOAD                                      TypeID = 7
-	TypeID_TYPE_ID_TXN_CONTEXT                                  TypeID = 8
-	TypeID_TYPE_ID_CHECK                                        TypeID = 9
-	TypeID_TYPE_ID_VERSION                                      TypeID = 10
-	TypeID_TYPE_ID_LATENCY                                      TypeID = 11
-	TypeID_TYPE_ID_METRICS                                      TypeID = 12
-	TypeID_TYPE_ID_N_QUAD                                       TypeID = 13
-	TypeID_TYPE_ID_VALUE                                        TypeID = 14
-	TypeID_TYPE_ID_FACET                                        TypeID = 15
-	TypeID_TYPE_ID_LOGIN_REQUEST                                TypeID = 16
-	TypeID_TYPE_ID_JWT                                          TypeID = 17
-	TypeID_TYPE_ID_RUN_DQL_REQUEST                              TypeID = 18
-	TypeID_TYPE_ID_ALLOCATE_I_DS_REQUEST                        TypeID = 19
-	TypeID_TYPE_ID_ALLOCATE_I_DS_RESPONSE                       TypeID = 20
-	TypeID_TYPE_ID_CREATE_NAMESPACE_REQUEST                     TypeID = 21
-	TypeID_TYPE_ID_CREATE_NAMESPACE_RESPONSE                    TypeID = 22
-	TypeID_TYPE_ID_DROP_NAMESPACE_REQUEST                       TypeID = 23
-	TypeID_TYPE_ID_DROP_NAMESPACE_RESPONSE                      TypeID = 24
-	TypeID_TYPE_ID_LIST_NAMESPACES_REQUEST                      TypeID = 25
-	TypeID_TYPE_ID_LIST_NAMESPACES_RESPONSE                     TypeID = 26
-	TypeID_TYPE_ID_NAMESPACE                                    TypeID = 27
-	TypeID_TYPE_ID_UPDATE_EXT_SNAPSHOT_STREAMING_STATE_REQUEST  TypeID = 28
-	TypeID_TYPE_ID_UPDATE_EXT_SNAPSHOT_STREAMING_STATE_RESPONSE TypeID = 29
-	TypeID_TYPE_ID_STREAM_EXT_SNAPSHOT_REQUEST                  TypeID = 30
-	TypeID_TYPE_ID_STREAM_EXT_SNAPSHOT_RESPONSE                 TypeID = 31
-	TypeID_TYPE_ID_STREAM_PACKET                                TypeID = 32
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0:  "TYPE_ID_UNSPECIFIED",
-		1:  "TYPE_ID_REQUEST",
-		2:  "TYPE_ID_UIDS",
-		3:  "TYPE_ID_LIST_OF_STRING",
-		4:  "TYPE_ID_RESPONSE",
-		5:  "TYPE_ID_MUTATION",
-		6:  "TYPE_ID_OPERATION",
-		7:  "TYPE_ID_PAYLOAD",
-		8:  "TYPE_ID_TXN_CONTEXT",
-		9:  "TYPE_ID_CHECK",
-		10: "TYPE_ID_VERSION",
-		11: "TYPE_ID_LATENCY",
-		12: "TYPE_ID_METRICS",
-		13: "TYPE_ID_N_QUAD",
-		14: "TYPE_ID_VALUE",
-		15: "TYPE_ID_FACET",
-		16: "TYPE_ID_LOGIN_REQUEST",
-		17: "TYPE_ID_JWT",
-		18: "TYPE_ID_RUN_DQL_REQUEST",
-		19: "TYPE_ID_ALLOCATE_I_DS_REQUEST",
-		20: "TYPE_ID_ALLOCATE_I_DS_RESPONSE",
-		21: "TYPE_ID_CREATE_NAMESPACE_REQUEST",
-		22: "TYPE_ID_CREATE_NAMESPACE_RESPONSE",
-		23: "TYPE_ID_DROP_NAMESPACE_REQUEST",
-		24: "TYPE_ID_DROP_NAMESPACE_RESPONSE",
-		25: "TYPE_ID_LIST_NAMESPACES_REQUEST",
-		26: "TYPE_ID_LIST_NAMESPACES_RESPONSE",
-		27: "TYPE_ID_NAMESPACE",
-		28: "TYPE_ID_UPDATE_EXT_SNAPSHOT_STREAMING_STATE_REQUEST",
-		29: "TYPE_ID_UPDATE_EXT_SNAPSHOT_STREAMING_STATE_RESPONSE",
-		30: "TYPE_ID_STREAM_EXT_SNAPSHOT_REQUEST",
-		31: "TYPE_ID_STREAM_EXT_SNAPSHOT_RESPONSE",
-		32: "TYPE_ID_STREAM_PACKET",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":                                  0,
-		"TYPE_ID_REQUEST":                                      1,
-		"TYPE_ID_UIDS":                                         2,
-		"TYPE_ID_LIST_OF_STRING":                               3,
-		"TYPE_ID_RESPONSE":                                     4,
-		"TYPE_ID_MUTATION":                                     5,
-		"TYPE_ID_OPERATION":                                    6,
-		"TYPE_ID_PAYLOAD":                                      7,
-		"TYPE_ID_TXN_CONTEXT":                                  8,
-		"TYPE_ID_CHECK":                                        9,
-		"TYPE_ID_VERSION":                                      10,
-		"TYPE_ID_LATENCY":                                      11,
-		"TYPE_ID_METRICS":                                      12,
-		"TYPE_ID_N_QUAD":                                       13,
-		"TYPE_ID_VALUE":                                        14,
-		"TYPE_ID_FACET":                                        15,
-		"TYPE_ID_LOGIN_REQUEST":                                16,
-		"TYPE_ID_JWT":                                          17,
-		"TYPE_ID_RUN_DQL_REQUEST":                              18,
-		"TYPE_ID_ALLOCATE_I_DS_REQUEST":                        19,
-		"TYPE_ID_ALLOCATE_I_DS_RESPONSE":                       20,
-		"TYPE_ID_CREATE_NAMESPACE_REQUEST":                     21,
-		"TYPE_ID_CREATE_NAMESPACE_RESPONSE":                    22,
-		"TYPE_ID_DROP_NAMESPACE_REQUEST":                       23,
-		"TYPE_ID_DROP_NAMESPACE_RESPONSE":                      24,
-		"TYPE_ID_LIST_NAMESPACES_REQUEST":                      25,
-		"TYPE_ID_LIST_NAMESPACES_RESPONSE":                     26,
-		"TYPE_ID_NAMESPACE":                                    27,
-		"TYPE_ID_UPDATE_EXT_SNAPSHOT_STREAMING_STATE_REQUEST":  28,
-		"TYPE_ID_UPDATE_EXT_SNAPSHOT_STREAMING_STATE_RESPONSE": 29,
-		"TYPE_ID_STREAM_EXT_SNAPSHOT_REQUEST":                  30,
-		"TYPE_ID_STREAM_EXT_SNAPSHOT_RESPONSE":                 31,
-		"TYPE_ID_STREAM_PACKET":                                32,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_graph_proto_enumTypes[4].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_graph_proto_enumTypes[4]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_graph_proto_rawDescGZIP(), []int{4}
-}
-
 type Request struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	StartTs       uint64                 `protobuf:"varint,1,opt,name=start_ts,json=startTs,proto3" json:"start_ts,omitempty"`
@@ -2659,42 +2516,7 @@ const file_libs_graph_proto_rawDesc = "" +
 	"\tLeaseType\x12\x06\n" +
 	"\x02NS\x10\x00\x12\a\n" +
 	"\x03UID\x10\x01\x12\x06\n" +
-	"\x02TS\x10\x02*\xca\a\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x13\n" +
-	"\x0fTYPE_ID_REQUEST\x10\x01\x12\x10\n" +
-	"\fTYPE_ID_UIDS\x10\x02\x12\x1a\n" +
-	"\x16TYPE_ID_LIST_OF_STRING\x10\x03\x12\x14\n" +
-	"\x10TYPE_ID_RESPONSE\x10\x04\x12\x14\n" +
-	"\x10TYPE_ID_MUTATION\x10\x05\x12\x15\n" +
-	"\x11TYPE_ID_OPERATION\x10\x06\x12\x13\n" +
-	"\x0fTYPE_ID_PAYLOAD\x10\a\x12\x17\n" +
-	"\x13TYPE_ID_TXN_CONTEXT\x10\b\x12\x11\n" +
-	"\rTYPE_ID_CHECK\x10\t\x12\x13\n" +
-	"\x0fTYPE_ID_VERSION\x10\n" +
-	"\x12\x13\n" +
-	"\x0fTYPE_ID_LATENCY\x10\v\x12\x13\n" +
-	"\x0fTYPE_ID_METRICS\x10\f\x12\x12\n" +
-	"\x0eTYPE_ID_N_QUAD\x10\r\x12\x11\n" +
-	"\rTYPE_ID_VALUE\x10\x0e\x12\x11\n" +
-	"\rTYPE_ID_FACET\x10\x0f\x12\x19\n" +
-	"\x15TYPE_ID_LOGIN_REQUEST\x10\x10\x12\x0f\n" +
-	"\vTYPE_ID_JWT\x10\x11\x12\x1b\n" +
-	"\x17TYPE_ID_RUN_DQL_REQUEST\x10\x12\x12!\n" +
-	"\x1dTYPE_ID_ALLOCATE_I_DS_REQUEST\x10\x13\x12\"\n" +
-	"\x1eTYPE_ID_ALLOCATE_I_DS_RESPONSE\x10\x14\x12$\n" +
-	" TYPE_ID_CREATE_NAMESPACE_REQUEST\x10\x15\x12%\n" +
-	"!TYPE_ID_CREATE_NAMESPACE_RESPONSE\x10\x16\x12\"\n" +
-	"\x1eTYPE_ID_DROP_NAMESPACE_REQUEST\x10\x17\x12#\n" +
-	"\x1fTYPE_ID_DROP_NAMESPACE_RESPONSE\x10\x18\x12#\n" +
-	"\x1fTYPE_ID_LIST_NAMESPACES_REQUEST\x10\x19\x12$\n" +
-	" TYPE_ID_LIST_NAMESPACES_RESPONSE\x10\x1a\x12\x15\n" +
-	"\x11TYPE_ID_NAMESPACE\x10\x1b\x127\n" +
-	"3TYPE_ID_UPDATE_EXT_SNAPSHOT_STREAMING_STATE_REQUEST\x10\x1c\x128\n" +
-	"4TYPE_ID_UPDATE_EXT_SNAPSHOT_STREAMING_STATE_RESPONSE\x10\x1d\x12'\n" +
-	"#TYPE_ID_STREAM_EXT_SNAPSHOT_REQUEST\x10\x1e\x12(\n" +
-	"$TYPE_ID_STREAM_EXT_SNAPSHOT_RESPONSE\x10\x1f\x12\x19\n" +
-	"\x15TYPE_ID_STREAM_PACKET\x10 B[ZYgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/graph_apib\x06proto3"
+	"\x02TS\x10\x02B[ZYgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/graph_apib\x06proto3"
 
 var (
 	file_libs_graph_proto_rawDescOnce sync.Once
@@ -2708,76 +2530,75 @@ func file_libs_graph_proto_rawDescGZIP() []byte {
 	return file_libs_graph_proto_rawDescData
 }
 
-var file_libs_graph_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
+var file_libs_graph_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
 var file_libs_graph_proto_msgTypes = make([]protoimpl.MessageInfo, 38)
 var file_libs_graph_proto_goTypes = []any{
 	(RespFormat)(0),                 // 0: graph_api.RespFormat
 	(DropOp)(0),                     // 1: graph_api.DropOp
 	(FacetValType)(0),               // 2: graph_api.FacetValType
 	(LeaseType)(0),                  // 3: graph_api.LeaseType
-	(TypeID)(0),                     // 4: graph_api.TypeID
-	(*Request)(nil),                 // 5: graph_api.Request
-	(*Uids)(nil),                    // 6: graph_api.Uids
-	(*ListOfString)(nil),            // 7: graph_api.ListOfString
-	(*Response)(nil),                // 8: graph_api.Response
-	(*Mutation)(nil),                // 9: graph_api.Mutation
-	(*Operation)(nil),               // 10: graph_api.Operation
-	(*Payload)(nil),                 // 11: graph_api.Payload
-	(*TxnContext)(nil),              // 12: graph_api.TxnContext
-	(*Check)(nil),                   // 13: graph_api.Check
-	(*Version)(nil),                 // 14: graph_api.Version
-	(*Latency)(nil),                 // 15: graph_api.Latency
-	(*Metrics)(nil),                 // 16: graph_api.Metrics
-	(*NQuad)(nil),                   // 17: graph_api.NQuad
-	(*Value)(nil),                   // 18: graph_api.Value
-	(*Facet)(nil),                   // 19: graph_api.Facet
-	(*LoginRequest)(nil),            // 20: graph_api.LoginRequest
-	(*Jwt)(nil),                     // 21: graph_api.Jwt
-	(*RunDQLRequest)(nil),           // 22: graph_api.RunDQLRequest
-	(*AllocateIDsRequest)(nil),      // 23: graph_api.AllocateIDsRequest
-	(*AllocateIDsResponse)(nil),     // 24: graph_api.AllocateIDsResponse
-	(*CreateNamespaceRequest)(nil),  // 25: graph_api.CreateNamespaceRequest
-	(*CreateNamespaceResponse)(nil), // 26: graph_api.CreateNamespaceResponse
-	(*DropNamespaceRequest)(nil),    // 27: graph_api.DropNamespaceRequest
-	(*DropNamespaceResponse)(nil),   // 28: graph_api.DropNamespaceResponse
-	(*ListNamespacesRequest)(nil),   // 29: graph_api.ListNamespacesRequest
-	(*ListNamespacesResponse)(nil),  // 30: graph_api.ListNamespacesResponse
-	(*Namespace)(nil),               // 31: graph_api.Namespace
-	(*UpdateExtSnapshotStreamingStateRequest)(nil),  // 32: graph_api.UpdateExtSnapshotStreamingStateRequest
-	(*UpdateExtSnapshotStreamingStateResponse)(nil), // 33: graph_api.UpdateExtSnapshotStreamingStateResponse
-	(*StreamExtSnapshotRequest)(nil),                // 34: graph_api.StreamExtSnapshotRequest
-	(*StreamExtSnapshotResponse)(nil),               // 35: graph_api.StreamExtSnapshotResponse
-	(*StreamPacket)(nil),                            // 36: graph_api.StreamPacket
-	nil,                                             // 37: graph_api.Request.VarsEntry
-	nil,                                             // 38: graph_api.Response.UidsEntry
-	nil,                                             // 39: graph_api.Response.HdrsEntry
-	nil,                                             // 40: graph_api.Metrics.NumUidsEntry
-	nil,                                             // 41: graph_api.RunDQLRequest.VarsEntry
-	nil,                                             // 42: graph_api.ListNamespacesResponse.NamespacesEntry
+	(*Request)(nil),                 // 4: graph_api.Request
+	(*Uids)(nil),                    // 5: graph_api.Uids
+	(*ListOfString)(nil),            // 6: graph_api.ListOfString
+	(*Response)(nil),                // 7: graph_api.Response
+	(*Mutation)(nil),                // 8: graph_api.Mutation
+	(*Operation)(nil),               // 9: graph_api.Operation
+	(*Payload)(nil),                 // 10: graph_api.Payload
+	(*TxnContext)(nil),              // 11: graph_api.TxnContext
+	(*Check)(nil),                   // 12: graph_api.Check
+	(*Version)(nil),                 // 13: graph_api.Version
+	(*Latency)(nil),                 // 14: graph_api.Latency
+	(*Metrics)(nil),                 // 15: graph_api.Metrics
+	(*NQuad)(nil),                   // 16: graph_api.NQuad
+	(*Value)(nil),                   // 17: graph_api.Value
+	(*Facet)(nil),                   // 18: graph_api.Facet
+	(*LoginRequest)(nil),            // 19: graph_api.LoginRequest
+	(*Jwt)(nil),                     // 20: graph_api.Jwt
+	(*RunDQLRequest)(nil),           // 21: graph_api.RunDQLRequest
+	(*AllocateIDsRequest)(nil),      // 22: graph_api.AllocateIDsRequest
+	(*AllocateIDsResponse)(nil),     // 23: graph_api.AllocateIDsResponse
+	(*CreateNamespaceRequest)(nil),  // 24: graph_api.CreateNamespaceRequest
+	(*CreateNamespaceResponse)(nil), // 25: graph_api.CreateNamespaceResponse
+	(*DropNamespaceRequest)(nil),    // 26: graph_api.DropNamespaceRequest
+	(*DropNamespaceResponse)(nil),   // 27: graph_api.DropNamespaceResponse
+	(*ListNamespacesRequest)(nil),   // 28: graph_api.ListNamespacesRequest
+	(*ListNamespacesResponse)(nil),  // 29: graph_api.ListNamespacesResponse
+	(*Namespace)(nil),               // 30: graph_api.Namespace
+	(*UpdateExtSnapshotStreamingStateRequest)(nil),  // 31: graph_api.UpdateExtSnapshotStreamingStateRequest
+	(*UpdateExtSnapshotStreamingStateResponse)(nil), // 32: graph_api.UpdateExtSnapshotStreamingStateResponse
+	(*StreamExtSnapshotRequest)(nil),                // 33: graph_api.StreamExtSnapshotRequest
+	(*StreamExtSnapshotResponse)(nil),               // 34: graph_api.StreamExtSnapshotResponse
+	(*StreamPacket)(nil),                            // 35: graph_api.StreamPacket
+	nil,                                             // 36: graph_api.Request.VarsEntry
+	nil,                                             // 37: graph_api.Response.UidsEntry
+	nil,                                             // 38: graph_api.Response.HdrsEntry
+	nil,                                             // 39: graph_api.Metrics.NumUidsEntry
+	nil,                                             // 40: graph_api.RunDQLRequest.VarsEntry
+	nil,                                             // 41: graph_api.ListNamespacesResponse.NamespacesEntry
 }
 var file_libs_graph_proto_depIdxs = []int32{
-	37, // 0: graph_api.Request.vars:type_name -> graph_api.Request.VarsEntry
-	9,  // 1: graph_api.Request.mutations:type_name -> graph_api.Mutation
+	36, // 0: graph_api.Request.vars:type_name -> graph_api.Request.VarsEntry
+	8,  // 1: graph_api.Request.mutations:type_name -> graph_api.Mutation
 	0,  // 2: graph_api.Request.resp_format:type_name -> graph_api.RespFormat
-	12, // 3: graph_api.Response.txn:type_name -> graph_api.TxnContext
-	15, // 4: graph_api.Response.latency:type_name -> graph_api.Latency
-	16, // 5: graph_api.Response.metrics:type_name -> graph_api.Metrics
-	38, // 6: graph_api.Response.uids:type_name -> graph_api.Response.UidsEntry
-	39, // 7: graph_api.Response.hdrs:type_name -> graph_api.Response.HdrsEntry
-	17, // 8: graph_api.Mutation.set:type_name -> graph_api.NQuad
-	17, // 9: graph_api.Mutation.del:type_name -> graph_api.NQuad
+	11, // 3: graph_api.Response.txn:type_name -> graph_api.TxnContext
+	14, // 4: graph_api.Response.latency:type_name -> graph_api.Latency
+	15, // 5: graph_api.Response.metrics:type_name -> graph_api.Metrics
+	37, // 6: graph_api.Response.uids:type_name -> graph_api.Response.UidsEntry
+	38, // 7: graph_api.Response.hdrs:type_name -> graph_api.Response.HdrsEntry
+	16, // 8: graph_api.Mutation.set:type_name -> graph_api.NQuad
+	16, // 9: graph_api.Mutation.del:type_name -> graph_api.NQuad
 	1,  // 10: graph_api.Operation.drop_op:type_name -> graph_api.DropOp
-	40, // 11: graph_api.Metrics.num_uids:type_name -> graph_api.Metrics.NumUidsEntry
-	18, // 12: graph_api.NQuad.object_value:type_name -> graph_api.Value
-	19, // 13: graph_api.NQuad.facets:type_name -> graph_api.Facet
+	39, // 11: graph_api.Metrics.num_uids:type_name -> graph_api.Metrics.NumUidsEntry
+	17, // 12: graph_api.NQuad.object_value:type_name -> graph_api.Value
+	18, // 13: graph_api.NQuad.facets:type_name -> graph_api.Facet
 	2,  // 14: graph_api.Facet.val_type:type_name -> graph_api.FacetValType
-	41, // 15: graph_api.RunDQLRequest.vars:type_name -> graph_api.RunDQLRequest.VarsEntry
+	40, // 15: graph_api.RunDQLRequest.vars:type_name -> graph_api.RunDQLRequest.VarsEntry
 	0,  // 16: graph_api.RunDQLRequest.resp_format:type_name -> graph_api.RespFormat
 	3,  // 17: graph_api.AllocateIDsRequest.lease_type:type_name -> graph_api.LeaseType
-	42, // 18: graph_api.ListNamespacesResponse.namespaces:type_name -> graph_api.ListNamespacesResponse.NamespacesEntry
-	36, // 19: graph_api.StreamExtSnapshotRequest.pkt:type_name -> graph_api.StreamPacket
-	7,  // 20: graph_api.Response.HdrsEntry.value:type_name -> graph_api.ListOfString
-	31, // 21: graph_api.ListNamespacesResponse.NamespacesEntry.value:type_name -> graph_api.Namespace
+	41, // 18: graph_api.ListNamespacesResponse.namespaces:type_name -> graph_api.ListNamespacesResponse.NamespacesEntry
+	35, // 19: graph_api.StreamExtSnapshotRequest.pkt:type_name -> graph_api.StreamPacket
+	6,  // 20: graph_api.Response.HdrsEntry.value:type_name -> graph_api.ListOfString
+	30, // 21: graph_api.ListNamespacesResponse.NamespacesEntry.value:type_name -> graph_api.Namespace
 	22, // [22:22] is the sub-list for method output_type
 	22, // [22:22] is the sub-list for method input_type
 	22, // [22:22] is the sub-list for extension type_name
@@ -2810,7 +2631,7 @@ func file_libs_graph_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_graph_proto_rawDesc), len(file_libs_graph_proto_rawDesc)),
-			NumEnums:      5,
+			NumEnums:      4,
 			NumMessages:   38,
 			NumExtensions: 0,
 			NumServices:   0,

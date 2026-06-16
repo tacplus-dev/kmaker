@@ -200,101 +200,6 @@ func (FileAction) EnumDescriptor() ([]byte, []int) {
 	return file_libs_accounting_proto_rawDescGZIP(), []int{2}
 }
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED             TypeID = 0
-	TypeID_TYPE_ID_ERROR_CONTEXT           TypeID = 1
-	TypeID_TYPE_ID_EVENT                   TypeID = 2
-	TypeID_TYPE_ID_RPC_COMPLETED           TypeID = 3
-	TypeID_TYPE_ID_RPC_ERROR               TypeID = 4
-	TypeID_TYPE_ID_TOKEN_REJECTED          TypeID = 5
-	TypeID_TYPE_ID_RPC_SUMMARY             TypeID = 6
-	TypeID_TYPE_ID_SESSION_SUMMARY         TypeID = 7
-	TypeID_TYPE_ID_TOKEN_EXCHANGED         TypeID = 8
-	TypeID_TYPE_ID_ENDPOINT_HEALTH_CHANGED TypeID = 9
-	TypeID_TYPE_ID_STATE_UPDATED           TypeID = 10
-	TypeID_TYPE_ID_COMMAND_EXECUTED        TypeID = 11
-	TypeID_TYPE_ID_TOOL_USED               TypeID = 12
-	TypeID_TYPE_ID_SUBAGENT_STARTED        TypeID = 13
-	TypeID_TYPE_ID_FILE_MODIFIED           TypeID = 14
-	TypeID_TYPE_ID_DIAGNOSTIC              TypeID = 15
-	TypeID_TYPE_ID_SPOOL_CONFIG            TypeID = 16
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0:  "TYPE_ID_UNSPECIFIED",
-		1:  "TYPE_ID_ERROR_CONTEXT",
-		2:  "TYPE_ID_EVENT",
-		3:  "TYPE_ID_RPC_COMPLETED",
-		4:  "TYPE_ID_RPC_ERROR",
-		5:  "TYPE_ID_TOKEN_REJECTED",
-		6:  "TYPE_ID_RPC_SUMMARY",
-		7:  "TYPE_ID_SESSION_SUMMARY",
-		8:  "TYPE_ID_TOKEN_EXCHANGED",
-		9:  "TYPE_ID_ENDPOINT_HEALTH_CHANGED",
-		10: "TYPE_ID_STATE_UPDATED",
-		11: "TYPE_ID_COMMAND_EXECUTED",
-		12: "TYPE_ID_TOOL_USED",
-		13: "TYPE_ID_SUBAGENT_STARTED",
-		14: "TYPE_ID_FILE_MODIFIED",
-		15: "TYPE_ID_DIAGNOSTIC",
-		16: "TYPE_ID_SPOOL_CONFIG",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":             0,
-		"TYPE_ID_ERROR_CONTEXT":           1,
-		"TYPE_ID_EVENT":                   2,
-		"TYPE_ID_RPC_COMPLETED":           3,
-		"TYPE_ID_RPC_ERROR":               4,
-		"TYPE_ID_TOKEN_REJECTED":          5,
-		"TYPE_ID_RPC_SUMMARY":             6,
-		"TYPE_ID_SESSION_SUMMARY":         7,
-		"TYPE_ID_TOKEN_EXCHANGED":         8,
-		"TYPE_ID_ENDPOINT_HEALTH_CHANGED": 9,
-		"TYPE_ID_STATE_UPDATED":           10,
-		"TYPE_ID_COMMAND_EXECUTED":        11,
-		"TYPE_ID_TOOL_USED":               12,
-		"TYPE_ID_SUBAGENT_STARTED":        13,
-		"TYPE_ID_FILE_MODIFIED":           14,
-		"TYPE_ID_DIAGNOSTIC":              15,
-		"TYPE_ID_SPOOL_CONFIG":            16,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_accounting_proto_enumTypes[3].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_accounting_proto_enumTypes[3]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_accounting_proto_rawDescGZIP(), []int{3}
-}
-
 // ErrorContext captures the origin of an error or diagnostic event.
 // "caller" and "function" are cheap (Go runtime.Caller, Rust std::panic::Location,
 // Java StackWalker). "stack_trace" is only populated on actual errors.
@@ -1765,26 +1670,7 @@ const file_libs_accounting_proto_rawDesc = "" +
 	"\x15FILE_ACTION_UNDEFINED\x10\x00\x12\x17\n" +
 	"\x13FILE_ACTION_CREATED\x10\x01\x12\x18\n" +
 	"\x14FILE_ACTION_MODIFIED\x10\x02\x12\x17\n" +
-	"\x13FILE_ACTION_DELETED\x10\x03*\xd0\x03\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x19\n" +
-	"\x15TYPE_ID_ERROR_CONTEXT\x10\x01\x12\x11\n" +
-	"\rTYPE_ID_EVENT\x10\x02\x12\x19\n" +
-	"\x15TYPE_ID_RPC_COMPLETED\x10\x03\x12\x15\n" +
-	"\x11TYPE_ID_RPC_ERROR\x10\x04\x12\x1a\n" +
-	"\x16TYPE_ID_TOKEN_REJECTED\x10\x05\x12\x17\n" +
-	"\x13TYPE_ID_RPC_SUMMARY\x10\x06\x12\x1b\n" +
-	"\x17TYPE_ID_SESSION_SUMMARY\x10\a\x12\x1b\n" +
-	"\x17TYPE_ID_TOKEN_EXCHANGED\x10\b\x12#\n" +
-	"\x1fTYPE_ID_ENDPOINT_HEALTH_CHANGED\x10\t\x12\x19\n" +
-	"\x15TYPE_ID_STATE_UPDATED\x10\n" +
-	"\x12\x1c\n" +
-	"\x18TYPE_ID_COMMAND_EXECUTED\x10\v\x12\x15\n" +
-	"\x11TYPE_ID_TOOL_USED\x10\f\x12\x1c\n" +
-	"\x18TYPE_ID_SUBAGENT_STARTED\x10\r\x12\x19\n" +
-	"\x15TYPE_ID_FILE_MODIFIED\x10\x0e\x12\x16\n" +
-	"\x12TYPE_ID_DIAGNOSTIC\x10\x0f\x12\x18\n" +
-	"\x14TYPE_ID_SPOOL_CONFIG\x10\x10B\\ZZgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/accountingb\x06proto3"
+	"\x13FILE_ACTION_DELETED\x10\x03B\\ZZgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/accountingb\x06proto3"
 
 var (
 	file_libs_accounting_proto_rawDescOnce sync.Once
@@ -1798,58 +1684,57 @@ func file_libs_accounting_proto_rawDescGZIP() []byte {
 	return file_libs_accounting_proto_rawDescData
 }
 
-var file_libs_accounting_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
+var file_libs_accounting_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_libs_accounting_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_libs_accounting_proto_goTypes = []any{
 	(EventLevel)(0),               // 0: accounting.EventLevel
 	(StateAction)(0),              // 1: accounting.StateAction
 	(FileAction)(0),               // 2: accounting.FileAction
-	(TypeID)(0),                   // 3: accounting.TypeID
-	(*ErrorContext)(nil),          // 4: accounting.ErrorContext
-	(*Event)(nil),                 // 5: accounting.Event
-	(*RpcCompleted)(nil),          // 6: accounting.RpcCompleted
-	(*RpcError)(nil),              // 7: accounting.RpcError
-	(*TokenRejected)(nil),         // 8: accounting.TokenRejected
-	(*RpcSummary)(nil),            // 9: accounting.RpcSummary
-	(*SessionSummary)(nil),        // 10: accounting.SessionSummary
-	(*TokenExchanged)(nil),        // 11: accounting.TokenExchanged
-	(*EndpointHealthChanged)(nil), // 12: accounting.EndpointHealthChanged
-	(*StateUpdated)(nil),          // 13: accounting.StateUpdated
-	(*CommandExecuted)(nil),       // 14: accounting.CommandExecuted
-	(*ToolUsed)(nil),              // 15: accounting.ToolUsed
-	(*SubagentStarted)(nil),       // 16: accounting.SubagentStarted
-	(*FileModified)(nil),          // 17: accounting.FileModified
-	(*Diagnostic)(nil),            // 18: accounting.Diagnostic
-	(*SpoolConfig)(nil),           // 19: accounting.SpoolConfig
-	nil,                           // 20: accounting.Event.IdentityEntry
-	nil,                           // 21: accounting.SessionSummary.IdentityEntry
-	(*accounting_method.AccountingMethod)(nil), // 22: accounting_method.AccountingMethod
+	(*ErrorContext)(nil),          // 3: accounting.ErrorContext
+	(*Event)(nil),                 // 4: accounting.Event
+	(*RpcCompleted)(nil),          // 5: accounting.RpcCompleted
+	(*RpcError)(nil),              // 6: accounting.RpcError
+	(*TokenRejected)(nil),         // 7: accounting.TokenRejected
+	(*RpcSummary)(nil),            // 8: accounting.RpcSummary
+	(*SessionSummary)(nil),        // 9: accounting.SessionSummary
+	(*TokenExchanged)(nil),        // 10: accounting.TokenExchanged
+	(*EndpointHealthChanged)(nil), // 11: accounting.EndpointHealthChanged
+	(*StateUpdated)(nil),          // 12: accounting.StateUpdated
+	(*CommandExecuted)(nil),       // 13: accounting.CommandExecuted
+	(*ToolUsed)(nil),              // 14: accounting.ToolUsed
+	(*SubagentStarted)(nil),       // 15: accounting.SubagentStarted
+	(*FileModified)(nil),          // 16: accounting.FileModified
+	(*Diagnostic)(nil),            // 17: accounting.Diagnostic
+	(*SpoolConfig)(nil),           // 18: accounting.SpoolConfig
+	nil,                           // 19: accounting.Event.IdentityEntry
+	nil,                           // 20: accounting.SessionSummary.IdentityEntry
+	(*accounting_method.AccountingMethod)(nil), // 21: accounting_method.AccountingMethod
 }
 var file_libs_accounting_proto_depIdxs = []int32{
-	20, // 0: accounting.Event.identity:type_name -> accounting.Event.IdentityEntry
+	19, // 0: accounting.Event.identity:type_name -> accounting.Event.IdentityEntry
 	0,  // 1: accounting.Event.level:type_name -> accounting.EventLevel
-	6,  // 2: accounting.Event.rpc_completed:type_name -> accounting.RpcCompleted
-	7,  // 3: accounting.Event.rpc_error:type_name -> accounting.RpcError
-	8,  // 4: accounting.Event.token_rejected:type_name -> accounting.TokenRejected
-	10, // 5: accounting.Event.session_summary:type_name -> accounting.SessionSummary
-	11, // 6: accounting.Event.token_exchanged:type_name -> accounting.TokenExchanged
-	12, // 7: accounting.Event.endpoint_health_changed:type_name -> accounting.EndpointHealthChanged
-	13, // 8: accounting.Event.state_updated:type_name -> accounting.StateUpdated
-	14, // 9: accounting.Event.command_executed:type_name -> accounting.CommandExecuted
-	15, // 10: accounting.Event.tool_used:type_name -> accounting.ToolUsed
-	16, // 11: accounting.Event.subagent_started:type_name -> accounting.SubagentStarted
-	17, // 12: accounting.Event.file_modified:type_name -> accounting.FileModified
-	18, // 13: accounting.Event.diagnostic:type_name -> accounting.Diagnostic
-	22, // 14: accounting.RpcCompleted.method:type_name -> accounting_method.AccountingMethod
-	22, // 15: accounting.RpcError.method:type_name -> accounting_method.AccountingMethod
-	4,  // 16: accounting.RpcError.error_context:type_name -> accounting.ErrorContext
-	22, // 17: accounting.TokenRejected.method:type_name -> accounting_method.AccountingMethod
-	22, // 18: accounting.RpcSummary.method:type_name -> accounting_method.AccountingMethod
-	21, // 19: accounting.SessionSummary.identity:type_name -> accounting.SessionSummary.IdentityEntry
-	9,  // 20: accounting.SessionSummary.rpcs:type_name -> accounting.RpcSummary
+	5,  // 2: accounting.Event.rpc_completed:type_name -> accounting.RpcCompleted
+	6,  // 3: accounting.Event.rpc_error:type_name -> accounting.RpcError
+	7,  // 4: accounting.Event.token_rejected:type_name -> accounting.TokenRejected
+	9,  // 5: accounting.Event.session_summary:type_name -> accounting.SessionSummary
+	10, // 6: accounting.Event.token_exchanged:type_name -> accounting.TokenExchanged
+	11, // 7: accounting.Event.endpoint_health_changed:type_name -> accounting.EndpointHealthChanged
+	12, // 8: accounting.Event.state_updated:type_name -> accounting.StateUpdated
+	13, // 9: accounting.Event.command_executed:type_name -> accounting.CommandExecuted
+	14, // 10: accounting.Event.tool_used:type_name -> accounting.ToolUsed
+	15, // 11: accounting.Event.subagent_started:type_name -> accounting.SubagentStarted
+	16, // 12: accounting.Event.file_modified:type_name -> accounting.FileModified
+	17, // 13: accounting.Event.diagnostic:type_name -> accounting.Diagnostic
+	21, // 14: accounting.RpcCompleted.method:type_name -> accounting_method.AccountingMethod
+	21, // 15: accounting.RpcError.method:type_name -> accounting_method.AccountingMethod
+	3,  // 16: accounting.RpcError.error_context:type_name -> accounting.ErrorContext
+	21, // 17: accounting.TokenRejected.method:type_name -> accounting_method.AccountingMethod
+	21, // 18: accounting.RpcSummary.method:type_name -> accounting_method.AccountingMethod
+	20, // 19: accounting.SessionSummary.identity:type_name -> accounting.SessionSummary.IdentityEntry
+	8,  // 20: accounting.SessionSummary.rpcs:type_name -> accounting.RpcSummary
 	1,  // 21: accounting.StateUpdated.action:type_name -> accounting.StateAction
 	2,  // 22: accounting.FileModified.action:type_name -> accounting.FileAction
-	4,  // 23: accounting.Diagnostic.error_context:type_name -> accounting.ErrorContext
+	3,  // 23: accounting.Diagnostic.error_context:type_name -> accounting.ErrorContext
 	24, // [24:24] is the sub-list for method output_type
 	24, // [24:24] is the sub-list for method input_type
 	24, // [24:24] is the sub-list for extension type_name
@@ -1881,7 +1766,7 @@ func file_libs_accounting_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_accounting_proto_rawDesc), len(file_libs_accounting_proto_rawDesc)),
-			NumEnums:      4,
+			NumEnums:      3,
 			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   0,

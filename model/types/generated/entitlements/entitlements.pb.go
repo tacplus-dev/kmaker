@@ -36,59 +36,13 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// EntitlementGrant is one generated entitlement grant token.
-// Runtime tokens should carry exact RPC grants only, e.g. PACKAGE_SERVICE_RPC.
-// Wildcard grants are expanded by generated helpers before token minting.
-type EntitlementGrant struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *EntitlementGrant) Reset() {
-	*x = EntitlementGrant{}
-	mi := &file_generated_entitlements_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EntitlementGrant) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EntitlementGrant) ProtoMessage() {}
-
-func (x *EntitlementGrant) ProtoReflect() protoreflect.Message {
-	mi := &file_generated_entitlements_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use EntitlementGrant.ProtoReflect.Descriptor instead.
-func (*EntitlementGrant) Descriptor() ([]byte, []int) {
-	return file_generated_entitlements_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *EntitlementGrant) GetToken() string {
-	if x != nil {
-		return x.Token
-	}
-	return ""
-}
-
 // TokenEntitlements holds compressed C2S entitlements embedded in user tokens.
 // OPA returns this structure directly; the token authority embeds it in the JWT service_entitlements claim.
 // grants may contain exact or wildcard grant tokens; generated helpers normalize them before authorization.
 type TokenEntitlements struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	Grants []*EntitlementGrant    `protobuf:"bytes,1,rep,name=grants,proto3" json:"grants,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// grants is a flat list of generated grant tokens, e.g. PACKAGE_SERVICE_RPC.
+	Grants []string `protobuf:"bytes,1,rep,name=grants,proto3" json:"grants,omitempty"`
 	// azp restricts these entitlements to tokens with a matching authorized party.
 	// Empty = entitlements apply regardless of azp.
 	Azp           []string `protobuf:"bytes,100,rep,name=azp,proto3" json:"azp,omitempty"`
@@ -98,7 +52,7 @@ type TokenEntitlements struct {
 
 func (x *TokenEntitlements) Reset() {
 	*x = TokenEntitlements{}
-	mi := &file_generated_entitlements_proto_msgTypes[1]
+	mi := &file_generated_entitlements_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -110,7 +64,7 @@ func (x *TokenEntitlements) String() string {
 func (*TokenEntitlements) ProtoMessage() {}
 
 func (x *TokenEntitlements) ProtoReflect() protoreflect.Message {
-	mi := &file_generated_entitlements_proto_msgTypes[1]
+	mi := &file_generated_entitlements_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -123,10 +77,10 @@ func (x *TokenEntitlements) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TokenEntitlements.ProtoReflect.Descriptor instead.
 func (*TokenEntitlements) Descriptor() ([]byte, []int) {
-	return file_generated_entitlements_proto_rawDescGZIP(), []int{1}
+	return file_generated_entitlements_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *TokenEntitlements) GetGrants() []*EntitlementGrant {
+func (x *TokenEntitlements) GetGrants() []string {
 	if x != nil {
 		return x.Grants
 	}
@@ -144,11 +98,9 @@ var File_generated_entitlements_proto protoreflect.FileDescriptor
 
 const file_generated_entitlements_proto_rawDesc = "" +
 	"\n" +
-	"\x1cgenerated/entitlements.proto\x12\fentitlements\"(\n" +
-	"\x10EntitlementGrant\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\"]\n" +
-	"\x11TokenEntitlements\x126\n" +
-	"\x06grants\x18\x01 \x03(\v2\x1e.entitlements.EntitlementGrantR\x06grants\x12\x10\n" +
+	"\x1cgenerated/entitlements.proto\x12\fentitlements\"=\n" +
+	"\x11TokenEntitlements\x12\x16\n" +
+	"\x06grants\x18\x01 \x03(\tR\x06grants\x12\x10\n" +
 	"\x03azp\x18d \x03(\tR\x03azpBcZagitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/entitlementsb\x06proto3"
 
 var (
@@ -163,18 +115,16 @@ func file_generated_entitlements_proto_rawDescGZIP() []byte {
 	return file_generated_entitlements_proto_rawDescData
 }
 
-var file_generated_entitlements_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_generated_entitlements_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_generated_entitlements_proto_goTypes = []any{
-	(*EntitlementGrant)(nil),  // 0: entitlements.EntitlementGrant
-	(*TokenEntitlements)(nil), // 1: entitlements.TokenEntitlements
+	(*TokenEntitlements)(nil), // 0: entitlements.TokenEntitlements
 }
 var file_generated_entitlements_proto_depIdxs = []int32{
-	0, // 0: entitlements.TokenEntitlements.grants:type_name -> entitlements.EntitlementGrant
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	0, // [0:0] is the sub-list for method output_type
+	0, // [0:0] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_generated_entitlements_proto_init() }
@@ -188,7 +138,7 @@ func file_generated_entitlements_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_generated_entitlements_proto_rawDesc), len(file_generated_entitlements_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

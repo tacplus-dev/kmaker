@@ -757,13 +757,13 @@ func ProxyRpcIdValues() []ProxyRpcId {
 		ProxyRpcId_PROXY_RPC_ID_ALL_MUTATORS,
 		ProxyRpcId_PROXY_RPC_ID_ALL_EXECUTORS,
 		ProxyRpcId_PROXY_RPC_ID_CREATE_CHAT_COMPLETION,
-		ProxyRpcId_PROXY_RPC_ID_CREATE_CHAT_COMPLETION_STREAM,
+		ProxyRpcId_PROXY_RPC_ID_GENERATE_CHAT_COMPLETION_STREAM,
 	}
 }
 
 // ProxyRpcIdStringValues returns all valid ProxyRpcId names as strings
 func ProxyRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "create-chat-completion", "create-chat-completion-stream"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "create-chat-completion", "generate-chat-completion-stream"}
 }
 
 // ParseProxyRpcId converts a string to a ProxyRpcId enum value
@@ -782,8 +782,8 @@ func ParseProxyRpcId(s string) (ProxyRpcId, error) {
 		return ProxyRpcId_PROXY_RPC_ID_ALL_EXECUTORS, nil
 	case "create-chat-completion", "proxy-rpc-id-create-chat-completion":
 		return ProxyRpcId_PROXY_RPC_ID_CREATE_CHAT_COMPLETION, nil
-	case "create-chat-completion-stream", "proxy-rpc-id-create-chat-completion-stream":
-		return ProxyRpcId_PROXY_RPC_ID_CREATE_CHAT_COMPLETION_STREAM, nil
+	case "generate-chat-completion-stream", "proxy-rpc-id-generate-chat-completion-stream":
+		return ProxyRpcId_PROXY_RPC_ID_GENERATE_CHAT_COMPLETION_STREAM, nil
 	default:
 		return ProxyRpcId_PROXY_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid proxyrpcid %s, expecting one of: %v", s, ProxyRpcIdStringValues())
 	}
@@ -822,8 +822,8 @@ func ProxyRpcIdToString(v ProxyRpcId) string {
 		return "all-executors"
 	case ProxyRpcId_PROXY_RPC_ID_CREATE_CHAT_COMPLETION:
 		return "create-chat-completion"
-	case ProxyRpcId_PROXY_RPC_ID_CREATE_CHAT_COMPLETION_STREAM:
-		return "create-chat-completion-stream"
+	case ProxyRpcId_PROXY_RPC_ID_GENERATE_CHAT_COMPLETION_STREAM:
+		return "generate-chat-completion-stream"
 	default:
 		return ""
 	}
@@ -854,8 +854,8 @@ func ParseProxyRpcIdLiberal(s string) ProxyRpcId {
 		return ProxyRpcId_PROXY_RPC_ID_ALL_EXECUTORS
 	case "create-chat-completion", "proxy-rpc-id-create-chat-completion":
 		return ProxyRpcId_PROXY_RPC_ID_CREATE_CHAT_COMPLETION
-	case "create-chat-completion-stream", "proxy-rpc-id-create-chat-completion-stream":
-		return ProxyRpcId_PROXY_RPC_ID_CREATE_CHAT_COMPLETION_STREAM
+	case "generate-chat-completion-stream", "proxy-rpc-id-generate-chat-completion-stream":
+		return ProxyRpcId_PROXY_RPC_ID_GENERATE_CHAT_COMPLETION_STREAM
 	default:
 		return ProxyRpcId_PROXY_RPC_ID_UNSPECIFIED
 	}
@@ -874,8 +874,8 @@ func ProxyRpcIdToSpecName(v ProxyRpcId) string {
 		return "PROXY_RPC_ID_ALL_EXECUTORS"
 	case ProxyRpcId_PROXY_RPC_ID_CREATE_CHAT_COMPLETION:
 		return "PROXY_RPC_ID_CREATE_CHAT_COMPLETION"
-	case ProxyRpcId_PROXY_RPC_ID_CREATE_CHAT_COMPLETION_STREAM:
-		return "PROXY_RPC_ID_CREATE_CHAT_COMPLETION_STREAM"
+	case ProxyRpcId_PROXY_RPC_ID_GENERATE_CHAT_COMPLETION_STREAM:
+		return "PROXY_RPC_ID_GENERATE_CHAT_COMPLETION_STREAM"
 	default:
 		return ""
 	}
@@ -8565,14 +8565,14 @@ func ValidateToolChoiceWithDepth(m *ToolChoice, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Kind (assert_max_length: 32)
-	if len(m.Kind) > 32 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Kind must be at most 32 characters, got: %d", len(m.Kind))
-	}
-
 	// Validate Kind (assert_required)
 	if m.Kind == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Kind is required")
+	}
+
+	// Validate Kind (assert_max_length: 32)
+	if len(m.Kind) > 32 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Kind must be at most 32 characters, got: %d", len(m.Kind))
 	}
 
 	// Validate Kind (default max size: 32768 bytes)
@@ -8611,14 +8611,14 @@ func ValidateToolChoiceFunctionWithDepth(m *ToolChoiceFunction, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Name (assert_max_length: 256)
-	if len(m.Name) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Name must be at most 256 characters, got: %d", len(m.Name))
-	}
-
 	// Validate Name (assert_required)
 	if m.Name == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Name is required")
+	}
+
+	// Validate Name (assert_max_length: 256)
+	if len(m.Name) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Name must be at most 256 characters, got: %d", len(m.Name))
 	}
 
 	// Validate Name (default max size: 32768 bytes)
@@ -8711,14 +8711,14 @@ func ValidateJsonSchemaFormatWithDepth(m *JsonSchemaFormat, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Description must be at most 4096 characters, got: %d", len(m.Description))
 	}
 
-	// Validate Schema (assert_max_length: 1048576)
-	if len(m.Schema) > 1048576 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Schema must be at most 1048576 characters, got: %d", len(m.Schema))
-	}
-
 	// Validate Schema (assert_required)
 	if m.Schema == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Schema is required")
+	}
+
+	// Validate Schema (assert_max_length: 1048576)
+	if len(m.Schema) > 1048576 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Schema must be at most 1048576 characters, got: %d", len(m.Schema))
 	}
 
 	// Validate Name (default max size: 32768 bytes)
@@ -8784,6 +8784,11 @@ func ValidateCreateChatCompletionRequestWithDepth(m *CreateChatCompletionRequest
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
+	// Validate Model (assert_required)
+	if m.Model == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Model is required")
+	}
+
 	// Validate Model (assert_min_length: 1)
 	if len(m.Model) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Model must be at least 1 characters, got: %d", len(m.Model))
@@ -8792,11 +8797,6 @@ func ValidateCreateChatCompletionRequestWithDepth(m *CreateChatCompletionRequest
 	// Validate Model (assert_max_length: 128)
 	if len(m.Model) > 128 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Model must be at most 128 characters, got: %d", len(m.Model))
-	}
-
-	// Validate Model (assert_required)
-	if m.Model == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Model is required")
 	}
 
 	// Validate Messages (assert_required)
@@ -9638,14 +9638,14 @@ func ValidateErrorDetailWithDepth(m *ErrorDetail, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Message must be at most 4096 characters, got: %d", len(m.Message))
 	}
 
-	// Validate Kind (assert_required)
-	if m.Kind == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Kind is required")
-	}
-
 	// Validate Kind (assert_max_length: 64)
 	if len(m.Kind) > 64 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Kind must be at most 64 characters, got: %d", len(m.Kind))
+	}
+
+	// Validate Kind (assert_required)
+	if m.Kind == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Kind is required")
 	}
 
 	// Validate Param (assert_max_length: 256)

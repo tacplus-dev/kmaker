@@ -37,56 +37,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED TypeID = 0
-	TypeID_TYPE_ID_CONFIG      TypeID = 1
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_CONFIG",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED": 0,
-		"TYPE_ID_CONFIG":      1,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_tokencache_proto_enumTypes[0].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_tokencache_proto_enumTypes[0]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_tokencache_proto_rawDescGZIP(), []int{0}
-}
-
 // Config configures the JWT token cache used for authentication.
 // Controls how tokens and JWK signing keys are cached and refreshed.
 type Config struct {
@@ -178,10 +128,7 @@ const file_libs_tokencache_proto_rawDesc = "" +
 	"\x0edynamic_lookup\x18\x01 \x01(\bR\rdynamicLookup\x12/\n" +
 	"\x10lifetime_seconds\x18\x02 \x01(\x03B\x04\xc0\xa6\x1d\x01R\x0flifetimeSeconds\x128\n" +
 	"\x15expire_unused_seconds\x18\x03 \x01(\x03B\x04\xc0\xa6\x1d\x01R\x13expireUnusedSeconds\x12>\n" +
-	"\x18refresh_interval_seconds\x18\x04 \x01(\x03B\x04\xc0\xa6\x1d\x01R\x16refreshIntervalSeconds*5\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x12\n" +
-	"\x0eTYPE_ID_CONFIG\x10\x01B\\ZZgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/tokencacheb\x06proto3"
+	"\x18refresh_interval_seconds\x18\x04 \x01(\x03B\x04\xc0\xa6\x1d\x01R\x16refreshIntervalSecondsB\\ZZgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/tokencacheb\x06proto3"
 
 var (
 	file_libs_tokencache_proto_rawDescOnce sync.Once
@@ -195,11 +142,9 @@ func file_libs_tokencache_proto_rawDescGZIP() []byte {
 	return file_libs_tokencache_proto_rawDescData
 }
 
-var file_libs_tokencache_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_libs_tokencache_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_libs_tokencache_proto_goTypes = []any{
-	(TypeID)(0),    // 0: tokencache.TypeID
-	(*Config)(nil), // 1: tokencache.Config
+	(*Config)(nil), // 0: tokencache.Config
 }
 var file_libs_tokencache_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -219,14 +164,13 @@ func file_libs_tokencache_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_tokencache_proto_rawDesc), len(file_libs_tokencache_proto_rawDesc)),
-			NumEnums:      1,
+			NumEnums:      0,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_libs_tokencache_proto_goTypes,
 		DependencyIndexes: file_libs_tokencache_proto_depIdxs,
-		EnumInfos:         file_libs_tokencache_proto_enumTypes,
 		MessageInfos:      file_libs_tokencache_proto_msgTypes,
 	}.Build()
 	File_libs_tokencache_proto = out.File

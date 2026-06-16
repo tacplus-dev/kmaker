@@ -38,59 +38,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED            TypeID = 0
-	TypeID_TYPE_ID_CLOUD_IDENTITY_PROOF   TypeID = 1
-	TypeID_TYPE_ID_PRESIGNED_HTTP_REQUEST TypeID = 2
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_CLOUD_IDENTITY_PROOF",
-		2: "TYPE_ID_PRESIGNED_HTTP_REQUEST",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":            0,
-		"TYPE_ID_CLOUD_IDENTITY_PROOF":   1,
-		"TYPE_ID_PRESIGNED_HTTP_REQUEST": 2,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_cloudidentity_proto_enumTypes[0].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_cloudidentity_proto_enumTypes[0]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_cloudidentity_proto_rawDescGZIP(), []int{0}
-}
-
 // CloudIdentityProof carries a cloud-native identity assertion.
 // Exactly one of presigned_request or identity_token must be set,
 // determined by the cloud vendor.
@@ -253,11 +200,7 @@ const file_libs_cloudidentity_proto_rawDesc = "" +
 	"\x04body\x18\x04 \x01(\tB\x05\xb8\xa8\x1d\x80@R\x04body\x1a:\n" +
 	"\fHeadersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01*g\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12 \n" +
-	"\x1cTYPE_ID_CLOUD_IDENTITY_PROOF\x10\x01\x12\"\n" +
-	"\x1eTYPE_ID_PRESIGNED_HTTP_REQUEST\x10\x02B_Z]gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/cloudidentityb\x06proto3"
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B_Z]gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/cloudidentityb\x06proto3"
 
 var (
 	file_libs_cloudidentity_proto_rawDescOnce sync.Once
@@ -271,19 +214,17 @@ func file_libs_cloudidentity_proto_rawDescGZIP() []byte {
 	return file_libs_cloudidentity_proto_rawDescData
 }
 
-var file_libs_cloudidentity_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_libs_cloudidentity_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_libs_cloudidentity_proto_goTypes = []any{
-	(TypeID)(0),                  // 0: cloudidentity.TypeID
-	(*CloudIdentityProof)(nil),   // 1: cloudidentity.CloudIdentityProof
-	(*PresignedHttpRequest)(nil), // 2: cloudidentity.PresignedHttpRequest
-	nil,                          // 3: cloudidentity.PresignedHttpRequest.HeadersEntry
-	(cloudvendor.CloudVendor)(0), // 4: cloudvendor.CloudVendor
+	(*CloudIdentityProof)(nil),   // 0: cloudidentity.CloudIdentityProof
+	(*PresignedHttpRequest)(nil), // 1: cloudidentity.PresignedHttpRequest
+	nil,                          // 2: cloudidentity.PresignedHttpRequest.HeadersEntry
+	(cloudvendor.CloudVendor)(0), // 3: cloudvendor.CloudVendor
 }
 var file_libs_cloudidentity_proto_depIdxs = []int32{
-	4, // 0: cloudidentity.CloudIdentityProof.vendor:type_name -> cloudvendor.CloudVendor
-	2, // 1: cloudidentity.CloudIdentityProof.presigned_request:type_name -> cloudidentity.PresignedHttpRequest
-	3, // 2: cloudidentity.PresignedHttpRequest.headers:type_name -> cloudidentity.PresignedHttpRequest.HeadersEntry
+	3, // 0: cloudidentity.CloudIdentityProof.vendor:type_name -> cloudvendor.CloudVendor
+	1, // 1: cloudidentity.CloudIdentityProof.presigned_request:type_name -> cloudidentity.PresignedHttpRequest
+	2, // 2: cloudidentity.PresignedHttpRequest.headers:type_name -> cloudidentity.PresignedHttpRequest.HeadersEntry
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
@@ -301,14 +242,13 @@ func file_libs_cloudidentity_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_cloudidentity_proto_rawDesc), len(file_libs_cloudidentity_proto_rawDesc)),
-			NumEnums:      1,
+			NumEnums:      0,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_libs_cloudidentity_proto_goTypes,
 		DependencyIndexes: file_libs_cloudidentity_proto_depIdxs,
-		EnumInfos:         file_libs_cloudidentity_proto_enumTypes,
 		MessageInfos:      file_libs_cloudidentity_proto_msgTypes,
 	}.Build()
 	File_libs_cloudidentity_proto = out.File

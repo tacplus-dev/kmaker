@@ -3561,18 +3561,18 @@ func MintRpcIdValues() []MintRpcId {
 		MintRpcId_MINT_RPC_ID_ALL_EXECUTORS,
 		MintRpcId_MINT_RPC_ID_MINT_SERVICE_TOKEN,
 		MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN,
-		MintRpcId_MINT_RPC_ID_TOKEN_MINT,
+		MintRpcId_MINT_RPC_ID_MINT_TOKEN,
 		MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_TOKEN,
 		MintRpcId_MINT_RPC_ID_MINT_CLIENT_TOKEN,
-		MintRpcId_MINT_RPC_ID_X509_MINT,
-		MintRpcId_MINT_RPC_ID_WORKLOAD_MINT,
-		MintRpcId_MINT_RPC_ID_WORKLOAD_REVOKE,
+		MintRpcId_MINT_RPC_ID_MINT_X509_CERT,
+		MintRpcId_MINT_RPC_ID_MINT_WORKLOAD,
+		MintRpcId_MINT_RPC_ID_REVOKE_WORKLOAD,
 	}
 }
 
 // MintRpcIdStringValues returns all valid MintRpcId names as strings
 func MintRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "mint-service-token", "mint-user-token", "token-mint", "mint-external-token", "mint-client-token", "x509-mint", "workload-mint", "workload-revoke"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "mint-service-token", "mint-user-token", "mint-token", "mint-external-token", "mint-client-token", "mint-x509-cert", "mint-workload", "revoke-workload"}
 }
 
 // ParseMintRpcId converts a string to a MintRpcId enum value
@@ -3593,18 +3593,18 @@ func ParseMintRpcId(s string) (MintRpcId, error) {
 		return MintRpcId_MINT_RPC_ID_MINT_SERVICE_TOKEN, nil
 	case "mint-user-token", "mint-rpc-id-mint-user-token":
 		return MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN, nil
-	case "token-mint", "mint-rpc-id-token-mint":
-		return MintRpcId_MINT_RPC_ID_TOKEN_MINT, nil
+	case "mint-token", "mint-rpc-id-mint-token":
+		return MintRpcId_MINT_RPC_ID_MINT_TOKEN, nil
 	case "mint-external-token", "mint-rpc-id-mint-external-token":
 		return MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_TOKEN, nil
 	case "mint-client-token", "mint-rpc-id-mint-client-token":
 		return MintRpcId_MINT_RPC_ID_MINT_CLIENT_TOKEN, nil
-	case "x509-mint", "mint-rpc-id-x509-mint":
-		return MintRpcId_MINT_RPC_ID_X509_MINT, nil
-	case "workload-mint", "mint-rpc-id-workload-mint":
-		return MintRpcId_MINT_RPC_ID_WORKLOAD_MINT, nil
-	case "workload-revoke", "mint-rpc-id-workload-revoke":
-		return MintRpcId_MINT_RPC_ID_WORKLOAD_REVOKE, nil
+	case "mint-x509-cert", "mint-rpc-id-mint-x509-cert":
+		return MintRpcId_MINT_RPC_ID_MINT_X509_CERT, nil
+	case "mint-workload", "mint-rpc-id-mint-workload":
+		return MintRpcId_MINT_RPC_ID_MINT_WORKLOAD, nil
+	case "revoke-workload", "mint-rpc-id-revoke-workload":
+		return MintRpcId_MINT_RPC_ID_REVOKE_WORKLOAD, nil
 	default:
 		return MintRpcId_MINT_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid mintrpcid %s, expecting one of: %v", s, MintRpcIdStringValues())
 	}
@@ -3645,18 +3645,18 @@ func MintRpcIdToString(v MintRpcId) string {
 		return "mint-service-token"
 	case MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN:
 		return "mint-user-token"
-	case MintRpcId_MINT_RPC_ID_TOKEN_MINT:
-		return "token-mint"
+	case MintRpcId_MINT_RPC_ID_MINT_TOKEN:
+		return "mint-token"
 	case MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_TOKEN:
 		return "mint-external-token"
 	case MintRpcId_MINT_RPC_ID_MINT_CLIENT_TOKEN:
 		return "mint-client-token"
-	case MintRpcId_MINT_RPC_ID_X509_MINT:
-		return "x509-mint"
-	case MintRpcId_MINT_RPC_ID_WORKLOAD_MINT:
-		return "workload-mint"
-	case MintRpcId_MINT_RPC_ID_WORKLOAD_REVOKE:
-		return "workload-revoke"
+	case MintRpcId_MINT_RPC_ID_MINT_X509_CERT:
+		return "mint-x509-cert"
+	case MintRpcId_MINT_RPC_ID_MINT_WORKLOAD:
+		return "mint-workload"
+	case MintRpcId_MINT_RPC_ID_REVOKE_WORKLOAD:
+		return "revoke-workload"
 	default:
 		return ""
 	}
@@ -3689,18 +3689,18 @@ func ParseMintRpcIdLiberal(s string) MintRpcId {
 		return MintRpcId_MINT_RPC_ID_MINT_SERVICE_TOKEN
 	case "mint-user-token", "mint-rpc-id-mint-user-token":
 		return MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN
-	case "token-mint", "mint-rpc-id-token-mint":
-		return MintRpcId_MINT_RPC_ID_TOKEN_MINT
+	case "mint-token", "mint-rpc-id-mint-token":
+		return MintRpcId_MINT_RPC_ID_MINT_TOKEN
 	case "mint-external-token", "mint-rpc-id-mint-external-token":
 		return MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_TOKEN
 	case "mint-client-token", "mint-rpc-id-mint-client-token":
 		return MintRpcId_MINT_RPC_ID_MINT_CLIENT_TOKEN
-	case "x509-mint", "mint-rpc-id-x509-mint":
-		return MintRpcId_MINT_RPC_ID_X509_MINT
-	case "workload-mint", "mint-rpc-id-workload-mint":
-		return MintRpcId_MINT_RPC_ID_WORKLOAD_MINT
-	case "workload-revoke", "mint-rpc-id-workload-revoke":
-		return MintRpcId_MINT_RPC_ID_WORKLOAD_REVOKE
+	case "mint-x509-cert", "mint-rpc-id-mint-x509-cert":
+		return MintRpcId_MINT_RPC_ID_MINT_X509_CERT
+	case "mint-workload", "mint-rpc-id-mint-workload":
+		return MintRpcId_MINT_RPC_ID_MINT_WORKLOAD
+	case "revoke-workload", "mint-rpc-id-revoke-workload":
+		return MintRpcId_MINT_RPC_ID_REVOKE_WORKLOAD
 	default:
 		return MintRpcId_MINT_RPC_ID_UNSPECIFIED
 	}
@@ -3721,18 +3721,18 @@ func MintRpcIdToSpecName(v MintRpcId) string {
 		return "MINT_RPC_ID_MINT_SERVICE_TOKEN"
 	case MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN:
 		return "MINT_RPC_ID_MINT_USER_TOKEN"
-	case MintRpcId_MINT_RPC_ID_TOKEN_MINT:
-		return "MINT_RPC_ID_TOKEN_MINT"
+	case MintRpcId_MINT_RPC_ID_MINT_TOKEN:
+		return "MINT_RPC_ID_MINT_TOKEN"
 	case MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_TOKEN:
 		return "MINT_RPC_ID_MINT_EXTERNAL_TOKEN"
 	case MintRpcId_MINT_RPC_ID_MINT_CLIENT_TOKEN:
 		return "MINT_RPC_ID_MINT_CLIENT_TOKEN"
-	case MintRpcId_MINT_RPC_ID_X509_MINT:
-		return "MINT_RPC_ID_X509_MINT"
-	case MintRpcId_MINT_RPC_ID_WORKLOAD_MINT:
-		return "MINT_RPC_ID_WORKLOAD_MINT"
-	case MintRpcId_MINT_RPC_ID_WORKLOAD_REVOKE:
-		return "MINT_RPC_ID_WORKLOAD_REVOKE"
+	case MintRpcId_MINT_RPC_ID_MINT_X509_CERT:
+		return "MINT_RPC_ID_MINT_X509_CERT"
+	case MintRpcId_MINT_RPC_ID_MINT_WORKLOAD:
+		return "MINT_RPC_ID_MINT_WORKLOAD"
+	case MintRpcId_MINT_RPC_ID_REVOKE_WORKLOAD:
+		return "MINT_RPC_ID_REVOKE_WORKLOAD"
 	default:
 		return ""
 	}
@@ -3870,9 +3870,9 @@ func TenantAdminRpcIdValues() []TenantAdminRpcId {
 		TenantAdminRpcId_TENANT_ADMIN_RPC_ID_DELETE_TENANT,
 		TenantAdminRpcId_TENANT_ADMIN_RPC_ID_LIST_TENANTS,
 		TenantAdminRpcId_TENANT_ADMIN_RPC_ID_GET_TENANT_CONFIG,
-		TenantAdminRpcId_TENANT_ADMIN_RPC_ID_SET_TENANT_CONFIG,
+		TenantAdminRpcId_TENANT_ADMIN_RPC_ID_UPDATE_TENANT_CONFIG,
 		TenantAdminRpcId_TENANT_ADMIN_RPC_ID_GET_PROJECT_CONFIG,
-		TenantAdminRpcId_TENANT_ADMIN_RPC_ID_SET_PROJECT_CONFIG,
+		TenantAdminRpcId_TENANT_ADMIN_RPC_ID_UPDATE_PROJECT_CONFIG,
 		TenantAdminRpcId_TENANT_ADMIN_RPC_ID_LIST_PROJECTS,
 		TenantAdminRpcId_TENANT_ADMIN_RPC_ID_DELETE_PROJECT,
 	}
@@ -3880,7 +3880,7 @@ func TenantAdminRpcIdValues() []TenantAdminRpcId {
 
 // TenantAdminRpcIdStringValues returns all valid TenantAdminRpcId names as strings
 func TenantAdminRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "create-tenant", "delete-tenant", "list-tenants", "get-tenant-config", "set-tenant-config", "get-project-config", "set-project-config", "list-projects", "delete-project"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "create-tenant", "delete-tenant", "list-tenants", "get-tenant-config", "update-tenant-config", "get-project-config", "update-project-config", "list-projects", "delete-project"}
 }
 
 // ParseTenantAdminRpcId converts a string to a TenantAdminRpcId enum value
@@ -3905,12 +3905,12 @@ func ParseTenantAdminRpcId(s string) (TenantAdminRpcId, error) {
 		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_LIST_TENANTS, nil
 	case "get-tenant-config", "tenant-admin-rpc-id-get-tenant-config":
 		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_GET_TENANT_CONFIG, nil
-	case "set-tenant-config", "tenant-admin-rpc-id-set-tenant-config":
-		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_SET_TENANT_CONFIG, nil
+	case "update-tenant-config", "tenant-admin-rpc-id-update-tenant-config":
+		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_UPDATE_TENANT_CONFIG, nil
 	case "get-project-config", "tenant-admin-rpc-id-get-project-config":
 		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_GET_PROJECT_CONFIG, nil
-	case "set-project-config", "tenant-admin-rpc-id-set-project-config":
-		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_SET_PROJECT_CONFIG, nil
+	case "update-project-config", "tenant-admin-rpc-id-update-project-config":
+		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_UPDATE_PROJECT_CONFIG, nil
 	case "list-projects", "tenant-admin-rpc-id-list-projects":
 		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_LIST_PROJECTS, nil
 	case "delete-project", "tenant-admin-rpc-id-delete-project":
@@ -3959,12 +3959,12 @@ func TenantAdminRpcIdToString(v TenantAdminRpcId) string {
 		return "list-tenants"
 	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_GET_TENANT_CONFIG:
 		return "get-tenant-config"
-	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_SET_TENANT_CONFIG:
-		return "set-tenant-config"
+	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_UPDATE_TENANT_CONFIG:
+		return "update-tenant-config"
 	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_GET_PROJECT_CONFIG:
 		return "get-project-config"
-	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_SET_PROJECT_CONFIG:
-		return "set-project-config"
+	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_UPDATE_PROJECT_CONFIG:
+		return "update-project-config"
 	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_LIST_PROJECTS:
 		return "list-projects"
 	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_DELETE_PROJECT:
@@ -4005,12 +4005,12 @@ func ParseTenantAdminRpcIdLiberal(s string) TenantAdminRpcId {
 		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_LIST_TENANTS
 	case "get-tenant-config", "tenant-admin-rpc-id-get-tenant-config":
 		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_GET_TENANT_CONFIG
-	case "set-tenant-config", "tenant-admin-rpc-id-set-tenant-config":
-		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_SET_TENANT_CONFIG
+	case "update-tenant-config", "tenant-admin-rpc-id-update-tenant-config":
+		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_UPDATE_TENANT_CONFIG
 	case "get-project-config", "tenant-admin-rpc-id-get-project-config":
 		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_GET_PROJECT_CONFIG
-	case "set-project-config", "tenant-admin-rpc-id-set-project-config":
-		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_SET_PROJECT_CONFIG
+	case "update-project-config", "tenant-admin-rpc-id-update-project-config":
+		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_UPDATE_PROJECT_CONFIG
 	case "list-projects", "tenant-admin-rpc-id-list-projects":
 		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_LIST_PROJECTS
 	case "delete-project", "tenant-admin-rpc-id-delete-project":
@@ -4039,12 +4039,12 @@ func TenantAdminRpcIdToSpecName(v TenantAdminRpcId) string {
 		return "TENANT_ADMIN_RPC_ID_LIST_TENANTS"
 	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_GET_TENANT_CONFIG:
 		return "TENANT_ADMIN_RPC_ID_GET_TENANT_CONFIG"
-	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_SET_TENANT_CONFIG:
-		return "TENANT_ADMIN_RPC_ID_SET_TENANT_CONFIG"
+	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_UPDATE_TENANT_CONFIG:
+		return "TENANT_ADMIN_RPC_ID_UPDATE_TENANT_CONFIG"
 	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_GET_PROJECT_CONFIG:
 		return "TENANT_ADMIN_RPC_ID_GET_PROJECT_CONFIG"
-	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_SET_PROJECT_CONFIG:
-		return "TENANT_ADMIN_RPC_ID_SET_PROJECT_CONFIG"
+	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_UPDATE_PROJECT_CONFIG:
+		return "TENANT_ADMIN_RPC_ID_UPDATE_PROJECT_CONFIG"
 	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_LIST_PROJECTS:
 		return "TENANT_ADMIN_RPC_ID_LIST_PROJECTS"
 	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_DELETE_PROJECT:
@@ -7821,7 +7821,6 @@ type configJSON struct {
 	RateLimit                   json.RawMessage   `json:"rate_limit,omitempty"`
 	Configs                     json.RawMessage   `json:"configs,omitempty"`
 	Delegates                   []json.RawMessage `json:"delegates,omitempty"`
-	SpiffePrefix                string            `json:"spiffe_prefix,omitempty"`
 	Fqdn                        string            `json:"fqdn,omitempty"`
 	Issuer                      string            `json:"issuer,omitempty"`
 	KeyRotationIntervalSeconds  int64             `json:"key_rotation_interval_seconds,omitempty"`
@@ -7833,6 +7832,8 @@ type configJSON struct {
 	MaxTokenLifetimeSeconds     int64             `json:"max_token_lifetime_seconds,omitempty"`
 	OfflineTokenLifetimeSeconds int64             `json:"offline_token_lifetime_seconds,omitempty"`
 	RootCredPairs               []json.RawMessage `json:"root_cred_pairs,omitempty"`
+	SpiffeTrustDomain           string            `json:"spiffe_trust_domain,omitempty"`
+	LocationPath                string            `json:"location_path,omitempty"`
 	TraceId                     string            `json:"trace_id,omitempty"`
 	Noop                        bool              `json:"noop,omitempty"`
 }
@@ -7962,7 +7963,6 @@ func ConfigToJSON(v *Config) ([]byte, error) {
 			}
 			return result
 		}(),
-		SpiffePrefix:                v.SpiffePrefix,
 		Fqdn:                        v.Fqdn,
 		Issuer:                      v.Issuer,
 		KeyRotationIntervalSeconds:  v.KeyRotationIntervalSeconds,
@@ -7987,8 +7987,10 @@ func ConfigToJSON(v *Config) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		SpiffeTrustDomain: v.SpiffeTrustDomain,
+		LocationPath:      v.LocationPath,
+		TraceId:           v.TraceId,
+		Noop:              v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -8118,7 +8120,6 @@ func ConfigToJSONPretty(v *Config) ([]byte, error) {
 			}
 			return result
 		}(),
-		SpiffePrefix:                v.SpiffePrefix,
 		Fqdn:                        v.Fqdn,
 		Issuer:                      v.Issuer,
 		KeyRotationIntervalSeconds:  v.KeyRotationIntervalSeconds,
@@ -8143,8 +8144,10 @@ func ConfigToJSONPretty(v *Config) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		SpiffeTrustDomain: v.SpiffeTrustDomain,
+		LocationPath:      v.LocationPath,
+		TraceId:           v.TraceId,
+		Noop:              v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -8323,7 +8326,6 @@ func ConfigFromJSON(data []byte) (*Config, error) {
 			}
 		}
 	}
-	result.SpiffePrefix = raw.SpiffePrefix
 	result.Fqdn = raw.Fqdn
 	result.Issuer = raw.Issuer
 	result.KeyRotationIntervalSeconds = raw.KeyRotationIntervalSeconds
@@ -8346,6 +8348,8 @@ func ConfigFromJSON(data []byte) (*Config, error) {
 			}
 		}
 	}
+	result.SpiffeTrustDomain = raw.SpiffeTrustDomain
+	result.LocationPath = raw.LocationPath
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -60149,7 +60153,6 @@ func ConfigToEnvVar(v *Config) map[string]string {
 			result[k] = val
 		}
 	}
-	result["PROTO_SERVICES_KERNEL_CONFIG_SPIFFE_PREFIX"] = v.SpiffePrefix
 	result["PROTO_SERVICES_KERNEL_CONFIG_FQDN"] = v.Fqdn
 	result["PROTO_SERVICES_KERNEL_CONFIG_ISSUER"] = v.Issuer
 	result["PROTO_SERVICES_KERNEL_CONFIG_KEY_ROTATION_INTERVAL_SECONDS"] = strconv.FormatInt(v.KeyRotationIntervalSeconds, 10)
@@ -60160,6 +60163,8 @@ func ConfigToEnvVar(v *Config) map[string]string {
 	result["PROTO_SERVICES_KERNEL_CONFIG_TLS_CERT_LIFETIME_SECONDS"] = strconv.FormatInt(v.TlsCertLifetimeSeconds, 10)
 	result["PROTO_SERVICES_KERNEL_CONFIG_MAX_TOKEN_LIFETIME_SECONDS"] = strconv.FormatInt(v.MaxTokenLifetimeSeconds, 10)
 	result["PROTO_SERVICES_KERNEL_CONFIG_OFFLINE_TOKEN_LIFETIME_SECONDS"] = strconv.FormatInt(v.OfflineTokenLifetimeSeconds, 10)
+	result["PROTO_SERVICES_KERNEL_CONFIG_SPIFFE_TRUST_DOMAIN"] = v.SpiffeTrustDomain
+	result["PROTO_SERVICES_KERNEL_CONFIG_LOCATION_PATH"] = v.LocationPath
 	result["PROTO_SERVICES_KERNEL_CONFIG_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_KERNEL_CONFIG_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -60235,9 +60240,6 @@ func ConfigFromEnvVar(env map[string]string) (*Config, error) {
 	} else if sub != nil {
 		result.Configs = sub
 	}
-	if val, ok := env["PROTO_SERVICES_KERNEL_CONFIG_SPIFFE_PREFIX"]; ok && val != "" {
-		result.SpiffePrefix = val
-	}
 	if val, ok := env["PROTO_SERVICES_KERNEL_CONFIG_FQDN"]; ok && val != "" {
 		result.Fqdn = val
 	}
@@ -60299,6 +60301,12 @@ func ConfigFromEnvVar(env map[string]string) (*Config, error) {
 			return nil, err
 		}
 		result.OfflineTokenLifetimeSeconds = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CONFIG_SPIFFE_TRUST_DOMAIN"]; ok && val != "" {
+		result.SpiffeTrustDomain = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CONFIG_LOCATION_PATH"]; ok && val != "" {
+		result.LocationPath = val
 	}
 	if val, ok := env["PROTO_SERVICES_KERNEL_CONFIG_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -71293,6 +71301,16 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field RootCredPairs exceeds max size of 64, got: %d", len(m.RootCredPairs))
 	}
 
+	// Validate SpiffeTrustDomain (assert_max_length: 256)
+	if len(m.SpiffeTrustDomain) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeTrustDomain must be at most 256 characters, got: %d", len(m.SpiffeTrustDomain))
+	}
+
+	// Validate LocationPath (assert_max_length: 256)
+	if len(m.LocationPath) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field LocationPath must be at most 256 characters, got: %d", len(m.LocationPath))
+	}
+
 	// Validate ClusterName (default max size: 32768 bytes)
 	if len(m.ClusterName) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ClusterName exceeds max size of 32768 bytes, got: %d", len(m.ClusterName))
@@ -71303,11 +71321,6 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PersistenceDir exceeds max size of 32768 bytes, got: %d", len(m.PersistenceDir))
 	}
 
-	// Validate SpiffePrefix (default max size: 32768 bytes)
-	if len(m.SpiffePrefix) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffePrefix exceeds max size of 32768 bytes, got: %d", len(m.SpiffePrefix))
-	}
-
 	// Validate Fqdn (default max size: 32768 bytes)
 	if len(m.Fqdn) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Fqdn exceeds max size of 32768 bytes, got: %d", len(m.Fqdn))
@@ -71316,6 +71329,16 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 	// Validate Issuer (default max size: 32768 bytes)
 	if len(m.Issuer) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Issuer exceeds max size of 32768 bytes, got: %d", len(m.Issuer))
+	}
+
+	// Validate SpiffeTrustDomain (default max size: 32768 bytes)
+	if len(m.SpiffeTrustDomain) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeTrustDomain exceeds max size of 32768 bytes, got: %d", len(m.SpiffeTrustDomain))
+	}
+
+	// Validate LocationPath (default max size: 32768 bytes)
+	if len(m.LocationPath) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field LocationPath exceeds max size of 32768 bytes, got: %d", len(m.LocationPath))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -81923,7 +81946,6 @@ const (
 	DefaultPartitionCount              int64  = 271
 	DefaultPersistenceDir              string = "data/kernel"
 	DefaultHazelcastListenerPort       int64  = 5001
-	DefaultSpiffePrefix                string = "local/dev"
 	DefaultKeyRotationIntervalSeconds  int64  = 86400
 	DefaultDefaultTokenExpirySeconds   int64  = 3600
 	DefaultCaCertLifetimeSeconds       int64  = 31536000
@@ -81932,6 +81954,7 @@ const (
 	DefaultTlsCertLifetimeSeconds      int64  = 86400
 	DefaultMaxTokenLifetimeSeconds     int64  = 2592000
 	DefaultOfflineTokenLifetimeSeconds int64  = 7776000
+	DefaultSpiffeTrustDomain           string = "local.dev"
 )
 
 // ============================================================
@@ -81944,10 +81967,11 @@ const (
 	MaxSizeConfigClusterCa                          int = 16
 	MaxSizeConfigTrustedCas                         int = 16
 	MaxSizeConfigDelegates                          int = 128
-	MaxSizeConfigSpiffePrefix                       int = 32768
 	MaxSizeConfigFqdn                               int = 32768
 	MaxSizeConfigIssuer                             int = 32768
 	MaxSizeConfigRootCredPairs                      int = 64
+	MaxSizeConfigSpiffeTrustDomain                  int = 32768
+	MaxSizeConfigLocationPath                       int = 32768
 	MaxSizeConfigTraceId                            int = 32768
 	MaxSizeIdentityVerifyingKeys                    int = 16
 	MaxSizeIdentityTraceId                          int = 32768
@@ -82476,9 +82500,6 @@ func ConfigDefaults(v *Config) {
 	if v.PersistenceDir == "" {
 		v.PersistenceDir = DefaultPersistenceDir
 	}
-	if v.SpiffePrefix == "" {
-		v.SpiffePrefix = DefaultSpiffePrefix
-	}
 	if v.KeyRotationIntervalSeconds == 0 {
 		v.KeyRotationIntervalSeconds = DefaultKeyRotationIntervalSeconds
 	}
@@ -82502,6 +82523,9 @@ func ConfigDefaults(v *Config) {
 	}
 	if v.OfflineTokenLifetimeSeconds == 0 {
 		v.OfflineTokenLifetimeSeconds = DefaultOfflineTokenLifetimeSeconds
+	}
+	if v.SpiffeTrustDomain == "" {
+		v.SpiffeTrustDomain = DefaultSpiffeTrustDomain
 	}
 	if v.Listener == nil {
 		v.Listener = &host.Host{Host: "0.0.0.0", Port: 5000}
@@ -85762,9 +85786,6 @@ func ConfigUndefaults(v *Config) {
 	if v.PersistenceDir == DefaultPersistenceDir {
 		v.PersistenceDir = ""
 	}
-	if v.SpiffePrefix == DefaultSpiffePrefix {
-		v.SpiffePrefix = ""
-	}
 	if v.KeyRotationIntervalSeconds == DefaultKeyRotationIntervalSeconds {
 		v.KeyRotationIntervalSeconds = 0
 	}
@@ -85788,6 +85809,9 @@ func ConfigUndefaults(v *Config) {
 	}
 	if v.OfflineTokenLifetimeSeconds == DefaultOfflineTokenLifetimeSeconds {
 		v.OfflineTokenLifetimeSeconds = 0
+	}
+	if v.SpiffeTrustDomain == DefaultSpiffeTrustDomain {
+		v.SpiffeTrustDomain = ""
 	}
 	if v.Listener != nil && v.Listener.Host == "0.0.0.0" && v.Listener.Port == 5000 {
 		v.Listener = nil
@@ -89409,9 +89433,6 @@ func MergeConfig(dst, src *Config) {
 	if len(dst.Delegates) == 0 {
 		dst.Delegates = src.Delegates
 	}
-	if dst.SpiffePrefix == "" {
-		dst.SpiffePrefix = src.SpiffePrefix
-	}
 	if dst.Fqdn == "" {
 		dst.Fqdn = src.Fqdn
 	}
@@ -89444,6 +89465,12 @@ func MergeConfig(dst, src *Config) {
 	}
 	if len(dst.RootCredPairs) == 0 {
 		dst.RootCredPairs = src.RootCredPairs
+	}
+	if dst.SpiffeTrustDomain == "" {
+		dst.SpiffeTrustDomain = src.SpiffeTrustDomain
+	}
+	if dst.LocationPath == "" {
+		dst.LocationPath = src.LocationPath
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

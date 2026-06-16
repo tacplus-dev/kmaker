@@ -42,6 +42,9 @@ func GitLabActivityNodeToGraph(msg *GitLabActivityNode) (map[string]interface{},
 	// owner_spiffe: scalar predicate
 	m["GitLabActivityNode.owner_spiffe"] = msg.OwnerSpiffe
 
+	// scheme_version: scalar predicate
+	m["GitLabActivityNode.scheme_version"] = msg.SchemeVersion
+
 	// tenant_namespace: scalar predicate
 	m["GitLabActivityNode.tenant_namespace"] = msg.TenantNamespace
 
@@ -94,6 +97,13 @@ func GitLabActivityNodeFromGraph(m map[string]interface{}) (*GitLabActivityNode,
 	if v, ok := m["GitLabActivityNode.owner_spiffe"]; ok {
 		if s, ok := v.(string); ok {
 			msg.OwnerSpiffe = s
+		}
+	}
+
+	// scheme_version: scalar predicate
+	if v, ok := m["GitLabActivityNode.scheme_version"]; ok {
+		if s, ok := v.(string); ok {
+			msg.SchemeVersion = s
 		}
 	}
 

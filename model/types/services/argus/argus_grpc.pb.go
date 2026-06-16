@@ -36,40 +36,40 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Argus_GetDashboard_FullMethodName           = "/argus.Argus/GetDashboard"
-	Argus_ListActiveSessions_FullMethodName     = "/argus.Argus/ListActiveSessions"
-	Argus_GetSessionDetail_FullMethodName       = "/argus.Argus/GetSessionDetail"
-	Argus_GetUserActivity_FullMethodName        = "/argus.Argus/GetUserActivity"
-	Argus_SearchSessions_FullMethodName         = "/argus.Argus/SearchSessions"
-	Argus_WatchLiveSessions_FullMethodName      = "/argus.Argus/WatchLiveSessions"
-	Argus_ScratchpadRead_FullMethodName         = "/argus.Argus/ScratchpadRead"
-	Argus_ScratchpadWrite_FullMethodName        = "/argus.Argus/ScratchpadWrite"
-	Argus_ScratchpadDelete_FullMethodName       = "/argus.Argus/ScratchpadDelete"
-	Argus_ScratchpadList_FullMethodName         = "/argus.Argus/ScratchpadList"
-	Argus_ScratchpadClear_FullMethodName        = "/argus.Argus/ScratchpadClear"
-	Argus_GetSupervisorContext_FullMethodName   = "/argus.Argus/GetSupervisorContext"
-	Argus_WatchDashboard_FullMethodName         = "/argus.Argus/WatchDashboard"
-	Argus_WatchSessionDetail_FullMethodName     = "/argus.Argus/WatchSessionDetail"
-	Argus_WatchUserActivity_FullMethodName      = "/argus.Argus/WatchUserActivity"
-	Argus_WatchSupervisorContext_FullMethodName = "/argus.Argus/WatchSupervisorContext"
-	Argus_WatchScratchpadList_FullMethodName    = "/argus.Argus/WatchScratchpadList"
-	Argus_WatchScratchpadRead_FullMethodName    = "/argus.Argus/WatchScratchpadRead"
-	Argus_ListUsers_FullMethodName              = "/argus.Argus/ListUsers"
-	Argus_GetUserProfile_FullMethodName         = "/argus.Argus/GetUserProfile"
-	Argus_GetUserTokenStats_FullMethodName      = "/argus.Argus/GetUserTokenStats"
-	Argus_WatchUserProfile_FullMethodName       = "/argus.Argus/WatchUserProfile"
-	Argus_GetUserCommitActivity_FullMethodName  = "/argus.Argus/GetUserCommitActivity"
-	Argus_GetFileActivity_FullMethodName        = "/argus.Argus/GetFileActivity"
-	Argus_GetSessionTimeline_FullMethodName     = "/argus.Argus/GetSessionTimeline"
-	Argus_GetAgentTree_FullMethodName           = "/argus.Argus/GetAgentTree"
-	Argus_GetSystemStats_FullMethodName         = "/argus.Argus/GetSystemStats"
-	Argus_GetToolLeaderboard_FullMethodName     = "/argus.Argus/GetToolLeaderboard"
-	Argus_GetModelUsage_FullMethodName          = "/argus.Argus/GetModelUsage"
-	Argus_GetActivityTimeseries_FullMethodName  = "/argus.Argus/GetActivityTimeseries"
-	Argus_WatchSystemStats_FullMethodName       = "/argus.Argus/WatchSystemStats"
-	Argus_WatchToolLeaderboard_FullMethodName   = "/argus.Argus/WatchToolLeaderboard"
-	Argus_SearchEvents_FullMethodName           = "/argus.Argus/SearchEvents"
-	Argus_SearchByFilePath_FullMethodName       = "/argus.Argus/SearchByFilePath"
+	Argus_GetDashboard_FullMethodName               = "/argus.Argus/GetDashboard"
+	Argus_ListActiveSessions_FullMethodName         = "/argus.Argus/ListActiveSessions"
+	Argus_GetSessionDetail_FullMethodName           = "/argus.Argus/GetSessionDetail"
+	Argus_GetUserActivity_FullMethodName            = "/argus.Argus/GetUserActivity"
+	Argus_ListSessionSearchResults_FullMethodName   = "/argus.Argus/ListSessionSearchResults"
+	Argus_SubscribeLiveSessions_FullMethodName      = "/argus.Argus/SubscribeLiveSessions"
+	Argus_GetScratchpad_FullMethodName              = "/argus.Argus/GetScratchpad"
+	Argus_UpdateScratchpad_FullMethodName           = "/argus.Argus/UpdateScratchpad"
+	Argus_DeleteScratchpad_FullMethodName           = "/argus.Argus/DeleteScratchpad"
+	Argus_ListScratchpads_FullMethodName            = "/argus.Argus/ListScratchpads"
+	Argus_DeleteScratchpads_FullMethodName          = "/argus.Argus/DeleteScratchpads"
+	Argus_GetSupervisorContext_FullMethodName       = "/argus.Argus/GetSupervisorContext"
+	Argus_SubscribeDashboard_FullMethodName         = "/argus.Argus/SubscribeDashboard"
+	Argus_SubscribeSessionDetail_FullMethodName     = "/argus.Argus/SubscribeSessionDetail"
+	Argus_SubscribeUserActivity_FullMethodName      = "/argus.Argus/SubscribeUserActivity"
+	Argus_SubscribeSupervisorContext_FullMethodName = "/argus.Argus/SubscribeSupervisorContext"
+	Argus_SubscribeScratchpadList_FullMethodName    = "/argus.Argus/SubscribeScratchpadList"
+	Argus_SubscribeScratchpadRead_FullMethodName    = "/argus.Argus/SubscribeScratchpadRead"
+	Argus_ListUsers_FullMethodName                  = "/argus.Argus/ListUsers"
+	Argus_GetUserProfile_FullMethodName             = "/argus.Argus/GetUserProfile"
+	Argus_GetUserTokenStats_FullMethodName          = "/argus.Argus/GetUserTokenStats"
+	Argus_SubscribeUserProfile_FullMethodName       = "/argus.Argus/SubscribeUserProfile"
+	Argus_ListUserCommitActivity_FullMethodName     = "/argus.Argus/ListUserCommitActivity"
+	Argus_GetFileActivity_FullMethodName            = "/argus.Argus/GetFileActivity"
+	Argus_GetSessionTimeline_FullMethodName         = "/argus.Argus/GetSessionTimeline"
+	Argus_GetAgentTree_FullMethodName               = "/argus.Argus/GetAgentTree"
+	Argus_GetSystemStats_FullMethodName             = "/argus.Argus/GetSystemStats"
+	Argus_ListToolLeaderboard_FullMethodName        = "/argus.Argus/ListToolLeaderboard"
+	Argus_ListModelUsage_FullMethodName             = "/argus.Argus/ListModelUsage"
+	Argus_ListActivityTimeseries_FullMethodName     = "/argus.Argus/ListActivityTimeseries"
+	Argus_SubscribeSystemStats_FullMethodName       = "/argus.Argus/SubscribeSystemStats"
+	Argus_SubscribeToolLeaderboard_FullMethodName   = "/argus.Argus/SubscribeToolLeaderboard"
+	Argus_ListEventSearchResults_FullMethodName     = "/argus.Argus/ListEventSearchResults"
+	Argus_ListFilePathMatches_FullMethodName        = "/argus.Argus/ListFilePathMatches"
 )
 
 // ArgusClient is the client API for Argus service.
@@ -84,45 +84,45 @@ type ArgusClient interface {
 	GetSessionDetail(ctx context.Context, in *GetSessionDetailRequest, opts ...grpc.CallOption) (*GetSessionDetailResponse, error)
 	// GetUserActivity returns recent sessions and aggregate stats for one user.
 	GetUserActivity(ctx context.Context, in *GetUserActivityRequest, opts ...grpc.CallOption) (*GetUserActivityResponse, error)
-	// SearchSessions searches sessions by keyword or SQL fragment.
-	SearchSessions(ctx context.Context, in *SearchSessionsRequest, opts ...grpc.CallOption) (*SearchSessionsResponse, error)
-	// WatchLiveSessions streams real-time session lifecycle events.
-	WatchLiveSessions(ctx context.Context, in *claudesensor.WatchLiveSessionsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[claudesensor.WatchLiveSessionsEvent], error)
-	// ScratchpadRead retrieves a persistent note by key.
-	ScratchpadRead(ctx context.Context, in *ScratchpadReadRequest, opts ...grpc.CallOption) (*ScratchpadReadResponse, error)
-	// ScratchpadWrite stores or overwrites a persistent note.
-	ScratchpadWrite(ctx context.Context, in *ScratchpadWriteRequest, opts ...grpc.CallOption) (*ScratchpadWriteResponse, error)
-	// ScratchpadDelete removes a persistent note by key.
-	ScratchpadDelete(ctx context.Context, in *ScratchpadDeleteRequest, opts ...grpc.CallOption) (*ScratchpadDeleteResponse, error)
-	// ScratchpadList lists all stored note keys with metadata.
-	ScratchpadList(ctx context.Context, in *ScratchpadListRequest, opts ...grpc.CallOption) (*ScratchpadListResponse, error)
-	// ScratchpadClear removes all stored notes.
-	ScratchpadClear(ctx context.Context, in *ScratchpadClearRequest, opts ...grpc.CallOption) (*ScratchpadClearResponse, error)
+	// ListSessionSearchResults searches sessions by keyword or SQL fragment.
+	ListSessionSearchResults(ctx context.Context, in *SearchSessionsRequest, opts ...grpc.CallOption) (*SearchSessionsResponse, error)
+	// SubscribeLiveSessions streams real-time session lifecycle events.
+	SubscribeLiveSessions(ctx context.Context, in *claudesensor.WatchLiveSessionsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[claudesensor.WatchLiveSessionsEvent], error)
+	// GetScratchpad retrieves a persistent note by key.
+	GetScratchpad(ctx context.Context, in *ScratchpadReadRequest, opts ...grpc.CallOption) (*ScratchpadReadResponse, error)
+	// UpdateScratchpad stores or overwrites a persistent note.
+	UpdateScratchpad(ctx context.Context, in *ScratchpadWriteRequest, opts ...grpc.CallOption) (*ScratchpadWriteResponse, error)
+	// DeleteScratchpad removes a persistent note by key.
+	DeleteScratchpad(ctx context.Context, in *ScratchpadDeleteRequest, opts ...grpc.CallOption) (*ScratchpadDeleteResponse, error)
+	// ListScratchpads lists all stored note keys with metadata.
+	ListScratchpads(ctx context.Context, in *ScratchpadListRequest, opts ...grpc.CallOption) (*ScratchpadListResponse, error)
+	// DeleteScratchpads removes all stored notes.
+	DeleteScratchpads(ctx context.Context, in *ScratchpadClearRequest, opts ...grpc.CallOption) (*ScratchpadClearResponse, error)
 	// GetSupervisorContext returns the formatted context block injected before
 	// every Supervisor LLM invocation.
 	GetSupervisorContext(ctx context.Context, in *GetSupervisorContextRequest, opts ...grpc.CallOption) (*GetSupervisorContextResponse, error)
-	// WatchDashboard streams dashboard snapshots — pushed every ~2s as session state changes.
-	WatchDashboard(ctx context.Context, in *WatchDashboardRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetDashboardResponse], error)
-	// WatchSessionDetail streams updates for one session as new events arrive.
-	WatchSessionDetail(ctx context.Context, in *WatchSessionDetailRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetSessionDetailResponse], error)
-	// WatchUserActivity streams updated activity stats for one user as sessions evolve.
-	WatchUserActivity(ctx context.Context, in *WatchUserActivityRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetUserActivityResponse], error)
-	// WatchSupervisorContext streams updated context blocks when the scratchpad or sessions change.
-	WatchSupervisorContext(ctx context.Context, in *WatchSupervisorContextRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetSupervisorContextResponse], error)
-	// WatchScratchpadList streams the key listing whenever an entry is added, updated, or removed.
-	WatchScratchpadList(ctx context.Context, in *WatchScratchpadListRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ScratchpadListResponse], error)
-	// WatchScratchpadRead streams the value for a key whenever it is written.
-	WatchScratchpadRead(ctx context.Context, in *WatchScratchpadReadRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ScratchpadReadResponse], error)
+	// SubscribeDashboard streams dashboard snapshots, pushed every ~2s as session state changes.
+	SubscribeDashboard(ctx context.Context, in *WatchDashboardRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetDashboardResponse], error)
+	// SubscribeSessionDetail streams updates for one session as new events arrive.
+	SubscribeSessionDetail(ctx context.Context, in *WatchSessionDetailRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetSessionDetailResponse], error)
+	// SubscribeUserActivity streams updated activity stats for one user as sessions evolve.
+	SubscribeUserActivity(ctx context.Context, in *WatchUserActivityRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetUserActivityResponse], error)
+	// SubscribeSupervisorContext streams updated context blocks when the scratchpad or sessions change.
+	SubscribeSupervisorContext(ctx context.Context, in *WatchSupervisorContextRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetSupervisorContextResponse], error)
+	// SubscribeScratchpadList streams the key listing whenever an entry is added, updated, or removed.
+	SubscribeScratchpadList(ctx context.Context, in *WatchScratchpadListRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ScratchpadListResponse], error)
+	// SubscribeScratchpadRead streams the value for a key whenever it is written.
+	SubscribeScratchpadRead(ctx context.Context, in *WatchScratchpadReadRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ScratchpadReadResponse], error)
 	// ListUsers returns all distinct users with aggregate stats over the given time range.
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
 	// GetUserProfile returns rich per-user stats: tools, models, session duration, working dirs.
 	GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*GetUserProfileResponse, error)
 	// GetUserTokenStats returns prompt volume and length distribution for one user over time.
 	GetUserTokenStats(ctx context.Context, in *GetUserTokenStatsRequest, opts ...grpc.CallOption) (*GetUserTokenStatsResponse, error)
-	// WatchUserProfile streams updated profile snapshots as sessions evolve.
-	WatchUserProfile(ctx context.Context, in *WatchUserProfileRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetUserProfileResponse], error)
-	// GetUserCommitActivity returns git commit events extracted from the user's Bash tool uses.
-	GetUserCommitActivity(ctx context.Context, in *GetUserCommitActivityRequest, opts ...grpc.CallOption) (*GetUserCommitActivityResponse, error)
+	// SubscribeUserProfile streams updated profile snapshots as sessions evolve.
+	SubscribeUserProfile(ctx context.Context, in *WatchUserProfileRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetUserProfileResponse], error)
+	// ListUserCommitActivity returns git commit events extracted from the user's Bash tool uses.
+	ListUserCommitActivity(ctx context.Context, in *GetUserCommitActivityRequest, opts ...grpc.CallOption) (*GetUserCommitActivityResponse, error)
 	// GetFileActivity returns file create/modify/delete records across sessions.
 	GetFileActivity(ctx context.Context, in *GetFileActivityRequest, opts ...grpc.CallOption) (*GetFileActivityResponse, error)
 	// GetSessionTimeline returns the full paginated event stream for one session.
@@ -131,20 +131,20 @@ type ArgusClient interface {
 	GetAgentTree(ctx context.Context, in *GetAgentTreeRequest, opts ...grpc.CallOption) (*GetAgentTreeResponse, error)
 	// GetSystemStats returns fleet-wide aggregates (users, sessions, events, tool stats).
 	GetSystemStats(ctx context.Context, in *GetSystemStatsRequest, opts ...grpc.CallOption) (*GetSystemStatsResponse, error)
-	// GetToolLeaderboard returns tools ranked by use count with failure rates and latencies.
-	GetToolLeaderboard(ctx context.Context, in *GetToolLeaderboardRequest, opts ...grpc.CallOption) (*GetToolLeaderboardResponse, error)
-	// GetModelUsage returns LLM model distribution across sessions.
-	GetModelUsage(ctx context.Context, in *GetModelUsageRequest, opts ...grpc.CallOption) (*GetModelUsageResponse, error)
-	// GetActivityTimeseries returns bucketed event/session/user counts over a time range.
-	GetActivityTimeseries(ctx context.Context, in *GetActivityTimeseriesRequest, opts ...grpc.CallOption) (*GetActivityTimeseriesResponse, error)
-	// WatchSystemStats streams fleet-wide stat snapshots every ~5s.
-	WatchSystemStats(ctx context.Context, in *WatchSystemStatsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetSystemStatsResponse], error)
-	// WatchToolLeaderboard streams updated leaderboard snapshots.
-	WatchToolLeaderboard(ctx context.Context, in *WatchToolLeaderboardRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetToolLeaderboardResponse], error)
-	// SearchEvents finds events matching a filter across the hot store.
-	SearchEvents(ctx context.Context, in *SearchEventsRequest, opts ...grpc.CallOption) (*SearchEventsResponse, error)
-	// SearchByFilePath finds all events that touched a given file path (prefix or glob).
-	SearchByFilePath(ctx context.Context, in *SearchByFilePathRequest, opts ...grpc.CallOption) (*SearchByFilePathResponse, error)
+	// ListToolLeaderboard returns tools ranked by use count with failure rates and latencies.
+	ListToolLeaderboard(ctx context.Context, in *GetToolLeaderboardRequest, opts ...grpc.CallOption) (*GetToolLeaderboardResponse, error)
+	// ListModelUsage returns LLM model distribution across sessions.
+	ListModelUsage(ctx context.Context, in *GetModelUsageRequest, opts ...grpc.CallOption) (*GetModelUsageResponse, error)
+	// ListActivityTimeseries returns bucketed event/session/user counts over a time range.
+	ListActivityTimeseries(ctx context.Context, in *GetActivityTimeseriesRequest, opts ...grpc.CallOption) (*GetActivityTimeseriesResponse, error)
+	// SubscribeSystemStats streams fleet-wide stat snapshots every ~5s.
+	SubscribeSystemStats(ctx context.Context, in *WatchSystemStatsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetSystemStatsResponse], error)
+	// SubscribeToolLeaderboard streams updated leaderboard snapshots.
+	SubscribeToolLeaderboard(ctx context.Context, in *WatchToolLeaderboardRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetToolLeaderboardResponse], error)
+	// ListEventSearchResults finds events matching a filter across the hot store.
+	ListEventSearchResults(ctx context.Context, in *SearchEventsRequest, opts ...grpc.CallOption) (*SearchEventsResponse, error)
+	// ListFilePathMatches finds all events that touched a given file path (prefix or glob).
+	ListFilePathMatches(ctx context.Context, in *SearchByFilePathRequest, opts ...grpc.CallOption) (*SearchByFilePathResponse, error)
 }
 
 type argusClient struct {
@@ -195,19 +195,19 @@ func (c *argusClient) GetUserActivity(ctx context.Context, in *GetUserActivityRe
 	return out, nil
 }
 
-func (c *argusClient) SearchSessions(ctx context.Context, in *SearchSessionsRequest, opts ...grpc.CallOption) (*SearchSessionsResponse, error) {
+func (c *argusClient) ListSessionSearchResults(ctx context.Context, in *SearchSessionsRequest, opts ...grpc.CallOption) (*SearchSessionsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SearchSessionsResponse)
-	err := c.cc.Invoke(ctx, Argus_SearchSessions_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Argus_ListSessionSearchResults_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *argusClient) WatchLiveSessions(ctx context.Context, in *claudesensor.WatchLiveSessionsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[claudesensor.WatchLiveSessionsEvent], error) {
+func (c *argusClient) SubscribeLiveSessions(ctx context.Context, in *claudesensor.WatchLiveSessionsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[claudesensor.WatchLiveSessionsEvent], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[0], Argus_WatchLiveSessions_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[0], Argus_SubscribeLiveSessions_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -222,52 +222,52 @@ func (c *argusClient) WatchLiveSessions(ctx context.Context, in *claudesensor.Wa
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchLiveSessionsClient = grpc.ServerStreamingClient[claudesensor.WatchLiveSessionsEvent]
+type Argus_SubscribeLiveSessionsClient = grpc.ServerStreamingClient[claudesensor.WatchLiveSessionsEvent]
 
-func (c *argusClient) ScratchpadRead(ctx context.Context, in *ScratchpadReadRequest, opts ...grpc.CallOption) (*ScratchpadReadResponse, error) {
+func (c *argusClient) GetScratchpad(ctx context.Context, in *ScratchpadReadRequest, opts ...grpc.CallOption) (*ScratchpadReadResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ScratchpadReadResponse)
-	err := c.cc.Invoke(ctx, Argus_ScratchpadRead_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Argus_GetScratchpad_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *argusClient) ScratchpadWrite(ctx context.Context, in *ScratchpadWriteRequest, opts ...grpc.CallOption) (*ScratchpadWriteResponse, error) {
+func (c *argusClient) UpdateScratchpad(ctx context.Context, in *ScratchpadWriteRequest, opts ...grpc.CallOption) (*ScratchpadWriteResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ScratchpadWriteResponse)
-	err := c.cc.Invoke(ctx, Argus_ScratchpadWrite_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Argus_UpdateScratchpad_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *argusClient) ScratchpadDelete(ctx context.Context, in *ScratchpadDeleteRequest, opts ...grpc.CallOption) (*ScratchpadDeleteResponse, error) {
+func (c *argusClient) DeleteScratchpad(ctx context.Context, in *ScratchpadDeleteRequest, opts ...grpc.CallOption) (*ScratchpadDeleteResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ScratchpadDeleteResponse)
-	err := c.cc.Invoke(ctx, Argus_ScratchpadDelete_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Argus_DeleteScratchpad_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *argusClient) ScratchpadList(ctx context.Context, in *ScratchpadListRequest, opts ...grpc.CallOption) (*ScratchpadListResponse, error) {
+func (c *argusClient) ListScratchpads(ctx context.Context, in *ScratchpadListRequest, opts ...grpc.CallOption) (*ScratchpadListResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ScratchpadListResponse)
-	err := c.cc.Invoke(ctx, Argus_ScratchpadList_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Argus_ListScratchpads_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *argusClient) ScratchpadClear(ctx context.Context, in *ScratchpadClearRequest, opts ...grpc.CallOption) (*ScratchpadClearResponse, error) {
+func (c *argusClient) DeleteScratchpads(ctx context.Context, in *ScratchpadClearRequest, opts ...grpc.CallOption) (*ScratchpadClearResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ScratchpadClearResponse)
-	err := c.cc.Invoke(ctx, Argus_ScratchpadClear_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Argus_DeleteScratchpads_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -284,9 +284,9 @@ func (c *argusClient) GetSupervisorContext(ctx context.Context, in *GetSuperviso
 	return out, nil
 }
 
-func (c *argusClient) WatchDashboard(ctx context.Context, in *WatchDashboardRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetDashboardResponse], error) {
+func (c *argusClient) SubscribeDashboard(ctx context.Context, in *WatchDashboardRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetDashboardResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[1], Argus_WatchDashboard_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[1], Argus_SubscribeDashboard_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -301,11 +301,11 @@ func (c *argusClient) WatchDashboard(ctx context.Context, in *WatchDashboardRequ
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchDashboardClient = grpc.ServerStreamingClient[GetDashboardResponse]
+type Argus_SubscribeDashboardClient = grpc.ServerStreamingClient[GetDashboardResponse]
 
-func (c *argusClient) WatchSessionDetail(ctx context.Context, in *WatchSessionDetailRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetSessionDetailResponse], error) {
+func (c *argusClient) SubscribeSessionDetail(ctx context.Context, in *WatchSessionDetailRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetSessionDetailResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[2], Argus_WatchSessionDetail_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[2], Argus_SubscribeSessionDetail_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -320,11 +320,11 @@ func (c *argusClient) WatchSessionDetail(ctx context.Context, in *WatchSessionDe
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchSessionDetailClient = grpc.ServerStreamingClient[GetSessionDetailResponse]
+type Argus_SubscribeSessionDetailClient = grpc.ServerStreamingClient[GetSessionDetailResponse]
 
-func (c *argusClient) WatchUserActivity(ctx context.Context, in *WatchUserActivityRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetUserActivityResponse], error) {
+func (c *argusClient) SubscribeUserActivity(ctx context.Context, in *WatchUserActivityRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetUserActivityResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[3], Argus_WatchUserActivity_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[3], Argus_SubscribeUserActivity_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -339,11 +339,11 @@ func (c *argusClient) WatchUserActivity(ctx context.Context, in *WatchUserActivi
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchUserActivityClient = grpc.ServerStreamingClient[GetUserActivityResponse]
+type Argus_SubscribeUserActivityClient = grpc.ServerStreamingClient[GetUserActivityResponse]
 
-func (c *argusClient) WatchSupervisorContext(ctx context.Context, in *WatchSupervisorContextRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetSupervisorContextResponse], error) {
+func (c *argusClient) SubscribeSupervisorContext(ctx context.Context, in *WatchSupervisorContextRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetSupervisorContextResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[4], Argus_WatchSupervisorContext_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[4], Argus_SubscribeSupervisorContext_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -358,11 +358,11 @@ func (c *argusClient) WatchSupervisorContext(ctx context.Context, in *WatchSuper
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchSupervisorContextClient = grpc.ServerStreamingClient[GetSupervisorContextResponse]
+type Argus_SubscribeSupervisorContextClient = grpc.ServerStreamingClient[GetSupervisorContextResponse]
 
-func (c *argusClient) WatchScratchpadList(ctx context.Context, in *WatchScratchpadListRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ScratchpadListResponse], error) {
+func (c *argusClient) SubscribeScratchpadList(ctx context.Context, in *WatchScratchpadListRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ScratchpadListResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[5], Argus_WatchScratchpadList_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[5], Argus_SubscribeScratchpadList_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -377,11 +377,11 @@ func (c *argusClient) WatchScratchpadList(ctx context.Context, in *WatchScratchp
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchScratchpadListClient = grpc.ServerStreamingClient[ScratchpadListResponse]
+type Argus_SubscribeScratchpadListClient = grpc.ServerStreamingClient[ScratchpadListResponse]
 
-func (c *argusClient) WatchScratchpadRead(ctx context.Context, in *WatchScratchpadReadRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ScratchpadReadResponse], error) {
+func (c *argusClient) SubscribeScratchpadRead(ctx context.Context, in *WatchScratchpadReadRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ScratchpadReadResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[6], Argus_WatchScratchpadRead_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[6], Argus_SubscribeScratchpadRead_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -396,7 +396,7 @@ func (c *argusClient) WatchScratchpadRead(ctx context.Context, in *WatchScratchp
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchScratchpadReadClient = grpc.ServerStreamingClient[ScratchpadReadResponse]
+type Argus_SubscribeScratchpadReadClient = grpc.ServerStreamingClient[ScratchpadReadResponse]
 
 func (c *argusClient) ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -428,9 +428,9 @@ func (c *argusClient) GetUserTokenStats(ctx context.Context, in *GetUserTokenSta
 	return out, nil
 }
 
-func (c *argusClient) WatchUserProfile(ctx context.Context, in *WatchUserProfileRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetUserProfileResponse], error) {
+func (c *argusClient) SubscribeUserProfile(ctx context.Context, in *WatchUserProfileRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetUserProfileResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[7], Argus_WatchUserProfile_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[7], Argus_SubscribeUserProfile_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -445,12 +445,12 @@ func (c *argusClient) WatchUserProfile(ctx context.Context, in *WatchUserProfile
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchUserProfileClient = grpc.ServerStreamingClient[GetUserProfileResponse]
+type Argus_SubscribeUserProfileClient = grpc.ServerStreamingClient[GetUserProfileResponse]
 
-func (c *argusClient) GetUserCommitActivity(ctx context.Context, in *GetUserCommitActivityRequest, opts ...grpc.CallOption) (*GetUserCommitActivityResponse, error) {
+func (c *argusClient) ListUserCommitActivity(ctx context.Context, in *GetUserCommitActivityRequest, opts ...grpc.CallOption) (*GetUserCommitActivityResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetUserCommitActivityResponse)
-	err := c.cc.Invoke(ctx, Argus_GetUserCommitActivity_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Argus_ListUserCommitActivity_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -497,39 +497,39 @@ func (c *argusClient) GetSystemStats(ctx context.Context, in *GetSystemStatsRequ
 	return out, nil
 }
 
-func (c *argusClient) GetToolLeaderboard(ctx context.Context, in *GetToolLeaderboardRequest, opts ...grpc.CallOption) (*GetToolLeaderboardResponse, error) {
+func (c *argusClient) ListToolLeaderboard(ctx context.Context, in *GetToolLeaderboardRequest, opts ...grpc.CallOption) (*GetToolLeaderboardResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetToolLeaderboardResponse)
-	err := c.cc.Invoke(ctx, Argus_GetToolLeaderboard_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Argus_ListToolLeaderboard_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *argusClient) GetModelUsage(ctx context.Context, in *GetModelUsageRequest, opts ...grpc.CallOption) (*GetModelUsageResponse, error) {
+func (c *argusClient) ListModelUsage(ctx context.Context, in *GetModelUsageRequest, opts ...grpc.CallOption) (*GetModelUsageResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetModelUsageResponse)
-	err := c.cc.Invoke(ctx, Argus_GetModelUsage_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Argus_ListModelUsage_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *argusClient) GetActivityTimeseries(ctx context.Context, in *GetActivityTimeseriesRequest, opts ...grpc.CallOption) (*GetActivityTimeseriesResponse, error) {
+func (c *argusClient) ListActivityTimeseries(ctx context.Context, in *GetActivityTimeseriesRequest, opts ...grpc.CallOption) (*GetActivityTimeseriesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetActivityTimeseriesResponse)
-	err := c.cc.Invoke(ctx, Argus_GetActivityTimeseries_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Argus_ListActivityTimeseries_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *argusClient) WatchSystemStats(ctx context.Context, in *WatchSystemStatsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetSystemStatsResponse], error) {
+func (c *argusClient) SubscribeSystemStats(ctx context.Context, in *WatchSystemStatsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetSystemStatsResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[8], Argus_WatchSystemStats_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[8], Argus_SubscribeSystemStats_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -544,11 +544,11 @@ func (c *argusClient) WatchSystemStats(ctx context.Context, in *WatchSystemStats
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchSystemStatsClient = grpc.ServerStreamingClient[GetSystemStatsResponse]
+type Argus_SubscribeSystemStatsClient = grpc.ServerStreamingClient[GetSystemStatsResponse]
 
-func (c *argusClient) WatchToolLeaderboard(ctx context.Context, in *WatchToolLeaderboardRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetToolLeaderboardResponse], error) {
+func (c *argusClient) SubscribeToolLeaderboard(ctx context.Context, in *WatchToolLeaderboardRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetToolLeaderboardResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[9], Argus_WatchToolLeaderboard_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[9], Argus_SubscribeToolLeaderboard_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -563,22 +563,22 @@ func (c *argusClient) WatchToolLeaderboard(ctx context.Context, in *WatchToolLea
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchToolLeaderboardClient = grpc.ServerStreamingClient[GetToolLeaderboardResponse]
+type Argus_SubscribeToolLeaderboardClient = grpc.ServerStreamingClient[GetToolLeaderboardResponse]
 
-func (c *argusClient) SearchEvents(ctx context.Context, in *SearchEventsRequest, opts ...grpc.CallOption) (*SearchEventsResponse, error) {
+func (c *argusClient) ListEventSearchResults(ctx context.Context, in *SearchEventsRequest, opts ...grpc.CallOption) (*SearchEventsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SearchEventsResponse)
-	err := c.cc.Invoke(ctx, Argus_SearchEvents_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Argus_ListEventSearchResults_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *argusClient) SearchByFilePath(ctx context.Context, in *SearchByFilePathRequest, opts ...grpc.CallOption) (*SearchByFilePathResponse, error) {
+func (c *argusClient) ListFilePathMatches(ctx context.Context, in *SearchByFilePathRequest, opts ...grpc.CallOption) (*SearchByFilePathResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SearchByFilePathResponse)
-	err := c.cc.Invoke(ctx, Argus_SearchByFilePath_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Argus_ListFilePathMatches_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -597,45 +597,45 @@ type ArgusServer interface {
 	GetSessionDetail(context.Context, *GetSessionDetailRequest) (*GetSessionDetailResponse, error)
 	// GetUserActivity returns recent sessions and aggregate stats for one user.
 	GetUserActivity(context.Context, *GetUserActivityRequest) (*GetUserActivityResponse, error)
-	// SearchSessions searches sessions by keyword or SQL fragment.
-	SearchSessions(context.Context, *SearchSessionsRequest) (*SearchSessionsResponse, error)
-	// WatchLiveSessions streams real-time session lifecycle events.
-	WatchLiveSessions(*claudesensor.WatchLiveSessionsRequest, grpc.ServerStreamingServer[claudesensor.WatchLiveSessionsEvent]) error
-	// ScratchpadRead retrieves a persistent note by key.
-	ScratchpadRead(context.Context, *ScratchpadReadRequest) (*ScratchpadReadResponse, error)
-	// ScratchpadWrite stores or overwrites a persistent note.
-	ScratchpadWrite(context.Context, *ScratchpadWriteRequest) (*ScratchpadWriteResponse, error)
-	// ScratchpadDelete removes a persistent note by key.
-	ScratchpadDelete(context.Context, *ScratchpadDeleteRequest) (*ScratchpadDeleteResponse, error)
-	// ScratchpadList lists all stored note keys with metadata.
-	ScratchpadList(context.Context, *ScratchpadListRequest) (*ScratchpadListResponse, error)
-	// ScratchpadClear removes all stored notes.
-	ScratchpadClear(context.Context, *ScratchpadClearRequest) (*ScratchpadClearResponse, error)
+	// ListSessionSearchResults searches sessions by keyword or SQL fragment.
+	ListSessionSearchResults(context.Context, *SearchSessionsRequest) (*SearchSessionsResponse, error)
+	// SubscribeLiveSessions streams real-time session lifecycle events.
+	SubscribeLiveSessions(*claudesensor.WatchLiveSessionsRequest, grpc.ServerStreamingServer[claudesensor.WatchLiveSessionsEvent]) error
+	// GetScratchpad retrieves a persistent note by key.
+	GetScratchpad(context.Context, *ScratchpadReadRequest) (*ScratchpadReadResponse, error)
+	// UpdateScratchpad stores or overwrites a persistent note.
+	UpdateScratchpad(context.Context, *ScratchpadWriteRequest) (*ScratchpadWriteResponse, error)
+	// DeleteScratchpad removes a persistent note by key.
+	DeleteScratchpad(context.Context, *ScratchpadDeleteRequest) (*ScratchpadDeleteResponse, error)
+	// ListScratchpads lists all stored note keys with metadata.
+	ListScratchpads(context.Context, *ScratchpadListRequest) (*ScratchpadListResponse, error)
+	// DeleteScratchpads removes all stored notes.
+	DeleteScratchpads(context.Context, *ScratchpadClearRequest) (*ScratchpadClearResponse, error)
 	// GetSupervisorContext returns the formatted context block injected before
 	// every Supervisor LLM invocation.
 	GetSupervisorContext(context.Context, *GetSupervisorContextRequest) (*GetSupervisorContextResponse, error)
-	// WatchDashboard streams dashboard snapshots — pushed every ~2s as session state changes.
-	WatchDashboard(*WatchDashboardRequest, grpc.ServerStreamingServer[GetDashboardResponse]) error
-	// WatchSessionDetail streams updates for one session as new events arrive.
-	WatchSessionDetail(*WatchSessionDetailRequest, grpc.ServerStreamingServer[GetSessionDetailResponse]) error
-	// WatchUserActivity streams updated activity stats for one user as sessions evolve.
-	WatchUserActivity(*WatchUserActivityRequest, grpc.ServerStreamingServer[GetUserActivityResponse]) error
-	// WatchSupervisorContext streams updated context blocks when the scratchpad or sessions change.
-	WatchSupervisorContext(*WatchSupervisorContextRequest, grpc.ServerStreamingServer[GetSupervisorContextResponse]) error
-	// WatchScratchpadList streams the key listing whenever an entry is added, updated, or removed.
-	WatchScratchpadList(*WatchScratchpadListRequest, grpc.ServerStreamingServer[ScratchpadListResponse]) error
-	// WatchScratchpadRead streams the value for a key whenever it is written.
-	WatchScratchpadRead(*WatchScratchpadReadRequest, grpc.ServerStreamingServer[ScratchpadReadResponse]) error
+	// SubscribeDashboard streams dashboard snapshots, pushed every ~2s as session state changes.
+	SubscribeDashboard(*WatchDashboardRequest, grpc.ServerStreamingServer[GetDashboardResponse]) error
+	// SubscribeSessionDetail streams updates for one session as new events arrive.
+	SubscribeSessionDetail(*WatchSessionDetailRequest, grpc.ServerStreamingServer[GetSessionDetailResponse]) error
+	// SubscribeUserActivity streams updated activity stats for one user as sessions evolve.
+	SubscribeUserActivity(*WatchUserActivityRequest, grpc.ServerStreamingServer[GetUserActivityResponse]) error
+	// SubscribeSupervisorContext streams updated context blocks when the scratchpad or sessions change.
+	SubscribeSupervisorContext(*WatchSupervisorContextRequest, grpc.ServerStreamingServer[GetSupervisorContextResponse]) error
+	// SubscribeScratchpadList streams the key listing whenever an entry is added, updated, or removed.
+	SubscribeScratchpadList(*WatchScratchpadListRequest, grpc.ServerStreamingServer[ScratchpadListResponse]) error
+	// SubscribeScratchpadRead streams the value for a key whenever it is written.
+	SubscribeScratchpadRead(*WatchScratchpadReadRequest, grpc.ServerStreamingServer[ScratchpadReadResponse]) error
 	// ListUsers returns all distinct users with aggregate stats over the given time range.
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 	// GetUserProfile returns rich per-user stats: tools, models, session duration, working dirs.
 	GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error)
 	// GetUserTokenStats returns prompt volume and length distribution for one user over time.
 	GetUserTokenStats(context.Context, *GetUserTokenStatsRequest) (*GetUserTokenStatsResponse, error)
-	// WatchUserProfile streams updated profile snapshots as sessions evolve.
-	WatchUserProfile(*WatchUserProfileRequest, grpc.ServerStreamingServer[GetUserProfileResponse]) error
-	// GetUserCommitActivity returns git commit events extracted from the user's Bash tool uses.
-	GetUserCommitActivity(context.Context, *GetUserCommitActivityRequest) (*GetUserCommitActivityResponse, error)
+	// SubscribeUserProfile streams updated profile snapshots as sessions evolve.
+	SubscribeUserProfile(*WatchUserProfileRequest, grpc.ServerStreamingServer[GetUserProfileResponse]) error
+	// ListUserCommitActivity returns git commit events extracted from the user's Bash tool uses.
+	ListUserCommitActivity(context.Context, *GetUserCommitActivityRequest) (*GetUserCommitActivityResponse, error)
 	// GetFileActivity returns file create/modify/delete records across sessions.
 	GetFileActivity(context.Context, *GetFileActivityRequest) (*GetFileActivityResponse, error)
 	// GetSessionTimeline returns the full paginated event stream for one session.
@@ -644,20 +644,20 @@ type ArgusServer interface {
 	GetAgentTree(context.Context, *GetAgentTreeRequest) (*GetAgentTreeResponse, error)
 	// GetSystemStats returns fleet-wide aggregates (users, sessions, events, tool stats).
 	GetSystemStats(context.Context, *GetSystemStatsRequest) (*GetSystemStatsResponse, error)
-	// GetToolLeaderboard returns tools ranked by use count with failure rates and latencies.
-	GetToolLeaderboard(context.Context, *GetToolLeaderboardRequest) (*GetToolLeaderboardResponse, error)
-	// GetModelUsage returns LLM model distribution across sessions.
-	GetModelUsage(context.Context, *GetModelUsageRequest) (*GetModelUsageResponse, error)
-	// GetActivityTimeseries returns bucketed event/session/user counts over a time range.
-	GetActivityTimeseries(context.Context, *GetActivityTimeseriesRequest) (*GetActivityTimeseriesResponse, error)
-	// WatchSystemStats streams fleet-wide stat snapshots every ~5s.
-	WatchSystemStats(*WatchSystemStatsRequest, grpc.ServerStreamingServer[GetSystemStatsResponse]) error
-	// WatchToolLeaderboard streams updated leaderboard snapshots.
-	WatchToolLeaderboard(*WatchToolLeaderboardRequest, grpc.ServerStreamingServer[GetToolLeaderboardResponse]) error
-	// SearchEvents finds events matching a filter across the hot store.
-	SearchEvents(context.Context, *SearchEventsRequest) (*SearchEventsResponse, error)
-	// SearchByFilePath finds all events that touched a given file path (prefix or glob).
-	SearchByFilePath(context.Context, *SearchByFilePathRequest) (*SearchByFilePathResponse, error)
+	// ListToolLeaderboard returns tools ranked by use count with failure rates and latencies.
+	ListToolLeaderboard(context.Context, *GetToolLeaderboardRequest) (*GetToolLeaderboardResponse, error)
+	// ListModelUsage returns LLM model distribution across sessions.
+	ListModelUsage(context.Context, *GetModelUsageRequest) (*GetModelUsageResponse, error)
+	// ListActivityTimeseries returns bucketed event/session/user counts over a time range.
+	ListActivityTimeseries(context.Context, *GetActivityTimeseriesRequest) (*GetActivityTimeseriesResponse, error)
+	// SubscribeSystemStats streams fleet-wide stat snapshots every ~5s.
+	SubscribeSystemStats(*WatchSystemStatsRequest, grpc.ServerStreamingServer[GetSystemStatsResponse]) error
+	// SubscribeToolLeaderboard streams updated leaderboard snapshots.
+	SubscribeToolLeaderboard(*WatchToolLeaderboardRequest, grpc.ServerStreamingServer[GetToolLeaderboardResponse]) error
+	// ListEventSearchResults finds events matching a filter across the hot store.
+	ListEventSearchResults(context.Context, *SearchEventsRequest) (*SearchEventsResponse, error)
+	// ListFilePathMatches finds all events that touched a given file path (prefix or glob).
+	ListFilePathMatches(context.Context, *SearchByFilePathRequest) (*SearchByFilePathResponse, error)
 	mustEmbedUnimplementedArgusServer()
 }
 
@@ -680,47 +680,47 @@ func (UnimplementedArgusServer) GetSessionDetail(context.Context, *GetSessionDet
 func (UnimplementedArgusServer) GetUserActivity(context.Context, *GetUserActivityRequest) (*GetUserActivityResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserActivity not implemented")
 }
-func (UnimplementedArgusServer) SearchSessions(context.Context, *SearchSessionsRequest) (*SearchSessionsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method SearchSessions not implemented")
+func (UnimplementedArgusServer) ListSessionSearchResults(context.Context, *SearchSessionsRequest) (*SearchSessionsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSessionSearchResults not implemented")
 }
-func (UnimplementedArgusServer) WatchLiveSessions(*claudesensor.WatchLiveSessionsRequest, grpc.ServerStreamingServer[claudesensor.WatchLiveSessionsEvent]) error {
-	return status.Error(codes.Unimplemented, "method WatchLiveSessions not implemented")
+func (UnimplementedArgusServer) SubscribeLiveSessions(*claudesensor.WatchLiveSessionsRequest, grpc.ServerStreamingServer[claudesensor.WatchLiveSessionsEvent]) error {
+	return status.Error(codes.Unimplemented, "method SubscribeLiveSessions not implemented")
 }
-func (UnimplementedArgusServer) ScratchpadRead(context.Context, *ScratchpadReadRequest) (*ScratchpadReadResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ScratchpadRead not implemented")
+func (UnimplementedArgusServer) GetScratchpad(context.Context, *ScratchpadReadRequest) (*ScratchpadReadResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetScratchpad not implemented")
 }
-func (UnimplementedArgusServer) ScratchpadWrite(context.Context, *ScratchpadWriteRequest) (*ScratchpadWriteResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ScratchpadWrite not implemented")
+func (UnimplementedArgusServer) UpdateScratchpad(context.Context, *ScratchpadWriteRequest) (*ScratchpadWriteResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateScratchpad not implemented")
 }
-func (UnimplementedArgusServer) ScratchpadDelete(context.Context, *ScratchpadDeleteRequest) (*ScratchpadDeleteResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ScratchpadDelete not implemented")
+func (UnimplementedArgusServer) DeleteScratchpad(context.Context, *ScratchpadDeleteRequest) (*ScratchpadDeleteResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteScratchpad not implemented")
 }
-func (UnimplementedArgusServer) ScratchpadList(context.Context, *ScratchpadListRequest) (*ScratchpadListResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ScratchpadList not implemented")
+func (UnimplementedArgusServer) ListScratchpads(context.Context, *ScratchpadListRequest) (*ScratchpadListResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListScratchpads not implemented")
 }
-func (UnimplementedArgusServer) ScratchpadClear(context.Context, *ScratchpadClearRequest) (*ScratchpadClearResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ScratchpadClear not implemented")
+func (UnimplementedArgusServer) DeleteScratchpads(context.Context, *ScratchpadClearRequest) (*ScratchpadClearResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteScratchpads not implemented")
 }
 func (UnimplementedArgusServer) GetSupervisorContext(context.Context, *GetSupervisorContextRequest) (*GetSupervisorContextResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetSupervisorContext not implemented")
 }
-func (UnimplementedArgusServer) WatchDashboard(*WatchDashboardRequest, grpc.ServerStreamingServer[GetDashboardResponse]) error {
-	return status.Error(codes.Unimplemented, "method WatchDashboard not implemented")
+func (UnimplementedArgusServer) SubscribeDashboard(*WatchDashboardRequest, grpc.ServerStreamingServer[GetDashboardResponse]) error {
+	return status.Error(codes.Unimplemented, "method SubscribeDashboard not implemented")
 }
-func (UnimplementedArgusServer) WatchSessionDetail(*WatchSessionDetailRequest, grpc.ServerStreamingServer[GetSessionDetailResponse]) error {
-	return status.Error(codes.Unimplemented, "method WatchSessionDetail not implemented")
+func (UnimplementedArgusServer) SubscribeSessionDetail(*WatchSessionDetailRequest, grpc.ServerStreamingServer[GetSessionDetailResponse]) error {
+	return status.Error(codes.Unimplemented, "method SubscribeSessionDetail not implemented")
 }
-func (UnimplementedArgusServer) WatchUserActivity(*WatchUserActivityRequest, grpc.ServerStreamingServer[GetUserActivityResponse]) error {
-	return status.Error(codes.Unimplemented, "method WatchUserActivity not implemented")
+func (UnimplementedArgusServer) SubscribeUserActivity(*WatchUserActivityRequest, grpc.ServerStreamingServer[GetUserActivityResponse]) error {
+	return status.Error(codes.Unimplemented, "method SubscribeUserActivity not implemented")
 }
-func (UnimplementedArgusServer) WatchSupervisorContext(*WatchSupervisorContextRequest, grpc.ServerStreamingServer[GetSupervisorContextResponse]) error {
-	return status.Error(codes.Unimplemented, "method WatchSupervisorContext not implemented")
+func (UnimplementedArgusServer) SubscribeSupervisorContext(*WatchSupervisorContextRequest, grpc.ServerStreamingServer[GetSupervisorContextResponse]) error {
+	return status.Error(codes.Unimplemented, "method SubscribeSupervisorContext not implemented")
 }
-func (UnimplementedArgusServer) WatchScratchpadList(*WatchScratchpadListRequest, grpc.ServerStreamingServer[ScratchpadListResponse]) error {
-	return status.Error(codes.Unimplemented, "method WatchScratchpadList not implemented")
+func (UnimplementedArgusServer) SubscribeScratchpadList(*WatchScratchpadListRequest, grpc.ServerStreamingServer[ScratchpadListResponse]) error {
+	return status.Error(codes.Unimplemented, "method SubscribeScratchpadList not implemented")
 }
-func (UnimplementedArgusServer) WatchScratchpadRead(*WatchScratchpadReadRequest, grpc.ServerStreamingServer[ScratchpadReadResponse]) error {
-	return status.Error(codes.Unimplemented, "method WatchScratchpadRead not implemented")
+func (UnimplementedArgusServer) SubscribeScratchpadRead(*WatchScratchpadReadRequest, grpc.ServerStreamingServer[ScratchpadReadResponse]) error {
+	return status.Error(codes.Unimplemented, "method SubscribeScratchpadRead not implemented")
 }
 func (UnimplementedArgusServer) ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListUsers not implemented")
@@ -731,11 +731,11 @@ func (UnimplementedArgusServer) GetUserProfile(context.Context, *GetUserProfileR
 func (UnimplementedArgusServer) GetUserTokenStats(context.Context, *GetUserTokenStatsRequest) (*GetUserTokenStatsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserTokenStats not implemented")
 }
-func (UnimplementedArgusServer) WatchUserProfile(*WatchUserProfileRequest, grpc.ServerStreamingServer[GetUserProfileResponse]) error {
-	return status.Error(codes.Unimplemented, "method WatchUserProfile not implemented")
+func (UnimplementedArgusServer) SubscribeUserProfile(*WatchUserProfileRequest, grpc.ServerStreamingServer[GetUserProfileResponse]) error {
+	return status.Error(codes.Unimplemented, "method SubscribeUserProfile not implemented")
 }
-func (UnimplementedArgusServer) GetUserCommitActivity(context.Context, *GetUserCommitActivityRequest) (*GetUserCommitActivityResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetUserCommitActivity not implemented")
+func (UnimplementedArgusServer) ListUserCommitActivity(context.Context, *GetUserCommitActivityRequest) (*GetUserCommitActivityResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListUserCommitActivity not implemented")
 }
 func (UnimplementedArgusServer) GetFileActivity(context.Context, *GetFileActivityRequest) (*GetFileActivityResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetFileActivity not implemented")
@@ -749,26 +749,26 @@ func (UnimplementedArgusServer) GetAgentTree(context.Context, *GetAgentTreeReque
 func (UnimplementedArgusServer) GetSystemStats(context.Context, *GetSystemStatsRequest) (*GetSystemStatsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetSystemStats not implemented")
 }
-func (UnimplementedArgusServer) GetToolLeaderboard(context.Context, *GetToolLeaderboardRequest) (*GetToolLeaderboardResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetToolLeaderboard not implemented")
+func (UnimplementedArgusServer) ListToolLeaderboard(context.Context, *GetToolLeaderboardRequest) (*GetToolLeaderboardResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListToolLeaderboard not implemented")
 }
-func (UnimplementedArgusServer) GetModelUsage(context.Context, *GetModelUsageRequest) (*GetModelUsageResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetModelUsage not implemented")
+func (UnimplementedArgusServer) ListModelUsage(context.Context, *GetModelUsageRequest) (*GetModelUsageResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListModelUsage not implemented")
 }
-func (UnimplementedArgusServer) GetActivityTimeseries(context.Context, *GetActivityTimeseriesRequest) (*GetActivityTimeseriesResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetActivityTimeseries not implemented")
+func (UnimplementedArgusServer) ListActivityTimeseries(context.Context, *GetActivityTimeseriesRequest) (*GetActivityTimeseriesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListActivityTimeseries not implemented")
 }
-func (UnimplementedArgusServer) WatchSystemStats(*WatchSystemStatsRequest, grpc.ServerStreamingServer[GetSystemStatsResponse]) error {
-	return status.Error(codes.Unimplemented, "method WatchSystemStats not implemented")
+func (UnimplementedArgusServer) SubscribeSystemStats(*WatchSystemStatsRequest, grpc.ServerStreamingServer[GetSystemStatsResponse]) error {
+	return status.Error(codes.Unimplemented, "method SubscribeSystemStats not implemented")
 }
-func (UnimplementedArgusServer) WatchToolLeaderboard(*WatchToolLeaderboardRequest, grpc.ServerStreamingServer[GetToolLeaderboardResponse]) error {
-	return status.Error(codes.Unimplemented, "method WatchToolLeaderboard not implemented")
+func (UnimplementedArgusServer) SubscribeToolLeaderboard(*WatchToolLeaderboardRequest, grpc.ServerStreamingServer[GetToolLeaderboardResponse]) error {
+	return status.Error(codes.Unimplemented, "method SubscribeToolLeaderboard not implemented")
 }
-func (UnimplementedArgusServer) SearchEvents(context.Context, *SearchEventsRequest) (*SearchEventsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method SearchEvents not implemented")
+func (UnimplementedArgusServer) ListEventSearchResults(context.Context, *SearchEventsRequest) (*SearchEventsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListEventSearchResults not implemented")
 }
-func (UnimplementedArgusServer) SearchByFilePath(context.Context, *SearchByFilePathRequest) (*SearchByFilePathResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method SearchByFilePath not implemented")
+func (UnimplementedArgusServer) ListFilePathMatches(context.Context, *SearchByFilePathRequest) (*SearchByFilePathResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListFilePathMatches not implemented")
 }
 func (UnimplementedArgusServer) mustEmbedUnimplementedArgusServer() {}
 func (UnimplementedArgusServer) testEmbeddedByValue()               {}
@@ -863,121 +863,121 @@ func _Argus_GetUserActivity_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Argus_SearchSessions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Argus_ListSessionSearchResults_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SearchSessionsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArgusServer).SearchSessions(ctx, in)
+		return srv.(ArgusServer).ListSessionSearchResults(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Argus_SearchSessions_FullMethodName,
+		FullMethod: Argus_ListSessionSearchResults_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArgusServer).SearchSessions(ctx, req.(*SearchSessionsRequest))
+		return srv.(ArgusServer).ListSessionSearchResults(ctx, req.(*SearchSessionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Argus_WatchLiveSessions_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Argus_SubscribeLiveSessions_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(claudesensor.WatchLiveSessionsRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ArgusServer).WatchLiveSessions(m, &grpc.GenericServerStream[claudesensor.WatchLiveSessionsRequest, claudesensor.WatchLiveSessionsEvent]{ServerStream: stream})
+	return srv.(ArgusServer).SubscribeLiveSessions(m, &grpc.GenericServerStream[claudesensor.WatchLiveSessionsRequest, claudesensor.WatchLiveSessionsEvent]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchLiveSessionsServer = grpc.ServerStreamingServer[claudesensor.WatchLiveSessionsEvent]
+type Argus_SubscribeLiveSessionsServer = grpc.ServerStreamingServer[claudesensor.WatchLiveSessionsEvent]
 
-func _Argus_ScratchpadRead_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Argus_GetScratchpad_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ScratchpadReadRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArgusServer).ScratchpadRead(ctx, in)
+		return srv.(ArgusServer).GetScratchpad(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Argus_ScratchpadRead_FullMethodName,
+		FullMethod: Argus_GetScratchpad_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArgusServer).ScratchpadRead(ctx, req.(*ScratchpadReadRequest))
+		return srv.(ArgusServer).GetScratchpad(ctx, req.(*ScratchpadReadRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Argus_ScratchpadWrite_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Argus_UpdateScratchpad_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ScratchpadWriteRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArgusServer).ScratchpadWrite(ctx, in)
+		return srv.(ArgusServer).UpdateScratchpad(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Argus_ScratchpadWrite_FullMethodName,
+		FullMethod: Argus_UpdateScratchpad_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArgusServer).ScratchpadWrite(ctx, req.(*ScratchpadWriteRequest))
+		return srv.(ArgusServer).UpdateScratchpad(ctx, req.(*ScratchpadWriteRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Argus_ScratchpadDelete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Argus_DeleteScratchpad_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ScratchpadDeleteRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArgusServer).ScratchpadDelete(ctx, in)
+		return srv.(ArgusServer).DeleteScratchpad(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Argus_ScratchpadDelete_FullMethodName,
+		FullMethod: Argus_DeleteScratchpad_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArgusServer).ScratchpadDelete(ctx, req.(*ScratchpadDeleteRequest))
+		return srv.(ArgusServer).DeleteScratchpad(ctx, req.(*ScratchpadDeleteRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Argus_ScratchpadList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Argus_ListScratchpads_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ScratchpadListRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArgusServer).ScratchpadList(ctx, in)
+		return srv.(ArgusServer).ListScratchpads(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Argus_ScratchpadList_FullMethodName,
+		FullMethod: Argus_ListScratchpads_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArgusServer).ScratchpadList(ctx, req.(*ScratchpadListRequest))
+		return srv.(ArgusServer).ListScratchpads(ctx, req.(*ScratchpadListRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Argus_ScratchpadClear_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Argus_DeleteScratchpads_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ScratchpadClearRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArgusServer).ScratchpadClear(ctx, in)
+		return srv.(ArgusServer).DeleteScratchpads(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Argus_ScratchpadClear_FullMethodName,
+		FullMethod: Argus_DeleteScratchpads_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArgusServer).ScratchpadClear(ctx, req.(*ScratchpadClearRequest))
+		return srv.(ArgusServer).DeleteScratchpads(ctx, req.(*ScratchpadClearRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1000,71 +1000,71 @@ func _Argus_GetSupervisorContext_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Argus_WatchDashboard_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Argus_SubscribeDashboard_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(WatchDashboardRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ArgusServer).WatchDashboard(m, &grpc.GenericServerStream[WatchDashboardRequest, GetDashboardResponse]{ServerStream: stream})
+	return srv.(ArgusServer).SubscribeDashboard(m, &grpc.GenericServerStream[WatchDashboardRequest, GetDashboardResponse]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchDashboardServer = grpc.ServerStreamingServer[GetDashboardResponse]
+type Argus_SubscribeDashboardServer = grpc.ServerStreamingServer[GetDashboardResponse]
 
-func _Argus_WatchSessionDetail_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Argus_SubscribeSessionDetail_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(WatchSessionDetailRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ArgusServer).WatchSessionDetail(m, &grpc.GenericServerStream[WatchSessionDetailRequest, GetSessionDetailResponse]{ServerStream: stream})
+	return srv.(ArgusServer).SubscribeSessionDetail(m, &grpc.GenericServerStream[WatchSessionDetailRequest, GetSessionDetailResponse]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchSessionDetailServer = grpc.ServerStreamingServer[GetSessionDetailResponse]
+type Argus_SubscribeSessionDetailServer = grpc.ServerStreamingServer[GetSessionDetailResponse]
 
-func _Argus_WatchUserActivity_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Argus_SubscribeUserActivity_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(WatchUserActivityRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ArgusServer).WatchUserActivity(m, &grpc.GenericServerStream[WatchUserActivityRequest, GetUserActivityResponse]{ServerStream: stream})
+	return srv.(ArgusServer).SubscribeUserActivity(m, &grpc.GenericServerStream[WatchUserActivityRequest, GetUserActivityResponse]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchUserActivityServer = grpc.ServerStreamingServer[GetUserActivityResponse]
+type Argus_SubscribeUserActivityServer = grpc.ServerStreamingServer[GetUserActivityResponse]
 
-func _Argus_WatchSupervisorContext_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Argus_SubscribeSupervisorContext_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(WatchSupervisorContextRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ArgusServer).WatchSupervisorContext(m, &grpc.GenericServerStream[WatchSupervisorContextRequest, GetSupervisorContextResponse]{ServerStream: stream})
+	return srv.(ArgusServer).SubscribeSupervisorContext(m, &grpc.GenericServerStream[WatchSupervisorContextRequest, GetSupervisorContextResponse]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchSupervisorContextServer = grpc.ServerStreamingServer[GetSupervisorContextResponse]
+type Argus_SubscribeSupervisorContextServer = grpc.ServerStreamingServer[GetSupervisorContextResponse]
 
-func _Argus_WatchScratchpadList_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Argus_SubscribeScratchpadList_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(WatchScratchpadListRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ArgusServer).WatchScratchpadList(m, &grpc.GenericServerStream[WatchScratchpadListRequest, ScratchpadListResponse]{ServerStream: stream})
+	return srv.(ArgusServer).SubscribeScratchpadList(m, &grpc.GenericServerStream[WatchScratchpadListRequest, ScratchpadListResponse]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchScratchpadListServer = grpc.ServerStreamingServer[ScratchpadListResponse]
+type Argus_SubscribeScratchpadListServer = grpc.ServerStreamingServer[ScratchpadListResponse]
 
-func _Argus_WatchScratchpadRead_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Argus_SubscribeScratchpadRead_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(WatchScratchpadReadRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ArgusServer).WatchScratchpadRead(m, &grpc.GenericServerStream[WatchScratchpadReadRequest, ScratchpadReadResponse]{ServerStream: stream})
+	return srv.(ArgusServer).SubscribeScratchpadRead(m, &grpc.GenericServerStream[WatchScratchpadReadRequest, ScratchpadReadResponse]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchScratchpadReadServer = grpc.ServerStreamingServer[ScratchpadReadResponse]
+type Argus_SubscribeScratchpadReadServer = grpc.ServerStreamingServer[ScratchpadReadResponse]
 
 func _Argus_ListUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListUsersRequest)
@@ -1120,31 +1120,31 @@ func _Argus_GetUserTokenStats_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Argus_WatchUserProfile_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Argus_SubscribeUserProfile_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(WatchUserProfileRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ArgusServer).WatchUserProfile(m, &grpc.GenericServerStream[WatchUserProfileRequest, GetUserProfileResponse]{ServerStream: stream})
+	return srv.(ArgusServer).SubscribeUserProfile(m, &grpc.GenericServerStream[WatchUserProfileRequest, GetUserProfileResponse]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchUserProfileServer = grpc.ServerStreamingServer[GetUserProfileResponse]
+type Argus_SubscribeUserProfileServer = grpc.ServerStreamingServer[GetUserProfileResponse]
 
-func _Argus_GetUserCommitActivity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Argus_ListUserCommitActivity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserCommitActivityRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArgusServer).GetUserCommitActivity(ctx, in)
+		return srv.(ArgusServer).ListUserCommitActivity(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Argus_GetUserCommitActivity_FullMethodName,
+		FullMethod: Argus_ListUserCommitActivity_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArgusServer).GetUserCommitActivity(ctx, req.(*GetUserCommitActivityRequest))
+		return srv.(ArgusServer).ListUserCommitActivity(ctx, req.(*GetUserCommitActivityRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1221,114 +1221,114 @@ func _Argus_GetSystemStats_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Argus_GetToolLeaderboard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Argus_ListToolLeaderboard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetToolLeaderboardRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArgusServer).GetToolLeaderboard(ctx, in)
+		return srv.(ArgusServer).ListToolLeaderboard(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Argus_GetToolLeaderboard_FullMethodName,
+		FullMethod: Argus_ListToolLeaderboard_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArgusServer).GetToolLeaderboard(ctx, req.(*GetToolLeaderboardRequest))
+		return srv.(ArgusServer).ListToolLeaderboard(ctx, req.(*GetToolLeaderboardRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Argus_GetModelUsage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Argus_ListModelUsage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetModelUsageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArgusServer).GetModelUsage(ctx, in)
+		return srv.(ArgusServer).ListModelUsage(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Argus_GetModelUsage_FullMethodName,
+		FullMethod: Argus_ListModelUsage_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArgusServer).GetModelUsage(ctx, req.(*GetModelUsageRequest))
+		return srv.(ArgusServer).ListModelUsage(ctx, req.(*GetModelUsageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Argus_GetActivityTimeseries_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Argus_ListActivityTimeseries_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetActivityTimeseriesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArgusServer).GetActivityTimeseries(ctx, in)
+		return srv.(ArgusServer).ListActivityTimeseries(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Argus_GetActivityTimeseries_FullMethodName,
+		FullMethod: Argus_ListActivityTimeseries_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArgusServer).GetActivityTimeseries(ctx, req.(*GetActivityTimeseriesRequest))
+		return srv.(ArgusServer).ListActivityTimeseries(ctx, req.(*GetActivityTimeseriesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Argus_WatchSystemStats_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Argus_SubscribeSystemStats_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(WatchSystemStatsRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ArgusServer).WatchSystemStats(m, &grpc.GenericServerStream[WatchSystemStatsRequest, GetSystemStatsResponse]{ServerStream: stream})
+	return srv.(ArgusServer).SubscribeSystemStats(m, &grpc.GenericServerStream[WatchSystemStatsRequest, GetSystemStatsResponse]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchSystemStatsServer = grpc.ServerStreamingServer[GetSystemStatsResponse]
+type Argus_SubscribeSystemStatsServer = grpc.ServerStreamingServer[GetSystemStatsResponse]
 
-func _Argus_WatchToolLeaderboard_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Argus_SubscribeToolLeaderboard_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(WatchToolLeaderboardRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ArgusServer).WatchToolLeaderboard(m, &grpc.GenericServerStream[WatchToolLeaderboardRequest, GetToolLeaderboardResponse]{ServerStream: stream})
+	return srv.(ArgusServer).SubscribeToolLeaderboard(m, &grpc.GenericServerStream[WatchToolLeaderboardRequest, GetToolLeaderboardResponse]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_WatchToolLeaderboardServer = grpc.ServerStreamingServer[GetToolLeaderboardResponse]
+type Argus_SubscribeToolLeaderboardServer = grpc.ServerStreamingServer[GetToolLeaderboardResponse]
 
-func _Argus_SearchEvents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Argus_ListEventSearchResults_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SearchEventsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArgusServer).SearchEvents(ctx, in)
+		return srv.(ArgusServer).ListEventSearchResults(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Argus_SearchEvents_FullMethodName,
+		FullMethod: Argus_ListEventSearchResults_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArgusServer).SearchEvents(ctx, req.(*SearchEventsRequest))
+		return srv.(ArgusServer).ListEventSearchResults(ctx, req.(*SearchEventsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Argus_SearchByFilePath_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Argus_ListFilePathMatches_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SearchByFilePathRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArgusServer).SearchByFilePath(ctx, in)
+		return srv.(ArgusServer).ListFilePathMatches(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Argus_SearchByFilePath_FullMethodName,
+		FullMethod: Argus_ListFilePathMatches_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArgusServer).SearchByFilePath(ctx, req.(*SearchByFilePathRequest))
+		return srv.(ArgusServer).ListFilePathMatches(ctx, req.(*SearchByFilePathRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1357,28 +1357,28 @@ var Argus_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Argus_GetUserActivity_Handler,
 		},
 		{
-			MethodName: "SearchSessions",
-			Handler:    _Argus_SearchSessions_Handler,
+			MethodName: "ListSessionSearchResults",
+			Handler:    _Argus_ListSessionSearchResults_Handler,
 		},
 		{
-			MethodName: "ScratchpadRead",
-			Handler:    _Argus_ScratchpadRead_Handler,
+			MethodName: "GetScratchpad",
+			Handler:    _Argus_GetScratchpad_Handler,
 		},
 		{
-			MethodName: "ScratchpadWrite",
-			Handler:    _Argus_ScratchpadWrite_Handler,
+			MethodName: "UpdateScratchpad",
+			Handler:    _Argus_UpdateScratchpad_Handler,
 		},
 		{
-			MethodName: "ScratchpadDelete",
-			Handler:    _Argus_ScratchpadDelete_Handler,
+			MethodName: "DeleteScratchpad",
+			Handler:    _Argus_DeleteScratchpad_Handler,
 		},
 		{
-			MethodName: "ScratchpadList",
-			Handler:    _Argus_ScratchpadList_Handler,
+			MethodName: "ListScratchpads",
+			Handler:    _Argus_ListScratchpads_Handler,
 		},
 		{
-			MethodName: "ScratchpadClear",
-			Handler:    _Argus_ScratchpadClear_Handler,
+			MethodName: "DeleteScratchpads",
+			Handler:    _Argus_DeleteScratchpads_Handler,
 		},
 		{
 			MethodName: "GetSupervisorContext",
@@ -1397,8 +1397,8 @@ var Argus_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Argus_GetUserTokenStats_Handler,
 		},
 		{
-			MethodName: "GetUserCommitActivity",
-			Handler:    _Argus_GetUserCommitActivity_Handler,
+			MethodName: "ListUserCommitActivity",
+			Handler:    _Argus_ListUserCommitActivity_Handler,
 		},
 		{
 			MethodName: "GetFileActivity",
@@ -1417,75 +1417,75 @@ var Argus_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Argus_GetSystemStats_Handler,
 		},
 		{
-			MethodName: "GetToolLeaderboard",
-			Handler:    _Argus_GetToolLeaderboard_Handler,
+			MethodName: "ListToolLeaderboard",
+			Handler:    _Argus_ListToolLeaderboard_Handler,
 		},
 		{
-			MethodName: "GetModelUsage",
-			Handler:    _Argus_GetModelUsage_Handler,
+			MethodName: "ListModelUsage",
+			Handler:    _Argus_ListModelUsage_Handler,
 		},
 		{
-			MethodName: "GetActivityTimeseries",
-			Handler:    _Argus_GetActivityTimeseries_Handler,
+			MethodName: "ListActivityTimeseries",
+			Handler:    _Argus_ListActivityTimeseries_Handler,
 		},
 		{
-			MethodName: "SearchEvents",
-			Handler:    _Argus_SearchEvents_Handler,
+			MethodName: "ListEventSearchResults",
+			Handler:    _Argus_ListEventSearchResults_Handler,
 		},
 		{
-			MethodName: "SearchByFilePath",
-			Handler:    _Argus_SearchByFilePath_Handler,
+			MethodName: "ListFilePathMatches",
+			Handler:    _Argus_ListFilePathMatches_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "WatchLiveSessions",
-			Handler:       _Argus_WatchLiveSessions_Handler,
+			StreamName:    "SubscribeLiveSessions",
+			Handler:       _Argus_SubscribeLiveSessions_Handler,
 			ServerStreams: true,
 		},
 		{
-			StreamName:    "WatchDashboard",
-			Handler:       _Argus_WatchDashboard_Handler,
+			StreamName:    "SubscribeDashboard",
+			Handler:       _Argus_SubscribeDashboard_Handler,
 			ServerStreams: true,
 		},
 		{
-			StreamName:    "WatchSessionDetail",
-			Handler:       _Argus_WatchSessionDetail_Handler,
+			StreamName:    "SubscribeSessionDetail",
+			Handler:       _Argus_SubscribeSessionDetail_Handler,
 			ServerStreams: true,
 		},
 		{
-			StreamName:    "WatchUserActivity",
-			Handler:       _Argus_WatchUserActivity_Handler,
+			StreamName:    "SubscribeUserActivity",
+			Handler:       _Argus_SubscribeUserActivity_Handler,
 			ServerStreams: true,
 		},
 		{
-			StreamName:    "WatchSupervisorContext",
-			Handler:       _Argus_WatchSupervisorContext_Handler,
+			StreamName:    "SubscribeSupervisorContext",
+			Handler:       _Argus_SubscribeSupervisorContext_Handler,
 			ServerStreams: true,
 		},
 		{
-			StreamName:    "WatchScratchpadList",
-			Handler:       _Argus_WatchScratchpadList_Handler,
+			StreamName:    "SubscribeScratchpadList",
+			Handler:       _Argus_SubscribeScratchpadList_Handler,
 			ServerStreams: true,
 		},
 		{
-			StreamName:    "WatchScratchpadRead",
-			Handler:       _Argus_WatchScratchpadRead_Handler,
+			StreamName:    "SubscribeScratchpadRead",
+			Handler:       _Argus_SubscribeScratchpadRead_Handler,
 			ServerStreams: true,
 		},
 		{
-			StreamName:    "WatchUserProfile",
-			Handler:       _Argus_WatchUserProfile_Handler,
+			StreamName:    "SubscribeUserProfile",
+			Handler:       _Argus_SubscribeUserProfile_Handler,
 			ServerStreams: true,
 		},
 		{
-			StreamName:    "WatchSystemStats",
-			Handler:       _Argus_WatchSystemStats_Handler,
+			StreamName:    "SubscribeSystemStats",
+			Handler:       _Argus_SubscribeSystemStats_Handler,
 			ServerStreams: true,
 		},
 		{
-			StreamName:    "WatchToolLeaderboard",
-			Handler:       _Argus_WatchToolLeaderboard_Handler,
+			StreamName:    "SubscribeToolLeaderboard",
+			Handler:       _Argus_SubscribeToolLeaderboard_Handler,
 			ServerStreams: true,
 		},
 	},

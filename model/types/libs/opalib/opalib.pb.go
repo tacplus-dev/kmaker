@@ -38,56 +38,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED TypeID = 0
-	TypeID_TYPE_ID_OPA_POLICY  TypeID = 1
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_OPA_POLICY",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED": 0,
-		"TYPE_ID_OPA_POLICY":  1,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_opalib_proto_enumTypes[0].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_opalib_proto_enumTypes[0]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_opalib_proto_rawDescGZIP(), []int{0}
-}
-
 // OpaPolicy defines an OPA policy bundle for authorization evaluation.
 // The bundle is a filesystem.Directory tree containing .rego policy files.
 type OpaPolicy struct {
@@ -172,10 +122,7 @@ const file_libs_opalib_proto_rawDesc = "" +
 	"entryPoint\x12-\n" +
 	"\x06bundle\x18\x02 \x01(\v2\x15.filesystem.DirectoryR\x06bundle\x12*\n" +
 	"\acreated\x18\x03 \x01(\x03B\x10\xb0\xa7\x1d\x80\x8bһ\x06\xc0\xa7\x1d\x80\x86\xc1\xfc\x1dR\acreated\x12\"\n" +
-	"\aversion\x18\x04 \x01(\tB\b\x90\xa7\x1d@\xe0\xa7\x1d\x01R\aversion*9\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x16\n" +
-	"\x12TYPE_ID_OPA_POLICY\x10\x01BXZVgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/opalibb\x06proto3"
+	"\aversion\x18\x04 \x01(\tB\b\x90\xa7\x1d@\xe0\xa7\x1d\x01R\aversionBXZVgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/opalibb\x06proto3"
 
 var (
 	file_libs_opalib_proto_rawDescOnce sync.Once
@@ -189,15 +136,13 @@ func file_libs_opalib_proto_rawDescGZIP() []byte {
 	return file_libs_opalib_proto_rawDescData
 }
 
-var file_libs_opalib_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_libs_opalib_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_libs_opalib_proto_goTypes = []any{
-	(TypeID)(0),                  // 0: opalib.TypeID
-	(*OpaPolicy)(nil),            // 1: opalib.OpaPolicy
-	(*filesystem.Directory)(nil), // 2: filesystem.Directory
+	(*OpaPolicy)(nil),            // 0: opalib.OpaPolicy
+	(*filesystem.Directory)(nil), // 1: filesystem.Directory
 }
 var file_libs_opalib_proto_depIdxs = []int32{
-	2, // 0: opalib.OpaPolicy.bundle:type_name -> filesystem.Directory
+	1, // 0: opalib.OpaPolicy.bundle:type_name -> filesystem.Directory
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -215,14 +160,13 @@ func file_libs_opalib_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_opalib_proto_rawDesc), len(file_libs_opalib_proto_rawDesc)),
-			NumEnums:      1,
+			NumEnums:      0,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_libs_opalib_proto_goTypes,
 		DependencyIndexes: file_libs_opalib_proto_depIdxs,
-		EnumInfos:         file_libs_opalib_proto_enumTypes,
 		MessageInfos:      file_libs_opalib_proto_msgTypes,
 	}.Build()
 	File_libs_opalib_proto = out.File

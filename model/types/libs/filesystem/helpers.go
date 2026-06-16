@@ -29,7 +29,6 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
-	"strings"
 
 	"github.com/pelletier/go-toml/v2"
 	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/errors"
@@ -37,122 +36,6 @@ import (
 	"google.golang.org/protobuf/proto"
 	"gopkg.in/yaml.v3"
 )
-
-// ============================================================
-// Enum Helpers
-// ============================================================
-// TypeIDValues returns all valid TypeID values (excluding UNDEFINED)
-func TypeIDValues() []TypeID {
-	return []TypeID{
-		TypeID_TYPE_ID_PERMISSION,
-		TypeID_TYPE_ID_FILE,
-		TypeID_TYPE_ID_DIRECTORY,
-	}
-}
-
-// TypeIDStringValues returns all valid TypeID names as strings
-func TypeIDStringValues() []string {
-	return []string{"permission", "file", "directory"}
-}
-
-// ParseTypeID converts a string to a TypeID enum value
-// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseTypeID(s string) (TypeID, error) {
-	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
-	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
-	switch normalized {
-	case "":
-		return TypeID_TYPE_ID_UNSPECIFIED, nil
-	case "permission", "type-id-permission":
-		return TypeID_TYPE_ID_PERMISSION, nil
-	case "file", "type-id-file":
-		return TypeID_TYPE_ID_FILE, nil
-	case "directory", "type-id-directory":
-		return TypeID_TYPE_ID_DIRECTORY, nil
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid typeid %s, expecting one of: %v", s, TypeIDStringValues())
-	}
-}
-
-// ParseTypeIDs converts a comma-separated string to a slice of TypeID enum values
-// Returns an error if any value is invalid
-func ParseTypeIDs(s string) ([]TypeID, error) {
-	if s == "" {
-		return nil, nil
-	}
-	parts := strings.Split(s, ",")
-	result := make([]TypeID, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed == "" {
-			continue
-		}
-		val, err := ParseTypeID(trimmed)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, val)
-	}
-	return result, nil
-}
-
-// TypeIDToString converts a TypeID to its lowercase string representation
-func TypeIDToString(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_PERMISSION:
-		return "permission"
-	case TypeID_TYPE_ID_FILE:
-		return "file"
-	case TypeID_TYPE_ID_DIRECTORY:
-		return "directory"
-	default:
-		return ""
-	}
-}
-
-// ParseTypeIDLiberal parses a TypeID liberally, accepting:
-// - Integer values (as string or int)
-// - Enum names in any case
-// - RFC-compliant JSON names
-func ParseTypeIDLiberal(s string) TypeID {
-	if s == "" {
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-	// Try parsing as integer
-	if num, err := strconv.Atoi(s); err == nil {
-		return TypeID(num)
-	}
-	// Normalize and try parsing
-	normalized := strings.ToLower(strings.TrimSpace(s))
-	normalized = strings.ReplaceAll(normalized, "_", "-")
-	normalized = strings.ReplaceAll(normalized, " ", "-")
-	switch normalized {
-	case "permission", "type-id-permission":
-		return TypeID_TYPE_ID_PERMISSION
-	case "file", "type-id-file":
-		return TypeID_TYPE_ID_FILE
-	case "directory", "type-id-directory":
-		return TypeID_TYPE_ID_DIRECTORY
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-}
-
-// TypeIDToSpecName converts a TypeID to its canonical protobuf spec name
-func TypeIDToSpecName(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_UNSPECIFIED:
-		return "TYPE_ID_UNSPECIFIED"
-	case TypeID_TYPE_ID_PERMISSION:
-		return "TYPE_ID_PERMISSION"
-	case TypeID_TYPE_ID_FILE:
-		return "TYPE_ID_FILE"
-	case TypeID_TYPE_ID_DIRECTORY:
-		return "TYPE_ID_DIRECTORY"
-	default:
-		return ""
-	}
-}
 
 // ============================================================
 // JSON/YAML/TOML Serialization Helpers
@@ -860,21 +743,21 @@ func ValidatePermissionWithDepth(m *Permission, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Owner (assert_le: 7)
-	if m.Owner > 7 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be <= 7, got: %v", m.Owner)
-	}
 	// Validate Owner (assert_ge: 0)
 	if m.Owner < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be >= 0, got: %v", m.Owner)
 	}
-	// Validate Group (assert_ge: 0)
-	if m.Group < 0 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Group must be >= 0, got: %v", m.Group)
+	// Validate Owner (assert_le: 7)
+	if m.Owner > 7 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be <= 7, got: %v", m.Owner)
 	}
 	// Validate Group (assert_le: 7)
 	if m.Group > 7 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Group must be <= 7, got: %v", m.Group)
+	}
+	// Validate Group (assert_ge: 0)
+	if m.Group < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Group must be >= 0, got: %v", m.Group)
 	}
 	// Validate Other (assert_ge: 0)
 	if m.Other < 0 {
@@ -949,14 +832,14 @@ func ValidateDirectoryWithDepth(m *Directory, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Name (assert_max_length: 255)
-	if len(m.Name) > 255 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Name must be at most 255 characters, got: %d", len(m.Name))
-	}
-
 	// Validate Name (assert_required)
 	if m.Name == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Name is required")
+	}
+
+	// Validate Name (assert_max_length: 255)
+	if len(m.Name) > 255 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Name must be at most 255 characters, got: %d", len(m.Name))
 	}
 
 	// Validate Directories (assert_max_size: 10000)

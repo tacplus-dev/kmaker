@@ -246,281 +246,6 @@ func RpcCategoryToSpecName(v RpcCategory) string {
 	}
 }
 
-// TypeIDValues returns all valid TypeID values (excluding UNDEFINED)
-func TypeIDValues() []TypeID {
-	return []TypeID{
-		TypeID_TYPE_ID_LANGUAGE_DEPENDENCIES,
-		TypeID_TYPE_ID_DEPENDENCIES_REGISTRY,
-		TypeID_TYPE_ID_DEPENDENCIES_CONFIG,
-		TypeID_TYPE_ID_STATE_PERM_ENTRY,
-		TypeID_TYPE_ID_BOUNDARY_INFO,
-		TypeID_TYPE_ID_SUBSCRIPTION_INFO,
-		TypeID_TYPE_ID_ENUM_VALUE_INFO,
-		TypeID_TYPE_ID_FIELD_INFO,
-		TypeID_TYPE_ID_TYPE_INFO,
-		TypeID_TYPE_ID_GRAPH_PROJECTION_FIELD_INFO,
-		TypeID_TYPE_ID_GRAPH_PROJECTION_INFO,
-		TypeID_TYPE_ID_TIMESERIES_PROJECTION_FIELD_INFO,
-		TypeID_TYPE_ID_TIMESERIES_PROJECTION_INFO,
-		TypeID_TYPE_ID_RPC_INFO,
-		TypeID_TYPE_ID_ENUM_INFO,
-		TypeID_TYPE_ID_SERVICE_INFO,
-		TypeID_TYPE_ID_ENTITLEMENT_GRANT_INFO,
-		TypeID_TYPE_ID_BUILD_INFO,
-		TypeID_TYPE_ID_VERIFICATION_HARNESS,
-		TypeID_TYPE_ID_VERIFICATION_REPORT,
-		TypeID_TYPE_ID_PACKAGE_NODE,
-	}
-}
-
-// TypeIDStringValues returns all valid TypeID names as strings
-func TypeIDStringValues() []string {
-	return []string{"language-dependencies", "dependencies-registry", "dependencies-config", "state-perm-entry", "boundary-info", "subscription-info", "enum-value-info", "field-info", "type-info", "graph-projection-field-info", "graph-projection-info", "timeseries-projection-field-info", "timeseries-projection-info", "rpc-info", "enum-info", "service-info", "entitlement-grant-info", "build-info", "verification-harness", "verification-report", "package-node"}
-}
-
-// ParseTypeID converts a string to a TypeID enum value
-// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseTypeID(s string) (TypeID, error) {
-	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
-	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
-	switch normalized {
-	case "":
-		return TypeID_TYPE_ID_UNSPECIFIED, nil
-	case "language-dependencies", "type-id-language-dependencies":
-		return TypeID_TYPE_ID_LANGUAGE_DEPENDENCIES, nil
-	case "dependencies-registry", "type-id-dependencies-registry":
-		return TypeID_TYPE_ID_DEPENDENCIES_REGISTRY, nil
-	case "dependencies-config", "type-id-dependencies-config":
-		return TypeID_TYPE_ID_DEPENDENCIES_CONFIG, nil
-	case "state-perm-entry", "type-id-state-perm-entry":
-		return TypeID_TYPE_ID_STATE_PERM_ENTRY, nil
-	case "boundary-info", "type-id-boundary-info":
-		return TypeID_TYPE_ID_BOUNDARY_INFO, nil
-	case "subscription-info", "type-id-subscription-info":
-		return TypeID_TYPE_ID_SUBSCRIPTION_INFO, nil
-	case "enum-value-info", "type-id-enum-value-info":
-		return TypeID_TYPE_ID_ENUM_VALUE_INFO, nil
-	case "field-info", "type-id-field-info":
-		return TypeID_TYPE_ID_FIELD_INFO, nil
-	case "type-info", "type-id-type-info":
-		return TypeID_TYPE_ID_TYPE_INFO, nil
-	case "graph-projection-field-info", "type-id-graph-projection-field-info":
-		return TypeID_TYPE_ID_GRAPH_PROJECTION_FIELD_INFO, nil
-	case "graph-projection-info", "type-id-graph-projection-info":
-		return TypeID_TYPE_ID_GRAPH_PROJECTION_INFO, nil
-	case "timeseries-projection-field-info", "type-id-timeseries-projection-field-info":
-		return TypeID_TYPE_ID_TIMESERIES_PROJECTION_FIELD_INFO, nil
-	case "timeseries-projection-info", "type-id-timeseries-projection-info":
-		return TypeID_TYPE_ID_TIMESERIES_PROJECTION_INFO, nil
-	case "rpc-info", "type-id-rpc-info":
-		return TypeID_TYPE_ID_RPC_INFO, nil
-	case "enum-info", "type-id-enum-info":
-		return TypeID_TYPE_ID_ENUM_INFO, nil
-	case "service-info", "type-id-service-info":
-		return TypeID_TYPE_ID_SERVICE_INFO, nil
-	case "entitlement-grant-info", "type-id-entitlement-grant-info":
-		return TypeID_TYPE_ID_ENTITLEMENT_GRANT_INFO, nil
-	case "build-info", "type-id-build-info":
-		return TypeID_TYPE_ID_BUILD_INFO, nil
-	case "verification-harness", "type-id-verification-harness":
-		return TypeID_TYPE_ID_VERIFICATION_HARNESS, nil
-	case "verification-report", "type-id-verification-report":
-		return TypeID_TYPE_ID_VERIFICATION_REPORT, nil
-	case "package-node", "type-id-package-node":
-		return TypeID_TYPE_ID_PACKAGE_NODE, nil
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid typeid %s, expecting one of: %v", s, TypeIDStringValues())
-	}
-}
-
-// ParseTypeIDs converts a comma-separated string to a slice of TypeID enum values
-// Returns an error if any value is invalid
-func ParseTypeIDs(s string) ([]TypeID, error) {
-	if s == "" {
-		return nil, nil
-	}
-	parts := strings.Split(s, ",")
-	result := make([]TypeID, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed == "" {
-			continue
-		}
-		val, err := ParseTypeID(trimmed)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, val)
-	}
-	return result, nil
-}
-
-// TypeIDToString converts a TypeID to its lowercase string representation
-func TypeIDToString(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_LANGUAGE_DEPENDENCIES:
-		return "language-dependencies"
-	case TypeID_TYPE_ID_DEPENDENCIES_REGISTRY:
-		return "dependencies-registry"
-	case TypeID_TYPE_ID_DEPENDENCIES_CONFIG:
-		return "dependencies-config"
-	case TypeID_TYPE_ID_STATE_PERM_ENTRY:
-		return "state-perm-entry"
-	case TypeID_TYPE_ID_BOUNDARY_INFO:
-		return "boundary-info"
-	case TypeID_TYPE_ID_SUBSCRIPTION_INFO:
-		return "subscription-info"
-	case TypeID_TYPE_ID_ENUM_VALUE_INFO:
-		return "enum-value-info"
-	case TypeID_TYPE_ID_FIELD_INFO:
-		return "field-info"
-	case TypeID_TYPE_ID_TYPE_INFO:
-		return "type-info"
-	case TypeID_TYPE_ID_GRAPH_PROJECTION_FIELD_INFO:
-		return "graph-projection-field-info"
-	case TypeID_TYPE_ID_GRAPH_PROJECTION_INFO:
-		return "graph-projection-info"
-	case TypeID_TYPE_ID_TIMESERIES_PROJECTION_FIELD_INFO:
-		return "timeseries-projection-field-info"
-	case TypeID_TYPE_ID_TIMESERIES_PROJECTION_INFO:
-		return "timeseries-projection-info"
-	case TypeID_TYPE_ID_RPC_INFO:
-		return "rpc-info"
-	case TypeID_TYPE_ID_ENUM_INFO:
-		return "enum-info"
-	case TypeID_TYPE_ID_SERVICE_INFO:
-		return "service-info"
-	case TypeID_TYPE_ID_ENTITLEMENT_GRANT_INFO:
-		return "entitlement-grant-info"
-	case TypeID_TYPE_ID_BUILD_INFO:
-		return "build-info"
-	case TypeID_TYPE_ID_VERIFICATION_HARNESS:
-		return "verification-harness"
-	case TypeID_TYPE_ID_VERIFICATION_REPORT:
-		return "verification-report"
-	case TypeID_TYPE_ID_PACKAGE_NODE:
-		return "package-node"
-	default:
-		return ""
-	}
-}
-
-// ParseTypeIDLiberal parses a TypeID liberally, accepting:
-// - Integer values (as string or int)
-// - Enum names in any case
-// - RFC-compliant JSON names
-func ParseTypeIDLiberal(s string) TypeID {
-	if s == "" {
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-	// Try parsing as integer
-	if num, err := strconv.Atoi(s); err == nil {
-		return TypeID(num)
-	}
-	// Normalize and try parsing
-	normalized := strings.ToLower(strings.TrimSpace(s))
-	normalized = strings.ReplaceAll(normalized, "_", "-")
-	normalized = strings.ReplaceAll(normalized, " ", "-")
-	switch normalized {
-	case "language-dependencies", "type-id-language-dependencies":
-		return TypeID_TYPE_ID_LANGUAGE_DEPENDENCIES
-	case "dependencies-registry", "type-id-dependencies-registry":
-		return TypeID_TYPE_ID_DEPENDENCIES_REGISTRY
-	case "dependencies-config", "type-id-dependencies-config":
-		return TypeID_TYPE_ID_DEPENDENCIES_CONFIG
-	case "state-perm-entry", "type-id-state-perm-entry":
-		return TypeID_TYPE_ID_STATE_PERM_ENTRY
-	case "boundary-info", "type-id-boundary-info":
-		return TypeID_TYPE_ID_BOUNDARY_INFO
-	case "subscription-info", "type-id-subscription-info":
-		return TypeID_TYPE_ID_SUBSCRIPTION_INFO
-	case "enum-value-info", "type-id-enum-value-info":
-		return TypeID_TYPE_ID_ENUM_VALUE_INFO
-	case "field-info", "type-id-field-info":
-		return TypeID_TYPE_ID_FIELD_INFO
-	case "type-info", "type-id-type-info":
-		return TypeID_TYPE_ID_TYPE_INFO
-	case "graph-projection-field-info", "type-id-graph-projection-field-info":
-		return TypeID_TYPE_ID_GRAPH_PROJECTION_FIELD_INFO
-	case "graph-projection-info", "type-id-graph-projection-info":
-		return TypeID_TYPE_ID_GRAPH_PROJECTION_INFO
-	case "timeseries-projection-field-info", "type-id-timeseries-projection-field-info":
-		return TypeID_TYPE_ID_TIMESERIES_PROJECTION_FIELD_INFO
-	case "timeseries-projection-info", "type-id-timeseries-projection-info":
-		return TypeID_TYPE_ID_TIMESERIES_PROJECTION_INFO
-	case "rpc-info", "type-id-rpc-info":
-		return TypeID_TYPE_ID_RPC_INFO
-	case "enum-info", "type-id-enum-info":
-		return TypeID_TYPE_ID_ENUM_INFO
-	case "service-info", "type-id-service-info":
-		return TypeID_TYPE_ID_SERVICE_INFO
-	case "entitlement-grant-info", "type-id-entitlement-grant-info":
-		return TypeID_TYPE_ID_ENTITLEMENT_GRANT_INFO
-	case "build-info", "type-id-build-info":
-		return TypeID_TYPE_ID_BUILD_INFO
-	case "verification-harness", "type-id-verification-harness":
-		return TypeID_TYPE_ID_VERIFICATION_HARNESS
-	case "verification-report", "type-id-verification-report":
-		return TypeID_TYPE_ID_VERIFICATION_REPORT
-	case "package-node", "type-id-package-node":
-		return TypeID_TYPE_ID_PACKAGE_NODE
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-}
-
-// TypeIDToSpecName converts a TypeID to its canonical protobuf spec name
-func TypeIDToSpecName(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_UNSPECIFIED:
-		return "TYPE_ID_UNSPECIFIED"
-	case TypeID_TYPE_ID_LANGUAGE_DEPENDENCIES:
-		return "TYPE_ID_LANGUAGE_DEPENDENCIES"
-	case TypeID_TYPE_ID_DEPENDENCIES_REGISTRY:
-		return "TYPE_ID_DEPENDENCIES_REGISTRY"
-	case TypeID_TYPE_ID_DEPENDENCIES_CONFIG:
-		return "TYPE_ID_DEPENDENCIES_CONFIG"
-	case TypeID_TYPE_ID_STATE_PERM_ENTRY:
-		return "TYPE_ID_STATE_PERM_ENTRY"
-	case TypeID_TYPE_ID_BOUNDARY_INFO:
-		return "TYPE_ID_BOUNDARY_INFO"
-	case TypeID_TYPE_ID_SUBSCRIPTION_INFO:
-		return "TYPE_ID_SUBSCRIPTION_INFO"
-	case TypeID_TYPE_ID_ENUM_VALUE_INFO:
-		return "TYPE_ID_ENUM_VALUE_INFO"
-	case TypeID_TYPE_ID_FIELD_INFO:
-		return "TYPE_ID_FIELD_INFO"
-	case TypeID_TYPE_ID_TYPE_INFO:
-		return "TYPE_ID_TYPE_INFO"
-	case TypeID_TYPE_ID_GRAPH_PROJECTION_FIELD_INFO:
-		return "TYPE_ID_GRAPH_PROJECTION_FIELD_INFO"
-	case TypeID_TYPE_ID_GRAPH_PROJECTION_INFO:
-		return "TYPE_ID_GRAPH_PROJECTION_INFO"
-	case TypeID_TYPE_ID_TIMESERIES_PROJECTION_FIELD_INFO:
-		return "TYPE_ID_TIMESERIES_PROJECTION_FIELD_INFO"
-	case TypeID_TYPE_ID_TIMESERIES_PROJECTION_INFO:
-		return "TYPE_ID_TIMESERIES_PROJECTION_INFO"
-	case TypeID_TYPE_ID_RPC_INFO:
-		return "TYPE_ID_RPC_INFO"
-	case TypeID_TYPE_ID_ENUM_INFO:
-		return "TYPE_ID_ENUM_INFO"
-	case TypeID_TYPE_ID_SERVICE_INFO:
-		return "TYPE_ID_SERVICE_INFO"
-	case TypeID_TYPE_ID_ENTITLEMENT_GRANT_INFO:
-		return "TYPE_ID_ENTITLEMENT_GRANT_INFO"
-	case TypeID_TYPE_ID_BUILD_INFO:
-		return "TYPE_ID_BUILD_INFO"
-	case TypeID_TYPE_ID_VERIFICATION_HARNESS:
-		return "TYPE_ID_VERIFICATION_HARNESS"
-	case TypeID_TYPE_ID_VERIFICATION_REPORT:
-		return "TYPE_ID_VERIFICATION_REPORT"
-	case TypeID_TYPE_ID_PACKAGE_NODE:
-		return "TYPE_ID_PACKAGE_NODE"
-	default:
-		return ""
-	}
-}
-
 // ============================================================
 // JSON/YAML/TOML Serialization Helpers
 // ============================================================
@@ -1582,6 +1307,358 @@ func SubscriptionInfoToTOML(v *SubscriptionInfo) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
+// EventPublishInfoJSON represents EventPublishInfo in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type eventpublishinfoJSON struct {
+	ActorPackage         string   `json:"actor_package,omitempty"`
+	ActorMessage         string   `json:"actor_message,omitempty"`
+	TopicRef             string   `json:"topic_ref,omitempty"`
+	EventTypeFqn         string   `json:"event_type_fqn,omitempty"`
+	BrokerTag            string   `json:"broker_tag,omitempty"`
+	RpcStem              string   `json:"rpc_stem,omitempty"`
+	AuthModel            string   `json:"auth_model,omitempty"`
+	AuthServices         []string `json:"auth_services,omitempty"`
+	AuthDisabled         bool     `json:"auth_disabled,omitempty"`
+	AuthAnyUser          bool     `json:"auth_any_user,omitempty"`
+	TargetNamespaceField string   `json:"target_namespace_field,omitempty"`
+}
+
+// EventPublishInfoToJSON converts EventPublishInfo to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func EventPublishInfoToJSON(v *EventPublishInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventpublishinfo is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := eventpublishinfoJSON{
+		ActorPackage:         v.ActorPackage,
+		ActorMessage:         v.ActorMessage,
+		TopicRef:             v.TopicRef,
+		EventTypeFqn:         v.EventTypeFqn,
+		BrokerTag:            v.BrokerTag,
+		RpcStem:              v.RpcStem,
+		AuthModel:            v.AuthModel,
+		AuthServices:         v.AuthServices,
+		AuthDisabled:         v.AuthDisabled,
+		AuthAnyUser:          v.AuthAnyUser,
+		TargetNamespaceField: v.TargetNamespaceField,
+	}
+	return json.Marshal(helper)
+}
+
+// EventPublishInfoToJSONPretty converts EventPublishInfo to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func EventPublishInfoToJSONPretty(v *EventPublishInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventpublishinfo is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := eventpublishinfoJSON{
+		ActorPackage:         v.ActorPackage,
+		ActorMessage:         v.ActorMessage,
+		TopicRef:             v.TopicRef,
+		EventTypeFqn:         v.EventTypeFqn,
+		BrokerTag:            v.BrokerTag,
+		RpcStem:              v.RpcStem,
+		AuthModel:            v.AuthModel,
+		AuthServices:         v.AuthServices,
+		AuthDisabled:         v.AuthDisabled,
+		AuthAnyUser:          v.AuthAnyUser,
+		TargetNamespaceField: v.TargetNamespaceField,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// EventPublishInfoFromBytes creates EventPublishInfo from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func EventPublishInfoFromBytes(data []byte) (*EventPublishInfo, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := EventPublishInfoFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := EventPublishInfoFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := EventPublishInfoFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &EventPublishInfo{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse EventPublishInfo: unsupported format or invalid data")
+}
+
+// EventPublishInfoFromJSON creates EventPublishInfo from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func EventPublishInfoFromJSON(data []byte) (*EventPublishInfo, error) {
+	// Unmarshal into helper struct with string enums
+	var raw eventpublishinfoJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &EventPublishInfo{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &EventPublishInfo{}
+	result.ActorPackage = raw.ActorPackage
+	result.ActorMessage = raw.ActorMessage
+	result.TopicRef = raw.TopicRef
+	result.EventTypeFqn = raw.EventTypeFqn
+	result.BrokerTag = raw.BrokerTag
+	result.RpcStem = raw.RpcStem
+	result.AuthModel = raw.AuthModel
+	result.AuthServices = raw.AuthServices
+	result.AuthDisabled = raw.AuthDisabled
+	result.AuthAnyUser = raw.AuthAnyUser
+	result.TargetNamespaceField = raw.TargetNamespaceField
+	return result, nil
+}
+
+// EventPublishInfoToYAML converts EventPublishInfo to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func EventPublishInfoToYAML(v *EventPublishInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventpublishinfo is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := EventPublishInfoToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// EventPublishInfoToTOML converts EventPublishInfo to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func EventPublishInfoToTOML(v *EventPublishInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventpublishinfo is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := EventPublishInfoToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// EventWatchInfoJSON represents EventWatchInfo in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type eventwatchinfoJSON struct {
+	ActorPackage         string   `json:"actor_package,omitempty"`
+	ActorMessage         string   `json:"actor_message,omitempty"`
+	TopicRef             string   `json:"topic_ref,omitempty"`
+	EventTypeFqn         string   `json:"event_type_fqn,omitempty"`
+	BrokerTag            string   `json:"broker_tag,omitempty"`
+	RpcStem              string   `json:"rpc_stem,omitempty"`
+	AuthModel            string   `json:"auth_model,omitempty"`
+	AuthServices         []string `json:"auth_services,omitempty"`
+	AuthDisabled         bool     `json:"auth_disabled,omitempty"`
+	AuthAnyUser          bool     `json:"auth_any_user,omitempty"`
+	TargetNamespaceField string   `json:"target_namespace_field,omitempty"`
+}
+
+// EventWatchInfoToJSON converts EventWatchInfo to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func EventWatchInfoToJSON(v *EventWatchInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventwatchinfo is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := eventwatchinfoJSON{
+		ActorPackage:         v.ActorPackage,
+		ActorMessage:         v.ActorMessage,
+		TopicRef:             v.TopicRef,
+		EventTypeFqn:         v.EventTypeFqn,
+		BrokerTag:            v.BrokerTag,
+		RpcStem:              v.RpcStem,
+		AuthModel:            v.AuthModel,
+		AuthServices:         v.AuthServices,
+		AuthDisabled:         v.AuthDisabled,
+		AuthAnyUser:          v.AuthAnyUser,
+		TargetNamespaceField: v.TargetNamespaceField,
+	}
+	return json.Marshal(helper)
+}
+
+// EventWatchInfoToJSONPretty converts EventWatchInfo to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func EventWatchInfoToJSONPretty(v *EventWatchInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventwatchinfo is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := eventwatchinfoJSON{
+		ActorPackage:         v.ActorPackage,
+		ActorMessage:         v.ActorMessage,
+		TopicRef:             v.TopicRef,
+		EventTypeFqn:         v.EventTypeFqn,
+		BrokerTag:            v.BrokerTag,
+		RpcStem:              v.RpcStem,
+		AuthModel:            v.AuthModel,
+		AuthServices:         v.AuthServices,
+		AuthDisabled:         v.AuthDisabled,
+		AuthAnyUser:          v.AuthAnyUser,
+		TargetNamespaceField: v.TargetNamespaceField,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// EventWatchInfoFromBytes creates EventWatchInfo from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func EventWatchInfoFromBytes(data []byte) (*EventWatchInfo, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := EventWatchInfoFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := EventWatchInfoFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := EventWatchInfoFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &EventWatchInfo{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse EventWatchInfo: unsupported format or invalid data")
+}
+
+// EventWatchInfoFromJSON creates EventWatchInfo from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func EventWatchInfoFromJSON(data []byte) (*EventWatchInfo, error) {
+	// Unmarshal into helper struct with string enums
+	var raw eventwatchinfoJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &EventWatchInfo{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &EventWatchInfo{}
+	result.ActorPackage = raw.ActorPackage
+	result.ActorMessage = raw.ActorMessage
+	result.TopicRef = raw.TopicRef
+	result.EventTypeFqn = raw.EventTypeFqn
+	result.BrokerTag = raw.BrokerTag
+	result.RpcStem = raw.RpcStem
+	result.AuthModel = raw.AuthModel
+	result.AuthServices = raw.AuthServices
+	result.AuthDisabled = raw.AuthDisabled
+	result.AuthAnyUser = raw.AuthAnyUser
+	result.TargetNamespaceField = raw.TargetNamespaceField
+	return result, nil
+}
+
+// EventWatchInfoToYAML converts EventWatchInfo to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func EventWatchInfoToYAML(v *EventWatchInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventwatchinfo is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := EventWatchInfoToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// EventWatchInfoToTOML converts EventWatchInfo to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func EventWatchInfoToTOML(v *EventWatchInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventwatchinfo is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := EventWatchInfoToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
 // EnumValueInfoJSON represents EnumValueInfo in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type enumvalueinfoJSON struct {
@@ -1726,6 +1803,194 @@ func EnumValueInfoToTOML(v *EnumValueInfo) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
+// FieldConstraintInfoJSON represents FieldConstraintInfo in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type fieldconstraintinfoJSON struct {
+	Rule        string    `json:"rule,omitempty"`
+	Target      string    `json:"target,omitempty"`
+	ValueKind   string    `json:"value_kind,omitempty"`
+	BoolValue   *bool     `json:"bool_value,omitempty"`
+	IntValue    *int64    `json:"int_value,omitempty"`
+	FloatValue  *float64  `json:"float_value,omitempty"`
+	StringValue string    `json:"string_value,omitempty"`
+	EnumValue   string    `json:"enum_value,omitempty"`
+	IntValues   []int64   `json:"int_values,omitempty"`
+	FloatValues []float64 `json:"float_values,omitempty"`
+	Operator    string    `json:"operator,omitempty"`
+	Defaulted   bool      `json:"defaulted,omitempty"`
+	Unit        string    `json:"unit,omitempty"`
+	Source      string    `json:"source,omitempty"`
+}
+
+// FieldConstraintInfoToJSON converts FieldConstraintInfo to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func FieldConstraintInfoToJSON(v *FieldConstraintInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fieldconstraintinfo is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := fieldconstraintinfoJSON{
+		Rule:        v.Rule,
+		Target:      v.Target,
+		ValueKind:   v.ValueKind,
+		BoolValue:   v.BoolValue,
+		IntValue:    v.IntValue,
+		FloatValue:  v.FloatValue,
+		StringValue: v.StringValue,
+		EnumValue:   v.EnumValue,
+		IntValues:   v.IntValues,
+		FloatValues: v.FloatValues,
+		Operator:    v.Operator,
+		Defaulted:   v.Defaulted,
+		Unit:        v.Unit,
+		Source:      v.Source,
+	}
+	return json.Marshal(helper)
+}
+
+// FieldConstraintInfoToJSONPretty converts FieldConstraintInfo to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func FieldConstraintInfoToJSONPretty(v *FieldConstraintInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fieldconstraintinfo is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := fieldconstraintinfoJSON{
+		Rule:        v.Rule,
+		Target:      v.Target,
+		ValueKind:   v.ValueKind,
+		BoolValue:   v.BoolValue,
+		IntValue:    v.IntValue,
+		FloatValue:  v.FloatValue,
+		StringValue: v.StringValue,
+		EnumValue:   v.EnumValue,
+		IntValues:   v.IntValues,
+		FloatValues: v.FloatValues,
+		Operator:    v.Operator,
+		Defaulted:   v.Defaulted,
+		Unit:        v.Unit,
+		Source:      v.Source,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// FieldConstraintInfoFromBytes creates FieldConstraintInfo from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func FieldConstraintInfoFromBytes(data []byte) (*FieldConstraintInfo, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := FieldConstraintInfoFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := FieldConstraintInfoFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := FieldConstraintInfoFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &FieldConstraintInfo{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse FieldConstraintInfo: unsupported format or invalid data")
+}
+
+// FieldConstraintInfoFromJSON creates FieldConstraintInfo from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func FieldConstraintInfoFromJSON(data []byte) (*FieldConstraintInfo, error) {
+	// Unmarshal into helper struct with string enums
+	var raw fieldconstraintinfoJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &FieldConstraintInfo{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &FieldConstraintInfo{}
+	result.Rule = raw.Rule
+	result.Target = raw.Target
+	result.ValueKind = raw.ValueKind
+	result.BoolValue = raw.BoolValue
+	result.IntValue = raw.IntValue
+	result.FloatValue = raw.FloatValue
+	result.StringValue = raw.StringValue
+	result.EnumValue = raw.EnumValue
+	result.IntValues = raw.IntValues
+	result.FloatValues = raw.FloatValues
+	result.Operator = raw.Operator
+	result.Defaulted = raw.Defaulted
+	result.Unit = raw.Unit
+	result.Source = raw.Source
+	return result, nil
+}
+
+// FieldConstraintInfoToYAML converts FieldConstraintInfo to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func FieldConstraintInfoToYAML(v *FieldConstraintInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fieldconstraintinfo is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := FieldConstraintInfoToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// FieldConstraintInfoToTOML converts FieldConstraintInfo to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func FieldConstraintInfoToTOML(v *FieldConstraintInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fieldconstraintinfo is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := FieldConstraintInfoToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
 // FieldInfoJSON represents FieldInfo in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type fieldinfoJSON struct {
@@ -1753,6 +2018,11 @@ type fieldinfoJSON struct {
 	TimeseriesPartitionKey   bool              `json:"timeseries_partition_key,omitempty"`
 	TimeseriesDefaultExpr    string            `json:"timeseries_default_expr,omitempty"`
 	TimeseriesLowCardinality bool              `json:"timeseries_low_cardinality,omitempty"`
+	Oneof                    bool              `json:"oneof,omitempty"`
+	OneofName                string            `json:"oneof_name,omitempty"`
+	StoreKey                 bool              `json:"store_key,omitempty"`
+	QuorumWrite              bool              `json:"quorum_write,omitempty"`
+	ConstraintInfos          []json.RawMessage `json:"constraint_infos,omitempty"`
 }
 
 // FieldInfoToJSON converts FieldInfo to JSON bytes.
@@ -1806,6 +2076,24 @@ func FieldInfoToJSON(v *FieldInfo) ([]byte, error) {
 		TimeseriesPartitionKey:   v.TimeseriesPartitionKey,
 		TimeseriesDefaultExpr:    v.TimeseriesDefaultExpr,
 		TimeseriesLowCardinality: v.TimeseriesLowCardinality,
+		Oneof:                    v.Oneof,
+		OneofName:                v.OneofName,
+		StoreKey:                 v.StoreKey,
+		QuorumWrite:              v.QuorumWrite,
+		ConstraintInfos: func() []json.RawMessage {
+			if len(v.ConstraintInfos) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.ConstraintInfos))
+			for _, item := range v.ConstraintInfos {
+				if item != nil {
+					if data, err := FieldConstraintInfoToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
 	}
 	return json.Marshal(helper)
 }
@@ -1861,6 +2149,24 @@ func FieldInfoToJSONPretty(v *FieldInfo) ([]byte, error) {
 		TimeseriesPartitionKey:   v.TimeseriesPartitionKey,
 		TimeseriesDefaultExpr:    v.TimeseriesDefaultExpr,
 		TimeseriesLowCardinality: v.TimeseriesLowCardinality,
+		Oneof:                    v.Oneof,
+		OneofName:                v.OneofName,
+		StoreKey:                 v.StoreKey,
+		QuorumWrite:              v.QuorumWrite,
+		ConstraintInfos: func() []json.RawMessage {
+			if len(v.ConstraintInfos) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.ConstraintInfos))
+			for _, item := range v.ConstraintInfos {
+				if item != nil {
+					if data, err := FieldConstraintInfoToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1971,6 +2277,22 @@ func FieldInfoFromJSON(data []byte) (*FieldInfo, error) {
 	result.TimeseriesPartitionKey = raw.TimeseriesPartitionKey
 	result.TimeseriesDefaultExpr = raw.TimeseriesDefaultExpr
 	result.TimeseriesLowCardinality = raw.TimeseriesLowCardinality
+	result.Oneof = raw.Oneof
+	result.OneofName = raw.OneofName
+	result.StoreKey = raw.StoreKey
+	result.QuorumWrite = raw.QuorumWrite
+	// Parse repeated message field: ConstraintInfos
+	if len(raw.ConstraintInfos) > 0 {
+		result.ConstraintInfos = make([]*FieldConstraintInfo, 0, len(raw.ConstraintInfos))
+		for _, itemJSON := range raw.ConstraintInfos {
+			if len(itemJSON) > 0 {
+				parsed, err := FieldConstraintInfoFromJSON(itemJSON)
+				if err == nil {
+					result.ConstraintInfos = append(result.ConstraintInfos, parsed)
+				}
+			}
+		}
+	}
 	return result, nil
 }
 
@@ -2034,6 +2356,9 @@ type typeinfoJSON struct {
 	EventdbOwner          string            `json:"eventdb_owner,omitempty"`
 	GraphProjections      []json.RawMessage `json:"graph_projections,omitempty"`
 	TimeseriesProjections []json.RawMessage `json:"timeseries_projections,omitempty"`
+	ServiceStore          bool              `json:"service_store,omitempty"`
+	ServiceStoreName      string            `json:"service_store_name,omitempty"`
+	ServiceStoreTag       string            `json:"service_store_tag,omitempty"`
 }
 
 // TypeInfoToJSON converts TypeInfo to JSON bytes.
@@ -2100,6 +2425,9 @@ func TypeInfoToJSON(v *TypeInfo) ([]byte, error) {
 			}
 			return result
 		}(),
+		ServiceStore:     v.ServiceStore,
+		ServiceStoreName: v.ServiceStoreName,
+		ServiceStoreTag:  v.ServiceStoreTag,
 	}
 	return json.Marshal(helper)
 }
@@ -2168,6 +2496,9 @@ func TypeInfoToJSONPretty(v *TypeInfo) ([]byte, error) {
 			}
 			return result
 		}(),
+		ServiceStore:     v.ServiceStore,
+		ServiceStoreName: v.ServiceStoreName,
+		ServiceStoreTag:  v.ServiceStoreTag,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -2282,6 +2613,9 @@ func TypeInfoFromJSON(data []byte) (*TypeInfo, error) {
 			}
 		}
 	}
+	result.ServiceStore = raw.ServiceStore
+	result.ServiceStoreName = raw.ServiceStoreName
+	result.ServiceStoreTag = raw.ServiceStoreTag
 	return result, nil
 }
 
@@ -3003,50 +3337,245 @@ func TimeseriesProjectionInfoToTOML(v *TimeseriesProjectionInfo) ([]byte, error)
 	return toml.Marshal(obj)
 }
 
+// RpcSurfaceInfoJSON represents RpcSurfaceInfo in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type rpcsurfaceinfoJSON struct {
+	SurfaceKind            string   `json:"surface_kind,omitempty"`
+	Transport              string   `json:"transport,omitempty"`
+	AuthModel              string   `json:"auth_model,omitempty"`
+	AuthDisabled           bool     `json:"auth_disabled,omitempty"`
+	AuthServices           []string `json:"auth_services,omitempty"`
+	AuthEntitledUsers      bool     `json:"auth_entitled_users,omitempty"`
+	AuthAnyUser            bool     `json:"auth_any_user,omitempty"`
+	TargetNamespaceField   string   `json:"target_namespace_field,omitempty"`
+	SubjectNamespaceSource string   `json:"subject_namespace_source,omitempty"`
+	TargetNamespaceSource  string   `json:"target_namespace_source,omitempty"`
+	TargetNamespace        string   `json:"target_namespace,omitempty"`
+	GrpcPath               string   `json:"grpc_path,omitempty"`
+	HttpPath               string   `json:"http_path,omitempty"`
+	HttpMethods            []string `json:"http_methods,omitempty"`
+	HttpAliasPath          string   `json:"http_alias_path,omitempty"`
+}
+
+// RpcSurfaceInfoToJSON converts RpcSurfaceInfo to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func RpcSurfaceInfoToJSON(v *RpcSurfaceInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "rpcsurfaceinfo is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := rpcsurfaceinfoJSON{
+		SurfaceKind:            v.SurfaceKind,
+		Transport:              v.Transport,
+		AuthModel:              v.AuthModel,
+		AuthDisabled:           v.AuthDisabled,
+		AuthServices:           v.AuthServices,
+		AuthEntitledUsers:      v.AuthEntitledUsers,
+		AuthAnyUser:            v.AuthAnyUser,
+		TargetNamespaceField:   v.TargetNamespaceField,
+		SubjectNamespaceSource: v.SubjectNamespaceSource,
+		TargetNamespaceSource:  v.TargetNamespaceSource,
+		TargetNamespace:        v.TargetNamespace,
+		GrpcPath:               v.GrpcPath,
+		HttpPath:               v.HttpPath,
+		HttpMethods:            v.HttpMethods,
+		HttpAliasPath:          v.HttpAliasPath,
+	}
+	return json.Marshal(helper)
+}
+
+// RpcSurfaceInfoToJSONPretty converts RpcSurfaceInfo to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func RpcSurfaceInfoToJSONPretty(v *RpcSurfaceInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "rpcsurfaceinfo is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := rpcsurfaceinfoJSON{
+		SurfaceKind:            v.SurfaceKind,
+		Transport:              v.Transport,
+		AuthModel:              v.AuthModel,
+		AuthDisabled:           v.AuthDisabled,
+		AuthServices:           v.AuthServices,
+		AuthEntitledUsers:      v.AuthEntitledUsers,
+		AuthAnyUser:            v.AuthAnyUser,
+		TargetNamespaceField:   v.TargetNamespaceField,
+		SubjectNamespaceSource: v.SubjectNamespaceSource,
+		TargetNamespaceSource:  v.TargetNamespaceSource,
+		TargetNamespace:        v.TargetNamespace,
+		GrpcPath:               v.GrpcPath,
+		HttpPath:               v.HttpPath,
+		HttpMethods:            v.HttpMethods,
+		HttpAliasPath:          v.HttpAliasPath,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// RpcSurfaceInfoFromBytes creates RpcSurfaceInfo from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func RpcSurfaceInfoFromBytes(data []byte) (*RpcSurfaceInfo, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := RpcSurfaceInfoFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := RpcSurfaceInfoFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := RpcSurfaceInfoFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &RpcSurfaceInfo{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse RpcSurfaceInfo: unsupported format or invalid data")
+}
+
+// RpcSurfaceInfoFromJSON creates RpcSurfaceInfo from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func RpcSurfaceInfoFromJSON(data []byte) (*RpcSurfaceInfo, error) {
+	// Unmarshal into helper struct with string enums
+	var raw rpcsurfaceinfoJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &RpcSurfaceInfo{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &RpcSurfaceInfo{}
+	result.SurfaceKind = raw.SurfaceKind
+	result.Transport = raw.Transport
+	result.AuthModel = raw.AuthModel
+	result.AuthDisabled = raw.AuthDisabled
+	result.AuthServices = raw.AuthServices
+	result.AuthEntitledUsers = raw.AuthEntitledUsers
+	result.AuthAnyUser = raw.AuthAnyUser
+	result.TargetNamespaceField = raw.TargetNamespaceField
+	result.SubjectNamespaceSource = raw.SubjectNamespaceSource
+	result.TargetNamespaceSource = raw.TargetNamespaceSource
+	result.TargetNamespace = raw.TargetNamespace
+	result.GrpcPath = raw.GrpcPath
+	result.HttpPath = raw.HttpPath
+	result.HttpMethods = raw.HttpMethods
+	result.HttpAliasPath = raw.HttpAliasPath
+	return result, nil
+}
+
+// RpcSurfaceInfoToYAML converts RpcSurfaceInfo to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func RpcSurfaceInfoToYAML(v *RpcSurfaceInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "rpcsurfaceinfo is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := RpcSurfaceInfoToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// RpcSurfaceInfoToTOML converts RpcSurfaceInfo to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func RpcSurfaceInfoToTOML(v *RpcSurfaceInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "rpcsurfaceinfo is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := RpcSurfaceInfoToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
 // RpcInfoJSON represents RpcInfo in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type rpcinfoJSON struct {
-	Service                   string   `json:"service,omitempty"`
-	ServiceName               string   `json:"service_name,omitempty"`
-	Rpc                       string   `json:"rpc,omitempty"`
-	InputType                 string   `json:"input_type,omitempty"`
-	OutputType                string   `json:"output_type,omitempty"`
-	ClientStreaming           bool     `json:"client_streaming,omitempty"`
-	ServerStreaming           bool     `json:"server_streaming,omitempty"`
-	Description               string   `json:"description,omitempty"`
-	Category                  string   `json:"category,omitempty"`
-	GrpcPath                  string   `json:"grpc_path,omitempty"`
-	HttpPath                  string   `json:"http_path,omitempty"`
-	HttpMethods               []string `json:"http_methods,omitempty"`
-	HttpAliasPath             string   `json:"http_alias_path,omitempty"`
-	AuthDisabled              bool     `json:"auth_disabled,omitempty"`
-	AuthServices              []string `json:"auth_services,omitempty"`
-	AuthEntitledUsers         bool     `json:"auth_entitled_users,omitempty"`
-	AuthAnyUser               bool     `json:"auth_any_user,omitempty"`
-	AuthModel                 string   `json:"auth_model,omitempty"`
-	CollectionMode            string   `json:"collection_mode,omitempty"`
-	CollectionMaxItems        uint32   `json:"collection_max_items,omitempty"`
-	CollectionOrderBy         []string `json:"collection_order_by,omitempty"`
-	CollectionReplayDepth     uint32   `json:"collection_replay_depth,omitempty"`
-	CollectionDefaultPageSize uint32   `json:"collection_default_page_size,omitempty"`
-	RpcVerb                   string   `json:"rpc_verb,omitempty"`
-	RpcNoun                   string   `json:"rpc_noun,omitempty"`
-	MethodPattern             string   `json:"method_pattern,omitempty"`
-	AccessKind                string   `json:"access_kind,omitempty"`
-	VerbClass                 string   `json:"verb_class,omitempty"`
-	EntitlementScopes         []string `json:"entitlement_scopes,omitempty"`
-	RetryPolicy               string   `json:"retry_policy,omitempty"`
-	CapabilityScope           string   `json:"capability_scope,omitempty"`
-	VerbDefinition            string   `json:"verb_definition,omitempty"`
-	VerbBoundary              string   `json:"verb_boundary,omitempty"`
-	AuditMeaning              string   `json:"audit_meaning,omitempty"`
-	RejectedVerbs             []string `json:"rejected_verbs,omitempty"`
-	AllowedPatterns           []string `json:"allowed_patterns,omitempty"`
-	HandlerShape              string   `json:"handler_shape,omitempty"`
-	TargetNamespaceField      string   `json:"target_namespace_field,omitempty"`
-	SubjectNamespaceSource    string   `json:"subject_namespace_source,omitempty"`
-	TargetNamespaceSource     string   `json:"target_namespace_source,omitempty"`
-	TargetNamespace           string   `json:"target_namespace,omitempty"`
+	Service                   string            `json:"service,omitempty"`
+	ServiceName               string            `json:"service_name,omitempty"`
+	Rpc                       string            `json:"rpc,omitempty"`
+	InputType                 string            `json:"input_type,omitempty"`
+	OutputType                string            `json:"output_type,omitempty"`
+	ClientStreaming           bool              `json:"client_streaming,omitempty"`
+	ServerStreaming           bool              `json:"server_streaming,omitempty"`
+	Description               string            `json:"description,omitempty"`
+	Category                  string            `json:"category,omitempty"`
+	GrpcPath                  string            `json:"grpc_path,omitempty"`
+	HttpPath                  string            `json:"http_path,omitempty"`
+	HttpMethods               []string          `json:"http_methods,omitempty"`
+	HttpAliasPath             string            `json:"http_alias_path,omitempty"`
+	AuthDisabled              bool              `json:"auth_disabled,omitempty"`
+	AuthServices              []string          `json:"auth_services,omitempty"`
+	AuthEntitledUsers         bool              `json:"auth_entitled_users,omitempty"`
+	AuthAnyUser               bool              `json:"auth_any_user,omitempty"`
+	AuthModel                 string            `json:"auth_model,omitempty"`
+	CollectionMode            string            `json:"collection_mode,omitempty"`
+	CollectionMaxItems        uint32            `json:"collection_max_items,omitempty"`
+	CollectionOrderBy         []string          `json:"collection_order_by,omitempty"`
+	CollectionReplayDepth     uint32            `json:"collection_replay_depth,omitempty"`
+	CollectionDefaultPageSize uint32            `json:"collection_default_page_size,omitempty"`
+	RpcVerb                   string            `json:"rpc_verb,omitempty"`
+	RpcNoun                   string            `json:"rpc_noun,omitempty"`
+	MethodPattern             string            `json:"method_pattern,omitempty"`
+	AccessKind                string            `json:"access_kind,omitempty"`
+	VerbClass                 string            `json:"verb_class,omitempty"`
+	EntitlementScopes         []string          `json:"entitlement_scopes,omitempty"`
+	RetryPolicy               string            `json:"retry_policy,omitempty"`
+	CapabilityScope           string            `json:"capability_scope,omitempty"`
+	VerbDefinition            string            `json:"verb_definition,omitempty"`
+	VerbBoundary              string            `json:"verb_boundary,omitempty"`
+	AuditMeaning              string            `json:"audit_meaning,omitempty"`
+	RejectedVerbs             []string          `json:"rejected_verbs,omitempty"`
+	AllowedPatterns           []string          `json:"allowed_patterns,omitempty"`
+	HandlerShape              string            `json:"handler_shape,omitempty"`
+	TargetNamespaceField      string            `json:"target_namespace_field,omitempty"`
+	SubjectNamespaceSource    string            `json:"subject_namespace_source,omitempty"`
+	TargetNamespaceSource     string            `json:"target_namespace_source,omitempty"`
+	TargetNamespace           string            `json:"target_namespace,omitempty"`
+	VerbStatus                string            `json:"verb_status,omitempty"`
+	FoldedToVerb              string            `json:"folded_to_verb,omitempty"`
+	Surfaces                  []json.RawMessage `json:"surfaces,omitempty"`
 }
 
 // RpcInfoToJSON converts RpcInfo to JSON bytes.
@@ -3098,6 +3627,22 @@ func RpcInfoToJSON(v *RpcInfo) ([]byte, error) {
 		SubjectNamespaceSource:    v.SubjectNamespaceSource,
 		TargetNamespaceSource:     v.TargetNamespaceSource,
 		TargetNamespace:           v.TargetNamespace,
+		VerbStatus:                v.VerbStatus,
+		FoldedToVerb:              v.FoldedToVerb,
+		Surfaces: func() []json.RawMessage {
+			if len(v.Surfaces) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Surfaces))
+			for _, item := range v.Surfaces {
+				if item != nil {
+					if data, err := RpcSurfaceInfoToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
 	}
 	return json.Marshal(helper)
 }
@@ -3151,6 +3696,22 @@ func RpcInfoToJSONPretty(v *RpcInfo) ([]byte, error) {
 		SubjectNamespaceSource:    v.SubjectNamespaceSource,
 		TargetNamespaceSource:     v.TargetNamespaceSource,
 		TargetNamespace:           v.TargetNamespace,
+		VerbStatus:                v.VerbStatus,
+		FoldedToVerb:              v.FoldedToVerb,
+		Surfaces: func() []json.RawMessage {
+			if len(v.Surfaces) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Surfaces))
+			for _, item := range v.Surfaces {
+				if item != nil {
+					if data, err := RpcSurfaceInfoToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -3266,6 +3827,20 @@ func RpcInfoFromJSON(data []byte) (*RpcInfo, error) {
 	result.SubjectNamespaceSource = raw.SubjectNamespaceSource
 	result.TargetNamespaceSource = raw.TargetNamespaceSource
 	result.TargetNamespace = raw.TargetNamespace
+	result.VerbStatus = raw.VerbStatus
+	result.FoldedToVerb = raw.FoldedToVerb
+	// Parse repeated message field: Surfaces
+	if len(raw.Surfaces) > 0 {
+		result.Surfaces = make([]*RpcSurfaceInfo, 0, len(raw.Surfaces))
+		for _, itemJSON := range raw.Surfaces {
+			if len(itemJSON) > 0 {
+				parsed, err := RpcSurfaceInfoFromJSON(itemJSON)
+				if err == nil {
+					result.Surfaces = append(result.Surfaces, parsed)
+				}
+			}
+		}
+	}
 	return result, nil
 }
 
@@ -3507,6 +4082,8 @@ type serviceinfoJSON struct {
 	EventTag     string            `json:"event_tag,omitempty"`
 	Smb          bool              `json:"smb,omitempty"`
 	SmbAuthority bool              `json:"smb_authority,omitempty"`
+	SmbRoot      string            `json:"smb_root,omitempty"`
+	HostTag      string            `json:"host_tag,omitempty"`
 }
 
 // ServiceInfoToJSON converts ServiceInfo to JSON bytes.
@@ -3540,6 +4117,13 @@ func ServiceInfoToJSON(v *ServiceInfo) ([]byte, error) {
 		EventTag:     v.EventTag,
 		Smb:          v.Smb,
 		SmbAuthority: v.SmbAuthority,
+		SmbRoot: func() string {
+			if v.SmbRoot == nil {
+				return ""
+			}
+			return spec.SmbRootToString(*v.SmbRoot)
+		}(),
+		HostTag: v.HostTag,
 	}
 	return json.Marshal(helper)
 }
@@ -3575,6 +4159,13 @@ func ServiceInfoToJSONPretty(v *ServiceInfo) ([]byte, error) {
 		EventTag:     v.EventTag,
 		Smb:          v.Smb,
 		SmbAuthority: v.SmbAuthority,
+		SmbRoot: func() string {
+			if v.SmbRoot == nil {
+				return ""
+			}
+			return spec.SmbRootToString(*v.SmbRoot)
+		}(),
+		HostTag: v.HostTag,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -3660,6 +4251,13 @@ func ServiceInfoFromJSON(data []byte) (*ServiceInfo, error) {
 	result.EventTag = raw.EventTag
 	result.Smb = raw.Smb
 	result.SmbAuthority = raw.SmbAuthority
+	// Parse enum field: SmbRoot
+	if raw.SmbRoot != "" {
+		if parsed, err := spec.ParseSmbRoot(raw.SmbRoot); err == nil {
+			result.SmbRoot = &parsed
+		}
+	}
+	result.HostTag = raw.HostTag
 	return result, nil
 }
 
@@ -3692,6 +4290,306 @@ func ServiceInfoToTOML(v *ServiceInfo) ([]byte, error) {
 	}
 	// Convert to JSON first
 	jsonData, err := ServiceInfoToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// VServiceInfoJSON represents VServiceInfo in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type vserviceinfoJSON struct {
+	Name    string `json:"name,omitempty"`
+	Id      int32  `json:"id,omitempty"`
+	Package string `json:"package,omitempty"`
+}
+
+// VServiceInfoToJSON converts VServiceInfo to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func VServiceInfoToJSON(v *VServiceInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "vserviceinfo is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := vserviceinfoJSON{
+		Name:    v.Name,
+		Id:      v.Id,
+		Package: v.Package,
+	}
+	return json.Marshal(helper)
+}
+
+// VServiceInfoToJSONPretty converts VServiceInfo to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func VServiceInfoToJSONPretty(v *VServiceInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "vserviceinfo is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := vserviceinfoJSON{
+		Name:    v.Name,
+		Id:      v.Id,
+		Package: v.Package,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// VServiceInfoFromBytes creates VServiceInfo from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func VServiceInfoFromBytes(data []byte) (*VServiceInfo, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := VServiceInfoFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := VServiceInfoFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := VServiceInfoFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &VServiceInfo{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse VServiceInfo: unsupported format or invalid data")
+}
+
+// VServiceInfoFromJSON creates VServiceInfo from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func VServiceInfoFromJSON(data []byte) (*VServiceInfo, error) {
+	// Unmarshal into helper struct with string enums
+	var raw vserviceinfoJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &VServiceInfo{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &VServiceInfo{}
+	result.Name = raw.Name
+	result.Id = raw.Id
+	result.Package = raw.Package
+	return result, nil
+}
+
+// VServiceInfoToYAML converts VServiceInfo to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func VServiceInfoToYAML(v *VServiceInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "vserviceinfo is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := VServiceInfoToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// VServiceInfoToTOML converts VServiceInfo to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func VServiceInfoToTOML(v *VServiceInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "vserviceinfo is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := VServiceInfoToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// ClientDependencyInfoJSON represents ClientDependencyInfo in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type clientdependencyinfoJSON struct {
+	SourcePackage string `json:"source_package,omitempty"`
+	SurfaceKind   string `json:"surface_kind,omitempty"`
+	Service       string `json:"service,omitempty"`
+	TargetPackage string `json:"target_package,omitempty"`
+	TargetService string `json:"target_service,omitempty"`
+	Wildcard      bool   `json:"wildcard,omitempty"`
+}
+
+// ClientDependencyInfoToJSON converts ClientDependencyInfo to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func ClientDependencyInfoToJSON(v *ClientDependencyInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "clientdependencyinfo is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := clientdependencyinfoJSON{
+		SourcePackage: v.SourcePackage,
+		SurfaceKind:   v.SurfaceKind,
+		Service:       v.Service,
+		TargetPackage: v.TargetPackage,
+		TargetService: v.TargetService,
+		Wildcard:      v.Wildcard,
+	}
+	return json.Marshal(helper)
+}
+
+// ClientDependencyInfoToJSONPretty converts ClientDependencyInfo to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func ClientDependencyInfoToJSONPretty(v *ClientDependencyInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "clientdependencyinfo is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := clientdependencyinfoJSON{
+		SourcePackage: v.SourcePackage,
+		SurfaceKind:   v.SurfaceKind,
+		Service:       v.Service,
+		TargetPackage: v.TargetPackage,
+		TargetService: v.TargetService,
+		Wildcard:      v.Wildcard,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// ClientDependencyInfoFromBytes creates ClientDependencyInfo from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func ClientDependencyInfoFromBytes(data []byte) (*ClientDependencyInfo, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := ClientDependencyInfoFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := ClientDependencyInfoFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := ClientDependencyInfoFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &ClientDependencyInfo{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse ClientDependencyInfo: unsupported format or invalid data")
+}
+
+// ClientDependencyInfoFromJSON creates ClientDependencyInfo from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func ClientDependencyInfoFromJSON(data []byte) (*ClientDependencyInfo, error) {
+	// Unmarshal into helper struct with string enums
+	var raw clientdependencyinfoJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &ClientDependencyInfo{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &ClientDependencyInfo{}
+	result.SourcePackage = raw.SourcePackage
+	result.SurfaceKind = raw.SurfaceKind
+	result.Service = raw.Service
+	result.TargetPackage = raw.TargetPackage
+	result.TargetService = raw.TargetService
+	result.Wildcard = raw.Wildcard
+	return result, nil
+}
+
+// ClientDependencyInfoToYAML converts ClientDependencyInfo to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func ClientDependencyInfoToYAML(v *ClientDependencyInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "clientdependencyinfo is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := ClientDependencyInfoToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// ClientDependencyInfoToTOML converts ClientDependencyInfo to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func ClientDependencyInfoToTOML(v *ClientDependencyInfo) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "clientdependencyinfo is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := ClientDependencyInfoToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -4363,20 +5261,25 @@ func VerificationReportToTOML(v *VerificationReport) ([]byte, error) {
 // PackageNodeJSON represents PackageNode in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type packagenodeJSON struct {
-	Name              string            `json:"name,omitempty"`
-	FullPath          string            `json:"full_path,omitempty"`
-	Children          []json.RawMessage `json:"children,omitempty"`
-	Types             []json.RawMessage `json:"types,omitempty"`
-	Rpcs              []json.RawMessage `json:"rpcs,omitempty"`
-	Boundaries        []json.RawMessage `json:"boundaries,omitempty"`
-	Docs              map[string]string `json:"docs,omitempty"`
-	Schema            string            `json:"schema,omitempty"`
-	Enums             []json.RawMessage `json:"enums,omitempty"`
-	Services          []json.RawMessage `json:"services,omitempty"`
-	Build             json.RawMessage   `json:"build,omitempty"`
-	Subscriptions     []json.RawMessage `json:"subscriptions,omitempty"`
-	Constants         map[string]string `json:"constants,omitempty"`
-	EntitlementGrants []json.RawMessage `json:"entitlement_grants,omitempty"`
+	Name               string            `json:"name,omitempty"`
+	FullPath           string            `json:"full_path,omitempty"`
+	Children           []json.RawMessage `json:"children,omitempty"`
+	Types              []json.RawMessage `json:"types,omitempty"`
+	Rpcs               []json.RawMessage `json:"rpcs,omitempty"`
+	Boundaries         []json.RawMessage `json:"boundaries,omitempty"`
+	Docs               map[string]string `json:"docs,omitempty"`
+	Schema             string            `json:"schema,omitempty"`
+	Enums              []json.RawMessage `json:"enums,omitempty"`
+	Services           []json.RawMessage `json:"services,omitempty"`
+	Build              json.RawMessage   `json:"build,omitempty"`
+	Subscriptions      []json.RawMessage `json:"subscriptions,omitempty"`
+	Constants          map[string]string `json:"constants,omitempty"`
+	EntitlementGrants  []json.RawMessage `json:"entitlement_grants,omitempty"`
+	ProtoPackages      []string          `json:"proto_packages,omitempty"`
+	Vservices          []json.RawMessage `json:"vservices,omitempty"`
+	ClientDependencies []json.RawMessage `json:"client_dependencies,omitempty"`
+	EventPublishes     []json.RawMessage `json:"event_publishes,omitempty"`
+	EventWatches       []json.RawMessage `json:"event_watches,omitempty"`
 }
 
 // PackageNodeToJSON converts PackageNode to JSON bytes.
@@ -4505,6 +5408,63 @@ func PackageNodeToJSON(v *PackageNode) ([]byte, error) {
 			for _, item := range v.EntitlementGrants {
 				if item != nil {
 					if data, err := EntitlementGrantInfoToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		ProtoPackages: v.ProtoPackages,
+		Vservices: func() []json.RawMessage {
+			if len(v.Vservices) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Vservices))
+			for _, item := range v.Vservices {
+				if item != nil {
+					if data, err := VServiceInfoToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		ClientDependencies: func() []json.RawMessage {
+			if len(v.ClientDependencies) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.ClientDependencies))
+			for _, item := range v.ClientDependencies {
+				if item != nil {
+					if data, err := ClientDependencyInfoToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		EventPublishes: func() []json.RawMessage {
+			if len(v.EventPublishes) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.EventPublishes))
+			for _, item := range v.EventPublishes {
+				if item != nil {
+					if data, err := EventPublishInfoToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		EventWatches: func() []json.RawMessage {
+			if len(v.EventWatches) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.EventWatches))
+			for _, item := range v.EventWatches {
+				if item != nil {
+					if data, err := EventWatchInfoToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -4641,6 +5601,63 @@ func PackageNodeToJSONPretty(v *PackageNode) ([]byte, error) {
 			for _, item := range v.EntitlementGrants {
 				if item != nil {
 					if data, err := EntitlementGrantInfoToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		ProtoPackages: v.ProtoPackages,
+		Vservices: func() []json.RawMessage {
+			if len(v.Vservices) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Vservices))
+			for _, item := range v.Vservices {
+				if item != nil {
+					if data, err := VServiceInfoToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		ClientDependencies: func() []json.RawMessage {
+			if len(v.ClientDependencies) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.ClientDependencies))
+			for _, item := range v.ClientDependencies {
+				if item != nil {
+					if data, err := ClientDependencyInfoToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		EventPublishes: func() []json.RawMessage {
+			if len(v.EventPublishes) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.EventPublishes))
+			for _, item := range v.EventPublishes {
+				if item != nil {
+					if data, err := EventPublishInfoToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		EventWatches: func() []json.RawMessage {
+			if len(v.EventWatches) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.EventWatches))
+			for _, item := range v.EventWatches {
+				if item != nil {
+					if data, err := EventWatchInfoToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -4815,6 +5832,55 @@ func PackageNodeFromJSON(data []byte) (*PackageNode, error) {
 				parsed, err := EntitlementGrantInfoFromJSON(itemJSON)
 				if err == nil {
 					result.EntitlementGrants = append(result.EntitlementGrants, parsed)
+				}
+			}
+		}
+	}
+	result.ProtoPackages = raw.ProtoPackages
+	// Parse repeated message field: Vservices
+	if len(raw.Vservices) > 0 {
+		result.Vservices = make([]*VServiceInfo, 0, len(raw.Vservices))
+		for _, itemJSON := range raw.Vservices {
+			if len(itemJSON) > 0 {
+				parsed, err := VServiceInfoFromJSON(itemJSON)
+				if err == nil {
+					result.Vservices = append(result.Vservices, parsed)
+				}
+			}
+		}
+	}
+	// Parse repeated message field: ClientDependencies
+	if len(raw.ClientDependencies) > 0 {
+		result.ClientDependencies = make([]*ClientDependencyInfo, 0, len(raw.ClientDependencies))
+		for _, itemJSON := range raw.ClientDependencies {
+			if len(itemJSON) > 0 {
+				parsed, err := ClientDependencyInfoFromJSON(itemJSON)
+				if err == nil {
+					result.ClientDependencies = append(result.ClientDependencies, parsed)
+				}
+			}
+		}
+	}
+	// Parse repeated message field: EventPublishes
+	if len(raw.EventPublishes) > 0 {
+		result.EventPublishes = make([]*EventPublishInfo, 0, len(raw.EventPublishes))
+		for _, itemJSON := range raw.EventPublishes {
+			if len(itemJSON) > 0 {
+				parsed, err := EventPublishInfoFromJSON(itemJSON)
+				if err == nil {
+					result.EventPublishes = append(result.EventPublishes, parsed)
+				}
+			}
+		}
+	}
+	// Parse repeated message field: EventWatches
+	if len(raw.EventWatches) > 0 {
+		result.EventWatches = make([]*EventWatchInfo, 0, len(raw.EventWatches))
+		for _, itemJSON := range raw.EventWatches {
+			if len(itemJSON) > 0 {
+				parsed, err := EventWatchInfoFromJSON(itemJSON)
+				if err == nil {
+					result.EventWatches = append(result.EventWatches, parsed)
 				}
 			}
 		}
@@ -5114,6 +6180,144 @@ func SubscriptionInfoFromEnvVar(env map[string]string) (*SubscriptionInfo, error
 	return result, nil
 }
 
+// EventPublishInfoToEnvVar converts EventPublishInfo to environment variable key-value pairs.
+func EventPublishInfoToEnvVar(v *EventPublishInfo) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_ACTOR_PACKAGE"] = v.ActorPackage
+	result["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_ACTOR_MESSAGE"] = v.ActorMessage
+	result["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_TOPIC_REF"] = v.TopicRef
+	result["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_EVENT_TYPE_FQN"] = v.EventTypeFqn
+	result["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_BROKER_TAG"] = v.BrokerTag
+	result["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_RPC_STEM"] = v.RpcStem
+	result["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_AUTH_MODEL"] = v.AuthModel
+	if len(v.AuthServices) > 0 {
+		result["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_AUTH_SERVICES"] = strings.Join(v.AuthServices, ",")
+	}
+	result["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_AUTH_DISABLED"] = strconv.FormatBool(v.AuthDisabled)
+	result["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_AUTH_ANY_USER"] = strconv.FormatBool(v.AuthAnyUser)
+	result["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_TARGET_NAMESPACE_FIELD"] = v.TargetNamespaceField
+	return result
+}
+
+// EventPublishInfoFromEnvVar creates EventPublishInfo from environment variable key-value pairs.
+func EventPublishInfoFromEnvVar(env map[string]string) (*EventPublishInfo, error) {
+	result := &EventPublishInfo{}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_ACTOR_PACKAGE"]; ok && val != "" {
+		result.ActorPackage = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_ACTOR_MESSAGE"]; ok && val != "" {
+		result.ActorMessage = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_TOPIC_REF"]; ok && val != "" {
+		result.TopicRef = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_EVENT_TYPE_FQN"]; ok && val != "" {
+		result.EventTypeFqn = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_BROKER_TAG"]; ok && val != "" {
+		result.BrokerTag = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_RPC_STEM"]; ok && val != "" {
+		result.RpcStem = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_AUTH_MODEL"]; ok && val != "" {
+		result.AuthModel = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_AUTH_SERVICES"]; ok && val != "" {
+		result.AuthServices = strings.Split(val, ",")
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_AUTH_DISABLED"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.AuthDisabled = parsed
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_AUTH_ANY_USER"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.AuthAnyUser = parsed
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_PUBLISH_INFO_TARGET_NAMESPACE_FIELD"]; ok && val != "" {
+		result.TargetNamespaceField = val
+	}
+	return result, nil
+}
+
+// EventWatchInfoToEnvVar converts EventWatchInfo to environment variable key-value pairs.
+func EventWatchInfoToEnvVar(v *EventWatchInfo) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_ACTOR_PACKAGE"] = v.ActorPackage
+	result["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_ACTOR_MESSAGE"] = v.ActorMessage
+	result["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_TOPIC_REF"] = v.TopicRef
+	result["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_EVENT_TYPE_FQN"] = v.EventTypeFqn
+	result["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_BROKER_TAG"] = v.BrokerTag
+	result["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_RPC_STEM"] = v.RpcStem
+	result["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_AUTH_MODEL"] = v.AuthModel
+	if len(v.AuthServices) > 0 {
+		result["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_AUTH_SERVICES"] = strings.Join(v.AuthServices, ",")
+	}
+	result["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_AUTH_DISABLED"] = strconv.FormatBool(v.AuthDisabled)
+	result["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_AUTH_ANY_USER"] = strconv.FormatBool(v.AuthAnyUser)
+	result["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_TARGET_NAMESPACE_FIELD"] = v.TargetNamespaceField
+	return result
+}
+
+// EventWatchInfoFromEnvVar creates EventWatchInfo from environment variable key-value pairs.
+func EventWatchInfoFromEnvVar(env map[string]string) (*EventWatchInfo, error) {
+	result := &EventWatchInfo{}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_ACTOR_PACKAGE"]; ok && val != "" {
+		result.ActorPackage = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_ACTOR_MESSAGE"]; ok && val != "" {
+		result.ActorMessage = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_TOPIC_REF"]; ok && val != "" {
+		result.TopicRef = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_EVENT_TYPE_FQN"]; ok && val != "" {
+		result.EventTypeFqn = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_BROKER_TAG"]; ok && val != "" {
+		result.BrokerTag = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_RPC_STEM"]; ok && val != "" {
+		result.RpcStem = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_AUTH_MODEL"]; ok && val != "" {
+		result.AuthModel = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_AUTH_SERVICES"]; ok && val != "" {
+		result.AuthServices = strings.Split(val, ",")
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_AUTH_DISABLED"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.AuthDisabled = parsed
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_AUTH_ANY_USER"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.AuthAnyUser = parsed
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_EVENT_WATCH_INFO_TARGET_NAMESPACE_FIELD"]; ok && val != "" {
+		result.TargetNamespaceField = val
+	}
+	return result, nil
+}
+
 // EnumValueInfoToEnvVar converts EnumValueInfo to environment variable key-value pairs.
 func EnumValueInfoToEnvVar(v *EnumValueInfo) map[string]string {
 	if v == nil {
@@ -5141,6 +6345,127 @@ func EnumValueInfoFromEnvVar(env map[string]string) (*EnumValueInfo, error) {
 	}
 	if val, ok := env["PROTO_LIBS_TACPLUS_ENUM_VALUE_INFO_DESCRIPTION"]; ok && val != "" {
 		result.Description = val
+	}
+	return result, nil
+}
+
+// FieldConstraintInfoToEnvVar converts FieldConstraintInfo to environment variable key-value pairs.
+func FieldConstraintInfoToEnvVar(v *FieldConstraintInfo) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_RULE"] = v.Rule
+	result["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_TARGET"] = v.Target
+	result["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_VALUE_KIND"] = v.ValueKind
+	if v.BoolValue != nil {
+		result["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_BOOL_VALUE"] = strconv.FormatBool(*v.BoolValue)
+	}
+	if v.IntValue != nil {
+		result["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_INT_VALUE"] = strconv.FormatInt(*v.IntValue, 10)
+	}
+	if v.FloatValue != nil {
+		result["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_FLOAT_VALUE"] = strconv.FormatFloat(*v.FloatValue, 'f', -1, 64)
+	}
+	result["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_STRING_VALUE"] = v.StringValue
+	result["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_ENUM_VALUE"] = v.EnumValue
+	if len(v.IntValues) > 0 {
+		parts := make([]string, len(v.IntValues))
+		for i, val := range v.IntValues {
+			parts[i] = strconv.FormatInt(val, 10)
+		}
+		result["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_INT_VALUES"] = strings.Join(parts, ",")
+	}
+	if len(v.FloatValues) > 0 {
+		parts := make([]string, len(v.FloatValues))
+		for i, val := range v.FloatValues {
+			parts[i] = strconv.FormatFloat(val, 'f', -1, 64)
+		}
+		result["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_FLOAT_VALUES"] = strings.Join(parts, ",")
+	}
+	result["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_OPERATOR"] = v.Operator
+	result["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_DEFAULTED"] = strconv.FormatBool(v.Defaulted)
+	result["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_UNIT"] = v.Unit
+	result["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_SOURCE"] = v.Source
+	return result
+}
+
+// FieldConstraintInfoFromEnvVar creates FieldConstraintInfo from environment variable key-value pairs.
+func FieldConstraintInfoFromEnvVar(env map[string]string) (*FieldConstraintInfo, error) {
+	result := &FieldConstraintInfo{}
+	if val, ok := env["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_RULE"]; ok && val != "" {
+		result.Rule = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_TARGET"]; ok && val != "" {
+		result.Target = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_VALUE_KIND"]; ok && val != "" {
+		result.ValueKind = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_BOOL_VALUE"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.BoolValue = &parsed
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_INT_VALUE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.IntValue = &parsed
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_FLOAT_VALUE"]; ok && val != "" {
+		parsed, err := strconv.ParseFloat(val, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.FloatValue = &parsed
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_STRING_VALUE"]; ok && val != "" {
+		result.StringValue = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_ENUM_VALUE"]; ok && val != "" {
+		result.EnumValue = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_INT_VALUES"]; ok && val != "" {
+		parts := strings.Split(val, ",")
+		result.IntValues = make([]int64, 0, len(parts))
+		for _, p := range parts {
+			parsed, err := strconv.ParseInt(strings.TrimSpace(p), 10, 64)
+			if err != nil {
+				return nil, err
+			}
+			result.IntValues = append(result.IntValues, parsed)
+		}
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_FLOAT_VALUES"]; ok && val != "" {
+		parts := strings.Split(val, ",")
+		result.FloatValues = make([]float64, 0, len(parts))
+		for _, p := range parts {
+			parsed, err := strconv.ParseFloat(strings.TrimSpace(p), 64)
+			if err != nil {
+				return nil, err
+			}
+			result.FloatValues = append(result.FloatValues, parsed)
+		}
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_OPERATOR"]; ok && val != "" {
+		result.Operator = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_DEFAULTED"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Defaulted = parsed
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_UNIT"]; ok && val != "" {
+		result.Unit = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_FIELD_CONSTRAINT_INFO_SOURCE"]; ok && val != "" {
+		result.Source = val
 	}
 	return result, nil
 }
@@ -5180,6 +6505,10 @@ func FieldInfoToEnvVar(v *FieldInfo) map[string]string {
 	result["PROTO_LIBS_TACPLUS_FIELD_INFO_TIMESERIES_PARTITION_KEY"] = strconv.FormatBool(v.TimeseriesPartitionKey)
 	result["PROTO_LIBS_TACPLUS_FIELD_INFO_TIMESERIES_DEFAULT_EXPR"] = v.TimeseriesDefaultExpr
 	result["PROTO_LIBS_TACPLUS_FIELD_INFO_TIMESERIES_LOW_CARDINALITY"] = strconv.FormatBool(v.TimeseriesLowCardinality)
+	result["PROTO_LIBS_TACPLUS_FIELD_INFO_ONEOF"] = strconv.FormatBool(v.Oneof)
+	result["PROTO_LIBS_TACPLUS_FIELD_INFO_ONEOF_NAME"] = v.OneofName
+	result["PROTO_LIBS_TACPLUS_FIELD_INFO_STORE_KEY"] = strconv.FormatBool(v.StoreKey)
+	result["PROTO_LIBS_TACPLUS_FIELD_INFO_QUORUM_WRITE"] = strconv.FormatBool(v.QuorumWrite)
 	return result
 }
 
@@ -5289,6 +6618,30 @@ func FieldInfoFromEnvVar(env map[string]string) (*FieldInfo, error) {
 		}
 		result.TimeseriesLowCardinality = parsed
 	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_FIELD_INFO_ONEOF"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Oneof = parsed
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_FIELD_INFO_ONEOF_NAME"]; ok && val != "" {
+		result.OneofName = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_FIELD_INFO_STORE_KEY"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.StoreKey = parsed
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_FIELD_INFO_QUORUM_WRITE"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.QuorumWrite = parsed
+	}
 	return result, nil
 }
 
@@ -5312,6 +6665,9 @@ func TypeInfoToEnvVar(v *TypeInfo) map[string]string {
 	result["PROTO_LIBS_TACPLUS_TYPE_INFO_TIMESERIES_TABLE_SOURCE"] = v.TimeseriesTableSource
 	result["PROTO_LIBS_TACPLUS_TYPE_INFO_EVENTDB_KEY"] = v.EventdbKey
 	result["PROTO_LIBS_TACPLUS_TYPE_INFO_EVENTDB_OWNER"] = v.EventdbOwner
+	result["PROTO_LIBS_TACPLUS_TYPE_INFO_SERVICE_STORE"] = strconv.FormatBool(v.ServiceStore)
+	result["PROTO_LIBS_TACPLUS_TYPE_INFO_SERVICE_STORE_NAME"] = v.ServiceStoreName
+	result["PROTO_LIBS_TACPLUS_TYPE_INFO_SERVICE_STORE_TAG"] = v.ServiceStoreTag
 	return result
 }
 
@@ -5359,6 +6715,19 @@ func TypeInfoFromEnvVar(env map[string]string) (*TypeInfo, error) {
 	}
 	if val, ok := env["PROTO_LIBS_TACPLUS_TYPE_INFO_EVENTDB_OWNER"]; ok && val != "" {
 		result.EventdbOwner = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_TYPE_INFO_SERVICE_STORE"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.ServiceStore = parsed
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_TYPE_INFO_SERVICE_STORE_NAME"]; ok && val != "" {
+		result.ServiceStoreName = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_TYPE_INFO_SERVICE_STORE_TAG"]; ok && val != "" {
+		result.ServiceStoreTag = val
 	}
 	return result, nil
 }
@@ -5511,6 +6880,97 @@ func TimeseriesProjectionInfoFromEnvVar(env map[string]string) (*TimeseriesProje
 	return result, nil
 }
 
+// RpcSurfaceInfoToEnvVar converts RpcSurfaceInfo to environment variable key-value pairs.
+func RpcSurfaceInfoToEnvVar(v *RpcSurfaceInfo) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_SURFACE_KIND"] = v.SurfaceKind
+	result["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_TRANSPORT"] = v.Transport
+	result["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_AUTH_MODEL"] = v.AuthModel
+	result["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_AUTH_DISABLED"] = strconv.FormatBool(v.AuthDisabled)
+	if len(v.AuthServices) > 0 {
+		result["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_AUTH_SERVICES"] = strings.Join(v.AuthServices, ",")
+	}
+	result["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_AUTH_ENTITLED_USERS"] = strconv.FormatBool(v.AuthEntitledUsers)
+	result["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_AUTH_ANY_USER"] = strconv.FormatBool(v.AuthAnyUser)
+	result["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_TARGET_NAMESPACE_FIELD"] = v.TargetNamespaceField
+	result["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_SUBJECT_NAMESPACE_SOURCE"] = v.SubjectNamespaceSource
+	result["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_TARGET_NAMESPACE_SOURCE"] = v.TargetNamespaceSource
+	result["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_TARGET_NAMESPACE"] = v.TargetNamespace
+	result["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_GRPC_PATH"] = v.GrpcPath
+	result["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_HTTP_PATH"] = v.HttpPath
+	if len(v.HttpMethods) > 0 {
+		result["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_HTTP_METHODS"] = strings.Join(v.HttpMethods, ",")
+	}
+	result["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_HTTP_ALIAS_PATH"] = v.HttpAliasPath
+	return result
+}
+
+// RpcSurfaceInfoFromEnvVar creates RpcSurfaceInfo from environment variable key-value pairs.
+func RpcSurfaceInfoFromEnvVar(env map[string]string) (*RpcSurfaceInfo, error) {
+	result := &RpcSurfaceInfo{}
+	if val, ok := env["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_SURFACE_KIND"]; ok && val != "" {
+		result.SurfaceKind = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_TRANSPORT"]; ok && val != "" {
+		result.Transport = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_AUTH_MODEL"]; ok && val != "" {
+		result.AuthModel = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_AUTH_DISABLED"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.AuthDisabled = parsed
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_AUTH_SERVICES"]; ok && val != "" {
+		result.AuthServices = strings.Split(val, ",")
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_AUTH_ENTITLED_USERS"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.AuthEntitledUsers = parsed
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_AUTH_ANY_USER"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.AuthAnyUser = parsed
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_TARGET_NAMESPACE_FIELD"]; ok && val != "" {
+		result.TargetNamespaceField = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_SUBJECT_NAMESPACE_SOURCE"]; ok && val != "" {
+		result.SubjectNamespaceSource = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_TARGET_NAMESPACE_SOURCE"]; ok && val != "" {
+		result.TargetNamespaceSource = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_TARGET_NAMESPACE"]; ok && val != "" {
+		result.TargetNamespace = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_GRPC_PATH"]; ok && val != "" {
+		result.GrpcPath = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_HTTP_PATH"]; ok && val != "" {
+		result.HttpPath = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_HTTP_METHODS"]; ok && val != "" {
+		result.HttpMethods = strings.Split(val, ",")
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_RPC_SURFACE_INFO_HTTP_ALIAS_PATH"]; ok && val != "" {
+		result.HttpAliasPath = val
+	}
+	return result, nil
+}
+
 // RpcInfoToEnvVar converts RpcInfo to environment variable key-value pairs.
 func RpcInfoToEnvVar(v *RpcInfo) map[string]string {
 	if v == nil {
@@ -5570,6 +7030,8 @@ func RpcInfoToEnvVar(v *RpcInfo) map[string]string {
 	result["PROTO_LIBS_TACPLUS_RPC_INFO_SUBJECT_NAMESPACE_SOURCE"] = v.SubjectNamespaceSource
 	result["PROTO_LIBS_TACPLUS_RPC_INFO_TARGET_NAMESPACE_SOURCE"] = v.TargetNamespaceSource
 	result["PROTO_LIBS_TACPLUS_RPC_INFO_TARGET_NAMESPACE"] = v.TargetNamespace
+	result["PROTO_LIBS_TACPLUS_RPC_INFO_VERB_STATUS"] = v.VerbStatus
+	result["PROTO_LIBS_TACPLUS_RPC_INFO_FOLDED_TO_VERB"] = v.FoldedToVerb
 	return result
 }
 
@@ -5739,6 +7201,12 @@ func RpcInfoFromEnvVar(env map[string]string) (*RpcInfo, error) {
 	if val, ok := env["PROTO_LIBS_TACPLUS_RPC_INFO_TARGET_NAMESPACE"]; ok && val != "" {
 		result.TargetNamespace = val
 	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_RPC_INFO_VERB_STATUS"]; ok && val != "" {
+		result.VerbStatus = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_RPC_INFO_FOLDED_TO_VERB"]; ok && val != "" {
+		result.FoldedToVerb = val
+	}
 	return result, nil
 }
 
@@ -5788,6 +7256,10 @@ func ServiceInfoToEnvVar(v *ServiceInfo) map[string]string {
 	result["PROTO_LIBS_TACPLUS_SERVICE_INFO_EVENT_TAG"] = v.EventTag
 	result["PROTO_LIBS_TACPLUS_SERVICE_INFO_SMB"] = strconv.FormatBool(v.Smb)
 	result["PROTO_LIBS_TACPLUS_SERVICE_INFO_SMB_AUTHORITY"] = strconv.FormatBool(v.SmbAuthority)
+	if v.SmbRoot != nil {
+		result["PROTO_LIBS_TACPLUS_SERVICE_INFO_SMB_ROOT"] = spec.SmbRootToString(*v.SmbRoot)
+	}
+	result["PROTO_LIBS_TACPLUS_SERVICE_INFO_HOST_TAG"] = v.HostTag
 	return result
 }
 
@@ -5828,6 +7300,90 @@ func ServiceInfoFromEnvVar(env map[string]string) (*ServiceInfo, error) {
 			return nil, err
 		}
 		result.SmbAuthority = parsed
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_SERVICE_INFO_SMB_ROOT"]; ok && val != "" {
+		parsed, err := spec.ParseSmbRoot(val)
+		if err != nil {
+			return nil, err
+		}
+		result.SmbRoot = &parsed
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_SERVICE_INFO_HOST_TAG"]; ok && val != "" {
+		result.HostTag = val
+	}
+	return result, nil
+}
+
+// VServiceInfoToEnvVar converts VServiceInfo to environment variable key-value pairs.
+func VServiceInfoToEnvVar(v *VServiceInfo) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_LIBS_TACPLUS_V_SERVICE_INFO_NAME"] = v.Name
+	result["PROTO_LIBS_TACPLUS_V_SERVICE_INFO_ID"] = strconv.FormatInt(int64(v.Id), 10)
+	result["PROTO_LIBS_TACPLUS_V_SERVICE_INFO_PACKAGE"] = v.Package
+	return result
+}
+
+// VServiceInfoFromEnvVar creates VServiceInfo from environment variable key-value pairs.
+func VServiceInfoFromEnvVar(env map[string]string) (*VServiceInfo, error) {
+	result := &VServiceInfo{}
+	if val, ok := env["PROTO_LIBS_TACPLUS_V_SERVICE_INFO_NAME"]; ok && val != "" {
+		result.Name = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_V_SERVICE_INFO_ID"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.Id = int32(parsed)
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_V_SERVICE_INFO_PACKAGE"]; ok && val != "" {
+		result.Package = val
+	}
+	return result, nil
+}
+
+// ClientDependencyInfoToEnvVar converts ClientDependencyInfo to environment variable key-value pairs.
+func ClientDependencyInfoToEnvVar(v *ClientDependencyInfo) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_LIBS_TACPLUS_CLIENT_DEPENDENCY_INFO_SOURCE_PACKAGE"] = v.SourcePackage
+	result["PROTO_LIBS_TACPLUS_CLIENT_DEPENDENCY_INFO_SURFACE_KIND"] = v.SurfaceKind
+	result["PROTO_LIBS_TACPLUS_CLIENT_DEPENDENCY_INFO_SERVICE"] = v.Service
+	result["PROTO_LIBS_TACPLUS_CLIENT_DEPENDENCY_INFO_TARGET_PACKAGE"] = v.TargetPackage
+	result["PROTO_LIBS_TACPLUS_CLIENT_DEPENDENCY_INFO_TARGET_SERVICE"] = v.TargetService
+	result["PROTO_LIBS_TACPLUS_CLIENT_DEPENDENCY_INFO_WILDCARD"] = strconv.FormatBool(v.Wildcard)
+	return result
+}
+
+// ClientDependencyInfoFromEnvVar creates ClientDependencyInfo from environment variable key-value pairs.
+func ClientDependencyInfoFromEnvVar(env map[string]string) (*ClientDependencyInfo, error) {
+	result := &ClientDependencyInfo{}
+	if val, ok := env["PROTO_LIBS_TACPLUS_CLIENT_DEPENDENCY_INFO_SOURCE_PACKAGE"]; ok && val != "" {
+		result.SourcePackage = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_CLIENT_DEPENDENCY_INFO_SURFACE_KIND"]; ok && val != "" {
+		result.SurfaceKind = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_CLIENT_DEPENDENCY_INFO_SERVICE"]; ok && val != "" {
+		result.Service = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_CLIENT_DEPENDENCY_INFO_TARGET_PACKAGE"]; ok && val != "" {
+		result.TargetPackage = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_CLIENT_DEPENDENCY_INFO_TARGET_SERVICE"]; ok && val != "" {
+		result.TargetService = val
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_CLIENT_DEPENDENCY_INFO_WILDCARD"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Wildcard = parsed
 	}
 	return result, nil
 }
@@ -6016,6 +7572,9 @@ func PackageNodeToEnvVar(v *PackageNode) map[string]string {
 			result[k] = val
 		}
 	}
+	if len(v.ProtoPackages) > 0 {
+		result["PROTO_LIBS_TACPLUS_PACKAGE_NODE_PROTO_PACKAGES"] = strings.Join(v.ProtoPackages, ",")
+	}
 	return result
 }
 
@@ -6035,6 +7594,9 @@ func PackageNodeFromEnvVar(env map[string]string) (*PackageNode, error) {
 		return nil, err
 	} else if sub != nil {
 		result.Build = sub
+	}
+	if val, ok := env["PROTO_LIBS_TACPLUS_PACKAGE_NODE_PROTO_PACKAGES"]; ok && val != "" {
+		result.ProtoPackages = strings.Split(val, ",")
 	}
 	return result, nil
 }
@@ -6386,6 +7948,148 @@ func ValidateSubscriptionInfoWithDepth(m *SubscriptionInfo, depth int) error {
 	return nil
 }
 
+// ValidateEventPublishInfo validates all fields in EventPublishInfo according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateEventPublishInfo(m *EventPublishInfo) error {
+	return ValidateEventPublishInfoWithDepth(m, 0)
+}
+
+// ValidateEventPublishInfoWithDepth validates EventPublishInfo and carries nested-message depth across
+// generated package boundaries.
+func ValidateEventPublishInfoWithDepth(m *EventPublishInfo, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate AuthServices (default max size: 1024 elements)
+	if len(m.AuthServices) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field AuthServices exceeds max size of 1024 elements, got: %d", len(m.AuthServices))
+	}
+
+	// Validate AuthServices elements (default max size: 32768 bytes)
+	for i, val := range m.AuthServices {
+		if len(val) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field AuthServices[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
+		}
+	}
+
+	// Validate ActorPackage (default max size: 32768 bytes)
+	if len(m.ActorPackage) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ActorPackage exceeds max size of 32768 bytes, got: %d", len(m.ActorPackage))
+	}
+
+	// Validate ActorMessage (default max size: 32768 bytes)
+	if len(m.ActorMessage) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ActorMessage exceeds max size of 32768 bytes, got: %d", len(m.ActorMessage))
+	}
+
+	// Validate TopicRef (default max size: 32768 bytes)
+	if len(m.TopicRef) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TopicRef exceeds max size of 32768 bytes, got: %d", len(m.TopicRef))
+	}
+
+	// Validate EventTypeFqn (default max size: 32768 bytes)
+	if len(m.EventTypeFqn) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field EventTypeFqn exceeds max size of 32768 bytes, got: %d", len(m.EventTypeFqn))
+	}
+
+	// Validate BrokerTag (default max size: 32768 bytes)
+	if len(m.BrokerTag) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field BrokerTag exceeds max size of 32768 bytes, got: %d", len(m.BrokerTag))
+	}
+
+	// Validate RpcStem (default max size: 32768 bytes)
+	if len(m.RpcStem) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RpcStem exceeds max size of 32768 bytes, got: %d", len(m.RpcStem))
+	}
+
+	// Validate AuthModel (default max size: 32768 bytes)
+	if len(m.AuthModel) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field AuthModel exceeds max size of 32768 bytes, got: %d", len(m.AuthModel))
+	}
+
+	// Validate TargetNamespaceField (default max size: 32768 bytes)
+	if len(m.TargetNamespaceField) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TargetNamespaceField exceeds max size of 32768 bytes, got: %d", len(m.TargetNamespaceField))
+	}
+
+	return nil
+}
+
+// ValidateEventWatchInfo validates all fields in EventWatchInfo according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateEventWatchInfo(m *EventWatchInfo) error {
+	return ValidateEventWatchInfoWithDepth(m, 0)
+}
+
+// ValidateEventWatchInfoWithDepth validates EventWatchInfo and carries nested-message depth across
+// generated package boundaries.
+func ValidateEventWatchInfoWithDepth(m *EventWatchInfo, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate AuthServices (default max size: 1024 elements)
+	if len(m.AuthServices) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field AuthServices exceeds max size of 1024 elements, got: %d", len(m.AuthServices))
+	}
+
+	// Validate AuthServices elements (default max size: 32768 bytes)
+	for i, val := range m.AuthServices {
+		if len(val) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field AuthServices[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
+		}
+	}
+
+	// Validate ActorPackage (default max size: 32768 bytes)
+	if len(m.ActorPackage) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ActorPackage exceeds max size of 32768 bytes, got: %d", len(m.ActorPackage))
+	}
+
+	// Validate ActorMessage (default max size: 32768 bytes)
+	if len(m.ActorMessage) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ActorMessage exceeds max size of 32768 bytes, got: %d", len(m.ActorMessage))
+	}
+
+	// Validate TopicRef (default max size: 32768 bytes)
+	if len(m.TopicRef) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TopicRef exceeds max size of 32768 bytes, got: %d", len(m.TopicRef))
+	}
+
+	// Validate EventTypeFqn (default max size: 32768 bytes)
+	if len(m.EventTypeFqn) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field EventTypeFqn exceeds max size of 32768 bytes, got: %d", len(m.EventTypeFqn))
+	}
+
+	// Validate BrokerTag (default max size: 32768 bytes)
+	if len(m.BrokerTag) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field BrokerTag exceeds max size of 32768 bytes, got: %d", len(m.BrokerTag))
+	}
+
+	// Validate RpcStem (default max size: 32768 bytes)
+	if len(m.RpcStem) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RpcStem exceeds max size of 32768 bytes, got: %d", len(m.RpcStem))
+	}
+
+	// Validate AuthModel (default max size: 32768 bytes)
+	if len(m.AuthModel) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field AuthModel exceeds max size of 32768 bytes, got: %d", len(m.AuthModel))
+	}
+
+	// Validate TargetNamespaceField (default max size: 32768 bytes)
+	if len(m.TargetNamespaceField) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TargetNamespaceField exceeds max size of 32768 bytes, got: %d", len(m.TargetNamespaceField))
+	}
+
+	return nil
+}
+
 // ValidateEnumValueInfo validates all fields in EnumValueInfo according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateEnumValueInfo(m *EnumValueInfo) error {
@@ -6415,6 +8119,75 @@ func ValidateEnumValueInfoWithDepth(m *EnumValueInfo, depth int) error {
 	return nil
 }
 
+// ValidateFieldConstraintInfo validates all fields in FieldConstraintInfo according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateFieldConstraintInfo(m *FieldConstraintInfo) error {
+	return ValidateFieldConstraintInfoWithDepth(m, 0)
+}
+
+// ValidateFieldConstraintInfoWithDepth validates FieldConstraintInfo and carries nested-message depth across
+// generated package boundaries.
+func ValidateFieldConstraintInfoWithDepth(m *FieldConstraintInfo, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate IntValues (default max size: 1024 elements)
+	if len(m.IntValues) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field IntValues exceeds max size of 1024 elements, got: %d", len(m.IntValues))
+	}
+
+	// Validate FloatValues (default max size: 1024 elements)
+	if len(m.FloatValues) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field FloatValues exceeds max size of 1024 elements, got: %d", len(m.FloatValues))
+	}
+
+	// Validate Rule (default max size: 32768 bytes)
+	if len(m.Rule) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Rule exceeds max size of 32768 bytes, got: %d", len(m.Rule))
+	}
+
+	// Validate Target (default max size: 32768 bytes)
+	if len(m.Target) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Target exceeds max size of 32768 bytes, got: %d", len(m.Target))
+	}
+
+	// Validate ValueKind (default max size: 32768 bytes)
+	if len(m.ValueKind) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ValueKind exceeds max size of 32768 bytes, got: %d", len(m.ValueKind))
+	}
+
+	// Validate StringValue (default max size: 32768 bytes)
+	if len(m.StringValue) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field StringValue exceeds max size of 32768 bytes, got: %d", len(m.StringValue))
+	}
+
+	// Validate EnumValue (default max size: 32768 bytes)
+	if len(m.EnumValue) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field EnumValue exceeds max size of 32768 bytes, got: %d", len(m.EnumValue))
+	}
+
+	// Validate Operator (default max size: 32768 bytes)
+	if len(m.Operator) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Operator exceeds max size of 32768 bytes, got: %d", len(m.Operator))
+	}
+
+	// Validate Unit (default max size: 32768 bytes)
+	if len(m.Unit) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Unit exceeds max size of 32768 bytes, got: %d", len(m.Unit))
+	}
+
+	// Validate Source (default max size: 32768 bytes)
+	if len(m.Source) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Source exceeds max size of 32768 bytes, got: %d", len(m.Source))
+	}
+
+	return nil
+}
+
 // ValidateFieldInfo validates all fields in FieldInfo according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateFieldInfo(m *FieldInfo) error {
@@ -6439,6 +8212,11 @@ func ValidateFieldInfoWithDepth(m *FieldInfo, depth int) error {
 	// Validate EnumValues (default max size: 1024 elements)
 	if len(m.EnumValues) > 1024 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field EnumValues exceeds max size of 1024 elements, got: %d", len(m.EnumValues))
+	}
+
+	// Validate ConstraintInfos (default max size: 1024 elements)
+	if len(m.ConstraintInfos) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ConstraintInfos exceeds max size of 1024 elements, got: %d", len(m.ConstraintInfos))
 	}
 
 	// Validate Constraints elements (default max size: 32768 bytes)
@@ -6513,6 +8291,11 @@ func ValidateFieldInfoWithDepth(m *FieldInfo, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TimeseriesDefaultExpr exceeds max size of 32768 bytes, got: %d", len(m.TimeseriesDefaultExpr))
 	}
 
+	// Validate OneofName (default max size: 32768 bytes)
+	if len(m.OneofName) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field OneofName exceeds max size of 32768 bytes, got: %d", len(m.OneofName))
+	}
+
 	// Validate Type enum value is known
 	if _, ok := spec.TypeKind_name[int32(m.Type)]; !ok {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Type has unknown enum value %d", int32(m.Type))
@@ -6529,6 +8312,13 @@ func ValidateFieldInfoWithDepth(m *FieldInfo, depth int) error {
 	for i, val := range m.EnumValues {
 		if err := ValidateEnumValueInfoWithDepth(val, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field EnumValues[%d] validation failed", i)
+		}
+	}
+
+	// Validate ConstraintInfos nested messages
+	for i, val := range m.ConstraintInfos {
+		if err := ValidateFieldConstraintInfoWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field ConstraintInfos[%d] validation failed", i)
 		}
 	}
 
@@ -6634,6 +8424,16 @@ func ValidateTypeInfoWithDepth(m *TypeInfo, depth int) error {
 	// Validate EventdbOwner (default max size: 32768 bytes)
 	if len(m.EventdbOwner) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field EventdbOwner exceeds max size of 32768 bytes, got: %d", len(m.EventdbOwner))
+	}
+
+	// Validate ServiceStoreName (default max size: 32768 bytes)
+	if len(m.ServiceStoreName) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ServiceStoreName exceeds max size of 32768 bytes, got: %d", len(m.ServiceStoreName))
+	}
+
+	// Validate ServiceStoreTag (default max size: 32768 bytes)
+	if len(m.ServiceStoreTag) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ServiceStoreTag exceeds max size of 32768 bytes, got: %d", len(m.ServiceStoreTag))
 	}
 
 	// Validate Fields nested messages
@@ -6820,6 +8620,99 @@ func ValidateTimeseriesProjectionInfoWithDepth(m *TimeseriesProjectionInfo, dept
 	return nil
 }
 
+// ValidateRpcSurfaceInfo validates all fields in RpcSurfaceInfo according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateRpcSurfaceInfo(m *RpcSurfaceInfo) error {
+	return ValidateRpcSurfaceInfoWithDepth(m, 0)
+}
+
+// ValidateRpcSurfaceInfoWithDepth validates RpcSurfaceInfo and carries nested-message depth across
+// generated package boundaries.
+func ValidateRpcSurfaceInfoWithDepth(m *RpcSurfaceInfo, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate AuthServices (default max size: 1024 elements)
+	if len(m.AuthServices) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field AuthServices exceeds max size of 1024 elements, got: %d", len(m.AuthServices))
+	}
+
+	// Validate HttpMethods (default max size: 1024 elements)
+	if len(m.HttpMethods) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field HttpMethods exceeds max size of 1024 elements, got: %d", len(m.HttpMethods))
+	}
+
+	// Validate AuthServices elements (default max size: 32768 bytes)
+	for i, val := range m.AuthServices {
+		if len(val) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field AuthServices[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
+		}
+	}
+
+	// Validate HttpMethods elements (default max size: 32768 bytes)
+	for i, val := range m.HttpMethods {
+		if len(val) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field HttpMethods[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
+		}
+	}
+
+	// Validate SurfaceKind (default max size: 32768 bytes)
+	if len(m.SurfaceKind) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SurfaceKind exceeds max size of 32768 bytes, got: %d", len(m.SurfaceKind))
+	}
+
+	// Validate Transport (default max size: 32768 bytes)
+	if len(m.Transport) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Transport exceeds max size of 32768 bytes, got: %d", len(m.Transport))
+	}
+
+	// Validate AuthModel (default max size: 32768 bytes)
+	if len(m.AuthModel) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field AuthModel exceeds max size of 32768 bytes, got: %d", len(m.AuthModel))
+	}
+
+	// Validate TargetNamespaceField (default max size: 32768 bytes)
+	if len(m.TargetNamespaceField) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TargetNamespaceField exceeds max size of 32768 bytes, got: %d", len(m.TargetNamespaceField))
+	}
+
+	// Validate SubjectNamespaceSource (default max size: 32768 bytes)
+	if len(m.SubjectNamespaceSource) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SubjectNamespaceSource exceeds max size of 32768 bytes, got: %d", len(m.SubjectNamespaceSource))
+	}
+
+	// Validate TargetNamespaceSource (default max size: 32768 bytes)
+	if len(m.TargetNamespaceSource) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TargetNamespaceSource exceeds max size of 32768 bytes, got: %d", len(m.TargetNamespaceSource))
+	}
+
+	// Validate TargetNamespace (default max size: 32768 bytes)
+	if len(m.TargetNamespace) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TargetNamespace exceeds max size of 32768 bytes, got: %d", len(m.TargetNamespace))
+	}
+
+	// Validate GrpcPath (default max size: 32768 bytes)
+	if len(m.GrpcPath) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field GrpcPath exceeds max size of 32768 bytes, got: %d", len(m.GrpcPath))
+	}
+
+	// Validate HttpPath (default max size: 32768 bytes)
+	if len(m.HttpPath) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field HttpPath exceeds max size of 32768 bytes, got: %d", len(m.HttpPath))
+	}
+
+	// Validate HttpAliasPath (default max size: 32768 bytes)
+	if len(m.HttpAliasPath) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field HttpAliasPath exceeds max size of 32768 bytes, got: %d", len(m.HttpAliasPath))
+	}
+
+	return nil
+}
+
 // ValidateRpcInfo validates all fields in RpcInfo according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateRpcInfo(m *RpcInfo) error {
@@ -6864,6 +8757,11 @@ func ValidateRpcInfoWithDepth(m *RpcInfo, depth int) error {
 	// Validate AllowedPatterns (default max size: 1024 elements)
 	if len(m.AllowedPatterns) > 1024 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field AllowedPatterns exceeds max size of 1024 elements, got: %d", len(m.AllowedPatterns))
+	}
+
+	// Validate Surfaces (default max size: 1024 elements)
+	if len(m.Surfaces) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Surfaces exceeds max size of 1024 elements, got: %d", len(m.Surfaces))
 	}
 
 	// Validate HttpMethods elements (default max size: 32768 bytes)
@@ -7033,6 +8931,16 @@ func ValidateRpcInfoWithDepth(m *RpcInfo, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TargetNamespace exceeds max size of 32768 bytes, got: %d", len(m.TargetNamespace))
 	}
 
+	// Validate VerbStatus (default max size: 32768 bytes)
+	if len(m.VerbStatus) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field VerbStatus exceeds max size of 32768 bytes, got: %d", len(m.VerbStatus))
+	}
+
+	// Validate FoldedToVerb (default max size: 32768 bytes)
+	if len(m.FoldedToVerb) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field FoldedToVerb exceeds max size of 32768 bytes, got: %d", len(m.FoldedToVerb))
+	}
+
 	// Validate Service enum value is known
 	if _, ok := ServiceName_name[int32(m.Service)]; !ok {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Service has unknown enum value %d", int32(m.Service))
@@ -7041,6 +8949,13 @@ func ValidateRpcInfoWithDepth(m *RpcInfo, depth int) error {
 	// Validate Category enum value is known
 	if _, ok := RpcCategory_name[int32(m.Category)]; !ok {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Category has unknown enum value %d", int32(m.Category))
+	}
+
+	// Validate Surfaces nested messages
+	for i, val := range m.Surfaces {
+		if err := ValidateRpcSurfaceInfoWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Surfaces[%d] validation failed", i)
+		}
 	}
 
 	return nil
@@ -7162,11 +9077,96 @@ func ValidateServiceInfoWithDepth(m *ServiceInfo, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field EventTag exceeds max size of 32768 bytes, got: %d", len(m.EventTag))
 	}
 
+	// Validate HostTag (default max size: 32768 bytes)
+	if len(m.HostTag) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field HostTag exceeds max size of 32768 bytes, got: %d", len(m.HostTag))
+	}
+
+	// Validate SmbRoot enum value is known
+	if m.SmbRoot != nil {
+		if _, ok := spec.SmbRoot_name[int32(*m.SmbRoot)]; !ok {
+			return protoerrors.NewErrMissingInvalidData(nil, "field SmbRoot has unknown enum value %d", int32(*m.SmbRoot))
+		}
+	}
+
 	// Validate Rpcs nested messages
 	for i, val := range m.Rpcs {
 		if err := ValidateRpcInfoWithDepth(val, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field Rpcs[%d] validation failed", i)
 		}
+	}
+
+	return nil
+}
+
+// ValidateVServiceInfo validates all fields in VServiceInfo according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateVServiceInfo(m *VServiceInfo) error {
+	return ValidateVServiceInfoWithDepth(m, 0)
+}
+
+// ValidateVServiceInfoWithDepth validates VServiceInfo and carries nested-message depth across
+// generated package boundaries.
+func ValidateVServiceInfoWithDepth(m *VServiceInfo, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Name (default max size: 32768 bytes)
+	if len(m.Name) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Name exceeds max size of 32768 bytes, got: %d", len(m.Name))
+	}
+
+	// Validate Package (default max size: 32768 bytes)
+	if len(m.Package) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Package exceeds max size of 32768 bytes, got: %d", len(m.Package))
+	}
+
+	return nil
+}
+
+// ValidateClientDependencyInfo validates all fields in ClientDependencyInfo according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateClientDependencyInfo(m *ClientDependencyInfo) error {
+	return ValidateClientDependencyInfoWithDepth(m, 0)
+}
+
+// ValidateClientDependencyInfoWithDepth validates ClientDependencyInfo and carries nested-message depth across
+// generated package boundaries.
+func ValidateClientDependencyInfoWithDepth(m *ClientDependencyInfo, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate SourcePackage (default max size: 32768 bytes)
+	if len(m.SourcePackage) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SourcePackage exceeds max size of 32768 bytes, got: %d", len(m.SourcePackage))
+	}
+
+	// Validate SurfaceKind (default max size: 32768 bytes)
+	if len(m.SurfaceKind) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SurfaceKind exceeds max size of 32768 bytes, got: %d", len(m.SurfaceKind))
+	}
+
+	// Validate Service (default max size: 32768 bytes)
+	if len(m.Service) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Service exceeds max size of 32768 bytes, got: %d", len(m.Service))
+	}
+
+	// Validate TargetPackage (default max size: 32768 bytes)
+	if len(m.TargetPackage) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TargetPackage exceeds max size of 32768 bytes, got: %d", len(m.TargetPackage))
+	}
+
+	// Validate TargetService (default max size: 32768 bytes)
+	if len(m.TargetService) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TargetService exceeds max size of 32768 bytes, got: %d", len(m.TargetService))
 	}
 
 	return nil
@@ -7437,6 +9437,31 @@ func ValidatePackageNodeWithDepth(m *PackageNode, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field EntitlementGrants exceeds max size of 1024 elements, got: %d", len(m.EntitlementGrants))
 	}
 
+	// Validate ProtoPackages (default max size: 1024 elements)
+	if len(m.ProtoPackages) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProtoPackages exceeds max size of 1024 elements, got: %d", len(m.ProtoPackages))
+	}
+
+	// Validate Vservices (default max size: 1024 elements)
+	if len(m.Vservices) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Vservices exceeds max size of 1024 elements, got: %d", len(m.Vservices))
+	}
+
+	// Validate ClientDependencies (default max size: 1024 elements)
+	if len(m.ClientDependencies) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ClientDependencies exceeds max size of 1024 elements, got: %d", len(m.ClientDependencies))
+	}
+
+	// Validate EventPublishes (default max size: 1024 elements)
+	if len(m.EventPublishes) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field EventPublishes exceeds max size of 1024 elements, got: %d", len(m.EventPublishes))
+	}
+
+	// Validate EventWatches (default max size: 1024 elements)
+	if len(m.EventWatches) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field EventWatches exceeds max size of 1024 elements, got: %d", len(m.EventWatches))
+	}
+
 	// Validate Docs keys (default max size: 32768 bytes)
 	for key := range m.Docs {
 		if len(key) > 32768 {
@@ -7462,6 +9487,13 @@ func ValidatePackageNodeWithDepth(m *PackageNode, depth int) error {
 	for key, val := range m.Constants {
 		if len(val) > 32768 {
 			return protoerrors.NewErrMissingInvalidData(nil, "field Constants[%v] exceeds max size of 32768 bytes, got: %d", key, len(val))
+		}
+	}
+
+	// Validate ProtoPackages elements (default max size: 32768 bytes)
+	for i, val := range m.ProtoPackages {
+		if len(val) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field ProtoPackages[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
 		}
 	}
 
@@ -7543,6 +9575,34 @@ func ValidatePackageNodeWithDepth(m *PackageNode, depth int) error {
 		}
 	}
 
+	// Validate Vservices nested messages
+	for i, val := range m.Vservices {
+		if err := ValidateVServiceInfoWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Vservices[%d] validation failed", i)
+		}
+	}
+
+	// Validate ClientDependencies nested messages
+	for i, val := range m.ClientDependencies {
+		if err := ValidateClientDependencyInfoWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field ClientDependencies[%d] validation failed", i)
+		}
+	}
+
+	// Validate EventPublishes nested messages
+	for i, val := range m.EventPublishes {
+		if err := ValidateEventPublishInfoWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field EventPublishes[%d] validation failed", i)
+		}
+	}
+
+	// Validate EventWatches nested messages
+	for i, val := range m.EventWatches {
+		if err := ValidateEventWatchInfoWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field EventWatches[%d] validation failed", i)
+		}
+	}
+
 	return nil
 }
 
@@ -7550,151 +9610,211 @@ func ValidatePackageNodeWithDepth(m *PackageNode, depth int) error {
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizeLanguagedependenciesDependencies    int = 1024
-	MaxSizeDependenciesregistryGitlabProjectId int = 32768
-	MaxSizeDependenciesregistryInterfaces      int = 1024
-	MaxSizeDependenciesregistryImports         int = 1024
-	MaxSizeDependenciesconfigTools             int = 1024
-	MaxSizeDependenciesconfigLang              int = 1024
-	MaxSizeStatepermentryTarget                int = 32768
-	MaxSizeBoundaryinfoStateRoot               int = 32768
-	MaxSizeBoundaryinfoBoundary                int = 32768
-	MaxSizeBoundaryinfoTypeFqn                 int = 32768
-	MaxSizeBoundaryinfoBoundaryCallers         int = 1024
-	MaxSizeBoundaryinfoBoundaryPerms           int = 1024
-	MaxSizeBoundaryinfoStatePerms              int = 1024
-	MaxSizeBoundaryinfoRpcs                    int = 1024
-	MaxSizeBoundaryinfoTag                     int = 32768
-	MaxSizeBoundaryinfoGraphType               int = 32768
-	MaxSizeBoundaryinfoAutoTlsKeyType          int = 32768
-	MaxSizeSubscriptioninfoSource              int = 32768
-	MaxSizeSubscriptioninfoSourcePackage       int = 32768
-	MaxSizeSubscriptioninfoSourceStateRoot     int = 32768
-	MaxSizeSubscriptioninfoSourceField         int = 32768
-	MaxSizeSubscriptioninfoSourceTypeFqn       int = 32768
-	MaxSizeEnumvalueinfoName                   int = 32768
-	MaxSizeEnumvalueinfoDescription            int = 32768
-	MaxSizeFieldinfoName                       int = 32768
-	MaxSizeFieldinfoDescription                int = 32768
-	MaxSizeFieldinfoDefaultJson                int = 32768
-	MaxSizeFieldinfoConstraints                int = 1024
-	MaxSizeFieldinfoEnumValues                 int = 1024
-	MaxSizeFieldinfoMapKeyType                 int = 32768
-	MaxSizeFieldinfoMapValueType               int = 32768
-	MaxSizeFieldinfoGraphIndex                 int = 32768
-	MaxSizeFieldinfoProjectionSource           int = 32768
-	MaxSizeFieldinfoGraphEdge                  int = 32768
-	MaxSizeFieldinfoGraphMode                  int = 32768
-	MaxSizeFieldinfoGraphFieldIndex            int = 32768
-	MaxSizeFieldinfoTimeseriesType             int = 32768
-	MaxSizeFieldinfoTimeseriesCodec            int = 32768
-	MaxSizeFieldinfoTimeseriesDefaultExpr      int = 32768
-	MaxSizeTypeinfoFqn                         int = 32768
-	MaxSizeTypeinfoName                        int = 32768
-	MaxSizeTypeinfoPackage                     int = 32768
-	MaxSizeTypeinfoDescription                 int = 32768
-	MaxSizeTypeinfoSchemaJson                  int = 32768
-	MaxSizeTypeinfoFields                      int = 1024
-	MaxSizeTypeinfoGraphType                   int = 32768
-	MaxSizeTypeinfoGraphXidField               int = 32768
-	MaxSizeTypeinfoGraphSchema                 int = 32768
-	MaxSizeTypeinfoGraphTypeSource             int = 32768
-	MaxSizeTypeinfoTimeseriesSchema            int = 32768
-	MaxSizeTypeinfoTimeseriesTableName         int = 32768
-	MaxSizeTypeinfoTimeseriesTableSource       int = 32768
-	MaxSizeTypeinfoEventdbKey                  int = 32768
-	MaxSizeTypeinfoEventdbOwner                int = 32768
-	MaxSizeTypeinfoGraphProjections            int = 1024
-	MaxSizeTypeinfoTimeseriesProjections       int = 1024
-	MaxSizeGraphprojectionfieldinfoSource      int = 32768
-	MaxSizeGraphprojectionfieldinfoAs          int = 32768
-	MaxSizeGraphprojectionfieldinfoIndex       int = 32768
-	MaxSizeGraphprojectionfieldinfoEdge        int = 32768
-	MaxSizeGraphprojectioninfoName             int = 32768
-	MaxSizeGraphprojectioninfoXid              int = 32768
-	MaxSizeGraphprojectioninfoField            int = 1024
-	MaxSizeTimeseriesprojectionfieldinfoSource int = 32768
-	MaxSizeTimeseriesprojectionfieldinfoAs     int = 32768
-	MaxSizeTimeseriesprojectioninfoName        int = 32768
-	MaxSizeTimeseriesprojectioninfoEngine      int = 32768
-	MaxSizeTimeseriesprojectioninfoTtl         int = 32768
-	MaxSizeTimeseriesprojectioninfoWhen        int = 32768
-	MaxSizeTimeseriesprojectioninfoField       int = 1024
-	MaxSizeRpcinfoServiceName                  int = 32768
-	MaxSizeRpcinfoRpc                          int = 32768
-	MaxSizeRpcinfoInputType                    int = 32768
-	MaxSizeRpcinfoOutputType                   int = 32768
-	MaxSizeRpcinfoDescription                  int = 32768
-	MaxSizeRpcinfoGrpcPath                     int = 32768
-	MaxSizeRpcinfoHttpPath                     int = 32768
-	MaxSizeRpcinfoHttpMethods                  int = 1024
-	MaxSizeRpcinfoHttpAliasPath                int = 32768
-	MaxSizeRpcinfoAuthServices                 int = 1024
-	MaxSizeRpcinfoAuthModel                    int = 32768
-	MaxSizeRpcinfoCollectionMode               int = 32768
-	MaxSizeRpcinfoCollectionOrderBy            int = 1024
-	MaxSizeRpcinfoRpcVerb                      int = 32768
-	MaxSizeRpcinfoRpcNoun                      int = 32768
-	MaxSizeRpcinfoMethodPattern                int = 32768
-	MaxSizeRpcinfoAccessKind                   int = 32768
-	MaxSizeRpcinfoVerbClass                    int = 32768
-	MaxSizeRpcinfoEntitlementScopes            int = 1024
-	MaxSizeRpcinfoRetryPolicy                  int = 32768
-	MaxSizeRpcinfoCapabilityScope              int = 32768
-	MaxSizeRpcinfoVerbDefinition               int = 32768
-	MaxSizeRpcinfoVerbBoundary                 int = 32768
-	MaxSizeRpcinfoAuditMeaning                 int = 32768
-	MaxSizeRpcinfoRejectedVerbs                int = 1024
-	MaxSizeRpcinfoAllowedPatterns              int = 1024
-	MaxSizeRpcinfoHandlerShape                 int = 32768
-	MaxSizeRpcinfoTargetNamespaceField         int = 32768
-	MaxSizeRpcinfoSubjectNamespaceSource       int = 32768
-	MaxSizeRpcinfoTargetNamespaceSource        int = 32768
-	MaxSizeRpcinfoTargetNamespace              int = 32768
-	MaxSizeEnuminfoName                        int = 32768
-	MaxSizeEnuminfoPackage                     int = 32768
-	MaxSizeEnuminfoDescription                 int = 32768
-	MaxSizeEnuminfoValues                      int = 1024
-	MaxSizeServiceinfoName                     int = 32768
-	MaxSizeServiceinfoDescription              int = 32768
-	MaxSizeServiceinfoPackage                  int = 32768
-	MaxSizeServiceinfoGrpcService              int = 32768
-	MaxSizeServiceinfoRpcs                     int = 1024
-	MaxSizeServiceinfoBoundaries               int = 1024
-	MaxSizeServiceinfoDependencies             int = 1024
-	MaxSizeServiceinfoEventTag                 int = 32768
-	MaxSizeEntitlementgrantinfoToken           int = 32768
-	MaxSizeEntitlementgrantinfoPackage         int = 32768
-	MaxSizeEntitlementgrantinfoServiceName     int = 32768
-	MaxSizeEntitlementgrantinfoRpc             int = 32768
-	MaxSizeEntitlementgrantinfoCapabilityScope int = 32768
-	MaxSizeEntitlementgrantinfoExpandsTo       int = 1024
-	MaxSizeBuildinfoTacplusVersion             int = 32768
-	MaxSizeBuildinfoBuildTimestamp             int = 32768
-	MaxSizeBuildinfoSourceGitSha               int = 32768
-	MaxSizeVerificationharnessMessageFqn       int = 32768
-	MaxSizeVerificationharnessHarnessName      int = 32768
-	MaxSizeVerificationharnessAssumptions      int = 1024
-	MaxSizeVerificationharnessContracts        int = 1024
-	MaxSizeVerificationharnessStatus           int = 32768
-	MaxSizeVerificationharnessDetail           int = 32768
-	MaxSizeVerificationreportTool              int = 32768
-	MaxSizeVerificationreportToolVersion       int = 32768
-	MaxSizeVerificationreportLanguage          int = 32768
-	MaxSizeVerificationreportHarnesses         int = 1024
-	MaxSizePackagenodeName                     int = 32768
-	MaxSizePackagenodeFullPath                 int = 32768
-	MaxSizePackagenodeChildren                 int = 1024
-	MaxSizePackagenodeTypes                    int = 1024
-	MaxSizePackagenodeRpcs                     int = 1024
-	MaxSizePackagenodeBoundaries               int = 1024
-	MaxSizePackagenodeDocs                     int = 1024
-	MaxSizePackagenodeSchema                   int = 32768
-	MaxSizePackagenodeEnums                    int = 1024
-	MaxSizePackagenodeServices                 int = 1024
-	MaxSizePackagenodeSubscriptions            int = 1024
-	MaxSizePackagenodeConstants                int = 1024
-	MaxSizePackagenodeEntitlementGrants        int = 1024
+	MaxSizeLanguagedependenciesDependencies     int = 1024
+	MaxSizeDependenciesregistryGitlabProjectId  int = 32768
+	MaxSizeDependenciesregistryInterfaces       int = 1024
+	MaxSizeDependenciesregistryImports          int = 1024
+	MaxSizeDependenciesconfigTools              int = 1024
+	MaxSizeDependenciesconfigLang               int = 1024
+	MaxSizeStatepermentryTarget                 int = 32768
+	MaxSizeBoundaryinfoStateRoot                int = 32768
+	MaxSizeBoundaryinfoBoundary                 int = 32768
+	MaxSizeBoundaryinfoTypeFqn                  int = 32768
+	MaxSizeBoundaryinfoBoundaryCallers          int = 1024
+	MaxSizeBoundaryinfoBoundaryPerms            int = 1024
+	MaxSizeBoundaryinfoStatePerms               int = 1024
+	MaxSizeBoundaryinfoRpcs                     int = 1024
+	MaxSizeBoundaryinfoTag                      int = 32768
+	MaxSizeBoundaryinfoGraphType                int = 32768
+	MaxSizeBoundaryinfoAutoTlsKeyType           int = 32768
+	MaxSizeSubscriptioninfoSource               int = 32768
+	MaxSizeSubscriptioninfoSourcePackage        int = 32768
+	MaxSizeSubscriptioninfoSourceStateRoot      int = 32768
+	MaxSizeSubscriptioninfoSourceField          int = 32768
+	MaxSizeSubscriptioninfoSourceTypeFqn        int = 32768
+	MaxSizeEventpublishinfoActorPackage         int = 32768
+	MaxSizeEventpublishinfoActorMessage         int = 32768
+	MaxSizeEventpublishinfoTopicRef             int = 32768
+	MaxSizeEventpublishinfoEventTypeFqn         int = 32768
+	MaxSizeEventpublishinfoBrokerTag            int = 32768
+	MaxSizeEventpublishinfoRpcStem              int = 32768
+	MaxSizeEventpublishinfoAuthModel            int = 32768
+	MaxSizeEventpublishinfoAuthServices         int = 1024
+	MaxSizeEventpublishinfoTargetNamespaceField int = 32768
+	MaxSizeEventwatchinfoActorPackage           int = 32768
+	MaxSizeEventwatchinfoActorMessage           int = 32768
+	MaxSizeEventwatchinfoTopicRef               int = 32768
+	MaxSizeEventwatchinfoEventTypeFqn           int = 32768
+	MaxSizeEventwatchinfoBrokerTag              int = 32768
+	MaxSizeEventwatchinfoRpcStem                int = 32768
+	MaxSizeEventwatchinfoAuthModel              int = 32768
+	MaxSizeEventwatchinfoAuthServices           int = 1024
+	MaxSizeEventwatchinfoTargetNamespaceField   int = 32768
+	MaxSizeEnumvalueinfoName                    int = 32768
+	MaxSizeEnumvalueinfoDescription             int = 32768
+	MaxSizeFieldconstraintinfoRule              int = 32768
+	MaxSizeFieldconstraintinfoTarget            int = 32768
+	MaxSizeFieldconstraintinfoValueKind         int = 32768
+	MaxSizeFieldconstraintinfoStringValue       int = 32768
+	MaxSizeFieldconstraintinfoEnumValue         int = 32768
+	MaxSizeFieldconstraintinfoIntValues         int = 1024
+	MaxSizeFieldconstraintinfoFloatValues       int = 1024
+	MaxSizeFieldconstraintinfoOperator          int = 32768
+	MaxSizeFieldconstraintinfoUnit              int = 32768
+	MaxSizeFieldconstraintinfoSource            int = 32768
+	MaxSizeFieldinfoName                        int = 32768
+	MaxSizeFieldinfoDescription                 int = 32768
+	MaxSizeFieldinfoDefaultJson                 int = 32768
+	MaxSizeFieldinfoConstraints                 int = 1024
+	MaxSizeFieldinfoEnumValues                  int = 1024
+	MaxSizeFieldinfoMapKeyType                  int = 32768
+	MaxSizeFieldinfoMapValueType                int = 32768
+	MaxSizeFieldinfoGraphIndex                  int = 32768
+	MaxSizeFieldinfoProjectionSource            int = 32768
+	MaxSizeFieldinfoGraphEdge                   int = 32768
+	MaxSizeFieldinfoGraphMode                   int = 32768
+	MaxSizeFieldinfoGraphFieldIndex             int = 32768
+	MaxSizeFieldinfoTimeseriesType              int = 32768
+	MaxSizeFieldinfoTimeseriesCodec             int = 32768
+	MaxSizeFieldinfoTimeseriesDefaultExpr       int = 32768
+	MaxSizeFieldinfoOneofName                   int = 32768
+	MaxSizeFieldinfoConstraintInfos             int = 1024
+	MaxSizeTypeinfoFqn                          int = 32768
+	MaxSizeTypeinfoName                         int = 32768
+	MaxSizeTypeinfoPackage                      int = 32768
+	MaxSizeTypeinfoDescription                  int = 32768
+	MaxSizeTypeinfoSchemaJson                   int = 32768
+	MaxSizeTypeinfoFields                       int = 1024
+	MaxSizeTypeinfoGraphType                    int = 32768
+	MaxSizeTypeinfoGraphXidField                int = 32768
+	MaxSizeTypeinfoGraphSchema                  int = 32768
+	MaxSizeTypeinfoGraphTypeSource              int = 32768
+	MaxSizeTypeinfoTimeseriesSchema             int = 32768
+	MaxSizeTypeinfoTimeseriesTableName          int = 32768
+	MaxSizeTypeinfoTimeseriesTableSource        int = 32768
+	MaxSizeTypeinfoEventdbKey                   int = 32768
+	MaxSizeTypeinfoEventdbOwner                 int = 32768
+	MaxSizeTypeinfoGraphProjections             int = 1024
+	MaxSizeTypeinfoTimeseriesProjections        int = 1024
+	MaxSizeTypeinfoServiceStoreName             int = 32768
+	MaxSizeTypeinfoServiceStoreTag              int = 32768
+	MaxSizeGraphprojectionfieldinfoSource       int = 32768
+	MaxSizeGraphprojectionfieldinfoAs           int = 32768
+	MaxSizeGraphprojectionfieldinfoIndex        int = 32768
+	MaxSizeGraphprojectionfieldinfoEdge         int = 32768
+	MaxSizeGraphprojectioninfoName              int = 32768
+	MaxSizeGraphprojectioninfoXid               int = 32768
+	MaxSizeGraphprojectioninfoField             int = 1024
+	MaxSizeTimeseriesprojectionfieldinfoSource  int = 32768
+	MaxSizeTimeseriesprojectionfieldinfoAs      int = 32768
+	MaxSizeTimeseriesprojectioninfoName         int = 32768
+	MaxSizeTimeseriesprojectioninfoEngine       int = 32768
+	MaxSizeTimeseriesprojectioninfoTtl          int = 32768
+	MaxSizeTimeseriesprojectioninfoWhen         int = 32768
+	MaxSizeTimeseriesprojectioninfoField        int = 1024
+	MaxSizeRpcsurfaceinfoSurfaceKind            int = 32768
+	MaxSizeRpcsurfaceinfoTransport              int = 32768
+	MaxSizeRpcsurfaceinfoAuthModel              int = 32768
+	MaxSizeRpcsurfaceinfoAuthServices           int = 1024
+	MaxSizeRpcsurfaceinfoTargetNamespaceField   int = 32768
+	MaxSizeRpcsurfaceinfoSubjectNamespaceSource int = 32768
+	MaxSizeRpcsurfaceinfoTargetNamespaceSource  int = 32768
+	MaxSizeRpcsurfaceinfoTargetNamespace        int = 32768
+	MaxSizeRpcsurfaceinfoGrpcPath               int = 32768
+	MaxSizeRpcsurfaceinfoHttpPath               int = 32768
+	MaxSizeRpcsurfaceinfoHttpMethods            int = 1024
+	MaxSizeRpcsurfaceinfoHttpAliasPath          int = 32768
+	MaxSizeRpcinfoServiceName                   int = 32768
+	MaxSizeRpcinfoRpc                           int = 32768
+	MaxSizeRpcinfoInputType                     int = 32768
+	MaxSizeRpcinfoOutputType                    int = 32768
+	MaxSizeRpcinfoDescription                   int = 32768
+	MaxSizeRpcinfoGrpcPath                      int = 32768
+	MaxSizeRpcinfoHttpPath                      int = 32768
+	MaxSizeRpcinfoHttpMethods                   int = 1024
+	MaxSizeRpcinfoHttpAliasPath                 int = 32768
+	MaxSizeRpcinfoAuthServices                  int = 1024
+	MaxSizeRpcinfoAuthModel                     int = 32768
+	MaxSizeRpcinfoCollectionMode                int = 32768
+	MaxSizeRpcinfoCollectionOrderBy             int = 1024
+	MaxSizeRpcinfoRpcVerb                       int = 32768
+	MaxSizeRpcinfoRpcNoun                       int = 32768
+	MaxSizeRpcinfoMethodPattern                 int = 32768
+	MaxSizeRpcinfoAccessKind                    int = 32768
+	MaxSizeRpcinfoVerbClass                     int = 32768
+	MaxSizeRpcinfoEntitlementScopes             int = 1024
+	MaxSizeRpcinfoRetryPolicy                   int = 32768
+	MaxSizeRpcinfoCapabilityScope               int = 32768
+	MaxSizeRpcinfoVerbDefinition                int = 32768
+	MaxSizeRpcinfoVerbBoundary                  int = 32768
+	MaxSizeRpcinfoAuditMeaning                  int = 32768
+	MaxSizeRpcinfoRejectedVerbs                 int = 1024
+	MaxSizeRpcinfoAllowedPatterns               int = 1024
+	MaxSizeRpcinfoHandlerShape                  int = 32768
+	MaxSizeRpcinfoTargetNamespaceField          int = 32768
+	MaxSizeRpcinfoSubjectNamespaceSource        int = 32768
+	MaxSizeRpcinfoTargetNamespaceSource         int = 32768
+	MaxSizeRpcinfoTargetNamespace               int = 32768
+	MaxSizeRpcinfoVerbStatus                    int = 32768
+	MaxSizeRpcinfoFoldedToVerb                  int = 32768
+	MaxSizeRpcinfoSurfaces                      int = 1024
+	MaxSizeEnuminfoName                         int = 32768
+	MaxSizeEnuminfoPackage                      int = 32768
+	MaxSizeEnuminfoDescription                  int = 32768
+	MaxSizeEnuminfoValues                       int = 1024
+	MaxSizeServiceinfoName                      int = 32768
+	MaxSizeServiceinfoDescription               int = 32768
+	MaxSizeServiceinfoPackage                   int = 32768
+	MaxSizeServiceinfoGrpcService               int = 32768
+	MaxSizeServiceinfoRpcs                      int = 1024
+	MaxSizeServiceinfoBoundaries                int = 1024
+	MaxSizeServiceinfoDependencies              int = 1024
+	MaxSizeServiceinfoEventTag                  int = 32768
+	MaxSizeServiceinfoHostTag                   int = 32768
+	MaxSizeVserviceinfoName                     int = 32768
+	MaxSizeVserviceinfoPackage                  int = 32768
+	MaxSizeClientdependencyinfoSourcePackage    int = 32768
+	MaxSizeClientdependencyinfoSurfaceKind      int = 32768
+	MaxSizeClientdependencyinfoService          int = 32768
+	MaxSizeClientdependencyinfoTargetPackage    int = 32768
+	MaxSizeClientdependencyinfoTargetService    int = 32768
+	MaxSizeEntitlementgrantinfoToken            int = 32768
+	MaxSizeEntitlementgrantinfoPackage          int = 32768
+	MaxSizeEntitlementgrantinfoServiceName      int = 32768
+	MaxSizeEntitlementgrantinfoRpc              int = 32768
+	MaxSizeEntitlementgrantinfoCapabilityScope  int = 32768
+	MaxSizeEntitlementgrantinfoExpandsTo        int = 1024
+	MaxSizeBuildinfoTacplusVersion              int = 32768
+	MaxSizeBuildinfoBuildTimestamp              int = 32768
+	MaxSizeBuildinfoSourceGitSha                int = 32768
+	MaxSizeVerificationharnessMessageFqn        int = 32768
+	MaxSizeVerificationharnessHarnessName       int = 32768
+	MaxSizeVerificationharnessAssumptions       int = 1024
+	MaxSizeVerificationharnessContracts         int = 1024
+	MaxSizeVerificationharnessStatus            int = 32768
+	MaxSizeVerificationharnessDetail            int = 32768
+	MaxSizeVerificationreportTool               int = 32768
+	MaxSizeVerificationreportToolVersion        int = 32768
+	MaxSizeVerificationreportLanguage           int = 32768
+	MaxSizeVerificationreportHarnesses          int = 1024
+	MaxSizePackagenodeName                      int = 32768
+	MaxSizePackagenodeFullPath                  int = 32768
+	MaxSizePackagenodeChildren                  int = 1024
+	MaxSizePackagenodeTypes                     int = 1024
+	MaxSizePackagenodeRpcs                      int = 1024
+	MaxSizePackagenodeBoundaries                int = 1024
+	MaxSizePackagenodeDocs                      int = 1024
+	MaxSizePackagenodeSchema                    int = 32768
+	MaxSizePackagenodeEnums                     int = 1024
+	MaxSizePackagenodeServices                  int = 1024
+	MaxSizePackagenodeSubscriptions             int = 1024
+	MaxSizePackagenodeConstants                 int = 1024
+	MaxSizePackagenodeEntitlementGrants         int = 1024
+	MaxSizePackagenodeProtoPackages             int = 1024
+	MaxSizePackagenodeVservices                 int = 1024
+	MaxSizePackagenodeClientDependencies        int = 1024
+	MaxSizePackagenodeEventPublishes            int = 1024
+	MaxSizePackagenodeEventWatches              int = 1024
 )
 
 // ============================================================
@@ -7758,10 +9878,40 @@ func SubscriptionInfoDefaults(v *SubscriptionInfo) {
 }
 
 // ============================================================
+// TypeDefaults: EventPublishInfo
+// ============================================================
+// EventPublishInfoDefaults applies field-level default values to zero-valued fields.
+func EventPublishInfoDefaults(v *EventPublishInfo) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: EventWatchInfo
+// ============================================================
+// EventWatchInfoDefaults applies field-level default values to zero-valued fields.
+func EventWatchInfoDefaults(v *EventWatchInfo) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
 // TypeDefaults: EnumValueInfo
 // ============================================================
 // EnumValueInfoDefaults applies field-level default values to zero-valued fields.
 func EnumValueInfoDefaults(v *EnumValueInfo) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: FieldConstraintInfo
+// ============================================================
+// FieldConstraintInfoDefaults applies field-level default values to zero-valued fields.
+func FieldConstraintInfoDefaults(v *FieldConstraintInfo) {
 	if v == nil {
 		return
 	}
@@ -7828,6 +9978,16 @@ func TimeseriesProjectionInfoDefaults(v *TimeseriesProjectionInfo) {
 }
 
 // ============================================================
+// TypeDefaults: RpcSurfaceInfo
+// ============================================================
+// RpcSurfaceInfoDefaults applies field-level default values to zero-valued fields.
+func RpcSurfaceInfoDefaults(v *RpcSurfaceInfo) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
 // TypeDefaults: RpcInfo
 // ============================================================
 // RpcInfoDefaults applies field-level default values to zero-valued fields.
@@ -7852,6 +10012,26 @@ func EnumInfoDefaults(v *EnumInfo) {
 // ============================================================
 // ServiceInfoDefaults applies field-level default values to zero-valued fields.
 func ServiceInfoDefaults(v *ServiceInfo) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: VServiceInfo
+// ============================================================
+// VServiceInfoDefaults applies field-level default values to zero-valued fields.
+func VServiceInfoDefaults(v *VServiceInfo) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: ClientDependencyInfo
+// ============================================================
+// ClientDependencyInfoDefaults applies field-level default values to zero-valued fields.
+func ClientDependencyInfoDefaults(v *ClientDependencyInfo) {
 	if v == nil {
 		return
 	}
@@ -7974,11 +10154,44 @@ func SubscriptionInfoUndefaults(v *SubscriptionInfo) {
 }
 
 // ============================================================
+// TypeUndefaults: EventPublishInfo
+// ============================================================
+// EventPublishInfoUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func EventPublishInfoUndefaults(v *EventPublishInfo) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: EventWatchInfo
+// ============================================================
+// EventWatchInfoUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func EventWatchInfoUndefaults(v *EventWatchInfo) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
 // TypeUndefaults: EnumValueInfo
 // ============================================================
 // EnumValueInfoUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
 func EnumValueInfoUndefaults(v *EnumValueInfo) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: FieldConstraintInfo
+// ============================================================
+// FieldConstraintInfoUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func FieldConstraintInfoUndefaults(v *FieldConstraintInfo) {
 	if v == nil {
 		return
 	}
@@ -8051,6 +10264,17 @@ func TimeseriesProjectionInfoUndefaults(v *TimeseriesProjectionInfo) {
 }
 
 // ============================================================
+// TypeUndefaults: RpcSurfaceInfo
+// ============================================================
+// RpcSurfaceInfoUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func RpcSurfaceInfoUndefaults(v *RpcSurfaceInfo) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
 // TypeUndefaults: RpcInfo
 // ============================================================
 // RpcInfoUndefaults resets fields that match their default values back to zero.
@@ -8078,6 +10302,28 @@ func EnumInfoUndefaults(v *EnumInfo) {
 // ServiceInfoUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
 func ServiceInfoUndefaults(v *ServiceInfo) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: VServiceInfo
+// ============================================================
+// VServiceInfoUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func VServiceInfoUndefaults(v *VServiceInfo) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: ClientDependencyInfo
+// ============================================================
+// ClientDependencyInfoUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func ClientDependencyInfoUndefaults(v *ClientDependencyInfo) {
 	if v == nil {
 		return
 	}
@@ -8281,6 +10527,86 @@ func MergeSubscriptionInfo(dst, src *SubscriptionInfo) {
 }
 
 // ============================================================
+// Merge: EventPublishInfo
+// ============================================================
+// MergeEventPublishInfo fills zero-valued fields in dst from src.
+func MergeEventPublishInfo(dst, src *EventPublishInfo) {
+	if dst.ActorPackage == "" {
+		dst.ActorPackage = src.ActorPackage
+	}
+	if dst.ActorMessage == "" {
+		dst.ActorMessage = src.ActorMessage
+	}
+	if dst.TopicRef == "" {
+		dst.TopicRef = src.TopicRef
+	}
+	if dst.EventTypeFqn == "" {
+		dst.EventTypeFqn = src.EventTypeFqn
+	}
+	if dst.BrokerTag == "" {
+		dst.BrokerTag = src.BrokerTag
+	}
+	if dst.RpcStem == "" {
+		dst.RpcStem = src.RpcStem
+	}
+	if dst.AuthModel == "" {
+		dst.AuthModel = src.AuthModel
+	}
+	if len(dst.AuthServices) == 0 {
+		dst.AuthServices = src.AuthServices
+	}
+	if !dst.AuthDisabled {
+		dst.AuthDisabled = src.AuthDisabled
+	}
+	if !dst.AuthAnyUser {
+		dst.AuthAnyUser = src.AuthAnyUser
+	}
+	if dst.TargetNamespaceField == "" {
+		dst.TargetNamespaceField = src.TargetNamespaceField
+	}
+}
+
+// ============================================================
+// Merge: EventWatchInfo
+// ============================================================
+// MergeEventWatchInfo fills zero-valued fields in dst from src.
+func MergeEventWatchInfo(dst, src *EventWatchInfo) {
+	if dst.ActorPackage == "" {
+		dst.ActorPackage = src.ActorPackage
+	}
+	if dst.ActorMessage == "" {
+		dst.ActorMessage = src.ActorMessage
+	}
+	if dst.TopicRef == "" {
+		dst.TopicRef = src.TopicRef
+	}
+	if dst.EventTypeFqn == "" {
+		dst.EventTypeFqn = src.EventTypeFqn
+	}
+	if dst.BrokerTag == "" {
+		dst.BrokerTag = src.BrokerTag
+	}
+	if dst.RpcStem == "" {
+		dst.RpcStem = src.RpcStem
+	}
+	if dst.AuthModel == "" {
+		dst.AuthModel = src.AuthModel
+	}
+	if len(dst.AuthServices) == 0 {
+		dst.AuthServices = src.AuthServices
+	}
+	if !dst.AuthDisabled {
+		dst.AuthDisabled = src.AuthDisabled
+	}
+	if !dst.AuthAnyUser {
+		dst.AuthAnyUser = src.AuthAnyUser
+	}
+	if dst.TargetNamespaceField == "" {
+		dst.TargetNamespaceField = src.TargetNamespaceField
+	}
+}
+
+// ============================================================
 // Merge: EnumValueInfo
 // ============================================================
 // MergeEnumValueInfo fills zero-valued fields in dst from src.
@@ -8293,6 +10619,55 @@ func MergeEnumValueInfo(dst, src *EnumValueInfo) {
 	}
 	if dst.Description == "" {
 		dst.Description = src.Description
+	}
+}
+
+// ============================================================
+// Merge: FieldConstraintInfo
+// ============================================================
+// MergeFieldConstraintInfo fills zero-valued fields in dst from src.
+func MergeFieldConstraintInfo(dst, src *FieldConstraintInfo) {
+	if dst.Rule == "" {
+		dst.Rule = src.Rule
+	}
+	if dst.Target == "" {
+		dst.Target = src.Target
+	}
+	if dst.ValueKind == "" {
+		dst.ValueKind = src.ValueKind
+	}
+	if dst.BoolValue == nil {
+		dst.BoolValue = src.BoolValue
+	}
+	if dst.IntValue == nil {
+		dst.IntValue = src.IntValue
+	}
+	if dst.FloatValue == nil {
+		dst.FloatValue = src.FloatValue
+	}
+	if dst.StringValue == "" {
+		dst.StringValue = src.StringValue
+	}
+	if dst.EnumValue == "" {
+		dst.EnumValue = src.EnumValue
+	}
+	if len(dst.IntValues) == 0 {
+		dst.IntValues = src.IntValues
+	}
+	if len(dst.FloatValues) == 0 {
+		dst.FloatValues = src.FloatValues
+	}
+	if dst.Operator == "" {
+		dst.Operator = src.Operator
+	}
+	if !dst.Defaulted {
+		dst.Defaulted = src.Defaulted
+	}
+	if dst.Unit == "" {
+		dst.Unit = src.Unit
+	}
+	if dst.Source == "" {
+		dst.Source = src.Source
 	}
 }
 
@@ -8375,6 +10750,21 @@ func MergeFieldInfo(dst, src *FieldInfo) {
 	if !dst.TimeseriesLowCardinality {
 		dst.TimeseriesLowCardinality = src.TimeseriesLowCardinality
 	}
+	if !dst.Oneof {
+		dst.Oneof = src.Oneof
+	}
+	if dst.OneofName == "" {
+		dst.OneofName = src.OneofName
+	}
+	if !dst.StoreKey {
+		dst.StoreKey = src.StoreKey
+	}
+	if !dst.QuorumWrite {
+		dst.QuorumWrite = src.QuorumWrite
+	}
+	if len(dst.ConstraintInfos) == 0 {
+		dst.ConstraintInfos = src.ConstraintInfos
+	}
 }
 
 // ============================================================
@@ -8432,6 +10822,15 @@ func MergeTypeInfo(dst, src *TypeInfo) {
 	}
 	if len(dst.TimeseriesProjections) == 0 {
 		dst.TimeseriesProjections = src.TimeseriesProjections
+	}
+	if !dst.ServiceStore {
+		dst.ServiceStore = src.ServiceStore
+	}
+	if dst.ServiceStoreName == "" {
+		dst.ServiceStoreName = src.ServiceStoreName
+	}
+	if dst.ServiceStoreTag == "" {
+		dst.ServiceStoreTag = src.ServiceStoreTag
 	}
 }
 
@@ -8517,6 +10916,58 @@ func MergeTimeseriesProjectionInfo(dst, src *TimeseriesProjectionInfo) {
 	}
 	if len(dst.Field) == 0 {
 		dst.Field = src.Field
+	}
+}
+
+// ============================================================
+// Merge: RpcSurfaceInfo
+// ============================================================
+// MergeRpcSurfaceInfo fills zero-valued fields in dst from src.
+func MergeRpcSurfaceInfo(dst, src *RpcSurfaceInfo) {
+	if dst.SurfaceKind == "" {
+		dst.SurfaceKind = src.SurfaceKind
+	}
+	if dst.Transport == "" {
+		dst.Transport = src.Transport
+	}
+	if dst.AuthModel == "" {
+		dst.AuthModel = src.AuthModel
+	}
+	if !dst.AuthDisabled {
+		dst.AuthDisabled = src.AuthDisabled
+	}
+	if len(dst.AuthServices) == 0 {
+		dst.AuthServices = src.AuthServices
+	}
+	if !dst.AuthEntitledUsers {
+		dst.AuthEntitledUsers = src.AuthEntitledUsers
+	}
+	if !dst.AuthAnyUser {
+		dst.AuthAnyUser = src.AuthAnyUser
+	}
+	if dst.TargetNamespaceField == "" {
+		dst.TargetNamespaceField = src.TargetNamespaceField
+	}
+	if dst.SubjectNamespaceSource == "" {
+		dst.SubjectNamespaceSource = src.SubjectNamespaceSource
+	}
+	if dst.TargetNamespaceSource == "" {
+		dst.TargetNamespaceSource = src.TargetNamespaceSource
+	}
+	if dst.TargetNamespace == "" {
+		dst.TargetNamespace = src.TargetNamespace
+	}
+	if dst.GrpcPath == "" {
+		dst.GrpcPath = src.GrpcPath
+	}
+	if dst.HttpPath == "" {
+		dst.HttpPath = src.HttpPath
+	}
+	if len(dst.HttpMethods) == 0 {
+		dst.HttpMethods = src.HttpMethods
+	}
+	if dst.HttpAliasPath == "" {
+		dst.HttpAliasPath = src.HttpAliasPath
 	}
 }
 
@@ -8648,6 +11099,15 @@ func MergeRpcInfo(dst, src *RpcInfo) {
 	if dst.TargetNamespace == "" {
 		dst.TargetNamespace = src.TargetNamespace
 	}
+	if dst.VerbStatus == "" {
+		dst.VerbStatus = src.VerbStatus
+	}
+	if dst.FoldedToVerb == "" {
+		dst.FoldedToVerb = src.FoldedToVerb
+	}
+	if len(dst.Surfaces) == 0 {
+		dst.Surfaces = src.Surfaces
+	}
 }
 
 // ============================================================
@@ -8703,6 +11163,53 @@ func MergeServiceInfo(dst, src *ServiceInfo) {
 	}
 	if !dst.SmbAuthority {
 		dst.SmbAuthority = src.SmbAuthority
+	}
+	if dst.SmbRoot == nil {
+		dst.SmbRoot = src.SmbRoot
+	}
+	if dst.HostTag == "" {
+		dst.HostTag = src.HostTag
+	}
+}
+
+// ============================================================
+// Merge: VServiceInfo
+// ============================================================
+// MergeVServiceInfo fills zero-valued fields in dst from src.
+func MergeVServiceInfo(dst, src *VServiceInfo) {
+	if dst.Name == "" {
+		dst.Name = src.Name
+	}
+	if dst.Id == 0 {
+		dst.Id = src.Id
+	}
+	if dst.Package == "" {
+		dst.Package = src.Package
+	}
+}
+
+// ============================================================
+// Merge: ClientDependencyInfo
+// ============================================================
+// MergeClientDependencyInfo fills zero-valued fields in dst from src.
+func MergeClientDependencyInfo(dst, src *ClientDependencyInfo) {
+	if dst.SourcePackage == "" {
+		dst.SourcePackage = src.SourcePackage
+	}
+	if dst.SurfaceKind == "" {
+		dst.SurfaceKind = src.SurfaceKind
+	}
+	if dst.Service == "" {
+		dst.Service = src.Service
+	}
+	if dst.TargetPackage == "" {
+		dst.TargetPackage = src.TargetPackage
+	}
+	if dst.TargetService == "" {
+		dst.TargetService = src.TargetService
+	}
+	if !dst.Wildcard {
+		dst.Wildcard = src.Wildcard
 	}
 }
 
@@ -8851,5 +11358,20 @@ func MergePackageNode(dst, src *PackageNode) {
 	}
 	if len(dst.EntitlementGrants) == 0 {
 		dst.EntitlementGrants = src.EntitlementGrants
+	}
+	if len(dst.ProtoPackages) == 0 {
+		dst.ProtoPackages = src.ProtoPackages
+	}
+	if len(dst.Vservices) == 0 {
+		dst.Vservices = src.Vservices
+	}
+	if len(dst.ClientDependencies) == 0 {
+		dst.ClientDependencies = src.ClientDependencies
+	}
+	if len(dst.EventPublishes) == 0 {
+		dst.EventPublishes = src.EventPublishes
+	}
+	if len(dst.EventWatches) == 0 {
+		dst.EventWatches = src.EventWatches
 	}
 }

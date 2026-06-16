@@ -238,12 +238,12 @@ service Messaging {
 
   // --- Identity ---
 
-  // RegisterUser registers a virtual user identity for posting messages.
+  // UpdateVirtualUser registers or updates a virtual user identity for posting messages.
   // If the user ID already exists, the registration is updated.
-  rpc RegisterUser(RegisterUserRequest) returns (google.protobuf.Empty);
+  rpc UpdateVirtualUser(UpdateVirtualUserRequest) returns (google.protobuf.Empty);
 
-  // UnregisterUser removes a virtual user identity.
-  rpc UnregisterUser(UnregisterUserRequest) returns (google.protobuf.Empty);
+  // DeleteVirtualUser removes a virtual user identity.
+  rpc DeleteVirtualUser(DeleteVirtualUserRequest) returns (google.protobuf.Empty);
 
   // --- Channel Subscription ---
 
@@ -251,12 +251,12 @@ service Messaging {
   // A channel may have at most one subscriber.
   rpc Subscribe(SubscribeRequest) returns (google.protobuf.Empty);
 
-  // Unsubscribe removes a channel subscription.
-  rpc Unsubscribe(UnsubscribeRequest) returns (google.protobuf.Empty);
+  // DeleteSubscription removes a channel subscription.
+  rpc DeleteSubscription(DeleteSubscriptionRequest) returns (google.protobuf.Empty);
 
-  // Events opens a server stream that delivers inbound events
+  // SubscribeEvents opens a server stream that delivers inbound events
   // for all channels the virtual user is subscribed to.
-  rpc Events(EventsRequest) returns (stream Event);
+  rpc SubscribeEvents(EventsRequest) returns (stream Event);
 
   // --- Messaging ---
 
@@ -268,22 +268,24 @@ service Messaging {
 
   // --- Read ---
 
-  // GetThread retrieves the full message history of a thread.
-  rpc GetThread(GetThreadRequest) returns (GetThreadResponse);
+  // ListThreadMessages retrieves the full message history of a thread.
+  rpc ListThreadMessages(GetThreadRequest) returns (GetThreadResponse) {
+  }
 
   // GetChannelHistory retrieves recent messages from a channel.
   rpc GetChannelHistory(GetChannelHistoryRequest) returns (GetChannelHistoryResponse);
 
   // ListChannels lists channels in the workspace.
-  rpc ListChannels(trace.TraceRequest) returns (ListChannelsResponse);
+  rpc ListChannels(trace.TraceRequest) returns (ListChannelsResponse) {
+  }
 
   // --- Reactions ---
 
-  // AddReaction adds an emoji reaction to a message.
-  rpc AddReaction(ReactionRequest) returns (google.protobuf.Empty);
+  // CreateReaction adds an emoji reaction to a message.
+  rpc CreateReaction(ReactionRequest) returns (google.protobuf.Empty);
 
-  // RemoveReaction removes an emoji reaction from a message.
-  rpc RemoveReaction(ReactionRequest) returns (google.protobuf.Empty);
+  // DeleteReaction removes an emoji reaction from a message.
+  rpc DeleteReaction(ReactionRequest) returns (google.protobuf.Empty);
 }
 
 // ============================================================================
@@ -292,13 +294,13 @@ service Messaging {
 
 // --- Identity ---
 
-message RegisterUserRequest {
+message UpdateVirtualUserRequest {
   VirtualUser user = 1;
   string trace_id = 200;
   bool noop = 201;
 }
 
-message UnregisterUserRequest {
+message DeleteVirtualUserRequest {
   string user_id = 1;
   string trace_id = 200;
   bool noop = 201;
@@ -319,7 +321,7 @@ message SubscribeRequest {
   bool noop = 201;
 }
 
-message UnsubscribeRequest {
+message DeleteSubscriptionRequest {
   string channel_id = 1;
   string subscriber_id = 2;
   string trace_id = 200;
@@ -628,10 +630,10 @@ enum TypeID {
   TYPE_ID_MESSAGE = 5;
   TYPE_ID_EVENT = 6;
   TYPE_ID_CHANNEL = 7;
-  TYPE_ID_REGISTER_USER_REQUEST = 8;
-  TYPE_ID_UNREGISTER_USER_REQUEST = 9;
+  TYPE_ID_UPDATE_VIRTUAL_USER_REQUEST = 8;
+  TYPE_ID_DELETE_VIRTUAL_USER_REQUEST = 9;
   TYPE_ID_SUBSCRIBE_REQUEST = 10;
-  TYPE_ID_UNSUBSCRIBE_REQUEST = 11;
+  TYPE_ID_DELETE_SUBSCRIPTION_REQUEST = 11;
   TYPE_ID_EVENTS_REQUEST = 12;
   TYPE_ID_SEND_MESSAGE_REQUEST = 13;
   TYPE_ID_SEND_THREAD_REPLY_REQUEST = 14;
@@ -680,18 +682,18 @@ enum MessagingRpcId {
   MESSAGING_RPC_ID_ALL_ACCESSORS = 1;
   MESSAGING_RPC_ID_ALL_MUTATORS = 2;
   MESSAGING_RPC_ID_ALL_EXECUTORS = 3;
-  MESSAGING_RPC_ID_REGISTER_USER = 4;
-  MESSAGING_RPC_ID_UNREGISTER_USER = 5;
+  MESSAGING_RPC_ID_UPDATE_VIRTUAL_USER = 4;
+  MESSAGING_RPC_ID_DELETE_VIRTUAL_USER = 5;
   MESSAGING_RPC_ID_SUBSCRIBE = 6;
-  MESSAGING_RPC_ID_UNSUBSCRIBE = 7;
-  MESSAGING_RPC_ID_EVENTS = 8;
+  MESSAGING_RPC_ID_DELETE_SUBSCRIPTION = 7;
+  MESSAGING_RPC_ID_SUBSCRIBE_EVENTS = 8;
   MESSAGING_RPC_ID_SEND_MESSAGE = 9;
   MESSAGING_RPC_ID_SEND_THREAD_REPLY = 10;
-  MESSAGING_RPC_ID_GET_THREAD = 11;
+  MESSAGING_RPC_ID_LIST_THREAD_MESSAGES = 11;
   MESSAGING_RPC_ID_GET_CHANNEL_HISTORY = 12;
   MESSAGING_RPC_ID_LIST_CHANNELS = 13;
-  MESSAGING_RPC_ID_ADD_REACTION = 14;
-  MESSAGING_RPC_ID_REMOVE_REACTION = 15;
+  MESSAGING_RPC_ID_CREATE_REACTION = 14;
+  MESSAGING_RPC_ID_DELETE_REACTION = 15;
 }
 
 enum GatewayStateServiceRpcId {

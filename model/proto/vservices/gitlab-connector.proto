@@ -47,6 +47,7 @@ option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/k
 
 import "libs/spec.proto";
 import "libs/trace.proto";
+import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 
 // ============================================================================
@@ -144,16 +145,16 @@ message GitLabConnectorEvent {
 
   // ── Cavalier tenancy ──────────────────────────────────────────────
 
-  // tenant_namespace is the Cavalier namespace that owns the connector config
-  // which produced this event, e.g. "/acme" or "/acme/platform".
+  // tenant_namespace is the normalized Cavalier namespace that owns this event,
+  // e.g. "/tenants/acme" or "/tenants/acme/workspaces/platform".
   string tenant_namespace = 4;
-  // owner_spiffe is the resource URI for this event record, e.g.
-  // spiffe://<prefix>/<tenant_namespace>/data/gitlab-event/<event_id>.
-  string owner_spiffe     = 5;
+  // owner_spiffe is the generated resource URI for this event record:
+  // resource_spiffe_id(spiffe_trust_domain, tenant_namespace, "gitlab-event", event_id).
+  string owner_spiffe = 5;
   // actor_sub is the canonical Cavalier subject for the GitLab actor when a
   // tenant mapping/policy can resolve it. Leave empty rather than deriving it
   // from mutable email.
-  string actor_sub        = 6;
+  string actor_sub = 6;
 
   // ── GitLab source ────────────────────────────────────────────────
 
@@ -176,6 +177,9 @@ message GitLabConnectorEvent {
   GitLabEventType event_type     = 14;
   // ingestion_source distinguishes how this event was received.
   string          ingestion_source = 15;  // "webhook" | "poll"
+
+  // scheme_version records the persisted identity scheme used for owner_spiffe.
+  string scheme_version = 16;
 
   // ── Payload ──────────────────────────────────────────────────────
 
@@ -207,7 +211,11 @@ message GitLabConnectorEventBus {
 service GitLabConnectorEventBusStateService {
 	// Topic: EventStream
 	rpc PublishToEventStream(GitLabConnectorEvent) returns (TopicPublishReceipt);
-	rpc SubscribeToEventStream(trace.TraceRequest) returns (stream GitLabConnectorEvent);
+	rpc SubscribeToEventStream(trace.TraceRequest) returns (stream GitLabConnectorEventBusEventStreamSubscribeRecord);
+}
+
+message GitLabConnectorEventBusEventStreamSubscribeRecord { EventBusRecordMeta meta = 1; GitLabConnectorEvent payload = 2;   string trace_id = 200;
+  bool noop = 201;
 }
 
 message MapEmpty {  string trace_id = 200;
@@ -215,6 +223,10 @@ message MapEmpty {  string trace_id = 200;
 }
 
 message TopicPublishReceipt { bool published = 1;   string trace_id = 200;
+  bool noop = 201;
+}
+
+message EventBusRecordMeta { bytes key = 1; string topic = 2; int32 partition = 3; int64 offset = 4; google.protobuf.Timestamp timestamp = 5;   string trace_id = 200;
   bool noop = 201;
 }
 
@@ -242,13 +254,14 @@ message GitLabActivityNode {
 
   string event_id = 1;
   string owner_spiffe = 2;
-  string tenant_namespace = 3;
-  string project = 4;
-  string actor_sub = 5;
-  string email = 6;
-  string author_email = 7;
-  gitlabconnector.GitLabEventType event_type = 8;
-  int64 timestamp_ms = 9;
+  string scheme_version = 3;
+  string tenant_namespace = 4;
+  string project = 5;
+  string actor_sub = 6;
+  string email = 7;
+  string author_email = 8;
+  gitlabconnector.GitLabEventType event_type = 9;
+  int64 timestamp_ms = 10;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -262,14 +275,15 @@ message GitLabActivityRecord {
   int64 timestamp_ms = 4;
   string event_id = 5;
   string owner_spiffe = 6;
-  string actor_sub = 7;
-  string email = 8;
-  string author_email = 9;
-  string author_username = 10;
-  gitlabconnector.GitLabEventType event_type = 11;
-  string gitlab_url = 12;
-  string project_key = 13;
-  string ingestion_source = 14;
+  string scheme_version = 7;
+  string actor_sub = 8;
+  string email = 9;
+  string author_email = 10;
+  string author_username = 11;
+  gitlabconnector.GitLabEventType event_type = 12;
+  string gitlab_url = 13;
+  string project_key = 14;
+  string ingestion_source = 15;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -302,11 +316,13 @@ enum TypeID {
   TYPE_ID_ISSUE_PAYLOAD = 4;
   TYPE_ID_GIT_LAB_CONNECTOR_EVENT = 5;
   TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS = 6;
-  TYPE_ID_MAP_EMPTY = 7;
-  TYPE_ID_TOPIC_PUBLISH_RECEIPT = 8;
-  TYPE_ID_GIT_LAB_PROJECT_NODE = 9;
-  TYPE_ID_GIT_LAB_ACTIVITY_NODE = 10;
-  TYPE_ID_GIT_LAB_ACTIVITY_RECORD = 11;
+  TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD = 7;
+  TYPE_ID_MAP_EMPTY = 8;
+  TYPE_ID_TOPIC_PUBLISH_RECEIPT = 9;
+  TYPE_ID_EVENT_BUS_RECORD_META = 10;
+  TYPE_ID_GIT_LAB_PROJECT_NODE = 11;
+  TYPE_ID_GIT_LAB_ACTIVITY_NODE = 12;
+  TYPE_ID_GIT_LAB_ACTIVITY_RECORD = 13;
 }
 
 enum GitLabConnectorEventBusStateServiceRpcId {

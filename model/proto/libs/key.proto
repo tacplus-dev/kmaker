@@ -61,13 +61,3 @@ enum UseType {
   // UseTypeEnc represents encryption use
   USE_TYPE_ENC = 2;
 }
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-enum TypeID {
-  TYPE_ID_UNSPECIFIED = 0;
-  TYPE_ID_PUBLIC_KEY = 1;
-  TYPE_ID_KEY = 2;
-}

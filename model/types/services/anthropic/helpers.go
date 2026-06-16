@@ -948,13 +948,13 @@ func ProxyRpcIdValues() []ProxyRpcId {
 		ProxyRpcId_PROXY_RPC_ID_ALL_MUTATORS,
 		ProxyRpcId_PROXY_RPC_ID_ALL_EXECUTORS,
 		ProxyRpcId_PROXY_RPC_ID_CREATE_MESSAGE,
-		ProxyRpcId_PROXY_RPC_ID_CREATE_MESSAGE_STREAM,
+		ProxyRpcId_PROXY_RPC_ID_GENERATE_MESSAGE_STREAM,
 	}
 }
 
 // ProxyRpcIdStringValues returns all valid ProxyRpcId names as strings
 func ProxyRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "create-message", "create-message-stream"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "create-message", "generate-message-stream"}
 }
 
 // ParseProxyRpcId converts a string to a ProxyRpcId enum value
@@ -973,8 +973,8 @@ func ParseProxyRpcId(s string) (ProxyRpcId, error) {
 		return ProxyRpcId_PROXY_RPC_ID_ALL_EXECUTORS, nil
 	case "create-message", "proxy-rpc-id-create-message":
 		return ProxyRpcId_PROXY_RPC_ID_CREATE_MESSAGE, nil
-	case "create-message-stream", "proxy-rpc-id-create-message-stream":
-		return ProxyRpcId_PROXY_RPC_ID_CREATE_MESSAGE_STREAM, nil
+	case "generate-message-stream", "proxy-rpc-id-generate-message-stream":
+		return ProxyRpcId_PROXY_RPC_ID_GENERATE_MESSAGE_STREAM, nil
 	default:
 		return ProxyRpcId_PROXY_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid proxyrpcid %s, expecting one of: %v", s, ProxyRpcIdStringValues())
 	}
@@ -1013,8 +1013,8 @@ func ProxyRpcIdToString(v ProxyRpcId) string {
 		return "all-executors"
 	case ProxyRpcId_PROXY_RPC_ID_CREATE_MESSAGE:
 		return "create-message"
-	case ProxyRpcId_PROXY_RPC_ID_CREATE_MESSAGE_STREAM:
-		return "create-message-stream"
+	case ProxyRpcId_PROXY_RPC_ID_GENERATE_MESSAGE_STREAM:
+		return "generate-message-stream"
 	default:
 		return ""
 	}
@@ -1045,8 +1045,8 @@ func ParseProxyRpcIdLiberal(s string) ProxyRpcId {
 		return ProxyRpcId_PROXY_RPC_ID_ALL_EXECUTORS
 	case "create-message", "proxy-rpc-id-create-message":
 		return ProxyRpcId_PROXY_RPC_ID_CREATE_MESSAGE
-	case "create-message-stream", "proxy-rpc-id-create-message-stream":
-		return ProxyRpcId_PROXY_RPC_ID_CREATE_MESSAGE_STREAM
+	case "generate-message-stream", "proxy-rpc-id-generate-message-stream":
+		return ProxyRpcId_PROXY_RPC_ID_GENERATE_MESSAGE_STREAM
 	default:
 		return ProxyRpcId_PROXY_RPC_ID_UNSPECIFIED
 	}
@@ -1065,8 +1065,8 @@ func ProxyRpcIdToSpecName(v ProxyRpcId) string {
 		return "PROXY_RPC_ID_ALL_EXECUTORS"
 	case ProxyRpcId_PROXY_RPC_ID_CREATE_MESSAGE:
 		return "PROXY_RPC_ID_CREATE_MESSAGE"
-	case ProxyRpcId_PROXY_RPC_ID_CREATE_MESSAGE_STREAM:
-		return "PROXY_RPC_ID_CREATE_MESSAGE_STREAM"
+	case ProxyRpcId_PROXY_RPC_ID_GENERATE_MESSAGE_STREAM:
+		return "PROXY_RPC_ID_GENERATE_MESSAGE_STREAM"
 	default:
 		return ""
 	}
@@ -6277,16 +6277,16 @@ func ValidateImageSourceWithDepth(m *ImageSource, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Data must be at most 20971520 characters, got: %d", len(m.Data))
 	}
 
-	// Validate Url (assert_max_length: 4096)
-	if len(m.Url) > 4096 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Url must be at most 4096 characters, got: %d", len(m.Url))
-	}
-
 	// Validate Url (assert_url: URL_SCHEME_HTTPS)
 	if m.Url != "" {
 		if err := utils.ValidateAssertURL_URL_SCHEME_HTTPS(m.Url); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field Url URL validation failed")
 		}
+	}
+
+	// Validate Url (assert_max_length: 4096)
+	if len(m.Url) > 4096 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Url must be at most 4096 characters, got: %d", len(m.Url))
 	}
 
 	// Validate Kind (default max size: 32768 bytes)
@@ -6377,11 +6377,6 @@ func ValidateMessageWithDepth(m *Message, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Role must be defined")
 	}
 
-	// Validate Content (assert_min_size: 1)
-	if len(m.Content) < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Content below min size of 1, got: %d", len(m.Content))
-	}
-
 	// Validate Content (assert_required)
 	if len(m.Content) == 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Content is required")
@@ -6390,6 +6385,11 @@ func ValidateMessageWithDepth(m *Message, depth int) error {
 	// Validate Content (assert_max_size: 1024)
 	if len(m.Content) > 1024 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Content exceeds max size of 1024, got: %d", len(m.Content))
+	}
+
+	// Validate Content (assert_min_size: 1)
+	if len(m.Content) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Content below min size of 1, got: %d", len(m.Content))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -6605,6 +6605,11 @@ func ValidateCreateMessageRequestWithDepth(m *CreateMessageRequest, depth int) e
 		return protoerrors.NewErrMissingInvalidData(nil, "field Model must be at most 128 characters, got: %d", len(m.Model))
 	}
 
+	// Validate Messages (assert_max_size: 4096)
+	if len(m.Messages) > 4096 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Messages exceeds max size of 4096, got: %d", len(m.Messages))
+	}
+
 	// Validate Messages (assert_min_size: 1)
 	if len(m.Messages) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Messages below min size of 1, got: %d", len(m.Messages))
@@ -6613,11 +6618,6 @@ func ValidateCreateMessageRequestWithDepth(m *CreateMessageRequest, depth int) e
 	// Validate Messages (assert_required)
 	if len(m.Messages) == 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Messages is required")
-	}
-
-	// Validate Messages (assert_max_size: 4096)
-	if len(m.Messages) > 4096 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Messages exceeds max size of 4096, got: %d", len(m.Messages))
 	}
 
 	// Validate MaxTokens (assert_required: must be > 0)
@@ -7134,14 +7134,14 @@ func ValidateErrorDetailWithDepth(m *ErrorDetail, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Kind must be at most 64 characters, got: %d", len(m.Kind))
 	}
 
-	// Validate Message (assert_required)
-	if m.Message == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Message is required")
-	}
-
 	// Validate Message (assert_max_length: 4096)
 	if len(m.Message) > 4096 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Message must be at most 4096 characters, got: %d", len(m.Message))
+	}
+
+	// Validate Message (assert_required)
+	if m.Message == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Message is required")
 	}
 
 	// Validate Kind (default max size: 32768 bytes)
@@ -7178,11 +7178,6 @@ func ValidateProxyEventWithDepth(m *ProxyEvent, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Subject (assert_max_length: 256)
-	if len(m.Subject) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Subject must be at most 256 characters, got: %d", len(m.Subject))
-	}
-
 	// Validate Subject (assert_required)
 	if m.Subject == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Subject is required")
@@ -7191,6 +7186,11 @@ func ValidateProxyEventWithDepth(m *ProxyEvent, depth int) error {
 	// Validate Subject (assert_min_length: 1)
 	if len(m.Subject) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Subject must be at least 1 characters, got: %d", len(m.Subject))
+	}
+
+	// Validate Subject (assert_max_length: 256)
+	if len(m.Subject) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Subject must be at most 256 characters, got: %d", len(m.Subject))
 	}
 
 	// Validate Request (assert_required)

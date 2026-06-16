@@ -94,56 +94,6 @@ func (InstanceStatus) EnumDescriptor() ([]byte, []int) {
 	return file_libs_healthreport_proto_rawDescGZIP(), []int{0}
 }
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED             TypeID = 0
-	TypeID_TYPE_ID_SERVICE_INSTANCE_HEALTH TypeID = 1
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_SERVICE_INSTANCE_HEALTH",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":             0,
-		"TYPE_ID_SERVICE_INSTANCE_HEALTH": 1,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_healthreport_proto_enumTypes[1].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_healthreport_proto_enumTypes[1]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_healthreport_proto_rawDescGZIP(), []int{1}
-}
-
 // ServiceInstanceHealth captures the health, load, and reachability of a
 // single running instance of a microservice. The composite key
 // "service_id@instance_id" is set by the server from the caller's token claims.
@@ -401,10 +351,7 @@ const file_libs_healthreport_proto_rawDesc = "" +
 	"\x17INSTANCE_STATUS_HEALTHY\x10\x01\x12\x1c\n" +
 	"\x18INSTANCE_STATUS_DEGRADED\x10\x02\x12\x1c\n" +
 	"\x18INSTANCE_STATUS_DRAINING\x10\x03\x12\x1d\n" +
-	"\x19INSTANCE_STATUS_UNHEALTHY\x10\x04*F\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12#\n" +
-	"\x1fTYPE_ID_SERVICE_INSTANCE_HEALTH\x10\x01B^Z\\gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/healthreportb\x06proto3"
+	"\x19INSTANCE_STATUS_UNHEALTHY\x10\x04B^Z\\gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/healthreportb\x06proto3"
 
 var (
 	file_libs_healthreport_proto_rawDescOnce sync.Once
@@ -418,20 +365,19 @@ func file_libs_healthreport_proto_rawDescGZIP() []byte {
 	return file_libs_healthreport_proto_rawDescData
 }
 
-var file_libs_healthreport_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_libs_healthreport_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_libs_healthreport_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_libs_healthreport_proto_goTypes = []any{
 	(InstanceStatus)(0),           // 0: healthreport.InstanceStatus
-	(TypeID)(0),                   // 1: healthreport.TypeID
-	(*ServiceInstanceHealth)(nil), // 2: healthreport.ServiceInstanceHealth
-	nil,                           // 3: healthreport.ServiceInstanceHealth.LabelsEntry
-	(*host.Host)(nil),             // 4: host.Host
+	(*ServiceInstanceHealth)(nil), // 1: healthreport.ServiceInstanceHealth
+	nil,                           // 2: healthreport.ServiceInstanceHealth.LabelsEntry
+	(*host.Host)(nil),             // 3: host.Host
 }
 var file_libs_healthreport_proto_depIdxs = []int32{
-	4, // 0: healthreport.ServiceInstanceHealth.grpc_endpoint:type_name -> host.Host
-	4, // 1: healthreport.ServiceInstanceHealth.http_endpoint:type_name -> host.Host
+	3, // 0: healthreport.ServiceInstanceHealth.grpc_endpoint:type_name -> host.Host
+	3, // 1: healthreport.ServiceInstanceHealth.http_endpoint:type_name -> host.Host
 	0, // 2: healthreport.ServiceInstanceHealth.status:type_name -> healthreport.InstanceStatus
-	3, // 3: healthreport.ServiceInstanceHealth.labels:type_name -> healthreport.ServiceInstanceHealth.LabelsEntry
+	2, // 3: healthreport.ServiceInstanceHealth.labels:type_name -> healthreport.ServiceInstanceHealth.LabelsEntry
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
@@ -449,7 +395,7 @@ func file_libs_healthreport_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_healthreport_proto_rawDesc), len(file_libs_healthreport_proto_rawDesc)),
-			NumEnums:      2,
+			NumEnums:      1,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,

@@ -270,62 +270,6 @@ func (X509ExtKeyUsage) EnumDescriptor() ([]byte, []int) {
 	return file_libs_x509_proto_rawDescGZIP(), []int{2}
 }
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED       TypeID = 0
-	TypeID_TYPE_ID_X509_CERT         TypeID = 1
-	TypeID_TYPE_ID_X509_CERT_REQUEST TypeID = 2
-	TypeID_TYPE_ID_X509_CERT_CHAIN   TypeID = 3
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_X509_CERT",
-		2: "TYPE_ID_X509_CERT_REQUEST",
-		3: "TYPE_ID_X509_CERT_CHAIN",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":       0,
-		"TYPE_ID_X509_CERT":         1,
-		"TYPE_ID_X509_CERT_REQUEST": 2,
-		"TYPE_ID_X509_CERT_CHAIN":   3,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_x509_proto_enumTypes[3].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_x509_proto_enumTypes[3]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_x509_proto_rawDescGZIP(), []int{3}
-}
-
 // ProtoCert represents an X.509 certificate.
 // The certificate is stored as a base64-encoded PEM block.
 // Use NewProtoCert() in Go with DER-encoded certificate bytes to create.
@@ -587,26 +531,26 @@ var File_libs_x509_proto protoreflect.FileDescriptor
 
 const file_libs_x509_proto_rawDesc = "" +
 	"\n" +
-	"\x0flibs/x509.proto\x12\x04x509\x1a\x0elibs/key.proto\x1a\x0flibs/spec.proto\x1a\x1cgoogle/protobuf/struct.proto\"B\n" +
-	"\bX509Cert\x12\x14\n" +
-	"\x02id\x18\x01 \x01(\tB\x04е\x18\x01R\x02id\x12 \n" +
-	"\x06base64\x18\x02 \x01(\tB\b\x88\xa6\x1d\x01\x80\xa7\x1d\x01R\x06base64\"\xa7\x03\n" +
+	"\x0flibs/x509.proto\x12\x04x509\x1a\x0elibs/key.proto\x1a\x0flibs/spec.proto\x1a\x1cgoogle/protobuf/struct.proto\"M\n" +
+	"\bX509Cert\x12\x19\n" +
+	"\x02id\x18\x01 \x01(\tB\tе\x18\x01\xb8\xa8\x1d\x80\x02R\x02id\x12&\n" +
+	"\x06base64\x18\x02 \x01(\tB\x0e\x88\xa6\x1d\x01\x80\xa7\x1d\x01\xb8\xa8\x1d\x80\x80\x01R\x06base64\"\xac\x03\n" +
 	"\x0fX509CertRequest\x12 \n" +
 	"\x03key\x18\x01 \x01(\v2\x0e.key.PublicKeyR\x03key\x12\x1a\n" +
 	"\x03exp\x18\x02 \x01(\x03B\b\x88\xa6\x1d\x01\xc0\xa6\x1d\x01R\x03exp\x123\n" +
 	"\bmetadata\x18\x03 \x01(\v2\x17.google.protobuf.StructR\bmetadata\x125\n" +
 	"\tkey_usage\x18\x04 \x01(\x0e2\x12.x509.X509KeyUsageB\x04\x88\xa6\x1d\x01R\bkeyUsage\x12?\n" +
-	"\rext_key_usage\x18\x05 \x03(\x0e2\x15.x509.X509ExtKeyUsageB\x04\xb8\xa8\x1d\x10R\vextKeyUsage\x12 \n" +
-	"\x06issuer\x18\x06 \x01(\tB\b\x88\xa6\x1d\x01\x88\xa7\x1d\x01R\x06issuer\x12\x13\n" +
+	"\rext_key_usage\x18\x05 \x03(\x0e2\x15.x509.X509ExtKeyUsageB\x04\xb8\xa8\x1d\x10R\vextKeyUsage\x12%\n" +
+	"\x06issuer\x18\x06 \x01(\tB\r\x88\xa6\x1d\x01\x88\xa7\x1d\x01\xb8\xa8\x1d\x80\bR\x06issuer\x12\x13\n" +
 	"\x05is_ca\x18\a \x01(\bR\x04isCa\x12.\n" +
 	"\x13path_len_constraint\x18\b \x01(\x05R\x11pathLenConstraint\x12!\n" +
 	"\tdns_names\x18\t \x03(\tB\x04\xb8\xa8\x1d R\bdnsNames\x12\x1f\n" +
 	"\buri_sans\x18\n" +
-	" \x03(\tB\x04\xb8\xa8\x1d\bR\auriSans\"q\n" +
+	" \x03(\tB\x04\xb8\xa8\x1d\bR\auriSans\"v\n" +
 	"\rX509CertChain\x12.\n" +
 	"\x05chain\x18\x01 \x03(\v2\x0e.x509.X509CertB\b\xb8\xa8\x1d\b\xa0\xa9\x1d\x01R\x05chain\x12\x1a\n" +
-	"\x03key\x18\x02 \x01(\v2\b.key.KeyR\x03key\x12\x14\n" +
-	"\x02id\x18\x03 \x01(\tB\x04е\x18\x01R\x02id*n\n" +
+	"\x03key\x18\x02 \x01(\v2\b.key.KeyR\x03key\x12\x19\n" +
+	"\x02id\x18\x03 \x01(\tB\tе\x18\x01\xb8\xa8\x1d\x80\x02R\x02id*n\n" +
 	"\aPemType\x12\x16\n" +
 	"\x12PEM_TYPE_UNDEFINED\x10\x00\x12\x18\n" +
 	"\x14PEM_TYPE_PRIVATE_KEY\x10\x01\x12\x17\n" +
@@ -637,12 +581,7 @@ const file_libs_x509_proto_rawDesc = "" +
 	"\x123\n" +
 	"/X509_EXT_KEY_USAGE_NETSCAPE_SERVER_GATED_CRYPTO\x10\v\x128\n" +
 	"4X509_EXT_KEY_USAGE_MICROSOFT_COMMERCIAL_CODE_SIGNING\x10\f\x124\n" +
-	"0X509_EXT_KEY_USAGE_MICROSOFT_KERNEL_CODE_SIGNING\x10\r*t\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x15\n" +
-	"\x11TYPE_ID_X509_CERT\x10\x01\x12\x1d\n" +
-	"\x19TYPE_ID_X509_CERT_REQUEST\x10\x02\x12\x1b\n" +
-	"\x17TYPE_ID_X509_CERT_CHAIN\x10\x03BVZTgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/x509b\x06proto3"
+	"0X509_EXT_KEY_USAGE_MICROSOFT_KERNEL_CODE_SIGNING\x10\rBVZTgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/x509b\x06proto3"
 
 var (
 	file_libs_x509_proto_rawDescOnce sync.Once
@@ -656,27 +595,26 @@ func file_libs_x509_proto_rawDescGZIP() []byte {
 	return file_libs_x509_proto_rawDescData
 }
 
-var file_libs_x509_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
+var file_libs_x509_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_libs_x509_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_libs_x509_proto_goTypes = []any{
 	(PemType)(0),            // 0: x509.PemType
 	(X509KeyUsage)(0),       // 1: x509.X509KeyUsage
 	(X509ExtKeyUsage)(0),    // 2: x509.X509ExtKeyUsage
-	(TypeID)(0),             // 3: x509.TypeID
-	(*X509Cert)(nil),        // 4: x509.X509Cert
-	(*X509CertRequest)(nil), // 5: x509.X509CertRequest
-	(*X509CertChain)(nil),   // 6: x509.X509CertChain
-	(*key.PublicKey)(nil),   // 7: key.PublicKey
-	(*structpb.Struct)(nil), // 8: google.protobuf.Struct
-	(*key.Key)(nil),         // 9: key.Key
+	(*X509Cert)(nil),        // 3: x509.X509Cert
+	(*X509CertRequest)(nil), // 4: x509.X509CertRequest
+	(*X509CertChain)(nil),   // 5: x509.X509CertChain
+	(*key.PublicKey)(nil),   // 6: key.PublicKey
+	(*structpb.Struct)(nil), // 7: google.protobuf.Struct
+	(*key.Key)(nil),         // 8: key.Key
 }
 var file_libs_x509_proto_depIdxs = []int32{
-	7, // 0: x509.X509CertRequest.key:type_name -> key.PublicKey
-	8, // 1: x509.X509CertRequest.metadata:type_name -> google.protobuf.Struct
+	6, // 0: x509.X509CertRequest.key:type_name -> key.PublicKey
+	7, // 1: x509.X509CertRequest.metadata:type_name -> google.protobuf.Struct
 	1, // 2: x509.X509CertRequest.key_usage:type_name -> x509.X509KeyUsage
 	2, // 3: x509.X509CertRequest.ext_key_usage:type_name -> x509.X509ExtKeyUsage
-	4, // 4: x509.X509CertChain.chain:type_name -> x509.X509Cert
-	9, // 5: x509.X509CertChain.key:type_name -> key.Key
+	3, // 4: x509.X509CertChain.chain:type_name -> x509.X509Cert
+	8, // 5: x509.X509CertChain.key:type_name -> key.Key
 	6, // [6:6] is the sub-list for method output_type
 	6, // [6:6] is the sub-list for method input_type
 	6, // [6:6] is the sub-list for extension type_name
@@ -694,7 +632,7 @@ func file_libs_x509_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_x509_proto_rawDesc), len(file_libs_x509_proto_rawDesc)),
-			NumEnums:      4,
+			NumEnums:      3,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,

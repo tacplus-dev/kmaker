@@ -56,6 +56,7 @@ option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/k
 
 import "libs/spec.proto";
 import "libs/trace.proto";
+import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 
 // ============================================================================
@@ -69,8 +70,9 @@ enum LlmProvider {
   LLM_PROVIDER_OPENAI      = 2;
 }
 
-// LlmOperationType identifies the specific proxy RPC that was invoked.
-// Values map 1:1 to the RPCs defined in anthropic.proto and openai.proto.
+// LlmOperationType identifies the upstream provider operation that was invoked.
+// Values preserve the provider API operation names even when the local RPC uses
+// a governed action verb.
 enum LlmOperationType {
   LLM_OPERATION_TYPE_UNSPECIFIED = 0;
 
@@ -182,7 +184,11 @@ message LlmEventBus {
 service LlmEventBusStateService {
 	// Topic: EventStream
 	rpc PublishToEventStream(LlmEvent) returns (TopicPublishReceipt);
-	rpc SubscribeToEventStream(trace.TraceRequest) returns (stream LlmEvent);
+	rpc SubscribeToEventStream(trace.TraceRequest) returns (stream LlmEventBusEventStreamSubscribeRecord);
+}
+
+message LlmEventBusEventStreamSubscribeRecord { EventBusRecordMeta meta = 1; LlmEvent payload = 2;   string trace_id = 200;
+  bool noop = 201;
 }
 
 message MapEmpty {  string trace_id = 200;
@@ -190,6 +196,10 @@ message MapEmpty {  string trace_id = 200;
 }
 
 message TopicPublishReceipt { bool published = 1;   string trace_id = 200;
+  bool noop = 201;
+}
+
+message EventBusRecordMeta { bytes key = 1; string topic = 2; int32 partition = 3; int64 offset = 4; google.protobuf.Timestamp timestamp = 5;   string trace_id = 200;
   bool noop = 201;
 }
 
@@ -278,11 +288,13 @@ enum TypeID {
   TYPE_ID_UNSPECIFIED = 0;
   TYPE_ID_LLM_EVENT = 1;
   TYPE_ID_LLM_EVENT_BUS = 2;
-  TYPE_ID_MAP_EMPTY = 3;
-  TYPE_ID_TOPIC_PUBLISH_RECEIPT = 4;
-  TYPE_ID_LLM_MODEL_NODE = 5;
-  TYPE_ID_LLM_CALL_NODE = 6;
-  TYPE_ID_LLM_CALL_RECORD = 7;
+  TYPE_ID_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD = 3;
+  TYPE_ID_MAP_EMPTY = 4;
+  TYPE_ID_TOPIC_PUBLISH_RECEIPT = 5;
+  TYPE_ID_EVENT_BUS_RECORD_META = 6;
+  TYPE_ID_LLM_MODEL_NODE = 7;
+  TYPE_ID_LLM_CALL_NODE = 8;
+  TYPE_ID_LLM_CALL_RECORD = 9;
 }
 
 enum LlmEventBusStateServiceRpcId {

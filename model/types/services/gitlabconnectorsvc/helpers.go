@@ -1876,10 +1876,10 @@ func GitLabConnectorTenantConfigToTOML(v *GitLabConnectorTenantConfig) ([]byte, 
 // WatchedGitLabGroupJSON represents WatchedGitLabGroup in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type watchedgitlabgroupJSON struct {
-	GroupPath        string `json:"group_path,omitempty"`
-	ProjectNamespace string `json:"project_namespace,omitempty"`
-	TraceId          string `json:"trace_id,omitempty"`
-	Noop             bool   `json:"noop,omitempty"`
+	GroupPath          string `json:"group_path,omitempty"`
+	WorkspaceNamespace string `json:"workspace_namespace,omitempty"`
+	TraceId            string `json:"trace_id,omitempty"`
+	Noop               bool   `json:"noop,omitempty"`
 }
 
 // WatchedGitLabGroupToJSON converts WatchedGitLabGroup to JSON bytes.
@@ -1890,10 +1890,10 @@ func WatchedGitLabGroupToJSON(v *WatchedGitLabGroup) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := watchedgitlabgroupJSON{
-		GroupPath:        v.GroupPath,
-		ProjectNamespace: v.ProjectNamespace,
-		TraceId:          v.TraceId,
-		Noop:             v.Noop,
+		GroupPath:          v.GroupPath,
+		WorkspaceNamespace: v.WorkspaceNamespace,
+		TraceId:            v.TraceId,
+		Noop:               v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1906,10 +1906,10 @@ func WatchedGitLabGroupToJSONPretty(v *WatchedGitLabGroup) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := watchedgitlabgroupJSON{
-		GroupPath:        v.GroupPath,
-		ProjectNamespace: v.ProjectNamespace,
-		TraceId:          v.TraceId,
-		Noop:             v.Noop,
+		GroupPath:          v.GroupPath,
+		WorkspaceNamespace: v.WorkspaceNamespace,
+		TraceId:            v.TraceId,
+		Noop:               v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1975,7 +1975,7 @@ func WatchedGitLabGroupFromJSON(data []byte) (*WatchedGitLabGroup, error) {
 	// Build result with parsed enums
 	result := &WatchedGitLabGroup{}
 	result.GroupPath = raw.GroupPath
-	result.ProjectNamespace = raw.ProjectNamespace
+	result.WorkspaceNamespace = raw.WorkspaceNamespace
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -8411,7 +8411,7 @@ func WatchedGitLabGroupToEnvVar(v *WatchedGitLabGroup) map[string]string {
 	}
 	result := make(map[string]string)
 	result["PROTO_SERVICES_GITLAB-CONNECTOR_WATCHED_GIT_LAB_GROUP_GROUP_PATH"] = v.GroupPath
-	result["PROTO_SERVICES_GITLAB-CONNECTOR_WATCHED_GIT_LAB_GROUP_PROJECT_NAMESPACE"] = v.ProjectNamespace
+	result["PROTO_SERVICES_GITLAB-CONNECTOR_WATCHED_GIT_LAB_GROUP_WORKSPACE_NAMESPACE"] = v.WorkspaceNamespace
 	result["PROTO_SERVICES_GITLAB-CONNECTOR_WATCHED_GIT_LAB_GROUP_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_GITLAB-CONNECTOR_WATCHED_GIT_LAB_GROUP_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -8423,8 +8423,8 @@ func WatchedGitLabGroupFromEnvVar(env map[string]string) (*WatchedGitLabGroup, e
 	if val, ok := env["PROTO_SERVICES_GITLAB-CONNECTOR_WATCHED_GIT_LAB_GROUP_GROUP_PATH"]; ok && val != "" {
 		result.GroupPath = val
 	}
-	if val, ok := env["PROTO_SERVICES_GITLAB-CONNECTOR_WATCHED_GIT_LAB_GROUP_PROJECT_NAMESPACE"]; ok && val != "" {
-		result.ProjectNamespace = val
+	if val, ok := env["PROTO_SERVICES_GITLAB-CONNECTOR_WATCHED_GIT_LAB_GROUP_WORKSPACE_NAMESPACE"]; ok && val != "" {
+		result.WorkspaceNamespace = val
 	}
 	if val, ok := env["PROTO_SERVICES_GITLAB-CONNECTOR_WATCHED_GIT_LAB_GROUP_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -9956,9 +9956,9 @@ func ValidateWatchedGitLabGroupWithDepth(m *WatchedGitLabGroup, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field GroupPath must be at most 512 characters, got: %d", len(m.GroupPath))
 	}
 
-	// Validate ProjectNamespace (assert_max_length: 256)
-	if len(m.ProjectNamespace) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectNamespace must be at most 256 characters, got: %d", len(m.ProjectNamespace))
+	// Validate WorkspaceNamespace (assert_max_length: 256)
+	if len(m.WorkspaceNamespace) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field WorkspaceNamespace must be at most 256 characters, got: %d", len(m.WorkspaceNamespace))
 	}
 
 	// Validate GroupPath (default max size: 32768 bytes)
@@ -9966,9 +9966,9 @@ func ValidateWatchedGitLabGroupWithDepth(m *WatchedGitLabGroup, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field GroupPath exceeds max size of 32768 bytes, got: %d", len(m.GroupPath))
 	}
 
-	// Validate ProjectNamespace (default max size: 32768 bytes)
-	if len(m.ProjectNamespace) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectNamespace exceeds max size of 32768 bytes, got: %d", len(m.ProjectNamespace))
+	// Validate WorkspaceNamespace (default max size: 32768 bytes)
+	if len(m.WorkspaceNamespace) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field WorkspaceNamespace exceeds max size of 32768 bytes, got: %d", len(m.WorkspaceNamespace))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -10048,14 +10048,14 @@ func ValidateLastPollTimestampWithDepth(m *LastPollTimestamp, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TenantNamespace is required")
 	}
 
-	// Validate GitlabUrl (assert_max_length: 512)
-	if len(m.GitlabUrl) > 512 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field GitlabUrl must be at most 512 characters, got: %d", len(m.GitlabUrl))
-	}
-
 	// Validate GitlabUrl (assert_required)
 	if m.GitlabUrl == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field GitlabUrl is required")
+	}
+
+	// Validate GitlabUrl (assert_max_length: 512)
+	if len(m.GitlabUrl) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field GitlabUrl must be at most 512 characters, got: %d", len(m.GitlabUrl))
 	}
 
 	// Validate GroupPath (assert_required)
@@ -11329,7 +11329,7 @@ const (
 	MaxSizeGitlabconnectortenantconfigEventTypesEnabled int = 16
 	MaxSizeGitlabconnectortenantconfigTraceId           int = 32768
 	MaxSizeWatchedgitlabgroupGroupPath                  int = 32768
-	MaxSizeWatchedgitlabgroupProjectNamespace           int = 32768
+	MaxSizeWatchedgitlabgroupWorkspaceNamespace         int = 32768
 	MaxSizeWatchedgitlabgroupTraceId                    int = 32768
 	MaxSizeGitlabconnectorstateLastPollTimestamps       int = 4096
 	MaxSizeGitlabconnectorstateWebhookRegistrations     int = 4096
@@ -12359,8 +12359,8 @@ func MergeWatchedGitLabGroup(dst, src *WatchedGitLabGroup) {
 	if dst.GroupPath == "" {
 		dst.GroupPath = src.GroupPath
 	}
-	if dst.ProjectNamespace == "" {
-		dst.ProjectNamespace = src.ProjectNamespace
+	if dst.WorkspaceNamespace == "" {
+		dst.WorkspaceNamespace = src.WorkspaceNamespace
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

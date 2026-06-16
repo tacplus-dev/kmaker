@@ -39,7 +39,7 @@ const (
 	Admin_ListTopics_FullMethodName                = "/eventbus.Admin/ListTopics"
 	Admin_GetTopicInfo_FullMethodName              = "/eventbus.Admin/GetTopicInfo"
 	Admin_DeleteTopic_FullMethodName               = "/eventbus.Admin/DeleteTopic"
-	Admin_AlterTopicConfig_FullMethodName          = "/eventbus.Admin/AlterTopicConfig"
+	Admin_UpdateTopicConfig_FullMethodName         = "/eventbus.Admin/UpdateTopicConfig"
 	Admin_GetConsumerGroupLag_FullMethodName       = "/eventbus.Admin/GetConsumerGroupLag"
 	Admin_ListConsumerGroups_FullMethodName        = "/eventbus.Admin/ListConsumerGroups"
 	Admin_ResetConsumerGroupOffsets_FullMethodName = "/eventbus.Admin/ResetConsumerGroupOffsets"
@@ -56,17 +56,17 @@ const (
 // based on spec.topic annotations on state roots with tag: "eventbus".
 type AdminClient interface {
 	// Topic admin.
-	ListTopics(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*ListTopicsResponse, error)
+	ListTopics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListTopicsResponse, error)
 	GetTopicInfo(ctx context.Context, in *TopicInfoRequest, opts ...grpc.CallOption) (*TopicInfo, error)
 	DeleteTopic(ctx context.Context, in *DeleteTopicRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	AlterTopicConfig(ctx context.Context, in *AlterTopicConfigRequest, opts ...grpc.CallOption) (*TopicInfo, error)
+	UpdateTopicConfig(ctx context.Context, in *UpdateTopicConfigRequest, opts ...grpc.CallOption) (*TopicInfo, error)
 	// Consumer group admin.
 	GetConsumerGroupLag(ctx context.Context, in *ConsumerGroupRequest, opts ...grpc.CallOption) (*ConsumerGroupInfo, error)
-	ListConsumerGroups(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*ListConsumerGroupsResponse, error)
+	ListConsumerGroups(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListConsumerGroupsResponse, error)
 	ResetConsumerGroupOffsets(ctx context.Context, in *ResetConsumerGroupOffsetsRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteConsumerGroup(ctx context.Context, in *ConsumerGroupRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// Cluster health.
-	GetClusterHealth(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*ClusterHealthResponse, error)
+	GetClusterHealth(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ClusterHealthResponse, error)
 }
 
 type adminClient struct {
@@ -77,7 +77,7 @@ func NewAdminClient(cc grpc.ClientConnInterface) AdminClient {
 	return &adminClient{cc}
 }
 
-func (c *adminClient) ListTopics(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*ListTopicsResponse, error) {
+func (c *adminClient) ListTopics(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListTopicsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListTopicsResponse)
 	err := c.cc.Invoke(ctx, Admin_ListTopics_FullMethodName, in, out, cOpts...)
@@ -107,10 +107,10 @@ func (c *adminClient) DeleteTopic(ctx context.Context, in *DeleteTopicRequest, o
 	return out, nil
 }
 
-func (c *adminClient) AlterTopicConfig(ctx context.Context, in *AlterTopicConfigRequest, opts ...grpc.CallOption) (*TopicInfo, error) {
+func (c *adminClient) UpdateTopicConfig(ctx context.Context, in *UpdateTopicConfigRequest, opts ...grpc.CallOption) (*TopicInfo, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TopicInfo)
-	err := c.cc.Invoke(ctx, Admin_AlterTopicConfig_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Admin_UpdateTopicConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +127,7 @@ func (c *adminClient) GetConsumerGroupLag(ctx context.Context, in *ConsumerGroup
 	return out, nil
 }
 
-func (c *adminClient) ListConsumerGroups(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*ListConsumerGroupsResponse, error) {
+func (c *adminClient) ListConsumerGroups(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListConsumerGroupsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListConsumerGroupsResponse)
 	err := c.cc.Invoke(ctx, Admin_ListConsumerGroups_FullMethodName, in, out, cOpts...)
@@ -157,7 +157,7 @@ func (c *adminClient) DeleteConsumerGroup(ctx context.Context, in *ConsumerGroup
 	return out, nil
 }
 
-func (c *adminClient) GetClusterHealth(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*ClusterHealthResponse, error) {
+func (c *adminClient) GetClusterHealth(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ClusterHealthResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ClusterHealthResponse)
 	err := c.cc.Invoke(ctx, Admin_GetClusterHealth_FullMethodName, in, out, cOpts...)
@@ -176,17 +176,17 @@ func (c *adminClient) GetClusterHealth(ctx context.Context, in *trace.TraceReque
 // based on spec.topic annotations on state roots with tag: "eventbus".
 type AdminServer interface {
 	// Topic admin.
-	ListTopics(context.Context, *trace.TraceRequest) (*ListTopicsResponse, error)
+	ListTopics(context.Context, *emptypb.Empty) (*ListTopicsResponse, error)
 	GetTopicInfo(context.Context, *TopicInfoRequest) (*TopicInfo, error)
 	DeleteTopic(context.Context, *DeleteTopicRequest) (*emptypb.Empty, error)
-	AlterTopicConfig(context.Context, *AlterTopicConfigRequest) (*TopicInfo, error)
+	UpdateTopicConfig(context.Context, *UpdateTopicConfigRequest) (*TopicInfo, error)
 	// Consumer group admin.
 	GetConsumerGroupLag(context.Context, *ConsumerGroupRequest) (*ConsumerGroupInfo, error)
-	ListConsumerGroups(context.Context, *trace.TraceRequest) (*ListConsumerGroupsResponse, error)
+	ListConsumerGroups(context.Context, *emptypb.Empty) (*ListConsumerGroupsResponse, error)
 	ResetConsumerGroupOffsets(context.Context, *ResetConsumerGroupOffsetsRequest) (*emptypb.Empty, error)
 	DeleteConsumerGroup(context.Context, *ConsumerGroupRequest) (*emptypb.Empty, error)
 	// Cluster health.
-	GetClusterHealth(context.Context, *trace.TraceRequest) (*ClusterHealthResponse, error)
+	GetClusterHealth(context.Context, *emptypb.Empty) (*ClusterHealthResponse, error)
 	mustEmbedUnimplementedAdminServer()
 }
 
@@ -197,7 +197,7 @@ type AdminServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAdminServer struct{}
 
-func (UnimplementedAdminServer) ListTopics(context.Context, *trace.TraceRequest) (*ListTopicsResponse, error) {
+func (UnimplementedAdminServer) ListTopics(context.Context, *emptypb.Empty) (*ListTopicsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListTopics not implemented")
 }
 func (UnimplementedAdminServer) GetTopicInfo(context.Context, *TopicInfoRequest) (*TopicInfo, error) {
@@ -206,13 +206,13 @@ func (UnimplementedAdminServer) GetTopicInfo(context.Context, *TopicInfoRequest)
 func (UnimplementedAdminServer) DeleteTopic(context.Context, *DeleteTopicRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteTopic not implemented")
 }
-func (UnimplementedAdminServer) AlterTopicConfig(context.Context, *AlterTopicConfigRequest) (*TopicInfo, error) {
-	return nil, status.Error(codes.Unimplemented, "method AlterTopicConfig not implemented")
+func (UnimplementedAdminServer) UpdateTopicConfig(context.Context, *UpdateTopicConfigRequest) (*TopicInfo, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateTopicConfig not implemented")
 }
 func (UnimplementedAdminServer) GetConsumerGroupLag(context.Context, *ConsumerGroupRequest) (*ConsumerGroupInfo, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetConsumerGroupLag not implemented")
 }
-func (UnimplementedAdminServer) ListConsumerGroups(context.Context, *trace.TraceRequest) (*ListConsumerGroupsResponse, error) {
+func (UnimplementedAdminServer) ListConsumerGroups(context.Context, *emptypb.Empty) (*ListConsumerGroupsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListConsumerGroups not implemented")
 }
 func (UnimplementedAdminServer) ResetConsumerGroupOffsets(context.Context, *ResetConsumerGroupOffsetsRequest) (*emptypb.Empty, error) {
@@ -221,7 +221,7 @@ func (UnimplementedAdminServer) ResetConsumerGroupOffsets(context.Context, *Rese
 func (UnimplementedAdminServer) DeleteConsumerGroup(context.Context, *ConsumerGroupRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteConsumerGroup not implemented")
 }
-func (UnimplementedAdminServer) GetClusterHealth(context.Context, *trace.TraceRequest) (*ClusterHealthResponse, error) {
+func (UnimplementedAdminServer) GetClusterHealth(context.Context, *emptypb.Empty) (*ClusterHealthResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetClusterHealth not implemented")
 }
 func (UnimplementedAdminServer) mustEmbedUnimplementedAdminServer() {}
@@ -246,7 +246,7 @@ func RegisterAdminServer(s grpc.ServiceRegistrar, srv AdminServer) {
 }
 
 func _Admin_ListTopics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(trace.TraceRequest)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -258,7 +258,7 @@ func _Admin_ListTopics_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: Admin_ListTopics_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).ListTopics(ctx, req.(*trace.TraceRequest))
+		return srv.(AdminServer).ListTopics(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -299,20 +299,20 @@ func _Admin_DeleteTopic_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Admin_AlterTopicConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AlterTopicConfigRequest)
+func _Admin_UpdateTopicConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateTopicConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AdminServer).AlterTopicConfig(ctx, in)
+		return srv.(AdminServer).UpdateTopicConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Admin_AlterTopicConfig_FullMethodName,
+		FullMethod: Admin_UpdateTopicConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).AlterTopicConfig(ctx, req.(*AlterTopicConfigRequest))
+		return srv.(AdminServer).UpdateTopicConfig(ctx, req.(*UpdateTopicConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -336,7 +336,7 @@ func _Admin_GetConsumerGroupLag_Handler(srv interface{}, ctx context.Context, de
 }
 
 func _Admin_ListConsumerGroups_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(trace.TraceRequest)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -348,7 +348,7 @@ func _Admin_ListConsumerGroups_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: Admin_ListConsumerGroups_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).ListConsumerGroups(ctx, req.(*trace.TraceRequest))
+		return srv.(AdminServer).ListConsumerGroups(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -390,7 +390,7 @@ func _Admin_DeleteConsumerGroup_Handler(srv interface{}, ctx context.Context, de
 }
 
 func _Admin_GetClusterHealth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(trace.TraceRequest)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -402,7 +402,7 @@ func _Admin_GetClusterHealth_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: Admin_GetClusterHealth_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).GetClusterHealth(ctx, req.(*trace.TraceRequest))
+		return srv.(AdminServer).GetClusterHealth(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -427,8 +427,8 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Admin_DeleteTopic_Handler,
 		},
 		{
-			MethodName: "AlterTopicConfig",
-			Handler:    _Admin_AlterTopicConfig_Handler,
+			MethodName: "UpdateTopicConfig",
+			Handler:    _Admin_UpdateTopicConfig_Handler,
 		},
 		{
 			MethodName: "GetConsumerGroupLag",
@@ -456,7 +456,7 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	TraceSession_WatchTrace_FullMethodName = "/eventbus.TraceSession/WatchTrace"
+	TraceSession_SubscribeTrace_FullMethodName = "/eventbus.TraceSession/SubscribeTrace"
 )
 
 // TraceSessionClient is the client API for TraceSession service.
@@ -464,12 +464,12 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // TraceSession provides client-facing trace session management.
-// WatchTrace opens a server-streaming trace session: the server generates a
+// SubscribeTrace opens a server-streaming trace session: the server generates a
 // unique trace_id and sends it as the first TraceEvent (only trace_id set).
 // Services processing requests tagged with that trace_id publish TraceEvents
 // to the trace topic. EventBus dispatches matching events to this stream.
 type TraceSessionClient interface {
-	WatchTrace(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[trace.TraceEvent], error)
+	SubscribeTrace(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[trace.TraceEvent], error)
 }
 
 type traceSessionClient struct {
@@ -480,9 +480,9 @@ func NewTraceSessionClient(cc grpc.ClientConnInterface) TraceSessionClient {
 	return &traceSessionClient{cc}
 }
 
-func (c *traceSessionClient) WatchTrace(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[trace.TraceEvent], error) {
+func (c *traceSessionClient) SubscribeTrace(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[trace.TraceEvent], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &TraceSession_ServiceDesc.Streams[0], TraceSession_WatchTrace_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &TraceSession_ServiceDesc.Streams[0], TraceSession_SubscribeTrace_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -497,19 +497,19 @@ func (c *traceSessionClient) WatchTrace(ctx context.Context, in *trace.TraceRequ
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type TraceSession_WatchTraceClient = grpc.ServerStreamingClient[trace.TraceEvent]
+type TraceSession_SubscribeTraceClient = grpc.ServerStreamingClient[trace.TraceEvent]
 
 // TraceSessionServer is the server API for TraceSession service.
 // All implementations must embed UnimplementedTraceSessionServer
 // for forward compatibility.
 //
 // TraceSession provides client-facing trace session management.
-// WatchTrace opens a server-streaming trace session: the server generates a
+// SubscribeTrace opens a server-streaming trace session: the server generates a
 // unique trace_id and sends it as the first TraceEvent (only trace_id set).
 // Services processing requests tagged with that trace_id publish TraceEvents
 // to the trace topic. EventBus dispatches matching events to this stream.
 type TraceSessionServer interface {
-	WatchTrace(*trace.TraceRequest, grpc.ServerStreamingServer[trace.TraceEvent]) error
+	SubscribeTrace(*trace.TraceRequest, grpc.ServerStreamingServer[trace.TraceEvent]) error
 	mustEmbedUnimplementedTraceSessionServer()
 }
 
@@ -520,8 +520,8 @@ type TraceSessionServer interface {
 // pointer dereference when methods are called.
 type UnimplementedTraceSessionServer struct{}
 
-func (UnimplementedTraceSessionServer) WatchTrace(*trace.TraceRequest, grpc.ServerStreamingServer[trace.TraceEvent]) error {
-	return status.Error(codes.Unimplemented, "method WatchTrace not implemented")
+func (UnimplementedTraceSessionServer) SubscribeTrace(*trace.TraceRequest, grpc.ServerStreamingServer[trace.TraceEvent]) error {
+	return status.Error(codes.Unimplemented, "method SubscribeTrace not implemented")
 }
 func (UnimplementedTraceSessionServer) mustEmbedUnimplementedTraceSessionServer() {}
 func (UnimplementedTraceSessionServer) testEmbeddedByValue()                      {}
@@ -544,16 +544,16 @@ func RegisterTraceSessionServer(s grpc.ServiceRegistrar, srv TraceSessionServer)
 	s.RegisterService(&TraceSession_ServiceDesc, srv)
 }
 
-func _TraceSession_WatchTrace_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _TraceSession_SubscribeTrace_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(trace.TraceRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(TraceSessionServer).WatchTrace(m, &grpc.GenericServerStream[trace.TraceRequest, trace.TraceEvent]{ServerStream: stream})
+	return srv.(TraceSessionServer).SubscribeTrace(m, &grpc.GenericServerStream[trace.TraceRequest, trace.TraceEvent]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type TraceSession_WatchTraceServer = grpc.ServerStreamingServer[trace.TraceEvent]
+type TraceSession_SubscribeTraceServer = grpc.ServerStreamingServer[trace.TraceEvent]
 
 // TraceSession_ServiceDesc is the grpc.ServiceDesc for TraceSession service.
 // It's only intended for direct use with grpc.RegisterService,
@@ -564,818 +564,8 @@ var TraceSession_ServiceDesc = grpc.ServiceDesc{
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "WatchTrace",
-			Handler:       _TraceSession_WatchTrace_Handler,
-			ServerStreams: true,
-		},
-	},
-	Metadata: "services/eventbus.proto",
-}
-
-const (
-	EventbusStateService_GetNodes_FullMethodName         = "/eventbus.EventbusStateService/GetNodes"
-	EventbusStateService_PutNodes_FullMethodName         = "/eventbus.EventbusStateService/PutNodes"
-	EventbusStateService_SetNodes_FullMethodName         = "/eventbus.EventbusStateService/SetNodes"
-	EventbusStateService_RemoveNodes_FullMethodName      = "/eventbus.EventbusStateService/RemoveNodes"
-	EventbusStateService_DeleteNodes_FullMethodName      = "/eventbus.EventbusStateService/DeleteNodes"
-	EventbusStateService_ContainsKeyNodes_FullMethodName = "/eventbus.EventbusStateService/ContainsKeyNodes"
-	EventbusStateService_GetAllNodes_FullMethodName      = "/eventbus.EventbusStateService/GetAllNodes"
-	EventbusStateService_KeySetNodes_FullMethodName      = "/eventbus.EventbusStateService/KeySetNodes"
-	EventbusStateService_SizeNodes_FullMethodName        = "/eventbus.EventbusStateService/SizeNodes"
-	EventbusStateService_ClearNodes_FullMethodName       = "/eventbus.EventbusStateService/ClearNodes"
-	EventbusStateService_PutIfAbsentNodes_FullMethodName = "/eventbus.EventbusStateService/PutIfAbsentNodes"
-	EventbusStateService_WatchNodes_FullMethodName       = "/eventbus.EventbusStateService/WatchNodes"
-	EventbusStateService_QueryNodes_FullMethodName       = "/eventbus.EventbusStateService/QueryNodes"
-	EventbusStateService_WatchQueryNodes_FullMethodName  = "/eventbus.EventbusStateService/WatchQueryNodes"
-)
-
-// EventbusStateServiceClient is the client API for EventbusStateService service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// ============================================================================
-// Auto-generated State Service (tacplus)
-// ============================================================================
-// tacplus:generated-service
-type EventbusStateServiceClient interface {
-	// Collection: Nodes
-	GetNodes(ctx context.Context, in *NodesGetRequest, opts ...grpc.CallOption) (*NodesValueResponse, error)
-	PutNodes(ctx context.Context, in *NodesPutRequest, opts ...grpc.CallOption) (*NodesValueResponse, error)
-	SetNodes(ctx context.Context, in *NodesPutRequest, opts ...grpc.CallOption) (*MapEmpty, error)
-	RemoveNodes(ctx context.Context, in *NodesGetRequest, opts ...grpc.CallOption) (*NodesValueResponse, error)
-	DeleteNodes(ctx context.Context, in *NodesGetRequest, opts ...grpc.CallOption) (*MapEmpty, error)
-	ContainsKeyNodes(ctx context.Context, in *NodesGetRequest, opts ...grpc.CallOption) (*NodesValueResponse, error)
-	GetAllNodes(ctx context.Context, in *NodesGetAllRequest, opts ...grpc.CallOption) (*NodesEntriesResponse, error)
-	KeySetNodes(ctx context.Context, in *NodesKeysRequest, opts ...grpc.CallOption) (*NodesKeysResponse, error)
-	SizeNodes(ctx context.Context, in *NodesSizeRequest, opts ...grpc.CallOption) (*NodesSizeResponse, error)
-	ClearNodes(ctx context.Context, in *NodesClearRequest, opts ...grpc.CallOption) (*MapEmpty, error)
-	PutIfAbsentNodes(ctx context.Context, in *NodesPutRequest, opts ...grpc.CallOption) (*NodesValueResponse, error)
-	WatchNodes(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[NodesEntriesResponse], error)
-	QueryNodes(ctx context.Context, in *NodesQueryRequest, opts ...grpc.CallOption) (*NodesQueryResponse, error)
-	WatchQueryNodes(ctx context.Context, in *NodesQueryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[NodesQueryResponse], error)
-}
-
-type eventbusStateServiceClient struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewEventbusStateServiceClient(cc grpc.ClientConnInterface) EventbusStateServiceClient {
-	return &eventbusStateServiceClient{cc}
-}
-
-func (c *eventbusStateServiceClient) GetNodes(ctx context.Context, in *NodesGetRequest, opts ...grpc.CallOption) (*NodesValueResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(NodesValueResponse)
-	err := c.cc.Invoke(ctx, EventbusStateService_GetNodes_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *eventbusStateServiceClient) PutNodes(ctx context.Context, in *NodesPutRequest, opts ...grpc.CallOption) (*NodesValueResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(NodesValueResponse)
-	err := c.cc.Invoke(ctx, EventbusStateService_PutNodes_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *eventbusStateServiceClient) SetNodes(ctx context.Context, in *NodesPutRequest, opts ...grpc.CallOption) (*MapEmpty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MapEmpty)
-	err := c.cc.Invoke(ctx, EventbusStateService_SetNodes_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *eventbusStateServiceClient) RemoveNodes(ctx context.Context, in *NodesGetRequest, opts ...grpc.CallOption) (*NodesValueResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(NodesValueResponse)
-	err := c.cc.Invoke(ctx, EventbusStateService_RemoveNodes_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *eventbusStateServiceClient) DeleteNodes(ctx context.Context, in *NodesGetRequest, opts ...grpc.CallOption) (*MapEmpty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MapEmpty)
-	err := c.cc.Invoke(ctx, EventbusStateService_DeleteNodes_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *eventbusStateServiceClient) ContainsKeyNodes(ctx context.Context, in *NodesGetRequest, opts ...grpc.CallOption) (*NodesValueResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(NodesValueResponse)
-	err := c.cc.Invoke(ctx, EventbusStateService_ContainsKeyNodes_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *eventbusStateServiceClient) GetAllNodes(ctx context.Context, in *NodesGetAllRequest, opts ...grpc.CallOption) (*NodesEntriesResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(NodesEntriesResponse)
-	err := c.cc.Invoke(ctx, EventbusStateService_GetAllNodes_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *eventbusStateServiceClient) KeySetNodes(ctx context.Context, in *NodesKeysRequest, opts ...grpc.CallOption) (*NodesKeysResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(NodesKeysResponse)
-	err := c.cc.Invoke(ctx, EventbusStateService_KeySetNodes_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *eventbusStateServiceClient) SizeNodes(ctx context.Context, in *NodesSizeRequest, opts ...grpc.CallOption) (*NodesSizeResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(NodesSizeResponse)
-	err := c.cc.Invoke(ctx, EventbusStateService_SizeNodes_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *eventbusStateServiceClient) ClearNodes(ctx context.Context, in *NodesClearRequest, opts ...grpc.CallOption) (*MapEmpty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MapEmpty)
-	err := c.cc.Invoke(ctx, EventbusStateService_ClearNodes_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *eventbusStateServiceClient) PutIfAbsentNodes(ctx context.Context, in *NodesPutRequest, opts ...grpc.CallOption) (*NodesValueResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(NodesValueResponse)
-	err := c.cc.Invoke(ctx, EventbusStateService_PutIfAbsentNodes_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *eventbusStateServiceClient) WatchNodes(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[NodesEntriesResponse], error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &EventbusStateService_ServiceDesc.Streams[0], EventbusStateService_WatchNodes_FullMethodName, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &grpc.GenericClientStream[trace.TraceRequest, NodesEntriesResponse]{ClientStream: stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type EventbusStateService_WatchNodesClient = grpc.ServerStreamingClient[NodesEntriesResponse]
-
-func (c *eventbusStateServiceClient) QueryNodes(ctx context.Context, in *NodesQueryRequest, opts ...grpc.CallOption) (*NodesQueryResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(NodesQueryResponse)
-	err := c.cc.Invoke(ctx, EventbusStateService_QueryNodes_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *eventbusStateServiceClient) WatchQueryNodes(ctx context.Context, in *NodesQueryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[NodesQueryResponse], error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &EventbusStateService_ServiceDesc.Streams[1], EventbusStateService_WatchQueryNodes_FullMethodName, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &grpc.GenericClientStream[NodesQueryRequest, NodesQueryResponse]{ClientStream: stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type EventbusStateService_WatchQueryNodesClient = grpc.ServerStreamingClient[NodesQueryResponse]
-
-// EventbusStateServiceServer is the server API for EventbusStateService service.
-// All implementations must embed UnimplementedEventbusStateServiceServer
-// for forward compatibility.
-//
-// ============================================================================
-// Auto-generated State Service (tacplus)
-// ============================================================================
-// tacplus:generated-service
-type EventbusStateServiceServer interface {
-	// Collection: Nodes
-	GetNodes(context.Context, *NodesGetRequest) (*NodesValueResponse, error)
-	PutNodes(context.Context, *NodesPutRequest) (*NodesValueResponse, error)
-	SetNodes(context.Context, *NodesPutRequest) (*MapEmpty, error)
-	RemoveNodes(context.Context, *NodesGetRequest) (*NodesValueResponse, error)
-	DeleteNodes(context.Context, *NodesGetRequest) (*MapEmpty, error)
-	ContainsKeyNodes(context.Context, *NodesGetRequest) (*NodesValueResponse, error)
-	GetAllNodes(context.Context, *NodesGetAllRequest) (*NodesEntriesResponse, error)
-	KeySetNodes(context.Context, *NodesKeysRequest) (*NodesKeysResponse, error)
-	SizeNodes(context.Context, *NodesSizeRequest) (*NodesSizeResponse, error)
-	ClearNodes(context.Context, *NodesClearRequest) (*MapEmpty, error)
-	PutIfAbsentNodes(context.Context, *NodesPutRequest) (*NodesValueResponse, error)
-	WatchNodes(*trace.TraceRequest, grpc.ServerStreamingServer[NodesEntriesResponse]) error
-	QueryNodes(context.Context, *NodesQueryRequest) (*NodesQueryResponse, error)
-	WatchQueryNodes(*NodesQueryRequest, grpc.ServerStreamingServer[NodesQueryResponse]) error
-	mustEmbedUnimplementedEventbusStateServiceServer()
-}
-
-// UnimplementedEventbusStateServiceServer must be embedded to have
-// forward compatible implementations.
-//
-// NOTE: this should be embedded by value instead of pointer to avoid a nil
-// pointer dereference when methods are called.
-type UnimplementedEventbusStateServiceServer struct{}
-
-func (UnimplementedEventbusStateServiceServer) GetNodes(context.Context, *NodesGetRequest) (*NodesValueResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetNodes not implemented")
-}
-func (UnimplementedEventbusStateServiceServer) PutNodes(context.Context, *NodesPutRequest) (*NodesValueResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method PutNodes not implemented")
-}
-func (UnimplementedEventbusStateServiceServer) SetNodes(context.Context, *NodesPutRequest) (*MapEmpty, error) {
-	return nil, status.Error(codes.Unimplemented, "method SetNodes not implemented")
-}
-func (UnimplementedEventbusStateServiceServer) RemoveNodes(context.Context, *NodesGetRequest) (*NodesValueResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method RemoveNodes not implemented")
-}
-func (UnimplementedEventbusStateServiceServer) DeleteNodes(context.Context, *NodesGetRequest) (*MapEmpty, error) {
-	return nil, status.Error(codes.Unimplemented, "method DeleteNodes not implemented")
-}
-func (UnimplementedEventbusStateServiceServer) ContainsKeyNodes(context.Context, *NodesGetRequest) (*NodesValueResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ContainsKeyNodes not implemented")
-}
-func (UnimplementedEventbusStateServiceServer) GetAllNodes(context.Context, *NodesGetAllRequest) (*NodesEntriesResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetAllNodes not implemented")
-}
-func (UnimplementedEventbusStateServiceServer) KeySetNodes(context.Context, *NodesKeysRequest) (*NodesKeysResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method KeySetNodes not implemented")
-}
-func (UnimplementedEventbusStateServiceServer) SizeNodes(context.Context, *NodesSizeRequest) (*NodesSizeResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method SizeNodes not implemented")
-}
-func (UnimplementedEventbusStateServiceServer) ClearNodes(context.Context, *NodesClearRequest) (*MapEmpty, error) {
-	return nil, status.Error(codes.Unimplemented, "method ClearNodes not implemented")
-}
-func (UnimplementedEventbusStateServiceServer) PutIfAbsentNodes(context.Context, *NodesPutRequest) (*NodesValueResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method PutIfAbsentNodes not implemented")
-}
-func (UnimplementedEventbusStateServiceServer) WatchNodes(*trace.TraceRequest, grpc.ServerStreamingServer[NodesEntriesResponse]) error {
-	return status.Error(codes.Unimplemented, "method WatchNodes not implemented")
-}
-func (UnimplementedEventbusStateServiceServer) QueryNodes(context.Context, *NodesQueryRequest) (*NodesQueryResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method QueryNodes not implemented")
-}
-func (UnimplementedEventbusStateServiceServer) WatchQueryNodes(*NodesQueryRequest, grpc.ServerStreamingServer[NodesQueryResponse]) error {
-	return status.Error(codes.Unimplemented, "method WatchQueryNodes not implemented")
-}
-func (UnimplementedEventbusStateServiceServer) mustEmbedUnimplementedEventbusStateServiceServer() {}
-func (UnimplementedEventbusStateServiceServer) testEmbeddedByValue()                              {}
-
-// UnsafeEventbusStateServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to EventbusStateServiceServer will
-// result in compilation errors.
-type UnsafeEventbusStateServiceServer interface {
-	mustEmbedUnimplementedEventbusStateServiceServer()
-}
-
-func RegisterEventbusStateServiceServer(s grpc.ServiceRegistrar, srv EventbusStateServiceServer) {
-	// If the following call panics, it indicates UnimplementedEventbusStateServiceServer was
-	// embedded by pointer and is nil.  This will cause panics if an
-	// unimplemented method is ever invoked, so we test this at initialization
-	// time to prevent it from happening at runtime later due to I/O.
-	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
-		t.testEmbeddedByValue()
-	}
-	s.RegisterService(&EventbusStateService_ServiceDesc, srv)
-}
-
-func _EventbusStateService_GetNodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NodesGetRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EventbusStateServiceServer).GetNodes(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EventbusStateService_GetNodes_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventbusStateServiceServer).GetNodes(ctx, req.(*NodesGetRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EventbusStateService_PutNodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NodesPutRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EventbusStateServiceServer).PutNodes(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EventbusStateService_PutNodes_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventbusStateServiceServer).PutNodes(ctx, req.(*NodesPutRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EventbusStateService_SetNodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NodesPutRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EventbusStateServiceServer).SetNodes(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EventbusStateService_SetNodes_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventbusStateServiceServer).SetNodes(ctx, req.(*NodesPutRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EventbusStateService_RemoveNodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NodesGetRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EventbusStateServiceServer).RemoveNodes(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EventbusStateService_RemoveNodes_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventbusStateServiceServer).RemoveNodes(ctx, req.(*NodesGetRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EventbusStateService_DeleteNodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NodesGetRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EventbusStateServiceServer).DeleteNodes(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EventbusStateService_DeleteNodes_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventbusStateServiceServer).DeleteNodes(ctx, req.(*NodesGetRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EventbusStateService_ContainsKeyNodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NodesGetRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EventbusStateServiceServer).ContainsKeyNodes(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EventbusStateService_ContainsKeyNodes_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventbusStateServiceServer).ContainsKeyNodes(ctx, req.(*NodesGetRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EventbusStateService_GetAllNodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NodesGetAllRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EventbusStateServiceServer).GetAllNodes(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EventbusStateService_GetAllNodes_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventbusStateServiceServer).GetAllNodes(ctx, req.(*NodesGetAllRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EventbusStateService_KeySetNodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NodesKeysRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EventbusStateServiceServer).KeySetNodes(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EventbusStateService_KeySetNodes_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventbusStateServiceServer).KeySetNodes(ctx, req.(*NodesKeysRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EventbusStateService_SizeNodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NodesSizeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EventbusStateServiceServer).SizeNodes(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EventbusStateService_SizeNodes_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventbusStateServiceServer).SizeNodes(ctx, req.(*NodesSizeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EventbusStateService_ClearNodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NodesClearRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EventbusStateServiceServer).ClearNodes(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EventbusStateService_ClearNodes_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventbusStateServiceServer).ClearNodes(ctx, req.(*NodesClearRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EventbusStateService_PutIfAbsentNodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NodesPutRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EventbusStateServiceServer).PutIfAbsentNodes(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EventbusStateService_PutIfAbsentNodes_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventbusStateServiceServer).PutIfAbsentNodes(ctx, req.(*NodesPutRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EventbusStateService_WatchNodes_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(trace.TraceRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(EventbusStateServiceServer).WatchNodes(m, &grpc.GenericServerStream[trace.TraceRequest, NodesEntriesResponse]{ServerStream: stream})
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type EventbusStateService_WatchNodesServer = grpc.ServerStreamingServer[NodesEntriesResponse]
-
-func _EventbusStateService_QueryNodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NodesQueryRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EventbusStateServiceServer).QueryNodes(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EventbusStateService_QueryNodes_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventbusStateServiceServer).QueryNodes(ctx, req.(*NodesQueryRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EventbusStateService_WatchQueryNodes_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(NodesQueryRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(EventbusStateServiceServer).WatchQueryNodes(m, &grpc.GenericServerStream[NodesQueryRequest, NodesQueryResponse]{ServerStream: stream})
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type EventbusStateService_WatchQueryNodesServer = grpc.ServerStreamingServer[NodesQueryResponse]
-
-// EventbusStateService_ServiceDesc is the grpc.ServiceDesc for EventbusStateService service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var EventbusStateService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "eventbus.EventbusStateService",
-	HandlerType: (*EventbusStateServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "GetNodes",
-			Handler:    _EventbusStateService_GetNodes_Handler,
-		},
-		{
-			MethodName: "PutNodes",
-			Handler:    _EventbusStateService_PutNodes_Handler,
-		},
-		{
-			MethodName: "SetNodes",
-			Handler:    _EventbusStateService_SetNodes_Handler,
-		},
-		{
-			MethodName: "RemoveNodes",
-			Handler:    _EventbusStateService_RemoveNodes_Handler,
-		},
-		{
-			MethodName: "DeleteNodes",
-			Handler:    _EventbusStateService_DeleteNodes_Handler,
-		},
-		{
-			MethodName: "ContainsKeyNodes",
-			Handler:    _EventbusStateService_ContainsKeyNodes_Handler,
-		},
-		{
-			MethodName: "GetAllNodes",
-			Handler:    _EventbusStateService_GetAllNodes_Handler,
-		},
-		{
-			MethodName: "KeySetNodes",
-			Handler:    _EventbusStateService_KeySetNodes_Handler,
-		},
-		{
-			MethodName: "SizeNodes",
-			Handler:    _EventbusStateService_SizeNodes_Handler,
-		},
-		{
-			MethodName: "ClearNodes",
-			Handler:    _EventbusStateService_ClearNodes_Handler,
-		},
-		{
-			MethodName: "PutIfAbsentNodes",
-			Handler:    _EventbusStateService_PutIfAbsentNodes_Handler,
-		},
-		{
-			MethodName: "QueryNodes",
-			Handler:    _EventbusStateService_QueryNodes_Handler,
-		},
-	},
-	Streams: []grpc.StreamDesc{
-		{
-			StreamName:    "WatchNodes",
-			Handler:       _EventbusStateService_WatchNodes_Handler,
-			ServerStreams: true,
-		},
-		{
-			StreamName:    "WatchQueryNodes",
-			Handler:       _EventbusStateService_WatchQueryNodes_Handler,
-			ServerStreams: true,
-		},
-	},
-	Metadata: "services/eventbus.proto",
-}
-
-const (
-	EventbusConfigStateService_GetConfig_FullMethodName   = "/eventbus.EventbusConfigStateService/GetConfig"
-	EventbusConfigStateService_SetConfig_FullMethodName   = "/eventbus.EventbusConfigStateService/SetConfig"
-	EventbusConfigStateService_WatchConfig_FullMethodName = "/eventbus.EventbusConfigStateService/WatchConfig"
-)
-
-// EventbusConfigStateServiceClient is the client API for EventbusConfigStateService service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// ============================================================================
-// Auto-generated State Service (tacplus)
-// ============================================================================
-// tacplus:generated-service
-type EventbusConfigStateServiceClient interface {
-	// Singleton: Config
-	GetConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*Config, error)
-	SetConfig(ctx context.Context, in *Config, opts ...grpc.CallOption) (*Config, error)
-	WatchConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Config], error)
-}
-
-type eventbusConfigStateServiceClient struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewEventbusConfigStateServiceClient(cc grpc.ClientConnInterface) EventbusConfigStateServiceClient {
-	return &eventbusConfigStateServiceClient{cc}
-}
-
-func (c *eventbusConfigStateServiceClient) GetConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*Config, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Config)
-	err := c.cc.Invoke(ctx, EventbusConfigStateService_GetConfig_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *eventbusConfigStateServiceClient) SetConfig(ctx context.Context, in *Config, opts ...grpc.CallOption) (*Config, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Config)
-	err := c.cc.Invoke(ctx, EventbusConfigStateService_SetConfig_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *eventbusConfigStateServiceClient) WatchConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Config], error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &EventbusConfigStateService_ServiceDesc.Streams[0], EventbusConfigStateService_WatchConfig_FullMethodName, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &grpc.GenericClientStream[trace.TraceRequest, Config]{ClientStream: stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type EventbusConfigStateService_WatchConfigClient = grpc.ServerStreamingClient[Config]
-
-// EventbusConfigStateServiceServer is the server API for EventbusConfigStateService service.
-// All implementations must embed UnimplementedEventbusConfigStateServiceServer
-// for forward compatibility.
-//
-// ============================================================================
-// Auto-generated State Service (tacplus)
-// ============================================================================
-// tacplus:generated-service
-type EventbusConfigStateServiceServer interface {
-	// Singleton: Config
-	GetConfig(context.Context, *trace.TraceRequest) (*Config, error)
-	SetConfig(context.Context, *Config) (*Config, error)
-	WatchConfig(*trace.TraceRequest, grpc.ServerStreamingServer[Config]) error
-	mustEmbedUnimplementedEventbusConfigStateServiceServer()
-}
-
-// UnimplementedEventbusConfigStateServiceServer must be embedded to have
-// forward compatible implementations.
-//
-// NOTE: this should be embedded by value instead of pointer to avoid a nil
-// pointer dereference when methods are called.
-type UnimplementedEventbusConfigStateServiceServer struct{}
-
-func (UnimplementedEventbusConfigStateServiceServer) GetConfig(context.Context, *trace.TraceRequest) (*Config, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetConfig not implemented")
-}
-func (UnimplementedEventbusConfigStateServiceServer) SetConfig(context.Context, *Config) (*Config, error) {
-	return nil, status.Error(codes.Unimplemented, "method SetConfig not implemented")
-}
-func (UnimplementedEventbusConfigStateServiceServer) WatchConfig(*trace.TraceRequest, grpc.ServerStreamingServer[Config]) error {
-	return status.Error(codes.Unimplemented, "method WatchConfig not implemented")
-}
-func (UnimplementedEventbusConfigStateServiceServer) mustEmbedUnimplementedEventbusConfigStateServiceServer() {
-}
-func (UnimplementedEventbusConfigStateServiceServer) testEmbeddedByValue() {}
-
-// UnsafeEventbusConfigStateServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to EventbusConfigStateServiceServer will
-// result in compilation errors.
-type UnsafeEventbusConfigStateServiceServer interface {
-	mustEmbedUnimplementedEventbusConfigStateServiceServer()
-}
-
-func RegisterEventbusConfigStateServiceServer(s grpc.ServiceRegistrar, srv EventbusConfigStateServiceServer) {
-	// If the following call panics, it indicates UnimplementedEventbusConfigStateServiceServer was
-	// embedded by pointer and is nil.  This will cause panics if an
-	// unimplemented method is ever invoked, so we test this at initialization
-	// time to prevent it from happening at runtime later due to I/O.
-	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
-		t.testEmbeddedByValue()
-	}
-	s.RegisterService(&EventbusConfigStateService_ServiceDesc, srv)
-}
-
-func _EventbusConfigStateService_GetConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(trace.TraceRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EventbusConfigStateServiceServer).GetConfig(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EventbusConfigStateService_GetConfig_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventbusConfigStateServiceServer).GetConfig(ctx, req.(*trace.TraceRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EventbusConfigStateService_SetConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Config)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EventbusConfigStateServiceServer).SetConfig(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EventbusConfigStateService_SetConfig_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventbusConfigStateServiceServer).SetConfig(ctx, req.(*Config))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EventbusConfigStateService_WatchConfig_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(trace.TraceRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(EventbusConfigStateServiceServer).WatchConfig(m, &grpc.GenericServerStream[trace.TraceRequest, Config]{ServerStream: stream})
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type EventbusConfigStateService_WatchConfigServer = grpc.ServerStreamingServer[Config]
-
-// EventbusConfigStateService_ServiceDesc is the grpc.ServiceDesc for EventbusConfigStateService service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var EventbusConfigStateService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "eventbus.EventbusConfigStateService",
-	HandlerType: (*EventbusConfigStateServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "GetConfig",
-			Handler:    _EventbusConfigStateService_GetConfig_Handler,
-		},
-		{
-			MethodName: "SetConfig",
-			Handler:    _EventbusConfigStateService_SetConfig_Handler,
-		},
-	},
-	Streams: []grpc.StreamDesc{
-		{
-			StreamName:    "WatchConfig",
-			Handler:       _EventbusConfigStateService_WatchConfig_Handler,
+			StreamName:    "SubscribeTrace",
+			Handler:       _TraceSession_SubscribeTrace_Handler,
 			ServerStreams: true,
 		},
 	},

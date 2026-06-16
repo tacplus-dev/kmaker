@@ -37,147 +37,11 @@ import (
 // JSON/YAML/TOML Serialization Helpers
 // ============================================================
 
-// EntitlementGrantJSON represents EntitlementGrant in external JSON format (with string enums)
-// MARKER: JSON helper struct generated from serial.go
-type entitlementgrantJSON struct {
-	Token string `json:"token,omitempty"`
-}
-
-// EntitlementGrantToJSON converts EntitlementGrant to JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func EntitlementGrantToJSON(v *EntitlementGrant) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "entitlementgrant is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := entitlementgrantJSON{
-		Token: v.Token,
-	}
-	return json.Marshal(helper)
-}
-
-// EntitlementGrantToJSONPretty converts EntitlementGrant to indented JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func EntitlementGrantToJSONPretty(v *EntitlementGrant) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "entitlementgrant is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := entitlementgrantJSON{
-		Token: v.Token,
-	}
-	return json.MarshalIndent(helper, "", "  ")
-}
-
-// EntitlementGrantFromBytes creates EntitlementGrant from bytes, auto-detecting the format.
-// Supports JSON, YAML, TOML, and binary protobuf formats.
-func EntitlementGrantFromBytes(data []byte) (*EntitlementGrant, error) {
-	// Trim leading whitespace to check format
-	trimmed := bytes.TrimSpace(data)
-	if len(trimmed) == 0 {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
-	}
-	// Try JSON first (most common, starts with { or [)
-	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := EntitlementGrantFromJSON(data); err == nil {
-			return result, nil
-		}
-	}
-	// Try TOML (try before YAML since YAML is more permissive)
-	var tomlObj any
-	if err := toml.Unmarshal(data, &tomlObj); err == nil {
-		// Convert TOML to JSON, then parse
-		jsonData, err := json.Marshal(tomlObj)
-		if err == nil {
-			if result, err := EntitlementGrantFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try YAML
-	var yamlObj any
-	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
-		// Convert YAML to JSON, then parse
-		jsonData, err := json.Marshal(yamlObj)
-		if err == nil {
-			if result, err := EntitlementGrantFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try binary protobuf
-	v := &EntitlementGrant{}
-	if err := proto.Unmarshal(data, v); err == nil {
-		return v, nil
-	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse EntitlementGrant: unsupported format or invalid data")
-}
-
-// EntitlementGrantFromJSON creates EntitlementGrant from JSON bytes.
-// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func EntitlementGrantFromJSON(data []byte) (*EntitlementGrant, error) {
-	// Unmarshal into helper struct with string enums
-	var raw entitlementgrantJSON
-	if err := json.Unmarshal(data, &raw); err != nil {
-		// Fall back to protojson which handles proto3 JSON conventions
-		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &EntitlementGrant{}
-		if pErr := protojson.Unmarshal(data, v); pErr != nil {
-			return nil, err
-		}
-		return v, nil
-	}
-	// Build result with parsed enums
-	result := &EntitlementGrant{}
-	result.Token = raw.Token
-	return result, nil
-}
-
-// EntitlementGrantToYAML converts EntitlementGrant to YAML bytes.
-// Converts to JSON first, then to YAML for proper protobuf handling.
-func EntitlementGrantToYAML(v *EntitlementGrant) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "entitlementgrant is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := EntitlementGrantToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to YAML, preserving integer precision
-	dec := json.NewDecoder(bytes.NewReader(jsonData))
-	dec.UseNumber()
-	var obj any
-	if err := dec.Decode(&obj); err != nil {
-		return nil, err
-	}
-	return yaml.Marshal(convertJSONNumbers(obj))
-}
-
-// EntitlementGrantToTOML converts EntitlementGrant to TOML bytes.
-// Converts to JSON first, then to TOML for proper protobuf handling.
-func EntitlementGrantToTOML(v *EntitlementGrant) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "entitlementgrant is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := EntitlementGrantToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to TOML
-	var obj any
-	if err := json.Unmarshal(jsonData, &obj); err != nil {
-		return nil, err
-	}
-	return toml.Marshal(obj)
-}
-
 // TokenEntitlementsJSON represents TokenEntitlements in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type tokenentitlementsJSON struct {
-	Grants []json.RawMessage `json:"grants,omitempty"`
-	Azp    []string          `json:"azp,omitempty"`
+	Grants []string `json:"grants,omitempty"`
+	Azp    []string `json:"azp,omitempty"`
 }
 
 // TokenEntitlementsToJSON converts TokenEntitlements to JSON bytes.
@@ -188,21 +52,8 @@ func TokenEntitlementsToJSON(v *TokenEntitlements) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := tokenentitlementsJSON{
-		Grants: func() []json.RawMessage {
-			if len(v.Grants) == 0 {
-				return nil
-			}
-			result := make([]json.RawMessage, 0, len(v.Grants))
-			for _, item := range v.Grants {
-				if item != nil {
-					if data, err := EntitlementGrantToJSON(item); err == nil {
-						result = append(result, data)
-					}
-				}
-			}
-			return result
-		}(),
-		Azp: v.Azp,
+		Grants: v.Grants,
+		Azp:    v.Azp,
 	}
 	return json.Marshal(helper)
 }
@@ -215,21 +66,8 @@ func TokenEntitlementsToJSONPretty(v *TokenEntitlements) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := tokenentitlementsJSON{
-		Grants: func() []json.RawMessage {
-			if len(v.Grants) == 0 {
-				return nil
-			}
-			result := make([]json.RawMessage, 0, len(v.Grants))
-			for _, item := range v.Grants {
-				if item != nil {
-					if data, err := EntitlementGrantToJSON(item); err == nil {
-						result = append(result, data)
-					}
-				}
-			}
-			return result
-		}(),
-		Azp: v.Azp,
+		Grants: v.Grants,
+		Azp:    v.Azp,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -294,18 +132,7 @@ func TokenEntitlementsFromJSON(data []byte) (*TokenEntitlements, error) {
 	}
 	// Build result with parsed enums
 	result := &TokenEntitlements{}
-	// Parse repeated message field: Grants
-	if len(raw.Grants) > 0 {
-		result.Grants = make([]*EntitlementGrant, 0, len(raw.Grants))
-		for _, itemJSON := range raw.Grants {
-			if len(itemJSON) > 0 {
-				parsed, err := EntitlementGrantFromJSON(itemJSON)
-				if err == nil {
-					result.Grants = append(result.Grants, parsed)
-				}
-			}
-		}
-	}
+	result.Grants = raw.Grants
 	result.Azp = raw.Azp
 	return result, nil
 }
@@ -382,31 +209,15 @@ func convertJSONNumbers(v any) any {
 // Environment Variable Helpers
 // ============================================================
 
-// EntitlementGrantToEnvVar converts EntitlementGrant to environment variable key-value pairs.
-func EntitlementGrantToEnvVar(v *EntitlementGrant) map[string]string {
-	if v == nil {
-		return nil
-	}
-	result := make(map[string]string)
-	result["PROTO_GENERATED_ENTITLEMENTS_ENTITLEMENT_GRANT_TOKEN"] = v.Token
-	return result
-}
-
-// EntitlementGrantFromEnvVar creates EntitlementGrant from environment variable key-value pairs.
-func EntitlementGrantFromEnvVar(env map[string]string) (*EntitlementGrant, error) {
-	result := &EntitlementGrant{}
-	if val, ok := env["PROTO_GENERATED_ENTITLEMENTS_ENTITLEMENT_GRANT_TOKEN"]; ok && val != "" {
-		result.Token = val
-	}
-	return result, nil
-}
-
 // TokenEntitlementsToEnvVar converts TokenEntitlements to environment variable key-value pairs.
 func TokenEntitlementsToEnvVar(v *TokenEntitlements) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
+	if len(v.Grants) > 0 {
+		result["PROTO_GENERATED_ENTITLEMENTS_TOKEN_ENTITLEMENTS_GRANTS"] = strings.Join(v.Grants, ",")
+	}
 	if len(v.Azp) > 0 {
 		result["PROTO_GENERATED_ENTITLEMENTS_TOKEN_ENTITLEMENTS_AZP"] = strings.Join(v.Azp, ",")
 	}
@@ -416,6 +227,9 @@ func TokenEntitlementsToEnvVar(v *TokenEntitlements) map[string]string {
 // TokenEntitlementsFromEnvVar creates TokenEntitlements from environment variable key-value pairs.
 func TokenEntitlementsFromEnvVar(env map[string]string) (*TokenEntitlements, error) {
 	result := &TokenEntitlements{}
+	if val, ok := env["PROTO_GENERATED_ENTITLEMENTS_TOKEN_ENTITLEMENTS_GRANTS"]; ok && val != "" {
+		result.Grants = strings.Split(val, ",")
+	}
 	if val, ok := env["PROTO_GENERATED_ENTITLEMENTS_TOKEN_ENTITLEMENTS_AZP"]; ok && val != "" {
 		result.Azp = strings.Split(val, ",")
 	}
@@ -425,30 +239,6 @@ func TokenEntitlementsFromEnvVar(env map[string]string) (*TokenEntitlements, err
 // ============================================================
 // Validation Helpers
 // ============================================================
-// ValidateEntitlementGrant validates all fields in EntitlementGrant according to their annotations.
-// Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateEntitlementGrant(m *EntitlementGrant) error {
-	return ValidateEntitlementGrantWithDepth(m, 0)
-}
-
-// ValidateEntitlementGrantWithDepth validates EntitlementGrant and carries nested-message depth across
-// generated package boundaries.
-func ValidateEntitlementGrantWithDepth(m *EntitlementGrant, depth int) error {
-	if m == nil {
-		return nil
-	}
-	if depth > 24 {
-		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
-	}
-
-	// Validate Token (default max size: 32768 bytes)
-	if len(m.Token) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Token exceeds max size of 32768 bytes, got: %d", len(m.Token))
-	}
-
-	return nil
-}
-
 // ValidateTokenEntitlements validates all fields in TokenEntitlements according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateTokenEntitlements(m *TokenEntitlements) error {
@@ -475,17 +265,17 @@ func ValidateTokenEntitlementsWithDepth(m *TokenEntitlements, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Azp exceeds max size of 1024 elements, got: %d", len(m.Azp))
 	}
 
+	// Validate Grants elements (default max size: 32768 bytes)
+	for i, val := range m.Grants {
+		if len(val) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field Grants[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
+		}
+	}
+
 	// Validate Azp elements (default max size: 32768 bytes)
 	for i, val := range m.Azp {
 		if len(val) > 32768 {
 			return protoerrors.NewErrMissingInvalidData(nil, "field Azp[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
-		}
-	}
-
-	// Validate Grants nested messages
-	for i, val := range m.Grants {
-		if err := ValidateEntitlementGrantWithDepth(val, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field Grants[%d] validation failed", i)
 		}
 	}
 
@@ -496,37 +286,15 @@ func ValidateTokenEntitlementsWithDepth(m *TokenEntitlements, depth int) error {
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizeEntitlementgrantToken   int = 32768
 	MaxSizeTokenentitlementsGrants int = 1024
 	MaxSizeTokenentitlementsAzp    int = 1024
 )
-
-// ============================================================
-// TypeDefaults: EntitlementGrant
-// ============================================================
-// EntitlementGrantDefaults applies field-level default values to zero-valued fields.
-func EntitlementGrantDefaults(v *EntitlementGrant) {
-	if v == nil {
-		return
-	}
-}
 
 // ============================================================
 // TypeDefaults: TokenEntitlements
 // ============================================================
 // TokenEntitlementsDefaults applies field-level default values to zero-valued fields.
 func TokenEntitlementsDefaults(v *TokenEntitlements) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeUndefaults: EntitlementGrant
-// ============================================================
-// EntitlementGrantUndefaults resets fields that match their default values back to zero.
-// Use before persisting to store only explicit user overrides.
-func EntitlementGrantUndefaults(v *EntitlementGrant) {
 	if v == nil {
 		return
 	}
@@ -540,16 +308,6 @@ func EntitlementGrantUndefaults(v *EntitlementGrant) {
 func TokenEntitlementsUndefaults(v *TokenEntitlements) {
 	if v == nil {
 		return
-	}
-}
-
-// ============================================================
-// Merge: EntitlementGrant
-// ============================================================
-// MergeEntitlementGrant fills zero-valued fields in dst from src.
-func MergeEntitlementGrant(dst, src *EntitlementGrant) {
-	if dst.Token == "" {
-		dst.Token = src.Token
 	}
 }
 

@@ -433,12 +433,12 @@ func (TypeID) EnumDescriptor() ([]byte, []int) {
 type ProxyRpcId int32
 
 const (
-	ProxyRpcId_PROXY_RPC_ID_UNSPECIFIED           ProxyRpcId = 0
-	ProxyRpcId_PROXY_RPC_ID_ALL_ACCESSORS         ProxyRpcId = 1
-	ProxyRpcId_PROXY_RPC_ID_ALL_MUTATORS          ProxyRpcId = 2
-	ProxyRpcId_PROXY_RPC_ID_ALL_EXECUTORS         ProxyRpcId = 3
-	ProxyRpcId_PROXY_RPC_ID_CREATE_MESSAGE        ProxyRpcId = 4
-	ProxyRpcId_PROXY_RPC_ID_CREATE_MESSAGE_STREAM ProxyRpcId = 5
+	ProxyRpcId_PROXY_RPC_ID_UNSPECIFIED             ProxyRpcId = 0
+	ProxyRpcId_PROXY_RPC_ID_ALL_ACCESSORS           ProxyRpcId = 1
+	ProxyRpcId_PROXY_RPC_ID_ALL_MUTATORS            ProxyRpcId = 2
+	ProxyRpcId_PROXY_RPC_ID_ALL_EXECUTORS           ProxyRpcId = 3
+	ProxyRpcId_PROXY_RPC_ID_CREATE_MESSAGE          ProxyRpcId = 4
+	ProxyRpcId_PROXY_RPC_ID_GENERATE_MESSAGE_STREAM ProxyRpcId = 5
 )
 
 // Enum value maps for ProxyRpcId.
@@ -449,15 +449,15 @@ var (
 		2: "PROXY_RPC_ID_ALL_MUTATORS",
 		3: "PROXY_RPC_ID_ALL_EXECUTORS",
 		4: "PROXY_RPC_ID_CREATE_MESSAGE",
-		5: "PROXY_RPC_ID_CREATE_MESSAGE_STREAM",
+		5: "PROXY_RPC_ID_GENERATE_MESSAGE_STREAM",
 	}
 	ProxyRpcId_value = map[string]int32{
-		"PROXY_RPC_ID_UNSPECIFIED":           0,
-		"PROXY_RPC_ID_ALL_ACCESSORS":         1,
-		"PROXY_RPC_ID_ALL_MUTATORS":          2,
-		"PROXY_RPC_ID_ALL_EXECUTORS":         3,
-		"PROXY_RPC_ID_CREATE_MESSAGE":        4,
-		"PROXY_RPC_ID_CREATE_MESSAGE_STREAM": 5,
+		"PROXY_RPC_ID_UNSPECIFIED":             0,
+		"PROXY_RPC_ID_ALL_ACCESSORS":           1,
+		"PROXY_RPC_ID_ALL_MUTATORS":            2,
+		"PROXY_RPC_ID_ALL_EXECUTORS":           3,
+		"PROXY_RPC_ID_CREATE_MESSAGE":          4,
+		"PROXY_RPC_ID_GENERATE_MESSAGE_STREAM": 5,
 	}
 )
 
@@ -2502,12 +2502,12 @@ const file_services_anthropic_proto_rawDesc = "" +
 	"\bprovider\x18\n" +
 	" \x01(\tB\x11\x90\xa7\x1d@\x8a\xa8\x1d\tanthropicR\bprovider\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa4\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa6\x01\n" +
 	"\x14AnthropicConfigState\x123\n" +
 	"\x06config\x18\x01 \x01(\v2\x11.anthropic.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:&\x9a\xa8\x1d\x1e\n" +
-	"\x14AnthropicConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:(\x9a\xa8\x1d \n" +
+	"\x14AnthropicConfigState\x1a\beventbus\xa0\xa8\x1d\x02\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\x99\x02\n" +
@@ -2568,15 +2568,15 @@ const file_services_anthropic_proto_rawDesc = "" +
 	"\x14TYPE_ID_ERROR_DETAIL\x10\x11\x12\x17\n" +
 	"\x13TYPE_ID_PROXY_EVENT\x10\x12\x12\"\n" +
 	"\x1eTYPE_ID_ANTHROPIC_CONFIG_STATE\x10\x13\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10\x14*\xd2\x01\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x10\x14*\xd4\x01\n" +
 	"\n" +
 	"ProxyRpcId\x12\x1c\n" +
 	"\x18PROXY_RPC_ID_UNSPECIFIED\x10\x00\x12\x1e\n" +
 	"\x1aPROXY_RPC_ID_ALL_ACCESSORS\x10\x01\x12\x1d\n" +
 	"\x19PROXY_RPC_ID_ALL_MUTATORS\x10\x02\x12\x1e\n" +
 	"\x1aPROXY_RPC_ID_ALL_EXECUTORS\x10\x03\x12\x1f\n" +
-	"\x1bPROXY_RPC_ID_CREATE_MESSAGE\x10\x04\x12&\n" +
-	"\"PROXY_RPC_ID_CREATE_MESSAGE_STREAM\x10\x05*\xa7\x03\n" +
+	"\x1bPROXY_RPC_ID_CREATE_MESSAGE\x10\x04\x12(\n" +
+	"$PROXY_RPC_ID_GENERATE_MESSAGE_STREAM\x10\x05*\xa7\x03\n" +
 	" AnthropicConfigStateServiceRpcId\x125\n" +
 	"1ANTHROPIC_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x127\n" +
 	"3ANTHROPIC_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x126\n" +
@@ -2584,10 +2584,10 @@ const file_services_anthropic_proto_rawDesc = "" +
 	"3ANTHROPIC_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x124\n" +
 	"0ANTHROPIC_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x124\n" +
 	"0ANTHROPIC_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x126\n" +
-	"2ANTHROPIC_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xa5\x01\n" +
+	"2ANTHROPIC_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xa7\x01\n" +
 	"\x05Proxy\x12J\n" +
-	"\rCreateMessage\x12\x17.anthropic.ProxyRequest\x1a .anthropic.CreateMessageResponse\x12H\n" +
-	"\x13CreateMessageStream\x12\x17.anthropic.ProxyRequest\x1a\x16.anthropic.StreamEvent0\x01\x1a\x06\xf2\x97\"\x02\x18\x012\xc4\x01\n" +
+	"\rCreateMessage\x12\x17.anthropic.ProxyRequest\x1a .anthropic.CreateMessageResponse\x12J\n" +
+	"\x15GenerateMessageStream\x12\x17.anthropic.ProxyRequest\x1a\x16.anthropic.StreamEvent0\x01\x1a\x06\xf2\x97\"\x02\x18\x012\xc4\x01\n" +
 	"\x1bAnthropicConfigStateService\x123\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x11.anthropic.Config\x121\n" +
 	"\tSetConfig\x12\x11.anthropic.Config\x1a\x11.anthropic.Config\x127\n" +
@@ -2677,12 +2677,12 @@ var file_services_anthropic_proto_depIdxs = []int32{
 	23, // 28: anthropic.ProxyEvent.error:type_name -> anthropic.ErrorResponse
 	8,  // 29: anthropic.AnthropicConfigState.config:type_name -> anthropic.Config
 	9,  // 30: anthropic.Proxy.CreateMessage:input_type -> anthropic.ProxyRequest
-	9,  // 31: anthropic.Proxy.CreateMessageStream:input_type -> anthropic.ProxyRequest
+	9,  // 31: anthropic.Proxy.GenerateMessageStream:input_type -> anthropic.ProxyRequest
 	28, // 32: anthropic.AnthropicConfigStateService.GetConfig:input_type -> trace.TraceRequest
 	8,  // 33: anthropic.AnthropicConfigStateService.SetConfig:input_type -> anthropic.Config
 	28, // 34: anthropic.AnthropicConfigStateService.WatchConfig:input_type -> trace.TraceRequest
 	19, // 35: anthropic.Proxy.CreateMessage:output_type -> anthropic.CreateMessageResponse
-	21, // 36: anthropic.Proxy.CreateMessageStream:output_type -> anthropic.StreamEvent
+	21, // 36: anthropic.Proxy.GenerateMessageStream:output_type -> anthropic.StreamEvent
 	8,  // 37: anthropic.AnthropicConfigStateService.GetConfig:output_type -> anthropic.Config
 	8,  // 38: anthropic.AnthropicConfigStateService.SetConfig:output_type -> anthropic.Config
 	8,  // 39: anthropic.AnthropicConfigStateService.WatchConfig:output_type -> anthropic.Config

@@ -69,16 +69,3 @@ message CollectionQuery {
   int32 limit = 3;                // 0 = no limit
   int32 offset = 4;               // 0 = no offset
 }
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-enum TypeID {
-  TYPE_ID_UNSPECIFIED = 0;
-  TYPE_ID_QUERY_VALUE = 1;
-  TYPE_ID_PREDICATE = 2;
-  TYPE_ID_PREDICATE_GROUP = 3;
-  TYPE_ID_SORT_FIELD = 4;
-  TYPE_ID_COLLECTION_QUERY = 5;
-}

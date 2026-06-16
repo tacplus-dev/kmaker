@@ -344,7 +344,7 @@ const (
 	ProxyRpcId_PROXY_RPC_ID_LIST_BRANCHES              ProxyRpcId = 27
 	ProxyRpcId_PROXY_RPC_ID_CREATE_BRANCH              ProxyRpcId = 28
 	ProxyRpcId_PROXY_RPC_ID_LIST_COMMITS               ProxyRpcId = 29
-	ProxyRpcId_PROXY_RPC_ID_SEARCH_BLOBS               ProxyRpcId = 30
+	ProxyRpcId_PROXY_RPC_ID_LIST_BLOB_SEARCH_RESULTS   ProxyRpcId = 30
 )
 
 // Enum value maps for ProxyRpcId.
@@ -380,7 +380,7 @@ var (
 		27: "PROXY_RPC_ID_LIST_BRANCHES",
 		28: "PROXY_RPC_ID_CREATE_BRANCH",
 		29: "PROXY_RPC_ID_LIST_COMMITS",
-		30: "PROXY_RPC_ID_SEARCH_BLOBS",
+		30: "PROXY_RPC_ID_LIST_BLOB_SEARCH_RESULTS",
 	}
 	ProxyRpcId_value = map[string]int32{
 		"PROXY_RPC_ID_UNSPECIFIED":                0,
@@ -413,7 +413,7 @@ var (
 		"PROXY_RPC_ID_LIST_BRANCHES":              27,
 		"PROXY_RPC_ID_CREATE_BRANCH":              28,
 		"PROXY_RPC_ID_LIST_COMMITS":               29,
-		"PROXY_RPC_ID_SEARCH_BLOBS":               30,
+		"PROXY_RPC_ID_LIST_BLOB_SEARCH_RESULTS":   30,
 	}
 )
 
@@ -8554,12 +8554,12 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"durationMs\x12*\n" +
 	"\bprovider\x18\v \x01(\tB\x0e\x90\xa7\x1d@\x8a\xa8\x1d\x06gitlabR\bprovider\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9b\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9d\x01\n" +
 	"\x11GitlabConfigState\x120\n" +
 	"\x06config\x18\x01 \x01(\v2\x0e.gitlab.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:#\x9a\xa8\x1d\x1b\n" +
-	"\x11GitlabConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:%\x9a\xa8\x1d\x1d\n" +
+	"\x11GitlabConfigState\x1a\beventbus\xa0\xa8\x1d\x02\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\xaa\x14\n" +
@@ -8640,7 +8640,7 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"\x1dTYPE_ID_SEARCH_BLOBS_RESPONSE\x10H\x12\x17\n" +
 	"\x13TYPE_ID_PROXY_EVENT\x10I\x12\x1f\n" +
 	"\x1bTYPE_ID_GITLAB_CONFIG_STATE\x10J\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10K*\xb2\b\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x10K*\xbe\b\n" +
 	"\n" +
 	"ProxyRpcId\x12\x1c\n" +
 	"\x18PROXY_RPC_ID_UNSPECIFIED\x10\x00\x12\x1e\n" +
@@ -8673,8 +8673,8 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"#PROXY_RPC_ID_UPDATE_REPOSITORY_FILE\x10\x1a\x12\x1e\n" +
 	"\x1aPROXY_RPC_ID_LIST_BRANCHES\x10\x1b\x12\x1e\n" +
 	"\x1aPROXY_RPC_ID_CREATE_BRANCH\x10\x1c\x12\x1d\n" +
-	"\x19PROXY_RPC_ID_LIST_COMMITS\x10\x1d\x12\x1d\n" +
-	"\x19PROXY_RPC_ID_SEARCH_BLOBS\x10\x1e*\x8f\x03\n" +
+	"\x19PROXY_RPC_ID_LIST_COMMITS\x10\x1d\x12)\n" +
+	"%PROXY_RPC_ID_LIST_BLOB_SEARCH_RESULTS\x10\x1e*\x8f\x03\n" +
 	"\x1dGitlabConfigStateServiceRpcId\x122\n" +
 	".GITLAB_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x124\n" +
 	"0GITLAB_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x123\n" +
@@ -8682,37 +8682,40 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"0GITLAB_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x121\n" +
 	"-GITLAB_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x121\n" +
 	"-GITLAB_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x123\n" +
-	"/GITLAB_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xae\x11\n" +
+	"/GITLAB_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xf2\x12\n" +
 	"\x05Proxy\x126\n" +
 	"\x05Proxy\x12\x15.http.RawProxyRequest\x1a\x16.http.RawProxyResponse\x12C\n" +
 	"\n" +
-	"GetProject\x12\x19.gitlab.GetProjectRequest\x1a\x1a.gitlab.GetProjectResponse\x12C\n" +
+	"GetProject\x12\x19.gitlab.GetProjectRequest\x1a\x1a.gitlab.GetProjectResponse\x12^\n" +
 	"\n" +
-	"ListIssues\x12\x19.gitlab.ListIssuesRequest\x1a\x1a.gitlab.ListIssuesResponse\x12=\n" +
+	"ListIssues\x12\x19.gitlab.ListIssuesRequest\x1a\x1a.gitlab.ListIssuesResponse\"\x19\xf2\x88'\x15\b\x01\x12\n" +
+	"updated_at\x12\x03iid\x18d\x12=\n" +
 	"\bGetIssue\x12\x17.gitlab.GetIssueRequest\x1a\x18.gitlab.GetIssueResponse\x12F\n" +
 	"\vCreateIssue\x12\x1a.gitlab.CreateIssueRequest\x1a\x1b.gitlab.CreateIssueResponse\x12F\n" +
 	"\vUpdateIssue\x12\x1a.gitlab.UpdateIssueRequest\x1a\x1b.gitlab.UpdateIssueResponse\x12R\n" +
-	"\x0fCreateIssueNote\x12\x1e.gitlab.CreateIssueNoteRequest\x1a\x1f.gitlab.CreateIssueNoteResponse\x12X\n" +
-	"\x11ListMergeRequests\x12 .gitlab.ListMergeRequestsRequest\x1a!.gitlab.ListMergeRequestsResponse\x12R\n" +
+	"\x0fCreateIssueNote\x12\x1e.gitlab.CreateIssueNoteRequest\x1a\x1f.gitlab.CreateIssueNoteResponse\x12s\n" +
+	"\x11ListMergeRequests\x12 .gitlab.ListMergeRequestsRequest\x1a!.gitlab.ListMergeRequestsResponse\"\x19\xf2\x88'\x15\b\x01\x12\n" +
+	"updated_at\x12\x03iid\x18d\x12R\n" +
 	"\x0fGetMergeRequest\x12\x1e.gitlab.GetMergeRequestRequest\x1a\x1f.gitlab.GetMergeRequestResponse\x12[\n" +
 	"\x12CreateMergeRequest\x12!.gitlab.CreateMergeRequestRequest\x1a\".gitlab.CreateMergeRequestResponse\x12[\n" +
 	"\x12UpdateMergeRequest\x12!.gitlab.UpdateMergeRequestRequest\x1a\".gitlab.UpdateMergeRequestResponse\x12X\n" +
-	"\x11MergeMergeRequest\x12 .gitlab.MergeMergeRequestRequest\x1a!.gitlab.MergeMergeRequestResponse\x12j\n" +
-	"\x17ListMergeRequestChanges\x12&.gitlab.ListMergeRequestChangesRequest\x1a'.gitlab.ListMergeRequestChangesResponse\x12g\n" +
-	"\x16CreateMergeRequestNote\x12%.gitlab.CreateMergeRequestNoteRequest\x1a&.gitlab.CreateMergeRequestNoteResponse\x12L\n" +
-	"\rListPipelines\x12\x1c.gitlab.ListPipelinesRequest\x1a\x1d.gitlab.ListPipelinesResponse\x12F\n" +
+	"\x11MergeMergeRequest\x12 .gitlab.MergeMergeRequestRequest\x1a!.gitlab.MergeMergeRequestResponse\x12\x89\x01\n" +
+	"\x17ListMergeRequestChanges\x12&.gitlab.ListMergeRequestChangesRequest\x1a'.gitlab.ListMergeRequestChangesResponse\"\x1d\xf2\x88'\x19\b\x01\x12\bnew_path\x12\bold_path\x18\xb8\x17\x12g\n" +
+	"\x16CreateMergeRequestNote\x12%.gitlab.CreateMergeRequestNoteRequest\x1a&.gitlab.CreateMergeRequestNoteResponse\x12Z\n" +
+	"\rListPipelines\x12\x1c.gitlab.ListPipelinesRequest\x1a\x1d.gitlab.ListPipelinesResponse\"\f\xf2\x88'\b\b\x01\x12\x02id\x18d\x12F\n" +
 	"\vGetPipeline\x12\x1a.gitlab.GetPipelineRequest\x1a\x1b.gitlab.GetPipelineResponse\x12O\n" +
 	"\x0eCreatePipeline\x12\x1d.gitlab.CreatePipelineRequest\x1a\x1e.gitlab.CreatePipelineResponse\x12O\n" +
 	"\x0eCancelPipeline\x12\x1d.gitlab.CancelPipelineRequest\x1a\x1e.gitlab.CancelPipelineResponse\x12L\n" +
-	"\rRetryPipeline\x12\x1c.gitlab.RetryPipelineRequest\x1a\x1d.gitlab.RetryPipelineResponse\x12U\n" +
-	"\x10ListPipelineJobs\x12\x1f.gitlab.ListPipelineJobsRequest\x1a .gitlab.ListPipelineJobsResponse\x12X\n" +
+	"\rRetryPipeline\x12\x1c.gitlab.RetryPipelineRequest\x1a\x1d.gitlab.RetryPipelineResponse\x12c\n" +
+	"\x10ListPipelineJobs\x12\x1f.gitlab.ListPipelineJobsRequest\x1a .gitlab.ListPipelineJobsResponse\"\f\xf2\x88'\b\b\x01\x12\x02id\x18d\x12X\n" +
 	"\x11GetRepositoryFile\x12 .gitlab.GetRepositoryFileRequest\x1a!.gitlab.GetRepositoryFileResponse\x12a\n" +
 	"\x14CreateRepositoryFile\x12#.gitlab.CreateRepositoryFileRequest\x1a$.gitlab.CreateRepositoryFileResponse\x12a\n" +
-	"\x14UpdateRepositoryFile\x12#.gitlab.UpdateRepositoryFileRequest\x1a$.gitlab.UpdateRepositoryFileResponse\x12I\n" +
-	"\fListBranches\x12\x1b.gitlab.ListBranchesRequest\x1a\x1c.gitlab.ListBranchesResponse\x12I\n" +
-	"\fCreateBranch\x12\x1b.gitlab.CreateBranchRequest\x1a\x1c.gitlab.CreateBranchResponse\x12F\n" +
-	"\vListCommits\x12\x1a.gitlab.ListCommitsRequest\x1a\x1b.gitlab.ListCommitsResponse\x12F\n" +
-	"\vSearchBlobs\x12\x1a.gitlab.SearchBlobsRequest\x1a\x1b.gitlab.SearchBlobsResponse\x1a\x06\xf2\x97\"\x02\x18\x012\xb5\x01\n" +
+	"\x14UpdateRepositoryFile\x12#.gitlab.UpdateRepositoryFileRequest\x1a$.gitlab.UpdateRepositoryFileResponse\x12Y\n" +
+	"\fListBranches\x12\x1b.gitlab.ListBranchesRequest\x1a\x1c.gitlab.ListBranchesResponse\"\x0e\xf2\x88'\n" +
+	"\b\x01\x12\x04name\x18d\x12I\n" +
+	"\fCreateBranch\x12\x1b.gitlab.CreateBranchRequest\x1a\x1c.gitlab.CreateBranchResponse\x12d\n" +
+	"\vListCommits\x12\x1a.gitlab.ListCommitsRequest\x1a\x1b.gitlab.ListCommitsResponse\"\x1c\xf2\x88'\x18\b\x01\x12\x0ecommitted_date\x12\x02id\x18d\x12j\n" +
+	"\x15ListBlobSearchResults\x12\x1a.gitlab.SearchBlobsRequest\x1a\x1b.gitlab.SearchBlobsResponse\"\x18\xf2\x88'\x14\b\x01\x12\x04path\x12\bfilename\x18d\x1a\x06\xf2\x97\"\x02\x18\x012\xb5\x01\n" +
 	"\x18GitlabConfigStateService\x120\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x0e.gitlab.Config\x12+\n" +
 	"\tSetConfig\x12\x0e.gitlab.Config\x1a\x0e.gitlab.Config\x124\n" +
@@ -8929,7 +8932,7 @@ var file_services_gitlab_proto_depIdxs = []int32{
 	67,  // 104: gitlab.Proxy.ListBranches:input_type -> gitlab.ListBranchesRequest
 	69,  // 105: gitlab.Proxy.CreateBranch:input_type -> gitlab.CreateBranchRequest
 	71,  // 106: gitlab.Proxy.ListCommits:input_type -> gitlab.ListCommitsRequest
-	73,  // 107: gitlab.Proxy.SearchBlobs:input_type -> gitlab.SearchBlobsRequest
+	73,  // 107: gitlab.Proxy.ListBlobSearchResults:input_type -> gitlab.SearchBlobsRequest
 	80,  // 108: gitlab.GitlabConfigStateService.GetConfig:input_type -> trace.TraceRequest
 	3,   // 109: gitlab.GitlabConfigStateService.SetConfig:input_type -> gitlab.Config
 	80,  // 110: gitlab.GitlabConfigStateService.WatchConfig:input_type -> trace.TraceRequest
@@ -8959,7 +8962,7 @@ var file_services_gitlab_proto_depIdxs = []int32{
 	68,  // 134: gitlab.Proxy.ListBranches:output_type -> gitlab.ListBranchesResponse
 	70,  // 135: gitlab.Proxy.CreateBranch:output_type -> gitlab.CreateBranchResponse
 	72,  // 136: gitlab.Proxy.ListCommits:output_type -> gitlab.ListCommitsResponse
-	74,  // 137: gitlab.Proxy.SearchBlobs:output_type -> gitlab.SearchBlobsResponse
+	74,  // 137: gitlab.Proxy.ListBlobSearchResults:output_type -> gitlab.SearchBlobsResponse
 	3,   // 138: gitlab.GitlabConfigStateService.GetConfig:output_type -> gitlab.Config
 	3,   // 139: gitlab.GitlabConfigStateService.SetConfig:output_type -> gitlab.Config
 	3,   // 140: gitlab.GitlabConfigStateService.WatchConfig:output_type -> gitlab.Config

@@ -674,6 +674,55 @@ func (GraphMode) EnumDescriptor() ([]byte, []int) {
 	return file_libs_spec_proto_rawDescGZIP(), []int{8}
 }
 
+// SmbRoot selects which trust root backs an SMB service's member certificates.
+type SmbRoot int32
+
+const (
+	// SMB_ROOT_ISOLATED uses a self-signed per-SMB CA, scoped only to this SMB.
+	SmbRoot_SMB_ROOT_ISOLATED SmbRoot = 0
+	// SMB_ROOT_CLUSTER signs the per-SMB intermediate under the cluster CA.
+	SmbRoot_SMB_ROOT_CLUSTER SmbRoot = 1
+)
+
+// Enum value maps for SmbRoot.
+var (
+	SmbRoot_name = map[int32]string{
+		0: "SMB_ROOT_ISOLATED",
+		1: "SMB_ROOT_CLUSTER",
+	}
+	SmbRoot_value = map[string]int32{
+		"SMB_ROOT_ISOLATED": 0,
+		"SMB_ROOT_CLUSTER":  1,
+	}
+)
+
+func (x SmbRoot) Enum() *SmbRoot {
+	p := new(SmbRoot)
+	*p = x
+	return p
+}
+
+func (x SmbRoot) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (SmbRoot) Descriptor() protoreflect.EnumDescriptor {
+	return file_libs_spec_proto_enumTypes[9].Descriptor()
+}
+
+func (SmbRoot) Type() protoreflect.EnumType {
+	return &file_libs_spec_proto_enumTypes[9]
+}
+
+func (x SmbRoot) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use SmbRoot.Descriptor instead.
+func (SmbRoot) EnumDescriptor() ([]byte, []int) {
+	return file_libs_spec_proto_rawDescGZIP(), []int{9}
+}
+
 // CollectionMode declares how a multi-result read behaves. See docs/API.md.
 // A read returning more than one result must declare exactly one mode; an
 // unbounded SNAPSHOT is a contradiction (if it is unbounded, it is a WATCH).
@@ -691,7 +740,7 @@ const (
 	// PAGE: a client-driven, resumable, windowed GET (unary). The caller pages
 	// through a finite set with an opaque keyset page_token over order_by; each
 	// page is bounded by page_size (capped at the trust-tier ceiling). Forbids
-	// max_items/replay_depth. See docs/RPC_PATTERNS_AND_VERBS_PLAN.md §4.
+	// max_items/replay_depth. See docs/archive/RPC_PATTERNS_AND_VERBS_PLAN.md §4.
 	CollectionMode_COLLECTION_MODE_PAGE CollectionMode = 3
 )
 
@@ -722,11 +771,11 @@ func (x CollectionMode) String() string {
 }
 
 func (CollectionMode) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_spec_proto_enumTypes[9].Descriptor()
+	return file_libs_spec_proto_enumTypes[10].Descriptor()
 }
 
 func (CollectionMode) Type() protoreflect.EnumType {
-	return &file_libs_spec_proto_enumTypes[9]
+	return &file_libs_spec_proto_enumTypes[10]
 }
 
 func (x CollectionMode) Number() protoreflect.EnumNumber {
@@ -735,7 +784,7 @@ func (x CollectionMode) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use CollectionMode.Descriptor instead.
 func (CollectionMode) EnumDescriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{9}
+	return file_libs_spec_proto_rawDescGZIP(), []int{10}
 }
 
 // ConsistencyModel defines how a boundary field's state is stored and replicated.
@@ -793,11 +842,11 @@ func (x ConsistencyModel) String() string {
 }
 
 func (ConsistencyModel) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_spec_proto_enumTypes[10].Descriptor()
+	return file_libs_spec_proto_enumTypes[11].Descriptor()
 }
 
 func (ConsistencyModel) Type() protoreflect.EnumType {
-	return &file_libs_spec_proto_enumTypes[10]
+	return &file_libs_spec_proto_enumTypes[11]
 }
 
 func (x ConsistencyModel) Number() protoreflect.EnumNumber {
@@ -806,7 +855,7 @@ func (x ConsistencyModel) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ConsistencyModel.Descriptor instead.
 func (ConsistencyModel) EnumDescriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{10}
+	return file_libs_spec_proto_rawDescGZIP(), []int{11}
 }
 
 // EvictionPolicy determines which entries to evict when max_size is reached.
@@ -852,11 +901,11 @@ func (x EvictionPolicy) String() string {
 }
 
 func (EvictionPolicy) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_spec_proto_enumTypes[11].Descriptor()
+	return file_libs_spec_proto_enumTypes[12].Descriptor()
 }
 
 func (EvictionPolicy) Type() protoreflect.EnumType {
-	return &file_libs_spec_proto_enumTypes[11]
+	return &file_libs_spec_proto_enumTypes[12]
 }
 
 func (x EvictionPolicy) Number() protoreflect.EnumNumber {
@@ -865,7 +914,7 @@ func (x EvictionPolicy) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use EvictionPolicy.Descriptor instead.
 func (EvictionPolicy) EnumDescriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{11}
+	return file_libs_spec_proto_rawDescGZIP(), []int{12}
 }
 
 // MaxSizePolicy determines what the eviction_max_size limit refers to.
@@ -909,11 +958,11 @@ func (x MaxSizePolicy) String() string {
 }
 
 func (MaxSizePolicy) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_spec_proto_enumTypes[12].Descriptor()
+	return file_libs_spec_proto_enumTypes[13].Descriptor()
 }
 
 func (MaxSizePolicy) Type() protoreflect.EnumType {
-	return &file_libs_spec_proto_enumTypes[12]
+	return &file_libs_spec_proto_enumTypes[13]
 }
 
 func (x MaxSizePolicy) Number() protoreflect.EnumNumber {
@@ -922,7 +971,7 @@ func (x MaxSizePolicy) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use MaxSizePolicy.Descriptor instead.
 func (MaxSizePolicy) EnumDescriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{12}
+	return file_libs_spec_proto_rawDescGZIP(), []int{13}
 }
 
 // StatePermsMode defines the access level a state service has to another state root.
@@ -972,11 +1021,11 @@ func (x StatePermsMode) String() string {
 }
 
 func (StatePermsMode) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_spec_proto_enumTypes[13].Descriptor()
+	return file_libs_spec_proto_enumTypes[14].Descriptor()
 }
 
 func (StatePermsMode) Type() protoreflect.EnumType {
-	return &file_libs_spec_proto_enumTypes[13]
+	return &file_libs_spec_proto_enumTypes[14]
 }
 
 func (x StatePermsMode) Number() protoreflect.EnumNumber {
@@ -985,7 +1034,7 @@ func (x StatePermsMode) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StatePermsMode.Descriptor instead.
 func (StatePermsMode) EnumDescriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{13}
+	return file_libs_spec_proto_rawDescGZIP(), []int{14}
 }
 
 // TlsKeyType specifies the key algorithm for auto-TLS certificate management.
@@ -1025,11 +1074,11 @@ func (x TlsKeyType) String() string {
 }
 
 func (TlsKeyType) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_spec_proto_enumTypes[14].Descriptor()
+	return file_libs_spec_proto_enumTypes[15].Descriptor()
 }
 
 func (TlsKeyType) Type() protoreflect.EnumType {
-	return &file_libs_spec_proto_enumTypes[14]
+	return &file_libs_spec_proto_enumTypes[15]
 }
 
 func (x TlsKeyType) Number() protoreflect.EnumNumber {
@@ -1038,7 +1087,58 @@ func (x TlsKeyType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use TlsKeyType.Descriptor instead.
 func (TlsKeyType) EnumDescriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{14}
+	return file_libs_spec_proto_rawDescGZIP(), []int{15}
+}
+
+// ConfigSliceScope identifies the aggregate config message that receives a
+// per-service config slice.
+type ConfigSliceScope int32
+
+const (
+	ConfigSliceScope_CONFIG_SLICE_SCOPE_UNSPECIFIED ConfigSliceScope = 0
+	ConfigSliceScope_CONFIG_SLICE_SCOPE_TENANT      ConfigSliceScope = 1
+	ConfigSliceScope_CONFIG_SLICE_SCOPE_PROJECT     ConfigSliceScope = 2
+)
+
+// Enum value maps for ConfigSliceScope.
+var (
+	ConfigSliceScope_name = map[int32]string{
+		0: "CONFIG_SLICE_SCOPE_UNSPECIFIED",
+		1: "CONFIG_SLICE_SCOPE_TENANT",
+		2: "CONFIG_SLICE_SCOPE_PROJECT",
+	}
+	ConfigSliceScope_value = map[string]int32{
+		"CONFIG_SLICE_SCOPE_UNSPECIFIED": 0,
+		"CONFIG_SLICE_SCOPE_TENANT":      1,
+		"CONFIG_SLICE_SCOPE_PROJECT":     2,
+	}
+)
+
+func (x ConfigSliceScope) Enum() *ConfigSliceScope {
+	p := new(ConfigSliceScope)
+	*p = x
+	return p
+}
+
+func (x ConfigSliceScope) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ConfigSliceScope) Descriptor() protoreflect.EnumDescriptor {
+	return file_libs_spec_proto_enumTypes[16].Descriptor()
+}
+
+func (ConfigSliceScope) Type() protoreflect.EnumType {
+	return &file_libs_spec_proto_enumTypes[16]
+}
+
+func (x ConfigSliceScope) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ConfigSliceScope.Descriptor instead.
+func (ConfigSliceScope) EnumDescriptor() ([]byte, []int) {
+	return file_libs_spec_proto_rawDescGZIP(), []int{16}
 }
 
 // RestMethod enumerates additional HTTP methods for REST exposure.
@@ -1084,11 +1184,11 @@ func (x RestMethod) String() string {
 }
 
 func (RestMethod) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_spec_proto_enumTypes[15].Descriptor()
+	return file_libs_spec_proto_enumTypes[17].Descriptor()
 }
 
 func (RestMethod) Type() protoreflect.EnumType {
-	return &file_libs_spec_proto_enumTypes[15]
+	return &file_libs_spec_proto_enumTypes[17]
 }
 
 func (x RestMethod) Number() protoreflect.EnumNumber {
@@ -1097,207 +1197,7 @@ func (x RestMethod) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use RestMethod.Descriptor instead.
 func (RestMethod) EnumDescriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{15}
-}
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED                 TypeID = 0
-	TypeID_TYPE_ID_STRING_CONST                TypeID = 1
-	TypeID_TYPE_ID_INT_CONST                   TypeID = 2
-	TypeID_TYPE_ID_FLOAT_CONST                 TypeID = 3
-	TypeID_TYPE_ID_BOOL_CONST                  TypeID = 4
-	TypeID_TYPE_ID_DEFAULT_HOST                TypeID = 5
-	TypeID_TYPE_ID_NUMERIC_CONSTRAINT          TypeID = 6
-	TypeID_TYPE_ID_FLOAT_CONSTRAINT            TypeID = 7
-	TypeID_TYPE_ID_PARAM_MAP_CONFIG            TypeID = 8
-	TypeID_TYPE_ID_SUBSCRIPTION_ANNOTATION     TypeID = 9
-	TypeID_TYPE_ID_EVENT_PUBLISH_ANNOTATION    TypeID = 10
-	TypeID_TYPE_ID_EVENT_WATCH_ANNOTATION      TypeID = 11
-	TypeID_TYPE_ID_GRAPH_TYPE_ANNOTATION       TypeID = 12
-	TypeID_TYPE_ID_EVENT_DB_ANNOTATION         TypeID = 13
-	TypeID_TYPE_ID_GRAPH_PROJECTION            TypeID = 14
-	TypeID_TYPE_ID_GRAPH_PROJECTION_FIELD      TypeID = 15
-	TypeID_TYPE_ID_TIMESERIES_PROJECTION       TypeID = 16
-	TypeID_TYPE_ID_TIMESERIES_PROJECTION_FIELD TypeID = 17
-	TypeID_TYPE_ID_GRAPH_FIELD_OPTION          TypeID = 18
-	TypeID_TYPE_ID_TIMESERIES_TABLE_ANNOTATION TypeID = 19
-	TypeID_TYPE_ID_TIMESERIES_FIELD_OPTION     TypeID = 20
-	TypeID_TYPE_ID_SERVICE_S2_S_ANNOTATION     TypeID = 21
-	TypeID_TYPE_ID_SERVICE_C2_S_ANNOTATION     TypeID = 22
-	TypeID_TYPE_ID_SERVICE_C2_D_ANNOTATION     TypeID = 23
-	TypeID_TYPE_ID_IDENTITY_SPIFFE_RESOURCE    TypeID = 24
-	TypeID_TYPE_ID_TOKEN_MINTER_ANNOTATION     TypeID = 25
-	TypeID_TYPE_ID_SMB_AUTHORITY_ANNOTATION    TypeID = 26
-	TypeID_TYPE_ID_METHOD_S2_S_ANNOTATION      TypeID = 27
-	TypeID_TYPE_ID_METHOD_C2_S_ANNOTATION      TypeID = 28
-	TypeID_TYPE_ID_METHOD_COLLECTION           TypeID = 29
-	TypeID_TYPE_ID_SERVICE_EVENT_ANNOTATION    TypeID = 30
-	TypeID_TYPE_ID_CONDITIONAL_REQUIREMENT     TypeID = 31
-	TypeID_TYPE_ID_STATE_ANNOTATION            TypeID = 32
-	TypeID_TYPE_ID_SERVICE_STORE_ANNOTATION    TypeID = 33
-	TypeID_TYPE_ID_GRAPH_STORE_ANNOTATION      TypeID = 34
-	TypeID_TYPE_ID_TIMESERIES_STORE_ANNOTATION TypeID = 35
-	TypeID_TYPE_ID_HOT_STORE_ANNOTATION        TypeID = 36
-	TypeID_TYPE_ID_COLD_STORE_ANNOTATION       TypeID = 37
-	TypeID_TYPE_ID_SERVICE_HEALTH_ANNOTATION   TypeID = 38
-	TypeID_TYPE_ID_V_SERVICE_ANNOTATION        TypeID = 39
-	TypeID_TYPE_ID_SERVICE_ANNOTATION          TypeID = 40
-	TypeID_TYPE_ID_GRPC_CONFIG_ANNOTATION      TypeID = 41
-	TypeID_TYPE_ID_STATE_PERMS                 TypeID = 42
-	TypeID_TYPE_ID_STATE_IMPORT                TypeID = 43
-	TypeID_TYPE_ID_OPA_EVAL_ANNOTATION         TypeID = 44
-	TypeID_TYPE_ID_OPA_IMPORT                  TypeID = 45
-	TypeID_TYPE_ID_GRAPH_IMPORT                TypeID = 46
-	TypeID_TYPE_ID_TIMESERIES_IMPORT           TypeID = 47
-	TypeID_TYPE_ID_GRPC_S2_S_CLIENT            TypeID = 48
-	TypeID_TYPE_ID_GRPC_C2_S_CLIENT            TypeID = 49
-	TypeID_TYPE_ID_GRPC_W2_S_CLIENT            TypeID = 50
-	TypeID_TYPE_ID_REST_METHODS                TypeID = 51
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0:  "TYPE_ID_UNSPECIFIED",
-		1:  "TYPE_ID_STRING_CONST",
-		2:  "TYPE_ID_INT_CONST",
-		3:  "TYPE_ID_FLOAT_CONST",
-		4:  "TYPE_ID_BOOL_CONST",
-		5:  "TYPE_ID_DEFAULT_HOST",
-		6:  "TYPE_ID_NUMERIC_CONSTRAINT",
-		7:  "TYPE_ID_FLOAT_CONSTRAINT",
-		8:  "TYPE_ID_PARAM_MAP_CONFIG",
-		9:  "TYPE_ID_SUBSCRIPTION_ANNOTATION",
-		10: "TYPE_ID_EVENT_PUBLISH_ANNOTATION",
-		11: "TYPE_ID_EVENT_WATCH_ANNOTATION",
-		12: "TYPE_ID_GRAPH_TYPE_ANNOTATION",
-		13: "TYPE_ID_EVENT_DB_ANNOTATION",
-		14: "TYPE_ID_GRAPH_PROJECTION",
-		15: "TYPE_ID_GRAPH_PROJECTION_FIELD",
-		16: "TYPE_ID_TIMESERIES_PROJECTION",
-		17: "TYPE_ID_TIMESERIES_PROJECTION_FIELD",
-		18: "TYPE_ID_GRAPH_FIELD_OPTION",
-		19: "TYPE_ID_TIMESERIES_TABLE_ANNOTATION",
-		20: "TYPE_ID_TIMESERIES_FIELD_OPTION",
-		21: "TYPE_ID_SERVICE_S2_S_ANNOTATION",
-		22: "TYPE_ID_SERVICE_C2_S_ANNOTATION",
-		23: "TYPE_ID_SERVICE_C2_D_ANNOTATION",
-		24: "TYPE_ID_IDENTITY_SPIFFE_RESOURCE",
-		25: "TYPE_ID_TOKEN_MINTER_ANNOTATION",
-		26: "TYPE_ID_SMB_AUTHORITY_ANNOTATION",
-		27: "TYPE_ID_METHOD_S2_S_ANNOTATION",
-		28: "TYPE_ID_METHOD_C2_S_ANNOTATION",
-		29: "TYPE_ID_METHOD_COLLECTION",
-		30: "TYPE_ID_SERVICE_EVENT_ANNOTATION",
-		31: "TYPE_ID_CONDITIONAL_REQUIREMENT",
-		32: "TYPE_ID_STATE_ANNOTATION",
-		33: "TYPE_ID_SERVICE_STORE_ANNOTATION",
-		34: "TYPE_ID_GRAPH_STORE_ANNOTATION",
-		35: "TYPE_ID_TIMESERIES_STORE_ANNOTATION",
-		36: "TYPE_ID_HOT_STORE_ANNOTATION",
-		37: "TYPE_ID_COLD_STORE_ANNOTATION",
-		38: "TYPE_ID_SERVICE_HEALTH_ANNOTATION",
-		39: "TYPE_ID_V_SERVICE_ANNOTATION",
-		40: "TYPE_ID_SERVICE_ANNOTATION",
-		41: "TYPE_ID_GRPC_CONFIG_ANNOTATION",
-		42: "TYPE_ID_STATE_PERMS",
-		43: "TYPE_ID_STATE_IMPORT",
-		44: "TYPE_ID_OPA_EVAL_ANNOTATION",
-		45: "TYPE_ID_OPA_IMPORT",
-		46: "TYPE_ID_GRAPH_IMPORT",
-		47: "TYPE_ID_TIMESERIES_IMPORT",
-		48: "TYPE_ID_GRPC_S2_S_CLIENT",
-		49: "TYPE_ID_GRPC_C2_S_CLIENT",
-		50: "TYPE_ID_GRPC_W2_S_CLIENT",
-		51: "TYPE_ID_REST_METHODS",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":                 0,
-		"TYPE_ID_STRING_CONST":                1,
-		"TYPE_ID_INT_CONST":                   2,
-		"TYPE_ID_FLOAT_CONST":                 3,
-		"TYPE_ID_BOOL_CONST":                  4,
-		"TYPE_ID_DEFAULT_HOST":                5,
-		"TYPE_ID_NUMERIC_CONSTRAINT":          6,
-		"TYPE_ID_FLOAT_CONSTRAINT":            7,
-		"TYPE_ID_PARAM_MAP_CONFIG":            8,
-		"TYPE_ID_SUBSCRIPTION_ANNOTATION":     9,
-		"TYPE_ID_EVENT_PUBLISH_ANNOTATION":    10,
-		"TYPE_ID_EVENT_WATCH_ANNOTATION":      11,
-		"TYPE_ID_GRAPH_TYPE_ANNOTATION":       12,
-		"TYPE_ID_EVENT_DB_ANNOTATION":         13,
-		"TYPE_ID_GRAPH_PROJECTION":            14,
-		"TYPE_ID_GRAPH_PROJECTION_FIELD":      15,
-		"TYPE_ID_TIMESERIES_PROJECTION":       16,
-		"TYPE_ID_TIMESERIES_PROJECTION_FIELD": 17,
-		"TYPE_ID_GRAPH_FIELD_OPTION":          18,
-		"TYPE_ID_TIMESERIES_TABLE_ANNOTATION": 19,
-		"TYPE_ID_TIMESERIES_FIELD_OPTION":     20,
-		"TYPE_ID_SERVICE_S2_S_ANNOTATION":     21,
-		"TYPE_ID_SERVICE_C2_S_ANNOTATION":     22,
-		"TYPE_ID_SERVICE_C2_D_ANNOTATION":     23,
-		"TYPE_ID_IDENTITY_SPIFFE_RESOURCE":    24,
-		"TYPE_ID_TOKEN_MINTER_ANNOTATION":     25,
-		"TYPE_ID_SMB_AUTHORITY_ANNOTATION":    26,
-		"TYPE_ID_METHOD_S2_S_ANNOTATION":      27,
-		"TYPE_ID_METHOD_C2_S_ANNOTATION":      28,
-		"TYPE_ID_METHOD_COLLECTION":           29,
-		"TYPE_ID_SERVICE_EVENT_ANNOTATION":    30,
-		"TYPE_ID_CONDITIONAL_REQUIREMENT":     31,
-		"TYPE_ID_STATE_ANNOTATION":            32,
-		"TYPE_ID_SERVICE_STORE_ANNOTATION":    33,
-		"TYPE_ID_GRAPH_STORE_ANNOTATION":      34,
-		"TYPE_ID_TIMESERIES_STORE_ANNOTATION": 35,
-		"TYPE_ID_HOT_STORE_ANNOTATION":        36,
-		"TYPE_ID_COLD_STORE_ANNOTATION":       37,
-		"TYPE_ID_SERVICE_HEALTH_ANNOTATION":   38,
-		"TYPE_ID_V_SERVICE_ANNOTATION":        39,
-		"TYPE_ID_SERVICE_ANNOTATION":          40,
-		"TYPE_ID_GRPC_CONFIG_ANNOTATION":      41,
-		"TYPE_ID_STATE_PERMS":                 42,
-		"TYPE_ID_STATE_IMPORT":                43,
-		"TYPE_ID_OPA_EVAL_ANNOTATION":         44,
-		"TYPE_ID_OPA_IMPORT":                  45,
-		"TYPE_ID_GRAPH_IMPORT":                46,
-		"TYPE_ID_TIMESERIES_IMPORT":           47,
-		"TYPE_ID_GRPC_S2_S_CLIENT":            48,
-		"TYPE_ID_GRPC_C2_S_CLIENT":            49,
-		"TYPE_ID_GRPC_W2_S_CLIENT":            50,
-		"TYPE_ID_REST_METHODS":                51,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_spec_proto_enumTypes[16].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_spec_proto_enumTypes[16]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{16}
+	return file_libs_spec_proto_rawDescGZIP(), []int{17}
 }
 
 // File-level string constants.
@@ -3083,8 +2983,54 @@ func (x *TokenMinterAnnotation) GetProxy() bool {
 	return false
 }
 
-// SmbAuthorityAnnotation marks the consumer service that issues isolated per-SMB
-// CAs and member certs for spec.smb services (SPIFFE plan D7), declared
+// SmbAnnotation marks a Service Mesh Blackbox service and selects its trust root.
+// The default root is SMB_ROOT_ISOLATED.
+type SmbAnnotation struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Root          SmbRoot                `protobuf:"varint,1,opt,name=root,proto3,enum=spec.SmbRoot" json:"root,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SmbAnnotation) Reset() {
+	*x = SmbAnnotation{}
+	mi := &file_libs_spec_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SmbAnnotation) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SmbAnnotation) ProtoMessage() {}
+
+func (x *SmbAnnotation) ProtoReflect() protoreflect.Message {
+	mi := &file_libs_spec_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SmbAnnotation.ProtoReflect.Descriptor instead.
+func (*SmbAnnotation) Descriptor() ([]byte, []int) {
+	return file_libs_spec_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *SmbAnnotation) GetRoot() SmbRoot {
+	if x != nil {
+		return x.Root
+	}
+	return SmbRoot_SMB_ROOT_ISOLATED
+}
+
+// SmbAuthorityAnnotation marks the consumer service that issues per-SMB CAs and
+// member certs for spec.smb services (SPIFFE plan D7), declared
 // EXPLICITLY rather than inferred. tacplus resolves the fully-qualified
 // package.Service carrying this annotation as the SMB cert authority and fails
 // generation if any spec.smb service exists with no authority declared. tacplus
@@ -3099,7 +3045,7 @@ type SmbAuthorityAnnotation struct {
 
 func (x *SmbAuthorityAnnotation) Reset() {
 	*x = SmbAuthorityAnnotation{}
-	mi := &file_libs_spec_proto_msgTypes[25]
+	mi := &file_libs_spec_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3111,7 +3057,7 @@ func (x *SmbAuthorityAnnotation) String() string {
 func (*SmbAuthorityAnnotation) ProtoMessage() {}
 
 func (x *SmbAuthorityAnnotation) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[25]
+	mi := &file_libs_spec_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3124,7 +3070,7 @@ func (x *SmbAuthorityAnnotation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SmbAuthorityAnnotation.ProtoReflect.Descriptor instead.
 func (*SmbAuthorityAnnotation) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{25}
+	return file_libs_spec_proto_rawDescGZIP(), []int{26}
 }
 
 // MethodS2SAnnotation overrides service-level defaults for a single S2S RPC.
@@ -3144,7 +3090,7 @@ type MethodS2SAnnotation struct {
 
 func (x *MethodS2SAnnotation) Reset() {
 	*x = MethodS2SAnnotation{}
-	mi := &file_libs_spec_proto_msgTypes[26]
+	mi := &file_libs_spec_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3156,7 +3102,7 @@ func (x *MethodS2SAnnotation) String() string {
 func (*MethodS2SAnnotation) ProtoMessage() {}
 
 func (x *MethodS2SAnnotation) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[26]
+	mi := &file_libs_spec_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3169,7 +3115,7 @@ func (x *MethodS2SAnnotation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MethodS2SAnnotation.ProtoReflect.Descriptor instead.
 func (*MethodS2SAnnotation) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{26}
+	return file_libs_spec_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *MethodS2SAnnotation) GetAuthServices() []string {
@@ -3214,7 +3160,7 @@ type MethodC2SAnnotation struct {
 
 func (x *MethodC2SAnnotation) Reset() {
 	*x = MethodC2SAnnotation{}
-	mi := &file_libs_spec_proto_msgTypes[27]
+	mi := &file_libs_spec_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3226,7 +3172,7 @@ func (x *MethodC2SAnnotation) String() string {
 func (*MethodC2SAnnotation) ProtoMessage() {}
 
 func (x *MethodC2SAnnotation) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[27]
+	mi := &file_libs_spec_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3239,7 +3185,7 @@ func (x *MethodC2SAnnotation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MethodC2SAnnotation.ProtoReflect.Descriptor instead.
 func (*MethodC2SAnnotation) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{27}
+	return file_libs_spec_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *MethodC2SAnnotation) GetAuthDisabled() bool {
@@ -3292,7 +3238,7 @@ type MethodCollection struct {
 
 func (x *MethodCollection) Reset() {
 	*x = MethodCollection{}
-	mi := &file_libs_spec_proto_msgTypes[28]
+	mi := &file_libs_spec_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3304,7 +3250,7 @@ func (x *MethodCollection) String() string {
 func (*MethodCollection) ProtoMessage() {}
 
 func (x *MethodCollection) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[28]
+	mi := &file_libs_spec_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3317,7 +3263,7 @@ func (x *MethodCollection) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MethodCollection.ProtoReflect.Descriptor instead.
 func (*MethodCollection) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{28}
+	return file_libs_spec_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *MethodCollection) GetMode() CollectionMode {
@@ -3369,7 +3315,7 @@ type ServiceEventAnnotation struct {
 
 func (x *ServiceEventAnnotation) Reset() {
 	*x = ServiceEventAnnotation{}
-	mi := &file_libs_spec_proto_msgTypes[29]
+	mi := &file_libs_spec_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3381,7 +3327,7 @@ func (x *ServiceEventAnnotation) String() string {
 func (*ServiceEventAnnotation) ProtoMessage() {}
 
 func (x *ServiceEventAnnotation) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[29]
+	mi := &file_libs_spec_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3394,7 +3340,7 @@ func (x *ServiceEventAnnotation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceEventAnnotation.ProtoReflect.Descriptor instead.
 func (*ServiceEventAnnotation) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{29}
+	return file_libs_spec_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *ServiceEventAnnotation) GetTag() string {
@@ -3425,7 +3371,7 @@ type ConditionalRequirement struct {
 
 func (x *ConditionalRequirement) Reset() {
 	*x = ConditionalRequirement{}
-	mi := &file_libs_spec_proto_msgTypes[30]
+	mi := &file_libs_spec_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3437,7 +3383,7 @@ func (x *ConditionalRequirement) String() string {
 func (*ConditionalRequirement) ProtoMessage() {}
 
 func (x *ConditionalRequirement) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[30]
+	mi := &file_libs_spec_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3450,7 +3396,7 @@ func (x *ConditionalRequirement) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConditionalRequirement.ProtoReflect.Descriptor instead.
 func (*ConditionalRequirement) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{30}
+	return file_libs_spec_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *ConditionalRequirement) GetField() string {
@@ -3489,7 +3435,7 @@ type StateAnnotation struct {
 
 func (x *StateAnnotation) Reset() {
 	*x = StateAnnotation{}
-	mi := &file_libs_spec_proto_msgTypes[31]
+	mi := &file_libs_spec_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3501,7 +3447,7 @@ func (x *StateAnnotation) String() string {
 func (*StateAnnotation) ProtoMessage() {}
 
 func (x *StateAnnotation) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[31]
+	mi := &file_libs_spec_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3514,7 +3460,7 @@ func (x *StateAnnotation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StateAnnotation.ProtoReflect.Descriptor instead.
 func (*StateAnnotation) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{31}
+	return file_libs_spec_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *StateAnnotation) GetName() string {
@@ -3564,7 +3510,7 @@ type ServiceStoreAnnotation struct {
 
 func (x *ServiceStoreAnnotation) Reset() {
 	*x = ServiceStoreAnnotation{}
-	mi := &file_libs_spec_proto_msgTypes[32]
+	mi := &file_libs_spec_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3576,7 +3522,7 @@ func (x *ServiceStoreAnnotation) String() string {
 func (*ServiceStoreAnnotation) ProtoMessage() {}
 
 func (x *ServiceStoreAnnotation) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[32]
+	mi := &file_libs_spec_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3589,7 +3535,7 @@ func (x *ServiceStoreAnnotation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceStoreAnnotation.ProtoReflect.Descriptor instead.
 func (*ServiceStoreAnnotation) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{32}
+	return file_libs_spec_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *ServiceStoreAnnotation) GetTag() string {
@@ -3611,7 +3557,7 @@ type GraphStoreAnnotation struct {
 
 func (x *GraphStoreAnnotation) Reset() {
 	*x = GraphStoreAnnotation{}
-	mi := &file_libs_spec_proto_msgTypes[33]
+	mi := &file_libs_spec_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3623,7 +3569,7 @@ func (x *GraphStoreAnnotation) String() string {
 func (*GraphStoreAnnotation) ProtoMessage() {}
 
 func (x *GraphStoreAnnotation) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[33]
+	mi := &file_libs_spec_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3636,7 +3582,7 @@ func (x *GraphStoreAnnotation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GraphStoreAnnotation.ProtoReflect.Descriptor instead.
 func (*GraphStoreAnnotation) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{33}
+	return file_libs_spec_proto_rawDescGZIP(), []int{34}
 }
 
 // TimeseriesStoreAnnotation marks a service proto as a timeseries data store.
@@ -3651,7 +3597,7 @@ type TimeseriesStoreAnnotation struct {
 
 func (x *TimeseriesStoreAnnotation) Reset() {
 	*x = TimeseriesStoreAnnotation{}
-	mi := &file_libs_spec_proto_msgTypes[34]
+	mi := &file_libs_spec_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3663,7 +3609,7 @@ func (x *TimeseriesStoreAnnotation) String() string {
 func (*TimeseriesStoreAnnotation) ProtoMessage() {}
 
 func (x *TimeseriesStoreAnnotation) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[34]
+	mi := &file_libs_spec_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3676,7 +3622,7 @@ func (x *TimeseriesStoreAnnotation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TimeseriesStoreAnnotation.ProtoReflect.Descriptor instead.
 func (*TimeseriesStoreAnnotation) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{34}
+	return file_libs_spec_proto_rawDescGZIP(), []int{35}
 }
 
 // HotStoreAnnotation marks a service proto as an in-memory hot event store.
@@ -3690,7 +3636,7 @@ type HotStoreAnnotation struct {
 
 func (x *HotStoreAnnotation) Reset() {
 	*x = HotStoreAnnotation{}
-	mi := &file_libs_spec_proto_msgTypes[35]
+	mi := &file_libs_spec_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3702,7 +3648,7 @@ func (x *HotStoreAnnotation) String() string {
 func (*HotStoreAnnotation) ProtoMessage() {}
 
 func (x *HotStoreAnnotation) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[35]
+	mi := &file_libs_spec_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3715,7 +3661,7 @@ func (x *HotStoreAnnotation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HotStoreAnnotation.ProtoReflect.Descriptor instead.
 func (*HotStoreAnnotation) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{35}
+	return file_libs_spec_proto_rawDescGZIP(), []int{36}
 }
 
 // ColdStoreAnnotation marks a service proto as a cold event archive.
@@ -3727,7 +3673,7 @@ type ColdStoreAnnotation struct {
 
 func (x *ColdStoreAnnotation) Reset() {
 	*x = ColdStoreAnnotation{}
-	mi := &file_libs_spec_proto_msgTypes[36]
+	mi := &file_libs_spec_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3739,7 +3685,7 @@ func (x *ColdStoreAnnotation) String() string {
 func (*ColdStoreAnnotation) ProtoMessage() {}
 
 func (x *ColdStoreAnnotation) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[36]
+	mi := &file_libs_spec_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3752,7 +3698,7 @@ func (x *ColdStoreAnnotation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ColdStoreAnnotation.ProtoReflect.Descriptor instead.
 func (*ColdStoreAnnotation) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{36}
+	return file_libs_spec_proto_rawDescGZIP(), []int{37}
 }
 
 // ServiceHealthAnnotation declares a typed health message for a service.
@@ -3769,7 +3715,7 @@ type ServiceHealthAnnotation struct {
 
 func (x *ServiceHealthAnnotation) Reset() {
 	*x = ServiceHealthAnnotation{}
-	mi := &file_libs_spec_proto_msgTypes[37]
+	mi := &file_libs_spec_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3781,7 +3727,7 @@ func (x *ServiceHealthAnnotation) String() string {
 func (*ServiceHealthAnnotation) ProtoMessage() {}
 
 func (x *ServiceHealthAnnotation) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[37]
+	mi := &file_libs_spec_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3794,7 +3740,7 @@ func (x *ServiceHealthAnnotation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceHealthAnnotation.ProtoReflect.Descriptor instead.
 func (*ServiceHealthAnnotation) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{37}
+	return file_libs_spec_proto_rawDescGZIP(), []int{38}
 }
 
 // VServiceAnnotation declares a virtual service identity for a proto file.
@@ -3813,7 +3759,7 @@ type VServiceAnnotation struct {
 
 func (x *VServiceAnnotation) Reset() {
 	*x = VServiceAnnotation{}
-	mi := &file_libs_spec_proto_msgTypes[38]
+	mi := &file_libs_spec_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3825,7 +3771,7 @@ func (x *VServiceAnnotation) String() string {
 func (*VServiceAnnotation) ProtoMessage() {}
 
 func (x *VServiceAnnotation) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[38]
+	mi := &file_libs_spec_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3838,7 +3784,7 @@ func (x *VServiceAnnotation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VServiceAnnotation.ProtoReflect.Descriptor instead.
 func (*VServiceAnnotation) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{38}
+	return file_libs_spec_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *VServiceAnnotation) GetName() string {
@@ -3878,7 +3824,7 @@ type ServiceAnnotation struct {
 
 func (x *ServiceAnnotation) Reset() {
 	*x = ServiceAnnotation{}
-	mi := &file_libs_spec_proto_msgTypes[39]
+	mi := &file_libs_spec_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3890,7 +3836,7 @@ func (x *ServiceAnnotation) String() string {
 func (*ServiceAnnotation) ProtoMessage() {}
 
 func (x *ServiceAnnotation) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[39]
+	mi := &file_libs_spec_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3903,7 +3849,7 @@ func (x *ServiceAnnotation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceAnnotation.ProtoReflect.Descriptor instead.
 func (*ServiceAnnotation) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{39}
+	return file_libs_spec_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *ServiceAnnotation) GetName() string {
@@ -3947,7 +3893,7 @@ type GrpcConfigAnnotation struct {
 
 func (x *GrpcConfigAnnotation) Reset() {
 	*x = GrpcConfigAnnotation{}
-	mi := &file_libs_spec_proto_msgTypes[40]
+	mi := &file_libs_spec_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3959,7 +3905,7 @@ func (x *GrpcConfigAnnotation) String() string {
 func (*GrpcConfigAnnotation) ProtoMessage() {}
 
 func (x *GrpcConfigAnnotation) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[40]
+	mi := &file_libs_spec_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3972,10 +3918,63 @@ func (x *GrpcConfigAnnotation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GrpcConfigAnnotation.ProtoReflect.Descriptor instead.
 func (*GrpcConfigAnnotation) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{40}
+	return file_libs_spec_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *GrpcConfigAnnotation) GetServiceName() string {
+	if x != nil {
+		return x.ServiceName
+	}
+	return ""
+}
+
+// ConfigSliceAnnotation declares one per-service config slice and its owner.
+type ConfigSliceAnnotation struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Scope         ConfigSliceScope       `protobuf:"varint,1,opt,name=scope,proto3,enum=spec.ConfigSliceScope" json:"scope,omitempty"`
+	ServiceName   string                 `protobuf:"bytes,2,opt,name=service_name,json=serviceName,proto3" json:"service_name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ConfigSliceAnnotation) Reset() {
+	*x = ConfigSliceAnnotation{}
+	mi := &file_libs_spec_proto_msgTypes[42]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ConfigSliceAnnotation) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ConfigSliceAnnotation) ProtoMessage() {}
+
+func (x *ConfigSliceAnnotation) ProtoReflect() protoreflect.Message {
+	mi := &file_libs_spec_proto_msgTypes[42]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ConfigSliceAnnotation.ProtoReflect.Descriptor instead.
+func (*ConfigSliceAnnotation) Descriptor() ([]byte, []int) {
+	return file_libs_spec_proto_rawDescGZIP(), []int{42}
+}
+
+func (x *ConfigSliceAnnotation) GetScope() ConfigSliceScope {
+	if x != nil {
+		return x.Scope
+	}
+	return ConfigSliceScope_CONFIG_SLICE_SCOPE_UNSPECIFIED
+}
+
+func (x *ConfigSliceAnnotation) GetServiceName() string {
 	if x != nil {
 		return x.ServiceName
 	}
@@ -3995,7 +3994,7 @@ type StatePerms struct {
 
 func (x *StatePerms) Reset() {
 	*x = StatePerms{}
-	mi := &file_libs_spec_proto_msgTypes[41]
+	mi := &file_libs_spec_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4007,7 +4006,7 @@ func (x *StatePerms) String() string {
 func (*StatePerms) ProtoMessage() {}
 
 func (x *StatePerms) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[41]
+	mi := &file_libs_spec_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4020,7 +4019,7 @@ func (x *StatePerms) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatePerms.ProtoReflect.Descriptor instead.
 func (*StatePerms) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{41}
+	return file_libs_spec_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *StatePerms) GetTarget() string {
@@ -4037,9 +4036,8 @@ func (x *StatePerms) GetMode() StatePermsMode {
 	return StatePermsMode_STATE_PERMS_MODE_UNSPECIFIED
 }
 
-// StateImport declares a read-only dependency on another service's exported state.
-// Used as a file-level option so each proto package can declare which external
-// states it imports. The target state must have export=true on its service_state.
+// StateImport is the legacy file-level mirror for field-level state_import
+// declarations. The target state must have export=true on its service_state.
 type StateImport struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// source is "package.StateName" (e.g. "identity.Identity", "aegis.AegisState").
@@ -4050,7 +4048,7 @@ type StateImport struct {
 
 func (x *StateImport) Reset() {
 	*x = StateImport{}
-	mi := &file_libs_spec_proto_msgTypes[42]
+	mi := &file_libs_spec_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4062,7 +4060,7 @@ func (x *StateImport) String() string {
 func (*StateImport) ProtoMessage() {}
 
 func (x *StateImport) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[42]
+	mi := &file_libs_spec_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4075,7 +4073,7 @@ func (x *StateImport) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StateImport.ProtoReflect.Descriptor instead.
 func (*StateImport) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{42}
+	return file_libs_spec_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *StateImport) GetSource() string {
@@ -4111,7 +4109,7 @@ type OpaEvalAnnotation struct {
 
 func (x *OpaEvalAnnotation) Reset() {
 	*x = OpaEvalAnnotation{}
-	mi := &file_libs_spec_proto_msgTypes[43]
+	mi := &file_libs_spec_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4123,7 +4121,7 @@ func (x *OpaEvalAnnotation) String() string {
 func (*OpaEvalAnnotation) ProtoMessage() {}
 
 func (x *OpaEvalAnnotation) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[43]
+	mi := &file_libs_spec_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4136,7 +4134,7 @@ func (x *OpaEvalAnnotation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OpaEvalAnnotation.ProtoReflect.Descriptor instead.
 func (*OpaEvalAnnotation) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{43}
+	return file_libs_spec_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *OpaEvalAnnotation) GetEntryPoint() string {
@@ -4173,7 +4171,7 @@ type OpaImport struct {
 
 func (x *OpaImport) Reset() {
 	*x = OpaImport{}
-	mi := &file_libs_spec_proto_msgTypes[44]
+	mi := &file_libs_spec_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4185,7 +4183,7 @@ func (x *OpaImport) String() string {
 func (*OpaImport) ProtoMessage() {}
 
 func (x *OpaImport) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[44]
+	mi := &file_libs_spec_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4198,7 +4196,7 @@ func (x *OpaImport) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OpaImport.ProtoReflect.Descriptor instead.
 func (*OpaImport) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{44}
+	return file_libs_spec_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *OpaImport) GetSource() string {
@@ -4233,7 +4231,7 @@ type GraphImport struct {
 
 func (x *GraphImport) Reset() {
 	*x = GraphImport{}
-	mi := &file_libs_spec_proto_msgTypes[45]
+	mi := &file_libs_spec_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4245,7 +4243,7 @@ func (x *GraphImport) String() string {
 func (*GraphImport) ProtoMessage() {}
 
 func (x *GraphImport) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[45]
+	mi := &file_libs_spec_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4258,7 +4256,7 @@ func (x *GraphImport) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GraphImport.ProtoReflect.Descriptor instead.
 func (*GraphImport) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{45}
+	return file_libs_spec_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *GraphImport) GetService() string {
@@ -4286,7 +4284,7 @@ type TimeseriesImport struct {
 
 func (x *TimeseriesImport) Reset() {
 	*x = TimeseriesImport{}
-	mi := &file_libs_spec_proto_msgTypes[46]
+	mi := &file_libs_spec_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4298,7 +4296,7 @@ func (x *TimeseriesImport) String() string {
 func (*TimeseriesImport) ProtoMessage() {}
 
 func (x *TimeseriesImport) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[46]
+	mi := &file_libs_spec_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4311,7 +4309,7 @@ func (x *TimeseriesImport) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TimeseriesImport.ProtoReflect.Descriptor instead.
 func (*TimeseriesImport) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{46}
+	return file_libs_spec_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *TimeseriesImport) GetService() string {
@@ -4336,7 +4334,7 @@ type GrpcS2SClient struct {
 
 func (x *GrpcS2SClient) Reset() {
 	*x = GrpcS2SClient{}
-	mi := &file_libs_spec_proto_msgTypes[47]
+	mi := &file_libs_spec_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4348,7 +4346,7 @@ func (x *GrpcS2SClient) String() string {
 func (*GrpcS2SClient) ProtoMessage() {}
 
 func (x *GrpcS2SClient) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[47]
+	mi := &file_libs_spec_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4361,7 +4359,7 @@ func (x *GrpcS2SClient) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GrpcS2SClient.ProtoReflect.Descriptor instead.
 func (*GrpcS2SClient) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{47}
+	return file_libs_spec_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *GrpcS2SClient) GetService() string {
@@ -4385,7 +4383,7 @@ type GrpcC2SClient struct {
 
 func (x *GrpcC2SClient) Reset() {
 	*x = GrpcC2SClient{}
-	mi := &file_libs_spec_proto_msgTypes[48]
+	mi := &file_libs_spec_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4397,7 +4395,7 @@ func (x *GrpcC2SClient) String() string {
 func (*GrpcC2SClient) ProtoMessage() {}
 
 func (x *GrpcC2SClient) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[48]
+	mi := &file_libs_spec_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4410,7 +4408,7 @@ func (x *GrpcC2SClient) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GrpcC2SClient.ProtoReflect.Descriptor instead.
 func (*GrpcC2SClient) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{48}
+	return file_libs_spec_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *GrpcC2SClient) GetService() string {
@@ -4434,7 +4432,7 @@ type GrpcW2SClient struct {
 
 func (x *GrpcW2SClient) Reset() {
 	*x = GrpcW2SClient{}
-	mi := &file_libs_spec_proto_msgTypes[49]
+	mi := &file_libs_spec_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4446,7 +4444,7 @@ func (x *GrpcW2SClient) String() string {
 func (*GrpcW2SClient) ProtoMessage() {}
 
 func (x *GrpcW2SClient) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[49]
+	mi := &file_libs_spec_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4459,7 +4457,7 @@ func (x *GrpcW2SClient) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GrpcW2SClient.ProtoReflect.Descriptor instead.
 func (*GrpcW2SClient) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{49}
+	return file_libs_spec_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *GrpcW2SClient) GetService() string {
@@ -4479,7 +4477,7 @@ type RestMethods struct {
 
 func (x *RestMethods) Reset() {
 	*x = RestMethods{}
-	mi := &file_libs_spec_proto_msgTypes[50]
+	mi := &file_libs_spec_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4491,7 +4489,7 @@ func (x *RestMethods) String() string {
 func (*RestMethods) ProtoMessage() {}
 
 func (x *RestMethods) ProtoReflect() protoreflect.Message {
-	mi := &file_libs_spec_proto_msgTypes[50]
+	mi := &file_libs_spec_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4504,7 +4502,7 @@ func (x *RestMethods) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RestMethods.ProtoReflect.Descriptor instead.
 func (*RestMethods) Descriptor() ([]byte, []int) {
-	return file_libs_spec_proto_rawDescGZIP(), []int{50}
+	return file_libs_spec_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *RestMethods) GetMethods() []RestMethod {
@@ -4833,6 +4831,14 @@ var file_libs_spec_proto_extTypes = []protoimpl.ExtensionInfo{
 		Field:         60068,
 		Name:          "spec.per_service_config",
 		Tag:           "varint,60068,opt,name=per_service_config",
+		Filename:      "libs/spec.proto",
+	},
+	{
+		ExtendedType:  (*descriptorpb.MessageOptions)(nil),
+		ExtensionType: (*ConfigSliceAnnotation)(nil),
+		Field:         60075,
+		Name:          "spec.config_slice",
+		Tag:           "bytes,60075,opt,name=config_slice",
 		Filename:      "libs/spec.proto",
 	},
 	{
@@ -5589,10 +5595,10 @@ var file_libs_spec_proto_extTypes = []protoimpl.ExtensionInfo{
 	},
 	{
 		ExtendedType:  (*descriptorpb.ServiceOptions)(nil),
-		ExtensionType: (*bool)(nil),
+		ExtensionType: (*SmbAnnotation)(nil),
 		Field:         70020,
 		Name:          "spec.smb",
-		Tag:           "varint,70020,opt,name=smb",
+		Tag:           "bytes,70020,opt,name=smb",
 		Filename:      "libs/spec.proto",
 	},
 	{
@@ -5689,8 +5695,9 @@ var (
 	//
 	// optional spec.ServiceAnnotation service = 50011;
 	E_Service = &file_libs_spec_proto_extTypes[5]
-	// state_imports declares read-only dependencies on other services' exported state roots.
-	// Each entry references a "package.StateName" that must have export=true on its service_state.
+	// state_imports is a legacy file-level mirror for field-level state_import roots.
+	// Prefer field-level state_import; if this option is present, it must exactly
+	// mirror the imported "package.StateName" roots derived from those fields.
 	//
 	// repeated spec.StateImport state_imports = 50012;
 	E_StateImports = &file_libs_spec_proto_extTypes[6]
@@ -5953,36 +5960,22 @@ var (
 	//
 	// optional bool per_service_config = 60068;
 	E_PerServiceConfig = &file_libs_spec_proto_extTypes[39]
-	// tenant_config_slice marks a message as a per-service slice of the auto-generated
-	// TenantConfig message. tacplus collects all messages with this annotation and
-	// generates generated/tenant_config.proto deterministically.
-	// The field name in TenantConfig is derived from the service package name.
-	// The field number is looked up (or auto-assigned) in registry.yaml.
+	// config_slice marks a message as one per-service configuration slice with an
+	// explicit owner and scope.
+	// Example: option (spec.config_slice) = {scope: CONFIG_SLICE_SCOPE_TENANT, service_name: "identity"};
+	//
+	// optional spec.ConfigSliceAnnotation config_slice = 60075;
+	E_ConfigSlice = &file_libs_spec_proto_extTypes[40]
+	// Legacy aliases accepted for older downstream protos. Prefer config_slice.
 	//
 	// optional bool tenant_config_slice = 60069;
-	E_TenantConfigSlice = &file_libs_spec_proto_extTypes[40]
-	// tenant_config_service overrides the service name for a tenant_config_slice message.
-	// Use this when the slice is defined in a file with a different proto package than
-	// the service name (e.g., to avoid Go import cycles).
-	// Example: option (spec.tenant_config_service) = "identity";
-	//
+	E_TenantConfigSlice = &file_libs_spec_proto_extTypes[41]
 	// optional string tenant_config_service = 60070;
-	E_TenantConfigService = &file_libs_spec_proto_extTypes[41]
-	// project_config_slice marks a message as a per-service slice of the auto-generated
-	// ProjectConfig message. tacplus collects all messages with this annotation and
-	// generates generated/project_config.proto deterministically.
-	// The field name in ProjectConfig is derived from the service package name.
-	// The field number is looked up (or auto-assigned) in registry.yaml.
-	//
+	E_TenantConfigService = &file_libs_spec_proto_extTypes[42]
 	// optional bool project_config_slice = 60071;
-	E_ProjectConfigSlice = &file_libs_spec_proto_extTypes[42]
-	// project_config_service overrides the service name for a project_config_slice message.
-	// Use this when the slice is defined in a file with a different proto package than
-	// the service name (e.g., to avoid Go import cycles).
-	// Example: option (spec.project_config_service) = "identity";
-	//
+	E_ProjectConfigSlice = &file_libs_spec_proto_extTypes[43]
 	// optional string project_config_service = 60072;
-	E_ProjectConfigService = &file_libs_spec_proto_extTypes[43]
+	E_ProjectConfigService = &file_libs_spec_proto_extTypes[44]
 	// event_publish declares that this actor publishes an EventBus topic. The
 	// topic_ref must be a tacplus-validated TopicRef:
 	// "<proto-package>.<topic-message>.<topic-field>".
@@ -5993,7 +5986,7 @@ var (
 	// default.
 	//
 	// repeated spec.EventPublishAnnotation event_publish = 60073;
-	E_EventPublish = &file_libs_spec_proto_extTypes[44]
+	E_EventPublish = &file_libs_spec_proto_extTypes[45]
 	// event_watch declares that this actor watches an EventBus topic. The
 	// topic_ref must be a tacplus-validated TopicRef:
 	// "<proto-package>.<topic-message>.<topic-field>".
@@ -6004,7 +5997,7 @@ var (
 	// default.
 	//
 	// repeated spec.EventWatchAnnotation event_watch = 60074;
-	E_EventWatch = &file_libs_spec_proto_extTypes[45]
+	E_EventWatch = &file_libs_spec_proto_extTypes[46]
 )
 
 // Extension fields to descriptorpb.FieldOptions.
@@ -6014,105 +6007,105 @@ var (
 	// For repeated fields: must have at least one element
 	//
 	// optional bool assert_required = 60001;
-	E_AssertRequired = &file_libs_spec_proto_extTypes[46]
+	E_AssertRequired = &file_libs_spec_proto_extTypes[47]
 	// optional spec.IpAddrTypes assert_ipaddr_type = 60002;
-	E_AssertIpaddrType = &file_libs_spec_proto_extTypes[47]
+	E_AssertIpaddrType = &file_libs_spec_proto_extTypes[48]
 	// optional spec.EncType assert_enc_type = 60003;
-	E_AssertEncType = &file_libs_spec_proto_extTypes[48]
+	E_AssertEncType = &file_libs_spec_proto_extTypes[49]
 	// optional bool assert_net_port = 60004;
-	E_AssertNetPort = &file_libs_spec_proto_extTypes[49]
+	E_AssertNetPort = &file_libs_spec_proto_extTypes[50]
 	// URL/URI validation
 	//
 	// optional spec.UrlScheme assert_url = 60005;
-	E_AssertUrl = &file_libs_spec_proto_extTypes[50]
+	E_AssertUrl = &file_libs_spec_proto_extTypes[51]
 	// Email validation
 	//
 	// optional bool assert_email = 60006;
-	E_AssertEmail = &file_libs_spec_proto_extTypes[51]
+	E_AssertEmail = &file_libs_spec_proto_extTypes[52]
 	// FQDN validation
 	//
 	// optional bool assert_fqdn = 60007;
-	E_AssertFqdn = &file_libs_spec_proto_extTypes[52]
+	E_AssertFqdn = &file_libs_spec_proto_extTypes[53]
 	// Duration/Timeout validation
 	//
 	// optional spec.DurationType assert_duration = 60008;
-	E_AssertDuration = &file_libs_spec_proto_extTypes[53]
+	E_AssertDuration = &file_libs_spec_proto_extTypes[54]
 	// optional int64 assert_duration_min = 60009;
-	E_AssertDurationMin = &file_libs_spec_proto_extTypes[54]
+	E_AssertDurationMin = &file_libs_spec_proto_extTypes[55]
 	// optional int64 assert_duration_max = 60010;
-	E_AssertDurationMax = &file_libs_spec_proto_extTypes[55]
+	E_AssertDurationMax = &file_libs_spec_proto_extTypes[56]
 	// Listen address validation (host:port format)
 	//
 	// optional bool assert_listen_addr = 60015;
-	E_AssertListenAddr = &file_libs_spec_proto_extTypes[56]
+	E_AssertListenAddr = &file_libs_spec_proto_extTypes[57]
 	// Base64 validation
 	//
 	// optional bool assert_base64 = 60016;
-	E_AssertBase64 = &file_libs_spec_proto_extTypes[57]
+	E_AssertBase64 = &file_libs_spec_proto_extTypes[58]
 	// String length validation
 	//
 	// optional uint32 assert_min_length = 60017;
-	E_AssertMinLength = &file_libs_spec_proto_extTypes[58]
+	E_AssertMinLength = &file_libs_spec_proto_extTypes[59]
 	// optional uint32 assert_max_length = 60018;
-	E_AssertMaxLength = &file_libs_spec_proto_extTypes[59]
+	E_AssertMaxLength = &file_libs_spec_proto_extTypes[60]
 	// Enum non-zero validation (ensures enum is not 0/_UNDEFINED value)
 	//
 	// optional bool assert_enum_defined = 60019;
-	E_AssertEnumDefined = &file_libs_spec_proto_extTypes[60]
+	E_AssertEnumDefined = &file_libs_spec_proto_extTypes[61]
 	// File path validation
 	//
 	// optional spec.PathType assert_file_path = 60020;
-	E_AssertFilePath = &file_libs_spec_proto_extTypes[61]
+	E_AssertFilePath = &file_libs_spec_proto_extTypes[62]
 	// Simple numeric comparisons (for most common cases)
 	// These work with int32, int64, uint32, uint64 fields
 	//
 	// optional int64 assert_gt = 60021;
-	E_AssertGt = &file_libs_spec_proto_extTypes[62] // greater than
+	E_AssertGt = &file_libs_spec_proto_extTypes[63] // greater than
 	// optional int64 assert_ge = 60022;
-	E_AssertGe = &file_libs_spec_proto_extTypes[63] // greater than or equal
+	E_AssertGe = &file_libs_spec_proto_extTypes[64] // greater than or equal
 	// optional int64 assert_lt = 60023;
-	E_AssertLt = &file_libs_spec_proto_extTypes[64] // less than
+	E_AssertLt = &file_libs_spec_proto_extTypes[65] // less than
 	// optional int64 assert_le = 60024;
-	E_AssertLe = &file_libs_spec_proto_extTypes[65] // less than or equal
+	E_AssertLe = &file_libs_spec_proto_extTypes[66] // less than or equal
 	// Complex numeric constraints (for advanced validation scenarios)
 	//
 	// optional spec.NumericConstraint assert_numeric = 60025;
-	E_AssertNumeric = &file_libs_spec_proto_extTypes[66]
+	E_AssertNumeric = &file_libs_spec_proto_extTypes[67]
 	// Floating-point constraints (for float and double fields)
 	//
 	// optional spec.FloatConstraint assert_float = 60026;
-	E_AssertFloat = &file_libs_spec_proto_extTypes[67]
+	E_AssertFloat = &file_libs_spec_proto_extTypes[68]
 	// Semantic version validation
 	// Validates that a string follows semantic versioning format (e.g., "1.0.0", "v2.3.1")
 	// Supports optional 'v' prefix and follows semver.org specification
 	//
 	// optional bool assert_semver = 60028;
-	E_AssertSemver = &file_libs_spec_proto_extTypes[68]
+	E_AssertSemver = &file_libs_spec_proto_extTypes[69]
 	// Parameter key mapping for FromMap generation
 	// Explicitly maps this field to a specific enum value for parameter parsing
 	// Example: [(consts.param_key) = "TOKEN_PARAM_KEY_CLIENT_ID"]
 	//
 	// optional string param_key = 60029;
-	E_ParamKey = &file_libs_spec_proto_extTypes[69]
+	E_ParamKey = &file_libs_spec_proto_extTypes[70]
 	// Conditional requirement: this field is required when another field equals false
 	// Specifies the name of a boolean field that, when false, makes this field required
 	// Example: [(consts.required_if_false) = "disable_tls"] means this field is required when disable_tls is false
 	//
 	// optional string required_if_false = 60030;
-	E_RequiredIfFalse = &file_libs_spec_proto_extTypes[70]
+	E_RequiredIfFalse = &file_libs_spec_proto_extTypes[71]
 	// Conditional requirement: this field is required when another field equals true
 	// Specifies the name of a boolean field that, when true, makes this field required
 	// Example: [(consts.required_if_true) = "enable_cors"] means this field is required when enable_cors is true
 	//
 	// optional string required_if_true = 60031;
-	E_RequiredIfTrue = &file_libs_spec_proto_extTypes[71]
+	E_RequiredIfTrue = &file_libs_spec_proto_extTypes[72]
 	// Host validation (IP address OR FQDN)
 	// Validates that a string is either a valid IP address (IPv4/IPv6) or a valid FQDN.
 	// This is an OR check — the value must satisfy at least one of the two formats.
 	// Use this for fields that accept a network host identifier.
 	//
 	// optional bool assert_host = 60032;
-	E_AssertHost = &file_libs_spec_proto_extTypes[72]
+	E_AssertHost = &file_libs_spec_proto_extTypes[73]
 	// Field-level default value annotations.
 	// Attaches a default constant directly to a field. The code generators will
 	// emit a constant named DEFAULT_{FIELD_NAME_UPPER_SNAKE} in the constants output.
@@ -6121,27 +6114,27 @@ var (
 	//	-> generates: DEFAULT_PARTITION_COUNT = 271
 	//
 	// optional string default_string = 60033;
-	E_DefaultString = &file_libs_spec_proto_extTypes[73]
+	E_DefaultString = &file_libs_spec_proto_extTypes[74]
 	// optional int64 default_int = 60034;
-	E_DefaultInt = &file_libs_spec_proto_extTypes[74]
+	E_DefaultInt = &file_libs_spec_proto_extTypes[75]
 	// optional double default_float = 60035;
-	E_DefaultFloat = &file_libs_spec_proto_extTypes[75]
+	E_DefaultFloat = &file_libs_spec_proto_extTypes[76]
 	// optional bool default_bool = 60036;
-	E_DefaultBool = &file_libs_spec_proto_extTypes[76]
+	E_DefaultBool = &file_libs_spec_proto_extTypes[77]
 	// optional double default_double = 60049;
-	E_DefaultDouble = &file_libs_spec_proto_extTypes[77]
+	E_DefaultDouble = &file_libs_spec_proto_extTypes[78]
 	// key provides a string identifier for mapping on Config fields.
 	// Links a grpcserver.Config or statedb.Config field to its target service/state.
 	// Example: statedb.Config state = 2 [(spec.key) = "BaseballState"];
 	//
 	// optional string key = 60037;
-	E_Key = &file_libs_spec_proto_extTypes[78]
+	E_Key = &file_libs_spec_proto_extTypes[79]
 	// Conditional requirement: this field is required when another field equals a specific value.
 	// Works with enum or string sibling fields.
 	// Example: [(spec.required_if_eq) = {field: "action", value: "ACTION_PERMIT"}]
 	//
 	// optional spec.ConditionalRequirement required_if_eq = 60038;
-	E_RequiredIfEq = &file_libs_spec_proto_extTypes[79]
+	E_RequiredIfEq = &file_libs_spec_proto_extTypes[80]
 	// assert_max_size enforces a maximum length/count on string, bytes, repeated, and map fields.
 	// For string/bytes: maximum byte length. Default 32,768 bytes (32 KB) when not set.
 	// For repeated/map: maximum element count. Runtime default 1,024 elements when not set;
@@ -6149,40 +6142,40 @@ var (
 	// Use this to override the default for fields that need more or less capacity.
 	//
 	// optional uint32 assert_max_size = 60039;
-	E_AssertMaxSize = &file_libs_spec_proto_extTypes[80]
+	E_AssertMaxSize = &file_libs_spec_proto_extTypes[81]
 	// assert_min_size enforces a minimum length/count on string, bytes, repeated, and map fields.
 	// For string/bytes: minimum byte length. For repeated/map: minimum element count.
 	//
 	// optional uint32 assert_min_size = 60052;
-	E_AssertMinSize = &file_libs_spec_proto_extTypes[81]
+	E_AssertMinSize = &file_libs_spec_proto_extTypes[82]
 	// SQL statement validation.
 	// Validates that a string is a syntactically valid SQL statement of the permitted type.
 	// Rejects injection patterns: semicolons, comment sequences (-- and /*), escape characters.
 	// Example: string query = 1 [(spec.assert_sql) = SQL_PERMIT_SELECT];
 	//
 	// optional spec.SqlPermit assert_sql = 60046;
-	E_AssertSql = &file_libs_spec_proto_extTypes[82]
+	E_AssertSql = &file_libs_spec_proto_extTypes[83]
 	// References a file-level constant (int_const, string_const, float_const, bool_const)
 	// as the default value for this field. The Defaults function will use the named constant
 	// directly, so multiple fields can share the same default without duplicating values.
 	// Example: int32 tcp_port = 5 [(spec.default_const) = "DEFAULT_PORT"];
 	//
 	// optional string default_const = 60047;
-	E_DefaultConst = &file_libs_spec_proto_extTypes[83]
+	E_DefaultConst = &file_libs_spec_proto_extTypes[84]
 	// Default value for host.Host fields. Generates a Defaults() initialization
 	// and a DEFAULT_{FIELD}_PORT constant.
 	// Mirrors host.Host structure to avoid circular import with host.proto.
 	//
 	// optional spec.DefaultHost default_host = 60048;
-	E_DefaultHost = &file_libs_spec_proto_extTypes[84]
+	E_DefaultHost = &file_libs_spec_proto_extTypes[85]
 	// Statedb field indexing: marks a field for Hazelcast index creation
 	//
 	// optional bool indexed = 50010;
-	E_Indexed = &file_libs_spec_proto_extTypes[85]
+	E_Indexed = &file_libs_spec_proto_extTypes[86]
 	// Statedb index type hint for indexed fields
 	//
 	// optional string index_type = 50011;
-	E_IndexType = &file_libs_spec_proto_extTypes[86] // "HASH", "SORTED", "BITMAP"
+	E_IndexType = &file_libs_spec_proto_extTypes[87] // "HASH", "SORTED", "BITMAP"
 	// Statedb consistency model for boundary fields within a state root message.
 	// UNSPECIFIED (default): serialized as part of parent message, not a separate IMap.
 	// ATOMIC: own IMap, requires Lock for mutations.
@@ -6191,35 +6184,38 @@ var (
 	// All direct children of a state root must have an explicit consistency annotation.
 	//
 	// optional spec.ConsistencyModel consistency = 50012;
-	E_Consistency = &file_libs_spec_proto_extTypes[87]
+	E_Consistency = &file_libs_spec_proto_extTypes[88]
 	// Statedb private: field can never be accessed by other services (owner RW only)
 	//
 	// optional bool private = 50013;
-	E_Private = &file_libs_spec_proto_extTypes[88]
-	// state_import declares that this field's value comes from another service's state.
+	E_Private = &file_libs_spec_proto_extTypes[89]
+	// state_import declares that this field's value comes from another service's
+	// exported state. This is the canonical source for read-only cross-service
+	// state imports; the imported root is derived from "package.StateName.field".
+	// The projection currently supports singular message fields.
 	// Example: [(spec.state_import) = "football.FootballState.roster"];
 	//
 	// optional string state_import = 50014;
-	E_StateImport = &file_libs_spec_proto_extTypes[89]
+	E_StateImport = &file_libs_spec_proto_extTypes[90]
 	// queue marks a state root field as a FIFO queue (Hazelcast IQueue).
 	// One consumer receives each item. Operations: offer, poll, peek, size.
 	// Example: TaskItem task_queue = 3 [(spec.queue) = true];
 	//
 	// optional bool queue = 50015;
-	E_Queue = &file_libs_spec_proto_extTypes[90]
+	E_Queue = &file_libs_spec_proto_extTypes[91]
 	// priority_queue marks a state root field as a priority queue.
 	// Value is the name of the field used for priority ordering (e.g., "severity").
 	// Items consumed in priority order (highest first).
 	// Example: AlertItem alert_queue = 4 [(spec.priority_queue) = "severity"];
 	//
 	// optional string priority_queue = 50016;
-	E_PriorityQueue = &file_libs_spec_proto_extTypes[91]
+	E_PriorityQueue = &file_libs_spec_proto_extTypes[92]
 	// topic marks a state root field as a pub/sub topic (Hazelcast ITopic).
 	// Every subscriber receives every message. Operations: publish, subscribe.
 	// Example: EventData event_stream = 5 [(spec.topic) = true];
 	//
 	// optional bool topic = 50017;
-	E_Topic = &file_libs_spec_proto_extTypes[92]
+	E_Topic = &file_libs_spec_proto_extTypes[93]
 	// leader marks a queue, topic, or priority_queue field as requiring leader election.
 	// When set, the generated code automatically manages election, lease renewal, and
 	// watch streams. Write operations (Offer/Publish) are gated on leader status.
@@ -6227,61 +6223,61 @@ var (
 	// Example: TaskItem task_queue = 3 [(spec.queue) = true, (spec.leader) = true];
 	//
 	// optional bool leader = 50018;
-	E_Leader = &file_libs_spec_proto_extTypes[93]
+	E_Leader = &file_libs_spec_proto_extTypes[94]
 	// Statedb storage: number of synchronous backups for this boundary's IMap.
 	// Synchronous backups block writes until complete, providing stronger durability.
 	// Range: 0-6. Default: 1.
 	// Example: TeamRoster roster = 1 [(spec.consistency) = CONSISTENCY_ATOMIC, (spec.sync_backup_count) = 2];
 	//
 	// optional int32 sync_backup_count = 50020;
-	E_SyncBackupCount = &file_libs_spec_proto_extTypes[94]
+	E_SyncBackupCount = &file_libs_spec_proto_extTypes[95]
 	// Statedb storage: number of asynchronous backups for this boundary's IMap.
 	// Asynchronous backups do not block writes, providing better throughput
 	// at the cost of potential data loss during node failure. Range: 0-6. Default: 0.
 	//
 	// optional int32 async_backup_count = 50021;
-	E_AsyncBackupCount = &file_libs_spec_proto_extTypes[95]
+	E_AsyncBackupCount = &file_libs_spec_proto_extTypes[96]
 	// Statedb eviction: which entries to evict when max_size is reached.
 	// Default: EVICTION_POLICY_NONE (no eviction).
 	// Example: SessionData sessions = 2 [(spec.consistency) = CONSISTENCY_CONVERGENT, (spec.eviction_policy) = EVICTION_POLICY_LRU];
 	//
 	// optional spec.EvictionPolicy eviction_policy = 50022;
-	E_EvictionPolicy = &file_libs_spec_proto_extTypes[96]
+	E_EvictionPolicy = &file_libs_spec_proto_extTypes[97]
 	// Statedb eviction: maximum number of entries (or heap metric) before eviction begins.
 	// Default: 0 (no limit).
 	//
 	// optional int32 eviction_max_size = 50023;
-	E_EvictionMaxSize = &file_libs_spec_proto_extTypes[97]
+	E_EvictionMaxSize = &file_libs_spec_proto_extTypes[98]
 	// Statedb eviction: what the eviction_max_size limit refers to.
 	// Default: MAX_SIZE_POLICY_ENTRY_COUNT.
 	//
 	// optional spec.MaxSizePolicy eviction_max_size_policy = 50024;
-	E_EvictionMaxSizePolicy = &file_libs_spec_proto_extTypes[98]
+	E_EvictionMaxSizePolicy = &file_libs_spec_proto_extTypes[99]
 	// Statedb eviction: time-to-live for entries in seconds.
 	// Entries older than this are automatically evicted.
 	// Default: 0 (no TTL, entries live forever).
 	//
 	// optional int64 eviction_ttl_seconds = 50025;
-	E_EvictionTtlSeconds = &file_libs_spec_proto_extTypes[99]
+	E_EvictionTtlSeconds = &file_libs_spec_proto_extTypes[100]
 	// Statedb eviction: maximum idle time for entries in seconds.
 	// Entries not accessed within this period are automatically evicted.
 	// Default: 0 (no idle expiration).
 	//
 	// optional int64 eviction_max_idle_seconds = 50026;
-	E_EvictionMaxIdleSeconds = &file_libs_spec_proto_extTypes[100]
+	E_EvictionMaxIdleSeconds = &file_libs_spec_proto_extTypes[101]
 	// epoch_expiration marks an int64 field as a Unix epoch expiration timestamp (seconds).
 	// Collections only: 0 = no expiration; > 0 must be future and within 1 year.
 	// Hazelcast TTL = epoch - now at write time; entry auto-removed on expiry.
 	//
 	// optional bool epoch_expiration = 50027;
-	E_EpochExpiration = &file_libs_spec_proto_extTypes[101]
+	E_EpochExpiration = &file_libs_spec_proto_extTypes[102]
 	// persistence marks a graph boundary (singleton, collection, map) for durable storage.
 	// When true, the cluster persists this boundary's data across restarts.
 	// Can only be set on fields with a (spec.consistency) annotation.
 	// Cannot be set on queues, topics, or priority queues.
 	//
 	// optional bool persistence = 50028;
-	E_Persistence = &file_libs_spec_proto_extTypes[102]
+	E_Persistence = &file_libs_spec_proto_extTypes[103]
 	// boundary_perms overrides the message-level state_perms for this boundary field.
 	// Only valid on fields with a (spec.consistency) annotation inside a service_state message.
 	// Callers not listed inherit the message-level access mode.
@@ -6293,7 +6289,7 @@ var (
 	//	];
 	//
 	// repeated spec.StatePerms boundary_perms = 50030;
-	E_BoundaryPerms = &file_libs_spec_proto_extTypes[103]
+	E_BoundaryPerms = &file_libs_spec_proto_extTypes[104]
 	// refresh_on_miss names the message type used as the lookup request
 	// for cache-miss-triggered refresh. When set, tacplus generates a
 	// Lookup{FieldName} RPC on the state service.
@@ -6303,14 +6299,14 @@ var (
 	// Cannot combine with queue/topic/priority_queue.
 	//
 	// optional string refresh_on_miss = 50031;
-	E_RefreshOnMiss = &file_libs_spec_proto_extTypes[104]
+	E_RefreshOnMiss = &file_libs_spec_proto_extTypes[105]
 	// command marks this field as a command RPC on the state service.
 	// The field type is the request message; the response is always google.protobuf.Empty.
 	// Commands are mutations — only RW callers get the accessor.
 	// Use boundary_perms to restrict which callers can invoke the command.
 	//
 	// optional bool command = 50032;
-	E_Command = &file_libs_spec_proto_extTypes[105]
+	E_Command = &file_libs_spec_proto_extTypes[106]
 	// view_sources marks a field as a read-only view over multiple collection boundaries.
 	// Each entry is the field name of a source collection within the same service_state.
 	// The view unions all source collections into a single read-only boundary.
@@ -6337,7 +6333,7 @@ var (
 	//	];
 	//
 	// repeated string view_sources = 50033;
-	E_ViewSources = &file_libs_spec_proto_extTypes[106]
+	E_ViewSources = &file_libs_spec_proto_extTypes[107]
 	// boundary_callers lists services allowed to call this boundary cross-namespace.
 	// Applies to queue (offer), topic (publish), and command (exec) boundaries.
 	// Requires matching state_perms with STATE_PERMS_MODE_CALL on the caller's
@@ -6345,7 +6341,7 @@ var (
 	// Example: TaskItem task_queue = 3 [(spec.queue) = true, (spec.boundary_callers) = "woodstock"];
 	//
 	// repeated string boundary_callers = 50036;
-	E_BoundaryCallers = &file_libs_spec_proto_extTypes[107]
+	E_BoundaryCallers = &file_libs_spec_proto_extTypes[108]
 	// view_member registers this collection as a contributing source to one or
 	// more named cross-boundary views. All collections sharing a view_member
 	// value are aggregated by the cluster into that read-only view service. A
@@ -6362,26 +6358,26 @@ var (
 	//   - The message type must have an (spec.indexed) field for map keying.
 	//
 	// repeated string view_member = 50035;
-	E_ViewMember = &file_libs_spec_proto_extTypes[108]
+	E_ViewMember = &file_libs_spec_proto_extTypes[109]
 	// instance_keyed: server extracts instance_id from the caller's token
 	// and uses "service_id@instance_id" as the map key. The publisher
 	// sees a singleton Set API (no key param). Consumers see a collection.
 	//
 	// optional bool instance_keyed = 50034;
-	E_InstanceKeyed = &file_libs_spec_proto_extTypes[109]
+	E_InstanceKeyed = &file_libs_spec_proto_extTypes[110]
 	// store_key marks a field as the map key for a service_store message.
 	// Exactly one field per service_store message must have this annotation.
 	// The field type must be string. The key is used as the Hazelcast IMap key.
 	//
 	// optional bool store_key = 50037;
-	E_StoreKey = &file_libs_spec_proto_extTypes[110]
+	E_StoreKey = &file_libs_spec_proto_extTypes[111]
 	// quorum_write marks a state field as requiring write quorum.
 	// Writes are acked only after replication to 2+ nodes.
 	// On a single-node cluster, writes succeed immediately (no quorum possible).
 	// Only valid on fields within a service_state or service_store message.
 	//
 	// optional bool quorum_write = 50038;
-	E_QuorumWrite = &file_libs_spec_proto_extTypes[111]
+	E_QuorumWrite = &file_libs_spec_proto_extTypes[112]
 	// collected_health marks a state boundary for Sentinel health collection.
 	// Sentinel discovers instances via ServiceHealthState, calls a generated
 	// GetXxx RPC on the source service, and writes results to state.
@@ -6390,7 +6386,7 @@ var (
 	// when Sentinel stops updating them (use eviction_ttl_seconds).
 	//
 	// optional bool collected_health = 50039;
-	E_CollectedHealth = &file_libs_spec_proto_extTypes[112]
+	E_CollectedHealth = &file_libs_spec_proto_extTypes[113]
 	// graph_index specifies graph index directive(s) for this field.
 	// Used to generate DQL schema with proper indexes and graph store projections.
 	// Comma-separated for multiple: "exact", "term,fulltext", "trigram".
@@ -6399,7 +6395,7 @@ var (
 	// Example: string id = 1 [(spec.graph_index) = "exact"];
 	//
 	// optional string graph_index = 60050;
-	E_GraphIndex = &file_libs_spec_proto_extTypes[113]
+	E_GraphIndex = &file_libs_spec_proto_extTypes[114]
 	// projection_source maps a projection field to its source path on the event message.
 	// Used on fields within messages annotated with (spec.graph_type) or
 	// (spec.timeseries_table) that have a source set. Uses dot notation for
@@ -6411,7 +6407,7 @@ var (
 	//	"tool_use.duration_ms"  — nested int64 field
 	//
 	// optional string projection_source = 60063;
-	E_ProjectionSource = &file_libs_spec_proto_extTypes[114]
+	E_ProjectionSource = &file_libs_spec_proto_extTypes[115]
 	// graph_edge declares this field as a uid edge to another graph type.
 	// The value is the target graph type name (as declared in graph_type.name).
 	// At schema generation: predicate becomes `uid @reverse` instead of scalar.
@@ -6423,7 +6419,7 @@ var (
 	// Example: string session = 2 [(spec.graph_edge) = "Session"];
 	//
 	// optional string graph_edge = 60064;
-	E_GraphEdge = &file_libs_spec_proto_extTypes[115]
+	E_GraphEdge = &file_libs_spec_proto_extTypes[116]
 	// assert_invariant declares a formal invariant for this field.
 	// The expression is a boolean predicate in the target language's syntax.
 	// For Rust: used as kani::assume() in proof harnesses and debug_assert! in validate().
@@ -6432,25 +6428,25 @@ var (
 	// Example: string token = 1 [(spec.assert_invariant) = "self.ttl > 0 && self.ttl <= 86400"];
 	//
 	// optional string assert_invariant = 60053;
-	E_AssertInvariant = &file_libs_spec_proto_extTypes[116]
+	E_AssertInvariant = &file_libs_spec_proto_extTypes[117]
 	// cache marks this field for projection into the hot cache (Hazelcast).
 	// When true, this field is included in the HZ map entry.
 	// Example: string display_name = 3 [(spec.cache) = true];
 	//
 	// optional bool cache = 60054;
-	E_Cache = &file_libs_spec_proto_extTypes[117]
+	E_Cache = &file_libs_spec_proto_extTypes[118]
 	// timeseries marks this field for projection into the timeseries store.
 	// When true, this field is included in the timeseries materialized view.
 	// Example: int64 first_seen_ms = 5 [(spec.timeseries) = true];
 	//
 	// optional bool timeseries = 60055;
-	E_Timeseries = &file_libs_spec_proto_extTypes[118]
+	E_Timeseries = &file_libs_spec_proto_extTypes[119]
 	// archive marks this field for projection into cold storage (Iceberg).
 	// When true, this field is included in the Iceberg table schema.
 	// Example: bytes raw_payload = 20 [(spec.archive) = true];
 	//
 	// optional bool archive = 60056;
-	E_Archive = &file_libs_spec_proto_extTypes[119]
+	E_Archive = &file_libs_spec_proto_extTypes[120]
 	// sql declares a named SQL query.
 	// The SQL shape is fixed at build time; only parameter values are mutable.
 	// Example: string by_type = 1 [(spec.sql) =
@@ -6458,7 +6454,7 @@ var (
 	//	"SELECT * FROM Entity WHERE entity_type = :entity_type"];
 	//
 	// optional string sql = 60057;
-	E_Sql = &file_libs_spec_proto_extTypes[120]
+	E_Sql = &file_libs_spec_proto_extTypes[121]
 	// JSON key override: specifies the output key used in JSON serialization.
 	// The generated JSON helpers use this instead of the proto field name.
 	// Use when the proto field was renamed to avoid language keyword conflicts
@@ -6466,13 +6462,13 @@ var (
 	// Example: int64 reset_at = 4 [(spec.json_key) = "reset"];
 	//
 	// optional string json_key = 60061;
-	E_JsonKey = &file_libs_spec_proto_extTypes[121]
+	E_JsonKey = &file_libs_spec_proto_extTypes[122]
 	// JSON aliases: additional keys accepted during JSON deserialization.
 	// Used alongside json_key and the proto field name for flexible input parsing.
 	// Example: string callback_url = 5 [(spec.json_aliases) = "callbackUrl"];
 	//
 	// repeated string json_aliases = 60062;
-	E_JsonAliases = &file_libs_spec_proto_extTypes[122]
+	E_JsonAliases = &file_libs_spec_proto_extTypes[123]
 	// ── Graph Persistence Annotations ───────────────────────────────────────────
 	// Controls how individual fields are persisted in the graph store. Fields
 	// without this annotation are omitted entirely — graph storage is opt-in.
@@ -6486,7 +6482,7 @@ var (
 	//	map<string, string> tags = 4 [(spec.graph) = {mode: INCLUDE}];
 	//
 	// optional spec.GraphFieldOption graph = 60065;
-	E_Graph = &file_libs_spec_proto_extTypes[123]
+	E_Graph = &file_libs_spec_proto_extTypes[124]
 	// ── Timeseries Projection Annotations ────────────────────────────────────────
 	// Controls how individual fields map to timeseries columns. Fields without
 	// this annotation are omitted — timeseries projection is opt-in.
@@ -6499,27 +6495,27 @@ var (
 	//	string event_type = 3 [(spec.timeseries_column) = {low_cardinality: true}];
 	//
 	// optional spec.TimeseriesFieldOption timeseries_column = 60066;
-	E_TimeseriesColumn = &file_libs_spec_proto_extTypes[124]
+	E_TimeseriesColumn = &file_libs_spec_proto_extTypes[125]
 	// identity_namespace: this string field holds an authorization-tree namespace
 	// path; generated code normalizes it via normalize_namespace before use.
 	//
 	// optional bool identity_namespace = 60075;
-	E_IdentityNamespace = &file_libs_spec_proto_extTypes[125]
+	E_IdentityNamespace = &file_libs_spec_proto_extTypes[126]
 	// identity_subject: this string field holds a stable principal subject id
 	// (the `sub`), not a full SPIFFE URI.
 	//
 	// optional bool identity_subject = 60076;
-	E_IdentitySubject = &file_libs_spec_proto_extTypes[126]
+	E_IdentitySubject = &file_libs_spec_proto_extTypes[127]
 	// identity_spiffe_subject: this string field holds a full SUBJECT SPIFFE ID,
 	// constructed/validated via libs/spiffe (durable subject key, e.g. workload).
 	//
 	// optional bool identity_spiffe_subject = 60077;
-	E_IdentitySpiffeSubject = &file_libs_spec_proto_extTypes[127]
+	E_IdentitySpiffeSubject = &file_libs_spec_proto_extTypes[128]
 	// identity_spiffe_resource: this string field holds a RESOURCE SPIFFE ID that
 	// tacplus constructs from sibling fields; see IdentitySpiffeResource.
 	//
 	// optional spec.IdentitySpiffeResource identity_spiffe_resource = 60078;
-	E_IdentitySpiffeResource = &file_libs_spec_proto_extTypes[128]
+	E_IdentitySpiffeResource = &file_libs_spec_proto_extTypes[129]
 )
 
 // Extension fields to descriptorpb.ServiceOptions.
@@ -6529,26 +6525,26 @@ var (
 	// The gateway uses this as the service_id for backend resolution.
 	//
 	// optional string event_tag = 70012;
-	E_EventTag = &file_libs_spec_proto_extTypes[129]
+	E_EventTag = &file_libs_spec_proto_extTypes[130]
 	// service_s2s declares a service-to-service gRPC service.
 	// Only authenticated service identities can call these RPCs.
 	// Example: option (spec.service_s2s) = {auth_services: ["gateway"]};
 	//
 	// optional spec.ServiceS2SAnnotation service_s2s = 70013;
-	E_ServiceS2S = &file_libs_spec_proto_extTypes[130]
+	E_ServiceS2S = &file_libs_spec_proto_extTypes[131]
 	// service_c2s declares a client-to-service gRPC service.
 	// Exposed through the gateway to end users.
 	// Example: option (spec.service_c2s) = {auth_entitled_users: true};
 	//
 	// optional spec.ServiceC2SAnnotation service_c2s = 70014;
-	E_ServiceC2S = &file_libs_spec_proto_extTypes[131]
+	E_ServiceC2S = &file_libs_spec_proto_extTypes[132]
 	// service_c2d declares a client-to-daemon gRPC service.
 	// Served over local IPC between CLI processes and a daemon.
 	// No auth — filesystem permissions are the security boundary.
 	// Example: option (spec.service_c2d) = {};
 	//
 	// optional spec.ServiceC2DAnnotation service_c2d = 70015;
-	E_ServiceC2D = &file_libs_spec_proto_extTypes[132]
+	E_ServiceC2D = &file_libs_spec_proto_extTypes[133]
 	// token_minter explicitly marks the cluster's token mint service so the
 	// bootstrap exchanger codegen targets it by fully-qualified name instead of
 	// scanning for mint RPC signatures.
@@ -6557,21 +6553,20 @@ var (
 	//	option (spec.token_minter) = {proxy: true}; // gateway C2S front
 	//
 	// optional spec.TokenMinterAnnotation token_minter = 70016;
-	E_TokenMinter = &file_libs_spec_proto_extTypes[133]
+	E_TokenMinter = &file_libs_spec_proto_extTypes[134]
 	// smb (Service Mesh Blackbox) marks a service whose OWN INSTANCES communicate
 	// over a black-box peer protocol (e.g. Hazelcast gossip/replication) within a
-	// single cluster (SPIFFE plan D7). Because the black box's own TLS/SPIFFE
-	// handling is not trusted, this channel does NOT reuse the cluster's true ROOT
-	// CA. Each instance obtains an isolated per-SMB CA + its own member cert from
-	// the SMB CA authority (the consumer service designated by spec.smb_authority)
-	// and the instances mutually authenticate (mTLS) under that isolated root. The
-	// true ROOT CA must never enter black-box config. (Annotation lands now; the
-	// authority contract + client seam are built separately per the plan's
-	// execution note.)
-	// Example: option (spec.smb) = true;
+	// single cluster (SPIFFE plan D7). Each instance obtains a per-SMB CA + its
+	// own member cert from the SMB CA authority (the consumer service designated
+	// by spec.smb_authority). By default that per-SMB CA is isolated from the
+	// cluster root; bootstrap-constrained members may request a cluster-rooted
+	// per-SMB intermediate with root: SMB_ROOT_CLUSTER.
+	// Example: option (spec.smb) = {};
 	//
-	// optional bool smb = 70020;
-	E_Smb = &file_libs_spec_proto_extTypes[134]
+	//	option (spec.smb) = {root: SMB_ROOT_CLUSTER};
+	//
+	// optional spec.SmbAnnotation smb = 70020;
+	E_Smb = &file_libs_spec_proto_extTypes[135]
 	// smb_authority marks the consumer service that issues isolated per-SMB CAs and
 	// member certs for spec.smb services — declared EXPLICITLY (like token_minter),
 	// not inferred. tacplus targets the service carrying this annotation as the SMB
@@ -6581,7 +6576,7 @@ var (
 	// Example: option (spec.smb_authority) = {};
 	//
 	// optional spec.SmbAuthorityAnnotation smb_authority = 70021;
-	E_SmbAuthority = &file_libs_spec_proto_extTypes[135]
+	E_SmbAuthority = &file_libs_spec_proto_extTypes[136]
 )
 
 // Extension fields to descriptorpb.MethodOptions.
@@ -6591,7 +6586,7 @@ var (
 	// Example: option (spec.rest_method) = {methods: [REST_METHOD_GET]};
 	//
 	// optional spec.RestMethods rest_method = 80009;
-	E_RestMethod = &file_libs_spec_proto_extTypes[136]
+	E_RestMethod = &file_libs_spec_proto_extTypes[137]
 	// rest_path adds an additional alias REST route for this method.
 	// The path is relative to REST_ROOT_PATH (defined in gateway.proto).
 	// The convention path ({ROOT_PATH}/{package}/{MethodName}) is always
@@ -6601,41 +6596,41 @@ var (
 	//	→ adds route at /api/v1/.well-known/openid-configuration
 	//
 	// optional string rest_path = 80008;
-	E_RestPath = &file_libs_spec_proto_extTypes[137]
+	E_RestPath = &file_libs_spec_proto_extTypes[138]
 	// proof_requires declares a precondition on an RPC method.
 	// In Rust, emitted as #[kani::requires(...)].
 	// In Java, emitted as //@ requires ... (JML).
 	// Example: option (spec.proof_requires) = "!request.client_id.is_empty()";
 	//
 	// optional string proof_requires = 80010;
-	E_ProofRequires = &file_libs_spec_proto_extTypes[138]
+	E_ProofRequires = &file_libs_spec_proto_extTypes[139]
 	// proof_ensures declares a postcondition on an RPC method.
 	// In Rust, emitted as #[kani::ensures(...)].
 	// In Java, emitted as //@ ensures ... (JML).
 	// Example: option (spec.proof_ensures) = "response.token.len() > 0";
 	//
 	// optional string proof_ensures = 80011;
-	E_ProofEnsures = &file_libs_spec_proto_extTypes[139]
+	E_ProofEnsures = &file_libs_spec_proto_extTypes[140]
 	// method_s2s overrides service-level defaults for a single S2S RPC.
 	// Only valid on methods within a service_s2s service.
 	// Example: option (spec.method_s2s) = {auth_services: ["sentinel", "gateway"]};
 	// Example: option (spec.method_s2s) = {auth_disabled: true};
 	//
 	// optional spec.MethodS2SAnnotation method_s2s = 80012;
-	E_MethodS2S = &file_libs_spec_proto_extTypes[140]
+	E_MethodS2S = &file_libs_spec_proto_extTypes[141]
 	// method_c2s overrides service-level defaults for a single C2S RPC.
 	// Only valid on methods within a service_c2s service.
 	// Example: option (spec.method_c2s) = {auth_disabled: true};
 	// Example: option (spec.method_c2s) = {auth_any_user: true};
 	//
 	// optional spec.MethodC2SAnnotation method_c2s = 80013;
-	E_MethodC2S = &file_libs_spec_proto_extTypes[141]
+	E_MethodC2S = &file_libs_spec_proto_extTypes[142]
 	// method_collection marks a collection-returning read and declares its shape.
 	// Example: option (spec.method_collection) = {mode: COLLECTION_MODE_SNAPSHOT, max_items: 1000, order_by: ["created_at"]};
 	// Example: option (spec.method_collection) = {mode: COLLECTION_MODE_WATCH, order_by: ["id"]};
 	//
 	// optional spec.MethodCollection method_collection = 80014;
-	E_MethodCollection = &file_libs_spec_proto_extTypes[142]
+	E_MethodCollection = &file_libs_spec_proto_extTypes[143]
 )
 
 var File_libs_spec_proto protoreflect.FileDescriptor
@@ -6767,7 +6762,9 @@ const file_libs_spec_proto_rawDesc = "" +
 	"\x04kind\x18\x02 \x01(\tR\x04kind\x12\x19\n" +
 	"\bid_field\x18\x03 \x01(\tR\aidField\"-\n" +
 	"\x15TokenMinterAnnotation\x12\x14\n" +
-	"\x05proxy\x18\x01 \x01(\bR\x05proxy\"\x18\n" +
+	"\x05proxy\x18\x01 \x01(\bR\x05proxy\"2\n" +
+	"\rSmbAnnotation\x12!\n" +
+	"\x04root\x18\x01 \x01(\x0e2\r.spec.SmbRootR\x04root\"\x18\n" +
 	"\x16SmbAuthorityAnnotation\"_\n" +
 	"\x13MethodS2SAnnotation\x12#\n" +
 	"\rauth_services\x18\x01 \x03(\tR\fauthServices\x12#\n" +
@@ -6809,7 +6806,10 @@ const file_libs_spec_proto_rawDesc = "" +
 	"\agateway\x18\x04 \x01(\bR\agateway\x12#\n" +
 	"\rrest_dispatch\x18\x05 \x01(\bR\frestDispatch\"9\n" +
 	"\x14GrpcConfigAnnotation\x12!\n" +
-	"\fservice_name\x18\x01 \x01(\tR\vserviceName\"N\n" +
+	"\fservice_name\x18\x01 \x01(\tR\vserviceName\"h\n" +
+	"\x15ConfigSliceAnnotation\x12,\n" +
+	"\x05scope\x18\x01 \x01(\x0e2\x16.spec.ConfigSliceScopeR\x05scope\x12!\n" +
+	"\fservice_name\x18\x02 \x01(\tR\vserviceName\"N\n" +
 	"\n" +
 	"StatePerms\x12\x16\n" +
 	"\x06target\x18\x01 \x01(\tR\x06target\x12(\n" +
@@ -6917,7 +6917,10 @@ const file_libs_spec_proto_rawDesc = "" +
 	"\tGraphMode\x12\x1a\n" +
 	"\x16GRAPH_MODE_UNSPECIFIED\x10\x00\x12\x16\n" +
 	"\x12GRAPH_MODE_INCLUDE\x10\x01\x12\x18\n" +
-	"\x14GRAPH_MODE_PREDICATE\x10\x02*\x84\x01\n" +
+	"\x14GRAPH_MODE_PREDICATE\x10\x02*6\n" +
+	"\aSmbRoot\x12\x15\n" +
+	"\x11SMB_ROOT_ISOLATED\x10\x00\x12\x14\n" +
+	"\x10SMB_ROOT_CLUSTER\x10\x01*\x84\x01\n" +
 	"\x0eCollectionMode\x12\x1f\n" +
 	"\x1bCOLLECTION_MODE_UNSPECIFIED\x10\x00\x12\x1c\n" +
 	"\x18COLLECTION_MODE_SNAPSHOT\x10\x01\x12\x19\n" +
@@ -6949,68 +6952,18 @@ const file_libs_spec_proto_rawDesc = "" +
 	"TlsKeyType\x12\x15\n" +
 	"\x11TLS_KEY_TYPE_NONE\x10\x00\x12\x18\n" +
 	"\x14TLS_KEY_TYPE_ED25519\x10\x01\x12\x16\n" +
-	"\x12TLS_KEY_TYPE_ECDSA\x10\x02*\x82\x01\n" +
+	"\x12TLS_KEY_TYPE_ECDSA\x10\x02*u\n" +
+	"\x10ConfigSliceScope\x12\"\n" +
+	"\x1eCONFIG_SLICE_SCOPE_UNSPECIFIED\x10\x00\x12\x1d\n" +
+	"\x19CONFIG_SLICE_SCOPE_TENANT\x10\x01\x12\x1e\n" +
+	"\x1aCONFIG_SLICE_SCOPE_PROJECT\x10\x02*\x82\x01\n" +
 	"\n" +
 	"RestMethod\x12\x1b\n" +
 	"\x17REST_METHOD_UNSPECIFIED\x10\x00\x12\x13\n" +
 	"\x0fREST_METHOD_GET\x10\x01\x12\x15\n" +
 	"\x11REST_METHOD_PATCH\x10\x02\x12\x13\n" +
 	"\x0fREST_METHOD_PUT\x10\x03\x12\x16\n" +
-	"\x12REST_METHOD_DELETE\x10\x04*\xb6\r\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x18\n" +
-	"\x14TYPE_ID_STRING_CONST\x10\x01\x12\x15\n" +
-	"\x11TYPE_ID_INT_CONST\x10\x02\x12\x17\n" +
-	"\x13TYPE_ID_FLOAT_CONST\x10\x03\x12\x16\n" +
-	"\x12TYPE_ID_BOOL_CONST\x10\x04\x12\x18\n" +
-	"\x14TYPE_ID_DEFAULT_HOST\x10\x05\x12\x1e\n" +
-	"\x1aTYPE_ID_NUMERIC_CONSTRAINT\x10\x06\x12\x1c\n" +
-	"\x18TYPE_ID_FLOAT_CONSTRAINT\x10\a\x12\x1c\n" +
-	"\x18TYPE_ID_PARAM_MAP_CONFIG\x10\b\x12#\n" +
-	"\x1fTYPE_ID_SUBSCRIPTION_ANNOTATION\x10\t\x12$\n" +
-	" TYPE_ID_EVENT_PUBLISH_ANNOTATION\x10\n" +
-	"\x12\"\n" +
-	"\x1eTYPE_ID_EVENT_WATCH_ANNOTATION\x10\v\x12!\n" +
-	"\x1dTYPE_ID_GRAPH_TYPE_ANNOTATION\x10\f\x12\x1f\n" +
-	"\x1bTYPE_ID_EVENT_DB_ANNOTATION\x10\r\x12\x1c\n" +
-	"\x18TYPE_ID_GRAPH_PROJECTION\x10\x0e\x12\"\n" +
-	"\x1eTYPE_ID_GRAPH_PROJECTION_FIELD\x10\x0f\x12!\n" +
-	"\x1dTYPE_ID_TIMESERIES_PROJECTION\x10\x10\x12'\n" +
-	"#TYPE_ID_TIMESERIES_PROJECTION_FIELD\x10\x11\x12\x1e\n" +
-	"\x1aTYPE_ID_GRAPH_FIELD_OPTION\x10\x12\x12'\n" +
-	"#TYPE_ID_TIMESERIES_TABLE_ANNOTATION\x10\x13\x12#\n" +
-	"\x1fTYPE_ID_TIMESERIES_FIELD_OPTION\x10\x14\x12#\n" +
-	"\x1fTYPE_ID_SERVICE_S2_S_ANNOTATION\x10\x15\x12#\n" +
-	"\x1fTYPE_ID_SERVICE_C2_S_ANNOTATION\x10\x16\x12#\n" +
-	"\x1fTYPE_ID_SERVICE_C2_D_ANNOTATION\x10\x17\x12$\n" +
-	" TYPE_ID_IDENTITY_SPIFFE_RESOURCE\x10\x18\x12#\n" +
-	"\x1fTYPE_ID_TOKEN_MINTER_ANNOTATION\x10\x19\x12$\n" +
-	" TYPE_ID_SMB_AUTHORITY_ANNOTATION\x10\x1a\x12\"\n" +
-	"\x1eTYPE_ID_METHOD_S2_S_ANNOTATION\x10\x1b\x12\"\n" +
-	"\x1eTYPE_ID_METHOD_C2_S_ANNOTATION\x10\x1c\x12\x1d\n" +
-	"\x19TYPE_ID_METHOD_COLLECTION\x10\x1d\x12$\n" +
-	" TYPE_ID_SERVICE_EVENT_ANNOTATION\x10\x1e\x12#\n" +
-	"\x1fTYPE_ID_CONDITIONAL_REQUIREMENT\x10\x1f\x12\x1c\n" +
-	"\x18TYPE_ID_STATE_ANNOTATION\x10 \x12$\n" +
-	" TYPE_ID_SERVICE_STORE_ANNOTATION\x10!\x12\"\n" +
-	"\x1eTYPE_ID_GRAPH_STORE_ANNOTATION\x10\"\x12'\n" +
-	"#TYPE_ID_TIMESERIES_STORE_ANNOTATION\x10#\x12 \n" +
-	"\x1cTYPE_ID_HOT_STORE_ANNOTATION\x10$\x12!\n" +
-	"\x1dTYPE_ID_COLD_STORE_ANNOTATION\x10%\x12%\n" +
-	"!TYPE_ID_SERVICE_HEALTH_ANNOTATION\x10&\x12 \n" +
-	"\x1cTYPE_ID_V_SERVICE_ANNOTATION\x10'\x12\x1e\n" +
-	"\x1aTYPE_ID_SERVICE_ANNOTATION\x10(\x12\"\n" +
-	"\x1eTYPE_ID_GRPC_CONFIG_ANNOTATION\x10)\x12\x17\n" +
-	"\x13TYPE_ID_STATE_PERMS\x10*\x12\x18\n" +
-	"\x14TYPE_ID_STATE_IMPORT\x10+\x12\x1f\n" +
-	"\x1bTYPE_ID_OPA_EVAL_ANNOTATION\x10,\x12\x16\n" +
-	"\x12TYPE_ID_OPA_IMPORT\x10-\x12\x18\n" +
-	"\x14TYPE_ID_GRAPH_IMPORT\x10.\x12\x1d\n" +
-	"\x19TYPE_ID_TIMESERIES_IMPORT\x10/\x12\x1c\n" +
-	"\x18TYPE_ID_GRPC_S2_S_CLIENT\x100\x12\x1c\n" +
-	"\x18TYPE_ID_GRPC_C2_S_CLIENT\x101\x12\x1c\n" +
-	"\x18TYPE_ID_GRPC_W2_S_CLIENT\x102\x12\x18\n" +
-	"\x14TYPE_ID_REST_METHODS\x103:T\n" +
+	"\x12REST_METHOD_DELETE\x10\x04:T\n" +
 	"\fstring_const\x12\x1c.google.protobuf.FileOptions\x18ц\x03 \x03(\v2\x11.spec.StringConstR\vstringConst:K\n" +
 	"\tint_const\x12\x1c.google.protobuf.FileOptions\x18҆\x03 \x03(\v2\x0e.spec.IntConstR\bintConst:Q\n" +
 	"\vfloat_const\x12\x1c.google.protobuf.FileOptions\x18ӆ\x03 \x03(\v2\x10.spec.FloatConstR\n" +
@@ -7058,7 +7011,8 @@ const file_libs_spec_proto_rawDesc = "" +
 	"\rservice_store\x12\x1f.google.protobuf.MessageOptions\x18\x9e\xd5\x03 \x01(\v2\x1c.spec.ServiceStoreAnnotationR\fserviceStore:U\n" +
 	"\bopa_eval\x12\x1f.google.protobuf.MessageOptions\x18\x9f\xd5\x03 \x01(\v2\x17.spec.OpaEvalAnnotationR\aopaEval:g\n" +
 	"\x0eservice_health\x12\x1f.google.protobuf.MessageOptions\x18\xa0\xd5\x03 \x01(\v2\x1d.spec.ServiceHealthAnnotationR\rserviceHealth:O\n" +
-	"\x12per_service_config\x12\x1f.google.protobuf.MessageOptions\x18\xa4\xd5\x03 \x01(\bR\x10perServiceConfig:Q\n" +
+	"\x12per_service_config\x12\x1f.google.protobuf.MessageOptions\x18\xa4\xd5\x03 \x01(\bR\x10perServiceConfig:a\n" +
+	"\fconfig_slice\x12\x1f.google.protobuf.MessageOptions\x18\xab\xd5\x03 \x01(\v2\x1b.spec.ConfigSliceAnnotationR\vconfigSlice:Q\n" +
 	"\x13tenant_config_slice\x12\x1f.google.protobuf.MessageOptions\x18\xa5\xd5\x03 \x01(\bR\x11tenantConfigSlice:U\n" +
 	"\x15tenant_config_service\x12\x1f.google.protobuf.MessageOptions\x18\xa6\xd5\x03 \x01(\tR\x13tenantConfigService:S\n" +
 	"\x14project_config_slice\x12\x1f.google.protobuf.MessageOptions\x18\xa7\xd5\x03 \x01(\bR\x12projectConfigSlice:W\n" +
@@ -7167,8 +7121,8 @@ const file_libs_spec_proto_rawDesc = "" +
 	"serviceC2s:^\n" +
 	"\vservice_c2d\x12\x1f.google.protobuf.ServiceOptions\x18\xff\xa2\x04 \x01(\v2\x1a.spec.ServiceC2DAnnotationR\n" +
 	"serviceC2d:a\n" +
-	"\ftoken_minter\x12\x1f.google.protobuf.ServiceOptions\x18\x80\xa3\x04 \x01(\v2\x1b.spec.TokenMinterAnnotationR\vtokenMinter:3\n" +
-	"\x03smb\x12\x1f.google.protobuf.ServiceOptions\x18\x84\xa3\x04 \x01(\bR\x03smb:d\n" +
+	"\ftoken_minter\x12\x1f.google.protobuf.ServiceOptions\x18\x80\xa3\x04 \x01(\v2\x1b.spec.TokenMinterAnnotationR\vtokenMinter:H\n" +
+	"\x03smb\x12\x1f.google.protobuf.ServiceOptions\x18\x84\xa3\x04 \x01(\v2\x13.spec.SmbAnnotationR\x03smb:d\n" +
 	"\rsmb_authority\x12\x1f.google.protobuf.ServiceOptions\x18\x85\xa3\x04 \x01(\v2\x1c.spec.SmbAuthorityAnnotationR\fsmbAuthority:T\n" +
 	"\vrest_method\x12\x1e.google.protobuf.MethodOptions\x18\x89\xf1\x04 \x01(\v2\x11.spec.RestMethodsR\n" +
 	"restMethod:=\n" +
@@ -7193,8 +7147,8 @@ func file_libs_spec_proto_rawDescGZIP() []byte {
 	return file_libs_spec_proto_rawDescData
 }
 
-var file_libs_spec_proto_enumTypes = make([]protoimpl.EnumInfo, 17)
-var file_libs_spec_proto_msgTypes = make([]protoimpl.MessageInfo, 51)
+var file_libs_spec_proto_enumTypes = make([]protoimpl.EnumInfo, 18)
+var file_libs_spec_proto_msgTypes = make([]protoimpl.MessageInfo, 53)
 var file_libs_spec_proto_goTypes = []any{
 	(IpAddrTypes)(0),                      // 0: spec.IpAddrTypes
 	(EncType)(0),                          // 1: spec.EncType
@@ -7205,293 +7159,301 @@ var file_libs_spec_proto_goTypes = []any{
 	(Azp)(0),                              // 6: spec.Azp
 	(TypeKind)(0),                         // 7: spec.TypeKind
 	(GraphMode)(0),                        // 8: spec.GraphMode
-	(CollectionMode)(0),                   // 9: spec.CollectionMode
-	(ConsistencyModel)(0),                 // 10: spec.ConsistencyModel
-	(EvictionPolicy)(0),                   // 11: spec.EvictionPolicy
-	(MaxSizePolicy)(0),                    // 12: spec.MaxSizePolicy
-	(StatePermsMode)(0),                   // 13: spec.StatePermsMode
-	(TlsKeyType)(0),                       // 14: spec.TlsKeyType
-	(RestMethod)(0),                       // 15: spec.RestMethod
-	(TypeID)(0),                           // 16: spec.TypeID
-	(*StringConst)(nil),                   // 17: spec.StringConst
-	(*IntConst)(nil),                      // 18: spec.IntConst
-	(*FloatConst)(nil),                    // 19: spec.FloatConst
-	(*BoolConst)(nil),                     // 20: spec.BoolConst
-	(*DefaultHost)(nil),                   // 21: spec.DefaultHost
-	(*NumericConstraint)(nil),             // 22: spec.NumericConstraint
-	(*FloatConstraint)(nil),               // 23: spec.FloatConstraint
-	(*ParamMapConfig)(nil),                // 24: spec.ParamMapConfig
-	(*SubscriptionAnnotation)(nil),        // 25: spec.SubscriptionAnnotation
-	(*EventPublishAnnotation)(nil),        // 26: spec.EventPublishAnnotation
-	(*EventWatchAnnotation)(nil),          // 27: spec.EventWatchAnnotation
-	(*GraphTypeAnnotation)(nil),           // 28: spec.GraphTypeAnnotation
-	(*EventDbAnnotation)(nil),             // 29: spec.EventDbAnnotation
-	(*GraphProjection)(nil),               // 30: spec.GraphProjection
-	(*GraphProjectionField)(nil),          // 31: spec.GraphProjectionField
-	(*TimeseriesProjection)(nil),          // 32: spec.TimeseriesProjection
-	(*TimeseriesProjectionField)(nil),     // 33: spec.TimeseriesProjectionField
-	(*GraphFieldOption)(nil),              // 34: spec.GraphFieldOption
-	(*TimeseriesTableAnnotation)(nil),     // 35: spec.TimeseriesTableAnnotation
-	(*TimeseriesFieldOption)(nil),         // 36: spec.TimeseriesFieldOption
-	(*ServiceS2SAnnotation)(nil),          // 37: spec.ServiceS2SAnnotation
-	(*ServiceC2SAnnotation)(nil),          // 38: spec.ServiceC2SAnnotation
-	(*ServiceC2DAnnotation)(nil),          // 39: spec.ServiceC2DAnnotation
-	(*IdentitySpiffeResource)(nil),        // 40: spec.IdentitySpiffeResource
-	(*TokenMinterAnnotation)(nil),         // 41: spec.TokenMinterAnnotation
-	(*SmbAuthorityAnnotation)(nil),        // 42: spec.SmbAuthorityAnnotation
-	(*MethodS2SAnnotation)(nil),           // 43: spec.MethodS2SAnnotation
-	(*MethodC2SAnnotation)(nil),           // 44: spec.MethodC2SAnnotation
-	(*MethodCollection)(nil),              // 45: spec.MethodCollection
-	(*ServiceEventAnnotation)(nil),        // 46: spec.ServiceEventAnnotation
-	(*ConditionalRequirement)(nil),        // 47: spec.ConditionalRequirement
-	(*StateAnnotation)(nil),               // 48: spec.StateAnnotation
-	(*ServiceStoreAnnotation)(nil),        // 49: spec.ServiceStoreAnnotation
-	(*GraphStoreAnnotation)(nil),          // 50: spec.GraphStoreAnnotation
-	(*TimeseriesStoreAnnotation)(nil),     // 51: spec.TimeseriesStoreAnnotation
-	(*HotStoreAnnotation)(nil),            // 52: spec.HotStoreAnnotation
-	(*ColdStoreAnnotation)(nil),           // 53: spec.ColdStoreAnnotation
-	(*ServiceHealthAnnotation)(nil),       // 54: spec.ServiceHealthAnnotation
-	(*VServiceAnnotation)(nil),            // 55: spec.VServiceAnnotation
-	(*ServiceAnnotation)(nil),             // 56: spec.ServiceAnnotation
-	(*GrpcConfigAnnotation)(nil),          // 57: spec.GrpcConfigAnnotation
-	(*StatePerms)(nil),                    // 58: spec.StatePerms
-	(*StateImport)(nil),                   // 59: spec.StateImport
-	(*OpaEvalAnnotation)(nil),             // 60: spec.OpaEvalAnnotation
-	(*OpaImport)(nil),                     // 61: spec.OpaImport
-	(*GraphImport)(nil),                   // 62: spec.GraphImport
-	(*TimeseriesImport)(nil),              // 63: spec.TimeseriesImport
-	(*GrpcS2SClient)(nil),                 // 64: spec.GrpcS2SClient
-	(*GrpcC2SClient)(nil),                 // 65: spec.GrpcC2SClient
-	(*GrpcW2SClient)(nil),                 // 66: spec.GrpcW2SClient
-	(*RestMethods)(nil),                   // 67: spec.RestMethods
-	(*descriptorpb.FileOptions)(nil),      // 68: google.protobuf.FileOptions
-	(*descriptorpb.EnumValueOptions)(nil), // 69: google.protobuf.EnumValueOptions
-	(*descriptorpb.MessageOptions)(nil),   // 70: google.protobuf.MessageOptions
-	(*descriptorpb.FieldOptions)(nil),     // 71: google.protobuf.FieldOptions
-	(*descriptorpb.ServiceOptions)(nil),   // 72: google.protobuf.ServiceOptions
-	(*descriptorpb.MethodOptions)(nil),    // 73: google.protobuf.MethodOptions
+	(SmbRoot)(0),                          // 9: spec.SmbRoot
+	(CollectionMode)(0),                   // 10: spec.CollectionMode
+	(ConsistencyModel)(0),                 // 11: spec.ConsistencyModel
+	(EvictionPolicy)(0),                   // 12: spec.EvictionPolicy
+	(MaxSizePolicy)(0),                    // 13: spec.MaxSizePolicy
+	(StatePermsMode)(0),                   // 14: spec.StatePermsMode
+	(TlsKeyType)(0),                       // 15: spec.TlsKeyType
+	(ConfigSliceScope)(0),                 // 16: spec.ConfigSliceScope
+	(RestMethod)(0),                       // 17: spec.RestMethod
+	(*StringConst)(nil),                   // 18: spec.StringConst
+	(*IntConst)(nil),                      // 19: spec.IntConst
+	(*FloatConst)(nil),                    // 20: spec.FloatConst
+	(*BoolConst)(nil),                     // 21: spec.BoolConst
+	(*DefaultHost)(nil),                   // 22: spec.DefaultHost
+	(*NumericConstraint)(nil),             // 23: spec.NumericConstraint
+	(*FloatConstraint)(nil),               // 24: spec.FloatConstraint
+	(*ParamMapConfig)(nil),                // 25: spec.ParamMapConfig
+	(*SubscriptionAnnotation)(nil),        // 26: spec.SubscriptionAnnotation
+	(*EventPublishAnnotation)(nil),        // 27: spec.EventPublishAnnotation
+	(*EventWatchAnnotation)(nil),          // 28: spec.EventWatchAnnotation
+	(*GraphTypeAnnotation)(nil),           // 29: spec.GraphTypeAnnotation
+	(*EventDbAnnotation)(nil),             // 30: spec.EventDbAnnotation
+	(*GraphProjection)(nil),               // 31: spec.GraphProjection
+	(*GraphProjectionField)(nil),          // 32: spec.GraphProjectionField
+	(*TimeseriesProjection)(nil),          // 33: spec.TimeseriesProjection
+	(*TimeseriesProjectionField)(nil),     // 34: spec.TimeseriesProjectionField
+	(*GraphFieldOption)(nil),              // 35: spec.GraphFieldOption
+	(*TimeseriesTableAnnotation)(nil),     // 36: spec.TimeseriesTableAnnotation
+	(*TimeseriesFieldOption)(nil),         // 37: spec.TimeseriesFieldOption
+	(*ServiceS2SAnnotation)(nil),          // 38: spec.ServiceS2SAnnotation
+	(*ServiceC2SAnnotation)(nil),          // 39: spec.ServiceC2SAnnotation
+	(*ServiceC2DAnnotation)(nil),          // 40: spec.ServiceC2DAnnotation
+	(*IdentitySpiffeResource)(nil),        // 41: spec.IdentitySpiffeResource
+	(*TokenMinterAnnotation)(nil),         // 42: spec.TokenMinterAnnotation
+	(*SmbAnnotation)(nil),                 // 43: spec.SmbAnnotation
+	(*SmbAuthorityAnnotation)(nil),        // 44: spec.SmbAuthorityAnnotation
+	(*MethodS2SAnnotation)(nil),           // 45: spec.MethodS2SAnnotation
+	(*MethodC2SAnnotation)(nil),           // 46: spec.MethodC2SAnnotation
+	(*MethodCollection)(nil),              // 47: spec.MethodCollection
+	(*ServiceEventAnnotation)(nil),        // 48: spec.ServiceEventAnnotation
+	(*ConditionalRequirement)(nil),        // 49: spec.ConditionalRequirement
+	(*StateAnnotation)(nil),               // 50: spec.StateAnnotation
+	(*ServiceStoreAnnotation)(nil),        // 51: spec.ServiceStoreAnnotation
+	(*GraphStoreAnnotation)(nil),          // 52: spec.GraphStoreAnnotation
+	(*TimeseriesStoreAnnotation)(nil),     // 53: spec.TimeseriesStoreAnnotation
+	(*HotStoreAnnotation)(nil),            // 54: spec.HotStoreAnnotation
+	(*ColdStoreAnnotation)(nil),           // 55: spec.ColdStoreAnnotation
+	(*ServiceHealthAnnotation)(nil),       // 56: spec.ServiceHealthAnnotation
+	(*VServiceAnnotation)(nil),            // 57: spec.VServiceAnnotation
+	(*ServiceAnnotation)(nil),             // 58: spec.ServiceAnnotation
+	(*GrpcConfigAnnotation)(nil),          // 59: spec.GrpcConfigAnnotation
+	(*ConfigSliceAnnotation)(nil),         // 60: spec.ConfigSliceAnnotation
+	(*StatePerms)(nil),                    // 61: spec.StatePerms
+	(*StateImport)(nil),                   // 62: spec.StateImport
+	(*OpaEvalAnnotation)(nil),             // 63: spec.OpaEvalAnnotation
+	(*OpaImport)(nil),                     // 64: spec.OpaImport
+	(*GraphImport)(nil),                   // 65: spec.GraphImport
+	(*TimeseriesImport)(nil),              // 66: spec.TimeseriesImport
+	(*GrpcS2SClient)(nil),                 // 67: spec.GrpcS2SClient
+	(*GrpcC2SClient)(nil),                 // 68: spec.GrpcC2SClient
+	(*GrpcW2SClient)(nil),                 // 69: spec.GrpcW2SClient
+	(*RestMethods)(nil),                   // 70: spec.RestMethods
+	(*descriptorpb.FileOptions)(nil),      // 71: google.protobuf.FileOptions
+	(*descriptorpb.EnumValueOptions)(nil), // 72: google.protobuf.EnumValueOptions
+	(*descriptorpb.MessageOptions)(nil),   // 73: google.protobuf.MessageOptions
+	(*descriptorpb.FieldOptions)(nil),     // 74: google.protobuf.FieldOptions
+	(*descriptorpb.ServiceOptions)(nil),   // 75: google.protobuf.ServiceOptions
+	(*descriptorpb.MethodOptions)(nil),    // 76: google.protobuf.MethodOptions
 }
 var file_libs_spec_proto_depIdxs = []int32{
-	43,  // 0: spec.EventPublishAnnotation.method_s2s:type_name -> spec.MethodS2SAnnotation
-	44,  // 1: spec.EventPublishAnnotation.method_c2s:type_name -> spec.MethodC2SAnnotation
-	43,  // 2: spec.EventWatchAnnotation.method_s2s:type_name -> spec.MethodS2SAnnotation
-	44,  // 3: spec.EventWatchAnnotation.method_c2s:type_name -> spec.MethodC2SAnnotation
-	31,  // 4: spec.GraphProjection.field:type_name -> spec.GraphProjectionField
-	33,  // 5: spec.TimeseriesProjection.field:type_name -> spec.TimeseriesProjectionField
+	45,  // 0: spec.EventPublishAnnotation.method_s2s:type_name -> spec.MethodS2SAnnotation
+	46,  // 1: spec.EventPublishAnnotation.method_c2s:type_name -> spec.MethodC2SAnnotation
+	45,  // 2: spec.EventWatchAnnotation.method_s2s:type_name -> spec.MethodS2SAnnotation
+	46,  // 3: spec.EventWatchAnnotation.method_c2s:type_name -> spec.MethodC2SAnnotation
+	32,  // 4: spec.GraphProjection.field:type_name -> spec.GraphProjectionField
+	34,  // 5: spec.TimeseriesProjection.field:type_name -> spec.TimeseriesProjectionField
 	8,   // 6: spec.GraphFieldOption.mode:type_name -> spec.GraphMode
-	9,   // 7: spec.MethodCollection.mode:type_name -> spec.CollectionMode
-	14,  // 8: spec.StateAnnotation.auto_tls:type_name -> spec.TlsKeyType
-	13,  // 9: spec.StatePerms.mode:type_name -> spec.StatePermsMode
-	15,  // 10: spec.RestMethods.methods:type_name -> spec.RestMethod
-	68,  // 11: spec.string_const:extendee -> google.protobuf.FileOptions
-	68,  // 12: spec.int_const:extendee -> google.protobuf.FileOptions
-	68,  // 13: spec.float_const:extendee -> google.protobuf.FileOptions
-	68,  // 14: spec.bool_const:extendee -> google.protobuf.FileOptions
-	68,  // 15: spec.generate_user_api:extendee -> google.protobuf.FileOptions
-	68,  // 16: spec.service:extendee -> google.protobuf.FileOptions
-	68,  // 17: spec.state_imports:extendee -> google.protobuf.FileOptions
-	68,  // 18: spec.opa_import:extendee -> google.protobuf.FileOptions
-	68,  // 19: spec.graph_store:extendee -> google.protobuf.FileOptions
-	68,  // 20: spec.timeseries_store:extendee -> google.protobuf.FileOptions
-	68,  // 21: spec.graph_import:extendee -> google.protobuf.FileOptions
-	68,  // 22: spec.timeseries_import:extendee -> google.protobuf.FileOptions
-	68,  // 23: spec.grpc_s2s_client:extendee -> google.protobuf.FileOptions
-	68,  // 24: spec.grpc_c2s_client:extendee -> google.protobuf.FileOptions
-	68,  // 25: spec.grpc_w2s_client:extendee -> google.protobuf.FileOptions
-	68,  // 26: spec.all_grpc_s2s_clients:extendee -> google.protobuf.FileOptions
-	68,  // 27: spec.vservice:extendee -> google.protobuf.FileOptions
-	68,  // 28: spec.hot_store:extendee -> google.protobuf.FileOptions
-	68,  // 29: spec.cold_store:extendee -> google.protobuf.FileOptions
-	69,  // 30: spec.json_return_value:extendee -> google.protobuf.EnumValueOptions
-	70,  // 31: spec.generate_from_map:extendee -> google.protobuf.MessageOptions
-	70,  // 32: spec.service_state:extendee -> google.protobuf.MessageOptions
-	70,  // 33: spec.state_consistency:extendee -> google.protobuf.MessageOptions
-	70,  // 34: spec.state_eviction_policy:extendee -> google.protobuf.MessageOptions
-	70,  // 35: spec.state_sync_backup_count:extendee -> google.protobuf.MessageOptions
-	70,  // 36: spec.state_async_backup_count:extendee -> google.protobuf.MessageOptions
-	70,  // 37: spec.state_perms:extendee -> google.protobuf.MessageOptions
-	70,  // 38: spec.grpc_config:extendee -> google.protobuf.MessageOptions
-	70,  // 39: spec.disable_auth_message:extendee -> google.protobuf.MessageOptions
-	70,  // 40: spec.subscribe:extendee -> google.protobuf.MessageOptions
-	70,  // 41: spec.graph_type:extendee -> google.protobuf.MessageOptions
-	70,  // 42: spec.eventdb:extendee -> google.protobuf.MessageOptions
-	70,  // 43: spec.graph_projection:extendee -> google.protobuf.MessageOptions
-	70,  // 44: spec.timeseries_projection:extendee -> google.protobuf.MessageOptions
-	70,  // 45: spec.service_event:extendee -> google.protobuf.MessageOptions
-	70,  // 46: spec.timeseries_table:extendee -> google.protobuf.MessageOptions
-	70,  // 47: spec.service_store:extendee -> google.protobuf.MessageOptions
-	70,  // 48: spec.opa_eval:extendee -> google.protobuf.MessageOptions
-	70,  // 49: spec.service_health:extendee -> google.protobuf.MessageOptions
-	70,  // 50: spec.per_service_config:extendee -> google.protobuf.MessageOptions
-	70,  // 51: spec.tenant_config_slice:extendee -> google.protobuf.MessageOptions
-	70,  // 52: spec.tenant_config_service:extendee -> google.protobuf.MessageOptions
-	70,  // 53: spec.project_config_slice:extendee -> google.protobuf.MessageOptions
-	70,  // 54: spec.project_config_service:extendee -> google.protobuf.MessageOptions
-	70,  // 55: spec.event_publish:extendee -> google.protobuf.MessageOptions
-	70,  // 56: spec.event_watch:extendee -> google.protobuf.MessageOptions
-	71,  // 57: spec.assert_required:extendee -> google.protobuf.FieldOptions
-	71,  // 58: spec.assert_ipaddr_type:extendee -> google.protobuf.FieldOptions
-	71,  // 59: spec.assert_enc_type:extendee -> google.protobuf.FieldOptions
-	71,  // 60: spec.assert_net_port:extendee -> google.protobuf.FieldOptions
-	71,  // 61: spec.assert_url:extendee -> google.protobuf.FieldOptions
-	71,  // 62: spec.assert_email:extendee -> google.protobuf.FieldOptions
-	71,  // 63: spec.assert_fqdn:extendee -> google.protobuf.FieldOptions
-	71,  // 64: spec.assert_duration:extendee -> google.protobuf.FieldOptions
-	71,  // 65: spec.assert_duration_min:extendee -> google.protobuf.FieldOptions
-	71,  // 66: spec.assert_duration_max:extendee -> google.protobuf.FieldOptions
-	71,  // 67: spec.assert_listen_addr:extendee -> google.protobuf.FieldOptions
-	71,  // 68: spec.assert_base64:extendee -> google.protobuf.FieldOptions
-	71,  // 69: spec.assert_min_length:extendee -> google.protobuf.FieldOptions
-	71,  // 70: spec.assert_max_length:extendee -> google.protobuf.FieldOptions
-	71,  // 71: spec.assert_enum_defined:extendee -> google.protobuf.FieldOptions
-	71,  // 72: spec.assert_file_path:extendee -> google.protobuf.FieldOptions
-	71,  // 73: spec.assert_gt:extendee -> google.protobuf.FieldOptions
-	71,  // 74: spec.assert_ge:extendee -> google.protobuf.FieldOptions
-	71,  // 75: spec.assert_lt:extendee -> google.protobuf.FieldOptions
-	71,  // 76: spec.assert_le:extendee -> google.protobuf.FieldOptions
-	71,  // 77: spec.assert_numeric:extendee -> google.protobuf.FieldOptions
-	71,  // 78: spec.assert_float:extendee -> google.protobuf.FieldOptions
-	71,  // 79: spec.assert_semver:extendee -> google.protobuf.FieldOptions
-	71,  // 80: spec.param_key:extendee -> google.protobuf.FieldOptions
-	71,  // 81: spec.required_if_false:extendee -> google.protobuf.FieldOptions
-	71,  // 82: spec.required_if_true:extendee -> google.protobuf.FieldOptions
-	71,  // 83: spec.assert_host:extendee -> google.protobuf.FieldOptions
-	71,  // 84: spec.default_string:extendee -> google.protobuf.FieldOptions
-	71,  // 85: spec.default_int:extendee -> google.protobuf.FieldOptions
-	71,  // 86: spec.default_float:extendee -> google.protobuf.FieldOptions
-	71,  // 87: spec.default_bool:extendee -> google.protobuf.FieldOptions
-	71,  // 88: spec.default_double:extendee -> google.protobuf.FieldOptions
-	71,  // 89: spec.key:extendee -> google.protobuf.FieldOptions
-	71,  // 90: spec.required_if_eq:extendee -> google.protobuf.FieldOptions
-	71,  // 91: spec.assert_max_size:extendee -> google.protobuf.FieldOptions
-	71,  // 92: spec.assert_min_size:extendee -> google.protobuf.FieldOptions
-	71,  // 93: spec.assert_sql:extendee -> google.protobuf.FieldOptions
-	71,  // 94: spec.default_const:extendee -> google.protobuf.FieldOptions
-	71,  // 95: spec.default_host:extendee -> google.protobuf.FieldOptions
-	71,  // 96: spec.indexed:extendee -> google.protobuf.FieldOptions
-	71,  // 97: spec.index_type:extendee -> google.protobuf.FieldOptions
-	71,  // 98: spec.consistency:extendee -> google.protobuf.FieldOptions
-	71,  // 99: spec.private:extendee -> google.protobuf.FieldOptions
-	71,  // 100: spec.state_import:extendee -> google.protobuf.FieldOptions
-	71,  // 101: spec.queue:extendee -> google.protobuf.FieldOptions
-	71,  // 102: spec.priority_queue:extendee -> google.protobuf.FieldOptions
-	71,  // 103: spec.topic:extendee -> google.protobuf.FieldOptions
-	71,  // 104: spec.leader:extendee -> google.protobuf.FieldOptions
-	71,  // 105: spec.sync_backup_count:extendee -> google.protobuf.FieldOptions
-	71,  // 106: spec.async_backup_count:extendee -> google.protobuf.FieldOptions
-	71,  // 107: spec.eviction_policy:extendee -> google.protobuf.FieldOptions
-	71,  // 108: spec.eviction_max_size:extendee -> google.protobuf.FieldOptions
-	71,  // 109: spec.eviction_max_size_policy:extendee -> google.protobuf.FieldOptions
-	71,  // 110: spec.eviction_ttl_seconds:extendee -> google.protobuf.FieldOptions
-	71,  // 111: spec.eviction_max_idle_seconds:extendee -> google.protobuf.FieldOptions
-	71,  // 112: spec.epoch_expiration:extendee -> google.protobuf.FieldOptions
-	71,  // 113: spec.persistence:extendee -> google.protobuf.FieldOptions
-	71,  // 114: spec.boundary_perms:extendee -> google.protobuf.FieldOptions
-	71,  // 115: spec.refresh_on_miss:extendee -> google.protobuf.FieldOptions
-	71,  // 116: spec.command:extendee -> google.protobuf.FieldOptions
-	71,  // 117: spec.view_sources:extendee -> google.protobuf.FieldOptions
-	71,  // 118: spec.boundary_callers:extendee -> google.protobuf.FieldOptions
-	71,  // 119: spec.view_member:extendee -> google.protobuf.FieldOptions
-	71,  // 120: spec.instance_keyed:extendee -> google.protobuf.FieldOptions
-	71,  // 121: spec.store_key:extendee -> google.protobuf.FieldOptions
-	71,  // 122: spec.quorum_write:extendee -> google.protobuf.FieldOptions
-	71,  // 123: spec.collected_health:extendee -> google.protobuf.FieldOptions
-	71,  // 124: spec.graph_index:extendee -> google.protobuf.FieldOptions
-	71,  // 125: spec.projection_source:extendee -> google.protobuf.FieldOptions
-	71,  // 126: spec.graph_edge:extendee -> google.protobuf.FieldOptions
-	71,  // 127: spec.assert_invariant:extendee -> google.protobuf.FieldOptions
-	71,  // 128: spec.cache:extendee -> google.protobuf.FieldOptions
-	71,  // 129: spec.timeseries:extendee -> google.protobuf.FieldOptions
-	71,  // 130: spec.archive:extendee -> google.protobuf.FieldOptions
-	71,  // 131: spec.sql:extendee -> google.protobuf.FieldOptions
-	71,  // 132: spec.json_key:extendee -> google.protobuf.FieldOptions
-	71,  // 133: spec.json_aliases:extendee -> google.protobuf.FieldOptions
-	71,  // 134: spec.graph:extendee -> google.protobuf.FieldOptions
-	71,  // 135: spec.timeseries_column:extendee -> google.protobuf.FieldOptions
-	71,  // 136: spec.identity_namespace:extendee -> google.protobuf.FieldOptions
-	71,  // 137: spec.identity_subject:extendee -> google.protobuf.FieldOptions
-	71,  // 138: spec.identity_spiffe_subject:extendee -> google.protobuf.FieldOptions
-	71,  // 139: spec.identity_spiffe_resource:extendee -> google.protobuf.FieldOptions
-	72,  // 140: spec.event_tag:extendee -> google.protobuf.ServiceOptions
-	72,  // 141: spec.service_s2s:extendee -> google.protobuf.ServiceOptions
-	72,  // 142: spec.service_c2s:extendee -> google.protobuf.ServiceOptions
-	72,  // 143: spec.service_c2d:extendee -> google.protobuf.ServiceOptions
-	72,  // 144: spec.token_minter:extendee -> google.protobuf.ServiceOptions
-	72,  // 145: spec.smb:extendee -> google.protobuf.ServiceOptions
-	72,  // 146: spec.smb_authority:extendee -> google.protobuf.ServiceOptions
-	73,  // 147: spec.rest_method:extendee -> google.protobuf.MethodOptions
-	73,  // 148: spec.rest_path:extendee -> google.protobuf.MethodOptions
-	73,  // 149: spec.proof_requires:extendee -> google.protobuf.MethodOptions
-	73,  // 150: spec.proof_ensures:extendee -> google.protobuf.MethodOptions
-	73,  // 151: spec.method_s2s:extendee -> google.protobuf.MethodOptions
-	73,  // 152: spec.method_c2s:extendee -> google.protobuf.MethodOptions
-	73,  // 153: spec.method_collection:extendee -> google.protobuf.MethodOptions
-	17,  // 154: spec.string_const:type_name -> spec.StringConst
-	18,  // 155: spec.int_const:type_name -> spec.IntConst
-	19,  // 156: spec.float_const:type_name -> spec.FloatConst
-	20,  // 157: spec.bool_const:type_name -> spec.BoolConst
-	56,  // 158: spec.service:type_name -> spec.ServiceAnnotation
-	59,  // 159: spec.state_imports:type_name -> spec.StateImport
-	61,  // 160: spec.opa_import:type_name -> spec.OpaImport
-	50,  // 161: spec.graph_store:type_name -> spec.GraphStoreAnnotation
-	51,  // 162: spec.timeseries_store:type_name -> spec.TimeseriesStoreAnnotation
-	62,  // 163: spec.graph_import:type_name -> spec.GraphImport
-	63,  // 164: spec.timeseries_import:type_name -> spec.TimeseriesImport
-	64,  // 165: spec.grpc_s2s_client:type_name -> spec.GrpcS2SClient
-	65,  // 166: spec.grpc_c2s_client:type_name -> spec.GrpcC2SClient
-	66,  // 167: spec.grpc_w2s_client:type_name -> spec.GrpcW2SClient
-	55,  // 168: spec.vservice:type_name -> spec.VServiceAnnotation
-	52,  // 169: spec.hot_store:type_name -> spec.HotStoreAnnotation
-	53,  // 170: spec.cold_store:type_name -> spec.ColdStoreAnnotation
-	24,  // 171: spec.generate_from_map:type_name -> spec.ParamMapConfig
-	48,  // 172: spec.service_state:type_name -> spec.StateAnnotation
-	10,  // 173: spec.state_consistency:type_name -> spec.ConsistencyModel
-	11,  // 174: spec.state_eviction_policy:type_name -> spec.EvictionPolicy
-	58,  // 175: spec.state_perms:type_name -> spec.StatePerms
-	57,  // 176: spec.grpc_config:type_name -> spec.GrpcConfigAnnotation
-	25,  // 177: spec.subscribe:type_name -> spec.SubscriptionAnnotation
-	28,  // 178: spec.graph_type:type_name -> spec.GraphTypeAnnotation
-	29,  // 179: spec.eventdb:type_name -> spec.EventDbAnnotation
-	30,  // 180: spec.graph_projection:type_name -> spec.GraphProjection
-	32,  // 181: spec.timeseries_projection:type_name -> spec.TimeseriesProjection
-	46,  // 182: spec.service_event:type_name -> spec.ServiceEventAnnotation
-	35,  // 183: spec.timeseries_table:type_name -> spec.TimeseriesTableAnnotation
-	49,  // 184: spec.service_store:type_name -> spec.ServiceStoreAnnotation
-	60,  // 185: spec.opa_eval:type_name -> spec.OpaEvalAnnotation
-	54,  // 186: spec.service_health:type_name -> spec.ServiceHealthAnnotation
-	26,  // 187: spec.event_publish:type_name -> spec.EventPublishAnnotation
-	27,  // 188: spec.event_watch:type_name -> spec.EventWatchAnnotation
-	0,   // 189: spec.assert_ipaddr_type:type_name -> spec.IpAddrTypes
-	1,   // 190: spec.assert_enc_type:type_name -> spec.EncType
-	2,   // 191: spec.assert_url:type_name -> spec.UrlScheme
-	4,   // 192: spec.assert_duration:type_name -> spec.DurationType
-	5,   // 193: spec.assert_file_path:type_name -> spec.PathType
-	22,  // 194: spec.assert_numeric:type_name -> spec.NumericConstraint
-	23,  // 195: spec.assert_float:type_name -> spec.FloatConstraint
-	47,  // 196: spec.required_if_eq:type_name -> spec.ConditionalRequirement
-	3,   // 197: spec.assert_sql:type_name -> spec.SqlPermit
-	21,  // 198: spec.default_host:type_name -> spec.DefaultHost
-	10,  // 199: spec.consistency:type_name -> spec.ConsistencyModel
-	11,  // 200: spec.eviction_policy:type_name -> spec.EvictionPolicy
-	12,  // 201: spec.eviction_max_size_policy:type_name -> spec.MaxSizePolicy
-	58,  // 202: spec.boundary_perms:type_name -> spec.StatePerms
-	34,  // 203: spec.graph:type_name -> spec.GraphFieldOption
-	36,  // 204: spec.timeseries_column:type_name -> spec.TimeseriesFieldOption
-	40,  // 205: spec.identity_spiffe_resource:type_name -> spec.IdentitySpiffeResource
-	37,  // 206: spec.service_s2s:type_name -> spec.ServiceS2SAnnotation
-	38,  // 207: spec.service_c2s:type_name -> spec.ServiceC2SAnnotation
-	39,  // 208: spec.service_c2d:type_name -> spec.ServiceC2DAnnotation
-	41,  // 209: spec.token_minter:type_name -> spec.TokenMinterAnnotation
-	42,  // 210: spec.smb_authority:type_name -> spec.SmbAuthorityAnnotation
-	67,  // 211: spec.rest_method:type_name -> spec.RestMethods
-	43,  // 212: spec.method_s2s:type_name -> spec.MethodS2SAnnotation
-	44,  // 213: spec.method_c2s:type_name -> spec.MethodC2SAnnotation
-	45,  // 214: spec.method_collection:type_name -> spec.MethodCollection
-	215, // [215:215] is the sub-list for method output_type
-	215, // [215:215] is the sub-list for method input_type
-	154, // [154:215] is the sub-list for extension type_name
-	11,  // [11:154] is the sub-list for extension extendee
-	0,   // [0:11] is the sub-list for field type_name
+	9,   // 7: spec.SmbAnnotation.root:type_name -> spec.SmbRoot
+	10,  // 8: spec.MethodCollection.mode:type_name -> spec.CollectionMode
+	15,  // 9: spec.StateAnnotation.auto_tls:type_name -> spec.TlsKeyType
+	16,  // 10: spec.ConfigSliceAnnotation.scope:type_name -> spec.ConfigSliceScope
+	14,  // 11: spec.StatePerms.mode:type_name -> spec.StatePermsMode
+	17,  // 12: spec.RestMethods.methods:type_name -> spec.RestMethod
+	71,  // 13: spec.string_const:extendee -> google.protobuf.FileOptions
+	71,  // 14: spec.int_const:extendee -> google.protobuf.FileOptions
+	71,  // 15: spec.float_const:extendee -> google.protobuf.FileOptions
+	71,  // 16: spec.bool_const:extendee -> google.protobuf.FileOptions
+	71,  // 17: spec.generate_user_api:extendee -> google.protobuf.FileOptions
+	71,  // 18: spec.service:extendee -> google.protobuf.FileOptions
+	71,  // 19: spec.state_imports:extendee -> google.protobuf.FileOptions
+	71,  // 20: spec.opa_import:extendee -> google.protobuf.FileOptions
+	71,  // 21: spec.graph_store:extendee -> google.protobuf.FileOptions
+	71,  // 22: spec.timeseries_store:extendee -> google.protobuf.FileOptions
+	71,  // 23: spec.graph_import:extendee -> google.protobuf.FileOptions
+	71,  // 24: spec.timeseries_import:extendee -> google.protobuf.FileOptions
+	71,  // 25: spec.grpc_s2s_client:extendee -> google.protobuf.FileOptions
+	71,  // 26: spec.grpc_c2s_client:extendee -> google.protobuf.FileOptions
+	71,  // 27: spec.grpc_w2s_client:extendee -> google.protobuf.FileOptions
+	71,  // 28: spec.all_grpc_s2s_clients:extendee -> google.protobuf.FileOptions
+	71,  // 29: spec.vservice:extendee -> google.protobuf.FileOptions
+	71,  // 30: spec.hot_store:extendee -> google.protobuf.FileOptions
+	71,  // 31: spec.cold_store:extendee -> google.protobuf.FileOptions
+	72,  // 32: spec.json_return_value:extendee -> google.protobuf.EnumValueOptions
+	73,  // 33: spec.generate_from_map:extendee -> google.protobuf.MessageOptions
+	73,  // 34: spec.service_state:extendee -> google.protobuf.MessageOptions
+	73,  // 35: spec.state_consistency:extendee -> google.protobuf.MessageOptions
+	73,  // 36: spec.state_eviction_policy:extendee -> google.protobuf.MessageOptions
+	73,  // 37: spec.state_sync_backup_count:extendee -> google.protobuf.MessageOptions
+	73,  // 38: spec.state_async_backup_count:extendee -> google.protobuf.MessageOptions
+	73,  // 39: spec.state_perms:extendee -> google.protobuf.MessageOptions
+	73,  // 40: spec.grpc_config:extendee -> google.protobuf.MessageOptions
+	73,  // 41: spec.disable_auth_message:extendee -> google.protobuf.MessageOptions
+	73,  // 42: spec.subscribe:extendee -> google.protobuf.MessageOptions
+	73,  // 43: spec.graph_type:extendee -> google.protobuf.MessageOptions
+	73,  // 44: spec.eventdb:extendee -> google.protobuf.MessageOptions
+	73,  // 45: spec.graph_projection:extendee -> google.protobuf.MessageOptions
+	73,  // 46: spec.timeseries_projection:extendee -> google.protobuf.MessageOptions
+	73,  // 47: spec.service_event:extendee -> google.protobuf.MessageOptions
+	73,  // 48: spec.timeseries_table:extendee -> google.protobuf.MessageOptions
+	73,  // 49: spec.service_store:extendee -> google.protobuf.MessageOptions
+	73,  // 50: spec.opa_eval:extendee -> google.protobuf.MessageOptions
+	73,  // 51: spec.service_health:extendee -> google.protobuf.MessageOptions
+	73,  // 52: spec.per_service_config:extendee -> google.protobuf.MessageOptions
+	73,  // 53: spec.config_slice:extendee -> google.protobuf.MessageOptions
+	73,  // 54: spec.tenant_config_slice:extendee -> google.protobuf.MessageOptions
+	73,  // 55: spec.tenant_config_service:extendee -> google.protobuf.MessageOptions
+	73,  // 56: spec.project_config_slice:extendee -> google.protobuf.MessageOptions
+	73,  // 57: spec.project_config_service:extendee -> google.protobuf.MessageOptions
+	73,  // 58: spec.event_publish:extendee -> google.protobuf.MessageOptions
+	73,  // 59: spec.event_watch:extendee -> google.protobuf.MessageOptions
+	74,  // 60: spec.assert_required:extendee -> google.protobuf.FieldOptions
+	74,  // 61: spec.assert_ipaddr_type:extendee -> google.protobuf.FieldOptions
+	74,  // 62: spec.assert_enc_type:extendee -> google.protobuf.FieldOptions
+	74,  // 63: spec.assert_net_port:extendee -> google.protobuf.FieldOptions
+	74,  // 64: spec.assert_url:extendee -> google.protobuf.FieldOptions
+	74,  // 65: spec.assert_email:extendee -> google.protobuf.FieldOptions
+	74,  // 66: spec.assert_fqdn:extendee -> google.protobuf.FieldOptions
+	74,  // 67: spec.assert_duration:extendee -> google.protobuf.FieldOptions
+	74,  // 68: spec.assert_duration_min:extendee -> google.protobuf.FieldOptions
+	74,  // 69: spec.assert_duration_max:extendee -> google.protobuf.FieldOptions
+	74,  // 70: spec.assert_listen_addr:extendee -> google.protobuf.FieldOptions
+	74,  // 71: spec.assert_base64:extendee -> google.protobuf.FieldOptions
+	74,  // 72: spec.assert_min_length:extendee -> google.protobuf.FieldOptions
+	74,  // 73: spec.assert_max_length:extendee -> google.protobuf.FieldOptions
+	74,  // 74: spec.assert_enum_defined:extendee -> google.protobuf.FieldOptions
+	74,  // 75: spec.assert_file_path:extendee -> google.protobuf.FieldOptions
+	74,  // 76: spec.assert_gt:extendee -> google.protobuf.FieldOptions
+	74,  // 77: spec.assert_ge:extendee -> google.protobuf.FieldOptions
+	74,  // 78: spec.assert_lt:extendee -> google.protobuf.FieldOptions
+	74,  // 79: spec.assert_le:extendee -> google.protobuf.FieldOptions
+	74,  // 80: spec.assert_numeric:extendee -> google.protobuf.FieldOptions
+	74,  // 81: spec.assert_float:extendee -> google.protobuf.FieldOptions
+	74,  // 82: spec.assert_semver:extendee -> google.protobuf.FieldOptions
+	74,  // 83: spec.param_key:extendee -> google.protobuf.FieldOptions
+	74,  // 84: spec.required_if_false:extendee -> google.protobuf.FieldOptions
+	74,  // 85: spec.required_if_true:extendee -> google.protobuf.FieldOptions
+	74,  // 86: spec.assert_host:extendee -> google.protobuf.FieldOptions
+	74,  // 87: spec.default_string:extendee -> google.protobuf.FieldOptions
+	74,  // 88: spec.default_int:extendee -> google.protobuf.FieldOptions
+	74,  // 89: spec.default_float:extendee -> google.protobuf.FieldOptions
+	74,  // 90: spec.default_bool:extendee -> google.protobuf.FieldOptions
+	74,  // 91: spec.default_double:extendee -> google.protobuf.FieldOptions
+	74,  // 92: spec.key:extendee -> google.protobuf.FieldOptions
+	74,  // 93: spec.required_if_eq:extendee -> google.protobuf.FieldOptions
+	74,  // 94: spec.assert_max_size:extendee -> google.protobuf.FieldOptions
+	74,  // 95: spec.assert_min_size:extendee -> google.protobuf.FieldOptions
+	74,  // 96: spec.assert_sql:extendee -> google.protobuf.FieldOptions
+	74,  // 97: spec.default_const:extendee -> google.protobuf.FieldOptions
+	74,  // 98: spec.default_host:extendee -> google.protobuf.FieldOptions
+	74,  // 99: spec.indexed:extendee -> google.protobuf.FieldOptions
+	74,  // 100: spec.index_type:extendee -> google.protobuf.FieldOptions
+	74,  // 101: spec.consistency:extendee -> google.protobuf.FieldOptions
+	74,  // 102: spec.private:extendee -> google.protobuf.FieldOptions
+	74,  // 103: spec.state_import:extendee -> google.protobuf.FieldOptions
+	74,  // 104: spec.queue:extendee -> google.protobuf.FieldOptions
+	74,  // 105: spec.priority_queue:extendee -> google.protobuf.FieldOptions
+	74,  // 106: spec.topic:extendee -> google.protobuf.FieldOptions
+	74,  // 107: spec.leader:extendee -> google.protobuf.FieldOptions
+	74,  // 108: spec.sync_backup_count:extendee -> google.protobuf.FieldOptions
+	74,  // 109: spec.async_backup_count:extendee -> google.protobuf.FieldOptions
+	74,  // 110: spec.eviction_policy:extendee -> google.protobuf.FieldOptions
+	74,  // 111: spec.eviction_max_size:extendee -> google.protobuf.FieldOptions
+	74,  // 112: spec.eviction_max_size_policy:extendee -> google.protobuf.FieldOptions
+	74,  // 113: spec.eviction_ttl_seconds:extendee -> google.protobuf.FieldOptions
+	74,  // 114: spec.eviction_max_idle_seconds:extendee -> google.protobuf.FieldOptions
+	74,  // 115: spec.epoch_expiration:extendee -> google.protobuf.FieldOptions
+	74,  // 116: spec.persistence:extendee -> google.protobuf.FieldOptions
+	74,  // 117: spec.boundary_perms:extendee -> google.protobuf.FieldOptions
+	74,  // 118: spec.refresh_on_miss:extendee -> google.protobuf.FieldOptions
+	74,  // 119: spec.command:extendee -> google.protobuf.FieldOptions
+	74,  // 120: spec.view_sources:extendee -> google.protobuf.FieldOptions
+	74,  // 121: spec.boundary_callers:extendee -> google.protobuf.FieldOptions
+	74,  // 122: spec.view_member:extendee -> google.protobuf.FieldOptions
+	74,  // 123: spec.instance_keyed:extendee -> google.protobuf.FieldOptions
+	74,  // 124: spec.store_key:extendee -> google.protobuf.FieldOptions
+	74,  // 125: spec.quorum_write:extendee -> google.protobuf.FieldOptions
+	74,  // 126: spec.collected_health:extendee -> google.protobuf.FieldOptions
+	74,  // 127: spec.graph_index:extendee -> google.protobuf.FieldOptions
+	74,  // 128: spec.projection_source:extendee -> google.protobuf.FieldOptions
+	74,  // 129: spec.graph_edge:extendee -> google.protobuf.FieldOptions
+	74,  // 130: spec.assert_invariant:extendee -> google.protobuf.FieldOptions
+	74,  // 131: spec.cache:extendee -> google.protobuf.FieldOptions
+	74,  // 132: spec.timeseries:extendee -> google.protobuf.FieldOptions
+	74,  // 133: spec.archive:extendee -> google.protobuf.FieldOptions
+	74,  // 134: spec.sql:extendee -> google.protobuf.FieldOptions
+	74,  // 135: spec.json_key:extendee -> google.protobuf.FieldOptions
+	74,  // 136: spec.json_aliases:extendee -> google.protobuf.FieldOptions
+	74,  // 137: spec.graph:extendee -> google.protobuf.FieldOptions
+	74,  // 138: spec.timeseries_column:extendee -> google.protobuf.FieldOptions
+	74,  // 139: spec.identity_namespace:extendee -> google.protobuf.FieldOptions
+	74,  // 140: spec.identity_subject:extendee -> google.protobuf.FieldOptions
+	74,  // 141: spec.identity_spiffe_subject:extendee -> google.protobuf.FieldOptions
+	74,  // 142: spec.identity_spiffe_resource:extendee -> google.protobuf.FieldOptions
+	75,  // 143: spec.event_tag:extendee -> google.protobuf.ServiceOptions
+	75,  // 144: spec.service_s2s:extendee -> google.protobuf.ServiceOptions
+	75,  // 145: spec.service_c2s:extendee -> google.protobuf.ServiceOptions
+	75,  // 146: spec.service_c2d:extendee -> google.protobuf.ServiceOptions
+	75,  // 147: spec.token_minter:extendee -> google.protobuf.ServiceOptions
+	75,  // 148: spec.smb:extendee -> google.protobuf.ServiceOptions
+	75,  // 149: spec.smb_authority:extendee -> google.protobuf.ServiceOptions
+	76,  // 150: spec.rest_method:extendee -> google.protobuf.MethodOptions
+	76,  // 151: spec.rest_path:extendee -> google.protobuf.MethodOptions
+	76,  // 152: spec.proof_requires:extendee -> google.protobuf.MethodOptions
+	76,  // 153: spec.proof_ensures:extendee -> google.protobuf.MethodOptions
+	76,  // 154: spec.method_s2s:extendee -> google.protobuf.MethodOptions
+	76,  // 155: spec.method_c2s:extendee -> google.protobuf.MethodOptions
+	76,  // 156: spec.method_collection:extendee -> google.protobuf.MethodOptions
+	18,  // 157: spec.string_const:type_name -> spec.StringConst
+	19,  // 158: spec.int_const:type_name -> spec.IntConst
+	20,  // 159: spec.float_const:type_name -> spec.FloatConst
+	21,  // 160: spec.bool_const:type_name -> spec.BoolConst
+	58,  // 161: spec.service:type_name -> spec.ServiceAnnotation
+	62,  // 162: spec.state_imports:type_name -> spec.StateImport
+	64,  // 163: spec.opa_import:type_name -> spec.OpaImport
+	52,  // 164: spec.graph_store:type_name -> spec.GraphStoreAnnotation
+	53,  // 165: spec.timeseries_store:type_name -> spec.TimeseriesStoreAnnotation
+	65,  // 166: spec.graph_import:type_name -> spec.GraphImport
+	66,  // 167: spec.timeseries_import:type_name -> spec.TimeseriesImport
+	67,  // 168: spec.grpc_s2s_client:type_name -> spec.GrpcS2SClient
+	68,  // 169: spec.grpc_c2s_client:type_name -> spec.GrpcC2SClient
+	69,  // 170: spec.grpc_w2s_client:type_name -> spec.GrpcW2SClient
+	57,  // 171: spec.vservice:type_name -> spec.VServiceAnnotation
+	54,  // 172: spec.hot_store:type_name -> spec.HotStoreAnnotation
+	55,  // 173: spec.cold_store:type_name -> spec.ColdStoreAnnotation
+	25,  // 174: spec.generate_from_map:type_name -> spec.ParamMapConfig
+	50,  // 175: spec.service_state:type_name -> spec.StateAnnotation
+	11,  // 176: spec.state_consistency:type_name -> spec.ConsistencyModel
+	12,  // 177: spec.state_eviction_policy:type_name -> spec.EvictionPolicy
+	61,  // 178: spec.state_perms:type_name -> spec.StatePerms
+	59,  // 179: spec.grpc_config:type_name -> spec.GrpcConfigAnnotation
+	26,  // 180: spec.subscribe:type_name -> spec.SubscriptionAnnotation
+	29,  // 181: spec.graph_type:type_name -> spec.GraphTypeAnnotation
+	30,  // 182: spec.eventdb:type_name -> spec.EventDbAnnotation
+	31,  // 183: spec.graph_projection:type_name -> spec.GraphProjection
+	33,  // 184: spec.timeseries_projection:type_name -> spec.TimeseriesProjection
+	48,  // 185: spec.service_event:type_name -> spec.ServiceEventAnnotation
+	36,  // 186: spec.timeseries_table:type_name -> spec.TimeseriesTableAnnotation
+	51,  // 187: spec.service_store:type_name -> spec.ServiceStoreAnnotation
+	63,  // 188: spec.opa_eval:type_name -> spec.OpaEvalAnnotation
+	56,  // 189: spec.service_health:type_name -> spec.ServiceHealthAnnotation
+	60,  // 190: spec.config_slice:type_name -> spec.ConfigSliceAnnotation
+	27,  // 191: spec.event_publish:type_name -> spec.EventPublishAnnotation
+	28,  // 192: spec.event_watch:type_name -> spec.EventWatchAnnotation
+	0,   // 193: spec.assert_ipaddr_type:type_name -> spec.IpAddrTypes
+	1,   // 194: spec.assert_enc_type:type_name -> spec.EncType
+	2,   // 195: spec.assert_url:type_name -> spec.UrlScheme
+	4,   // 196: spec.assert_duration:type_name -> spec.DurationType
+	5,   // 197: spec.assert_file_path:type_name -> spec.PathType
+	23,  // 198: spec.assert_numeric:type_name -> spec.NumericConstraint
+	24,  // 199: spec.assert_float:type_name -> spec.FloatConstraint
+	49,  // 200: spec.required_if_eq:type_name -> spec.ConditionalRequirement
+	3,   // 201: spec.assert_sql:type_name -> spec.SqlPermit
+	22,  // 202: spec.default_host:type_name -> spec.DefaultHost
+	11,  // 203: spec.consistency:type_name -> spec.ConsistencyModel
+	12,  // 204: spec.eviction_policy:type_name -> spec.EvictionPolicy
+	13,  // 205: spec.eviction_max_size_policy:type_name -> spec.MaxSizePolicy
+	61,  // 206: spec.boundary_perms:type_name -> spec.StatePerms
+	35,  // 207: spec.graph:type_name -> spec.GraphFieldOption
+	37,  // 208: spec.timeseries_column:type_name -> spec.TimeseriesFieldOption
+	41,  // 209: spec.identity_spiffe_resource:type_name -> spec.IdentitySpiffeResource
+	38,  // 210: spec.service_s2s:type_name -> spec.ServiceS2SAnnotation
+	39,  // 211: spec.service_c2s:type_name -> spec.ServiceC2SAnnotation
+	40,  // 212: spec.service_c2d:type_name -> spec.ServiceC2DAnnotation
+	42,  // 213: spec.token_minter:type_name -> spec.TokenMinterAnnotation
+	43,  // 214: spec.smb:type_name -> spec.SmbAnnotation
+	44,  // 215: spec.smb_authority:type_name -> spec.SmbAuthorityAnnotation
+	70,  // 216: spec.rest_method:type_name -> spec.RestMethods
+	45,  // 217: spec.method_s2s:type_name -> spec.MethodS2SAnnotation
+	46,  // 218: spec.method_c2s:type_name -> spec.MethodC2SAnnotation
+	47,  // 219: spec.method_collection:type_name -> spec.MethodCollection
+	220, // [220:220] is the sub-list for method output_type
+	220, // [220:220] is the sub-list for method input_type
+	157, // [157:220] is the sub-list for extension type_name
+	13,  // [13:157] is the sub-list for extension extendee
+	0,   // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_libs_spec_proto_init() }
@@ -7506,9 +7468,9 @@ func file_libs_spec_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_spec_proto_rawDesc), len(file_libs_spec_proto_rawDesc)),
-			NumEnums:      17,
-			NumMessages:   51,
-			NumExtensions: 143,
+			NumEnums:      18,
+			NumMessages:   53,
+			NumExtensions: 144,
 			NumServices:   0,
 		},
 		GoTypes:           file_libs_spec_proto_goTypes,

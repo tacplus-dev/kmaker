@@ -43,12 +43,12 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	Mint_MintServiceToken_FullMethodName  = "/kernel.Mint/MintServiceToken"
 	Mint_MintUserToken_FullMethodName     = "/kernel.Mint/MintUserToken"
-	Mint_TokenMint_FullMethodName         = "/kernel.Mint/TokenMint"
+	Mint_MintToken_FullMethodName         = "/kernel.Mint/MintToken"
 	Mint_MintExternalToken_FullMethodName = "/kernel.Mint/MintExternalToken"
 	Mint_MintClientToken_FullMethodName   = "/kernel.Mint/MintClientToken"
-	Mint_X509Mint_FullMethodName          = "/kernel.Mint/X509Mint"
-	Mint_WorkloadMint_FullMethodName      = "/kernel.Mint/WorkloadMint"
-	Mint_WorkloadRevoke_FullMethodName    = "/kernel.Mint/WorkloadRevoke"
+	Mint_MintX509Cert_FullMethodName      = "/kernel.Mint/MintX509Cert"
+	Mint_MintWorkload_FullMethodName      = "/kernel.Mint/MintWorkload"
+	Mint_RevokeWorkload_FullMethodName    = "/kernel.Mint/RevokeWorkload"
 )
 
 // MintClient is the client API for Mint service.
@@ -83,14 +83,14 @@ type MintClient interface {
 	// identity (the broker attests the claims; kernel trusts azp). Restricted to
 	// auth brokers. Signs Ed25519.
 	MintUserToken(ctx context.Context, in *tokenrequest.MintUserTokenRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error)
-	// TokenMint — exchange (RT→AT→ST). The caller presents a kernel-signed token;
+	// MintToken — exchange (RT→AT→ST). The caller presents a kernel-signed token;
 	// kernel VERIFIES it and mints the next tier per the 3-tier rules (a refresh
 	// can't directly mint a service token, etc.). service_auds mints AT + N ST in
 	// one call. azp is preserved from the presented token onto every issued
 	// token. Signs Ed25519. This IS the real exchange (replaces the former
 	// standalone TokenExchange service).
 	// auth_disabled: the token to exchange is carried in the request body.
-	TokenMint(ctx context.Context, in *tokenrequest.TokenMintRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error)
+	MintToken(ctx context.Context, in *tokenrequest.TokenMintRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error)
 	// MintExternalToken — WIF. A proxy presents the user token plus opaque routing
 	// metadata; kernel runs OPA EvalProxyPolicy, then mints an external token
 	// (token_use = EXTERNAL, azp = proxy) carrying the policy's aud/extra_claims,
@@ -106,7 +106,7 @@ type MintClient interface {
 	// pre-tenant external clients (cavalier CLI, CI pipelines) can reach it.
 	// auth_disabled: the request body carries its own proof (no bearer header).
 	MintClientToken(ctx context.Context, in *tokenrequest.MintClientTokenRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error)
-	// X509Mint signs an X.509 certificate under a per-service intermediate CA.
+	// MintX509Cert signs an X.509 certificate under a per-service intermediate CA.
 	// Authentication via bearer token in the Authorization header or input_token
 	// in the request body (for gateway-mediated calls). auth_disabled: handler
 	// validates authentication internally — accepts both bearer tokens and
@@ -122,15 +122,15 @@ type MintClient interface {
 	//
 	// The intermediate CA is unique per service, providing per-service trust
 	// isolation — only nodes of the same service verify each other.
-	X509Mint(ctx context.Context, in *tokenrequest.X509MintRequest, opts ...grpc.CallOption) (*x509.X509CertChain, error)
-	// WorkloadMint mints a child workload identity. Caller must be authenticated
+	MintX509Cert(ctx context.Context, in *tokenrequest.X509MintRequest, opts ...grpc.CallOption) (*x509.X509CertChain, error)
+	// MintWorkload mints a child workload identity. Caller must be authenticated
 	// (bearer token). The child's SPIFFE ID is the caller's SPIFFE ID + "/" +
 	// workload_name. Kernel validates: caller is not terminal.
-	WorkloadMint(ctx context.Context, in *tokenrequest.WorkloadMintRequest, opts ...grpc.CallOption) (*tokenrequest.WorkloadMintResponse, error)
-	// WorkloadRevoke revokes a child workload's identity. Only the parent (or an
+	MintWorkload(ctx context.Context, in *tokenrequest.WorkloadMintRequest, opts ...grpc.CallOption) (*tokenrequest.WorkloadMintResponse, error)
+	// RevokeWorkload revokes a child workload's identity. Only the parent (or an
 	// ancestor in the SPIFFE path) can revoke. The revocation is recorded in
 	// WorkloadState and checked on refresh.
-	WorkloadRevoke(ctx context.Context, in *WorkloadRevokeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	RevokeWorkload(ctx context.Context, in *WorkloadRevokeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type mintClient struct {
@@ -161,10 +161,10 @@ func (c *mintClient) MintUserToken(ctx context.Context, in *tokenrequest.MintUse
 	return out, nil
 }
 
-func (c *mintClient) TokenMint(ctx context.Context, in *tokenrequest.TokenMintRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error) {
+func (c *mintClient) MintToken(ctx context.Context, in *tokenrequest.TokenMintRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(tokenrequest.TokenMintResponse)
-	err := c.cc.Invoke(ctx, Mint_TokenMint_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Mint_MintToken_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -191,30 +191,30 @@ func (c *mintClient) MintClientToken(ctx context.Context, in *tokenrequest.MintC
 	return out, nil
 }
 
-func (c *mintClient) X509Mint(ctx context.Context, in *tokenrequest.X509MintRequest, opts ...grpc.CallOption) (*x509.X509CertChain, error) {
+func (c *mintClient) MintX509Cert(ctx context.Context, in *tokenrequest.X509MintRequest, opts ...grpc.CallOption) (*x509.X509CertChain, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(x509.X509CertChain)
-	err := c.cc.Invoke(ctx, Mint_X509Mint_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Mint_MintX509Cert_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mintClient) WorkloadMint(ctx context.Context, in *tokenrequest.WorkloadMintRequest, opts ...grpc.CallOption) (*tokenrequest.WorkloadMintResponse, error) {
+func (c *mintClient) MintWorkload(ctx context.Context, in *tokenrequest.WorkloadMintRequest, opts ...grpc.CallOption) (*tokenrequest.WorkloadMintResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(tokenrequest.WorkloadMintResponse)
-	err := c.cc.Invoke(ctx, Mint_WorkloadMint_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Mint_MintWorkload_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mintClient) WorkloadRevoke(ctx context.Context, in *WorkloadRevokeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *mintClient) RevokeWorkload(ctx context.Context, in *WorkloadRevokeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Mint_WorkloadRevoke_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Mint_RevokeWorkload_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -253,14 +253,14 @@ type MintServer interface {
 	// identity (the broker attests the claims; kernel trusts azp). Restricted to
 	// auth brokers. Signs Ed25519.
 	MintUserToken(context.Context, *tokenrequest.MintUserTokenRequest) (*tokenrequest.TokenMintResponse, error)
-	// TokenMint — exchange (RT→AT→ST). The caller presents a kernel-signed token;
+	// MintToken — exchange (RT→AT→ST). The caller presents a kernel-signed token;
 	// kernel VERIFIES it and mints the next tier per the 3-tier rules (a refresh
 	// can't directly mint a service token, etc.). service_auds mints AT + N ST in
 	// one call. azp is preserved from the presented token onto every issued
 	// token. Signs Ed25519. This IS the real exchange (replaces the former
 	// standalone TokenExchange service).
 	// auth_disabled: the token to exchange is carried in the request body.
-	TokenMint(context.Context, *tokenrequest.TokenMintRequest) (*tokenrequest.TokenMintResponse, error)
+	MintToken(context.Context, *tokenrequest.TokenMintRequest) (*tokenrequest.TokenMintResponse, error)
 	// MintExternalToken — WIF. A proxy presents the user token plus opaque routing
 	// metadata; kernel runs OPA EvalProxyPolicy, then mints an external token
 	// (token_use = EXTERNAL, azp = proxy) carrying the policy's aud/extra_claims,
@@ -276,7 +276,7 @@ type MintServer interface {
 	// pre-tenant external clients (cavalier CLI, CI pipelines) can reach it.
 	// auth_disabled: the request body carries its own proof (no bearer header).
 	MintClientToken(context.Context, *tokenrequest.MintClientTokenRequest) (*tokenrequest.TokenMintResponse, error)
-	// X509Mint signs an X.509 certificate under a per-service intermediate CA.
+	// MintX509Cert signs an X.509 certificate under a per-service intermediate CA.
 	// Authentication via bearer token in the Authorization header or input_token
 	// in the request body (for gateway-mediated calls). auth_disabled: handler
 	// validates authentication internally — accepts both bearer tokens and
@@ -292,15 +292,15 @@ type MintServer interface {
 	//
 	// The intermediate CA is unique per service, providing per-service trust
 	// isolation — only nodes of the same service verify each other.
-	X509Mint(context.Context, *tokenrequest.X509MintRequest) (*x509.X509CertChain, error)
-	// WorkloadMint mints a child workload identity. Caller must be authenticated
+	MintX509Cert(context.Context, *tokenrequest.X509MintRequest) (*x509.X509CertChain, error)
+	// MintWorkload mints a child workload identity. Caller must be authenticated
 	// (bearer token). The child's SPIFFE ID is the caller's SPIFFE ID + "/" +
 	// workload_name. Kernel validates: caller is not terminal.
-	WorkloadMint(context.Context, *tokenrequest.WorkloadMintRequest) (*tokenrequest.WorkloadMintResponse, error)
-	// WorkloadRevoke revokes a child workload's identity. Only the parent (or an
+	MintWorkload(context.Context, *tokenrequest.WorkloadMintRequest) (*tokenrequest.WorkloadMintResponse, error)
+	// RevokeWorkload revokes a child workload's identity. Only the parent (or an
 	// ancestor in the SPIFFE path) can revoke. The revocation is recorded in
 	// WorkloadState and checked on refresh.
-	WorkloadRevoke(context.Context, *WorkloadRevokeRequest) (*emptypb.Empty, error)
+	RevokeWorkload(context.Context, *WorkloadRevokeRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedMintServer()
 }
 
@@ -317,8 +317,8 @@ func (UnimplementedMintServer) MintServiceToken(context.Context, *tokenrequest.M
 func (UnimplementedMintServer) MintUserToken(context.Context, *tokenrequest.MintUserTokenRequest) (*tokenrequest.TokenMintResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method MintUserToken not implemented")
 }
-func (UnimplementedMintServer) TokenMint(context.Context, *tokenrequest.TokenMintRequest) (*tokenrequest.TokenMintResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method TokenMint not implemented")
+func (UnimplementedMintServer) MintToken(context.Context, *tokenrequest.TokenMintRequest) (*tokenrequest.TokenMintResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MintToken not implemented")
 }
 func (UnimplementedMintServer) MintExternalToken(context.Context, *tokenrequest.ExternalTokenMintRequest) (*tokenrequest.ExternalTokenMintResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method MintExternalToken not implemented")
@@ -326,14 +326,14 @@ func (UnimplementedMintServer) MintExternalToken(context.Context, *tokenrequest.
 func (UnimplementedMintServer) MintClientToken(context.Context, *tokenrequest.MintClientTokenRequest) (*tokenrequest.TokenMintResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method MintClientToken not implemented")
 }
-func (UnimplementedMintServer) X509Mint(context.Context, *tokenrequest.X509MintRequest) (*x509.X509CertChain, error) {
-	return nil, status.Error(codes.Unimplemented, "method X509Mint not implemented")
+func (UnimplementedMintServer) MintX509Cert(context.Context, *tokenrequest.X509MintRequest) (*x509.X509CertChain, error) {
+	return nil, status.Error(codes.Unimplemented, "method MintX509Cert not implemented")
 }
-func (UnimplementedMintServer) WorkloadMint(context.Context, *tokenrequest.WorkloadMintRequest) (*tokenrequest.WorkloadMintResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method WorkloadMint not implemented")
+func (UnimplementedMintServer) MintWorkload(context.Context, *tokenrequest.WorkloadMintRequest) (*tokenrequest.WorkloadMintResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MintWorkload not implemented")
 }
-func (UnimplementedMintServer) WorkloadRevoke(context.Context, *WorkloadRevokeRequest) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method WorkloadRevoke not implemented")
+func (UnimplementedMintServer) RevokeWorkload(context.Context, *WorkloadRevokeRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method RevokeWorkload not implemented")
 }
 func (UnimplementedMintServer) mustEmbedUnimplementedMintServer() {}
 func (UnimplementedMintServer) testEmbeddedByValue()              {}
@@ -392,20 +392,20 @@ func _Mint_MintUserToken_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mint_TokenMint_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Mint_MintToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(tokenrequest.TokenMintRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MintServer).TokenMint(ctx, in)
+		return srv.(MintServer).MintToken(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Mint_TokenMint_FullMethodName,
+		FullMethod: Mint_MintToken_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MintServer).TokenMint(ctx, req.(*tokenrequest.TokenMintRequest))
+		return srv.(MintServer).MintToken(ctx, req.(*tokenrequest.TokenMintRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -446,56 +446,56 @@ func _Mint_MintClientToken_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mint_X509Mint_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Mint_MintX509Cert_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(tokenrequest.X509MintRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MintServer).X509Mint(ctx, in)
+		return srv.(MintServer).MintX509Cert(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Mint_X509Mint_FullMethodName,
+		FullMethod: Mint_MintX509Cert_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MintServer).X509Mint(ctx, req.(*tokenrequest.X509MintRequest))
+		return srv.(MintServer).MintX509Cert(ctx, req.(*tokenrequest.X509MintRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mint_WorkloadMint_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Mint_MintWorkload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(tokenrequest.WorkloadMintRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MintServer).WorkloadMint(ctx, in)
+		return srv.(MintServer).MintWorkload(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Mint_WorkloadMint_FullMethodName,
+		FullMethod: Mint_MintWorkload_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MintServer).WorkloadMint(ctx, req.(*tokenrequest.WorkloadMintRequest))
+		return srv.(MintServer).MintWorkload(ctx, req.(*tokenrequest.WorkloadMintRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mint_WorkloadRevoke_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Mint_RevokeWorkload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(WorkloadRevokeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MintServer).WorkloadRevoke(ctx, in)
+		return srv.(MintServer).RevokeWorkload(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Mint_WorkloadRevoke_FullMethodName,
+		FullMethod: Mint_RevokeWorkload_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MintServer).WorkloadRevoke(ctx, req.(*WorkloadRevokeRequest))
+		return srv.(MintServer).RevokeWorkload(ctx, req.(*WorkloadRevokeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -516,8 +516,8 @@ var Mint_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Mint_MintUserToken_Handler,
 		},
 		{
-			MethodName: "TokenMint",
-			Handler:    _Mint_TokenMint_Handler,
+			MethodName: "MintToken",
+			Handler:    _Mint_MintToken_Handler,
 		},
 		{
 			MethodName: "MintExternalToken",
@@ -528,16 +528,16 @@ var Mint_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Mint_MintClientToken_Handler,
 		},
 		{
-			MethodName: "X509Mint",
-			Handler:    _Mint_X509Mint_Handler,
+			MethodName: "MintX509Cert",
+			Handler:    _Mint_MintX509Cert_Handler,
 		},
 		{
-			MethodName: "WorkloadMint",
-			Handler:    _Mint_WorkloadMint_Handler,
+			MethodName: "MintWorkload",
+			Handler:    _Mint_MintWorkload_Handler,
 		},
 		{
-			MethodName: "WorkloadRevoke",
-			Handler:    _Mint_WorkloadRevoke_Handler,
+			MethodName: "RevokeWorkload",
+			Handler:    _Mint_RevokeWorkload_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -669,15 +669,15 @@ var CliTokenBroker_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	TenantAdmin_CreateTenant_FullMethodName     = "/kernel.TenantAdmin/CreateTenant"
-	TenantAdmin_DeleteTenant_FullMethodName     = "/kernel.TenantAdmin/DeleteTenant"
-	TenantAdmin_ListTenants_FullMethodName      = "/kernel.TenantAdmin/ListTenants"
-	TenantAdmin_GetTenantConfig_FullMethodName  = "/kernel.TenantAdmin/GetTenantConfig"
-	TenantAdmin_SetTenantConfig_FullMethodName  = "/kernel.TenantAdmin/SetTenantConfig"
-	TenantAdmin_GetProjectConfig_FullMethodName = "/kernel.TenantAdmin/GetProjectConfig"
-	TenantAdmin_SetProjectConfig_FullMethodName = "/kernel.TenantAdmin/SetProjectConfig"
-	TenantAdmin_ListProjects_FullMethodName     = "/kernel.TenantAdmin/ListProjects"
-	TenantAdmin_DeleteProject_FullMethodName    = "/kernel.TenantAdmin/DeleteProject"
+	TenantAdmin_CreateTenant_FullMethodName        = "/kernel.TenantAdmin/CreateTenant"
+	TenantAdmin_DeleteTenant_FullMethodName        = "/kernel.TenantAdmin/DeleteTenant"
+	TenantAdmin_ListTenants_FullMethodName         = "/kernel.TenantAdmin/ListTenants"
+	TenantAdmin_GetTenantConfig_FullMethodName     = "/kernel.TenantAdmin/GetTenantConfig"
+	TenantAdmin_UpdateTenantConfig_FullMethodName  = "/kernel.TenantAdmin/UpdateTenantConfig"
+	TenantAdmin_GetProjectConfig_FullMethodName    = "/kernel.TenantAdmin/GetProjectConfig"
+	TenantAdmin_UpdateProjectConfig_FullMethodName = "/kernel.TenantAdmin/UpdateProjectConfig"
+	TenantAdmin_ListProjects_FullMethodName        = "/kernel.TenantAdmin/ListProjects"
+	TenantAdmin_DeleteProject_FullMethodName       = "/kernel.TenantAdmin/DeleteProject"
 )
 
 // TenantAdminClient is the client API for TenantAdmin service.
@@ -708,7 +708,7 @@ type TenantAdminClient interface {
 	// GetTenantConfig returns the TenantConfig for tenant_namespace (its cred_pairs
 	// + oauth IDP + opa policy slices). Caller must be at-or-above the target.
 	GetTenantConfig(ctx context.Context, in *GetTenantConfigRequest, opts ...grpc.CallOption) (*tenant_config.TenantConfig, error)
-	// SetTenantConfig atomically replaces the whole TenantConfig for
+	// UpdateTenantConfig atomically replaces the whole TenantConfig for
 	// tenant_namespace. Caller must be at-or-above the target. cred_pair
 	// management happens here (add = include the public key; remove = omit it) —
 	// this single atomic write path is where constraints are validated:
@@ -717,14 +717,14 @@ type TenantAdminClient interface {
 	//     entitled to administer the tenant (always on);
 	//   - self-lockout guard: when acting on its own tenant, the result must
 	//     still contain the authenticating cred_pair (two-step rotation).
-	SetTenantConfig(ctx context.Context, in *SetTenantConfigRequest, opts ...grpc.CallOption) (*tenant_config.TenantConfig, error)
+	UpdateTenantConfig(ctx context.Context, in *SetTenantConfigRequest, opts ...grpc.CallOption) (*tenant_config.TenantConfig, error)
 	// GetProjectConfig returns the (currently empty) ProjectConfig for
 	// project_namespace ("/tenant/project") — its presence records existence.
 	GetProjectConfig(ctx context.Context, in *GetProjectConfigRequest, opts ...grpc.CallOption) (*ProjectConfig, error)
-	// SetProjectConfig atomically replaces the ProjectConfig for project_namespace
+	// UpdateProjectConfig atomically replaces the ProjectConfig for project_namespace
 	// (currently empty — used to create a project by establishing its existence).
 	// "/tenant/default" is auto-created empty at tenant creation.
-	SetProjectConfig(ctx context.Context, in *SetProjectConfigRequest, opts ...grpc.CallOption) (*ProjectConfig, error)
+	UpdateProjectConfig(ctx context.Context, in *SetProjectConfigRequest, opts ...grpc.CallOption) (*ProjectConfig, error)
 	// ListProjects returns the immediate project children of tenant_namespace.
 	ListProjects(ctx context.Context, in *ListProjectsRequest, opts ...grpc.CallOption) (*ListProjectsResponse, error)
 	// DeleteProject removes the project named by project_namespace and its state.
@@ -779,10 +779,10 @@ func (c *tenantAdminClient) GetTenantConfig(ctx context.Context, in *GetTenantCo
 	return out, nil
 }
 
-func (c *tenantAdminClient) SetTenantConfig(ctx context.Context, in *SetTenantConfigRequest, opts ...grpc.CallOption) (*tenant_config.TenantConfig, error) {
+func (c *tenantAdminClient) UpdateTenantConfig(ctx context.Context, in *SetTenantConfigRequest, opts ...grpc.CallOption) (*tenant_config.TenantConfig, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(tenant_config.TenantConfig)
-	err := c.cc.Invoke(ctx, TenantAdmin_SetTenantConfig_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, TenantAdmin_UpdateTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -799,10 +799,10 @@ func (c *tenantAdminClient) GetProjectConfig(ctx context.Context, in *GetProject
 	return out, nil
 }
 
-func (c *tenantAdminClient) SetProjectConfig(ctx context.Context, in *SetProjectConfigRequest, opts ...grpc.CallOption) (*ProjectConfig, error) {
+func (c *tenantAdminClient) UpdateProjectConfig(ctx context.Context, in *SetProjectConfigRequest, opts ...grpc.CallOption) (*ProjectConfig, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ProjectConfig)
-	err := c.cc.Invoke(ctx, TenantAdmin_SetProjectConfig_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, TenantAdmin_UpdateProjectConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -857,7 +857,7 @@ type TenantAdminServer interface {
 	// GetTenantConfig returns the TenantConfig for tenant_namespace (its cred_pairs
 	// + oauth IDP + opa policy slices). Caller must be at-or-above the target.
 	GetTenantConfig(context.Context, *GetTenantConfigRequest) (*tenant_config.TenantConfig, error)
-	// SetTenantConfig atomically replaces the whole TenantConfig for
+	// UpdateTenantConfig atomically replaces the whole TenantConfig for
 	// tenant_namespace. Caller must be at-or-above the target. cred_pair
 	// management happens here (add = include the public key; remove = omit it) —
 	// this single atomic write path is where constraints are validated:
@@ -866,14 +866,14 @@ type TenantAdminServer interface {
 	//     entitled to administer the tenant (always on);
 	//   - self-lockout guard: when acting on its own tenant, the result must
 	//     still contain the authenticating cred_pair (two-step rotation).
-	SetTenantConfig(context.Context, *SetTenantConfigRequest) (*tenant_config.TenantConfig, error)
+	UpdateTenantConfig(context.Context, *SetTenantConfigRequest) (*tenant_config.TenantConfig, error)
 	// GetProjectConfig returns the (currently empty) ProjectConfig for
 	// project_namespace ("/tenant/project") — its presence records existence.
 	GetProjectConfig(context.Context, *GetProjectConfigRequest) (*ProjectConfig, error)
-	// SetProjectConfig atomically replaces the ProjectConfig for project_namespace
+	// UpdateProjectConfig atomically replaces the ProjectConfig for project_namespace
 	// (currently empty — used to create a project by establishing its existence).
 	// "/tenant/default" is auto-created empty at tenant creation.
-	SetProjectConfig(context.Context, *SetProjectConfigRequest) (*ProjectConfig, error)
+	UpdateProjectConfig(context.Context, *SetProjectConfigRequest) (*ProjectConfig, error)
 	// ListProjects returns the immediate project children of tenant_namespace.
 	ListProjects(context.Context, *ListProjectsRequest) (*ListProjectsResponse, error)
 	// DeleteProject removes the project named by project_namespace and its state.
@@ -900,14 +900,14 @@ func (UnimplementedTenantAdminServer) ListTenants(context.Context, *ListTenantsR
 func (UnimplementedTenantAdminServer) GetTenantConfig(context.Context, *GetTenantConfigRequest) (*tenant_config.TenantConfig, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetTenantConfig not implemented")
 }
-func (UnimplementedTenantAdminServer) SetTenantConfig(context.Context, *SetTenantConfigRequest) (*tenant_config.TenantConfig, error) {
-	return nil, status.Error(codes.Unimplemented, "method SetTenantConfig not implemented")
+func (UnimplementedTenantAdminServer) UpdateTenantConfig(context.Context, *SetTenantConfigRequest) (*tenant_config.TenantConfig, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateTenantConfig not implemented")
 }
 func (UnimplementedTenantAdminServer) GetProjectConfig(context.Context, *GetProjectConfigRequest) (*ProjectConfig, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetProjectConfig not implemented")
 }
-func (UnimplementedTenantAdminServer) SetProjectConfig(context.Context, *SetProjectConfigRequest) (*ProjectConfig, error) {
-	return nil, status.Error(codes.Unimplemented, "method SetProjectConfig not implemented")
+func (UnimplementedTenantAdminServer) UpdateProjectConfig(context.Context, *SetProjectConfigRequest) (*ProjectConfig, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateProjectConfig not implemented")
 }
 func (UnimplementedTenantAdminServer) ListProjects(context.Context, *ListProjectsRequest) (*ListProjectsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListProjects not implemented")
@@ -1008,20 +1008,20 @@ func _TenantAdmin_GetTenantConfig_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TenantAdmin_SetTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _TenantAdmin_UpdateTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TenantAdminServer).SetTenantConfig(ctx, in)
+		return srv.(TenantAdminServer).UpdateTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TenantAdmin_SetTenantConfig_FullMethodName,
+		FullMethod: TenantAdmin_UpdateTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TenantAdminServer).SetTenantConfig(ctx, req.(*SetTenantConfigRequest))
+		return srv.(TenantAdminServer).UpdateTenantConfig(ctx, req.(*SetTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1044,20 +1044,20 @@ func _TenantAdmin_GetProjectConfig_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TenantAdmin_SetProjectConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _TenantAdmin_UpdateProjectConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetProjectConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TenantAdminServer).SetProjectConfig(ctx, in)
+		return srv.(TenantAdminServer).UpdateProjectConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TenantAdmin_SetProjectConfig_FullMethodName,
+		FullMethod: TenantAdmin_UpdateProjectConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TenantAdminServer).SetProjectConfig(ctx, req.(*SetProjectConfigRequest))
+		return srv.(TenantAdminServer).UpdateProjectConfig(ctx, req.(*SetProjectConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1122,16 +1122,16 @@ var TenantAdmin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _TenantAdmin_GetTenantConfig_Handler,
 		},
 		{
-			MethodName: "SetTenantConfig",
-			Handler:    _TenantAdmin_SetTenantConfig_Handler,
+			MethodName: "UpdateTenantConfig",
+			Handler:    _TenantAdmin_UpdateTenantConfig_Handler,
 		},
 		{
 			MethodName: "GetProjectConfig",
 			Handler:    _TenantAdmin_GetProjectConfig_Handler,
 		},
 		{
-			MethodName: "SetProjectConfig",
-			Handler:    _TenantAdmin_SetProjectConfig_Handler,
+			MethodName: "UpdateProjectConfig",
+			Handler:    _TenantAdmin_UpdateProjectConfig_Handler,
 		},
 		{
 			MethodName: "ListProjects",

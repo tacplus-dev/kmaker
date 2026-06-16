@@ -37,7 +37,7 @@ func NewHandler(cfg *pb.Config, signer *Signer, reviewer TokenReviewer) (*Handle
 	}, nil
 }
 
-func (h *Handler) SignKernelCert(ctx context.Context, _ *servicemanager.Caller, req *pb.SignKernelCertRequest) (*x509pb.X509CertChain, error) {
+func (h *Handler) MintKernelCert(ctx context.Context, _ *servicemanager.Caller, req *pb.MintKernelCertRequest) (*x509pb.X509CertChain, error) {
 	review, err := h.reviewer.ReviewToken(ctx, req.GetK8SToken(), []string{h.audience})
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "kubernetes token review failed: %v", err)
@@ -61,7 +61,7 @@ func (h *Handler) SignKernelCert(ctx context.Context, _ *servicemanager.Caller, 
 		return nil, status.Errorf(codes.PermissionDenied, "service account %s/%s is not allowed to request kernel certificates", sa.Namespace, sa.Name)
 	}
 
-	chain, err := h.signer.SignKernelCertificate(req)
+	chain, err := h.signer.MintKernelCertificate(req)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "sign kernel certificate: %v", err)
 	}

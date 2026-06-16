@@ -430,12 +430,12 @@ func (token *TokenWrapper) ServicePath() (string, error) {
 	if sub == "" {
 		return "", protoerrors.NewErrUnauthorized(nil, "service token has no sub or service_name claim")
 	}
-	if strings.HasPrefix(sub, wrapperSpiffe.Scheme+"://") {
-		path, err := wrapperSpiffe.ServicePathFromSpiffe(sub)
-		if err != nil {
-			return "", protoerrors.NewErrUnauthorized(err, "token subject is not a valid service identity")
-		}
+	path, err := wrapperSpiffe.ServicePathFromSpiffe(sub)
+	if err == nil {
 		return path, nil
+	}
+	if strings.Contains(sub, "://") {
+		return "", protoerrors.NewErrUnauthorized(err, "token subject is not a valid service identity")
 	}
 	return sub, nil
 }

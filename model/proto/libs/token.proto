@@ -226,14 +226,3 @@ message TokenRequestParams {
   // GrantType is the OAuth grant type
   optional GrantType grant_type = 12;
 }
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-enum TypeID {
-  TYPE_ID_UNSPECIFIED = 0;
-  TYPE_ID_TOKEN = 1;
-  TYPE_ID_EXCHANGE = 2;
-  TYPE_ID_TOKEN_REQUEST_PARAMS = 3;
-}

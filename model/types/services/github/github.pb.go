@@ -321,28 +321,28 @@ func (TypeID) EnumDescriptor() ([]byte, []int) {
 type ProxyRpcId int32
 
 const (
-	ProxyRpcId_PROXY_RPC_ID_UNSPECIFIED             ProxyRpcId = 0
-	ProxyRpcId_PROXY_RPC_ID_ALL_ACCESSORS           ProxyRpcId = 1
-	ProxyRpcId_PROXY_RPC_ID_ALL_MUTATORS            ProxyRpcId = 2
-	ProxyRpcId_PROXY_RPC_ID_ALL_EXECUTORS           ProxyRpcId = 3
-	ProxyRpcId_PROXY_RPC_ID_PROXY                   ProxyRpcId = 4
-	ProxyRpcId_PROXY_RPC_ID_GET_REPOSITORY          ProxyRpcId = 5
-	ProxyRpcId_PROXY_RPC_ID_LIST_ISSUES             ProxyRpcId = 6
-	ProxyRpcId_PROXY_RPC_ID_GET_ISSUE               ProxyRpcId = 7
-	ProxyRpcId_PROXY_RPC_ID_CREATE_ISSUE            ProxyRpcId = 8
-	ProxyRpcId_PROXY_RPC_ID_UPDATE_ISSUE            ProxyRpcId = 9
-	ProxyRpcId_PROXY_RPC_ID_CREATE_ISSUE_COMMENT    ProxyRpcId = 10
-	ProxyRpcId_PROXY_RPC_ID_LIST_PULL_REQUESTS      ProxyRpcId = 11
-	ProxyRpcId_PROXY_RPC_ID_GET_PULL_REQUEST        ProxyRpcId = 12
-	ProxyRpcId_PROXY_RPC_ID_CREATE_PULL_REQUEST     ProxyRpcId = 13
-	ProxyRpcId_PROXY_RPC_ID_MERGE_PULL_REQUEST      ProxyRpcId = 14
-	ProxyRpcId_PROXY_RPC_ID_LIST_PULL_REQUEST_FILES ProxyRpcId = 15
-	ProxyRpcId_PROXY_RPC_ID_GET_CONTENT             ProxyRpcId = 16
-	ProxyRpcId_PROXY_RPC_ID_CREATE_OR_UPDATE_FILE   ProxyRpcId = 17
-	ProxyRpcId_PROXY_RPC_ID_LIST_BRANCHES           ProxyRpcId = 18
-	ProxyRpcId_PROXY_RPC_ID_CREATE_BRANCH           ProxyRpcId = 19
-	ProxyRpcId_PROXY_RPC_ID_LIST_COMMITS            ProxyRpcId = 20
-	ProxyRpcId_PROXY_RPC_ID_SEARCH_CODE             ProxyRpcId = 21
+	ProxyRpcId_PROXY_RPC_ID_UNSPECIFIED              ProxyRpcId = 0
+	ProxyRpcId_PROXY_RPC_ID_ALL_ACCESSORS            ProxyRpcId = 1
+	ProxyRpcId_PROXY_RPC_ID_ALL_MUTATORS             ProxyRpcId = 2
+	ProxyRpcId_PROXY_RPC_ID_ALL_EXECUTORS            ProxyRpcId = 3
+	ProxyRpcId_PROXY_RPC_ID_PROXY                    ProxyRpcId = 4
+	ProxyRpcId_PROXY_RPC_ID_GET_REPOSITORY           ProxyRpcId = 5
+	ProxyRpcId_PROXY_RPC_ID_LIST_ISSUES              ProxyRpcId = 6
+	ProxyRpcId_PROXY_RPC_ID_GET_ISSUE                ProxyRpcId = 7
+	ProxyRpcId_PROXY_RPC_ID_CREATE_ISSUE             ProxyRpcId = 8
+	ProxyRpcId_PROXY_RPC_ID_UPDATE_ISSUE             ProxyRpcId = 9
+	ProxyRpcId_PROXY_RPC_ID_CREATE_ISSUE_COMMENT     ProxyRpcId = 10
+	ProxyRpcId_PROXY_RPC_ID_LIST_PULL_REQUESTS       ProxyRpcId = 11
+	ProxyRpcId_PROXY_RPC_ID_GET_PULL_REQUEST         ProxyRpcId = 12
+	ProxyRpcId_PROXY_RPC_ID_CREATE_PULL_REQUEST      ProxyRpcId = 13
+	ProxyRpcId_PROXY_RPC_ID_MERGE_PULL_REQUEST       ProxyRpcId = 14
+	ProxyRpcId_PROXY_RPC_ID_LIST_PULL_REQUEST_FILES  ProxyRpcId = 15
+	ProxyRpcId_PROXY_RPC_ID_GET_CONTENT              ProxyRpcId = 16
+	ProxyRpcId_PROXY_RPC_ID_CREATE_OR_UPDATE_FILE    ProxyRpcId = 17
+	ProxyRpcId_PROXY_RPC_ID_LIST_BRANCHES            ProxyRpcId = 18
+	ProxyRpcId_PROXY_RPC_ID_CREATE_BRANCH            ProxyRpcId = 19
+	ProxyRpcId_PROXY_RPC_ID_LIST_COMMITS             ProxyRpcId = 20
+	ProxyRpcId_PROXY_RPC_ID_LIST_CODE_SEARCH_RESULTS ProxyRpcId = 21
 )
 
 // Enum value maps for ProxyRpcId.
@@ -369,31 +369,31 @@ var (
 		18: "PROXY_RPC_ID_LIST_BRANCHES",
 		19: "PROXY_RPC_ID_CREATE_BRANCH",
 		20: "PROXY_RPC_ID_LIST_COMMITS",
-		21: "PROXY_RPC_ID_SEARCH_CODE",
+		21: "PROXY_RPC_ID_LIST_CODE_SEARCH_RESULTS",
 	}
 	ProxyRpcId_value = map[string]int32{
-		"PROXY_RPC_ID_UNSPECIFIED":             0,
-		"PROXY_RPC_ID_ALL_ACCESSORS":           1,
-		"PROXY_RPC_ID_ALL_MUTATORS":            2,
-		"PROXY_RPC_ID_ALL_EXECUTORS":           3,
-		"PROXY_RPC_ID_PROXY":                   4,
-		"PROXY_RPC_ID_GET_REPOSITORY":          5,
-		"PROXY_RPC_ID_LIST_ISSUES":             6,
-		"PROXY_RPC_ID_GET_ISSUE":               7,
-		"PROXY_RPC_ID_CREATE_ISSUE":            8,
-		"PROXY_RPC_ID_UPDATE_ISSUE":            9,
-		"PROXY_RPC_ID_CREATE_ISSUE_COMMENT":    10,
-		"PROXY_RPC_ID_LIST_PULL_REQUESTS":      11,
-		"PROXY_RPC_ID_GET_PULL_REQUEST":        12,
-		"PROXY_RPC_ID_CREATE_PULL_REQUEST":     13,
-		"PROXY_RPC_ID_MERGE_PULL_REQUEST":      14,
-		"PROXY_RPC_ID_LIST_PULL_REQUEST_FILES": 15,
-		"PROXY_RPC_ID_GET_CONTENT":             16,
-		"PROXY_RPC_ID_CREATE_OR_UPDATE_FILE":   17,
-		"PROXY_RPC_ID_LIST_BRANCHES":           18,
-		"PROXY_RPC_ID_CREATE_BRANCH":           19,
-		"PROXY_RPC_ID_LIST_COMMITS":            20,
-		"PROXY_RPC_ID_SEARCH_CODE":             21,
+		"PROXY_RPC_ID_UNSPECIFIED":              0,
+		"PROXY_RPC_ID_ALL_ACCESSORS":            1,
+		"PROXY_RPC_ID_ALL_MUTATORS":             2,
+		"PROXY_RPC_ID_ALL_EXECUTORS":            3,
+		"PROXY_RPC_ID_PROXY":                    4,
+		"PROXY_RPC_ID_GET_REPOSITORY":           5,
+		"PROXY_RPC_ID_LIST_ISSUES":              6,
+		"PROXY_RPC_ID_GET_ISSUE":                7,
+		"PROXY_RPC_ID_CREATE_ISSUE":             8,
+		"PROXY_RPC_ID_UPDATE_ISSUE":             9,
+		"PROXY_RPC_ID_CREATE_ISSUE_COMMENT":     10,
+		"PROXY_RPC_ID_LIST_PULL_REQUESTS":       11,
+		"PROXY_RPC_ID_GET_PULL_REQUEST":         12,
+		"PROXY_RPC_ID_CREATE_PULL_REQUEST":      13,
+		"PROXY_RPC_ID_MERGE_PULL_REQUEST":       14,
+		"PROXY_RPC_ID_LIST_PULL_REQUEST_FILES":  15,
+		"PROXY_RPC_ID_GET_CONTENT":              16,
+		"PROXY_RPC_ID_CREATE_OR_UPDATE_FILE":    17,
+		"PROXY_RPC_ID_LIST_BRANCHES":            18,
+		"PROXY_RPC_ID_CREATE_BRANCH":            19,
+		"PROXY_RPC_ID_LIST_COMMITS":             20,
+		"PROXY_RPC_ID_LIST_CODE_SEARCH_RESULTS": 21,
 	}
 )
 
@@ -6833,12 +6833,12 @@ const file_services_github_proto_rawDesc = "" +
 	"durationMs\x12*\n" +
 	"\bprovider\x18\f \x01(\tB\x0e\x90\xa7\x1d@\x8a\xa8\x1d\x06githubR\bprovider\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9b\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9d\x01\n" +
 	"\x11GithubConfigState\x120\n" +
 	"\x06config\x18\x01 \x01(\v2\x0e.github.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:#\x9a\xa8\x1d\x1b\n" +
-	"\x11GithubConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:%\x9a\xa8\x1d\x1d\n" +
+	"\x11GithubConfigState\x1a\beventbus\xa0\xa8\x1d\x02\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\x98\x01\n" +
@@ -6911,7 +6911,7 @@ const file_services_github_proto_rawDesc = "" +
 	"\x1cTYPE_ID_SEARCH_CODE_RESPONSE\x109\x12\x17\n" +
 	"\x13TYPE_ID_PROXY_EVENT\x10:\x12\x1f\n" +
 	"\x1bTYPE_ID_GITHUB_CONFIG_STATE\x10;\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10<*\xe1\x05\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x10<*\xee\x05\n" +
 	"\n" +
 	"ProxyRpcId\x12\x1c\n" +
 	"\x18PROXY_RPC_ID_UNSPECIFIED\x10\x00\x12\x1e\n" +
@@ -6935,8 +6935,8 @@ const file_services_github_proto_rawDesc = "" +
 	"\"PROXY_RPC_ID_CREATE_OR_UPDATE_FILE\x10\x11\x12\x1e\n" +
 	"\x1aPROXY_RPC_ID_LIST_BRANCHES\x10\x12\x12\x1e\n" +
 	"\x1aPROXY_RPC_ID_CREATE_BRANCH\x10\x13\x12\x1d\n" +
-	"\x19PROXY_RPC_ID_LIST_COMMITS\x10\x14\x12\x1c\n" +
-	"\x18PROXY_RPC_ID_SEARCH_CODE\x10\x15*\x8f\x03\n" +
+	"\x19PROXY_RPC_ID_LIST_COMMITS\x10\x14\x12)\n" +
+	"%PROXY_RPC_ID_LIST_CODE_SEARCH_RESULTS\x10\x15*\x8f\x03\n" +
 	"\x1dGithubConfigStateServiceRpcId\x122\n" +
 	".GITHUB_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x124\n" +
 	"0GITHUB_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x123\n" +
@@ -6944,29 +6944,31 @@ const file_services_github_proto_rawDesc = "" +
 	"0GITHUB_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x121\n" +
 	"-GITHUB_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x121\n" +
 	"-GITHUB_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x123\n" +
-	"/GITHUB_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\x87\v\n" +
+	"/GITHUB_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\x9c\f\n" +
 	"\x05Proxy\x126\n" +
 	"\x05Proxy\x12\x15.http.RawProxyRequest\x1a\x16.http.RawProxyResponse\x12L\n" +
-	"\rGetRepository\x12\x1c.github.GetRepositoryRequest\x1a\x1d.github.GetRepositoryResponse\x12C\n" +
+	"\rGetRepository\x12\x1c.github.GetRepositoryRequest\x1a\x1d.github.GetRepositoryResponse\x12a\n" +
 	"\n" +
-	"ListIssues\x12\x19.github.ListIssuesRequest\x1a\x1a.github.ListIssuesResponse\x12=\n" +
+	"ListIssues\x12\x19.github.ListIssuesRequest\x1a\x1a.github.ListIssuesResponse\"\x1c\xf2\x88'\x18\b\x01\x12\n" +
+	"updated_at\x12\x06number\x18d\x12=\n" +
 	"\bGetIssue\x12\x17.github.GetIssueRequest\x1a\x18.github.GetIssueResponse\x12F\n" +
 	"\vCreateIssue\x12\x1a.github.CreateIssueRequest\x1a\x1b.github.CreateIssueResponse\x12F\n" +
 	"\vUpdateIssue\x12\x1a.github.UpdateIssueRequest\x1a\x1b.github.UpdateIssueResponse\x12[\n" +
-	"\x12CreateIssueComment\x12!.github.CreateIssueCommentRequest\x1a\".github.CreateIssueCommentResponse\x12U\n" +
-	"\x10ListPullRequests\x12\x1f.github.ListPullRequestsRequest\x1a .github.ListPullRequestsResponse\x12O\n" +
+	"\x12CreateIssueComment\x12!.github.CreateIssueCommentRequest\x1a\".github.CreateIssueCommentResponse\x12s\n" +
+	"\x10ListPullRequests\x12\x1f.github.ListPullRequestsRequest\x1a .github.ListPullRequestsResponse\"\x1c\xf2\x88'\x18\b\x01\x12\n" +
+	"updated_at\x12\x06number\x18d\x12O\n" +
 	"\x0eGetPullRequest\x12\x1d.github.GetPullRequestRequest\x1a\x1e.github.GetPullRequestResponse\x12X\n" +
 	"\x11CreatePullRequest\x12 .github.CreatePullRequestRequest\x1a!.github.CreatePullRequestResponse\x12U\n" +
-	"\x10MergePullRequest\x12\x1f.github.MergePullRequestRequest\x1a .github.MergePullRequestResponse\x12a\n" +
-	"\x14ListPullRequestFiles\x12#.github.ListPullRequestFilesRequest\x1a$.github.ListPullRequestFilesResponse\x12C\n" +
+	"\x10MergePullRequest\x12\x1f.github.MergePullRequestRequest\x1a .github.MergePullRequestResponse\x12{\n" +
+	"\x14ListPullRequestFiles\x12#.github.ListPullRequestFilesRequest\x1a$.github.ListPullRequestFilesResponse\"\x18\xf2\x88'\x14\b\x01\x12\bfilename\x12\x03sha\x18\xb8\x17\x12C\n" +
 	"\n" +
 	"GetContent\x12\x19.github.GetContentRequest\x1a\x1a.github.GetContentResponse\x12[\n" +
-	"\x12CreateOrUpdateFile\x12!.github.CreateOrUpdateFileRequest\x1a\".github.CreateOrUpdateFileResponse\x12I\n" +
-	"\fListBranches\x12\x1b.github.ListBranchesRequest\x1a\x1c.github.ListBranchesResponse\x12I\n" +
-	"\fCreateBranch\x12\x1b.github.CreateBranchRequest\x1a\x1c.github.CreateBranchResponse\x12F\n" +
-	"\vListCommits\x12\x1a.github.ListCommitsRequest\x1a\x1b.github.ListCommitsResponse\x12C\n" +
-	"\n" +
-	"SearchCode\x12\x19.github.SearchCodeRequest\x1a\x1a.github.SearchCodeResponse\x1a\x06\xf2\x97\"\x02\x18\x012\xb5\x01\n" +
+	"\x12CreateOrUpdateFile\x12!.github.CreateOrUpdateFileRequest\x1a\".github.CreateOrUpdateFileResponse\x12Y\n" +
+	"\fListBranches\x12\x1b.github.ListBranchesRequest\x1a\x1c.github.ListBranchesResponse\"\x0e\xf2\x88'\n" +
+	"\b\x01\x12\x04name\x18d\x12I\n" +
+	"\fCreateBranch\x12\x1b.github.CreateBranchRequest\x1a\x1c.github.CreateBranchResponse\x12U\n" +
+	"\vListCommits\x12\x1a.github.ListCommitsRequest\x1a\x1b.github.ListCommitsResponse\"\r\xf2\x88'\t\b\x01\x12\x03sha\x18d\x12c\n" +
+	"\x15ListCodeSearchResults\x12\x19.github.SearchCodeRequest\x1a\x1a.github.SearchCodeResponse\"\x13\xf2\x88'\x0f\b\x01\x12\x04path\x12\x03sha\x18d\x1a\x06\xf2\x97\"\x02\x18\x012\xb5\x01\n" +
 	"\x18GithubConfigStateService\x120\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x0e.github.Config\x12+\n" +
 	"\tSetConfig\x12\x0e.github.Config\x1a\x0e.github.Config\x124\n" +
@@ -7149,7 +7151,7 @@ var file_services_github_proto_depIdxs = []int32{
 	53, // 82: github.Proxy.ListBranches:input_type -> github.ListBranchesRequest
 	55, // 83: github.Proxy.CreateBranch:input_type -> github.CreateBranchRequest
 	57, // 84: github.Proxy.ListCommits:input_type -> github.ListCommitsRequest
-	59, // 85: github.Proxy.SearchCode:input_type -> github.SearchCodeRequest
+	59, // 85: github.Proxy.ListCodeSearchResults:input_type -> github.SearchCodeRequest
 	66, // 86: github.GithubConfigStateService.GetConfig:input_type -> trace.TraceRequest
 	4,  // 87: github.GithubConfigStateService.SetConfig:input_type -> github.Config
 	66, // 88: github.GithubConfigStateService.WatchConfig:input_type -> trace.TraceRequest
@@ -7170,7 +7172,7 @@ var file_services_github_proto_depIdxs = []int32{
 	54, // 103: github.Proxy.ListBranches:output_type -> github.ListBranchesResponse
 	56, // 104: github.Proxy.CreateBranch:output_type -> github.CreateBranchResponse
 	58, // 105: github.Proxy.ListCommits:output_type -> github.ListCommitsResponse
-	60, // 106: github.Proxy.SearchCode:output_type -> github.SearchCodeResponse
+	60, // 106: github.Proxy.ListCodeSearchResults:output_type -> github.SearchCodeResponse
 	4,  // 107: github.GithubConfigStateService.GetConfig:output_type -> github.Config
 	4,  // 108: github.GithubConfigStateService.SetConfig:output_type -> github.Config
 	4,  // 109: github.GithubConfigStateService.WatchConfig:output_type -> github.Config

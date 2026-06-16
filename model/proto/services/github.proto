@@ -716,32 +716,38 @@ service Proxy {
   rpc GetRepository(GetRepositoryRequest) returns (GetRepositoryResponse);
 
   // Issues
-  rpc ListIssues(ListIssuesRequest) returns (ListIssuesResponse);
+  rpc ListIssues(ListIssuesRequest) returns (ListIssuesResponse) {
+  }
   rpc GetIssue(GetIssueRequest) returns (GetIssueResponse);
   rpc CreateIssue(CreateIssueRequest) returns (CreateIssueResponse);
   rpc UpdateIssue(UpdateIssueRequest) returns (UpdateIssueResponse);
   rpc CreateIssueComment(CreateIssueCommentRequest) returns (CreateIssueCommentResponse);
 
   // Pull Requests
-  rpc ListPullRequests(ListPullRequestsRequest) returns (ListPullRequestsResponse);
+  rpc ListPullRequests(ListPullRequestsRequest) returns (ListPullRequestsResponse) {
+  }
   rpc GetPullRequest(GetPullRequestRequest) returns (GetPullRequestResponse);
   rpc CreatePullRequest(CreatePullRequestRequest) returns (CreatePullRequestResponse);
   rpc MergePullRequest(MergePullRequestRequest) returns (MergePullRequestResponse);
-  rpc ListPullRequestFiles(ListPullRequestFilesRequest) returns (ListPullRequestFilesResponse);
+  rpc ListPullRequestFiles(ListPullRequestFilesRequest) returns (ListPullRequestFilesResponse) {
+  }
 
   // Content
   rpc GetContent(GetContentRequest) returns (GetContentResponse);
   rpc CreateOrUpdateFile(CreateOrUpdateFileRequest) returns (CreateOrUpdateFileResponse);
 
   // Branches
-  rpc ListBranches(ListBranchesRequest) returns (ListBranchesResponse);
+  rpc ListBranches(ListBranchesRequest) returns (ListBranchesResponse) {
+  }
   rpc CreateBranch(CreateBranchRequest) returns (CreateBranchResponse);
 
   // Commits
-  rpc ListCommits(ListCommitsRequest) returns (ListCommitsResponse);
+  rpc ListCommits(ListCommitsRequest) returns (ListCommitsResponse) {
+  }
 
   // Search
-  rpc SearchCode(SearchCodeRequest) returns (SearchCodeResponse);
+  rpc ListCodeSearchResults(SearchCodeRequest) returns (SearchCodeResponse) {
+  }
 }
 
 // ============================================================================
@@ -899,7 +905,7 @@ enum ProxyRpcId {
   PROXY_RPC_ID_LIST_BRANCHES = 18;
   PROXY_RPC_ID_CREATE_BRANCH = 19;
   PROXY_RPC_ID_LIST_COMMITS = 20;
-  PROXY_RPC_ID_SEARCH_CODE = 21;
+  PROXY_RPC_ID_LIST_CODE_SEARCH_RESULTS = 21;
 }
 
 enum GithubConfigStateServiceRpcId {

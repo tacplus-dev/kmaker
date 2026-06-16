@@ -98,62 +98,6 @@ func (HttpMethod) EnumDescriptor() ([]byte, []int) {
 	return file_libs_http_proto_rawDescGZIP(), []int{0}
 }
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED        TypeID = 0
-	TypeID_TYPE_ID_HTTP_HEADER        TypeID = 1
-	TypeID_TYPE_ID_RAW_PROXY_REQUEST  TypeID = 2
-	TypeID_TYPE_ID_RAW_PROXY_RESPONSE TypeID = 3
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_HTTP_HEADER",
-		2: "TYPE_ID_RAW_PROXY_REQUEST",
-		3: "TYPE_ID_RAW_PROXY_RESPONSE",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":        0,
-		"TYPE_ID_HTTP_HEADER":        1,
-		"TYPE_ID_RAW_PROXY_REQUEST":  2,
-		"TYPE_ID_RAW_PROXY_RESPONSE": 3,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_http_proto_enumTypes[1].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_http_proto_enumTypes[1]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_http_proto_rawDescGZIP(), []int{1}
-}
-
 // HttpHeader is a single HTTP header name-value pair.
 type HttpHeader struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -400,12 +344,7 @@ const file_libs_http_proto_rawDesc = "" +
 	"\x11HTTP_METHOD_PATCH\x10\x04\x1a\t\xaa\xb5\x18\x05PATCH\x12\"\n" +
 	"\x12HTTP_METHOD_DELETE\x10\x05\x1a\n" +
 	"\xaa\xb5\x18\x06DELETE\x12\x1e\n" +
-	"\x10HTTP_METHOD_HEAD\x10\x06\x1a\b\xaa\xb5\x18\x04HEAD*y\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x17\n" +
-	"\x13TYPE_ID_HTTP_HEADER\x10\x01\x12\x1d\n" +
-	"\x19TYPE_ID_RAW_PROXY_REQUEST\x10\x02\x12\x1e\n" +
-	"\x1aTYPE_ID_RAW_PROXY_RESPONSE\x10\x03BVZTgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/httpb\x06proto3"
+	"\x10HTTP_METHOD_HEAD\x10\x06\x1a\b\xaa\xb5\x18\x04HEADBVZTgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/httpb\x06proto3"
 
 var (
 	file_libs_http_proto_rawDescOnce sync.Once
@@ -419,21 +358,20 @@ func file_libs_http_proto_rawDescGZIP() []byte {
 	return file_libs_http_proto_rawDescData
 }
 
-var file_libs_http_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_libs_http_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_libs_http_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_libs_http_proto_goTypes = []any{
 	(HttpMethod)(0),          // 0: http.HttpMethod
-	(TypeID)(0),              // 1: http.TypeID
-	(*HttpHeader)(nil),       // 2: http.HttpHeader
-	(*RawProxyRequest)(nil),  // 3: http.RawProxyRequest
-	(*RawProxyResponse)(nil), // 4: http.RawProxyResponse
-	nil,                      // 5: http.RawProxyRequest.QueryParamsEntry
+	(*HttpHeader)(nil),       // 1: http.HttpHeader
+	(*RawProxyRequest)(nil),  // 2: http.RawProxyRequest
+	(*RawProxyResponse)(nil), // 3: http.RawProxyResponse
+	nil,                      // 4: http.RawProxyRequest.QueryParamsEntry
 }
 var file_libs_http_proto_depIdxs = []int32{
 	0, // 0: http.RawProxyRequest.method:type_name -> http.HttpMethod
-	5, // 1: http.RawProxyRequest.query_params:type_name -> http.RawProxyRequest.QueryParamsEntry
-	2, // 2: http.RawProxyRequest.headers:type_name -> http.HttpHeader
-	2, // 3: http.RawProxyResponse.headers:type_name -> http.HttpHeader
+	4, // 1: http.RawProxyRequest.query_params:type_name -> http.RawProxyRequest.QueryParamsEntry
+	1, // 2: http.RawProxyRequest.headers:type_name -> http.HttpHeader
+	1, // 3: http.RawProxyResponse.headers:type_name -> http.HttpHeader
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
@@ -451,7 +389,7 @@ func file_libs_http_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_http_proto_rawDesc), len(file_libs_http_proto_rawDesc)),
-			NumEnums:      2,
+			NumEnums:      1,
 			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,

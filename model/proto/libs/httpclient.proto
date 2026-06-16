@@ -96,13 +96,3 @@ message RetryConfig {
   // Network errors (connection failures, timeouts) are always retried regardless of this setting.
   repeated int32 retryable_status_codes = 5;
 }
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-enum TypeID {
-  TYPE_ID_UNSPECIFIED = 0;
-  TYPE_ID_HTTP_CLIENT_CONFIG = 1;
-  TYPE_ID_RETRY_CONFIG = 2;
-}

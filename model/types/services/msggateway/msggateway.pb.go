@@ -343,10 +343,10 @@ const (
 	TypeID_TYPE_ID_MESSAGE                        TypeID = 5
 	TypeID_TYPE_ID_EVENT                          TypeID = 6
 	TypeID_TYPE_ID_CHANNEL                        TypeID = 7
-	TypeID_TYPE_ID_REGISTER_USER_REQUEST          TypeID = 8
-	TypeID_TYPE_ID_UNREGISTER_USER_REQUEST        TypeID = 9
+	TypeID_TYPE_ID_UPDATE_VIRTUAL_USER_REQUEST    TypeID = 8
+	TypeID_TYPE_ID_DELETE_VIRTUAL_USER_REQUEST    TypeID = 9
 	TypeID_TYPE_ID_SUBSCRIBE_REQUEST              TypeID = 10
-	TypeID_TYPE_ID_UNSUBSCRIBE_REQUEST            TypeID = 11
+	TypeID_TYPE_ID_DELETE_SUBSCRIPTION_REQUEST    TypeID = 11
 	TypeID_TYPE_ID_EVENTS_REQUEST                 TypeID = 12
 	TypeID_TYPE_ID_SEND_MESSAGE_REQUEST           TypeID = 13
 	TypeID_TYPE_ID_SEND_THREAD_REPLY_REQUEST      TypeID = 14
@@ -401,10 +401,10 @@ var (
 		5:  "TYPE_ID_MESSAGE",
 		6:  "TYPE_ID_EVENT",
 		7:  "TYPE_ID_CHANNEL",
-		8:  "TYPE_ID_REGISTER_USER_REQUEST",
-		9:  "TYPE_ID_UNREGISTER_USER_REQUEST",
+		8:  "TYPE_ID_UPDATE_VIRTUAL_USER_REQUEST",
+		9:  "TYPE_ID_DELETE_VIRTUAL_USER_REQUEST",
 		10: "TYPE_ID_SUBSCRIBE_REQUEST",
-		11: "TYPE_ID_UNSUBSCRIBE_REQUEST",
+		11: "TYPE_ID_DELETE_SUBSCRIPTION_REQUEST",
 		12: "TYPE_ID_EVENTS_REQUEST",
 		13: "TYPE_ID_SEND_MESSAGE_REQUEST",
 		14: "TYPE_ID_SEND_THREAD_REPLY_REQUEST",
@@ -456,10 +456,10 @@ var (
 		"TYPE_ID_MESSAGE":                        5,
 		"TYPE_ID_EVENT":                          6,
 		"TYPE_ID_CHANNEL":                        7,
-		"TYPE_ID_REGISTER_USER_REQUEST":          8,
-		"TYPE_ID_UNREGISTER_USER_REQUEST":        9,
+		"TYPE_ID_UPDATE_VIRTUAL_USER_REQUEST":    8,
+		"TYPE_ID_DELETE_VIRTUAL_USER_REQUEST":    9,
 		"TYPE_ID_SUBSCRIBE_REQUEST":              10,
-		"TYPE_ID_UNSUBSCRIBE_REQUEST":            11,
+		"TYPE_ID_DELETE_SUBSCRIPTION_REQUEST":    11,
 		"TYPE_ID_EVENTS_REQUEST":                 12,
 		"TYPE_ID_SEND_MESSAGE_REQUEST":           13,
 		"TYPE_ID_SEND_THREAD_REPLY_REQUEST":      14,
@@ -534,22 +534,22 @@ func (TypeID) EnumDescriptor() ([]byte, []int) {
 type MessagingRpcId int32
 
 const (
-	MessagingRpcId_MESSAGING_RPC_ID_UNSPECIFIED         MessagingRpcId = 0
-	MessagingRpcId_MESSAGING_RPC_ID_ALL_ACCESSORS       MessagingRpcId = 1
-	MessagingRpcId_MESSAGING_RPC_ID_ALL_MUTATORS        MessagingRpcId = 2
-	MessagingRpcId_MESSAGING_RPC_ID_ALL_EXECUTORS       MessagingRpcId = 3
-	MessagingRpcId_MESSAGING_RPC_ID_REGISTER_USER       MessagingRpcId = 4
-	MessagingRpcId_MESSAGING_RPC_ID_UNREGISTER_USER     MessagingRpcId = 5
-	MessagingRpcId_MESSAGING_RPC_ID_SUBSCRIBE           MessagingRpcId = 6
-	MessagingRpcId_MESSAGING_RPC_ID_UNSUBSCRIBE         MessagingRpcId = 7
-	MessagingRpcId_MESSAGING_RPC_ID_EVENTS              MessagingRpcId = 8
-	MessagingRpcId_MESSAGING_RPC_ID_SEND_MESSAGE        MessagingRpcId = 9
-	MessagingRpcId_MESSAGING_RPC_ID_SEND_THREAD_REPLY   MessagingRpcId = 10
-	MessagingRpcId_MESSAGING_RPC_ID_GET_THREAD          MessagingRpcId = 11
-	MessagingRpcId_MESSAGING_RPC_ID_GET_CHANNEL_HISTORY MessagingRpcId = 12
-	MessagingRpcId_MESSAGING_RPC_ID_LIST_CHANNELS       MessagingRpcId = 13
-	MessagingRpcId_MESSAGING_RPC_ID_ADD_REACTION        MessagingRpcId = 14
-	MessagingRpcId_MESSAGING_RPC_ID_REMOVE_REACTION     MessagingRpcId = 15
+	MessagingRpcId_MESSAGING_RPC_ID_UNSPECIFIED          MessagingRpcId = 0
+	MessagingRpcId_MESSAGING_RPC_ID_ALL_ACCESSORS        MessagingRpcId = 1
+	MessagingRpcId_MESSAGING_RPC_ID_ALL_MUTATORS         MessagingRpcId = 2
+	MessagingRpcId_MESSAGING_RPC_ID_ALL_EXECUTORS        MessagingRpcId = 3
+	MessagingRpcId_MESSAGING_RPC_ID_UPDATE_VIRTUAL_USER  MessagingRpcId = 4
+	MessagingRpcId_MESSAGING_RPC_ID_DELETE_VIRTUAL_USER  MessagingRpcId = 5
+	MessagingRpcId_MESSAGING_RPC_ID_SUBSCRIBE            MessagingRpcId = 6
+	MessagingRpcId_MESSAGING_RPC_ID_DELETE_SUBSCRIPTION  MessagingRpcId = 7
+	MessagingRpcId_MESSAGING_RPC_ID_SUBSCRIBE_EVENTS     MessagingRpcId = 8
+	MessagingRpcId_MESSAGING_RPC_ID_SEND_MESSAGE         MessagingRpcId = 9
+	MessagingRpcId_MESSAGING_RPC_ID_SEND_THREAD_REPLY    MessagingRpcId = 10
+	MessagingRpcId_MESSAGING_RPC_ID_LIST_THREAD_MESSAGES MessagingRpcId = 11
+	MessagingRpcId_MESSAGING_RPC_ID_GET_CHANNEL_HISTORY  MessagingRpcId = 12
+	MessagingRpcId_MESSAGING_RPC_ID_LIST_CHANNELS        MessagingRpcId = 13
+	MessagingRpcId_MESSAGING_RPC_ID_CREATE_REACTION      MessagingRpcId = 14
+	MessagingRpcId_MESSAGING_RPC_ID_DELETE_REACTION      MessagingRpcId = 15
 )
 
 // Enum value maps for MessagingRpcId.
@@ -559,36 +559,36 @@ var (
 		1:  "MESSAGING_RPC_ID_ALL_ACCESSORS",
 		2:  "MESSAGING_RPC_ID_ALL_MUTATORS",
 		3:  "MESSAGING_RPC_ID_ALL_EXECUTORS",
-		4:  "MESSAGING_RPC_ID_REGISTER_USER",
-		5:  "MESSAGING_RPC_ID_UNREGISTER_USER",
+		4:  "MESSAGING_RPC_ID_UPDATE_VIRTUAL_USER",
+		5:  "MESSAGING_RPC_ID_DELETE_VIRTUAL_USER",
 		6:  "MESSAGING_RPC_ID_SUBSCRIBE",
-		7:  "MESSAGING_RPC_ID_UNSUBSCRIBE",
-		8:  "MESSAGING_RPC_ID_EVENTS",
+		7:  "MESSAGING_RPC_ID_DELETE_SUBSCRIPTION",
+		8:  "MESSAGING_RPC_ID_SUBSCRIBE_EVENTS",
 		9:  "MESSAGING_RPC_ID_SEND_MESSAGE",
 		10: "MESSAGING_RPC_ID_SEND_THREAD_REPLY",
-		11: "MESSAGING_RPC_ID_GET_THREAD",
+		11: "MESSAGING_RPC_ID_LIST_THREAD_MESSAGES",
 		12: "MESSAGING_RPC_ID_GET_CHANNEL_HISTORY",
 		13: "MESSAGING_RPC_ID_LIST_CHANNELS",
-		14: "MESSAGING_RPC_ID_ADD_REACTION",
-		15: "MESSAGING_RPC_ID_REMOVE_REACTION",
+		14: "MESSAGING_RPC_ID_CREATE_REACTION",
+		15: "MESSAGING_RPC_ID_DELETE_REACTION",
 	}
 	MessagingRpcId_value = map[string]int32{
-		"MESSAGING_RPC_ID_UNSPECIFIED":         0,
-		"MESSAGING_RPC_ID_ALL_ACCESSORS":       1,
-		"MESSAGING_RPC_ID_ALL_MUTATORS":        2,
-		"MESSAGING_RPC_ID_ALL_EXECUTORS":       3,
-		"MESSAGING_RPC_ID_REGISTER_USER":       4,
-		"MESSAGING_RPC_ID_UNREGISTER_USER":     5,
-		"MESSAGING_RPC_ID_SUBSCRIBE":           6,
-		"MESSAGING_RPC_ID_UNSUBSCRIBE":         7,
-		"MESSAGING_RPC_ID_EVENTS":              8,
-		"MESSAGING_RPC_ID_SEND_MESSAGE":        9,
-		"MESSAGING_RPC_ID_SEND_THREAD_REPLY":   10,
-		"MESSAGING_RPC_ID_GET_THREAD":          11,
-		"MESSAGING_RPC_ID_GET_CHANNEL_HISTORY": 12,
-		"MESSAGING_RPC_ID_LIST_CHANNELS":       13,
-		"MESSAGING_RPC_ID_ADD_REACTION":        14,
-		"MESSAGING_RPC_ID_REMOVE_REACTION":     15,
+		"MESSAGING_RPC_ID_UNSPECIFIED":          0,
+		"MESSAGING_RPC_ID_ALL_ACCESSORS":        1,
+		"MESSAGING_RPC_ID_ALL_MUTATORS":         2,
+		"MESSAGING_RPC_ID_ALL_EXECUTORS":        3,
+		"MESSAGING_RPC_ID_UPDATE_VIRTUAL_USER":  4,
+		"MESSAGING_RPC_ID_DELETE_VIRTUAL_USER":  5,
+		"MESSAGING_RPC_ID_SUBSCRIBE":            6,
+		"MESSAGING_RPC_ID_DELETE_SUBSCRIPTION":  7,
+		"MESSAGING_RPC_ID_SUBSCRIBE_EVENTS":     8,
+		"MESSAGING_RPC_ID_SEND_MESSAGE":         9,
+		"MESSAGING_RPC_ID_SEND_THREAD_REPLY":    10,
+		"MESSAGING_RPC_ID_LIST_THREAD_MESSAGES": 11,
+		"MESSAGING_RPC_ID_GET_CHANNEL_HISTORY":  12,
+		"MESSAGING_RPC_ID_LIST_CHANNELS":        13,
+		"MESSAGING_RPC_ID_CREATE_REACTION":      14,
+		"MESSAGING_RPC_ID_DELETE_REACTION":      15,
 	}
 )
 
@@ -1501,7 +1501,7 @@ func (x *Channel) GetNoop() bool {
 	return false
 }
 
-type RegisterUserRequest struct {
+type UpdateVirtualUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	User          *VirtualUser           `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -1510,20 +1510,20 @@ type RegisterUserRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RegisterUserRequest) Reset() {
-	*x = RegisterUserRequest{}
+func (x *UpdateVirtualUserRequest) Reset() {
+	*x = UpdateVirtualUserRequest{}
 	mi := &file_services_msggateway_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RegisterUserRequest) String() string {
+func (x *UpdateVirtualUserRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RegisterUserRequest) ProtoMessage() {}
+func (*UpdateVirtualUserRequest) ProtoMessage() {}
 
-func (x *RegisterUserRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateVirtualUserRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_services_msggateway_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1535,33 +1535,33 @@ func (x *RegisterUserRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RegisterUserRequest.ProtoReflect.Descriptor instead.
-func (*RegisterUserRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateVirtualUserRequest.ProtoReflect.Descriptor instead.
+func (*UpdateVirtualUserRequest) Descriptor() ([]byte, []int) {
 	return file_services_msggateway_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *RegisterUserRequest) GetUser() *VirtualUser {
+func (x *UpdateVirtualUserRequest) GetUser() *VirtualUser {
 	if x != nil {
 		return x.User
 	}
 	return nil
 }
 
-func (x *RegisterUserRequest) GetTraceId() string {
+func (x *UpdateVirtualUserRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *RegisterUserRequest) GetNoop() bool {
+func (x *UpdateVirtualUserRequest) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
 	return false
 }
 
-type UnregisterUserRequest struct {
+type DeleteVirtualUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -1570,20 +1570,20 @@ type UnregisterUserRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UnregisterUserRequest) Reset() {
-	*x = UnregisterUserRequest{}
+func (x *DeleteVirtualUserRequest) Reset() {
+	*x = DeleteVirtualUserRequest{}
 	mi := &file_services_msggateway_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UnregisterUserRequest) String() string {
+func (x *DeleteVirtualUserRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UnregisterUserRequest) ProtoMessage() {}
+func (*DeleteVirtualUserRequest) ProtoMessage() {}
 
-func (x *UnregisterUserRequest) ProtoReflect() protoreflect.Message {
+func (x *DeleteVirtualUserRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_services_msggateway_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1595,26 +1595,26 @@ func (x *UnregisterUserRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UnregisterUserRequest.ProtoReflect.Descriptor instead.
-func (*UnregisterUserRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use DeleteVirtualUserRequest.ProtoReflect.Descriptor instead.
+func (*DeleteVirtualUserRequest) Descriptor() ([]byte, []int) {
 	return file_services_msggateway_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *UnregisterUserRequest) GetUserId() string {
+func (x *DeleteVirtualUserRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
 	return ""
 }
 
-func (x *UnregisterUserRequest) GetTraceId() string {
+func (x *DeleteVirtualUserRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *UnregisterUserRequest) GetNoop() bool {
+func (x *DeleteVirtualUserRequest) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
@@ -1700,7 +1700,7 @@ func (x *SubscribeRequest) GetNoop() bool {
 	return false
 }
 
-type UnsubscribeRequest struct {
+type DeleteSubscriptionRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ChannelId     string                 `protobuf:"bytes,1,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
 	SubscriberId  string                 `protobuf:"bytes,2,opt,name=subscriber_id,json=subscriberId,proto3" json:"subscriber_id,omitempty"`
@@ -1710,20 +1710,20 @@ type UnsubscribeRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UnsubscribeRequest) Reset() {
-	*x = UnsubscribeRequest{}
+func (x *DeleteSubscriptionRequest) Reset() {
+	*x = DeleteSubscriptionRequest{}
 	mi := &file_services_msggateway_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UnsubscribeRequest) String() string {
+func (x *DeleteSubscriptionRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UnsubscribeRequest) ProtoMessage() {}
+func (*DeleteSubscriptionRequest) ProtoMessage() {}
 
-func (x *UnsubscribeRequest) ProtoReflect() protoreflect.Message {
+func (x *DeleteSubscriptionRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_services_msggateway_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1735,33 +1735,33 @@ func (x *UnsubscribeRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UnsubscribeRequest.ProtoReflect.Descriptor instead.
-func (*UnsubscribeRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use DeleteSubscriptionRequest.ProtoReflect.Descriptor instead.
+func (*DeleteSubscriptionRequest) Descriptor() ([]byte, []int) {
 	return file_services_msggateway_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *UnsubscribeRequest) GetChannelId() string {
+func (x *DeleteSubscriptionRequest) GetChannelId() string {
 	if x != nil {
 		return x.ChannelId
 	}
 	return ""
 }
 
-func (x *UnsubscribeRequest) GetSubscriberId() string {
+func (x *DeleteSubscriptionRequest) GetSubscriberId() string {
 	if x != nil {
 		return x.SubscriberId
 	}
 	return ""
 }
 
-func (x *UnsubscribeRequest) GetTraceId() string {
+func (x *DeleteSubscriptionRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
 	}
 	return ""
 }
 
-func (x *UnsubscribeRequest) GetNoop() bool {
+func (x *DeleteSubscriptionRequest) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
@@ -4559,12 +4559,12 @@ const file_services_msggateway_proto_rawDesc = "" +
 	"\apurpose\x18\x04 \x01(\tB\x05\x90\xa7\x1d\x80\bR\apurpose\x12'\n" +
 	"\fmember_count\x18\x05 \x01(\x05B\x04\xb0\xa7\x1d\x00R\vmemberCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"y\n" +
-	"\x13RegisterUserRequest\x121\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"~\n" +
+	"\x18UpdateVirtualUserRequest\x121\n" +
 	"\x04user\x18\x01 \x01(\v2\x17.msggateway.VirtualUserB\x04\x88\xa6\x1d\x01R\x04user\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"l\n" +
-	"\x15UnregisterUserRequest\x12\"\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"o\n" +
+	"\x18DeleteVirtualUserRequest\x12\"\n" +
 	"\auser_id\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x01R\x06userId\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xda\x01\n" +
@@ -4575,8 +4575,8 @@ const file_services_msggateway_proto_rawDesc = "" +
 	"\vevent_types\x18\x03 \x03(\x0e2\x15.msggateway.EventTypeB\x04\xb8\xa8\x1d\x10R\n" +
 	"eventTypes\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9e\x01\n" +
-	"\x12UnsubscribeRequest\x12'\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa5\x01\n" +
+	"\x19DeleteSubscriptionRequest\x12'\n" +
 	"\n" +
 	"channel_id\x18\x01 \x01(\tB\b\x88\xa6\x1d\x01\x90\xa7\x1d@R\tchannelId\x12.\n" +
 	"\rsubscriber_id\x18\x02 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x01R\fsubscriberId\x12\x1a\n" +
@@ -4644,12 +4644,12 @@ const file_services_msggateway_proto_rawDesc = "" +
 	"message_ts\x18\x02 \x01(\tB\b\x88\xa6\x1d\x01\x90\xa7\x1d@R\tmessageTs\x12\x1e\n" +
 	"\x05emoji\x18\x03 \x01(\tB\b\x88\xa6\x1d\x01\x90\xa7\x1d@R\x05emoji\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa7\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa9\x01\n" +
 	"\x15MsggatewayConfigState\x124\n" +
 	"\x06config\x18\x01 \x01(\v2\x12.msggateway.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:'\x9a\xa8\x1d\x1f\n" +
-	"\x15MsggatewayConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\"\xd0\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:)\x9a\xa8\x1d!\n" +
+	"\x15MsggatewayConfigState\x1a\beventbus\xa0\xa8\x1d\x02\"\xd0\x01\n" +
 	"\n" +
 	"QueryValue\x12#\n" +
 	"\fstring_value\x18\x01 \x01(\tH\x00R\vstringValue\x12\x1d\n" +
@@ -4829,7 +4829,7 @@ const file_services_msggateway_proto_rawDesc = "" +
 	"\tLogicalOp\x12\x1a\n" +
 	"\x16LOGICAL_OP_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eLOGICAL_OP_AND\x10\x01\x12\x11\n" +
-	"\rLOGICAL_OP_OR\x10\x02*\xc8\x0e\n" +
+	"\rLOGICAL_OP_OR\x10\x02*\xda\x0e\n" +
 	"\x06TypeID\x12\x17\n" +
 	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eTYPE_ID_CONFIG\x10\x01\x12\x18\n" +
@@ -4838,12 +4838,12 @@ const file_services_msggateway_proto_rawDesc = "" +
 	"\x15TYPE_ID_GATEWAY_STATE\x10\x04\x12\x13\n" +
 	"\x0fTYPE_ID_MESSAGE\x10\x05\x12\x11\n" +
 	"\rTYPE_ID_EVENT\x10\x06\x12\x13\n" +
-	"\x0fTYPE_ID_CHANNEL\x10\a\x12!\n" +
-	"\x1dTYPE_ID_REGISTER_USER_REQUEST\x10\b\x12#\n" +
-	"\x1fTYPE_ID_UNREGISTER_USER_REQUEST\x10\t\x12\x1d\n" +
+	"\x0fTYPE_ID_CHANNEL\x10\a\x12'\n" +
+	"#TYPE_ID_UPDATE_VIRTUAL_USER_REQUEST\x10\b\x12'\n" +
+	"#TYPE_ID_DELETE_VIRTUAL_USER_REQUEST\x10\t\x12\x1d\n" +
 	"\x19TYPE_ID_SUBSCRIBE_REQUEST\x10\n" +
-	"\x12\x1f\n" +
-	"\x1bTYPE_ID_UNSUBSCRIBE_REQUEST\x10\v\x12\x1a\n" +
+	"\x12'\n" +
+	"#TYPE_ID_DELETE_SUBSCRIPTION_REQUEST\x10\v\x12\x1a\n" +
 	"\x16TYPE_ID_EVENTS_REQUEST\x10\f\x12 \n" +
 	"\x1cTYPE_ID_SEND_MESSAGE_REQUEST\x10\r\x12%\n" +
 	"!TYPE_ID_SEND_THREAD_REPLY_REQUEST\x10\x0e\x12!\n" +
@@ -4884,25 +4884,25 @@ const file_services_msggateway_proto_rawDesc = "" +
 	"#TYPE_ID_SUBSCRIPTIONS_SIZE_RESPONSE\x101\x12'\n" +
 	"#TYPE_ID_SUBSCRIPTIONS_QUERY_REQUEST\x102\x12(\n" +
 	"$TYPE_ID_SUBSCRIPTIONS_QUERY_RESPONSE\x103\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x104*\xc9\x04\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x104*\xf2\x04\n" +
 	"\x0eMessagingRpcId\x12 \n" +
 	"\x1cMESSAGING_RPC_ID_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1eMESSAGING_RPC_ID_ALL_ACCESSORS\x10\x01\x12!\n" +
 	"\x1dMESSAGING_RPC_ID_ALL_MUTATORS\x10\x02\x12\"\n" +
-	"\x1eMESSAGING_RPC_ID_ALL_EXECUTORS\x10\x03\x12\"\n" +
-	"\x1eMESSAGING_RPC_ID_REGISTER_USER\x10\x04\x12$\n" +
-	" MESSAGING_RPC_ID_UNREGISTER_USER\x10\x05\x12\x1e\n" +
-	"\x1aMESSAGING_RPC_ID_SUBSCRIBE\x10\x06\x12 \n" +
-	"\x1cMESSAGING_RPC_ID_UNSUBSCRIBE\x10\a\x12\x1b\n" +
-	"\x17MESSAGING_RPC_ID_EVENTS\x10\b\x12!\n" +
+	"\x1eMESSAGING_RPC_ID_ALL_EXECUTORS\x10\x03\x12(\n" +
+	"$MESSAGING_RPC_ID_UPDATE_VIRTUAL_USER\x10\x04\x12(\n" +
+	"$MESSAGING_RPC_ID_DELETE_VIRTUAL_USER\x10\x05\x12\x1e\n" +
+	"\x1aMESSAGING_RPC_ID_SUBSCRIBE\x10\x06\x12(\n" +
+	"$MESSAGING_RPC_ID_DELETE_SUBSCRIPTION\x10\a\x12%\n" +
+	"!MESSAGING_RPC_ID_SUBSCRIBE_EVENTS\x10\b\x12!\n" +
 	"\x1dMESSAGING_RPC_ID_SEND_MESSAGE\x10\t\x12&\n" +
 	"\"MESSAGING_RPC_ID_SEND_THREAD_REPLY\x10\n" +
-	"\x12\x1f\n" +
-	"\x1bMESSAGING_RPC_ID_GET_THREAD\x10\v\x12(\n" +
+	"\x12)\n" +
+	"%MESSAGING_RPC_ID_LIST_THREAD_MESSAGES\x10\v\x12(\n" +
 	"$MESSAGING_RPC_ID_GET_CHANNEL_HISTORY\x10\f\x12\"\n" +
-	"\x1eMESSAGING_RPC_ID_LIST_CHANNELS\x10\r\x12!\n" +
-	"\x1dMESSAGING_RPC_ID_ADD_REACTION\x10\x0e\x12$\n" +
-	" MESSAGING_RPC_ID_REMOVE_REACTION\x10\x0f*\xe7\r\n" +
+	"\x1eMESSAGING_RPC_ID_LIST_CHANNELS\x10\r\x12$\n" +
+	" MESSAGING_RPC_ID_CREATE_REACTION\x10\x0e\x12$\n" +
+	" MESSAGING_RPC_ID_DELETE_REACTION\x10\x0f*\xe7\r\n" +
 	"\x18GatewayStateServiceRpcId\x12,\n" +
 	"(GATEWAY_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x12.\n" +
 	"*GATEWAY_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x12-\n" +
@@ -4944,20 +4944,21 @@ const file_services_msggateway_proto_rawDesc = "" +
 	"4MSGGATEWAY_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x125\n" +
 	"1MSGGATEWAY_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x125\n" +
 	"1MSGGATEWAY_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x127\n" +
-	"3MSGGATEWAY_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\x94\a\n" +
-	"\tMessaging\x12G\n" +
-	"\fRegisterUser\x12\x1f.msggateway.RegisterUserRequest\x1a\x16.google.protobuf.Empty\x12K\n" +
-	"\x0eUnregisterUser\x12!.msggateway.UnregisterUserRequest\x1a\x16.google.protobuf.Empty\x12A\n" +
-	"\tSubscribe\x12\x1c.msggateway.SubscribeRequest\x1a\x16.google.protobuf.Empty\x12E\n" +
-	"\vUnsubscribe\x12\x1e.msggateway.UnsubscribeRequest\x1a\x16.google.protobuf.Empty\x128\n" +
-	"\x06Events\x12\x19.msggateway.EventsRequest\x1a\x11.msggateway.Event0\x01\x12N\n" +
+	"3MSGGATEWAY_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xf8\a\n" +
+	"\tMessaging\x12Q\n" +
+	"\x11UpdateVirtualUser\x12$.msggateway.UpdateVirtualUserRequest\x1a\x16.google.protobuf.Empty\x12Q\n" +
+	"\x11DeleteVirtualUser\x12$.msggateway.DeleteVirtualUserRequest\x1a\x16.google.protobuf.Empty\x12A\n" +
+	"\tSubscribe\x12\x1c.msggateway.SubscribeRequest\x1a\x16.google.protobuf.Empty\x12S\n" +
+	"\x12DeleteSubscription\x12%.msggateway.DeleteSubscriptionRequest\x1a\x16.google.protobuf.Empty\x12A\n" +
+	"\x0fSubscribeEvents\x12\x19.msggateway.EventsRequest\x1a\x11.msggateway.Event0\x01\x12N\n" +
 	"\vSendMessage\x12\x1e.msggateway.SendMessageRequest\x1a\x1f.msggateway.SendMessageResponse\x12V\n" +
-	"\x0fSendThreadReply\x12\".msggateway.SendThreadReplyRequest\x1a\x1f.msggateway.SendMessageResponse\x12H\n" +
-	"\tGetThread\x12\x1c.msggateway.GetThreadRequest\x1a\x1d.msggateway.GetThreadResponse\x12`\n" +
-	"\x11GetChannelHistory\x12$.msggateway.GetChannelHistoryRequest\x1a%.msggateway.GetChannelHistoryResponse\x12E\n" +
-	"\fListChannels\x12\x13.trace.TraceRequest\x1a .msggateway.ListChannelsResponse\x12B\n" +
-	"\vAddReaction\x12\x1b.msggateway.ReactionRequest\x1a\x16.google.protobuf.Empty\x12E\n" +
-	"\x0eRemoveReaction\x12\x1b.msggateway.ReactionRequest\x1a\x16.google.protobuf.Empty\x1a\a\xea\x97\"\x03\n" +
+	"\x0fSendThreadReply\x12\".msggateway.SendThreadReplyRequest\x1a\x1f.msggateway.SendMessageResponse\x12s\n" +
+	"\x12ListThreadMessages\x12\x1c.msggateway.GetThreadRequest\x1a\x1d.msggateway.GetThreadResponse\" \xf2\x88'\x1c\b\x01\x12\ttimestamp\x12\n" +
+	"message_ts\x18\xe8\a\x12`\n" +
+	"\x11GetChannelHistory\x12$.msggateway.GetChannelHistoryRequest\x1a%.msggateway.GetChannelHistoryResponse\x12T\n" +
+	"\fListChannels\x12\x13.trace.TraceRequest\x1a .msggateway.ListChannelsResponse\"\r\xf2\x88'\t\b\x01\x12\x02id\x18\x80\b\x12E\n" +
+	"\x0eCreateReaction\x12\x1b.msggateway.ReactionRequest\x1a\x16.google.protobuf.Empty\x12E\n" +
+	"\x0eDeleteReaction\x12\x1b.msggateway.ReactionRequest\x1a\x16.google.protobuf.Empty\x1a\a\xea\x97\"\x03\n" +
 	"\x01*2\xfb\x14\n" +
 	"\x13GatewayStateService\x12\\\n" +
 	"\x0fGetVirtualUsers\x12\".msggateway.VirtualUsersGetRequest\x1a%.msggateway.VirtualUsersValueResponse\x12\\\n" +
@@ -5027,10 +5028,10 @@ var file_services_msggateway_proto_goTypes = []any{
 	(*Message)(nil),                        // 13: msggateway.Message
 	(*Event)(nil),                          // 14: msggateway.Event
 	(*Channel)(nil),                        // 15: msggateway.Channel
-	(*RegisterUserRequest)(nil),            // 16: msggateway.RegisterUserRequest
-	(*UnregisterUserRequest)(nil),          // 17: msggateway.UnregisterUserRequest
+	(*UpdateVirtualUserRequest)(nil),       // 16: msggateway.UpdateVirtualUserRequest
+	(*DeleteVirtualUserRequest)(nil),       // 17: msggateway.DeleteVirtualUserRequest
 	(*SubscribeRequest)(nil),               // 18: msggateway.SubscribeRequest
-	(*UnsubscribeRequest)(nil),             // 19: msggateway.UnsubscribeRequest
+	(*DeleteSubscriptionRequest)(nil),      // 19: msggateway.DeleteSubscriptionRequest
 	(*EventsRequest)(nil),                  // 20: msggateway.EventsRequest
 	(*SendMessageRequest)(nil),             // 21: msggateway.SendMessageRequest
 	(*SendThreadReplyRequest)(nil),         // 22: msggateway.SendThreadReplyRequest
@@ -5087,7 +5088,7 @@ var file_services_msggateway_proto_depIdxs = []int32{
 	64, // 4: msggateway.Message.timestamp:type_name -> google.protobuf.Timestamp
 	1,  // 5: msggateway.Event.event_type:type_name -> msggateway.EventType
 	13, // 6: msggateway.Event.message:type_name -> msggateway.Message
-	10, // 7: msggateway.RegisterUserRequest.user:type_name -> msggateway.VirtualUser
+	10, // 7: msggateway.UpdateVirtualUserRequest.user:type_name -> msggateway.VirtualUser
 	1,  // 8: msggateway.SubscribeRequest.event_types:type_name -> msggateway.EventType
 	13, // 9: msggateway.GetThreadResponse.messages:type_name -> msggateway.Message
 	13, // 10: msggateway.GetChannelHistoryResponse.messages:type_name -> msggateway.Message
@@ -5114,18 +5115,18 @@ var file_services_msggateway_proto_depIdxs = []int32{
 	11, // 31: msggateway.SubscriptionsQueryResponse.results:type_name -> msggateway.ChannelSubscription
 	10, // 32: msggateway.VirtualUsersEntriesResponse.EntriesEntry.value:type_name -> msggateway.VirtualUser
 	11, // 33: msggateway.SubscriptionsEntriesResponse.EntriesEntry.value:type_name -> msggateway.ChannelSubscription
-	16, // 34: msggateway.Messaging.RegisterUser:input_type -> msggateway.RegisterUserRequest
-	17, // 35: msggateway.Messaging.UnregisterUser:input_type -> msggateway.UnregisterUserRequest
+	16, // 34: msggateway.Messaging.UpdateVirtualUser:input_type -> msggateway.UpdateVirtualUserRequest
+	17, // 35: msggateway.Messaging.DeleteVirtualUser:input_type -> msggateway.DeleteVirtualUserRequest
 	18, // 36: msggateway.Messaging.Subscribe:input_type -> msggateway.SubscribeRequest
-	19, // 37: msggateway.Messaging.Unsubscribe:input_type -> msggateway.UnsubscribeRequest
-	20, // 38: msggateway.Messaging.Events:input_type -> msggateway.EventsRequest
+	19, // 37: msggateway.Messaging.DeleteSubscription:input_type -> msggateway.DeleteSubscriptionRequest
+	20, // 38: msggateway.Messaging.SubscribeEvents:input_type -> msggateway.EventsRequest
 	21, // 39: msggateway.Messaging.SendMessage:input_type -> msggateway.SendMessageRequest
 	22, // 40: msggateway.Messaging.SendThreadReply:input_type -> msggateway.SendThreadReplyRequest
-	24, // 41: msggateway.Messaging.GetThread:input_type -> msggateway.GetThreadRequest
+	24, // 41: msggateway.Messaging.ListThreadMessages:input_type -> msggateway.GetThreadRequest
 	26, // 42: msggateway.Messaging.GetChannelHistory:input_type -> msggateway.GetChannelHistoryRequest
 	65, // 43: msggateway.Messaging.ListChannels:input_type -> trace.TraceRequest
-	29, // 44: msggateway.Messaging.AddReaction:input_type -> msggateway.ReactionRequest
-	29, // 45: msggateway.Messaging.RemoveReaction:input_type -> msggateway.ReactionRequest
+	29, // 44: msggateway.Messaging.CreateReaction:input_type -> msggateway.ReactionRequest
+	29, // 45: msggateway.Messaging.DeleteReaction:input_type -> msggateway.ReactionRequest
 	36, // 46: msggateway.GatewayStateService.GetVirtualUsers:input_type -> msggateway.VirtualUsersGetRequest
 	37, // 47: msggateway.GatewayStateService.PutVirtualUsers:input_type -> msggateway.VirtualUsersPutRequest
 	37, // 48: msggateway.GatewayStateService.SetVirtualUsers:input_type -> msggateway.VirtualUsersPutRequest
@@ -5157,18 +5158,18 @@ var file_services_msggateway_proto_depIdxs = []int32{
 	65, // 74: msggateway.MsggatewayConfigStateService.GetConfig:input_type -> trace.TraceRequest
 	9,  // 75: msggateway.MsggatewayConfigStateService.SetConfig:input_type -> msggateway.Config
 	65, // 76: msggateway.MsggatewayConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	66, // 77: msggateway.Messaging.RegisterUser:output_type -> google.protobuf.Empty
-	66, // 78: msggateway.Messaging.UnregisterUser:output_type -> google.protobuf.Empty
+	66, // 77: msggateway.Messaging.UpdateVirtualUser:output_type -> google.protobuf.Empty
+	66, // 78: msggateway.Messaging.DeleteVirtualUser:output_type -> google.protobuf.Empty
 	66, // 79: msggateway.Messaging.Subscribe:output_type -> google.protobuf.Empty
-	66, // 80: msggateway.Messaging.Unsubscribe:output_type -> google.protobuf.Empty
-	14, // 81: msggateway.Messaging.Events:output_type -> msggateway.Event
+	66, // 80: msggateway.Messaging.DeleteSubscription:output_type -> google.protobuf.Empty
+	14, // 81: msggateway.Messaging.SubscribeEvents:output_type -> msggateway.Event
 	23, // 82: msggateway.Messaging.SendMessage:output_type -> msggateway.SendMessageResponse
 	23, // 83: msggateway.Messaging.SendThreadReply:output_type -> msggateway.SendMessageResponse
-	25, // 84: msggateway.Messaging.GetThread:output_type -> msggateway.GetThreadResponse
+	25, // 84: msggateway.Messaging.ListThreadMessages:output_type -> msggateway.GetThreadResponse
 	27, // 85: msggateway.Messaging.GetChannelHistory:output_type -> msggateway.GetChannelHistoryResponse
 	28, // 86: msggateway.Messaging.ListChannels:output_type -> msggateway.ListChannelsResponse
-	66, // 87: msggateway.Messaging.AddReaction:output_type -> google.protobuf.Empty
-	66, // 88: msggateway.Messaging.RemoveReaction:output_type -> google.protobuf.Empty
+	66, // 87: msggateway.Messaging.CreateReaction:output_type -> google.protobuf.Empty
+	66, // 88: msggateway.Messaging.DeleteReaction:output_type -> google.protobuf.Empty
 	42, // 89: msggateway.GatewayStateService.GetVirtualUsers:output_type -> msggateway.VirtualUsersValueResponse
 	42, // 90: msggateway.GatewayStateService.PutVirtualUsers:output_type -> msggateway.VirtualUsersValueResponse
 	60, // 91: msggateway.GatewayStateService.SetVirtualUsers:output_type -> msggateway.MapEmpty

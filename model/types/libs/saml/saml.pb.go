@@ -273,62 +273,6 @@ func (SamlStatusCode) EnumDescriptor() ([]byte, []int) {
 	return file_libs_saml_proto_rawDescGZIP(), []int{3}
 }
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED            TypeID = 0
-	TypeID_TYPE_ID_SAML_ASSERTION         TypeID = 1
-	TypeID_TYPE_ID_SAML_ENDPOINT          TypeID = 2
-	TypeID_TYPE_ID_SAML_ENTITY_DESCRIPTOR TypeID = 3
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_SAML_ASSERTION",
-		2: "TYPE_ID_SAML_ENDPOINT",
-		3: "TYPE_ID_SAML_ENTITY_DESCRIPTOR",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":            0,
-		"TYPE_ID_SAML_ASSERTION":         1,
-		"TYPE_ID_SAML_ENDPOINT":          2,
-		"TYPE_ID_SAML_ENTITY_DESCRIPTOR": 3,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_saml_proto_enumTypes[4].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_saml_proto_enumTypes[4]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_saml_proto_rawDescGZIP(), []int{4}
-}
-
 // SamlAssertion represents a SAML 2.0 assertion and its enclosing response.
 // It holds the semantic fields of both the <samlp:Response> envelope and the
 // inner <saml:Assertion> element, plus the final signed XML once Sign() is called.
@@ -799,12 +743,7 @@ const file_libs_saml_proto_rawDesc = "" +
 	"\x18SAML_STATUS_CODE_SUCCESS\x10\x01\x1a.\xaa\xb5\x18*urn:oasis:names:tc:SAML:2.0:status:Success\x12P\n" +
 	"\x1aSAML_STATUS_CODE_REQUESTER\x10\x02\x1a0\xaa\xb5\x18,urn:oasis:names:tc:SAML:2.0:status:Requester\x12P\n" +
 	"\x1aSAML_STATUS_CODE_RESPONDER\x10\x03\x1a0\xaa\xb5\x18,urn:oasis:names:tc:SAML:2.0:status:Responder\x12]\n" +
-	"!SAML_STATUS_CODE_VERSION_MISMATCH\x10\x04\x1a6\xaa\xb5\x182urn:oasis:names:tc:SAML:2.0:status:VersionMismatch*|\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x1a\n" +
-	"\x16TYPE_ID_SAML_ASSERTION\x10\x01\x12\x19\n" +
-	"\x15TYPE_ID_SAML_ENDPOINT\x10\x02\x12\"\n" +
-	"\x1eTYPE_ID_SAML_ENTITY_DESCRIPTOR\x10\x03BVZTgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/samlb\x06proto3"
+	"!SAML_STATUS_CODE_VERSION_MISMATCH\x10\x04\x1a6\xaa\xb5\x182urn:oasis:names:tc:SAML:2.0:status:VersionMismatchBVZTgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/samlb\x06proto3"
 
 var (
 	file_libs_saml_proto_rawDescOnce sync.Once
@@ -818,26 +757,25 @@ func file_libs_saml_proto_rawDescGZIP() []byte {
 	return file_libs_saml_proto_rawDescData
 }
 
-var file_libs_saml_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
+var file_libs_saml_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
 var file_libs_saml_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_libs_saml_proto_goTypes = []any{
 	(SamlNameIdFormat)(0),        // 0: saml.SamlNameIdFormat
 	(SamlBinding)(0),             // 1: saml.SamlBinding
 	(SamlAuthnContext)(0),        // 2: saml.SamlAuthnContext
 	(SamlStatusCode)(0),          // 3: saml.SamlStatusCode
-	(TypeID)(0),                  // 4: saml.TypeID
-	(*SamlAssertion)(nil),        // 5: saml.SamlAssertion
-	(*SamlEndpoint)(nil),         // 6: saml.SamlEndpoint
-	(*SamlEntityDescriptor)(nil), // 7: saml.SamlEntityDescriptor
-	nil,                          // 8: saml.SamlAssertion.AttributesEntry
-	(*x509.X509Cert)(nil),        // 9: x509.X509Cert
+	(*SamlAssertion)(nil),        // 4: saml.SamlAssertion
+	(*SamlEndpoint)(nil),         // 5: saml.SamlEndpoint
+	(*SamlEntityDescriptor)(nil), // 6: saml.SamlEntityDescriptor
+	nil,                          // 7: saml.SamlAssertion.AttributesEntry
+	(*x509.X509Cert)(nil),        // 8: x509.X509Cert
 }
 var file_libs_saml_proto_depIdxs = []int32{
-	8, // 0: saml.SamlAssertion.attributes:type_name -> saml.SamlAssertion.AttributesEntry
-	9, // 1: saml.SamlEntityDescriptor.signing_cert:type_name -> x509.X509Cert
-	6, // 2: saml.SamlEntityDescriptor.sso_services:type_name -> saml.SamlEndpoint
-	6, // 3: saml.SamlEntityDescriptor.acs_urls:type_name -> saml.SamlEndpoint
-	6, // 4: saml.SamlEntityDescriptor.slo_services:type_name -> saml.SamlEndpoint
+	7, // 0: saml.SamlAssertion.attributes:type_name -> saml.SamlAssertion.AttributesEntry
+	8, // 1: saml.SamlEntityDescriptor.signing_cert:type_name -> x509.X509Cert
+	5, // 2: saml.SamlEntityDescriptor.sso_services:type_name -> saml.SamlEndpoint
+	5, // 3: saml.SamlEntityDescriptor.acs_urls:type_name -> saml.SamlEndpoint
+	5, // 4: saml.SamlEntityDescriptor.slo_services:type_name -> saml.SamlEndpoint
 	5, // [5:5] is the sub-list for method output_type
 	5, // [5:5] is the sub-list for method input_type
 	5, // [5:5] is the sub-list for extension type_name
@@ -855,7 +793,7 @@ func file_libs_saml_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_saml_proto_rawDesc), len(file_libs_saml_proto_rawDesc)),
-			NumEnums:      5,
+			NumEnums:      4,
 			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,

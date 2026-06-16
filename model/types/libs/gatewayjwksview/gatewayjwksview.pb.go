@@ -39,120 +39,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED                    TypeID = 0
-	TypeID_TYPE_ID_GATEWAY_JWKS_VIEW_RESPONSE     TypeID = 1
-	TypeID_TYPE_ID_GATEWAY_JWKS_VIEW_GET_REQUEST  TypeID = 2
-	TypeID_TYPE_ID_GATEWAY_JWKS_VIEW_GET_RESPONSE TypeID = 3
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_GATEWAY_JWKS_VIEW_RESPONSE",
-		2: "TYPE_ID_GATEWAY_JWKS_VIEW_GET_REQUEST",
-		3: "TYPE_ID_GATEWAY_JWKS_VIEW_GET_RESPONSE",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":                    0,
-		"TYPE_ID_GATEWAY_JWKS_VIEW_RESPONSE":     1,
-		"TYPE_ID_GATEWAY_JWKS_VIEW_GET_REQUEST":  2,
-		"TYPE_ID_GATEWAY_JWKS_VIEW_GET_RESPONSE": 3,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_gatewayjwksview_proto_enumTypes[0].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_gatewayjwksview_proto_enumTypes[0]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_gatewayjwksview_proto_rawDescGZIP(), []int{0}
-}
-
-type GatewayJwksViewServiceRpcId int32
-
-const (
-	GatewayJwksViewServiceRpcId_GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_UNSPECIFIED   GatewayJwksViewServiceRpcId = 0
-	GatewayJwksViewServiceRpcId_GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_ALL_ACCESSORS GatewayJwksViewServiceRpcId = 1
-	GatewayJwksViewServiceRpcId_GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_ALL_MUTATORS  GatewayJwksViewServiceRpcId = 2
-	GatewayJwksViewServiceRpcId_GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_ALL_EXECUTORS GatewayJwksViewServiceRpcId = 3
-	GatewayJwksViewServiceRpcId_GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_WATCH         GatewayJwksViewServiceRpcId = 4
-	GatewayJwksViewServiceRpcId_GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_GET           GatewayJwksViewServiceRpcId = 5
-)
-
-// Enum value maps for GatewayJwksViewServiceRpcId.
-var (
-	GatewayJwksViewServiceRpcId_name = map[int32]string{
-		0: "GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_UNSPECIFIED",
-		1: "GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_ALL_ACCESSORS",
-		2: "GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_ALL_MUTATORS",
-		3: "GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_ALL_EXECUTORS",
-		4: "GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_WATCH",
-		5: "GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_GET",
-	}
-	GatewayJwksViewServiceRpcId_value = map[string]int32{
-		"GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_UNSPECIFIED":   0,
-		"GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_ALL_ACCESSORS": 1,
-		"GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_ALL_MUTATORS":  2,
-		"GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_ALL_EXECUTORS": 3,
-		"GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_WATCH":         4,
-		"GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_GET":           5,
-	}
-)
-
-func (x GatewayJwksViewServiceRpcId) Enum() *GatewayJwksViewServiceRpcId {
-	p := new(GatewayJwksViewServiceRpcId)
-	*p = x
-	return p
-}
-
-func (x GatewayJwksViewServiceRpcId) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (GatewayJwksViewServiceRpcId) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_gatewayjwksview_proto_enumTypes[1].Descriptor()
-}
-
-func (GatewayJwksViewServiceRpcId) Type() protoreflect.EnumType {
-	return &file_libs_gatewayjwksview_proto_enumTypes[1]
-}
-
-func (x GatewayJwksViewServiceRpcId) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use GatewayJwksViewServiceRpcId.Descriptor instead.
-func (GatewayJwksViewServiceRpcId) EnumDescriptor() ([]byte, []int) {
-	return file_libs_gatewayjwksview_proto_rawDescGZIP(), []int{1}
-}
-
 type GatewayJwksViewResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Entries       map[string]*jwk.Jwk    `protobuf:"bytes,1,rep,name=entries,proto3" json:"entries,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // kid -> Jwk
@@ -307,19 +193,7 @@ const file_libs_gatewayjwksview_proto_rawDesc = "" +
 	"\x03kid\x18\x01 \x01(\tR\x03kid\"R\n" +
 	"\x1aGatewayJwksViewGetResponse\x12\x1e\n" +
 	"\x05value\x18\x01 \x01(\v2\b.jwk.JwkR\x05value\x12\x14\n" +
-	"\x05found\x18\x02 \x01(\bR\x05found*\xa0\x01\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12&\n" +
-	"\"TYPE_ID_GATEWAY_JWKS_VIEW_RESPONSE\x10\x01\x12)\n" +
-	"%TYPE_ID_GATEWAY_JWKS_VIEW_GET_REQUEST\x10\x02\x12*\n" +
-	"&TYPE_ID_GATEWAY_JWKS_VIEW_GET_RESPONSE\x10\x03*\xc0\x02\n" +
-	"\x1bGatewayJwksViewServiceRpcId\x120\n" +
-	",GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x122\n" +
-	".GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x121\n" +
-	"-GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_ALL_MUTATORS\x10\x02\x122\n" +
-	".GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x12*\n" +
-	"&GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_WATCH\x10\x04\x12(\n" +
-	"$GATEWAY_JWKS_VIEW_SERVICE_RPC_ID_GET\x10\x052\xc2\x01\n" +
+	"\x05found\x18\x02 \x01(\bR\x05found2\xc2\x01\n" +
 	"\x16GatewayJwksViewService\x12H\n" +
 	"\x05Watch\x12\x13.trace.TraceRequest\x1a(.gatewayjwksview.GatewayJwksViewResponse0\x01\x12^\n" +
 	"\x03Get\x12*.gatewayjwksview.GatewayJwksViewGetRequest\x1a+.gatewayjwksview.GatewayJwksViewGetResponseBaZ_gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/gatewayjwksviewb\x06proto3"
@@ -336,26 +210,23 @@ func file_libs_gatewayjwksview_proto_rawDescGZIP() []byte {
 	return file_libs_gatewayjwksview_proto_rawDescData
 }
 
-var file_libs_gatewayjwksview_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_libs_gatewayjwksview_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_libs_gatewayjwksview_proto_goTypes = []any{
-	(TypeID)(0),                        // 0: gatewayjwksview.TypeID
-	(GatewayJwksViewServiceRpcId)(0),   // 1: gatewayjwksview.GatewayJwksViewServiceRpcId
-	(*GatewayJwksViewResponse)(nil),    // 2: gatewayjwksview.GatewayJwksViewResponse
-	(*GatewayJwksViewGetRequest)(nil),  // 3: gatewayjwksview.GatewayJwksViewGetRequest
-	(*GatewayJwksViewGetResponse)(nil), // 4: gatewayjwksview.GatewayJwksViewGetResponse
-	nil,                                // 5: gatewayjwksview.GatewayJwksViewResponse.EntriesEntry
-	(*jwk.Jwk)(nil),                    // 6: jwk.Jwk
-	(*trace.TraceRequest)(nil),         // 7: trace.TraceRequest
+	(*GatewayJwksViewResponse)(nil),    // 0: gatewayjwksview.GatewayJwksViewResponse
+	(*GatewayJwksViewGetRequest)(nil),  // 1: gatewayjwksview.GatewayJwksViewGetRequest
+	(*GatewayJwksViewGetResponse)(nil), // 2: gatewayjwksview.GatewayJwksViewGetResponse
+	nil,                                // 3: gatewayjwksview.GatewayJwksViewResponse.EntriesEntry
+	(*jwk.Jwk)(nil),                    // 4: jwk.Jwk
+	(*trace.TraceRequest)(nil),         // 5: trace.TraceRequest
 }
 var file_libs_gatewayjwksview_proto_depIdxs = []int32{
-	5, // 0: gatewayjwksview.GatewayJwksViewResponse.entries:type_name -> gatewayjwksview.GatewayJwksViewResponse.EntriesEntry
-	6, // 1: gatewayjwksview.GatewayJwksViewGetResponse.value:type_name -> jwk.Jwk
-	6, // 2: gatewayjwksview.GatewayJwksViewResponse.EntriesEntry.value:type_name -> jwk.Jwk
-	7, // 3: gatewayjwksview.GatewayJwksViewService.Watch:input_type -> trace.TraceRequest
-	3, // 4: gatewayjwksview.GatewayJwksViewService.Get:input_type -> gatewayjwksview.GatewayJwksViewGetRequest
-	2, // 5: gatewayjwksview.GatewayJwksViewService.Watch:output_type -> gatewayjwksview.GatewayJwksViewResponse
-	4, // 6: gatewayjwksview.GatewayJwksViewService.Get:output_type -> gatewayjwksview.GatewayJwksViewGetResponse
+	3, // 0: gatewayjwksview.GatewayJwksViewResponse.entries:type_name -> gatewayjwksview.GatewayJwksViewResponse.EntriesEntry
+	4, // 1: gatewayjwksview.GatewayJwksViewGetResponse.value:type_name -> jwk.Jwk
+	4, // 2: gatewayjwksview.GatewayJwksViewResponse.EntriesEntry.value:type_name -> jwk.Jwk
+	5, // 3: gatewayjwksview.GatewayJwksViewService.Watch:input_type -> trace.TraceRequest
+	1, // 4: gatewayjwksview.GatewayJwksViewService.Get:input_type -> gatewayjwksview.GatewayJwksViewGetRequest
+	0, // 5: gatewayjwksview.GatewayJwksViewService.Watch:output_type -> gatewayjwksview.GatewayJwksViewResponse
+	2, // 6: gatewayjwksview.GatewayJwksViewService.Get:output_type -> gatewayjwksview.GatewayJwksViewGetResponse
 	5, // [5:7] is the sub-list for method output_type
 	3, // [3:5] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
@@ -373,14 +244,13 @@ func file_libs_gatewayjwksview_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_gatewayjwksview_proto_rawDesc), len(file_libs_gatewayjwksview_proto_rawDesc)),
-			NumEnums:      2,
+			NumEnums:      0,
 			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_libs_gatewayjwksview_proto_goTypes,
 		DependencyIndexes: file_libs_gatewayjwksview_proto_depIdxs,
-		EnumInfos:         file_libs_gatewayjwksview_proto_enumTypes,
 		MessageInfos:      file_libs_gatewayjwksview_proto_msgTypes,
 	}.Build()
 	File_libs_gatewayjwksview_proto = out.File

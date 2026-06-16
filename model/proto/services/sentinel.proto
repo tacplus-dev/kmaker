@@ -62,19 +62,26 @@ service Dashboard {
   rpc GetClusterHealth(trace.TraceRequest) returns (hazelcast.AdminClusterHealth) {}
 
   // Per-node collections
-  rpc GetNodeMetrics(trace.TraceRequest) returns (NodeMetricsResponse) {}
-  rpc GetGrpcStats(trace.TraceRequest) returns (GrpcStatsResponse) {}
-  rpc GetPersistenceStatus(trace.TraceRequest) returns (PersistenceStatusResponse) {}
-  rpc GetNetworkStats(trace.TraceRequest) returns (NetworkStatsResponse) {}
-  rpc GetThreadInfo(trace.TraceRequest) returns (ThreadInfoResponse) {}
-  rpc GetTokenCacheStats(trace.TraceRequest) returns (TokenCacheStatsResponse) {}
-  rpc GetMapStats(trace.TraceRequest) returns (MapStatsResponse) {}
+  rpc ListNodeMetrics(trace.TraceRequest) returns (NodeMetricsResponse) {
+  }
+  rpc ListGrpcStats(trace.TraceRequest) returns (GrpcStatsResponse) {
+  }
+  rpc ListPersistenceStatus(trace.TraceRequest) returns (PersistenceStatusResponse) {
+  }
+  rpc ListNetworkStats(trace.TraceRequest) returns (NetworkStatsResponse) {
+  }
+  rpc ListThreadInfo(trace.TraceRequest) returns (ThreadInfoResponse) {
+  }
+  rpc ListTokenCacheStats(trace.TraceRequest) returns (TokenCacheStatsResponse) {
+  }
+  rpc ListMapStats(trace.TraceRequest) returns (MapStatsResponse) {
+  }
 
   // Full snapshot (all data in one call)
   rpc GetDashboard(trace.TraceRequest) returns (DashboardResponse) {}
 
-  // Server-streaming dashboard — pushes updates at a regular interval.
-  rpc WatchDashboard(WatchDashboardRequest) returns (stream DashboardResponse) {}
+  // Server-streaming dashboard: pushes updates at a regular interval.
+  rpc SubscribeDashboard(WatchDashboardRequest) returns (stream DashboardResponse) {}
 }
 
 // ============================================================================
@@ -188,15 +195,15 @@ enum DashboardRpcId {
   DASHBOARD_RPC_ID_ALL_EXECUTORS = 3;
   DASHBOARD_RPC_ID_GET_CLUSTER_INFO = 4;
   DASHBOARD_RPC_ID_GET_CLUSTER_HEALTH = 5;
-  DASHBOARD_RPC_ID_GET_NODE_METRICS = 6;
-  DASHBOARD_RPC_ID_GET_GRPC_STATS = 7;
-  DASHBOARD_RPC_ID_GET_PERSISTENCE_STATUS = 8;
-  DASHBOARD_RPC_ID_GET_NETWORK_STATS = 9;
-  DASHBOARD_RPC_ID_GET_THREAD_INFO = 10;
-  DASHBOARD_RPC_ID_GET_TOKEN_CACHE_STATS = 11;
-  DASHBOARD_RPC_ID_GET_MAP_STATS = 12;
+  DASHBOARD_RPC_ID_LIST_NODE_METRICS = 6;
+  DASHBOARD_RPC_ID_LIST_GRPC_STATS = 7;
+  DASHBOARD_RPC_ID_LIST_PERSISTENCE_STATUS = 8;
+  DASHBOARD_RPC_ID_LIST_NETWORK_STATS = 9;
+  DASHBOARD_RPC_ID_LIST_THREAD_INFO = 10;
+  DASHBOARD_RPC_ID_LIST_TOKEN_CACHE_STATS = 11;
+  DASHBOARD_RPC_ID_LIST_MAP_STATS = 12;
   DASHBOARD_RPC_ID_GET_DASHBOARD = 13;
-  DASHBOARD_RPC_ID_WATCH_DASHBOARD = 14;
+  DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD = 14;
 }
 
 enum SentinelConfigStateServiceRpcId {

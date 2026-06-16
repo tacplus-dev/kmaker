@@ -12,15 +12,15 @@ import (
 	"fmt"
 
 	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/libs/servicemanager"
-	kmaker_config_state "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/s2sm/state/services/kmaker_config"
+	kmaker_config_state_state "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/s2sm/state/services/kmaker_config_state"
 	service_health_state "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/s2sm/state/services/service_health"
 )
 
 // StateClients provides typed access to per-service state clients in the services group.
 type StateClients struct {
-	sc             *servicemanager.ServiceManager
-	service_health *service_health_state.StateClient
-	kmaker_config  *kmaker_config_state.StateClient
+	sc                  *servicemanager.ServiceManager
+	service_health      *service_health_state.StateClient
+	kmaker_config_state *kmaker_config_state_state.StateClient
 }
 
 // NewStateClients creates state clients for the services group from a shared StateClient.
@@ -35,10 +35,10 @@ func NewStateClients(ctx context.Context, sc *servicemanager.ServiceManager,
 		return nil, fmt.Errorf("failed to create service_health state client: %w", err)
 	}
 
-	s.kmaker_config, err = kmaker_config_state.NewStateClient(ctx, sc)
+	s.kmaker_config_state, err = kmaker_config_state_state.NewStateClient(ctx, sc)
 	if err != nil {
 		s.Close()
-		return nil, fmt.Errorf("failed to create kmaker_config state client: %w", err)
+		return nil, fmt.Errorf("failed to create kmaker_config_state state client: %w", err)
 	}
 
 	return s, nil
@@ -49,8 +49,8 @@ func (s *StateClients) Close() {
 	if s.service_health != nil {
 		s.service_health.Close()
 	}
-	if s.kmaker_config != nil {
-		s.kmaker_config.Close()
+	if s.kmaker_config_state != nil {
+		s.kmaker_config_state.Close()
 	}
 }
 
@@ -60,6 +60,6 @@ func (s *StateClients) ServiceHealth() *service_health_state.StateClient {
 }
 
 // KmakerConfigState returns the StateClient.
-func (s *StateClients) KmakerConfigState() *kmaker_config_state.StateClient {
-	return s.kmaker_config
+func (s *StateClients) KmakerConfigState() *kmaker_config_state_state.StateClient {
+	return s.kmaker_config_state
 }

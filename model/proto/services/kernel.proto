@@ -29,6 +29,7 @@ syntax = "proto3";
 package kernel;
 option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kernel";
 
+import "libs/spec.proto";
 import "libs/host.proto";
 import "libs/logger.proto";
 import "libs/outputformat.proto";
@@ -154,14 +155,13 @@ message Config {
   // Each delegate identifies a service and its authorized target services.
   repeated Delegate delegates = 17;
 
-  // spiffe_prefix is the deployment prefix for SPIFFE URIs in this cluster.
-  // The attestation authority + deployment path, WITHOUT the service label.
-  // SPIFFE URIs are: spiffe://<spiffe_prefix>/<service_label>[/<child>/...]
-  //
-  // Cloud: derived from attestation (e.g., "aws/123456789012/us-east-1/prod/default")
-  // On-prem: from X509 cert chain (e.g., "x509/acme-corp/dc-west")
-  // Dev: from config (e.g., "local/dev")
-  string spiffe_prefix = 19;
+  // Retired: spiffe_prefix (the multi-segment deployment prefix). SPIFFE IDs
+  // are now self-describing — the trust domain is the URI authority and the
+  // deployment topology lives in the path under /system (location_path below) —
+  // so no out-of-band combined prefix exists. Replaced by spiffe_trust_domain +
+  // location_path, mirroring libs/grpcconfig.Config.
+  reserved 19;
+  reserved "spiffe_prefix";
 
   // fqdn is the fully qualified domain name for this cluster
   // (e.g. "api.example.com"). Published to Identity state for
@@ -227,6 +227,24 @@ message Config {
   // proof, exchange it via MintClientToken, and provision tenants/projects via
   // TenantAdmin. Only the public half is carried here.
   repeated credentials.CredPair root_cred_pairs = 32;
+
+  // spiffe_trust_domain is the SPIFFE URI authority: a globally unique instance
+  // name for this autonomous-system instance (need not be a DNS domain). It must
+  // not contain '/', a scheme, query, or fragment, and carries no path. Service
+  // identity is built by the generated libs/spiffe helper as:
+  //   spiffe://<spiffe_trust_domain>/system/<location_path...>/services/<service_label>
+  // If empty, SPIFFE IDs are not set on issued tokens or X509 URI SANs. Kernel
+  // copies this (with location_path) into the runtime grpcconfig.Config it seeds
+  // into ServiceConfigState, so every service shares one trust domain.
+  string spiffe_trust_domain = 33;
+
+  // location_path is this deployment's topology path under /system — opaque,
+  // tag-delimited, slash-separated segments, arity not fixed (e.g.
+  // "aws/123456789012/us-east-1a/cluster-7/team-a"). Segments follow the SPIFFE
+  // segment grammar and must not be reserved tags. Supplied by the operator from
+  // runtime config (where the cluster runs); it is not a token claim. May be
+  // empty (no topology tiers).
+  string location_path = 34;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -305,6 +323,14 @@ message TrustedCa {
 service Mint {
   // Authoritative S2S token minter — bootstrap codegen targets this. Kernel is
   // the cluster's sole JWT token authority (and cert authority, below).
+  // Kernel is also the SMB CA authority (SPIFFE plan D7): it mints the isolated
+  // per-SMB CA + member certs for spec.smb services via SmbCertService
+  // (implemented by SmbCertServiceImpl). Designation only — like token_minter,
+  // tacplus requires exactly one when any spec.smb service exists.
+  // Kernel's own instances peer over Hazelcast (the black box), so kernel is
+  // itself an SMB member: it obtains an isolated per-SMB CA + member cert from
+  // its own authority (above) and uses them for Hazelcast peer mTLS. Generates
+  // the instance-side member-cert seam (Handler.newSmbCert).
 
   // MintServiceToken — self-mint. An internal service exchanges its cred_pair
   // JWT / cloud proof (bootstrap) or a kernel-signed refresh/access token for a
@@ -323,14 +349,14 @@ service Mint {
   rpc MintUserToken(tokenrequest.MintUserTokenRequest) returns (tokenrequest.TokenMintResponse) {
   }
 
-  // TokenMint — exchange (RT→AT→ST). The caller presents a kernel-signed token;
+  // MintToken — exchange (RT→AT→ST). The caller presents a kernel-signed token;
   // kernel VERIFIES it and mints the next tier per the 3-tier rules (a refresh
   // can't directly mint a service token, etc.). service_auds mints AT + N ST in
   // one call. azp is preserved from the presented token onto every issued
   // token. Signs Ed25519. This IS the real exchange (replaces the former
   // standalone TokenExchange service).
   // auth_disabled: the token to exchange is carried in the request body.
-  rpc TokenMint(tokenrequest.TokenMintRequest) returns (tokenrequest.TokenMintResponse) {
+  rpc MintToken(tokenrequest.TokenMintRequest) returns (tokenrequest.TokenMintResponse) {
   }
 
   // MintExternalToken — WIF. A proxy presents the user token plus opaque routing
@@ -359,7 +385,7 @@ service Mint {
   // signing chain), NOT the JWT signing keys.
   // --------------------------------------------------------------------------
 
-  // X509Mint signs an X.509 certificate under a per-service intermediate CA.
+  // MintX509Cert signs an X.509 certificate under a per-service intermediate CA.
   // Authentication via bearer token in the Authorization header or input_token
   // in the request body (for gateway-mediated calls). auth_disabled: handler
   // validates authentication internally — accepts both bearer tokens and
@@ -375,19 +401,19 @@ service Mint {
   //
   // The intermediate CA is unique per service, providing per-service trust
   // isolation — only nodes of the same service verify each other.
-  rpc X509Mint(tokenrequest.X509MintRequest) returns (x509.X509CertChain) {
+  rpc MintX509Cert(tokenrequest.X509MintRequest) returns (x509.X509CertChain) {
   }
 
-  // WorkloadMint mints a child workload identity. Caller must be authenticated
+  // MintWorkload mints a child workload identity. Caller must be authenticated
   // (bearer token). The child's SPIFFE ID is the caller's SPIFFE ID + "/" +
   // workload_name. Kernel validates: caller is not terminal.
-  rpc WorkloadMint(tokenrequest.WorkloadMintRequest) returns (tokenrequest.WorkloadMintResponse) {
+  rpc MintWorkload(tokenrequest.WorkloadMintRequest) returns (tokenrequest.WorkloadMintResponse) {
   }
 
-  // WorkloadRevoke revokes a child workload's identity. Only the parent (or an
+  // RevokeWorkload revokes a child workload's identity. Only the parent (or an
   // ancestor in the SPIFFE path) can revoke. The revocation is recorded in
   // WorkloadState and checked on refresh.
-  rpc WorkloadRevoke(WorkloadRevokeRequest) returns (google.protobuf.Empty) {
+  rpc RevokeWorkload(WorkloadRevokeRequest) returns (google.protobuf.Empty) {
   }
 }
 
@@ -980,7 +1006,7 @@ service TenantAdmin {
   rpc GetTenantConfig(GetTenantConfigRequest) returns (tenant_config.TenantConfig) {
   }
 
-  // SetTenantConfig atomically replaces the whole TenantConfig for
+  // UpdateTenantConfig atomically replaces the whole TenantConfig for
   // tenant_namespace. Caller must be at-or-above the target. cred_pair
   // management happens here (add = include the public key; remove = omit it) —
   // this single atomic write path is where constraints are validated:
@@ -989,7 +1015,7 @@ service TenantAdmin {
   //     entitled to administer the tenant (always on);
   //   - self-lockout guard: when acting on its own tenant, the result must
   //     still contain the authenticating cred_pair (two-step rotation).
-  rpc SetTenantConfig(SetTenantConfigRequest) returns (tenant_config.TenantConfig) {
+  rpc UpdateTenantConfig(SetTenantConfigRequest) returns (tenant_config.TenantConfig) {
   }
 
   // --- Project config ---
@@ -999,10 +1025,10 @@ service TenantAdmin {
   rpc GetProjectConfig(GetProjectConfigRequest) returns (ProjectConfig) {
   }
 
-  // SetProjectConfig atomically replaces the ProjectConfig for project_namespace
+  // UpdateProjectConfig atomically replaces the ProjectConfig for project_namespace
   // (currently empty — used to create a project by establishing its existence).
   // "/tenant/default" is auto-created empty at tenant creation.
-  rpc SetProjectConfig(SetProjectConfigRequest) returns (ProjectConfig) {
+  rpc UpdateProjectConfig(SetProjectConfigRequest) returns (ProjectConfig) {
   }
 
   // ListProjects returns the immediate project children of tenant_namespace.
@@ -2710,12 +2736,12 @@ enum MintRpcId {
   MINT_RPC_ID_ALL_EXECUTORS = 3;
   MINT_RPC_ID_MINT_SERVICE_TOKEN = 4;
   MINT_RPC_ID_MINT_USER_TOKEN = 5;
-  MINT_RPC_ID_TOKEN_MINT = 6;
+  MINT_RPC_ID_MINT_TOKEN = 6;
   MINT_RPC_ID_MINT_EXTERNAL_TOKEN = 7;
   MINT_RPC_ID_MINT_CLIENT_TOKEN = 8;
-  MINT_RPC_ID_X509_MINT = 9;
-  MINT_RPC_ID_WORKLOAD_MINT = 10;
-  MINT_RPC_ID_WORKLOAD_REVOKE = 11;
+  MINT_RPC_ID_MINT_X509_CERT = 9;
+  MINT_RPC_ID_MINT_WORKLOAD = 10;
+  MINT_RPC_ID_REVOKE_WORKLOAD = 11;
 }
 
 enum CliTokenBrokerRpcId {
@@ -2735,9 +2761,9 @@ enum TenantAdminRpcId {
   TENANT_ADMIN_RPC_ID_DELETE_TENANT = 5;
   TENANT_ADMIN_RPC_ID_LIST_TENANTS = 6;
   TENANT_ADMIN_RPC_ID_GET_TENANT_CONFIG = 7;
-  TENANT_ADMIN_RPC_ID_SET_TENANT_CONFIG = 8;
+  TENANT_ADMIN_RPC_ID_UPDATE_TENANT_CONFIG = 8;
   TENANT_ADMIN_RPC_ID_GET_PROJECT_CONFIG = 9;
-  TENANT_ADMIN_RPC_ID_SET_PROJECT_CONFIG = 10;
+  TENANT_ADMIN_RPC_ID_UPDATE_PROJECT_CONFIG = 10;
   TENANT_ADMIN_RPC_ID_LIST_PROJECTS = 11;
   TENANT_ADMIN_RPC_ID_DELETE_PROJECT = 12;
 }

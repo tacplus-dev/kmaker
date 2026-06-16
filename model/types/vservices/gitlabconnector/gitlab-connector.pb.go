@@ -27,6 +27,7 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -104,18 +105,20 @@ func (GitLabEventType) EnumDescriptor() ([]byte, []int) {
 type TypeID int32
 
 const (
-	TypeID_TYPE_ID_UNSPECIFIED                 TypeID = 0
-	TypeID_TYPE_ID_PUSH_PAYLOAD                TypeID = 1
-	TypeID_TYPE_ID_MERGE_REQUEST_PAYLOAD       TypeID = 2
-	TypeID_TYPE_ID_PIPELINE_PAYLOAD            TypeID = 3
-	TypeID_TYPE_ID_ISSUE_PAYLOAD               TypeID = 4
-	TypeID_TYPE_ID_GIT_LAB_CONNECTOR_EVENT     TypeID = 5
-	TypeID_TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS TypeID = 6
-	TypeID_TYPE_ID_MAP_EMPTY                   TypeID = 7
-	TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT       TypeID = 8
-	TypeID_TYPE_ID_GIT_LAB_PROJECT_NODE        TypeID = 9
-	TypeID_TYPE_ID_GIT_LAB_ACTIVITY_NODE       TypeID = 10
-	TypeID_TYPE_ID_GIT_LAB_ACTIVITY_RECORD     TypeID = 11
+	TypeID_TYPE_ID_UNSPECIFIED                                               TypeID = 0
+	TypeID_TYPE_ID_PUSH_PAYLOAD                                              TypeID = 1
+	TypeID_TYPE_ID_MERGE_REQUEST_PAYLOAD                                     TypeID = 2
+	TypeID_TYPE_ID_PIPELINE_PAYLOAD                                          TypeID = 3
+	TypeID_TYPE_ID_ISSUE_PAYLOAD                                             TypeID = 4
+	TypeID_TYPE_ID_GIT_LAB_CONNECTOR_EVENT                                   TypeID = 5
+	TypeID_TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS                               TypeID = 6
+	TypeID_TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD TypeID = 7
+	TypeID_TYPE_ID_MAP_EMPTY                                                 TypeID = 8
+	TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT                                     TypeID = 9
+	TypeID_TYPE_ID_EVENT_BUS_RECORD_META                                     TypeID = 10
+	TypeID_TYPE_ID_GIT_LAB_PROJECT_NODE                                      TypeID = 11
+	TypeID_TYPE_ID_GIT_LAB_ACTIVITY_NODE                                     TypeID = 12
+	TypeID_TYPE_ID_GIT_LAB_ACTIVITY_RECORD                                   TypeID = 13
 )
 
 // Enum value maps for TypeID.
@@ -128,25 +131,29 @@ var (
 		4:  "TYPE_ID_ISSUE_PAYLOAD",
 		5:  "TYPE_ID_GIT_LAB_CONNECTOR_EVENT",
 		6:  "TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS",
-		7:  "TYPE_ID_MAP_EMPTY",
-		8:  "TYPE_ID_TOPIC_PUBLISH_RECEIPT",
-		9:  "TYPE_ID_GIT_LAB_PROJECT_NODE",
-		10: "TYPE_ID_GIT_LAB_ACTIVITY_NODE",
-		11: "TYPE_ID_GIT_LAB_ACTIVITY_RECORD",
+		7:  "TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD",
+		8:  "TYPE_ID_MAP_EMPTY",
+		9:  "TYPE_ID_TOPIC_PUBLISH_RECEIPT",
+		10: "TYPE_ID_EVENT_BUS_RECORD_META",
+		11: "TYPE_ID_GIT_LAB_PROJECT_NODE",
+		12: "TYPE_ID_GIT_LAB_ACTIVITY_NODE",
+		13: "TYPE_ID_GIT_LAB_ACTIVITY_RECORD",
 	}
 	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":                 0,
-		"TYPE_ID_PUSH_PAYLOAD":                1,
-		"TYPE_ID_MERGE_REQUEST_PAYLOAD":       2,
-		"TYPE_ID_PIPELINE_PAYLOAD":            3,
-		"TYPE_ID_ISSUE_PAYLOAD":               4,
-		"TYPE_ID_GIT_LAB_CONNECTOR_EVENT":     5,
-		"TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS": 6,
-		"TYPE_ID_MAP_EMPTY":                   7,
-		"TYPE_ID_TOPIC_PUBLISH_RECEIPT":       8,
-		"TYPE_ID_GIT_LAB_PROJECT_NODE":        9,
-		"TYPE_ID_GIT_LAB_ACTIVITY_NODE":       10,
-		"TYPE_ID_GIT_LAB_ACTIVITY_RECORD":     11,
+		"TYPE_ID_UNSPECIFIED":                                               0,
+		"TYPE_ID_PUSH_PAYLOAD":                                              1,
+		"TYPE_ID_MERGE_REQUEST_PAYLOAD":                                     2,
+		"TYPE_ID_PIPELINE_PAYLOAD":                                          3,
+		"TYPE_ID_ISSUE_PAYLOAD":                                             4,
+		"TYPE_ID_GIT_LAB_CONNECTOR_EVENT":                                   5,
+		"TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS":                               6,
+		"TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD": 7,
+		"TYPE_ID_MAP_EMPTY":                                                 8,
+		"TYPE_ID_TOPIC_PUBLISH_RECEIPT":                                     9,
+		"TYPE_ID_EVENT_BUS_RECORD_META":                                     10,
+		"TYPE_ID_GIT_LAB_PROJECT_NODE":                                      11,
+		"TYPE_ID_GIT_LAB_ACTIVITY_NODE":                                     12,
+		"TYPE_ID_GIT_LAB_ACTIVITY_RECORD":                                   13,
 	}
 )
 
@@ -767,11 +774,11 @@ type GitLabConnectorEvent struct {
 	// Used for deduplication across webhook + poll paths.
 	GitlabId    string `protobuf:"bytes,2,opt,name=gitlab_id,json=gitlabId,proto3" json:"gitlab_id,omitempty"`
 	TimestampMs int64  `protobuf:"varint,3,opt,name=timestamp_ms,json=timestampMs,proto3" json:"timestamp_ms,omitempty"`
-	// tenant_namespace is the Cavalier namespace that owns the connector config
-	// which produced this event, e.g. "/acme" or "/acme/platform".
+	// tenant_namespace is the normalized Cavalier namespace that owns this event,
+	// e.g. "/tenants/acme" or "/tenants/acme/workspaces/platform".
 	TenantNamespace string `protobuf:"bytes,4,opt,name=tenant_namespace,json=tenantNamespace,proto3" json:"tenant_namespace,omitempty"`
-	// owner_spiffe is the resource URI for this event record, e.g.
-	// spiffe://<prefix>/<tenant_namespace>/data/gitlab-event/<event_id>.
+	// owner_spiffe is the generated resource URI for this event record:
+	// resource_spiffe_id(spiffe_trust_domain, tenant_namespace, "gitlab-event", event_id).
 	OwnerSpiffe string `protobuf:"bytes,5,opt,name=owner_spiffe,json=ownerSpiffe,proto3" json:"owner_spiffe,omitempty"`
 	// actor_sub is the canonical Cavalier subject for the GitLab actor when a
 	// tenant mapping/policy can resolve it. Leave empty rather than deriving it
@@ -790,6 +797,8 @@ type GitLabConnectorEvent struct {
 	EventType      GitLabEventType `protobuf:"varint,14,opt,name=event_type,json=eventType,proto3,enum=gitlabconnector.GitLabEventType" json:"event_type,omitempty"`
 	// ingestion_source distinguishes how this event was received.
 	IngestionSource string `protobuf:"bytes,15,opt,name=ingestion_source,json=ingestionSource,proto3" json:"ingestion_source,omitempty"` // "webhook" | "poll"
+	// scheme_version records the persisted identity scheme used for owner_spiffe.
+	SchemeVersion string `protobuf:"bytes,16,opt,name=scheme_version,json=schemeVersion,proto3" json:"scheme_version,omitempty"`
 	// Types that are valid to be assigned to Payload:
 	//
 	//	*GitLabConnectorEvent_Push
@@ -934,6 +943,13 @@ func (x *GitLabConnectorEvent) GetEventType() GitLabEventType {
 func (x *GitLabConnectorEvent) GetIngestionSource() string {
 	if x != nil {
 		return x.IngestionSource
+	}
+	return ""
+}
+
+func (x *GitLabConnectorEvent) GetSchemeVersion() string {
+	if x != nil {
+		return x.SchemeVersion
 	}
 	return ""
 }
@@ -1084,6 +1100,74 @@ func (x *GitLabConnectorEventBus) GetNoop() bool {
 	return false
 }
 
+type GitLabConnectorEventBusEventStreamSubscribeRecord struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Meta          *EventBusRecordMeta    `protobuf:"bytes,1,opt,name=meta,proto3" json:"meta,omitempty"`
+	Payload       *GitLabConnectorEvent  `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GitLabConnectorEventBusEventStreamSubscribeRecord) Reset() {
+	*x = GitLabConnectorEventBusEventStreamSubscribeRecord{}
+	mi := &file_vservices_gitlab_connector_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GitLabConnectorEventBusEventStreamSubscribeRecord) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GitLabConnectorEventBusEventStreamSubscribeRecord) ProtoMessage() {}
+
+func (x *GitLabConnectorEventBusEventStreamSubscribeRecord) ProtoReflect() protoreflect.Message {
+	mi := &file_vservices_gitlab_connector_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GitLabConnectorEventBusEventStreamSubscribeRecord.ProtoReflect.Descriptor instead.
+func (*GitLabConnectorEventBusEventStreamSubscribeRecord) Descriptor() ([]byte, []int) {
+	return file_vservices_gitlab_connector_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *GitLabConnectorEventBusEventStreamSubscribeRecord) GetMeta() *EventBusRecordMeta {
+	if x != nil {
+		return x.Meta
+	}
+	return nil
+}
+
+func (x *GitLabConnectorEventBusEventStreamSubscribeRecord) GetPayload() *GitLabConnectorEvent {
+	if x != nil {
+		return x.Payload
+	}
+	return nil
+}
+
+func (x *GitLabConnectorEventBusEventStreamSubscribeRecord) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *GitLabConnectorEventBusEventStreamSubscribeRecord) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
 type MapEmpty struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -1094,7 +1178,7 @@ type MapEmpty struct {
 
 func (x *MapEmpty) Reset() {
 	*x = MapEmpty{}
-	mi := &file_vservices_gitlab_connector_proto_msgTypes[6]
+	mi := &file_vservices_gitlab_connector_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1106,7 +1190,7 @@ func (x *MapEmpty) String() string {
 func (*MapEmpty) ProtoMessage() {}
 
 func (x *MapEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_gitlab_connector_proto_msgTypes[6]
+	mi := &file_vservices_gitlab_connector_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1119,7 +1203,7 @@ func (x *MapEmpty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MapEmpty.ProtoReflect.Descriptor instead.
 func (*MapEmpty) Descriptor() ([]byte, []int) {
-	return file_vservices_gitlab_connector_proto_rawDescGZIP(), []int{6}
+	return file_vservices_gitlab_connector_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *MapEmpty) GetTraceId() string {
@@ -1147,7 +1231,7 @@ type TopicPublishReceipt struct {
 
 func (x *TopicPublishReceipt) Reset() {
 	*x = TopicPublishReceipt{}
-	mi := &file_vservices_gitlab_connector_proto_msgTypes[7]
+	mi := &file_vservices_gitlab_connector_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1159,7 +1243,7 @@ func (x *TopicPublishReceipt) String() string {
 func (*TopicPublishReceipt) ProtoMessage() {}
 
 func (x *TopicPublishReceipt) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_gitlab_connector_proto_msgTypes[7]
+	mi := &file_vservices_gitlab_connector_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1172,7 +1256,7 @@ func (x *TopicPublishReceipt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TopicPublishReceipt.ProtoReflect.Descriptor instead.
 func (*TopicPublishReceipt) Descriptor() ([]byte, []int) {
-	return file_vservices_gitlab_connector_proto_rawDescGZIP(), []int{7}
+	return file_vservices_gitlab_connector_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *TopicPublishReceipt) GetPublished() bool {
@@ -1190,6 +1274,98 @@ func (x *TopicPublishReceipt) GetTraceId() string {
 }
 
 func (x *TopicPublishReceipt) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type EventBusRecordMeta struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Key           []byte                 `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	Topic         string                 `protobuf:"bytes,2,opt,name=topic,proto3" json:"topic,omitempty"`
+	Partition     int32                  `protobuf:"varint,3,opt,name=partition,proto3" json:"partition,omitempty"`
+	Offset        int64                  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`
+	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EventBusRecordMeta) Reset() {
+	*x = EventBusRecordMeta{}
+	mi := &file_vservices_gitlab_connector_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EventBusRecordMeta) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EventBusRecordMeta) ProtoMessage() {}
+
+func (x *EventBusRecordMeta) ProtoReflect() protoreflect.Message {
+	mi := &file_vservices_gitlab_connector_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EventBusRecordMeta.ProtoReflect.Descriptor instead.
+func (*EventBusRecordMeta) Descriptor() ([]byte, []int) {
+	return file_vservices_gitlab_connector_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *EventBusRecordMeta) GetKey() []byte {
+	if x != nil {
+		return x.Key
+	}
+	return nil
+}
+
+func (x *EventBusRecordMeta) GetTopic() string {
+	if x != nil {
+		return x.Topic
+	}
+	return ""
+}
+
+func (x *EventBusRecordMeta) GetPartition() int32 {
+	if x != nil {
+		return x.Partition
+	}
+	return 0
+}
+
+func (x *EventBusRecordMeta) GetOffset() int64 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
+}
+
+func (x *EventBusRecordMeta) GetTimestamp() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Timestamp
+	}
+	return nil
+}
+
+func (x *EventBusRecordMeta) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *EventBusRecordMeta) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
@@ -1214,7 +1390,7 @@ type GitLabProjectNode struct {
 
 func (x *GitLabProjectNode) Reset() {
 	*x = GitLabProjectNode{}
-	mi := &file_vservices_gitlab_connector_proto_msgTypes[8]
+	mi := &file_vservices_gitlab_connector_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1226,7 +1402,7 @@ func (x *GitLabProjectNode) String() string {
 func (*GitLabProjectNode) ProtoMessage() {}
 
 func (x *GitLabProjectNode) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_gitlab_connector_proto_msgTypes[8]
+	mi := &file_vservices_gitlab_connector_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1239,7 +1415,7 @@ func (x *GitLabProjectNode) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GitLabProjectNode.ProtoReflect.Descriptor instead.
 func (*GitLabProjectNode) Descriptor() ([]byte, []int) {
-	return file_vservices_gitlab_connector_proto_rawDescGZIP(), []int{8}
+	return file_vservices_gitlab_connector_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GitLabProjectNode) GetProjectKey() string {
@@ -1310,13 +1486,14 @@ type GitLabActivityNode struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	EventId         string                 `protobuf:"bytes,1,opt,name=event_id,json=eventId,proto3" json:"event_id,omitempty"`
 	OwnerSpiffe     string                 `protobuf:"bytes,2,opt,name=owner_spiffe,json=ownerSpiffe,proto3" json:"owner_spiffe,omitempty"`
-	TenantNamespace string                 `protobuf:"bytes,3,opt,name=tenant_namespace,json=tenantNamespace,proto3" json:"tenant_namespace,omitempty"`
-	Project         string                 `protobuf:"bytes,4,opt,name=project,proto3" json:"project,omitempty"`
-	ActorSub        string                 `protobuf:"bytes,5,opt,name=actor_sub,json=actorSub,proto3" json:"actor_sub,omitempty"`
-	Email           string                 `protobuf:"bytes,6,opt,name=email,proto3" json:"email,omitempty"`
-	AuthorEmail     string                 `protobuf:"bytes,7,opt,name=author_email,json=authorEmail,proto3" json:"author_email,omitempty"`
-	EventType       GitLabEventType        `protobuf:"varint,8,opt,name=event_type,json=eventType,proto3,enum=gitlabconnector.GitLabEventType" json:"event_type,omitempty"`
-	TimestampMs     int64                  `protobuf:"varint,9,opt,name=timestamp_ms,json=timestampMs,proto3" json:"timestamp_ms,omitempty"`
+	SchemeVersion   string                 `protobuf:"bytes,3,opt,name=scheme_version,json=schemeVersion,proto3" json:"scheme_version,omitempty"`
+	TenantNamespace string                 `protobuf:"bytes,4,opt,name=tenant_namespace,json=tenantNamespace,proto3" json:"tenant_namespace,omitempty"`
+	Project         string                 `protobuf:"bytes,5,opt,name=project,proto3" json:"project,omitempty"`
+	ActorSub        string                 `protobuf:"bytes,6,opt,name=actor_sub,json=actorSub,proto3" json:"actor_sub,omitempty"`
+	Email           string                 `protobuf:"bytes,7,opt,name=email,proto3" json:"email,omitempty"`
+	AuthorEmail     string                 `protobuf:"bytes,8,opt,name=author_email,json=authorEmail,proto3" json:"author_email,omitempty"`
+	EventType       GitLabEventType        `protobuf:"varint,9,opt,name=event_type,json=eventType,proto3,enum=gitlabconnector.GitLabEventType" json:"event_type,omitempty"`
+	TimestampMs     int64                  `protobuf:"varint,10,opt,name=timestamp_ms,json=timestampMs,proto3" json:"timestamp_ms,omitempty"`
 	TraceId         string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop            bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields   protoimpl.UnknownFields
@@ -1325,7 +1502,7 @@ type GitLabActivityNode struct {
 
 func (x *GitLabActivityNode) Reset() {
 	*x = GitLabActivityNode{}
-	mi := &file_vservices_gitlab_connector_proto_msgTypes[9]
+	mi := &file_vservices_gitlab_connector_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1337,7 +1514,7 @@ func (x *GitLabActivityNode) String() string {
 func (*GitLabActivityNode) ProtoMessage() {}
 
 func (x *GitLabActivityNode) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_gitlab_connector_proto_msgTypes[9]
+	mi := &file_vservices_gitlab_connector_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1350,7 +1527,7 @@ func (x *GitLabActivityNode) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GitLabActivityNode.ProtoReflect.Descriptor instead.
 func (*GitLabActivityNode) Descriptor() ([]byte, []int) {
-	return file_vservices_gitlab_connector_proto_rawDescGZIP(), []int{9}
+	return file_vservices_gitlab_connector_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GitLabActivityNode) GetEventId() string {
@@ -1363,6 +1540,13 @@ func (x *GitLabActivityNode) GetEventId() string {
 func (x *GitLabActivityNode) GetOwnerSpiffe() string {
 	if x != nil {
 		return x.OwnerSpiffe
+	}
+	return ""
+}
+
+func (x *GitLabActivityNode) GetSchemeVersion() string {
+	if x != nil {
+		return x.SchemeVersion
 	}
 	return ""
 }
@@ -1439,14 +1623,15 @@ type GitLabActivityRecord struct {
 	TimestampMs     int64                  `protobuf:"varint,4,opt,name=timestamp_ms,json=timestampMs,proto3" json:"timestamp_ms,omitempty"`
 	EventId         string                 `protobuf:"bytes,5,opt,name=event_id,json=eventId,proto3" json:"event_id,omitempty"`
 	OwnerSpiffe     string                 `protobuf:"bytes,6,opt,name=owner_spiffe,json=ownerSpiffe,proto3" json:"owner_spiffe,omitempty"`
-	ActorSub        string                 `protobuf:"bytes,7,opt,name=actor_sub,json=actorSub,proto3" json:"actor_sub,omitempty"`
-	Email           string                 `protobuf:"bytes,8,opt,name=email,proto3" json:"email,omitempty"`
-	AuthorEmail     string                 `protobuf:"bytes,9,opt,name=author_email,json=authorEmail,proto3" json:"author_email,omitempty"`
-	AuthorUsername  string                 `protobuf:"bytes,10,opt,name=author_username,json=authorUsername,proto3" json:"author_username,omitempty"`
-	EventType       GitLabEventType        `protobuf:"varint,11,opt,name=event_type,json=eventType,proto3,enum=gitlabconnector.GitLabEventType" json:"event_type,omitempty"`
-	GitlabUrl       string                 `protobuf:"bytes,12,opt,name=gitlab_url,json=gitlabUrl,proto3" json:"gitlab_url,omitempty"`
-	ProjectKey      string                 `protobuf:"bytes,13,opt,name=project_key,json=projectKey,proto3" json:"project_key,omitempty"`
-	IngestionSource string                 `protobuf:"bytes,14,opt,name=ingestion_source,json=ingestionSource,proto3" json:"ingestion_source,omitempty"`
+	SchemeVersion   string                 `protobuf:"bytes,7,opt,name=scheme_version,json=schemeVersion,proto3" json:"scheme_version,omitempty"`
+	ActorSub        string                 `protobuf:"bytes,8,opt,name=actor_sub,json=actorSub,proto3" json:"actor_sub,omitempty"`
+	Email           string                 `protobuf:"bytes,9,opt,name=email,proto3" json:"email,omitempty"`
+	AuthorEmail     string                 `protobuf:"bytes,10,opt,name=author_email,json=authorEmail,proto3" json:"author_email,omitempty"`
+	AuthorUsername  string                 `protobuf:"bytes,11,opt,name=author_username,json=authorUsername,proto3" json:"author_username,omitempty"`
+	EventType       GitLabEventType        `protobuf:"varint,12,opt,name=event_type,json=eventType,proto3,enum=gitlabconnector.GitLabEventType" json:"event_type,omitempty"`
+	GitlabUrl       string                 `protobuf:"bytes,13,opt,name=gitlab_url,json=gitlabUrl,proto3" json:"gitlab_url,omitempty"`
+	ProjectKey      string                 `protobuf:"bytes,14,opt,name=project_key,json=projectKey,proto3" json:"project_key,omitempty"`
+	IngestionSource string                 `protobuf:"bytes,15,opt,name=ingestion_source,json=ingestionSource,proto3" json:"ingestion_source,omitempty"`
 	TraceId         string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop            bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields   protoimpl.UnknownFields
@@ -1455,7 +1640,7 @@ type GitLabActivityRecord struct {
 
 func (x *GitLabActivityRecord) Reset() {
 	*x = GitLabActivityRecord{}
-	mi := &file_vservices_gitlab_connector_proto_msgTypes[10]
+	mi := &file_vservices_gitlab_connector_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1467,7 +1652,7 @@ func (x *GitLabActivityRecord) String() string {
 func (*GitLabActivityRecord) ProtoMessage() {}
 
 func (x *GitLabActivityRecord) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_gitlab_connector_proto_msgTypes[10]
+	mi := &file_vservices_gitlab_connector_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1480,7 +1665,7 @@ func (x *GitLabActivityRecord) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GitLabActivityRecord.ProtoReflect.Descriptor instead.
 func (*GitLabActivityRecord) Descriptor() ([]byte, []int) {
-	return file_vservices_gitlab_connector_proto_rawDescGZIP(), []int{10}
+	return file_vservices_gitlab_connector_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *GitLabActivityRecord) GetTenantNamespace() string {
@@ -1521,6 +1706,13 @@ func (x *GitLabActivityRecord) GetEventId() string {
 func (x *GitLabActivityRecord) GetOwnerSpiffe() string {
 	if x != nil {
 		return x.OwnerSpiffe
+	}
+	return ""
+}
+
+func (x *GitLabActivityRecord) GetSchemeVersion() string {
+	if x != nil {
+		return x.SchemeVersion
 	}
 	return ""
 }
@@ -1599,7 +1791,7 @@ var File_vservices_gitlab_connector_proto protoreflect.FileDescriptor
 
 const file_vservices_gitlab_connector_proto_rawDesc = "" +
 	"\n" +
-	" vservices/gitlab-connector.proto\x12\x0fgitlabconnector\x1a\x0flibs/spec.proto\x1a\x10libs/trace.proto\x1a\x1bgoogle/protobuf/empty.proto\"\x91\x02\n" +
+	" vservices/gitlab-connector.proto\x12\x0fgitlabconnector\x1a\x0flibs/spec.proto\x1a\x10libs/trace.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"\x91\x02\n" +
 	"\vPushPayload\x12\x1d\n" +
 	"\x06branch\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\x06branch\x12#\n" +
 	"\n" +
@@ -1639,14 +1831,15 @@ const file_vservices_gitlab_connector_proto_rawDesc = "" +
 	"\x06action\x18\x03 \x01(\tB\x04\x90\xa7\x1d@R\x06action\x12\x1b\n" +
 	"\x05title\x18\x04 \x01(\tB\x05\x90\xa7\x1d\x80\bR\x05title\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb3\x0e\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe0\x0f\n" +
 	"\x14GitLabConnectorEvent\x12$\n" +
 	"\bevent_id\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x04R\aeventId\x12\"\n" +
 	"\tgitlab_id\x18\x02 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\bgitlabId\x12'\n" +
-	"\ftimestamp_ms\x18\x03 \x01(\x03B\x04\xa8\xa7\x1d\x00R\vtimestampMs\x124\n" +
-	"\x10tenant_namespace\x18\x04 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x0ftenantNamespace\x12,\n" +
-	"\fowner_spiffe\x18\x05 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\bR\vownerSpiffe\x12\"\n" +
-	"\tactor_sub\x18\x06 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\bactorSub\x12$\n" +
+	"\ftimestamp_ms\x18\x03 \x01(\x03B\x04\xa8\xa7\x1d\x00R\vtimestampMs\x128\n" +
+	"\x10tenant_namespace\x18\x04 \x01(\tB\r\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02ت\x1d\x01R\x0ftenantNamespace\x12Z\n" +
+	"\fowner_spiffe\x18\x05 \x01(\tB7\x88\xa6\x1d\x01\x90\xa7\x1d\x80\b\xf2\xaa\x1d*\n" +
+	"\x10tenant_namespace\x12\fgitlab-event\x1a\bevent_idR\vownerSpiffe\x12&\n" +
+	"\tactor_sub\x18\x06 \x01(\tB\t\x90\xa7\x1d\x80\x04\xe0\xaa\x1d\x01R\bactorSub\x12$\n" +
 	"\n" +
 	"gitlab_url\x18\a \x01(\tB\x05\x90\xa7\x1d\x80\x04R\tgitlabUrl\x120\n" +
 	"\x10gitlab_namespace\x18\b \x01(\tB\x05\x90\xa7\x1d\x80\x04R\x0fgitlabNamespace\x12(\n" +
@@ -1659,13 +1852,14 @@ const file_vservices_gitlab_connector_proto_rawDesc = "" +
 	"\x0fauthor_username\x18\r \x01(\tB\x05\x90\xa7\x1d\x80\x02R\x0eauthorUsername\x12E\n" +
 	"\n" +
 	"event_type\x18\x0e \x01(\x0e2 .gitlabconnector.GitLabEventTypeB\x04\x98\xa7\x1d\x01R\teventType\x12/\n" +
-	"\x10ingestion_source\x18\x0f \x01(\tB\x04\x90\xa7\x1d R\x0fingestionSource\x122\n" +
+	"\x10ingestion_source\x18\x0f \x01(\tB\x04\x90\xa7\x1d R\x0fingestionSource\x12H\n" +
+	"\x0escheme_version\x18\x10 \x01(\tB!\x88\xa6\x1d\x01\x90\xa7\x1d\x10\xfa\xa8\x1d\x15SPIFFE_SCHEME_VERSIONR\rschemeVersion\x122\n" +
 	"\x04push\x18\x14 \x01(\v2\x1c.gitlabconnector.PushPayloadH\x00R\x04push\x12K\n" +
 	"\rmerge_request\x18\x15 \x01(\v2$.gitlabconnector.MergeRequestPayloadH\x00R\fmergeRequest\x12>\n" +
 	"\bpipeline\x18\x16 \x01(\v2 .gitlabconnector.PipelinePayloadH\x00R\bpipeline\x125\n" +
 	"\x05issue\x18\x17 \x01(\v2\x1d.gitlabconnector.IssuePayloadH\x00R\x05issue\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\xd2\x06\x8a\xaa\x1d\x18\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\xff\x06\x8a\xaa\x1d\x18\n" +
 	"\bevent_id\x12\fowner_spiffe\x92\xaa\x1d\xd0\x01\n" +
 	"\rGitLabProject\x12\vproject_key\x1a\x16\n" +
 	"\vproject_key\x1a\x05exact0\x01\x1a\x19\n" +
@@ -1675,10 +1869,11 @@ const file_vservices_gitlab_connector_proto_rawDesc = "" +
 	"\x10gitlab_namespace\x1a\x05exact\x1a\x15\n" +
 	"\fproject_path\x1a\x05exact\x1a%\n" +
 	"\ftimestamp_ms\x12\x10last_activity_ms\x1a\x03int\x1a\x11\n" +
-	"\bevent_id\x1a\x05exact\x92\xaa\x1d\xeb\x01\n" +
+	"\bevent_id\x1a\x05exact\x92\xaa\x1d\x84\x02\n" +
 	"\x0eGitLabActivity\x12\bevent_id\x1a\x11\n" +
 	"\bevent_id\x1a\x05exact\x1a\x15\n" +
-	"\fowner_spiffe\x1a\x05exact\x1a\x19\n" +
+	"\fowner_spiffe\x1a\x05exact\x1a\x17\n" +
+	"\x0escheme_version\x1a\x05exact\x1a\x19\n" +
 	"\x10tenant_namespace\x1a\x05exact\x1a%\n" +
 	"\vproject_key\x12\aproject\"\rGitLabProject\x1a\x12\n" +
 	"\tactor_sub\x1a\x05exact\x1a\x0e\n" +
@@ -1686,14 +1881,15 @@ const file_vservices_gitlab_connector_proto_rawDesc = "" +
 	"\fauthor_email\x1a\x05exact\x1a\x13\n" +
 	"\n" +
 	"event_type\x1a\x05exact\x1a\x13\n" +
-	"\ftimestamp_ms\x1a\x03int\x9a\xaa\x1d\xec\x02\n" +
+	"\ftimestamp_ms\x1a\x03int\x9a\xaa\x1d\x80\x03\n" +
 	"\x14GitLabActivityRecord\x12 ReplacingMergeTree(timestamp_ms)\x1aDtoDateTime(fromUnixTimestamp64Milli(timestamp_ms)) + INTERVAL 90 DAY*\x14\n" +
 	"\x10tenant_namespace\x18\x01*\x14\n" +
 	"\x10gitlab_namespace\x18\x02*\x10\n" +
 	"\fproject_path\x18\x03*\x12\n" +
 	"\ftimestamp_ms\x18\x04 \x01*\f\n" +
 	"\bevent_id\x18\x05*\x0e\n" +
-	"\fowner_spiffe*\v\n" +
+	"\fowner_spiffe*\x12\n" +
+	"\x0escheme_version(\x01*\v\n" +
 	"\tactor_sub*\a\n" +
 	"\x05email*\x0e\n" +
 	"\fauthor_email*\x13\n" +
@@ -1709,12 +1905,25 @@ const file_vservices_gitlab_connector_proto_rawDesc = "" +
 	"\fevent_stream\x18\x01 \x01(\v2%.gitlabconnector.GitLabConnectorEventB\x04\x88\xb6\x18\x01R\veventStream\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x10\xe2\xa9\x1d\f\n" +
-	"\beventbus\x18\x01\";\n" +
+	"\beventbus\x18\x01\"\xde\x01\n" +
+	"1GitLabConnectorEventBusEventStreamSubscribeRecord\x127\n" +
+	"\x04meta\x18\x01 \x01(\v2#.gitlabconnector.EventBusRecordMetaR\x04meta\x12?\n" +
+	"\apayload\x18\x02 \x01(\v2%.gitlabconnector.GitLabConnectorEventR\apayload\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"d\n" +
 	"\x13TopicPublishReceipt\x12\x1c\n" +
 	"\tpublished\x18\x01 \x01(\bR\tpublished\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xdd\x01\n" +
+	"\x12EventBusRecordMeta\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\fR\x03key\x12\x14\n" +
+	"\x05topic\x18\x02 \x01(\tR\x05topic\x12\x1c\n" +
+	"\tpartition\x18\x03 \x01(\x05R\tpartition\x12\x16\n" +
+	"\x06offset\x18\x04 \x01(\x03R\x06offset\x128\n" +
+	"\ttimestamp\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa1\x05\n" +
 	"\x11GitLabProjectNode\x12H\n" +
@@ -1730,43 +1939,46 @@ const file_vservices_gitlab_connector_proto_rawDesc = "" +
 	"\bevent_id\x18\a \x01(\tB\"\x92\xa9\x1d\x05exact\xfa\xa9\x1d\bevent_id\x8a\xaa\x1d\t\b\x02\x12\x05exactR\aeventId\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:F\xf2\xa8\x1dB\n" +
-	"\rGitLabProject\x12\vproject_key\x1a$gitlabconnector.GitLabConnectorEvent\"\x9a\x06\n" +
+	"\rGitLabProject\x12\vproject_key\x1a$gitlabconnector.GitLabConnectorEvent\"\xeb\x06\n" +
 	"\x12GitLabActivityNode\x12=\n" +
 	"\bevent_id\x18\x01 \x01(\tB\"\x92\xa9\x1d\x05exact\xfa\xa9\x1d\bevent_id\x8a\xaa\x1d\t\b\x02\x12\x05exactR\aeventId\x12I\n" +
-	"\fowner_spiffe\x18\x02 \x01(\tB&\x92\xa9\x1d\x05exact\xfa\xa9\x1d\fowner_spiffe\x8a\xaa\x1d\t\b\x02\x12\x05exactR\vownerSpiffe\x12U\n" +
-	"\x10tenant_namespace\x18\x03 \x01(\tB*\x92\xa9\x1d\x05exact\xfa\xa9\x1d\x10tenant_namespace\x8a\xaa\x1d\t\b\x02\x12\x05exactR\x0ftenantNamespace\x12:\n" +
-	"\aproject\x18\x04 \x01(\tB \xfa\xa9\x1d\vproject_key\x82\xaa\x1d\rGitLabProjectR\aproject\x12@\n" +
-	"\tactor_sub\x18\x05 \x01(\tB#\x92\xa9\x1d\x05exact\xfa\xa9\x1d\tactor_sub\x8a\xaa\x1d\t\b\x02\x12\x05exactR\bactorSub\x125\n" +
-	"\x05email\x18\x06 \x01(\tB\x1f\x92\xa9\x1d\x05exact\xfa\xa9\x1d\x05email\x8a\xaa\x1d\t\b\x02\x12\x05exactR\x05email\x12I\n" +
-	"\fauthor_email\x18\a \x01(\tB&\x92\xa9\x1d\x05exact\xfa\xa9\x1d\fauthor_email\x8a\xaa\x1d\t\b\x02\x12\x05exactR\vauthorEmail\x12e\n" +
+	"\fowner_spiffe\x18\x02 \x01(\tB&\x92\xa9\x1d\x05exact\xfa\xa9\x1d\fowner_spiffe\x8a\xaa\x1d\t\b\x02\x12\x05exactR\vownerSpiffe\x12O\n" +
+	"\x0escheme_version\x18\x03 \x01(\tB(\x92\xa9\x1d\x05exact\xfa\xa9\x1d\x0escheme_version\x8a\xaa\x1d\t\b\x02\x12\x05exactR\rschemeVersion\x12U\n" +
+	"\x10tenant_namespace\x18\x04 \x01(\tB*\x92\xa9\x1d\x05exact\xfa\xa9\x1d\x10tenant_namespace\x8a\xaa\x1d\t\b\x02\x12\x05exactR\x0ftenantNamespace\x12:\n" +
+	"\aproject\x18\x05 \x01(\tB \xfa\xa9\x1d\vproject_key\x82\xaa\x1d\rGitLabProjectR\aproject\x12@\n" +
+	"\tactor_sub\x18\x06 \x01(\tB#\x92\xa9\x1d\x05exact\xfa\xa9\x1d\tactor_sub\x8a\xaa\x1d\t\b\x02\x12\x05exactR\bactorSub\x125\n" +
+	"\x05email\x18\a \x01(\tB\x1f\x92\xa9\x1d\x05exact\xfa\xa9\x1d\x05email\x8a\xaa\x1d\t\b\x02\x12\x05exactR\x05email\x12I\n" +
+	"\fauthor_email\x18\b \x01(\tB&\x92\xa9\x1d\x05exact\xfa\xa9\x1d\fauthor_email\x8a\xaa\x1d\t\b\x02\x12\x05exactR\vauthorEmail\x12e\n" +
 	"\n" +
-	"event_type\x18\b \x01(\x0e2 .gitlabconnector.GitLabEventTypeB$\x92\xa9\x1d\x05exact\xfa\xa9\x1d\n" +
+	"event_type\x18\t \x01(\x0e2 .gitlabconnector.GitLabEventTypeB$\x92\xa9\x1d\x05exact\xfa\xa9\x1d\n" +
 	"event_type\x8a\xaa\x1d\t\b\x02\x12\x05exactR\teventType\x12E\n" +
-	"\ftimestamp_ms\x18\t \x01(\x03B\"\x92\xa9\x1d\x03int\xfa\xa9\x1d\ftimestamp_ms\x8a\xaa\x1d\a\b\x02\x12\x03intR\vtimestampMs\x12\x1a\n" +
+	"\ftimestamp_ms\x18\n" +
+	" \x01(\x03B\"\x92\xa9\x1d\x03int\xfa\xa9\x1d\ftimestamp_ms\x8a\xaa\x1d\a\b\x02\x12\x03intR\vtimestampMs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:D\xf2\xa8\x1d@\n" +
-	"\x0eGitLabActivity\x12\bevent_id\x1a$gitlabconnector.GitLabConnectorEvent\"\xa4\b\n" +
+	"\x0eGitLabActivity\x12\bevent_id\x1a$gitlabconnector.GitLabConnectorEvent\"\xe5\b\n" +
 	"\x14GitLabActivityRecord\x12E\n" +
 	"\x10tenant_namespace\x18\x01 \x01(\tB\x1a\xfa\xa9\x1d\x10tenant_namespace\x92\xaa\x1d\x02\x18\x01R\x0ftenantNamespace\x12E\n" +
 	"\x10gitlab_namespace\x18\x02 \x01(\tB\x1a\xfa\xa9\x1d\x10gitlab_namespace\x92\xaa\x1d\x02\x18\x02R\x0fgitlabNamespace\x129\n" +
 	"\fproject_path\x18\x03 \x01(\tB\x16\xfa\xa9\x1d\fproject_path\x92\xaa\x1d\x02\x18\x03R\vprojectPath\x12;\n" +
 	"\ftimestamp_ms\x18\x04 \x01(\x03B\x18\xfa\xa9\x1d\ftimestamp_ms\x92\xaa\x1d\x04\x18\x04 \x01R\vtimestampMs\x12-\n" +
 	"\bevent_id\x18\x05 \x01(\tB\x12\xfa\xa9\x1d\bevent_id\x92\xaa\x1d\x02\x18\x05R\aeventId\x127\n" +
-	"\fowner_spiffe\x18\x06 \x01(\tB\x14\xfa\xa9\x1d\fowner_spiffe\x92\xaa\x1d\x00R\vownerSpiffe\x12.\n" +
-	"\tactor_sub\x18\a \x01(\tB\x11\xfa\xa9\x1d\tactor_sub\x92\xaa\x1d\x00R\bactorSub\x12#\n" +
-	"\x05email\x18\b \x01(\tB\r\xfa\xa9\x1d\x05email\x92\xaa\x1d\x00R\x05email\x127\n" +
-	"\fauthor_email\x18\t \x01(\tB\x14\xfa\xa9\x1d\fauthor_email\x92\xaa\x1d\x00R\vauthorEmail\x12B\n" +
-	"\x0fauthor_username\x18\n" +
-	" \x01(\tB\x19\xfa\xa9\x1d\x0fauthor_username\x92\xaa\x1d\x020\x01R\x0eauthorUsername\x12U\n" +
+	"\fowner_spiffe\x18\x06 \x01(\tB\x14\xfa\xa9\x1d\fowner_spiffe\x92\xaa\x1d\x00R\vownerSpiffe\x12?\n" +
+	"\x0escheme_version\x18\a \x01(\tB\x18\xfa\xa9\x1d\x0escheme_version\x92\xaa\x1d\x020\x01R\rschemeVersion\x12.\n" +
+	"\tactor_sub\x18\b \x01(\tB\x11\xfa\xa9\x1d\tactor_sub\x92\xaa\x1d\x00R\bactorSub\x12#\n" +
+	"\x05email\x18\t \x01(\tB\r\xfa\xa9\x1d\x05email\x92\xaa\x1d\x00R\x05email\x127\n" +
+	"\fauthor_email\x18\n" +
+	" \x01(\tB\x14\xfa\xa9\x1d\fauthor_email\x92\xaa\x1d\x00R\vauthorEmail\x12B\n" +
+	"\x0fauthor_username\x18\v \x01(\tB\x19\xfa\xa9\x1d\x0fauthor_username\x92\xaa\x1d\x020\x01R\x0eauthorUsername\x12U\n" +
 	"\n" +
-	"event_type\x18\v \x01(\x0e2 .gitlabconnector.GitLabEventTypeB\x14\xfa\xa9\x1d\n" +
+	"event_type\x18\f \x01(\x0e2 .gitlabconnector.GitLabEventTypeB\x14\xfa\xa9\x1d\n" +
 	"event_type\x92\xaa\x1d\x020\x01R\teventType\x121\n" +
 	"\n" +
-	"gitlab_url\x18\f \x01(\tB\x12\xfa\xa9\x1d\n" +
+	"gitlab_url\x18\r \x01(\tB\x12\xfa\xa9\x1d\n" +
 	"gitlab_url\x92\xaa\x1d\x00R\tgitlabUrl\x124\n" +
-	"\vproject_key\x18\r \x01(\tB\x13\xfa\xa9\x1d\vproject_key\x92\xaa\x1d\x00R\n" +
+	"\vproject_key\x18\x0e \x01(\tB\x13\xfa\xa9\x1d\vproject_key\x92\xaa\x1d\x00R\n" +
 	"projectKey\x12E\n" +
-	"\x10ingestion_source\x18\x0e \x01(\tB\x1a\xfa\xa9\x1d\x10ingestion_source\x92\xaa\x1d\x020\x01R\x0fingestionSource\x12\x1a\n" +
+	"\x10ingestion_source\x18\x0f \x01(\tB\x1a\xfa\xa9\x1d\x10ingestion_source\x92\xaa\x1d\x020\x01R\x0fingestionSource\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x93\x01\xea\xa9\x1d\x8e\x01\x12 ReplacingMergeTree(timestamp_ms)\x1aDtoDateTime(fromUnixTimestamp64Milli(timestamp_ms)) + INTERVAL 90 DAY\"$gitlabconnector.GitLabConnectorEvent*\xcf\x01\n" +
 	"\x0fGitLabEventType\x12!\n" +
@@ -1775,7 +1987,7 @@ const file_vservices_gitlab_connector_proto_rawDesc = "" +
 	"\x1fGITLAB_EVENT_TYPE_MERGE_REQUEST\x10\x02\x12\x1e\n" +
 	"\x1aGITLAB_EVENT_TYPE_PIPELINE\x10\x03\x12\x1b\n" +
 	"\x17GITLAB_EVENT_TYPE_ISSUE\x10\x04\x12\x1b\n" +
-	"\x17GITLAB_EVENT_TYPE_AUDIT\x10\x05*\x89\x03\n" +
+	"\x17GITLAB_EVENT_TYPE_AUDIT\x10\x05*\xf3\x03\n" +
 	"\x06TypeID\x12\x17\n" +
 	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x18\n" +
 	"\x14TYPE_ID_PUSH_PAYLOAD\x10\x01\x12!\n" +
@@ -1783,13 +1995,15 @@ const file_vservices_gitlab_connector_proto_rawDesc = "" +
 	"\x18TYPE_ID_PIPELINE_PAYLOAD\x10\x03\x12\x19\n" +
 	"\x15TYPE_ID_ISSUE_PAYLOAD\x10\x04\x12#\n" +
 	"\x1fTYPE_ID_GIT_LAB_CONNECTOR_EVENT\x10\x05\x12'\n" +
-	"#TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS\x10\x06\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10\a\x12!\n" +
-	"\x1dTYPE_ID_TOPIC_PUBLISH_RECEIPT\x10\b\x12 \n" +
-	"\x1cTYPE_ID_GIT_LAB_PROJECT_NODE\x10\t\x12!\n" +
-	"\x1dTYPE_ID_GIT_LAB_ACTIVITY_NODE\x10\n" +
-	"\x12#\n" +
-	"\x1fTYPE_ID_GIT_LAB_ACTIVITY_RECORD\x10\v*\xd5\x03\n" +
+	"#TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS\x10\x06\x12E\n" +
+	"ATYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD\x10\a\x12\x15\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x10\b\x12!\n" +
+	"\x1dTYPE_ID_TOPIC_PUBLISH_RECEIPT\x10\t\x12!\n" +
+	"\x1dTYPE_ID_EVENT_BUS_RECORD_META\x10\n" +
+	"\x12 \n" +
+	"\x1cTYPE_ID_GIT_LAB_PROJECT_NODE\x10\v\x12!\n" +
+	"\x1dTYPE_ID_GIT_LAB_ACTIVITY_NODE\x10\f\x12#\n" +
+	"\x1fTYPE_ID_GIT_LAB_ACTIVITY_RECORD\x10\r*\xd5\x03\n" +
 	"(GitLabConnectorEventBusStateServiceRpcId\x12@\n" +
 	"<GIT_LAB_CONNECTOR_EVENT_BUS_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x12B\n" +
 	">GIT_LAB_CONNECTOR_EVENT_BUS_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x12A\n" +
@@ -1809,15 +2023,17 @@ const file_vservices_gitlab_connector_proto_rawDesc = "" +
 	"(TIMESERIES_MUTATION_RPC_ID_ALL_ACCESSORS\x10\x01\x12+\n" +
 	"'TIMESERIES_MUTATION_RPC_ID_ALL_MUTATORS\x10\x02\x12,\n" +
 	"(TIMESERIES_MUTATION_RPC_ID_ALL_EXECUTORS\x10\x03\x12=\n" +
-	"9TIMESERIES_MUTATION_RPC_ID_INSERT_GIT_LAB_ACTIVITY_RECORD\x10\x042\xf4\x01\n" +
+	"9TIMESERIES_MUTATION_RPC_ID_INSERT_GIT_LAB_ACTIVITY_RECORD\x10\x042\x91\x02\n" +
 	"#GitLabConnectorEventBusStateService\x12c\n" +
-	"\x14PublishToEventStream\x12%.gitlabconnector.GitLabConnectorEvent\x1a$.gitlabconnector.TopicPublishReceipt\x12V\n" +
-	"\x16SubscribeToEventStream\x12\x13.trace.TraceRequest\x1a%.gitlabconnector.GitLabConnectorEvent0\x01\x1a\x10\xe2\x97\"\beventbus\xea\x97\"\x002\xc5\x01\n" +
+	"\x14PublishToEventStream\x12%.gitlabconnector.GitLabConnectorEvent\x1a$.gitlabconnector.TopicPublishReceipt\x12s\n" +
+	"\x16SubscribeToEventStream\x12\x13.trace.TraceRequest\x1aB.gitlabconnector.GitLabConnectorEventBusEventStreamSubscribeRecord0\x01\x1a\x10\xe2\x97\"\beventbus\xea\x97\"\x002\xc5\x01\n" +
 	"\rGraphMutation\x12W\n" +
 	"\x18InsertGitLabActivityNode\x12#.gitlabconnector.GitLabActivityNode\x1a\x16.google.protobuf.Empty\x12U\n" +
 	"\x17InsertGitLabProjectNode\x12\".gitlabconnector.GitLabProjectNode\x1a\x16.google.protobuf.Empty\x1a\x04\xea\x97\"\x002w\n" +
 	"\x12TimeseriesMutation\x12[\n" +
-	"\x1aInsertGitLabActivityRecord\x12%.gitlabconnector.GitLabActivityRecord\x1a\x16.google.protobuf.Empty\x1a\x04\xea\x97\"\x00B{\xb2\xb6\x18\x11\n" +
+	"\x1aInsertGitLabActivityRecord\x12%.gitlabconnector.GitLabActivityRecord\x1a\x16.google.protobuf.Empty\x1a\x04\xea\x97\"\x00B\xc8\x01\x8a\xb5\x18*\n" +
+	"\x1aGITLAB_EVENT_RESOURCE_KIND\x12\fgitlab-event\x8a\xb5\x18\x1b\n" +
+	"\x15SPIFFE_SCHEME_VERSION\x12\x02v1\xb2\xb6\x18\x11\n" +
 	"\x0fgitlabconnectorZdgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/vservices/gitlabconnectorb\x06proto3"
 
 var (
@@ -1833,26 +2049,29 @@ func file_vservices_gitlab_connector_proto_rawDescGZIP() []byte {
 }
 
 var file_vservices_gitlab_connector_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
-var file_vservices_gitlab_connector_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_vservices_gitlab_connector_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_vservices_gitlab_connector_proto_goTypes = []any{
 	(GitLabEventType)(0), // 0: gitlabconnector.GitLabEventType
 	(TypeID)(0),          // 1: gitlabconnector.TypeID
-	(GitLabConnectorEventBusStateServiceRpcId)(0), // 2: gitlabconnector.GitLabConnectorEventBusStateServiceRpcId
-	(GraphMutationRpcId)(0),                       // 3: gitlabconnector.GraphMutationRpcId
-	(TimeseriesMutationRpcId)(0),                  // 4: gitlabconnector.TimeseriesMutationRpcId
-	(*PushPayload)(nil),                           // 5: gitlabconnector.PushPayload
-	(*MergeRequestPayload)(nil),                   // 6: gitlabconnector.MergeRequestPayload
-	(*PipelinePayload)(nil),                       // 7: gitlabconnector.PipelinePayload
-	(*IssuePayload)(nil),                          // 8: gitlabconnector.IssuePayload
-	(*GitLabConnectorEvent)(nil),                  // 9: gitlabconnector.GitLabConnectorEvent
-	(*GitLabConnectorEventBus)(nil),               // 10: gitlabconnector.GitLabConnectorEventBus
-	(*MapEmpty)(nil),                              // 11: gitlabconnector.MapEmpty
-	(*TopicPublishReceipt)(nil),                   // 12: gitlabconnector.TopicPublishReceipt
-	(*GitLabProjectNode)(nil),                     // 13: gitlabconnector.GitLabProjectNode
-	(*GitLabActivityNode)(nil),                    // 14: gitlabconnector.GitLabActivityNode
-	(*GitLabActivityRecord)(nil),                  // 15: gitlabconnector.GitLabActivityRecord
-	(*trace.TraceRequest)(nil),                    // 16: trace.TraceRequest
-	(*emptypb.Empty)(nil),                         // 17: google.protobuf.Empty
+	(GitLabConnectorEventBusStateServiceRpcId)(0),             // 2: gitlabconnector.GitLabConnectorEventBusStateServiceRpcId
+	(GraphMutationRpcId)(0),                                   // 3: gitlabconnector.GraphMutationRpcId
+	(TimeseriesMutationRpcId)(0),                              // 4: gitlabconnector.TimeseriesMutationRpcId
+	(*PushPayload)(nil),                                       // 5: gitlabconnector.PushPayload
+	(*MergeRequestPayload)(nil),                               // 6: gitlabconnector.MergeRequestPayload
+	(*PipelinePayload)(nil),                                   // 7: gitlabconnector.PipelinePayload
+	(*IssuePayload)(nil),                                      // 8: gitlabconnector.IssuePayload
+	(*GitLabConnectorEvent)(nil),                              // 9: gitlabconnector.GitLabConnectorEvent
+	(*GitLabConnectorEventBus)(nil),                           // 10: gitlabconnector.GitLabConnectorEventBus
+	(*GitLabConnectorEventBusEventStreamSubscribeRecord)(nil), // 11: gitlabconnector.GitLabConnectorEventBusEventStreamSubscribeRecord
+	(*MapEmpty)(nil),                                          // 12: gitlabconnector.MapEmpty
+	(*TopicPublishReceipt)(nil),                               // 13: gitlabconnector.TopicPublishReceipt
+	(*EventBusRecordMeta)(nil),                                // 14: gitlabconnector.EventBusRecordMeta
+	(*GitLabProjectNode)(nil),                                 // 15: gitlabconnector.GitLabProjectNode
+	(*GitLabActivityNode)(nil),                                // 16: gitlabconnector.GitLabActivityNode
+	(*GitLabActivityRecord)(nil),                              // 17: gitlabconnector.GitLabActivityRecord
+	(*timestamppb.Timestamp)(nil),                             // 18: google.protobuf.Timestamp
+	(*trace.TraceRequest)(nil),                                // 19: trace.TraceRequest
+	(*emptypb.Empty)(nil),                                     // 20: google.protobuf.Empty
 }
 var file_vservices_gitlab_connector_proto_depIdxs = []int32{
 	0,  // 0: gitlabconnector.GitLabConnectorEvent.event_type:type_name -> gitlabconnector.GitLabEventType
@@ -1861,23 +2080,26 @@ var file_vservices_gitlab_connector_proto_depIdxs = []int32{
 	7,  // 3: gitlabconnector.GitLabConnectorEvent.pipeline:type_name -> gitlabconnector.PipelinePayload
 	8,  // 4: gitlabconnector.GitLabConnectorEvent.issue:type_name -> gitlabconnector.IssuePayload
 	9,  // 5: gitlabconnector.GitLabConnectorEventBus.event_stream:type_name -> gitlabconnector.GitLabConnectorEvent
-	0,  // 6: gitlabconnector.GitLabActivityNode.event_type:type_name -> gitlabconnector.GitLabEventType
-	0,  // 7: gitlabconnector.GitLabActivityRecord.event_type:type_name -> gitlabconnector.GitLabEventType
-	9,  // 8: gitlabconnector.GitLabConnectorEventBusStateService.PublishToEventStream:input_type -> gitlabconnector.GitLabConnectorEvent
-	16, // 9: gitlabconnector.GitLabConnectorEventBusStateService.SubscribeToEventStream:input_type -> trace.TraceRequest
-	14, // 10: gitlabconnector.GraphMutation.InsertGitLabActivityNode:input_type -> gitlabconnector.GitLabActivityNode
-	13, // 11: gitlabconnector.GraphMutation.InsertGitLabProjectNode:input_type -> gitlabconnector.GitLabProjectNode
-	15, // 12: gitlabconnector.TimeseriesMutation.InsertGitLabActivityRecord:input_type -> gitlabconnector.GitLabActivityRecord
-	12, // 13: gitlabconnector.GitLabConnectorEventBusStateService.PublishToEventStream:output_type -> gitlabconnector.TopicPublishReceipt
-	9,  // 14: gitlabconnector.GitLabConnectorEventBusStateService.SubscribeToEventStream:output_type -> gitlabconnector.GitLabConnectorEvent
-	17, // 15: gitlabconnector.GraphMutation.InsertGitLabActivityNode:output_type -> google.protobuf.Empty
-	17, // 16: gitlabconnector.GraphMutation.InsertGitLabProjectNode:output_type -> google.protobuf.Empty
-	17, // 17: gitlabconnector.TimeseriesMutation.InsertGitLabActivityRecord:output_type -> google.protobuf.Empty
-	13, // [13:18] is the sub-list for method output_type
-	8,  // [8:13] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	14, // 6: gitlabconnector.GitLabConnectorEventBusEventStreamSubscribeRecord.meta:type_name -> gitlabconnector.EventBusRecordMeta
+	9,  // 7: gitlabconnector.GitLabConnectorEventBusEventStreamSubscribeRecord.payload:type_name -> gitlabconnector.GitLabConnectorEvent
+	18, // 8: gitlabconnector.EventBusRecordMeta.timestamp:type_name -> google.protobuf.Timestamp
+	0,  // 9: gitlabconnector.GitLabActivityNode.event_type:type_name -> gitlabconnector.GitLabEventType
+	0,  // 10: gitlabconnector.GitLabActivityRecord.event_type:type_name -> gitlabconnector.GitLabEventType
+	9,  // 11: gitlabconnector.GitLabConnectorEventBusStateService.PublishToEventStream:input_type -> gitlabconnector.GitLabConnectorEvent
+	19, // 12: gitlabconnector.GitLabConnectorEventBusStateService.SubscribeToEventStream:input_type -> trace.TraceRequest
+	16, // 13: gitlabconnector.GraphMutation.InsertGitLabActivityNode:input_type -> gitlabconnector.GitLabActivityNode
+	15, // 14: gitlabconnector.GraphMutation.InsertGitLabProjectNode:input_type -> gitlabconnector.GitLabProjectNode
+	17, // 15: gitlabconnector.TimeseriesMutation.InsertGitLabActivityRecord:input_type -> gitlabconnector.GitLabActivityRecord
+	13, // 16: gitlabconnector.GitLabConnectorEventBusStateService.PublishToEventStream:output_type -> gitlabconnector.TopicPublishReceipt
+	11, // 17: gitlabconnector.GitLabConnectorEventBusStateService.SubscribeToEventStream:output_type -> gitlabconnector.GitLabConnectorEventBusEventStreamSubscribeRecord
+	20, // 18: gitlabconnector.GraphMutation.InsertGitLabActivityNode:output_type -> google.protobuf.Empty
+	20, // 19: gitlabconnector.GraphMutation.InsertGitLabProjectNode:output_type -> google.protobuf.Empty
+	20, // 20: gitlabconnector.TimeseriesMutation.InsertGitLabActivityRecord:output_type -> google.protobuf.Empty
+	16, // [16:21] is the sub-list for method output_type
+	11, // [11:16] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_vservices_gitlab_connector_proto_init() }
@@ -1897,7 +2119,7 @@ func file_vservices_gitlab_connector_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_vservices_gitlab_connector_proto_rawDesc), len(file_vservices_gitlab_connector_proto_rawDesc)),
 			NumEnums:      5,
-			NumMessages:   11,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   3,
 		},

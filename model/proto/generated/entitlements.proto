@@ -5,18 +5,12 @@ syntax = "proto3";
 package entitlements;
 option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/entitlements";
 
-// EntitlementGrant is one generated entitlement grant token.
-// Runtime tokens should carry exact RPC grants only, e.g. PACKAGE_SERVICE_RPC.
-// Wildcard grants are expanded by generated helpers before token minting.
-message EntitlementGrant {
-  string token = 1;
-}
-
 // TokenEntitlements holds compressed C2S entitlements embedded in user tokens.
 // OPA returns this structure directly; the token authority embeds it in the JWT service_entitlements claim.
 // grants may contain exact or wildcard grant tokens; generated helpers normalize them before authorization.
 message TokenEntitlements {
-  repeated EntitlementGrant grants = 1;
+  // grants is a flat list of generated grant tokens, e.g. PACKAGE_SERVICE_RPC.
+  repeated string grants = 1;
   // azp restricts these entitlements to tokens with a matching authorized party.
   // Empty = entitlements apply regardless of azp.
   repeated string azp = 100;

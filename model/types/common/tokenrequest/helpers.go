@@ -2437,14 +2437,14 @@ func ValidateTokenMintRequestWithDepth(m *TokenMintRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Project must be at most 256 characters, got: %d", len(m.Project))
 	}
 
-	// Validate ServiceAuds (assert_max_size: 32)
-	if len(m.ServiceAuds) > 32 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ServiceAuds exceeds max size of 32, got: %d", len(m.ServiceAuds))
-	}
-
 	// Validate ServiceAuds (assert_max_length: 256)
 	if len(m.ServiceAuds) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ServiceAuds must be at most 256 characters, got: %d", len(m.ServiceAuds))
+	}
+
+	// Validate ServiceAuds (assert_max_size: 32)
+	if len(m.ServiceAuds) > 32 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ServiceAuds exceeds max size of 32, got: %d", len(m.ServiceAuds))
 	}
 
 	// Validate ServiceAuds elements (default max size: 32768 bytes)
@@ -2628,14 +2628,14 @@ func ValidateMintClientTokenRequestWithDepth(m *MintClientTokenRequest, depth in
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate InputToken (assert_required)
-	if m.InputToken == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field InputToken is required")
-	}
-
 	// Validate InputToken (assert_max_size: 65536 bytes)
 	if len(m.InputToken) > 65536 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field InputToken exceeds max size of 65536 bytes, got: %d", len(m.InputToken))
+	}
+
+	// Validate InputToken (assert_required)
+	if m.InputToken == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field InputToken is required")
 	}
 
 	// Validate Exp (assert_ge: 0)

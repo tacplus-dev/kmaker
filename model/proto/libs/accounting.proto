@@ -322,27 +322,3 @@ message SpoolConfig {
   string spool_path = 3;
   int64 spool_max_bytes = 4;
 }
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-enum TypeID {
-  TYPE_ID_UNSPECIFIED = 0;
-  TYPE_ID_ERROR_CONTEXT = 1;
-  TYPE_ID_EVENT = 2;
-  TYPE_ID_RPC_COMPLETED = 3;
-  TYPE_ID_RPC_ERROR = 4;
-  TYPE_ID_TOKEN_REJECTED = 5;
-  TYPE_ID_RPC_SUMMARY = 6;
-  TYPE_ID_SESSION_SUMMARY = 7;
-  TYPE_ID_TOKEN_EXCHANGED = 8;
-  TYPE_ID_ENDPOINT_HEALTH_CHANGED = 9;
-  TYPE_ID_STATE_UPDATED = 10;
-  TYPE_ID_COMMAND_EXECUTED = 11;
-  TYPE_ID_TOOL_USED = 12;
-  TYPE_ID_SUBAGENT_STARTED = 13;
-  TYPE_ID_FILE_MODIFIED = 14;
-  TYPE_ID_DIAGNOSTIC = 15;
-  TYPE_ID_SPOOL_CONFIG = 16;
-}

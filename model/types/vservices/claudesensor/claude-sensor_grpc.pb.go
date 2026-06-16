@@ -36,66 +36,66 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	StratumQuery_NewMap_FullMethodName             = "/claudesensor.StratumQuery/NewMap"
-	StratumQuery_DeleteMap_FullMethodName          = "/claudesensor.StratumQuery/DeleteMap"
-	StratumQuery_ListMaps_FullMethodName           = "/claudesensor.StratumQuery/ListMaps"
-	StratumQuery_DescribeMap_FullMethodName        = "/claudesensor.StratumQuery/DescribeMap"
-	StratumQuery_MapSize_FullMethodName            = "/claudesensor.StratumQuery/MapSize"
-	StratumQuery_LoadByIds_FullMethodName          = "/claudesensor.StratumQuery/LoadByIds"
-	StratumQuery_LoadBySql_FullMethodName          = "/claudesensor.StratumQuery/LoadBySql"
-	StratumQuery_LoadByTimedb_FullMethodName       = "/claudesensor.StratumQuery/LoadByTimedb"
-	StratumQuery_LoadByGraphdb_FullMethodName      = "/claudesensor.StratumQuery/LoadByGraphdb"
-	StratumQuery_FilterMap_FullMethodName          = "/claudesensor.StratumQuery/FilterMap"
-	StratumQuery_Merge_FullMethodName              = "/claudesensor.StratumQuery/Merge"
-	StratumQuery_QueryMap_FullMethodName           = "/claudesensor.StratumQuery/QueryMap"
-	StratumQuery_ListActiveSessions_FullMethodName = "/claudesensor.StratumQuery/ListActiveSessions"
-	StratumQuery_GetSessionEvents_FullMethodName   = "/claudesensor.StratumQuery/GetSessionEvents"
-	StratumQuery_GetUserSessions_FullMethodName    = "/claudesensor.StratumQuery/GetUserSessions"
-	StratumQuery_QueryByTimeRange_FullMethodName   = "/claudesensor.StratumQuery/QueryByTimeRange"
-	StratumQuery_QueryByEmail_FullMethodName       = "/claudesensor.StratumQuery/QueryByEmail"
-	StratumQuery_WatchLiveSessions_FullMethodName  = "/claudesensor.StratumQuery/WatchLiveSessions"
+	StratumQuery_CreateMap_FullMethodName             = "/claudesensor.StratumQuery/CreateMap"
+	StratumQuery_DeleteMap_FullMethodName             = "/claudesensor.StratumQuery/DeleteMap"
+	StratumQuery_ListMaps_FullMethodName              = "/claudesensor.StratumQuery/ListMaps"
+	StratumQuery_GetMapDetail_FullMethodName          = "/claudesensor.StratumQuery/GetMapDetail"
+	StratumQuery_GetMapSize_FullMethodName            = "/claudesensor.StratumQuery/GetMapSize"
+	StratumQuery_UpdateMapByIds_FullMethodName        = "/claudesensor.StratumQuery/UpdateMapByIds"
+	StratumQuery_UpdateMapBySql_FullMethodName        = "/claudesensor.StratumQuery/UpdateMapBySql"
+	StratumQuery_UpdateMapByTimedb_FullMethodName     = "/claudesensor.StratumQuery/UpdateMapByTimedb"
+	StratumQuery_UpdateMapByGraphdb_FullMethodName    = "/claudesensor.StratumQuery/UpdateMapByGraphdb"
+	StratumQuery_UpdateMapFilter_FullMethodName       = "/claudesensor.StratumQuery/UpdateMapFilter"
+	StratumQuery_Merge_FullMethodName                 = "/claudesensor.StratumQuery/Merge"
+	StratumQuery_ExecuteMapQuery_FullMethodName       = "/claudesensor.StratumQuery/ExecuteMapQuery"
+	StratumQuery_ListActiveSessions_FullMethodName    = "/claudesensor.StratumQuery/ListActiveSessions"
+	StratumQuery_GetSessionEvents_FullMethodName      = "/claudesensor.StratumQuery/GetSessionEvents"
+	StratumQuery_GetUserSessions_FullMethodName       = "/claudesensor.StratumQuery/GetUserSessions"
+	StratumQuery_ListEventsByTimeRange_FullMethodName = "/claudesensor.StratumQuery/ListEventsByTimeRange"
+	StratumQuery_ListEventsByEmail_FullMethodName     = "/claudesensor.StratumQuery/ListEventsByEmail"
+	StratumQuery_SubscribeLiveSessions_FullMethodName = "/claudesensor.StratumQuery/SubscribeLiveSessions"
 )
 
 // StratumQueryClient is the client API for StratumQuery service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StratumQueryClient interface {
-	// NewMap creates a new empty named working-set map. Error if name already in use.
-	NewMap(ctx context.Context, in *NewMapRequest, opts ...grpc.CallOption) (*NewMapResponse, error)
+	// CreateMap creates a new empty named working-set map. Error if name already in use.
+	CreateMap(ctx context.Context, in *CreateMapRequest, opts ...grpc.CallOption) (*CreateMapResponse, error)
 	// DeleteMap destroys a working-set map and frees its memory.
 	DeleteMap(ctx context.Context, in *DeleteMapRequest, opts ...grpc.CallOption) (*DeleteMapResponse, error)
 	// ListMaps returns all open working-set maps with basic metadata.
 	ListMaps(ctx context.Context, in *ListMapsRequest, opts ...grpc.CallOption) (*ListMapsResponse, error)
-	// DescribeMap returns a detailed breakdown (event types, time range, top actors).
-	DescribeMap(ctx context.Context, in *DescribeMapRequest, opts ...grpc.CallOption) (*DescribeMapResponse, error)
-	// MapSize returns event count and memory for a quick size check.
-	MapSize(ctx context.Context, in *MapSizeRequest, opts ...grpc.CallOption) (*MapSizeResponse, error)
-	// LoadByIds loads specific events by event_id directly from the hot store.
-	LoadByIds(ctx context.Context, in *LoadByIdsRequest, opts ...grpc.CallOption) (*LoadByIdsResponse, error)
-	// LoadBySql executes Calcite SQL against the hot event store and adds matches.
-	LoadBySql(ctx context.Context, in *LoadBySqlRequest, opts ...grpc.CallOption) (*LoadBySqlResponse, error)
-	// LoadByTimedb queries TimeDB (ClickHouse) for event_ids, then hydrates from the hot store.
-	LoadByTimedb(ctx context.Context, in *LoadByTimedbRequest, opts ...grpc.CallOption) (*LoadByTimedbResponse, error)
-	// LoadByGraphdb queries Dgraph for IDs, then hydrates full events from the hot store.
-	LoadByGraphdb(ctx context.Context, in *LoadByGraphdbRequest, opts ...grpc.CallOption) (*LoadByGraphdbResponse, error)
-	// FilterMap keeps only events matching the SQL predicate; removes all others.
-	FilterMap(ctx context.Context, in *FilterMapRequest, opts ...grpc.CallOption) (*FilterMapResponse, error)
+	// GetMapDetail returns a detailed breakdown (event types, time range, top actors).
+	GetMapDetail(ctx context.Context, in *GetMapDetailRequest, opts ...grpc.CallOption) (*GetMapDetailResponse, error)
+	// GetMapSize returns event count and memory for a quick size check.
+	GetMapSize(ctx context.Context, in *MapSizeRequest, opts ...grpc.CallOption) (*MapSizeResponse, error)
+	// UpdateMapByIds loads specific events by event_id directly from the hot store.
+	UpdateMapByIds(ctx context.Context, in *UpdateMapByIdsRequest, opts ...grpc.CallOption) (*UpdateMapByIdsResponse, error)
+	// UpdateMapBySql executes Calcite SQL against the hot event store and adds matches.
+	UpdateMapBySql(ctx context.Context, in *UpdateMapBySqlRequest, opts ...grpc.CallOption) (*UpdateMapBySqlResponse, error)
+	// UpdateMapByTimedb queries TimeDB (ClickHouse) for event_ids, then hydrates from the hot store.
+	UpdateMapByTimedb(ctx context.Context, in *UpdateMapByTimedbRequest, opts ...grpc.CallOption) (*UpdateMapByTimedbResponse, error)
+	// UpdateMapByGraphdb queries Dgraph for IDs, then hydrates full events from the hot store.
+	UpdateMapByGraphdb(ctx context.Context, in *UpdateMapByGraphdbRequest, opts ...grpc.CallOption) (*UpdateMapByGraphdbResponse, error)
+	// UpdateMapFilter keeps only events matching the SQL predicate; removes all others.
+	UpdateMapFilter(ctx context.Context, in *UpdateMapFilterRequest, opts ...grpc.CallOption) (*UpdateMapFilterResponse, error)
 	// Merge adds all events from src_map into dest_map. src_map is unchanged.
 	Merge(ctx context.Context, in *MergeRequest, opts ...grpc.CallOption) (*MergeResponse, error)
-	// QueryMap executes Calcite SQL over a working-set map and returns JSON rows.
-	QueryMap(ctx context.Context, in *QueryMapRequest, opts ...grpc.CallOption) (*QueryMapResponse, error)
+	// ExecuteMapQuery executes Calcite SQL over a working-set map and returns JSON rows.
+	ExecuteMapQuery(ctx context.Context, in *ExecuteMapQueryRequest, opts ...grpc.CallOption) (*ExecuteMapQueryResponse, error)
 	// ListActiveSessions returns all sessions active within active_session_idle_seconds, paginated.
 	ListActiveSessions(ctx context.Context, in *ListActiveSessionsRequest, opts ...grpc.CallOption) (*ListActiveSessionsResponse, error)
 	// GetSessionEvents returns all SensorEvents for a session, paginated.
 	GetSessionEvents(ctx context.Context, in *GetSessionEventsRequest, opts ...grpc.CallOption) (*GetSessionEventsResponse, error)
 	// GetUserSessions returns all sessions for a user email, paginated.
 	GetUserSessions(ctx context.Context, in *GetUserSessionsRequest, opts ...grpc.CallOption) (*GetUserSessionsResponse, error)
-	// QueryByTimeRange returns all SensorEvents in a time window, paginated.
-	QueryByTimeRange(ctx context.Context, in *QueryByTimeRangeRequest, opts ...grpc.CallOption) (*QueryByTimeRangeResponse, error)
-	// QueryByEmail returns all SensorEvents for a user email, paginated.
-	QueryByEmail(ctx context.Context, in *QueryByEmailRequest, opts ...grpc.CallOption) (*QueryByEmailResponse, error)
-	// WatchLiveSessions streams SessionSummary change events in real time.
-	WatchLiveSessions(ctx context.Context, in *WatchLiveSessionsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[WatchLiveSessionsEvent], error)
+	// ListEventsByTimeRange returns all SensorEvents in a time window, paginated.
+	ListEventsByTimeRange(ctx context.Context, in *ListEventsByTimeRangeRequest, opts ...grpc.CallOption) (*ListEventsByTimeRangeResponse, error)
+	// ListEventsByEmail returns all SensorEvents for a user email, paginated.
+	ListEventsByEmail(ctx context.Context, in *ListEventsByEmailRequest, opts ...grpc.CallOption) (*ListEventsByEmailResponse, error)
+	// SubscribeLiveSessions streams SessionSummary change events in real time.
+	SubscribeLiveSessions(ctx context.Context, in *WatchLiveSessionsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[WatchLiveSessionsEvent], error)
 }
 
 type stratumQueryClient struct {
@@ -106,10 +106,10 @@ func NewStratumQueryClient(cc grpc.ClientConnInterface) StratumQueryClient {
 	return &stratumQueryClient{cc}
 }
 
-func (c *stratumQueryClient) NewMap(ctx context.Context, in *NewMapRequest, opts ...grpc.CallOption) (*NewMapResponse, error) {
+func (c *stratumQueryClient) CreateMap(ctx context.Context, in *CreateMapRequest, opts ...grpc.CallOption) (*CreateMapResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(NewMapResponse)
-	err := c.cc.Invoke(ctx, StratumQuery_NewMap_FullMethodName, in, out, cOpts...)
+	out := new(CreateMapResponse)
+	err := c.cc.Invoke(ctx, StratumQuery_CreateMap_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -136,70 +136,70 @@ func (c *stratumQueryClient) ListMaps(ctx context.Context, in *ListMapsRequest, 
 	return out, nil
 }
 
-func (c *stratumQueryClient) DescribeMap(ctx context.Context, in *DescribeMapRequest, opts ...grpc.CallOption) (*DescribeMapResponse, error) {
+func (c *stratumQueryClient) GetMapDetail(ctx context.Context, in *GetMapDetailRequest, opts ...grpc.CallOption) (*GetMapDetailResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DescribeMapResponse)
-	err := c.cc.Invoke(ctx, StratumQuery_DescribeMap_FullMethodName, in, out, cOpts...)
+	out := new(GetMapDetailResponse)
+	err := c.cc.Invoke(ctx, StratumQuery_GetMapDetail_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *stratumQueryClient) MapSize(ctx context.Context, in *MapSizeRequest, opts ...grpc.CallOption) (*MapSizeResponse, error) {
+func (c *stratumQueryClient) GetMapSize(ctx context.Context, in *MapSizeRequest, opts ...grpc.CallOption) (*MapSizeResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MapSizeResponse)
-	err := c.cc.Invoke(ctx, StratumQuery_MapSize_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, StratumQuery_GetMapSize_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *stratumQueryClient) LoadByIds(ctx context.Context, in *LoadByIdsRequest, opts ...grpc.CallOption) (*LoadByIdsResponse, error) {
+func (c *stratumQueryClient) UpdateMapByIds(ctx context.Context, in *UpdateMapByIdsRequest, opts ...grpc.CallOption) (*UpdateMapByIdsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LoadByIdsResponse)
-	err := c.cc.Invoke(ctx, StratumQuery_LoadByIds_FullMethodName, in, out, cOpts...)
+	out := new(UpdateMapByIdsResponse)
+	err := c.cc.Invoke(ctx, StratumQuery_UpdateMapByIds_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *stratumQueryClient) LoadBySql(ctx context.Context, in *LoadBySqlRequest, opts ...grpc.CallOption) (*LoadBySqlResponse, error) {
+func (c *stratumQueryClient) UpdateMapBySql(ctx context.Context, in *UpdateMapBySqlRequest, opts ...grpc.CallOption) (*UpdateMapBySqlResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LoadBySqlResponse)
-	err := c.cc.Invoke(ctx, StratumQuery_LoadBySql_FullMethodName, in, out, cOpts...)
+	out := new(UpdateMapBySqlResponse)
+	err := c.cc.Invoke(ctx, StratumQuery_UpdateMapBySql_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *stratumQueryClient) LoadByTimedb(ctx context.Context, in *LoadByTimedbRequest, opts ...grpc.CallOption) (*LoadByTimedbResponse, error) {
+func (c *stratumQueryClient) UpdateMapByTimedb(ctx context.Context, in *UpdateMapByTimedbRequest, opts ...grpc.CallOption) (*UpdateMapByTimedbResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LoadByTimedbResponse)
-	err := c.cc.Invoke(ctx, StratumQuery_LoadByTimedb_FullMethodName, in, out, cOpts...)
+	out := new(UpdateMapByTimedbResponse)
+	err := c.cc.Invoke(ctx, StratumQuery_UpdateMapByTimedb_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *stratumQueryClient) LoadByGraphdb(ctx context.Context, in *LoadByGraphdbRequest, opts ...grpc.CallOption) (*LoadByGraphdbResponse, error) {
+func (c *stratumQueryClient) UpdateMapByGraphdb(ctx context.Context, in *UpdateMapByGraphdbRequest, opts ...grpc.CallOption) (*UpdateMapByGraphdbResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LoadByGraphdbResponse)
-	err := c.cc.Invoke(ctx, StratumQuery_LoadByGraphdb_FullMethodName, in, out, cOpts...)
+	out := new(UpdateMapByGraphdbResponse)
+	err := c.cc.Invoke(ctx, StratumQuery_UpdateMapByGraphdb_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *stratumQueryClient) FilterMap(ctx context.Context, in *FilterMapRequest, opts ...grpc.CallOption) (*FilterMapResponse, error) {
+func (c *stratumQueryClient) UpdateMapFilter(ctx context.Context, in *UpdateMapFilterRequest, opts ...grpc.CallOption) (*UpdateMapFilterResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(FilterMapResponse)
-	err := c.cc.Invoke(ctx, StratumQuery_FilterMap_FullMethodName, in, out, cOpts...)
+	out := new(UpdateMapFilterResponse)
+	err := c.cc.Invoke(ctx, StratumQuery_UpdateMapFilter_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -216,10 +216,10 @@ func (c *stratumQueryClient) Merge(ctx context.Context, in *MergeRequest, opts .
 	return out, nil
 }
 
-func (c *stratumQueryClient) QueryMap(ctx context.Context, in *QueryMapRequest, opts ...grpc.CallOption) (*QueryMapResponse, error) {
+func (c *stratumQueryClient) ExecuteMapQuery(ctx context.Context, in *ExecuteMapQueryRequest, opts ...grpc.CallOption) (*ExecuteMapQueryResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(QueryMapResponse)
-	err := c.cc.Invoke(ctx, StratumQuery_QueryMap_FullMethodName, in, out, cOpts...)
+	out := new(ExecuteMapQueryResponse)
+	err := c.cc.Invoke(ctx, StratumQuery_ExecuteMapQuery_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -256,29 +256,29 @@ func (c *stratumQueryClient) GetUserSessions(ctx context.Context, in *GetUserSes
 	return out, nil
 }
 
-func (c *stratumQueryClient) QueryByTimeRange(ctx context.Context, in *QueryByTimeRangeRequest, opts ...grpc.CallOption) (*QueryByTimeRangeResponse, error) {
+func (c *stratumQueryClient) ListEventsByTimeRange(ctx context.Context, in *ListEventsByTimeRangeRequest, opts ...grpc.CallOption) (*ListEventsByTimeRangeResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(QueryByTimeRangeResponse)
-	err := c.cc.Invoke(ctx, StratumQuery_QueryByTimeRange_FullMethodName, in, out, cOpts...)
+	out := new(ListEventsByTimeRangeResponse)
+	err := c.cc.Invoke(ctx, StratumQuery_ListEventsByTimeRange_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *stratumQueryClient) QueryByEmail(ctx context.Context, in *QueryByEmailRequest, opts ...grpc.CallOption) (*QueryByEmailResponse, error) {
+func (c *stratumQueryClient) ListEventsByEmail(ctx context.Context, in *ListEventsByEmailRequest, opts ...grpc.CallOption) (*ListEventsByEmailResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(QueryByEmailResponse)
-	err := c.cc.Invoke(ctx, StratumQuery_QueryByEmail_FullMethodName, in, out, cOpts...)
+	out := new(ListEventsByEmailResponse)
+	err := c.cc.Invoke(ctx, StratumQuery_ListEventsByEmail_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *stratumQueryClient) WatchLiveSessions(ctx context.Context, in *WatchLiveSessionsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[WatchLiveSessionsEvent], error) {
+func (c *stratumQueryClient) SubscribeLiveSessions(ctx context.Context, in *WatchLiveSessionsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[WatchLiveSessionsEvent], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &StratumQuery_ServiceDesc.Streams[0], StratumQuery_WatchLiveSessions_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &StratumQuery_ServiceDesc.Streams[0], StratumQuery_SubscribeLiveSessions_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -293,48 +293,48 @@ func (c *stratumQueryClient) WatchLiveSessions(ctx context.Context, in *WatchLiv
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type StratumQuery_WatchLiveSessionsClient = grpc.ServerStreamingClient[WatchLiveSessionsEvent]
+type StratumQuery_SubscribeLiveSessionsClient = grpc.ServerStreamingClient[WatchLiveSessionsEvent]
 
 // StratumQueryServer is the server API for StratumQuery service.
 // All implementations must embed UnimplementedStratumQueryServer
 // for forward compatibility.
 type StratumQueryServer interface {
-	// NewMap creates a new empty named working-set map. Error if name already in use.
-	NewMap(context.Context, *NewMapRequest) (*NewMapResponse, error)
+	// CreateMap creates a new empty named working-set map. Error if name already in use.
+	CreateMap(context.Context, *CreateMapRequest) (*CreateMapResponse, error)
 	// DeleteMap destroys a working-set map and frees its memory.
 	DeleteMap(context.Context, *DeleteMapRequest) (*DeleteMapResponse, error)
 	// ListMaps returns all open working-set maps with basic metadata.
 	ListMaps(context.Context, *ListMapsRequest) (*ListMapsResponse, error)
-	// DescribeMap returns a detailed breakdown (event types, time range, top actors).
-	DescribeMap(context.Context, *DescribeMapRequest) (*DescribeMapResponse, error)
-	// MapSize returns event count and memory for a quick size check.
-	MapSize(context.Context, *MapSizeRequest) (*MapSizeResponse, error)
-	// LoadByIds loads specific events by event_id directly from the hot store.
-	LoadByIds(context.Context, *LoadByIdsRequest) (*LoadByIdsResponse, error)
-	// LoadBySql executes Calcite SQL against the hot event store and adds matches.
-	LoadBySql(context.Context, *LoadBySqlRequest) (*LoadBySqlResponse, error)
-	// LoadByTimedb queries TimeDB (ClickHouse) for event_ids, then hydrates from the hot store.
-	LoadByTimedb(context.Context, *LoadByTimedbRequest) (*LoadByTimedbResponse, error)
-	// LoadByGraphdb queries Dgraph for IDs, then hydrates full events from the hot store.
-	LoadByGraphdb(context.Context, *LoadByGraphdbRequest) (*LoadByGraphdbResponse, error)
-	// FilterMap keeps only events matching the SQL predicate; removes all others.
-	FilterMap(context.Context, *FilterMapRequest) (*FilterMapResponse, error)
+	// GetMapDetail returns a detailed breakdown (event types, time range, top actors).
+	GetMapDetail(context.Context, *GetMapDetailRequest) (*GetMapDetailResponse, error)
+	// GetMapSize returns event count and memory for a quick size check.
+	GetMapSize(context.Context, *MapSizeRequest) (*MapSizeResponse, error)
+	// UpdateMapByIds loads specific events by event_id directly from the hot store.
+	UpdateMapByIds(context.Context, *UpdateMapByIdsRequest) (*UpdateMapByIdsResponse, error)
+	// UpdateMapBySql executes Calcite SQL against the hot event store and adds matches.
+	UpdateMapBySql(context.Context, *UpdateMapBySqlRequest) (*UpdateMapBySqlResponse, error)
+	// UpdateMapByTimedb queries TimeDB (ClickHouse) for event_ids, then hydrates from the hot store.
+	UpdateMapByTimedb(context.Context, *UpdateMapByTimedbRequest) (*UpdateMapByTimedbResponse, error)
+	// UpdateMapByGraphdb queries Dgraph for IDs, then hydrates full events from the hot store.
+	UpdateMapByGraphdb(context.Context, *UpdateMapByGraphdbRequest) (*UpdateMapByGraphdbResponse, error)
+	// UpdateMapFilter keeps only events matching the SQL predicate; removes all others.
+	UpdateMapFilter(context.Context, *UpdateMapFilterRequest) (*UpdateMapFilterResponse, error)
 	// Merge adds all events from src_map into dest_map. src_map is unchanged.
 	Merge(context.Context, *MergeRequest) (*MergeResponse, error)
-	// QueryMap executes Calcite SQL over a working-set map and returns JSON rows.
-	QueryMap(context.Context, *QueryMapRequest) (*QueryMapResponse, error)
+	// ExecuteMapQuery executes Calcite SQL over a working-set map and returns JSON rows.
+	ExecuteMapQuery(context.Context, *ExecuteMapQueryRequest) (*ExecuteMapQueryResponse, error)
 	// ListActiveSessions returns all sessions active within active_session_idle_seconds, paginated.
 	ListActiveSessions(context.Context, *ListActiveSessionsRequest) (*ListActiveSessionsResponse, error)
 	// GetSessionEvents returns all SensorEvents for a session, paginated.
 	GetSessionEvents(context.Context, *GetSessionEventsRequest) (*GetSessionEventsResponse, error)
 	// GetUserSessions returns all sessions for a user email, paginated.
 	GetUserSessions(context.Context, *GetUserSessionsRequest) (*GetUserSessionsResponse, error)
-	// QueryByTimeRange returns all SensorEvents in a time window, paginated.
-	QueryByTimeRange(context.Context, *QueryByTimeRangeRequest) (*QueryByTimeRangeResponse, error)
-	// QueryByEmail returns all SensorEvents for a user email, paginated.
-	QueryByEmail(context.Context, *QueryByEmailRequest) (*QueryByEmailResponse, error)
-	// WatchLiveSessions streams SessionSummary change events in real time.
-	WatchLiveSessions(*WatchLiveSessionsRequest, grpc.ServerStreamingServer[WatchLiveSessionsEvent]) error
+	// ListEventsByTimeRange returns all SensorEvents in a time window, paginated.
+	ListEventsByTimeRange(context.Context, *ListEventsByTimeRangeRequest) (*ListEventsByTimeRangeResponse, error)
+	// ListEventsByEmail returns all SensorEvents for a user email, paginated.
+	ListEventsByEmail(context.Context, *ListEventsByEmailRequest) (*ListEventsByEmailResponse, error)
+	// SubscribeLiveSessions streams SessionSummary change events in real time.
+	SubscribeLiveSessions(*WatchLiveSessionsRequest, grpc.ServerStreamingServer[WatchLiveSessionsEvent]) error
 	mustEmbedUnimplementedStratumQueryServer()
 }
 
@@ -345,8 +345,8 @@ type StratumQueryServer interface {
 // pointer dereference when methods are called.
 type UnimplementedStratumQueryServer struct{}
 
-func (UnimplementedStratumQueryServer) NewMap(context.Context, *NewMapRequest) (*NewMapResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method NewMap not implemented")
+func (UnimplementedStratumQueryServer) CreateMap(context.Context, *CreateMapRequest) (*CreateMapResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateMap not implemented")
 }
 func (UnimplementedStratumQueryServer) DeleteMap(context.Context, *DeleteMapRequest) (*DeleteMapResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteMap not implemented")
@@ -354,32 +354,32 @@ func (UnimplementedStratumQueryServer) DeleteMap(context.Context, *DeleteMapRequ
 func (UnimplementedStratumQueryServer) ListMaps(context.Context, *ListMapsRequest) (*ListMapsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMaps not implemented")
 }
-func (UnimplementedStratumQueryServer) DescribeMap(context.Context, *DescribeMapRequest) (*DescribeMapResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method DescribeMap not implemented")
+func (UnimplementedStratumQueryServer) GetMapDetail(context.Context, *GetMapDetailRequest) (*GetMapDetailResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetMapDetail not implemented")
 }
-func (UnimplementedStratumQueryServer) MapSize(context.Context, *MapSizeRequest) (*MapSizeResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method MapSize not implemented")
+func (UnimplementedStratumQueryServer) GetMapSize(context.Context, *MapSizeRequest) (*MapSizeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetMapSize not implemented")
 }
-func (UnimplementedStratumQueryServer) LoadByIds(context.Context, *LoadByIdsRequest) (*LoadByIdsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method LoadByIds not implemented")
+func (UnimplementedStratumQueryServer) UpdateMapByIds(context.Context, *UpdateMapByIdsRequest) (*UpdateMapByIdsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateMapByIds not implemented")
 }
-func (UnimplementedStratumQueryServer) LoadBySql(context.Context, *LoadBySqlRequest) (*LoadBySqlResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method LoadBySql not implemented")
+func (UnimplementedStratumQueryServer) UpdateMapBySql(context.Context, *UpdateMapBySqlRequest) (*UpdateMapBySqlResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateMapBySql not implemented")
 }
-func (UnimplementedStratumQueryServer) LoadByTimedb(context.Context, *LoadByTimedbRequest) (*LoadByTimedbResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method LoadByTimedb not implemented")
+func (UnimplementedStratumQueryServer) UpdateMapByTimedb(context.Context, *UpdateMapByTimedbRequest) (*UpdateMapByTimedbResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateMapByTimedb not implemented")
 }
-func (UnimplementedStratumQueryServer) LoadByGraphdb(context.Context, *LoadByGraphdbRequest) (*LoadByGraphdbResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method LoadByGraphdb not implemented")
+func (UnimplementedStratumQueryServer) UpdateMapByGraphdb(context.Context, *UpdateMapByGraphdbRequest) (*UpdateMapByGraphdbResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateMapByGraphdb not implemented")
 }
-func (UnimplementedStratumQueryServer) FilterMap(context.Context, *FilterMapRequest) (*FilterMapResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method FilterMap not implemented")
+func (UnimplementedStratumQueryServer) UpdateMapFilter(context.Context, *UpdateMapFilterRequest) (*UpdateMapFilterResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateMapFilter not implemented")
 }
 func (UnimplementedStratumQueryServer) Merge(context.Context, *MergeRequest) (*MergeResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Merge not implemented")
 }
-func (UnimplementedStratumQueryServer) QueryMap(context.Context, *QueryMapRequest) (*QueryMapResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method QueryMap not implemented")
+func (UnimplementedStratumQueryServer) ExecuteMapQuery(context.Context, *ExecuteMapQueryRequest) (*ExecuteMapQueryResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ExecuteMapQuery not implemented")
 }
 func (UnimplementedStratumQueryServer) ListActiveSessions(context.Context, *ListActiveSessionsRequest) (*ListActiveSessionsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListActiveSessions not implemented")
@@ -390,14 +390,14 @@ func (UnimplementedStratumQueryServer) GetSessionEvents(context.Context, *GetSes
 func (UnimplementedStratumQueryServer) GetUserSessions(context.Context, *GetUserSessionsRequest) (*GetUserSessionsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserSessions not implemented")
 }
-func (UnimplementedStratumQueryServer) QueryByTimeRange(context.Context, *QueryByTimeRangeRequest) (*QueryByTimeRangeResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method QueryByTimeRange not implemented")
+func (UnimplementedStratumQueryServer) ListEventsByTimeRange(context.Context, *ListEventsByTimeRangeRequest) (*ListEventsByTimeRangeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListEventsByTimeRange not implemented")
 }
-func (UnimplementedStratumQueryServer) QueryByEmail(context.Context, *QueryByEmailRequest) (*QueryByEmailResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method QueryByEmail not implemented")
+func (UnimplementedStratumQueryServer) ListEventsByEmail(context.Context, *ListEventsByEmailRequest) (*ListEventsByEmailResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListEventsByEmail not implemented")
 }
-func (UnimplementedStratumQueryServer) WatchLiveSessions(*WatchLiveSessionsRequest, grpc.ServerStreamingServer[WatchLiveSessionsEvent]) error {
-	return status.Error(codes.Unimplemented, "method WatchLiveSessions not implemented")
+func (UnimplementedStratumQueryServer) SubscribeLiveSessions(*WatchLiveSessionsRequest, grpc.ServerStreamingServer[WatchLiveSessionsEvent]) error {
+	return status.Error(codes.Unimplemented, "method SubscribeLiveSessions not implemented")
 }
 func (UnimplementedStratumQueryServer) mustEmbedUnimplementedStratumQueryServer() {}
 func (UnimplementedStratumQueryServer) testEmbeddedByValue()                      {}
@@ -420,20 +420,20 @@ func RegisterStratumQueryServer(s grpc.ServiceRegistrar, srv StratumQueryServer)
 	s.RegisterService(&StratumQuery_ServiceDesc, srv)
 }
 
-func _StratumQuery_NewMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NewMapRequest)
+func _StratumQuery_CreateMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateMapRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StratumQueryServer).NewMap(ctx, in)
+		return srv.(StratumQueryServer).CreateMap(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StratumQuery_NewMap_FullMethodName,
+		FullMethod: StratumQuery_CreateMap_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StratumQueryServer).NewMap(ctx, req.(*NewMapRequest))
+		return srv.(StratumQueryServer).CreateMap(ctx, req.(*CreateMapRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -474,128 +474,128 @@ func _StratumQuery_ListMaps_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StratumQuery_DescribeMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DescribeMapRequest)
+func _StratumQuery_GetMapDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMapDetailRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StratumQueryServer).DescribeMap(ctx, in)
+		return srv.(StratumQueryServer).GetMapDetail(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StratumQuery_DescribeMap_FullMethodName,
+		FullMethod: StratumQuery_GetMapDetail_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StratumQueryServer).DescribeMap(ctx, req.(*DescribeMapRequest))
+		return srv.(StratumQueryServer).GetMapDetail(ctx, req.(*GetMapDetailRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StratumQuery_MapSize_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _StratumQuery_GetMapSize_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MapSizeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StratumQueryServer).MapSize(ctx, in)
+		return srv.(StratumQueryServer).GetMapSize(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StratumQuery_MapSize_FullMethodName,
+		FullMethod: StratumQuery_GetMapSize_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StratumQueryServer).MapSize(ctx, req.(*MapSizeRequest))
+		return srv.(StratumQueryServer).GetMapSize(ctx, req.(*MapSizeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StratumQuery_LoadByIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoadByIdsRequest)
+func _StratumQuery_UpdateMapByIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateMapByIdsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StratumQueryServer).LoadByIds(ctx, in)
+		return srv.(StratumQueryServer).UpdateMapByIds(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StratumQuery_LoadByIds_FullMethodName,
+		FullMethod: StratumQuery_UpdateMapByIds_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StratumQueryServer).LoadByIds(ctx, req.(*LoadByIdsRequest))
+		return srv.(StratumQueryServer).UpdateMapByIds(ctx, req.(*UpdateMapByIdsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StratumQuery_LoadBySql_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoadBySqlRequest)
+func _StratumQuery_UpdateMapBySql_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateMapBySqlRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StratumQueryServer).LoadBySql(ctx, in)
+		return srv.(StratumQueryServer).UpdateMapBySql(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StratumQuery_LoadBySql_FullMethodName,
+		FullMethod: StratumQuery_UpdateMapBySql_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StratumQueryServer).LoadBySql(ctx, req.(*LoadBySqlRequest))
+		return srv.(StratumQueryServer).UpdateMapBySql(ctx, req.(*UpdateMapBySqlRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StratumQuery_LoadByTimedb_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoadByTimedbRequest)
+func _StratumQuery_UpdateMapByTimedb_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateMapByTimedbRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StratumQueryServer).LoadByTimedb(ctx, in)
+		return srv.(StratumQueryServer).UpdateMapByTimedb(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StratumQuery_LoadByTimedb_FullMethodName,
+		FullMethod: StratumQuery_UpdateMapByTimedb_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StratumQueryServer).LoadByTimedb(ctx, req.(*LoadByTimedbRequest))
+		return srv.(StratumQueryServer).UpdateMapByTimedb(ctx, req.(*UpdateMapByTimedbRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StratumQuery_LoadByGraphdb_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoadByGraphdbRequest)
+func _StratumQuery_UpdateMapByGraphdb_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateMapByGraphdbRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StratumQueryServer).LoadByGraphdb(ctx, in)
+		return srv.(StratumQueryServer).UpdateMapByGraphdb(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StratumQuery_LoadByGraphdb_FullMethodName,
+		FullMethod: StratumQuery_UpdateMapByGraphdb_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StratumQueryServer).LoadByGraphdb(ctx, req.(*LoadByGraphdbRequest))
+		return srv.(StratumQueryServer).UpdateMapByGraphdb(ctx, req.(*UpdateMapByGraphdbRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StratumQuery_FilterMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FilterMapRequest)
+func _StratumQuery_UpdateMapFilter_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateMapFilterRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StratumQueryServer).FilterMap(ctx, in)
+		return srv.(StratumQueryServer).UpdateMapFilter(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StratumQuery_FilterMap_FullMethodName,
+		FullMethod: StratumQuery_UpdateMapFilter_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StratumQueryServer).FilterMap(ctx, req.(*FilterMapRequest))
+		return srv.(StratumQueryServer).UpdateMapFilter(ctx, req.(*UpdateMapFilterRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -618,20 +618,20 @@ func _StratumQuery_Merge_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StratumQuery_QueryMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryMapRequest)
+func _StratumQuery_ExecuteMapQuery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ExecuteMapQueryRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StratumQueryServer).QueryMap(ctx, in)
+		return srv.(StratumQueryServer).ExecuteMapQuery(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StratumQuery_QueryMap_FullMethodName,
+		FullMethod: StratumQuery_ExecuteMapQuery_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StratumQueryServer).QueryMap(ctx, req.(*QueryMapRequest))
+		return srv.(StratumQueryServer).ExecuteMapQuery(ctx, req.(*ExecuteMapQueryRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -690,52 +690,52 @@ func _StratumQuery_GetUserSessions_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StratumQuery_QueryByTimeRange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryByTimeRangeRequest)
+func _StratumQuery_ListEventsByTimeRange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListEventsByTimeRangeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StratumQueryServer).QueryByTimeRange(ctx, in)
+		return srv.(StratumQueryServer).ListEventsByTimeRange(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StratumQuery_QueryByTimeRange_FullMethodName,
+		FullMethod: StratumQuery_ListEventsByTimeRange_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StratumQueryServer).QueryByTimeRange(ctx, req.(*QueryByTimeRangeRequest))
+		return srv.(StratumQueryServer).ListEventsByTimeRange(ctx, req.(*ListEventsByTimeRangeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StratumQuery_QueryByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryByEmailRequest)
+func _StratumQuery_ListEventsByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListEventsByEmailRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StratumQueryServer).QueryByEmail(ctx, in)
+		return srv.(StratumQueryServer).ListEventsByEmail(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StratumQuery_QueryByEmail_FullMethodName,
+		FullMethod: StratumQuery_ListEventsByEmail_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StratumQueryServer).QueryByEmail(ctx, req.(*QueryByEmailRequest))
+		return srv.(StratumQueryServer).ListEventsByEmail(ctx, req.(*ListEventsByEmailRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StratumQuery_WatchLiveSessions_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _StratumQuery_SubscribeLiveSessions_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(WatchLiveSessionsRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(StratumQueryServer).WatchLiveSessions(m, &grpc.GenericServerStream[WatchLiveSessionsRequest, WatchLiveSessionsEvent]{ServerStream: stream})
+	return srv.(StratumQueryServer).SubscribeLiveSessions(m, &grpc.GenericServerStream[WatchLiveSessionsRequest, WatchLiveSessionsEvent]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type StratumQuery_WatchLiveSessionsServer = grpc.ServerStreamingServer[WatchLiveSessionsEvent]
+type StratumQuery_SubscribeLiveSessionsServer = grpc.ServerStreamingServer[WatchLiveSessionsEvent]
 
 // StratumQuery_ServiceDesc is the grpc.ServiceDesc for StratumQuery service.
 // It's only intended for direct use with grpc.RegisterService,
@@ -745,8 +745,8 @@ var StratumQuery_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*StratumQueryServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "NewMap",
-			Handler:    _StratumQuery_NewMap_Handler,
+			MethodName: "CreateMap",
+			Handler:    _StratumQuery_CreateMap_Handler,
 		},
 		{
 			MethodName: "DeleteMap",
@@ -757,40 +757,40 @@ var StratumQuery_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _StratumQuery_ListMaps_Handler,
 		},
 		{
-			MethodName: "DescribeMap",
-			Handler:    _StratumQuery_DescribeMap_Handler,
+			MethodName: "GetMapDetail",
+			Handler:    _StratumQuery_GetMapDetail_Handler,
 		},
 		{
-			MethodName: "MapSize",
-			Handler:    _StratumQuery_MapSize_Handler,
+			MethodName: "GetMapSize",
+			Handler:    _StratumQuery_GetMapSize_Handler,
 		},
 		{
-			MethodName: "LoadByIds",
-			Handler:    _StratumQuery_LoadByIds_Handler,
+			MethodName: "UpdateMapByIds",
+			Handler:    _StratumQuery_UpdateMapByIds_Handler,
 		},
 		{
-			MethodName: "LoadBySql",
-			Handler:    _StratumQuery_LoadBySql_Handler,
+			MethodName: "UpdateMapBySql",
+			Handler:    _StratumQuery_UpdateMapBySql_Handler,
 		},
 		{
-			MethodName: "LoadByTimedb",
-			Handler:    _StratumQuery_LoadByTimedb_Handler,
+			MethodName: "UpdateMapByTimedb",
+			Handler:    _StratumQuery_UpdateMapByTimedb_Handler,
 		},
 		{
-			MethodName: "LoadByGraphdb",
-			Handler:    _StratumQuery_LoadByGraphdb_Handler,
+			MethodName: "UpdateMapByGraphdb",
+			Handler:    _StratumQuery_UpdateMapByGraphdb_Handler,
 		},
 		{
-			MethodName: "FilterMap",
-			Handler:    _StratumQuery_FilterMap_Handler,
+			MethodName: "UpdateMapFilter",
+			Handler:    _StratumQuery_UpdateMapFilter_Handler,
 		},
 		{
 			MethodName: "Merge",
 			Handler:    _StratumQuery_Merge_Handler,
 		},
 		{
-			MethodName: "QueryMap",
-			Handler:    _StratumQuery_QueryMap_Handler,
+			MethodName: "ExecuteMapQuery",
+			Handler:    _StratumQuery_ExecuteMapQuery_Handler,
 		},
 		{
 			MethodName: "ListActiveSessions",
@@ -805,18 +805,18 @@ var StratumQuery_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _StratumQuery_GetUserSessions_Handler,
 		},
 		{
-			MethodName: "QueryByTimeRange",
-			Handler:    _StratumQuery_QueryByTimeRange_Handler,
+			MethodName: "ListEventsByTimeRange",
+			Handler:    _StratumQuery_ListEventsByTimeRange_Handler,
 		},
 		{
-			MethodName: "QueryByEmail",
-			Handler:    _StratumQuery_QueryByEmail_Handler,
+			MethodName: "ListEventsByEmail",
+			Handler:    _StratumQuery_ListEventsByEmail_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "WatchLiveSessions",
-			Handler:       _StratumQuery_WatchLiveSessions_Handler,
+			StreamName:    "SubscribeLiveSessions",
+			Handler:       _StratumQuery_SubscribeLiveSessions_Handler,
 			ServerStreams: true,
 		},
 	},
@@ -824,17 +824,17 @@ var StratumQuery_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	TimedbQuery_Query_FullMethodName = "/claudesensor.TimedbQuery/Query"
+	TimedbQuery_ExecuteQuery_FullMethodName = "/claudesensor.TimedbQuery/ExecuteQuery"
 )
 
 // TimedbQueryClient is the client API for TimedbQuery service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TimedbQueryClient interface {
-	// Query executes a ClickHouse SQL query against the timeseries projection tables.
+	// ExecuteQuery executes a ClickHouse SQL query against the timeseries projection tables.
 	// Results are delivered in batches; the final message has is_eos = true.
 	// time_range is required — unbounded scans are not permitted.
-	Query(ctx context.Context, in *TimedbQueryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TimedbQueryResponse], error)
+	ExecuteQuery(ctx context.Context, in *TimedbQueryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TimedbQueryResponse], error)
 }
 
 type timedbQueryClient struct {
@@ -845,9 +845,9 @@ func NewTimedbQueryClient(cc grpc.ClientConnInterface) TimedbQueryClient {
 	return &timedbQueryClient{cc}
 }
 
-func (c *timedbQueryClient) Query(ctx context.Context, in *TimedbQueryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TimedbQueryResponse], error) {
+func (c *timedbQueryClient) ExecuteQuery(ctx context.Context, in *TimedbQueryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TimedbQueryResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &TimedbQuery_ServiceDesc.Streams[0], TimedbQuery_Query_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &TimedbQuery_ServiceDesc.Streams[0], TimedbQuery_ExecuteQuery_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -862,16 +862,16 @@ func (c *timedbQueryClient) Query(ctx context.Context, in *TimedbQueryRequest, o
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type TimedbQuery_QueryClient = grpc.ServerStreamingClient[TimedbQueryResponse]
+type TimedbQuery_ExecuteQueryClient = grpc.ServerStreamingClient[TimedbQueryResponse]
 
 // TimedbQueryServer is the server API for TimedbQuery service.
 // All implementations must embed UnimplementedTimedbQueryServer
 // for forward compatibility.
 type TimedbQueryServer interface {
-	// Query executes a ClickHouse SQL query against the timeseries projection tables.
+	// ExecuteQuery executes a ClickHouse SQL query against the timeseries projection tables.
 	// Results are delivered in batches; the final message has is_eos = true.
 	// time_range is required — unbounded scans are not permitted.
-	Query(*TimedbQueryRequest, grpc.ServerStreamingServer[TimedbQueryResponse]) error
+	ExecuteQuery(*TimedbQueryRequest, grpc.ServerStreamingServer[TimedbQueryResponse]) error
 	mustEmbedUnimplementedTimedbQueryServer()
 }
 
@@ -882,8 +882,8 @@ type TimedbQueryServer interface {
 // pointer dereference when methods are called.
 type UnimplementedTimedbQueryServer struct{}
 
-func (UnimplementedTimedbQueryServer) Query(*TimedbQueryRequest, grpc.ServerStreamingServer[TimedbQueryResponse]) error {
-	return status.Error(codes.Unimplemented, "method Query not implemented")
+func (UnimplementedTimedbQueryServer) ExecuteQuery(*TimedbQueryRequest, grpc.ServerStreamingServer[TimedbQueryResponse]) error {
+	return status.Error(codes.Unimplemented, "method ExecuteQuery not implemented")
 }
 func (UnimplementedTimedbQueryServer) mustEmbedUnimplementedTimedbQueryServer() {}
 func (UnimplementedTimedbQueryServer) testEmbeddedByValue()                     {}
@@ -906,16 +906,16 @@ func RegisterTimedbQueryServer(s grpc.ServiceRegistrar, srv TimedbQueryServer) {
 	s.RegisterService(&TimedbQuery_ServiceDesc, srv)
 }
 
-func _TimedbQuery_Query_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _TimedbQuery_ExecuteQuery_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(TimedbQueryRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(TimedbQueryServer).Query(m, &grpc.GenericServerStream[TimedbQueryRequest, TimedbQueryResponse]{ServerStream: stream})
+	return srv.(TimedbQueryServer).ExecuteQuery(m, &grpc.GenericServerStream[TimedbQueryRequest, TimedbQueryResponse]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type TimedbQuery_QueryServer = grpc.ServerStreamingServer[TimedbQueryResponse]
+type TimedbQuery_ExecuteQueryServer = grpc.ServerStreamingServer[TimedbQueryResponse]
 
 // TimedbQuery_ServiceDesc is the grpc.ServiceDesc for TimedbQuery service.
 // It's only intended for direct use with grpc.RegisterService,
@@ -926,8 +926,8 @@ var TimedbQuery_ServiceDesc = grpc.ServiceDesc{
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "Query",
-			Handler:       _TimedbQuery_Query_Handler,
+			StreamName:    "ExecuteQuery",
+			Handler:       _TimedbQuery_ExecuteQuery_Handler,
 			ServerStreams: true,
 		},
 	},
@@ -1054,7 +1054,7 @@ const (
 type AgenticCodeEventBusStateServiceClient interface {
 	// Topic: EventStream
 	PublishToEventStream(ctx context.Context, in *SensorEvent, opts ...grpc.CallOption) (*TopicPublishReceipt, error)
-	SubscribeToEventStream(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SensorEvent], error)
+	SubscribeToEventStream(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[AgenticCodeEventBusEventStreamSubscribeRecord], error)
 }
 
 type agenticCodeEventBusStateServiceClient struct {
@@ -1075,13 +1075,13 @@ func (c *agenticCodeEventBusStateServiceClient) PublishToEventStream(ctx context
 	return out, nil
 }
 
-func (c *agenticCodeEventBusStateServiceClient) SubscribeToEventStream(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SensorEvent], error) {
+func (c *agenticCodeEventBusStateServiceClient) SubscribeToEventStream(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[AgenticCodeEventBusEventStreamSubscribeRecord], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	stream, err := c.cc.NewStream(ctx, &AgenticCodeEventBusStateService_ServiceDesc.Streams[0], AgenticCodeEventBusStateService_SubscribeToEventStream_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[trace.TraceRequest, SensorEvent]{ClientStream: stream}
+	x := &grpc.GenericClientStream[trace.TraceRequest, AgenticCodeEventBusEventStreamSubscribeRecord]{ClientStream: stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -1092,7 +1092,7 @@ func (c *agenticCodeEventBusStateServiceClient) SubscribeToEventStream(ctx conte
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type AgenticCodeEventBusStateService_SubscribeToEventStreamClient = grpc.ServerStreamingClient[SensorEvent]
+type AgenticCodeEventBusStateService_SubscribeToEventStreamClient = grpc.ServerStreamingClient[AgenticCodeEventBusEventStreamSubscribeRecord]
 
 // AgenticCodeEventBusStateServiceServer is the server API for AgenticCodeEventBusStateService service.
 // All implementations must embed UnimplementedAgenticCodeEventBusStateServiceServer
@@ -1105,7 +1105,7 @@ type AgenticCodeEventBusStateService_SubscribeToEventStreamClient = grpc.ServerS
 type AgenticCodeEventBusStateServiceServer interface {
 	// Topic: EventStream
 	PublishToEventStream(context.Context, *SensorEvent) (*TopicPublishReceipt, error)
-	SubscribeToEventStream(*trace.TraceRequest, grpc.ServerStreamingServer[SensorEvent]) error
+	SubscribeToEventStream(*trace.TraceRequest, grpc.ServerStreamingServer[AgenticCodeEventBusEventStreamSubscribeRecord]) error
 	mustEmbedUnimplementedAgenticCodeEventBusStateServiceServer()
 }
 
@@ -1119,7 +1119,7 @@ type UnimplementedAgenticCodeEventBusStateServiceServer struct{}
 func (UnimplementedAgenticCodeEventBusStateServiceServer) PublishToEventStream(context.Context, *SensorEvent) (*TopicPublishReceipt, error) {
 	return nil, status.Error(codes.Unimplemented, "method PublishToEventStream not implemented")
 }
-func (UnimplementedAgenticCodeEventBusStateServiceServer) SubscribeToEventStream(*trace.TraceRequest, grpc.ServerStreamingServer[SensorEvent]) error {
+func (UnimplementedAgenticCodeEventBusStateServiceServer) SubscribeToEventStream(*trace.TraceRequest, grpc.ServerStreamingServer[AgenticCodeEventBusEventStreamSubscribeRecord]) error {
 	return status.Error(codes.Unimplemented, "method SubscribeToEventStream not implemented")
 }
 func (UnimplementedAgenticCodeEventBusStateServiceServer) mustEmbedUnimplementedAgenticCodeEventBusStateServiceServer() {
@@ -1167,11 +1167,11 @@ func _AgenticCodeEventBusStateService_SubscribeToEventStream_Handler(srv interfa
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(AgenticCodeEventBusStateServiceServer).SubscribeToEventStream(m, &grpc.GenericServerStream[trace.TraceRequest, SensorEvent]{ServerStream: stream})
+	return srv.(AgenticCodeEventBusStateServiceServer).SubscribeToEventStream(m, &grpc.GenericServerStream[trace.TraceRequest, AgenticCodeEventBusEventStreamSubscribeRecord]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type AgenticCodeEventBusStateService_SubscribeToEventStreamServer = grpc.ServerStreamingServer[SensorEvent]
+type AgenticCodeEventBusStateService_SubscribeToEventStreamServer = grpc.ServerStreamingServer[AgenticCodeEventBusEventStreamSubscribeRecord]
 
 // AgenticCodeEventBusStateService_ServiceDesc is the grpc.ServiceDesc for AgenticCodeEventBusStateService service.
 // It's only intended for direct use with grpc.RegisterService,
@@ -1211,7 +1211,7 @@ const (
 type TraceEventBusStateServiceClient interface {
 	// Topic: TraceEvents
 	PublishToTraceEvents(ctx context.Context, in *trace.TraceEvent, opts ...grpc.CallOption) (*TopicPublishReceipt, error)
-	SubscribeToTraceEvents(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[trace.TraceEvent], error)
+	SubscribeToTraceEvents(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TraceEventBusTraceEventsSubscribeRecord], error)
 }
 
 type traceEventBusStateServiceClient struct {
@@ -1232,13 +1232,13 @@ func (c *traceEventBusStateServiceClient) PublishToTraceEvents(ctx context.Conte
 	return out, nil
 }
 
-func (c *traceEventBusStateServiceClient) SubscribeToTraceEvents(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[trace.TraceEvent], error) {
+func (c *traceEventBusStateServiceClient) SubscribeToTraceEvents(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TraceEventBusTraceEventsSubscribeRecord], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	stream, err := c.cc.NewStream(ctx, &TraceEventBusStateService_ServiceDesc.Streams[0], TraceEventBusStateService_SubscribeToTraceEvents_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[trace.TraceRequest, trace.TraceEvent]{ClientStream: stream}
+	x := &grpc.GenericClientStream[trace.TraceRequest, TraceEventBusTraceEventsSubscribeRecord]{ClientStream: stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -1249,7 +1249,7 @@ func (c *traceEventBusStateServiceClient) SubscribeToTraceEvents(ctx context.Con
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type TraceEventBusStateService_SubscribeToTraceEventsClient = grpc.ServerStreamingClient[trace.TraceEvent]
+type TraceEventBusStateService_SubscribeToTraceEventsClient = grpc.ServerStreamingClient[TraceEventBusTraceEventsSubscribeRecord]
 
 // TraceEventBusStateServiceServer is the server API for TraceEventBusStateService service.
 // All implementations must embed UnimplementedTraceEventBusStateServiceServer
@@ -1262,7 +1262,7 @@ type TraceEventBusStateService_SubscribeToTraceEventsClient = grpc.ServerStreami
 type TraceEventBusStateServiceServer interface {
 	// Topic: TraceEvents
 	PublishToTraceEvents(context.Context, *trace.TraceEvent) (*TopicPublishReceipt, error)
-	SubscribeToTraceEvents(*trace.TraceRequest, grpc.ServerStreamingServer[trace.TraceEvent]) error
+	SubscribeToTraceEvents(*trace.TraceRequest, grpc.ServerStreamingServer[TraceEventBusTraceEventsSubscribeRecord]) error
 	mustEmbedUnimplementedTraceEventBusStateServiceServer()
 }
 
@@ -1276,7 +1276,7 @@ type UnimplementedTraceEventBusStateServiceServer struct{}
 func (UnimplementedTraceEventBusStateServiceServer) PublishToTraceEvents(context.Context, *trace.TraceEvent) (*TopicPublishReceipt, error) {
 	return nil, status.Error(codes.Unimplemented, "method PublishToTraceEvents not implemented")
 }
-func (UnimplementedTraceEventBusStateServiceServer) SubscribeToTraceEvents(*trace.TraceRequest, grpc.ServerStreamingServer[trace.TraceEvent]) error {
+func (UnimplementedTraceEventBusStateServiceServer) SubscribeToTraceEvents(*trace.TraceRequest, grpc.ServerStreamingServer[TraceEventBusTraceEventsSubscribeRecord]) error {
 	return status.Error(codes.Unimplemented, "method SubscribeToTraceEvents not implemented")
 }
 func (UnimplementedTraceEventBusStateServiceServer) mustEmbedUnimplementedTraceEventBusStateServiceServer() {
@@ -1324,11 +1324,11 @@ func _TraceEventBusStateService_SubscribeToTraceEvents_Handler(srv interface{}, 
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(TraceEventBusStateServiceServer).SubscribeToTraceEvents(m, &grpc.GenericServerStream[trace.TraceRequest, trace.TraceEvent]{ServerStream: stream})
+	return srv.(TraceEventBusStateServiceServer).SubscribeToTraceEvents(m, &grpc.GenericServerStream[trace.TraceRequest, TraceEventBusTraceEventsSubscribeRecord]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type TraceEventBusStateService_SubscribeToTraceEventsServer = grpc.ServerStreamingServer[trace.TraceEvent]
+type TraceEventBusStateService_SubscribeToTraceEventsServer = grpc.ServerStreamingServer[TraceEventBusTraceEventsSubscribeRecord]
 
 // TraceEventBusStateService_ServiceDesc is the grpc.ServiceDesc for TraceEventBusStateService service.
 // It's only intended for direct use with grpc.RegisterService,

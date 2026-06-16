@@ -33,6 +33,7 @@ func ExtractGitLabActivityRecordFromGitLabConnectorEvent(event *GitLabConnectorE
 		TimestampMs:     event.TimestampMs,
 		EventId:         event.EventId,
 		OwnerSpiffe:     event.OwnerSpiffe,
+		SchemeVersion:   event.SchemeVersion,
 		ActorSub:        event.ActorSub,
 		Email:           event.Email,
 		AuthorEmail:     event.AuthorEmail,

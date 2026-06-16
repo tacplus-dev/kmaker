@@ -60,7 +60,7 @@ func NewSigner(cfg *pb.Config) (*Signer, error) {
 	}, nil
 }
 
-func (s *Signer) SignKernelCertificate(req *pb.SignKernelCertRequest) (*x509pb.X509CertChain, error) {
+func (s *Signer) MintKernelCertificate(req *pb.MintKernelCertRequest) (*x509pb.X509CertChain, error) {
 	if req.GetCertRequest() == nil {
 		return nil, fmt.Errorf("cert_request is required")
 	}

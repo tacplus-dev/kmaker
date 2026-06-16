@@ -38,11 +38,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Mint_OpenIdConfig_FullMethodName = "/gateway.Mint/OpenIdConfig"
-	Mint_Jwks_FullMethodName         = "/gateway.Mint/Jwks"
-	Mint_TokenMint_FullMethodName    = "/gateway.Mint/TokenMint"
-	Mint_X509Mint_FullMethodName     = "/gateway.Mint/X509Mint"
-	Mint_PublicCa_FullMethodName     = "/gateway.Mint/PublicCa"
+	Mint_GetOpenIdConfig_FullMethodName = "/gateway.Mint/GetOpenIdConfig"
+	Mint_ListJwks_FullMethodName        = "/gateway.Mint/ListJwks"
+	Mint_MintToken_FullMethodName       = "/gateway.Mint/MintToken"
+	Mint_MintX509Cert_FullMethodName    = "/gateway.Mint/MintX509Cert"
+	Mint_ListPublicCa_FullMethodName    = "/gateway.Mint/ListPublicCa"
 )
 
 // MintClient is the client API for Mint service.
@@ -53,20 +53,20 @@ const (
 // discovery and JWKS endpoints (it already watches JWK keys from kernel).
 // TokenMint and X509Mint are delegated to kernel via the direct kernel channel.
 type MintClient interface {
-	// OpenIdConfig returns the OpenID Connect discovery document.
+	// GetOpenIdConfig returns the OpenID Connect discovery document.
 	// Gateway is the public-facing authority; the issuer URL is the gateway FQDN.
-	OpenIdConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*jwk.OpenIdConfiguration, error)
-	// Jwks returns the current JSON Web Key Set for token verification.
+	GetOpenIdConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*jwk.OpenIdConfiguration, error)
+	// ListJwks returns the current JSON Web Key Set for token verification.
 	// Gateway watches kernel's verifying keys and serves them at this endpoint.
-	Jwks(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*jwk.Jwks, error)
-	// TokenMint mints a signed JWT token. Delegated to kernel's MintService.
-	TokenMint(ctx context.Context, in *tokenrequest.TokenMintRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error)
-	// X509Mint signs an X.509 certificate. Delegated to kernel's MintService.
-	X509Mint(ctx context.Context, in *tokenrequest.X509MintRequest, opts ...grpc.CallOption) (*x509.X509CertChain, error)
-	// PublicCa returns the cluster root CA certificate(s).
+	ListJwks(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*jwk.Jwks, error)
+	// MintToken mints a signed JWT token. Delegated to kernel's Mint service.
+	MintToken(ctx context.Context, in *tokenrequest.TokenMintRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error)
+	// MintX509Cert signs an X.509 certificate. Delegated to kernel's Mint service.
+	MintX509Cert(ctx context.Context, in *tokenrequest.X509MintRequest, opts ...grpc.CallOption) (*x509.X509CertChain, error)
+	// ListPublicCa returns the cluster root CA certificate(s).
 	// Clients (e.g. cavalierctl) use these to verify TLS connections to the gateway.
 	// No authentication required — the CA is public trust anchor information.
-	PublicCa(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*PublicCaResponse, error)
+	ListPublicCa(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*PublicCaResponse, error)
 }
 
 type mintClient struct {
@@ -77,50 +77,50 @@ func NewMintClient(cc grpc.ClientConnInterface) MintClient {
 	return &mintClient{cc}
 }
 
-func (c *mintClient) OpenIdConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*jwk.OpenIdConfiguration, error) {
+func (c *mintClient) GetOpenIdConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*jwk.OpenIdConfiguration, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(jwk.OpenIdConfiguration)
-	err := c.cc.Invoke(ctx, Mint_OpenIdConfig_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Mint_GetOpenIdConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mintClient) Jwks(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*jwk.Jwks, error) {
+func (c *mintClient) ListJwks(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*jwk.Jwks, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(jwk.Jwks)
-	err := c.cc.Invoke(ctx, Mint_Jwks_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Mint_ListJwks_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mintClient) TokenMint(ctx context.Context, in *tokenrequest.TokenMintRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error) {
+func (c *mintClient) MintToken(ctx context.Context, in *tokenrequest.TokenMintRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(tokenrequest.TokenMintResponse)
-	err := c.cc.Invoke(ctx, Mint_TokenMint_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Mint_MintToken_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mintClient) X509Mint(ctx context.Context, in *tokenrequest.X509MintRequest, opts ...grpc.CallOption) (*x509.X509CertChain, error) {
+func (c *mintClient) MintX509Cert(ctx context.Context, in *tokenrequest.X509MintRequest, opts ...grpc.CallOption) (*x509.X509CertChain, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(x509.X509CertChain)
-	err := c.cc.Invoke(ctx, Mint_X509Mint_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Mint_MintX509Cert_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mintClient) PublicCa(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*PublicCaResponse, error) {
+func (c *mintClient) ListPublicCa(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*PublicCaResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PublicCaResponse)
-	err := c.cc.Invoke(ctx, Mint_PublicCa_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Mint_ListPublicCa_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -135,20 +135,20 @@ func (c *mintClient) PublicCa(ctx context.Context, in *trace.TraceRequest, opts 
 // discovery and JWKS endpoints (it already watches JWK keys from kernel).
 // TokenMint and X509Mint are delegated to kernel via the direct kernel channel.
 type MintServer interface {
-	// OpenIdConfig returns the OpenID Connect discovery document.
+	// GetOpenIdConfig returns the OpenID Connect discovery document.
 	// Gateway is the public-facing authority; the issuer URL is the gateway FQDN.
-	OpenIdConfig(context.Context, *trace.TraceRequest) (*jwk.OpenIdConfiguration, error)
-	// Jwks returns the current JSON Web Key Set for token verification.
+	GetOpenIdConfig(context.Context, *trace.TraceRequest) (*jwk.OpenIdConfiguration, error)
+	// ListJwks returns the current JSON Web Key Set for token verification.
 	// Gateway watches kernel's verifying keys and serves them at this endpoint.
-	Jwks(context.Context, *trace.TraceRequest) (*jwk.Jwks, error)
-	// TokenMint mints a signed JWT token. Delegated to kernel's MintService.
-	TokenMint(context.Context, *tokenrequest.TokenMintRequest) (*tokenrequest.TokenMintResponse, error)
-	// X509Mint signs an X.509 certificate. Delegated to kernel's MintService.
-	X509Mint(context.Context, *tokenrequest.X509MintRequest) (*x509.X509CertChain, error)
-	// PublicCa returns the cluster root CA certificate(s).
+	ListJwks(context.Context, *trace.TraceRequest) (*jwk.Jwks, error)
+	// MintToken mints a signed JWT token. Delegated to kernel's Mint service.
+	MintToken(context.Context, *tokenrequest.TokenMintRequest) (*tokenrequest.TokenMintResponse, error)
+	// MintX509Cert signs an X.509 certificate. Delegated to kernel's Mint service.
+	MintX509Cert(context.Context, *tokenrequest.X509MintRequest) (*x509.X509CertChain, error)
+	// ListPublicCa returns the cluster root CA certificate(s).
 	// Clients (e.g. cavalierctl) use these to verify TLS connections to the gateway.
 	// No authentication required — the CA is public trust anchor information.
-	PublicCa(context.Context, *trace.TraceRequest) (*PublicCaResponse, error)
+	ListPublicCa(context.Context, *trace.TraceRequest) (*PublicCaResponse, error)
 	mustEmbedUnimplementedMintServer()
 }
 
@@ -159,20 +159,20 @@ type MintServer interface {
 // pointer dereference when methods are called.
 type UnimplementedMintServer struct{}
 
-func (UnimplementedMintServer) OpenIdConfig(context.Context, *trace.TraceRequest) (*jwk.OpenIdConfiguration, error) {
-	return nil, status.Error(codes.Unimplemented, "method OpenIdConfig not implemented")
+func (UnimplementedMintServer) GetOpenIdConfig(context.Context, *trace.TraceRequest) (*jwk.OpenIdConfiguration, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetOpenIdConfig not implemented")
 }
-func (UnimplementedMintServer) Jwks(context.Context, *trace.TraceRequest) (*jwk.Jwks, error) {
-	return nil, status.Error(codes.Unimplemented, "method Jwks not implemented")
+func (UnimplementedMintServer) ListJwks(context.Context, *trace.TraceRequest) (*jwk.Jwks, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListJwks not implemented")
 }
-func (UnimplementedMintServer) TokenMint(context.Context, *tokenrequest.TokenMintRequest) (*tokenrequest.TokenMintResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method TokenMint not implemented")
+func (UnimplementedMintServer) MintToken(context.Context, *tokenrequest.TokenMintRequest) (*tokenrequest.TokenMintResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MintToken not implemented")
 }
-func (UnimplementedMintServer) X509Mint(context.Context, *tokenrequest.X509MintRequest) (*x509.X509CertChain, error) {
-	return nil, status.Error(codes.Unimplemented, "method X509Mint not implemented")
+func (UnimplementedMintServer) MintX509Cert(context.Context, *tokenrequest.X509MintRequest) (*x509.X509CertChain, error) {
+	return nil, status.Error(codes.Unimplemented, "method MintX509Cert not implemented")
 }
-func (UnimplementedMintServer) PublicCa(context.Context, *trace.TraceRequest) (*PublicCaResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method PublicCa not implemented")
+func (UnimplementedMintServer) ListPublicCa(context.Context, *trace.TraceRequest) (*PublicCaResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListPublicCa not implemented")
 }
 func (UnimplementedMintServer) mustEmbedUnimplementedMintServer() {}
 func (UnimplementedMintServer) testEmbeddedByValue()              {}
@@ -195,92 +195,92 @@ func RegisterMintServer(s grpc.ServiceRegistrar, srv MintServer) {
 	s.RegisterService(&Mint_ServiceDesc, srv)
 }
 
-func _Mint_OpenIdConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Mint_GetOpenIdConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(trace.TraceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MintServer).OpenIdConfig(ctx, in)
+		return srv.(MintServer).GetOpenIdConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Mint_OpenIdConfig_FullMethodName,
+		FullMethod: Mint_GetOpenIdConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MintServer).OpenIdConfig(ctx, req.(*trace.TraceRequest))
+		return srv.(MintServer).GetOpenIdConfig(ctx, req.(*trace.TraceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mint_Jwks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Mint_ListJwks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(trace.TraceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MintServer).Jwks(ctx, in)
+		return srv.(MintServer).ListJwks(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Mint_Jwks_FullMethodName,
+		FullMethod: Mint_ListJwks_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MintServer).Jwks(ctx, req.(*trace.TraceRequest))
+		return srv.(MintServer).ListJwks(ctx, req.(*trace.TraceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mint_TokenMint_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Mint_MintToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(tokenrequest.TokenMintRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MintServer).TokenMint(ctx, in)
+		return srv.(MintServer).MintToken(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Mint_TokenMint_FullMethodName,
+		FullMethod: Mint_MintToken_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MintServer).TokenMint(ctx, req.(*tokenrequest.TokenMintRequest))
+		return srv.(MintServer).MintToken(ctx, req.(*tokenrequest.TokenMintRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mint_X509Mint_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Mint_MintX509Cert_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(tokenrequest.X509MintRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MintServer).X509Mint(ctx, in)
+		return srv.(MintServer).MintX509Cert(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Mint_X509Mint_FullMethodName,
+		FullMethod: Mint_MintX509Cert_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MintServer).X509Mint(ctx, req.(*tokenrequest.X509MintRequest))
+		return srv.(MintServer).MintX509Cert(ctx, req.(*tokenrequest.X509MintRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mint_PublicCa_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Mint_ListPublicCa_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(trace.TraceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MintServer).PublicCa(ctx, in)
+		return srv.(MintServer).ListPublicCa(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Mint_PublicCa_FullMethodName,
+		FullMethod: Mint_ListPublicCa_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MintServer).PublicCa(ctx, req.(*trace.TraceRequest))
+		return srv.(MintServer).ListPublicCa(ctx, req.(*trace.TraceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -293,24 +293,24 @@ var Mint_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*MintServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "OpenIdConfig",
-			Handler:    _Mint_OpenIdConfig_Handler,
+			MethodName: "GetOpenIdConfig",
+			Handler:    _Mint_GetOpenIdConfig_Handler,
 		},
 		{
-			MethodName: "Jwks",
-			Handler:    _Mint_Jwks_Handler,
+			MethodName: "ListJwks",
+			Handler:    _Mint_ListJwks_Handler,
 		},
 		{
-			MethodName: "TokenMint",
-			Handler:    _Mint_TokenMint_Handler,
+			MethodName: "MintToken",
+			Handler:    _Mint_MintToken_Handler,
 		},
 		{
-			MethodName: "X509Mint",
-			Handler:    _Mint_X509Mint_Handler,
+			MethodName: "MintX509Cert",
+			Handler:    _Mint_MintX509Cert_Handler,
 		},
 		{
-			MethodName: "PublicCa",
-			Handler:    _Mint_PublicCa_Handler,
+			MethodName: "ListPublicCa",
+			Handler:    _Mint_ListPublicCa_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

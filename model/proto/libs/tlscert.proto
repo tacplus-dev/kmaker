@@ -88,25 +88,3 @@ message TlsCertRenew {
   // reason is a human-readable reason for the renewal (e.g., "half-life reached").
   string reason = 1;
 }
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-enum TypeID {
-  TYPE_ID_UNSPECIFIED = 0;
-  TYPE_ID_TLS_CERT_CLIENT_MSG = 1;
-  TYPE_ID_TLS_CERT_INIT = 2;
-  TYPE_ID_TLS_CERT_CSR = 3;
-  TYPE_ID_TLS_CERT_SERVER_MSG = 4;
-  TYPE_ID_TLS_CERT_DELIVERY = 5;
-  TYPE_ID_TLS_CERT_RENEW = 6;
-}
-
-enum TlsCertServiceRpcId {
-  TLS_CERT_SERVICE_RPC_ID_UNSPECIFIED = 0;
-  TLS_CERT_SERVICE_RPC_ID_ALL_ACCESSORS = 1;
-  TLS_CERT_SERVICE_RPC_ID_ALL_MUTATORS = 2;
-  TLS_CERT_SERVICE_RPC_ID_ALL_EXECUTORS = 3;
-  TLS_CERT_SERVICE_RPC_ID_MANAGE_CERT = 4;
-}

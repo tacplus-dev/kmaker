@@ -128,21 +128,21 @@ func (TypeID) EnumDescriptor() ([]byte, []int) {
 type DashboardRpcId int32
 
 const (
-	DashboardRpcId_DASHBOARD_RPC_ID_UNSPECIFIED            DashboardRpcId = 0
-	DashboardRpcId_DASHBOARD_RPC_ID_ALL_ACCESSORS          DashboardRpcId = 1
-	DashboardRpcId_DASHBOARD_RPC_ID_ALL_MUTATORS           DashboardRpcId = 2
-	DashboardRpcId_DASHBOARD_RPC_ID_ALL_EXECUTORS          DashboardRpcId = 3
-	DashboardRpcId_DASHBOARD_RPC_ID_GET_CLUSTER_INFO       DashboardRpcId = 4
-	DashboardRpcId_DASHBOARD_RPC_ID_GET_CLUSTER_HEALTH     DashboardRpcId = 5
-	DashboardRpcId_DASHBOARD_RPC_ID_GET_NODE_METRICS       DashboardRpcId = 6
-	DashboardRpcId_DASHBOARD_RPC_ID_GET_GRPC_STATS         DashboardRpcId = 7
-	DashboardRpcId_DASHBOARD_RPC_ID_GET_PERSISTENCE_STATUS DashboardRpcId = 8
-	DashboardRpcId_DASHBOARD_RPC_ID_GET_NETWORK_STATS      DashboardRpcId = 9
-	DashboardRpcId_DASHBOARD_RPC_ID_GET_THREAD_INFO        DashboardRpcId = 10
-	DashboardRpcId_DASHBOARD_RPC_ID_GET_TOKEN_CACHE_STATS  DashboardRpcId = 11
-	DashboardRpcId_DASHBOARD_RPC_ID_GET_MAP_STATS          DashboardRpcId = 12
-	DashboardRpcId_DASHBOARD_RPC_ID_GET_DASHBOARD          DashboardRpcId = 13
-	DashboardRpcId_DASHBOARD_RPC_ID_WATCH_DASHBOARD        DashboardRpcId = 14
+	DashboardRpcId_DASHBOARD_RPC_ID_UNSPECIFIED             DashboardRpcId = 0
+	DashboardRpcId_DASHBOARD_RPC_ID_ALL_ACCESSORS           DashboardRpcId = 1
+	DashboardRpcId_DASHBOARD_RPC_ID_ALL_MUTATORS            DashboardRpcId = 2
+	DashboardRpcId_DASHBOARD_RPC_ID_ALL_EXECUTORS           DashboardRpcId = 3
+	DashboardRpcId_DASHBOARD_RPC_ID_GET_CLUSTER_INFO        DashboardRpcId = 4
+	DashboardRpcId_DASHBOARD_RPC_ID_GET_CLUSTER_HEALTH      DashboardRpcId = 5
+	DashboardRpcId_DASHBOARD_RPC_ID_LIST_NODE_METRICS       DashboardRpcId = 6
+	DashboardRpcId_DASHBOARD_RPC_ID_LIST_GRPC_STATS         DashboardRpcId = 7
+	DashboardRpcId_DASHBOARD_RPC_ID_LIST_PERSISTENCE_STATUS DashboardRpcId = 8
+	DashboardRpcId_DASHBOARD_RPC_ID_LIST_NETWORK_STATS      DashboardRpcId = 9
+	DashboardRpcId_DASHBOARD_RPC_ID_LIST_THREAD_INFO        DashboardRpcId = 10
+	DashboardRpcId_DASHBOARD_RPC_ID_LIST_TOKEN_CACHE_STATS  DashboardRpcId = 11
+	DashboardRpcId_DASHBOARD_RPC_ID_LIST_MAP_STATS          DashboardRpcId = 12
+	DashboardRpcId_DASHBOARD_RPC_ID_GET_DASHBOARD           DashboardRpcId = 13
+	DashboardRpcId_DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD     DashboardRpcId = 14
 )
 
 // Enum value maps for DashboardRpcId.
@@ -154,32 +154,32 @@ var (
 		3:  "DASHBOARD_RPC_ID_ALL_EXECUTORS",
 		4:  "DASHBOARD_RPC_ID_GET_CLUSTER_INFO",
 		5:  "DASHBOARD_RPC_ID_GET_CLUSTER_HEALTH",
-		6:  "DASHBOARD_RPC_ID_GET_NODE_METRICS",
-		7:  "DASHBOARD_RPC_ID_GET_GRPC_STATS",
-		8:  "DASHBOARD_RPC_ID_GET_PERSISTENCE_STATUS",
-		9:  "DASHBOARD_RPC_ID_GET_NETWORK_STATS",
-		10: "DASHBOARD_RPC_ID_GET_THREAD_INFO",
-		11: "DASHBOARD_RPC_ID_GET_TOKEN_CACHE_STATS",
-		12: "DASHBOARD_RPC_ID_GET_MAP_STATS",
+		6:  "DASHBOARD_RPC_ID_LIST_NODE_METRICS",
+		7:  "DASHBOARD_RPC_ID_LIST_GRPC_STATS",
+		8:  "DASHBOARD_RPC_ID_LIST_PERSISTENCE_STATUS",
+		9:  "DASHBOARD_RPC_ID_LIST_NETWORK_STATS",
+		10: "DASHBOARD_RPC_ID_LIST_THREAD_INFO",
+		11: "DASHBOARD_RPC_ID_LIST_TOKEN_CACHE_STATS",
+		12: "DASHBOARD_RPC_ID_LIST_MAP_STATS",
 		13: "DASHBOARD_RPC_ID_GET_DASHBOARD",
-		14: "DASHBOARD_RPC_ID_WATCH_DASHBOARD",
+		14: "DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD",
 	}
 	DashboardRpcId_value = map[string]int32{
-		"DASHBOARD_RPC_ID_UNSPECIFIED":            0,
-		"DASHBOARD_RPC_ID_ALL_ACCESSORS":          1,
-		"DASHBOARD_RPC_ID_ALL_MUTATORS":           2,
-		"DASHBOARD_RPC_ID_ALL_EXECUTORS":          3,
-		"DASHBOARD_RPC_ID_GET_CLUSTER_INFO":       4,
-		"DASHBOARD_RPC_ID_GET_CLUSTER_HEALTH":     5,
-		"DASHBOARD_RPC_ID_GET_NODE_METRICS":       6,
-		"DASHBOARD_RPC_ID_GET_GRPC_STATS":         7,
-		"DASHBOARD_RPC_ID_GET_PERSISTENCE_STATUS": 8,
-		"DASHBOARD_RPC_ID_GET_NETWORK_STATS":      9,
-		"DASHBOARD_RPC_ID_GET_THREAD_INFO":        10,
-		"DASHBOARD_RPC_ID_GET_TOKEN_CACHE_STATS":  11,
-		"DASHBOARD_RPC_ID_GET_MAP_STATS":          12,
-		"DASHBOARD_RPC_ID_GET_DASHBOARD":          13,
-		"DASHBOARD_RPC_ID_WATCH_DASHBOARD":        14,
+		"DASHBOARD_RPC_ID_UNSPECIFIED":             0,
+		"DASHBOARD_RPC_ID_ALL_ACCESSORS":           1,
+		"DASHBOARD_RPC_ID_ALL_MUTATORS":            2,
+		"DASHBOARD_RPC_ID_ALL_EXECUTORS":           3,
+		"DASHBOARD_RPC_ID_GET_CLUSTER_INFO":        4,
+		"DASHBOARD_RPC_ID_GET_CLUSTER_HEALTH":      5,
+		"DASHBOARD_RPC_ID_LIST_NODE_METRICS":       6,
+		"DASHBOARD_RPC_ID_LIST_GRPC_STATS":         7,
+		"DASHBOARD_RPC_ID_LIST_PERSISTENCE_STATUS": 8,
+		"DASHBOARD_RPC_ID_LIST_NETWORK_STATS":      9,
+		"DASHBOARD_RPC_ID_LIST_THREAD_INFO":        10,
+		"DASHBOARD_RPC_ID_LIST_TOKEN_CACHE_STATS":  11,
+		"DASHBOARD_RPC_ID_LIST_MAP_STATS":          12,
+		"DASHBOARD_RPC_ID_GET_DASHBOARD":           13,
+		"DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD":     14,
 	}
 )
 
@@ -1155,12 +1155,12 @@ const file_services_sentinel_proto_rawDesc = "" +
 	"\x11token_cache_stats\x18\b \x03(\v2\x1f.hazelcast.AdminTokenCacheStatsB\x04\xb8\xa8\x1d R\x0ftokenCacheStats\x12<\n" +
 	"\tmap_stats\x18\t \x03(\v2\x18.hazelcast.AdminMapStatsB\x05\xb8\xa8\x1d\x80\bR\bmapStats\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa1\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa3\x01\n" +
 	"\x13SentinelConfigState\x122\n" +
 	"\x06config\x18\x01 \x01(\v2\x10.sentinel.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:%\x9a\xa8\x1d\x1d\n" +
-	"\x13SentinelConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:'\x9a\xa8\x1d\x1f\n" +
+	"\x13SentinelConfigState\x1a\beventbus\xa0\xa8\x1d\x02\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\xcb\x03\n" +
@@ -1179,24 +1179,24 @@ const file_services_sentinel_proto_rawDesc = "" +
 	"\x12\x1e\n" +
 	"\x1aTYPE_ID_DASHBOARD_RESPONSE\x10\v\x12!\n" +
 	"\x1dTYPE_ID_SENTINEL_CONFIG_STATE\x10\f\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10\r*\xce\x04\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x10\r*\xd9\x04\n" +
 	"\x0eDashboardRpcId\x12 \n" +
 	"\x1cDASHBOARD_RPC_ID_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1eDASHBOARD_RPC_ID_ALL_ACCESSORS\x10\x01\x12!\n" +
 	"\x1dDASHBOARD_RPC_ID_ALL_MUTATORS\x10\x02\x12\"\n" +
 	"\x1eDASHBOARD_RPC_ID_ALL_EXECUTORS\x10\x03\x12%\n" +
 	"!DASHBOARD_RPC_ID_GET_CLUSTER_INFO\x10\x04\x12'\n" +
-	"#DASHBOARD_RPC_ID_GET_CLUSTER_HEALTH\x10\x05\x12%\n" +
-	"!DASHBOARD_RPC_ID_GET_NODE_METRICS\x10\x06\x12#\n" +
-	"\x1fDASHBOARD_RPC_ID_GET_GRPC_STATS\x10\a\x12+\n" +
-	"'DASHBOARD_RPC_ID_GET_PERSISTENCE_STATUS\x10\b\x12&\n" +
-	"\"DASHBOARD_RPC_ID_GET_NETWORK_STATS\x10\t\x12$\n" +
-	" DASHBOARD_RPC_ID_GET_THREAD_INFO\x10\n" +
-	"\x12*\n" +
-	"&DASHBOARD_RPC_ID_GET_TOKEN_CACHE_STATS\x10\v\x12\"\n" +
-	"\x1eDASHBOARD_RPC_ID_GET_MAP_STATS\x10\f\x12\"\n" +
-	"\x1eDASHBOARD_RPC_ID_GET_DASHBOARD\x10\r\x12$\n" +
-	" DASHBOARD_RPC_ID_WATCH_DASHBOARD\x10\x0e*\x9f\x03\n" +
+	"#DASHBOARD_RPC_ID_GET_CLUSTER_HEALTH\x10\x05\x12&\n" +
+	"\"DASHBOARD_RPC_ID_LIST_NODE_METRICS\x10\x06\x12$\n" +
+	" DASHBOARD_RPC_ID_LIST_GRPC_STATS\x10\a\x12,\n" +
+	"(DASHBOARD_RPC_ID_LIST_PERSISTENCE_STATUS\x10\b\x12'\n" +
+	"#DASHBOARD_RPC_ID_LIST_NETWORK_STATS\x10\t\x12%\n" +
+	"!DASHBOARD_RPC_ID_LIST_THREAD_INFO\x10\n" +
+	"\x12+\n" +
+	"'DASHBOARD_RPC_ID_LIST_TOKEN_CACHE_STATS\x10\v\x12#\n" +
+	"\x1fDASHBOARD_RPC_ID_LIST_MAP_STATS\x10\f\x12\"\n" +
+	"\x1eDASHBOARD_RPC_ID_GET_DASHBOARD\x10\r\x12(\n" +
+	"$DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD\x10\x0e*\x9f\x03\n" +
 	"\x1fSentinelConfigStateServiceRpcId\x124\n" +
 	"0SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x126\n" +
 	"2SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x125\n" +
@@ -1204,19 +1204,19 @@ const file_services_sentinel_proto_rawDesc = "" +
 	"2SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x123\n" +
 	"/SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x123\n" +
 	"/SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x125\n" +
-	"1SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xbd\x06\n" +
+	"1SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xc1\a\n" +
 	"\tDashboard\x12D\n" +
 	"\x0eGetClusterInfo\x12\x13.trace.TraceRequest\x1a\x1b.hazelcast.AdminClusterInfo\"\x00\x12H\n" +
-	"\x10GetClusterHealth\x12\x13.trace.TraceRequest\x1a\x1d.hazelcast.AdminClusterHealth\"\x00\x12F\n" +
-	"\x0eGetNodeMetrics\x12\x13.trace.TraceRequest\x1a\x1d.sentinel.NodeMetricsResponse\"\x00\x12B\n" +
-	"\fGetGrpcStats\x12\x13.trace.TraceRequest\x1a\x1b.sentinel.GrpcStatsResponse\"\x00\x12R\n" +
-	"\x14GetPersistenceStatus\x12\x13.trace.TraceRequest\x1a#.sentinel.PersistenceStatusResponse\"\x00\x12H\n" +
-	"\x0fGetNetworkStats\x12\x13.trace.TraceRequest\x1a\x1e.sentinel.NetworkStatsResponse\"\x00\x12D\n" +
-	"\rGetThreadInfo\x12\x13.trace.TraceRequest\x1a\x1c.sentinel.ThreadInfoResponse\"\x00\x12N\n" +
-	"\x12GetTokenCacheStats\x12\x13.trace.TraceRequest\x1a!.sentinel.TokenCacheStatsResponse\"\x00\x12@\n" +
-	"\vGetMapStats\x12\x13.trace.TraceRequest\x1a\x1a.sentinel.MapStatsResponse\"\x00\x12B\n" +
-	"\fGetDashboard\x12\x13.trace.TraceRequest\x1a\x1b.sentinel.DashboardResponse\"\x00\x12R\n" +
-	"\x0eWatchDashboard\x12\x1f.sentinel.WatchDashboardRequest\x1a\x1b.sentinel.DashboardResponse\"\x000\x01\x1a\x06\xf2\x97\"\x02\x18\x012\x1c\n" +
+	"\x10GetClusterHealth\x12\x13.trace.TraceRequest\x1a\x1d.hazelcast.AdminClusterHealth\"\x00\x12X\n" +
+	"\x0fListNodeMetrics\x12\x13.trace.TraceRequest\x1a\x1d.sentinel.NodeMetricsResponse\"\x11\xf2\x88'\r\b\x01\x12\anode_id\x18 \x12T\n" +
+	"\rListGrpcStats\x12\x13.trace.TraceRequest\x1a\x1b.sentinel.GrpcStatsResponse\"\x11\xf2\x88'\r\b\x01\x12\anode_id\x18 \x12d\n" +
+	"\x15ListPersistenceStatus\x12\x13.trace.TraceRequest\x1a#.sentinel.PersistenceStatusResponse\"\x11\xf2\x88'\r\b\x01\x12\anode_id\x18 \x12Z\n" +
+	"\x10ListNetworkStats\x12\x13.trace.TraceRequest\x1a\x1e.sentinel.NetworkStatsResponse\"\x11\xf2\x88'\r\b\x01\x12\anode_id\x18 \x12V\n" +
+	"\x0eListThreadInfo\x12\x13.trace.TraceRequest\x1a\x1c.sentinel.ThreadInfoResponse\"\x11\xf2\x88'\r\b\x01\x12\anode_id\x18 \x12`\n" +
+	"\x13ListTokenCacheStats\x12\x13.trace.TraceRequest\x1a!.sentinel.TokenCacheStatsResponse\"\x11\xf2\x88'\r\b\x01\x12\anode_id\x18 \x12T\n" +
+	"\fListMapStats\x12\x13.trace.TraceRequest\x1a\x1a.sentinel.MapStatsResponse\"\x13\xf2\x88'\x0f\b\x01\x12\bmap_name\x18\x80\b\x12B\n" +
+	"\fGetDashboard\x12\x13.trace.TraceRequest\x1a\x1b.sentinel.DashboardResponse\"\x00\x12V\n" +
+	"\x12SubscribeDashboard\x12\x1f.sentinel.WatchDashboardRequest\x1a\x1b.sentinel.DashboardResponse\"\x000\x01\x1a\x06\xf2\x97\"\x02\x18\x012\x1c\n" +
 	"\x14SentinelStateService\x1a\x04\xea\x97\"\x002\xbf\x01\n" +
 	"\x1aSentinelConfigStateService\x122\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x10.sentinel.Config\x12/\n" +
@@ -1287,29 +1287,29 @@ var file_services_sentinel_proto_depIdxs = []int32{
 	3,  // 16: sentinel.SentinelConfigState.config:type_name -> sentinel.Config
 	25, // 17: sentinel.Dashboard.GetClusterInfo:input_type -> trace.TraceRequest
 	25, // 18: sentinel.Dashboard.GetClusterHealth:input_type -> trace.TraceRequest
-	25, // 19: sentinel.Dashboard.GetNodeMetrics:input_type -> trace.TraceRequest
-	25, // 20: sentinel.Dashboard.GetGrpcStats:input_type -> trace.TraceRequest
-	25, // 21: sentinel.Dashboard.GetPersistenceStatus:input_type -> trace.TraceRequest
-	25, // 22: sentinel.Dashboard.GetNetworkStats:input_type -> trace.TraceRequest
-	25, // 23: sentinel.Dashboard.GetThreadInfo:input_type -> trace.TraceRequest
-	25, // 24: sentinel.Dashboard.GetTokenCacheStats:input_type -> trace.TraceRequest
-	25, // 25: sentinel.Dashboard.GetMapStats:input_type -> trace.TraceRequest
+	25, // 19: sentinel.Dashboard.ListNodeMetrics:input_type -> trace.TraceRequest
+	25, // 20: sentinel.Dashboard.ListGrpcStats:input_type -> trace.TraceRequest
+	25, // 21: sentinel.Dashboard.ListPersistenceStatus:input_type -> trace.TraceRequest
+	25, // 22: sentinel.Dashboard.ListNetworkStats:input_type -> trace.TraceRequest
+	25, // 23: sentinel.Dashboard.ListThreadInfo:input_type -> trace.TraceRequest
+	25, // 24: sentinel.Dashboard.ListTokenCacheStats:input_type -> trace.TraceRequest
+	25, // 25: sentinel.Dashboard.ListMapStats:input_type -> trace.TraceRequest
 	25, // 26: sentinel.Dashboard.GetDashboard:input_type -> trace.TraceRequest
-	5,  // 27: sentinel.Dashboard.WatchDashboard:input_type -> sentinel.WatchDashboardRequest
+	5,  // 27: sentinel.Dashboard.SubscribeDashboard:input_type -> sentinel.WatchDashboardRequest
 	25, // 28: sentinel.SentinelConfigStateService.GetConfig:input_type -> trace.TraceRequest
 	3,  // 29: sentinel.SentinelConfigStateService.SetConfig:input_type -> sentinel.Config
 	25, // 30: sentinel.SentinelConfigStateService.WatchConfig:input_type -> trace.TraceRequest
 	23, // 31: sentinel.Dashboard.GetClusterInfo:output_type -> hazelcast.AdminClusterInfo
 	24, // 32: sentinel.Dashboard.GetClusterHealth:output_type -> hazelcast.AdminClusterHealth
-	6,  // 33: sentinel.Dashboard.GetNodeMetrics:output_type -> sentinel.NodeMetricsResponse
-	7,  // 34: sentinel.Dashboard.GetGrpcStats:output_type -> sentinel.GrpcStatsResponse
-	8,  // 35: sentinel.Dashboard.GetPersistenceStatus:output_type -> sentinel.PersistenceStatusResponse
-	9,  // 36: sentinel.Dashboard.GetNetworkStats:output_type -> sentinel.NetworkStatsResponse
-	10, // 37: sentinel.Dashboard.GetThreadInfo:output_type -> sentinel.ThreadInfoResponse
-	11, // 38: sentinel.Dashboard.GetTokenCacheStats:output_type -> sentinel.TokenCacheStatsResponse
-	12, // 39: sentinel.Dashboard.GetMapStats:output_type -> sentinel.MapStatsResponse
+	6,  // 33: sentinel.Dashboard.ListNodeMetrics:output_type -> sentinel.NodeMetricsResponse
+	7,  // 34: sentinel.Dashboard.ListGrpcStats:output_type -> sentinel.GrpcStatsResponse
+	8,  // 35: sentinel.Dashboard.ListPersistenceStatus:output_type -> sentinel.PersistenceStatusResponse
+	9,  // 36: sentinel.Dashboard.ListNetworkStats:output_type -> sentinel.NetworkStatsResponse
+	10, // 37: sentinel.Dashboard.ListThreadInfo:output_type -> sentinel.ThreadInfoResponse
+	11, // 38: sentinel.Dashboard.ListTokenCacheStats:output_type -> sentinel.TokenCacheStatsResponse
+	12, // 39: sentinel.Dashboard.ListMapStats:output_type -> sentinel.MapStatsResponse
 	13, // 40: sentinel.Dashboard.GetDashboard:output_type -> sentinel.DashboardResponse
-	13, // 41: sentinel.Dashboard.WatchDashboard:output_type -> sentinel.DashboardResponse
+	13, // 41: sentinel.Dashboard.SubscribeDashboard:output_type -> sentinel.DashboardResponse
 	3,  // 42: sentinel.SentinelConfigStateService.GetConfig:output_type -> sentinel.Config
 	3,  // 43: sentinel.SentinelConfigStateService.SetConfig:output_type -> sentinel.Config
 	3,  // 44: sentinel.SentinelConfigStateService.WatchConfig:output_type -> sentinel.Config

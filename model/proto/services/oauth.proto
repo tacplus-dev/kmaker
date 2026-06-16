@@ -192,11 +192,11 @@ message CompleteCliAuthResponse {
 // is to obtain one, so each RPC has auth_disabled.
 service Session {
 
-  // Session is a bidirectional stream between cavalierctl and OAuth.
+  // BrokerSession is a bidirectional stream between cavalierctl and OAuth.
   // The client sends a session_id, then waits for token delivery.
   // OAuth holds the stream open until the Callback handler writes a
   // matching token to OAuthState or the session times out.
-  rpc Session(stream SessionRequest) returns (stream SessionResponse) {
+  rpc BrokerSession(stream SessionRequest) returns (stream SessionResponse) {
   }
 }
 
@@ -217,20 +217,20 @@ service Auth {
   rpc Authorize(AuthorizeRequest) returns (AuthorizeResponse) {
   }
 
-  // Callback handles the OAuth2 authorization code callback from the IDP.
+  // MintCallbackTokens handles the OAuth2 authorization code callback from the IDP.
   // Exchanges the authorization code for an IDP ID token, validates it
   // against the IDP's JWKS, then delegates to kernel's MintUserToken.
-  rpc Callback(CallbackRequest) returns (CallbackResponse) {
+  rpc MintCallbackTokens(CallbackRequest) returns (CallbackResponse) {
   }
 
-  // Logout invalidates the session and optionally redirects to the IDP logout.
-  rpc Logout(LogoutRequest) returns (LogoutResponse) {
+  // RevokeSession invalidates the session and optionally redirects to the IDP logout.
+  rpc RevokeSession(LogoutRequest) returns (LogoutResponse) {
   }
 
-  // CompleteCliAuth is called by the webapp when a user is already logged in
+  // BrokerCliAuth is called by the webapp when a user is already logged in
   // and session_id is in the URL. OAuth forwards the authenticated identity
   // to kernel's CliTokenBroker for nonce completion and token minting.
-  rpc CompleteCliAuth(CompleteCliAuthRequest) returns (CompleteCliAuthResponse) {
+  rpc BrokerCliAuth(CompleteCliAuthRequest) returns (CompleteCliAuthResponse) {
   }
 }
 
@@ -523,7 +523,7 @@ enum SessionRpcId {
   SESSION_RPC_ID_ALL_ACCESSORS = 1;
   SESSION_RPC_ID_ALL_MUTATORS = 2;
   SESSION_RPC_ID_ALL_EXECUTORS = 3;
-  SESSION_RPC_ID_SESSION = 4;
+  SESSION_RPC_ID_BROKER_SESSION = 4;
 }
 
 enum AuthRpcId {
@@ -533,9 +533,9 @@ enum AuthRpcId {
   AUTH_RPC_ID_ALL_EXECUTORS = 3;
   AUTH_RPC_ID_LIST_PROVIDERS = 4;
   AUTH_RPC_ID_AUTHORIZE = 5;
-  AUTH_RPC_ID_CALLBACK = 6;
-  AUTH_RPC_ID_LOGOUT = 7;
-  AUTH_RPC_ID_COMPLETE_CLI_AUTH = 8;
+  AUTH_RPC_ID_MINT_CALLBACK_TOKENS = 6;
+  AUTH_RPC_ID_REVOKE_SESSION = 7;
+  AUTH_RPC_ID_BROKER_CLI_AUTH = 8;
 }
 
 enum OauthConfigStateServiceRpcId {

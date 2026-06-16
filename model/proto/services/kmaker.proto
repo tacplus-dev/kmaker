@@ -85,7 +85,7 @@ message KernelServiceAccount {
   bool noop = 201;
 }
 
-message SignKernelCertRequest {
+message MintKernelCertRequest {
   // k8s_token is a projected Kubernetes service account token for a kernel pod.
   string k8s_token = 1;
 
@@ -104,9 +104,9 @@ message SignKernelCertRequest {
 
 service Kmaker {
 
-  // SignKernelCert signs a kernel certificate after validating the Kubernetes
+  // MintKernelCert issues a kernel certificate after validating the Kubernetes
   // projected service account token with the Kubernetes TokenReview API.
-  rpc SignKernelCert(SignKernelCertRequest) returns (x509.X509CertChain) {
+  rpc MintKernelCert(MintKernelCertRequest) returns (x509.X509CertChain) {
   }
 }
 
@@ -142,7 +142,7 @@ enum TypeID {
   TYPE_ID_UNSPECIFIED = 0;
   TYPE_ID_CONFIG = 1;
   TYPE_ID_KERNEL_SERVICE_ACCOUNT = 2;
-  TYPE_ID_SIGN_KERNEL_CERT_REQUEST = 3;
+  TYPE_ID_MINT_KERNEL_CERT_REQUEST = 3;
   TYPE_ID_KMAKER_CONFIG_STATE = 4;
   TYPE_ID_MAP_EMPTY = 5;
 }
@@ -152,7 +152,7 @@ enum KmakerRpcId {
   KMAKER_RPC_ID_ALL_ACCESSORS = 1;
   KMAKER_RPC_ID_ALL_MUTATORS = 2;
   KMAKER_RPC_ID_ALL_EXECUTORS = 3;
-  KMAKER_RPC_ID_SIGN_KERNEL_CERT = 4;
+  KMAKER_RPC_ID_MINT_KERNEL_CERT = 4;
 }
 
 enum KmakerConfigStateServiceRpcId {

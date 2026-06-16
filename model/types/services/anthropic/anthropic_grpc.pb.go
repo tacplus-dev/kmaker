@@ -35,8 +35,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Proxy_CreateMessage_FullMethodName       = "/anthropic.Proxy/CreateMessage"
-	Proxy_CreateMessageStream_FullMethodName = "/anthropic.Proxy/CreateMessageStream"
+	Proxy_CreateMessage_FullMethodName         = "/anthropic.Proxy/CreateMessage"
+	Proxy_GenerateMessageStream_FullMethodName = "/anthropic.Proxy/GenerateMessageStream"
 )
 
 // ProxyClient is the client API for Proxy service.
@@ -45,9 +45,9 @@ const (
 type ProxyClient interface {
 	// CreateMessage sends a non-streaming request to the Anthropic Messages API.
 	CreateMessage(ctx context.Context, in *ProxyRequest, opts ...grpc.CallOption) (*CreateMessageResponse, error)
-	// CreateMessageStream sends a streaming request to the Anthropic Messages API.
+	// GenerateMessageStream sends a streaming request to the Anthropic Messages API.
 	// Returns a server-side stream of SSE events.
-	CreateMessageStream(ctx context.Context, in *ProxyRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[StreamEvent], error)
+	GenerateMessageStream(ctx context.Context, in *ProxyRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[StreamEvent], error)
 }
 
 type proxyClient struct {
@@ -68,9 +68,9 @@ func (c *proxyClient) CreateMessage(ctx context.Context, in *ProxyRequest, opts 
 	return out, nil
 }
 
-func (c *proxyClient) CreateMessageStream(ctx context.Context, in *ProxyRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[StreamEvent], error) {
+func (c *proxyClient) GenerateMessageStream(ctx context.Context, in *ProxyRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[StreamEvent], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Proxy_ServiceDesc.Streams[0], Proxy_CreateMessageStream_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Proxy_ServiceDesc.Streams[0], Proxy_GenerateMessageStream_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +85,7 @@ func (c *proxyClient) CreateMessageStream(ctx context.Context, in *ProxyRequest,
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Proxy_CreateMessageStreamClient = grpc.ServerStreamingClient[StreamEvent]
+type Proxy_GenerateMessageStreamClient = grpc.ServerStreamingClient[StreamEvent]
 
 // ProxyServer is the server API for Proxy service.
 // All implementations must embed UnimplementedProxyServer
@@ -93,9 +93,9 @@ type Proxy_CreateMessageStreamClient = grpc.ServerStreamingClient[StreamEvent]
 type ProxyServer interface {
 	// CreateMessage sends a non-streaming request to the Anthropic Messages API.
 	CreateMessage(context.Context, *ProxyRequest) (*CreateMessageResponse, error)
-	// CreateMessageStream sends a streaming request to the Anthropic Messages API.
+	// GenerateMessageStream sends a streaming request to the Anthropic Messages API.
 	// Returns a server-side stream of SSE events.
-	CreateMessageStream(*ProxyRequest, grpc.ServerStreamingServer[StreamEvent]) error
+	GenerateMessageStream(*ProxyRequest, grpc.ServerStreamingServer[StreamEvent]) error
 	mustEmbedUnimplementedProxyServer()
 }
 
@@ -109,8 +109,8 @@ type UnimplementedProxyServer struct{}
 func (UnimplementedProxyServer) CreateMessage(context.Context, *ProxyRequest) (*CreateMessageResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateMessage not implemented")
 }
-func (UnimplementedProxyServer) CreateMessageStream(*ProxyRequest, grpc.ServerStreamingServer[StreamEvent]) error {
-	return status.Error(codes.Unimplemented, "method CreateMessageStream not implemented")
+func (UnimplementedProxyServer) GenerateMessageStream(*ProxyRequest, grpc.ServerStreamingServer[StreamEvent]) error {
+	return status.Error(codes.Unimplemented, "method GenerateMessageStream not implemented")
 }
 func (UnimplementedProxyServer) mustEmbedUnimplementedProxyServer() {}
 func (UnimplementedProxyServer) testEmbeddedByValue()               {}
@@ -151,16 +151,16 @@ func _Proxy_CreateMessage_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Proxy_CreateMessageStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Proxy_GenerateMessageStream_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(ProxyRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ProxyServer).CreateMessageStream(m, &grpc.GenericServerStream[ProxyRequest, StreamEvent]{ServerStream: stream})
+	return srv.(ProxyServer).GenerateMessageStream(m, &grpc.GenericServerStream[ProxyRequest, StreamEvent]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Proxy_CreateMessageStreamServer = grpc.ServerStreamingServer[StreamEvent]
+type Proxy_GenerateMessageStreamServer = grpc.ServerStreamingServer[StreamEvent]
 
 // Proxy_ServiceDesc is the grpc.ServiceDesc for Proxy service.
 // It's only intended for direct use with grpc.RegisterService,
@@ -176,8 +176,8 @@ var Proxy_ServiceDesc = grpc.ServiceDesc{
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "CreateMessageStream",
-			Handler:       _Proxy_CreateMessageStream_Handler,
+			StreamName:    "GenerateMessageStream",
+			Handler:       _Proxy_GenerateMessageStream_Handler,
 			ServerStreams: true,
 		},
 	},

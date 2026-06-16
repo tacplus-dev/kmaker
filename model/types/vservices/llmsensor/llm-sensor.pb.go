@@ -27,6 +27,7 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -89,8 +90,9 @@ func (LlmProvider) EnumDescriptor() ([]byte, []int) {
 	return file_vservices_llm_sensor_proto_rawDescGZIP(), []int{0}
 }
 
-// LlmOperationType identifies the specific proxy RPC that was invoked.
-// Values map 1:1 to the RPCs defined in anthropic.proto and openai.proto.
+// LlmOperationType identifies the upstream provider operation that was invoked.
+// Values preserve the provider API operation names even when the local RPC uses
+// a governed action verb.
 type LlmOperationType int32
 
 const (
@@ -157,14 +159,16 @@ func (LlmOperationType) EnumDescriptor() ([]byte, []int) {
 type TypeID int32
 
 const (
-	TypeID_TYPE_ID_UNSPECIFIED           TypeID = 0
-	TypeID_TYPE_ID_LLM_EVENT             TypeID = 1
-	TypeID_TYPE_ID_LLM_EVENT_BUS         TypeID = 2
-	TypeID_TYPE_ID_MAP_EMPTY             TypeID = 3
-	TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT TypeID = 4
-	TypeID_TYPE_ID_LLM_MODEL_NODE        TypeID = 5
-	TypeID_TYPE_ID_LLM_CALL_NODE         TypeID = 6
-	TypeID_TYPE_ID_LLM_CALL_RECORD       TypeID = 7
+	TypeID_TYPE_ID_UNSPECIFIED                                 TypeID = 0
+	TypeID_TYPE_ID_LLM_EVENT                                   TypeID = 1
+	TypeID_TYPE_ID_LLM_EVENT_BUS                               TypeID = 2
+	TypeID_TYPE_ID_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD TypeID = 3
+	TypeID_TYPE_ID_MAP_EMPTY                                   TypeID = 4
+	TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT                       TypeID = 5
+	TypeID_TYPE_ID_EVENT_BUS_RECORD_META                       TypeID = 6
+	TypeID_TYPE_ID_LLM_MODEL_NODE                              TypeID = 7
+	TypeID_TYPE_ID_LLM_CALL_NODE                               TypeID = 8
+	TypeID_TYPE_ID_LLM_CALL_RECORD                             TypeID = 9
 )
 
 // Enum value maps for TypeID.
@@ -173,21 +177,25 @@ var (
 		0: "TYPE_ID_UNSPECIFIED",
 		1: "TYPE_ID_LLM_EVENT",
 		2: "TYPE_ID_LLM_EVENT_BUS",
-		3: "TYPE_ID_MAP_EMPTY",
-		4: "TYPE_ID_TOPIC_PUBLISH_RECEIPT",
-		5: "TYPE_ID_LLM_MODEL_NODE",
-		6: "TYPE_ID_LLM_CALL_NODE",
-		7: "TYPE_ID_LLM_CALL_RECORD",
+		3: "TYPE_ID_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD",
+		4: "TYPE_ID_MAP_EMPTY",
+		5: "TYPE_ID_TOPIC_PUBLISH_RECEIPT",
+		6: "TYPE_ID_EVENT_BUS_RECORD_META",
+		7: "TYPE_ID_LLM_MODEL_NODE",
+		8: "TYPE_ID_LLM_CALL_NODE",
+		9: "TYPE_ID_LLM_CALL_RECORD",
 	}
 	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":           0,
-		"TYPE_ID_LLM_EVENT":             1,
-		"TYPE_ID_LLM_EVENT_BUS":         2,
-		"TYPE_ID_MAP_EMPTY":             3,
-		"TYPE_ID_TOPIC_PUBLISH_RECEIPT": 4,
-		"TYPE_ID_LLM_MODEL_NODE":        5,
-		"TYPE_ID_LLM_CALL_NODE":         6,
-		"TYPE_ID_LLM_CALL_RECORD":       7,
+		"TYPE_ID_UNSPECIFIED":   0,
+		"TYPE_ID_LLM_EVENT":     1,
+		"TYPE_ID_LLM_EVENT_BUS": 2,
+		"TYPE_ID_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD": 3,
+		"TYPE_ID_MAP_EMPTY":             4,
+		"TYPE_ID_TOPIC_PUBLISH_RECEIPT": 5,
+		"TYPE_ID_EVENT_BUS_RECORD_META": 6,
+		"TYPE_ID_LLM_MODEL_NODE":        7,
+		"TYPE_ID_LLM_CALL_NODE":         8,
+		"TYPE_ID_LLM_CALL_RECORD":       9,
 	}
 )
 
@@ -663,6 +671,74 @@ func (x *LlmEventBus) GetNoop() bool {
 	return false
 }
 
+type LlmEventBusEventStreamSubscribeRecord struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Meta          *EventBusRecordMeta    `protobuf:"bytes,1,opt,name=meta,proto3" json:"meta,omitempty"`
+	Payload       *LlmEvent              `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LlmEventBusEventStreamSubscribeRecord) Reset() {
+	*x = LlmEventBusEventStreamSubscribeRecord{}
+	mi := &file_vservices_llm_sensor_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LlmEventBusEventStreamSubscribeRecord) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LlmEventBusEventStreamSubscribeRecord) ProtoMessage() {}
+
+func (x *LlmEventBusEventStreamSubscribeRecord) ProtoReflect() protoreflect.Message {
+	mi := &file_vservices_llm_sensor_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LlmEventBusEventStreamSubscribeRecord.ProtoReflect.Descriptor instead.
+func (*LlmEventBusEventStreamSubscribeRecord) Descriptor() ([]byte, []int) {
+	return file_vservices_llm_sensor_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *LlmEventBusEventStreamSubscribeRecord) GetMeta() *EventBusRecordMeta {
+	if x != nil {
+		return x.Meta
+	}
+	return nil
+}
+
+func (x *LlmEventBusEventStreamSubscribeRecord) GetPayload() *LlmEvent {
+	if x != nil {
+		return x.Payload
+	}
+	return nil
+}
+
+func (x *LlmEventBusEventStreamSubscribeRecord) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *LlmEventBusEventStreamSubscribeRecord) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
 type MapEmpty struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -673,7 +749,7 @@ type MapEmpty struct {
 
 func (x *MapEmpty) Reset() {
 	*x = MapEmpty{}
-	mi := &file_vservices_llm_sensor_proto_msgTypes[2]
+	mi := &file_vservices_llm_sensor_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -685,7 +761,7 @@ func (x *MapEmpty) String() string {
 func (*MapEmpty) ProtoMessage() {}
 
 func (x *MapEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_llm_sensor_proto_msgTypes[2]
+	mi := &file_vservices_llm_sensor_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -698,7 +774,7 @@ func (x *MapEmpty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MapEmpty.ProtoReflect.Descriptor instead.
 func (*MapEmpty) Descriptor() ([]byte, []int) {
-	return file_vservices_llm_sensor_proto_rawDescGZIP(), []int{2}
+	return file_vservices_llm_sensor_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *MapEmpty) GetTraceId() string {
@@ -726,7 +802,7 @@ type TopicPublishReceipt struct {
 
 func (x *TopicPublishReceipt) Reset() {
 	*x = TopicPublishReceipt{}
-	mi := &file_vservices_llm_sensor_proto_msgTypes[3]
+	mi := &file_vservices_llm_sensor_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -738,7 +814,7 @@ func (x *TopicPublishReceipt) String() string {
 func (*TopicPublishReceipt) ProtoMessage() {}
 
 func (x *TopicPublishReceipt) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_llm_sensor_proto_msgTypes[3]
+	mi := &file_vservices_llm_sensor_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -751,7 +827,7 @@ func (x *TopicPublishReceipt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TopicPublishReceipt.ProtoReflect.Descriptor instead.
 func (*TopicPublishReceipt) Descriptor() ([]byte, []int) {
-	return file_vservices_llm_sensor_proto_rawDescGZIP(), []int{3}
+	return file_vservices_llm_sensor_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *TopicPublishReceipt) GetPublished() bool {
@@ -775,6 +851,98 @@ func (x *TopicPublishReceipt) GetNoop() bool {
 	return false
 }
 
+type EventBusRecordMeta struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Key           []byte                 `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	Topic         string                 `protobuf:"bytes,2,opt,name=topic,proto3" json:"topic,omitempty"`
+	Partition     int32                  `protobuf:"varint,3,opt,name=partition,proto3" json:"partition,omitempty"`
+	Offset        int64                  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`
+	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EventBusRecordMeta) Reset() {
+	*x = EventBusRecordMeta{}
+	mi := &file_vservices_llm_sensor_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EventBusRecordMeta) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EventBusRecordMeta) ProtoMessage() {}
+
+func (x *EventBusRecordMeta) ProtoReflect() protoreflect.Message {
+	mi := &file_vservices_llm_sensor_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EventBusRecordMeta.ProtoReflect.Descriptor instead.
+func (*EventBusRecordMeta) Descriptor() ([]byte, []int) {
+	return file_vservices_llm_sensor_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *EventBusRecordMeta) GetKey() []byte {
+	if x != nil {
+		return x.Key
+	}
+	return nil
+}
+
+func (x *EventBusRecordMeta) GetTopic() string {
+	if x != nil {
+		return x.Topic
+	}
+	return ""
+}
+
+func (x *EventBusRecordMeta) GetPartition() int32 {
+	if x != nil {
+		return x.Partition
+	}
+	return 0
+}
+
+func (x *EventBusRecordMeta) GetOffset() int64 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
+}
+
+func (x *EventBusRecordMeta) GetTimestamp() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Timestamp
+	}
+	return nil
+}
+
+func (x *EventBusRecordMeta) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *EventBusRecordMeta) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
 // LlmModelNode — auto-generated graph projection of llmsensor.LlmEvent.
 type LlmModelNode struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -792,7 +960,7 @@ type LlmModelNode struct {
 
 func (x *LlmModelNode) Reset() {
 	*x = LlmModelNode{}
-	mi := &file_vservices_llm_sensor_proto_msgTypes[4]
+	mi := &file_vservices_llm_sensor_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -804,7 +972,7 @@ func (x *LlmModelNode) String() string {
 func (*LlmModelNode) ProtoMessage() {}
 
 func (x *LlmModelNode) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_llm_sensor_proto_msgTypes[4]
+	mi := &file_vservices_llm_sensor_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -817,7 +985,7 @@ func (x *LlmModelNode) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LlmModelNode.ProtoReflect.Descriptor instead.
 func (*LlmModelNode) Descriptor() ([]byte, []int) {
-	return file_vservices_llm_sensor_proto_rawDescGZIP(), []int{4}
+	return file_vservices_llm_sensor_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *LlmModelNode) GetModelKey() string {
@@ -897,7 +1065,7 @@ type LlmCallNode struct {
 
 func (x *LlmCallNode) Reset() {
 	*x = LlmCallNode{}
-	mi := &file_vservices_llm_sensor_proto_msgTypes[5]
+	mi := &file_vservices_llm_sensor_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -909,7 +1077,7 @@ func (x *LlmCallNode) String() string {
 func (*LlmCallNode) ProtoMessage() {}
 
 func (x *LlmCallNode) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_llm_sensor_proto_msgTypes[5]
+	mi := &file_vservices_llm_sensor_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -922,7 +1090,7 @@ func (x *LlmCallNode) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LlmCallNode.ProtoReflect.Descriptor instead.
 func (*LlmCallNode) Descriptor() ([]byte, []int) {
-	return file_vservices_llm_sensor_proto_rawDescGZIP(), []int{5}
+	return file_vservices_llm_sensor_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *LlmCallNode) GetEventId() string {
@@ -1039,7 +1207,7 @@ type LlmCallRecord struct {
 
 func (x *LlmCallRecord) Reset() {
 	*x = LlmCallRecord{}
-	mi := &file_vservices_llm_sensor_proto_msgTypes[6]
+	mi := &file_vservices_llm_sensor_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1051,7 +1219,7 @@ func (x *LlmCallRecord) String() string {
 func (*LlmCallRecord) ProtoMessage() {}
 
 func (x *LlmCallRecord) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_llm_sensor_proto_msgTypes[6]
+	mi := &file_vservices_llm_sensor_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1064,7 +1232,7 @@ func (x *LlmCallRecord) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LlmCallRecord.ProtoReflect.Descriptor instead.
 func (*LlmCallRecord) Descriptor() ([]byte, []int) {
-	return file_vservices_llm_sensor_proto_rawDescGZIP(), []int{6}
+	return file_vservices_llm_sensor_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *LlmCallRecord) GetModelKey() string {
@@ -1218,7 +1386,7 @@ var File_vservices_llm_sensor_proto protoreflect.FileDescriptor
 
 const file_vservices_llm_sensor_proto_rawDesc = "" +
 	"\n" +
-	"\x1avservices/llm-sensor.proto\x12\tllmsensor\x1a\x0flibs/spec.proto\x1a\x10libs/trace.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xb7\r\n" +
+	"\x1avservices/llm-sensor.proto\x12\tllmsensor\x1a\x0flibs/spec.proto\x1a\x10libs/trace.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xb7\r\n" +
 	"\bLlmEvent\x12\x1b\n" +
 	"\x05email\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x02R\x05email\x12$\n" +
 	"\bevent_id\x18\x02 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x04R\aeventId\x12'\n" +
@@ -1292,12 +1460,25 @@ const file_vservices_llm_sensor_proto_rawDesc = "" +
 	"\fevent_stream\x18\x01 \x01(\v2\x13.llmsensor.LlmEventB\x04\x88\xb6\x18\x01R\veventStream\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x10\xe2\xa9\x1d\f\n" +
-	"\beventbus\x18\x01\";\n" +
+	"\beventbus\x18\x01\"\xba\x01\n" +
+	"%LlmEventBusEventStreamSubscribeRecord\x121\n" +
+	"\x04meta\x18\x01 \x01(\v2\x1d.llmsensor.EventBusRecordMetaR\x04meta\x12-\n" +
+	"\apayload\x18\x02 \x01(\v2\x13.llmsensor.LlmEventR\apayload\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"d\n" +
 	"\x13TopicPublishReceipt\x12\x1c\n" +
 	"\tpublished\x18\x01 \x01(\bR\tpublished\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xdd\x01\n" +
+	"\x12EventBusRecordMeta\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\fR\x03key\x12\x14\n" +
+	"\x05topic\x18\x02 \x01(\tR\x05topic\x12\x1c\n" +
+	"\tpartition\x18\x03 \x01(\x05R\tpartition\x12\x16\n" +
+	"\x06offset\x18\x04 \x01(\x03R\x06offset\x128\n" +
+	"\ttimestamp\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x95\x04\n" +
 	"\fLlmModelNode\x12B\n" +
@@ -1365,16 +1546,18 @@ const file_vservices_llm_sensor_proto_rawDesc = "" +
 	"!LLM_OPERATION_TYPE_CREATE_MESSAGE\x10\x01\x12,\n" +
 	"(LLM_OPERATION_TYPE_CREATE_MESSAGE_STREAM\x10\x02\x12-\n" +
 	")LLM_OPERATION_TYPE_CREATE_CHAT_COMPLETION\x10\x03\x124\n" +
-	"0LLM_OPERATION_TYPE_CREATE_CHAT_COMPLETION_STREAM\x10\x04*\xe1\x01\n" +
+	"0LLM_OPERATION_TYPE_CREATE_CHAT_COMPLETION_STREAM\x10\x04*\xbd\x02\n" +
 	"\x06TypeID\x12\x17\n" +
 	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11TYPE_ID_LLM_EVENT\x10\x01\x12\x19\n" +
-	"\x15TYPE_ID_LLM_EVENT_BUS\x10\x02\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10\x03\x12!\n" +
-	"\x1dTYPE_ID_TOPIC_PUBLISH_RECEIPT\x10\x04\x12\x1a\n" +
-	"\x16TYPE_ID_LLM_MODEL_NODE\x10\x05\x12\x19\n" +
-	"\x15TYPE_ID_LLM_CALL_NODE\x10\x06\x12\x1b\n" +
-	"\x17TYPE_ID_LLM_CALL_RECORD\x10\a*\xf5\x02\n" +
+	"\x15TYPE_ID_LLM_EVENT_BUS\x10\x02\x127\n" +
+	"3TYPE_ID_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD\x10\x03\x12\x15\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x10\x04\x12!\n" +
+	"\x1dTYPE_ID_TOPIC_PUBLISH_RECEIPT\x10\x05\x12!\n" +
+	"\x1dTYPE_ID_EVENT_BUS_RECORD_META\x10\x06\x12\x1a\n" +
+	"\x16TYPE_ID_LLM_MODEL_NODE\x10\a\x12\x19\n" +
+	"\x15TYPE_ID_LLM_CALL_NODE\x10\b\x12\x1b\n" +
+	"\x17TYPE_ID_LLM_CALL_RECORD\x10\t*\xf5\x02\n" +
 	"\x1cLlmEventBusStateServiceRpcId\x122\n" +
 	".LLM_EVENT_BUS_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x124\n" +
 	"0LLM_EVENT_BUS_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x123\n" +
@@ -1394,10 +1577,10 @@ const file_vservices_llm_sensor_proto_rawDesc = "" +
 	"(TIMESERIES_MUTATION_RPC_ID_ALL_ACCESSORS\x10\x01\x12+\n" +
 	"'TIMESERIES_MUTATION_RPC_ID_ALL_MUTATORS\x10\x02\x12,\n" +
 	"(TIMESERIES_MUTATION_RPC_ID_ALL_EXECUTORS\x10\x03\x125\n" +
-	"1TIMESERIES_MUTATION_RPC_ID_INSERT_LLM_CALL_RECORD\x10\x042\xbe\x01\n" +
+	"1TIMESERIES_MUTATION_RPC_ID_INSERT_LLM_CALL_RECORD\x10\x042\xdb\x01\n" +
 	"\x17LlmEventBusStateService\x12K\n" +
-	"\x14PublishToEventStream\x12\x13.llmsensor.LlmEvent\x1a\x1e.llmsensor.TopicPublishReceipt\x12D\n" +
-	"\x16SubscribeToEventStream\x12\x13.trace.TraceRequest\x1a\x13.llmsensor.LlmEvent0\x01\x1a\x10\xe2\x97\"\beventbus\xea\x97\"\x002\xa1\x01\n" +
+	"\x14PublishToEventStream\x12\x13.llmsensor.LlmEvent\x1a\x1e.llmsensor.TopicPublishReceipt\x12a\n" +
+	"\x16SubscribeToEventStream\x12\x13.trace.TraceRequest\x1a0.llmsensor.LlmEventBusEventStreamSubscribeRecord0\x01\x1a\x10\xe2\x97\"\beventbus\xea\x97\"\x002\xa1\x01\n" +
 	"\rGraphMutation\x12C\n" +
 	"\x11InsertLlmCallNode\x12\x16.llmsensor.LlmCallNode\x1a\x16.google.protobuf.Empty\x12E\n" +
 	"\x12InsertLlmModelNode\x12\x17.llmsensor.LlmModelNode\x1a\x16.google.protobuf.Empty\x1a\x04\xea\x97\"\x002c\n" +
@@ -1418,48 +1601,54 @@ func file_vservices_llm_sensor_proto_rawDescGZIP() []byte {
 }
 
 var file_vservices_llm_sensor_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
-var file_vservices_llm_sensor_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_vservices_llm_sensor_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_vservices_llm_sensor_proto_goTypes = []any{
-	(LlmProvider)(0),                  // 0: llmsensor.LlmProvider
-	(LlmOperationType)(0),             // 1: llmsensor.LlmOperationType
-	(TypeID)(0),                       // 2: llmsensor.TypeID
-	(LlmEventBusStateServiceRpcId)(0), // 3: llmsensor.LlmEventBusStateServiceRpcId
-	(GraphMutationRpcId)(0),           // 4: llmsensor.GraphMutationRpcId
-	(TimeseriesMutationRpcId)(0),      // 5: llmsensor.TimeseriesMutationRpcId
-	(*LlmEvent)(nil),                  // 6: llmsensor.LlmEvent
-	(*LlmEventBus)(nil),               // 7: llmsensor.LlmEventBus
-	(*MapEmpty)(nil),                  // 8: llmsensor.MapEmpty
-	(*TopicPublishReceipt)(nil),       // 9: llmsensor.TopicPublishReceipt
-	(*LlmModelNode)(nil),              // 10: llmsensor.LlmModelNode
-	(*LlmCallNode)(nil),               // 11: llmsensor.LlmCallNode
-	(*LlmCallRecord)(nil),             // 12: llmsensor.LlmCallRecord
-	(*trace.TraceRequest)(nil),        // 13: trace.TraceRequest
-	(*emptypb.Empty)(nil),             // 14: google.protobuf.Empty
+	(LlmProvider)(0),                              // 0: llmsensor.LlmProvider
+	(LlmOperationType)(0),                         // 1: llmsensor.LlmOperationType
+	(TypeID)(0),                                   // 2: llmsensor.TypeID
+	(LlmEventBusStateServiceRpcId)(0),             // 3: llmsensor.LlmEventBusStateServiceRpcId
+	(GraphMutationRpcId)(0),                       // 4: llmsensor.GraphMutationRpcId
+	(TimeseriesMutationRpcId)(0),                  // 5: llmsensor.TimeseriesMutationRpcId
+	(*LlmEvent)(nil),                              // 6: llmsensor.LlmEvent
+	(*LlmEventBus)(nil),                           // 7: llmsensor.LlmEventBus
+	(*LlmEventBusEventStreamSubscribeRecord)(nil), // 8: llmsensor.LlmEventBusEventStreamSubscribeRecord
+	(*MapEmpty)(nil),                              // 9: llmsensor.MapEmpty
+	(*TopicPublishReceipt)(nil),                   // 10: llmsensor.TopicPublishReceipt
+	(*EventBusRecordMeta)(nil),                    // 11: llmsensor.EventBusRecordMeta
+	(*LlmModelNode)(nil),                          // 12: llmsensor.LlmModelNode
+	(*LlmCallNode)(nil),                           // 13: llmsensor.LlmCallNode
+	(*LlmCallRecord)(nil),                         // 14: llmsensor.LlmCallRecord
+	(*timestamppb.Timestamp)(nil),                 // 15: google.protobuf.Timestamp
+	(*trace.TraceRequest)(nil),                    // 16: trace.TraceRequest
+	(*emptypb.Empty)(nil),                         // 17: google.protobuf.Empty
 }
 var file_vservices_llm_sensor_proto_depIdxs = []int32{
 	0,  // 0: llmsensor.LlmEvent.provider:type_name -> llmsensor.LlmProvider
 	1,  // 1: llmsensor.LlmEvent.operation:type_name -> llmsensor.LlmOperationType
 	6,  // 2: llmsensor.LlmEventBus.event_stream:type_name -> llmsensor.LlmEvent
-	0,  // 3: llmsensor.LlmModelNode.provider:type_name -> llmsensor.LlmProvider
-	0,  // 4: llmsensor.LlmCallNode.provider:type_name -> llmsensor.LlmProvider
-	1,  // 5: llmsensor.LlmCallNode.operation:type_name -> llmsensor.LlmOperationType
-	0,  // 6: llmsensor.LlmCallRecord.provider:type_name -> llmsensor.LlmProvider
-	1,  // 7: llmsensor.LlmCallRecord.operation:type_name -> llmsensor.LlmOperationType
-	6,  // 8: llmsensor.LlmEventBusStateService.PublishToEventStream:input_type -> llmsensor.LlmEvent
-	13, // 9: llmsensor.LlmEventBusStateService.SubscribeToEventStream:input_type -> trace.TraceRequest
-	11, // 10: llmsensor.GraphMutation.InsertLlmCallNode:input_type -> llmsensor.LlmCallNode
-	10, // 11: llmsensor.GraphMutation.InsertLlmModelNode:input_type -> llmsensor.LlmModelNode
-	12, // 12: llmsensor.TimeseriesMutation.InsertLlmCallRecord:input_type -> llmsensor.LlmCallRecord
-	9,  // 13: llmsensor.LlmEventBusStateService.PublishToEventStream:output_type -> llmsensor.TopicPublishReceipt
-	6,  // 14: llmsensor.LlmEventBusStateService.SubscribeToEventStream:output_type -> llmsensor.LlmEvent
-	14, // 15: llmsensor.GraphMutation.InsertLlmCallNode:output_type -> google.protobuf.Empty
-	14, // 16: llmsensor.GraphMutation.InsertLlmModelNode:output_type -> google.protobuf.Empty
-	14, // 17: llmsensor.TimeseriesMutation.InsertLlmCallRecord:output_type -> google.protobuf.Empty
-	13, // [13:18] is the sub-list for method output_type
-	8,  // [8:13] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	11, // 3: llmsensor.LlmEventBusEventStreamSubscribeRecord.meta:type_name -> llmsensor.EventBusRecordMeta
+	6,  // 4: llmsensor.LlmEventBusEventStreamSubscribeRecord.payload:type_name -> llmsensor.LlmEvent
+	15, // 5: llmsensor.EventBusRecordMeta.timestamp:type_name -> google.protobuf.Timestamp
+	0,  // 6: llmsensor.LlmModelNode.provider:type_name -> llmsensor.LlmProvider
+	0,  // 7: llmsensor.LlmCallNode.provider:type_name -> llmsensor.LlmProvider
+	1,  // 8: llmsensor.LlmCallNode.operation:type_name -> llmsensor.LlmOperationType
+	0,  // 9: llmsensor.LlmCallRecord.provider:type_name -> llmsensor.LlmProvider
+	1,  // 10: llmsensor.LlmCallRecord.operation:type_name -> llmsensor.LlmOperationType
+	6,  // 11: llmsensor.LlmEventBusStateService.PublishToEventStream:input_type -> llmsensor.LlmEvent
+	16, // 12: llmsensor.LlmEventBusStateService.SubscribeToEventStream:input_type -> trace.TraceRequest
+	13, // 13: llmsensor.GraphMutation.InsertLlmCallNode:input_type -> llmsensor.LlmCallNode
+	12, // 14: llmsensor.GraphMutation.InsertLlmModelNode:input_type -> llmsensor.LlmModelNode
+	14, // 15: llmsensor.TimeseriesMutation.InsertLlmCallRecord:input_type -> llmsensor.LlmCallRecord
+	10, // 16: llmsensor.LlmEventBusStateService.PublishToEventStream:output_type -> llmsensor.TopicPublishReceipt
+	8,  // 17: llmsensor.LlmEventBusStateService.SubscribeToEventStream:output_type -> llmsensor.LlmEventBusEventStreamSubscribeRecord
+	17, // 18: llmsensor.GraphMutation.InsertLlmCallNode:output_type -> google.protobuf.Empty
+	17, // 19: llmsensor.GraphMutation.InsertLlmModelNode:output_type -> google.protobuf.Empty
+	17, // 20: llmsensor.TimeseriesMutation.InsertLlmCallRecord:output_type -> google.protobuf.Empty
+	16, // [16:21] is the sub-list for method output_type
+	11, // [11:16] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_vservices_llm_sensor_proto_init() }
@@ -1473,7 +1662,7 @@ func file_vservices_llm_sensor_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_vservices_llm_sensor_proto_rawDesc), len(file_vservices_llm_sensor_proto_rawDesc)),
 			NumEnums:      6,
-			NumMessages:   7,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   3,
 		},

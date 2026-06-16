@@ -67,17 +67,3 @@ message IPPort {
 message IPNets {
   repeated IPNet nets = 1;
 }
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-enum TypeID {
-  TYPE_ID_UNSPECIFIED = 0;
-  TYPE_ID_I_PV4 = 1;
-  TYPE_ID_I_PV6 = 2;
-  TYPE_ID_IP_ADDR = 3;
-  TYPE_ID_IP_NET = 4;
-  TYPE_ID_IP_PORT = 5;
-  TYPE_ID_IP_NETS = 6;
-}

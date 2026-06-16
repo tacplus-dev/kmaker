@@ -187,14 +187,3 @@ message SamlEntityDescriptor {
   // outgoing AuthnRequests.
   bool authn_requests_signed = 7;
 }
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-enum TypeID {
-  TYPE_ID_UNSPECIFIED = 0;
-  TYPE_ID_SAML_ASSERTION = 1;
-  TYPE_ID_SAML_ENDPOINT = 2;
-  TYPE_ID_SAML_ENTITY_DESCRIPTOR = 3;
-}

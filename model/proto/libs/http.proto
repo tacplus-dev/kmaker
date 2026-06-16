@@ -75,14 +75,3 @@ message RawProxyResponse {
   // body is the response body (typically JSON).
   string body = 3;
 }
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-enum TypeID {
-  TYPE_ID_UNSPECIFIED = 0;
-  TYPE_ID_HTTP_HEADER = 1;
-  TYPE_ID_RAW_PROXY_REQUEST = 2;
-  TYPE_ID_RAW_PROXY_RESPONSE = 3;
-}

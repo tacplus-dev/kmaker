@@ -23,6 +23,7 @@ package gitlabconnector
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"strconv"
 	"strings"
@@ -31,6 +32,7 @@ import (
 	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/errors"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	"gopkg.in/yaml.v3"
 )
 
@@ -177,8 +179,10 @@ func TypeIDValues() []TypeID {
 		TypeID_TYPE_ID_ISSUE_PAYLOAD,
 		TypeID_TYPE_ID_GIT_LAB_CONNECTOR_EVENT,
 		TypeID_TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS,
+		TypeID_TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD,
 		TypeID_TYPE_ID_MAP_EMPTY,
 		TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT,
+		TypeID_TYPE_ID_EVENT_BUS_RECORD_META,
 		TypeID_TYPE_ID_GIT_LAB_PROJECT_NODE,
 		TypeID_TYPE_ID_GIT_LAB_ACTIVITY_NODE,
 		TypeID_TYPE_ID_GIT_LAB_ACTIVITY_RECORD,
@@ -187,7 +191,7 @@ func TypeIDValues() []TypeID {
 
 // TypeIDStringValues returns all valid TypeID names as strings
 func TypeIDStringValues() []string {
-	return []string{"push-payload", "merge-request-payload", "pipeline-payload", "issue-payload", "git-lab-connector-event", "git-lab-connector-event-bus", "map-empty", "topic-publish-receipt", "git-lab-project-node", "git-lab-activity-node", "git-lab-activity-record"}
+	return []string{"push-payload", "merge-request-payload", "pipeline-payload", "issue-payload", "git-lab-connector-event", "git-lab-connector-event-bus", "git-lab-connector-event-bus-event-stream-subscribe-record", "map-empty", "topic-publish-receipt", "event-bus-record-meta", "git-lab-project-node", "git-lab-activity-node", "git-lab-activity-record"}
 }
 
 // ParseTypeID converts a string to a TypeID enum value
@@ -210,10 +214,14 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_GIT_LAB_CONNECTOR_EVENT, nil
 	case "git-lab-connector-event-bus", "type-id-git-lab-connector-event-bus":
 		return TypeID_TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS, nil
+	case "git-lab-connector-event-bus-event-stream-subscribe-record", "type-id-git-lab-connector-event-bus-event-stream-subscribe-record":
+		return TypeID_TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD, nil
 	case "map-empty", "type-id-map-empty":
 		return TypeID_TYPE_ID_MAP_EMPTY, nil
 	case "topic-publish-receipt", "type-id-topic-publish-receipt":
 		return TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT, nil
+	case "event-bus-record-meta", "type-id-event-bus-record-meta":
+		return TypeID_TYPE_ID_EVENT_BUS_RECORD_META, nil
 	case "git-lab-project-node", "type-id-git-lab-project-node":
 		return TypeID_TYPE_ID_GIT_LAB_PROJECT_NODE, nil
 	case "git-lab-activity-node", "type-id-git-lab-activity-node":
@@ -262,10 +270,14 @@ func TypeIDToString(v TypeID) string {
 		return "git-lab-connector-event"
 	case TypeID_TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS:
 		return "git-lab-connector-event-bus"
+	case TypeID_TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD:
+		return "git-lab-connector-event-bus-event-stream-subscribe-record"
 	case TypeID_TYPE_ID_MAP_EMPTY:
 		return "map-empty"
 	case TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT:
 		return "topic-publish-receipt"
+	case TypeID_TYPE_ID_EVENT_BUS_RECORD_META:
+		return "event-bus-record-meta"
 	case TypeID_TYPE_ID_GIT_LAB_PROJECT_NODE:
 		return "git-lab-project-node"
 	case TypeID_TYPE_ID_GIT_LAB_ACTIVITY_NODE:
@@ -306,10 +318,14 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_GIT_LAB_CONNECTOR_EVENT
 	case "git-lab-connector-event-bus", "type-id-git-lab-connector-event-bus":
 		return TypeID_TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS
+	case "git-lab-connector-event-bus-event-stream-subscribe-record", "type-id-git-lab-connector-event-bus-event-stream-subscribe-record":
+		return TypeID_TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD
 	case "map-empty", "type-id-map-empty":
 		return TypeID_TYPE_ID_MAP_EMPTY
 	case "topic-publish-receipt", "type-id-topic-publish-receipt":
 		return TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT
+	case "event-bus-record-meta", "type-id-event-bus-record-meta":
+		return TypeID_TYPE_ID_EVENT_BUS_RECORD_META
 	case "git-lab-project-node", "type-id-git-lab-project-node":
 		return TypeID_TYPE_ID_GIT_LAB_PROJECT_NODE
 	case "git-lab-activity-node", "type-id-git-lab-activity-node":
@@ -338,10 +354,14 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_GIT_LAB_CONNECTOR_EVENT"
 	case TypeID_TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS:
 		return "TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS"
+	case TypeID_TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD:
+		return "TYPE_ID_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD"
 	case TypeID_TYPE_ID_MAP_EMPTY:
 		return "TYPE_ID_MAP_EMPTY"
 	case TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT:
 		return "TYPE_ID_TOPIC_PUBLISH_RECEIPT"
+	case TypeID_TYPE_ID_EVENT_BUS_RECORD_META:
+		return "TYPE_ID_EVENT_BUS_RECORD_META"
 	case TypeID_TYPE_ID_GIT_LAB_PROJECT_NODE:
 		return "TYPE_ID_GIT_LAB_PROJECT_NODE"
 	case TypeID_TYPE_ID_GIT_LAB_ACTIVITY_NODE:
@@ -1419,6 +1439,7 @@ type gitlabconnectoreventJSON struct {
 	AuthorUsername  string          `json:"author_username,omitempty"`
 	EventType       string          `json:"event_type,omitempty"`
 	IngestionSource string          `json:"ingestion_source,omitempty"`
+	SchemeVersion   string          `json:"scheme_version,omitempty"`
 	Push            json.RawMessage `json:"push,omitempty"`
 	MergeRequest    json.RawMessage `json:"merge_request,omitempty"`
 	Pipeline        json.RawMessage `json:"pipeline,omitempty"`
@@ -1450,6 +1471,7 @@ func GitLabConnectorEventToJSON(v *GitLabConnectorEvent) ([]byte, error) {
 		AuthorUsername:  v.AuthorUsername,
 		EventType:       GitLabEventTypeToString(v.EventType),
 		IngestionSource: v.IngestionSource,
+		SchemeVersion:   v.SchemeVersion,
 		Push: func() json.RawMessage {
 			if v.GetPush() == nil {
 				return nil
@@ -1507,6 +1529,7 @@ func GitLabConnectorEventToJSONPretty(v *GitLabConnectorEvent) ([]byte, error) {
 		AuthorUsername:  v.AuthorUsername,
 		EventType:       GitLabEventTypeToString(v.EventType),
 		IngestionSource: v.IngestionSource,
+		SchemeVersion:   v.SchemeVersion,
 		Push: func() json.RawMessage {
 			if v.GetPush() == nil {
 				return nil
@@ -1621,6 +1644,7 @@ func GitLabConnectorEventFromJSON(data []byte) (*GitLabConnectorEvent, error) {
 		}
 	}
 	result.IngestionSource = raw.IngestionSource
+	result.SchemeVersion = raw.SchemeVersion
 	// Parse oneof field: Push
 	if len(raw.Push) > 0 {
 		parsed, err := PushPayloadFromJSON(raw.Push)
@@ -1845,6 +1869,190 @@ func GitLabConnectorEventBusToTOML(v *GitLabConnectorEventBus) ([]byte, error) {
 	}
 	// Convert to JSON first
 	jsonData, err := GitLabConnectorEventBusToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// GitLabConnectorEventBusEventStreamSubscribeRecordJSON represents GitLabConnectorEventBusEventStreamSubscribeRecord in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type gitlabconnectoreventbuseventstreamsubscriberecordJSON struct {
+	Meta    json.RawMessage `json:"meta,omitempty"`
+	Payload json.RawMessage `json:"payload,omitempty"`
+	TraceId string          `json:"trace_id,omitempty"`
+	Noop    bool            `json:"noop,omitempty"`
+}
+
+// GitLabConnectorEventBusEventStreamSubscribeRecordToJSON converts GitLabConnectorEventBusEventStreamSubscribeRecord to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func GitLabConnectorEventBusEventStreamSubscribeRecordToJSON(v *GitLabConnectorEventBusEventStreamSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "gitlabconnectoreventbuseventstreamsubscriberecord is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := gitlabconnectoreventbuseventstreamsubscriberecordJSON{
+		Meta: func() json.RawMessage {
+			if v.Meta == nil {
+				return nil
+			}
+			data, _ := EventBusRecordMetaToJSON(v.Meta)
+			return data
+		}(),
+		Payload: func() json.RawMessage {
+			if v.Payload == nil {
+				return nil
+			}
+			data, _ := GitLabConnectorEventToJSON(v.Payload)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// GitLabConnectorEventBusEventStreamSubscribeRecordToJSONPretty converts GitLabConnectorEventBusEventStreamSubscribeRecord to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func GitLabConnectorEventBusEventStreamSubscribeRecordToJSONPretty(v *GitLabConnectorEventBusEventStreamSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "gitlabconnectoreventbuseventstreamsubscriberecord is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := gitlabconnectoreventbuseventstreamsubscriberecordJSON{
+		Meta: func() json.RawMessage {
+			if v.Meta == nil {
+				return nil
+			}
+			data, _ := EventBusRecordMetaToJSON(v.Meta)
+			return data
+		}(),
+		Payload: func() json.RawMessage {
+			if v.Payload == nil {
+				return nil
+			}
+			data, _ := GitLabConnectorEventToJSON(v.Payload)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// GitLabConnectorEventBusEventStreamSubscribeRecordFromBytes creates GitLabConnectorEventBusEventStreamSubscribeRecord from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func GitLabConnectorEventBusEventStreamSubscribeRecordFromBytes(data []byte) (*GitLabConnectorEventBusEventStreamSubscribeRecord, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := GitLabConnectorEventBusEventStreamSubscribeRecordFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := GitLabConnectorEventBusEventStreamSubscribeRecordFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := GitLabConnectorEventBusEventStreamSubscribeRecordFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &GitLabConnectorEventBusEventStreamSubscribeRecord{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse GitLabConnectorEventBusEventStreamSubscribeRecord: unsupported format or invalid data")
+}
+
+// GitLabConnectorEventBusEventStreamSubscribeRecordFromJSON creates GitLabConnectorEventBusEventStreamSubscribeRecord from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func GitLabConnectorEventBusEventStreamSubscribeRecordFromJSON(data []byte) (*GitLabConnectorEventBusEventStreamSubscribeRecord, error) {
+	// Unmarshal into helper struct with string enums
+	var raw gitlabconnectoreventbuseventstreamsubscriberecordJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &GitLabConnectorEventBusEventStreamSubscribeRecord{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &GitLabConnectorEventBusEventStreamSubscribeRecord{}
+	// Parse message field: Meta
+	if len(raw.Meta) > 0 {
+		parsed, err := EventBusRecordMetaFromJSON(raw.Meta)
+		if err == nil {
+			result.Meta = parsed
+		}
+	}
+	// Parse message field: Payload
+	if len(raw.Payload) > 0 {
+		parsed, err := GitLabConnectorEventFromJSON(raw.Payload)
+		if err == nil {
+			result.Payload = parsed
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// GitLabConnectorEventBusEventStreamSubscribeRecordToYAML converts GitLabConnectorEventBusEventStreamSubscribeRecord to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func GitLabConnectorEventBusEventStreamSubscribeRecordToYAML(v *GitLabConnectorEventBusEventStreamSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "gitlabconnectoreventbuseventstreamsubscriberecord is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := GitLabConnectorEventBusEventStreamSubscribeRecordToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// GitLabConnectorEventBusEventStreamSubscribeRecordToTOML converts GitLabConnectorEventBusEventStreamSubscribeRecord to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func GitLabConnectorEventBusEventStreamSubscribeRecordToTOML(v *GitLabConnectorEventBusEventStreamSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "gitlabconnectoreventbuseventstreamsubscriberecord is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := GitLabConnectorEventBusEventStreamSubscribeRecordToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -2140,6 +2348,184 @@ func TopicPublishReceiptToTOML(v *TopicPublishReceipt) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
+// EventBusRecordMetaJSON represents EventBusRecordMeta in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type eventbusrecordmetaJSON struct {
+	Key       []byte          `json:"key,omitempty"`
+	Topic     string          `json:"topic,omitempty"`
+	Partition int32           `json:"partition,omitempty"`
+	Offset    int64           `json:"offset,omitempty"`
+	Timestamp json.RawMessage `json:"timestamp,omitempty"`
+	TraceId   string          `json:"trace_id,omitempty"`
+	Noop      bool            `json:"noop,omitempty"`
+}
+
+// EventBusRecordMetaToJSON converts EventBusRecordMeta to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func EventBusRecordMetaToJSON(v *EventBusRecordMeta) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusrecordmeta is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := eventbusrecordmetaJSON{
+		Key:       v.Key,
+		Topic:     v.Topic,
+		Partition: v.Partition,
+		Offset:    v.Offset,
+		Timestamp: func() json.RawMessage {
+			if v.Timestamp == nil {
+				return nil
+			}
+			data, _ := protojson.Marshal(v.Timestamp)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// EventBusRecordMetaToJSONPretty converts EventBusRecordMeta to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func EventBusRecordMetaToJSONPretty(v *EventBusRecordMeta) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusrecordmeta is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := eventbusrecordmetaJSON{
+		Key:       v.Key,
+		Topic:     v.Topic,
+		Partition: v.Partition,
+		Offset:    v.Offset,
+		Timestamp: func() json.RawMessage {
+			if v.Timestamp == nil {
+				return nil
+			}
+			data, _ := protojson.Marshal(v.Timestamp)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// EventBusRecordMetaFromBytes creates EventBusRecordMeta from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func EventBusRecordMetaFromBytes(data []byte) (*EventBusRecordMeta, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := EventBusRecordMetaFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := EventBusRecordMetaFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := EventBusRecordMetaFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &EventBusRecordMeta{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse EventBusRecordMeta: unsupported format or invalid data")
+}
+
+// EventBusRecordMetaFromJSON creates EventBusRecordMeta from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func EventBusRecordMetaFromJSON(data []byte) (*EventBusRecordMeta, error) {
+	// Unmarshal into helper struct with string enums
+	var raw eventbusrecordmetaJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &EventBusRecordMeta{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &EventBusRecordMeta{}
+	result.Key = raw.Key
+	result.Topic = raw.Topic
+	result.Partition = raw.Partition
+	result.Offset = raw.Offset
+	// Parse well-known type: Timestamp
+	if len(raw.Timestamp) > 0 {
+		result.Timestamp = &timestamppb.Timestamp{}
+		if err := protojson.Unmarshal(raw.Timestamp, result.Timestamp); err != nil {
+			result.Timestamp = nil
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// EventBusRecordMetaToYAML converts EventBusRecordMeta to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func EventBusRecordMetaToYAML(v *EventBusRecordMeta) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusrecordmeta is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := EventBusRecordMetaToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// EventBusRecordMetaToTOML converts EventBusRecordMeta to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func EventBusRecordMetaToTOML(v *EventBusRecordMeta) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusrecordmeta is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := EventBusRecordMetaToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
 // GitLabProjectNodeJSON represents GitLabProjectNode in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type gitlabprojectnodeJSON struct {
@@ -2313,6 +2699,7 @@ func GitLabProjectNodeToTOML(v *GitLabProjectNode) ([]byte, error) {
 type gitlabactivitynodeJSON struct {
 	EventId         string `json:"event_id,omitempty"`
 	OwnerSpiffe     string `json:"owner_spiffe,omitempty"`
+	SchemeVersion   string `json:"scheme_version,omitempty"`
 	TenantNamespace string `json:"tenant_namespace,omitempty"`
 	Project         string `json:"project,omitempty"`
 	ActorSub        string `json:"actor_sub,omitempty"`
@@ -2334,6 +2721,7 @@ func GitLabActivityNodeToJSON(v *GitLabActivityNode) ([]byte, error) {
 	helper := gitlabactivitynodeJSON{
 		EventId:         v.EventId,
 		OwnerSpiffe:     v.OwnerSpiffe,
+		SchemeVersion:   v.SchemeVersion,
 		TenantNamespace: v.TenantNamespace,
 		Project:         v.Project,
 		ActorSub:        v.ActorSub,
@@ -2357,6 +2745,7 @@ func GitLabActivityNodeToJSONPretty(v *GitLabActivityNode) ([]byte, error) {
 	helper := gitlabactivitynodeJSON{
 		EventId:         v.EventId,
 		OwnerSpiffe:     v.OwnerSpiffe,
+		SchemeVersion:   v.SchemeVersion,
 		TenantNamespace: v.TenantNamespace,
 		Project:         v.Project,
 		ActorSub:        v.ActorSub,
@@ -2432,6 +2821,7 @@ func GitLabActivityNodeFromJSON(data []byte) (*GitLabActivityNode, error) {
 	result := &GitLabActivityNode{}
 	result.EventId = raw.EventId
 	result.OwnerSpiffe = raw.OwnerSpiffe
+	result.SchemeVersion = raw.SchemeVersion
 	result.TenantNamespace = raw.TenantNamespace
 	result.Project = raw.Project
 	result.ActorSub = raw.ActorSub
@@ -2498,6 +2888,7 @@ type gitlabactivityrecordJSON struct {
 	TimestampMs     int64  `json:"timestamp_ms,omitempty"`
 	EventId         string `json:"event_id,omitempty"`
 	OwnerSpiffe     string `json:"owner_spiffe,omitempty"`
+	SchemeVersion   string `json:"scheme_version,omitempty"`
 	ActorSub        string `json:"actor_sub,omitempty"`
 	Email           string `json:"email,omitempty"`
 	AuthorEmail     string `json:"author_email,omitempty"`
@@ -2524,6 +2915,7 @@ func GitLabActivityRecordToJSON(v *GitLabActivityRecord) ([]byte, error) {
 		TimestampMs:     v.TimestampMs,
 		EventId:         v.EventId,
 		OwnerSpiffe:     v.OwnerSpiffe,
+		SchemeVersion:   v.SchemeVersion,
 		ActorSub:        v.ActorSub,
 		Email:           v.Email,
 		AuthorEmail:     v.AuthorEmail,
@@ -2552,6 +2944,7 @@ func GitLabActivityRecordToJSONPretty(v *GitLabActivityRecord) ([]byte, error) {
 		TimestampMs:     v.TimestampMs,
 		EventId:         v.EventId,
 		OwnerSpiffe:     v.OwnerSpiffe,
+		SchemeVersion:   v.SchemeVersion,
 		ActorSub:        v.ActorSub,
 		Email:           v.Email,
 		AuthorEmail:     v.AuthorEmail,
@@ -2632,6 +3025,7 @@ func GitLabActivityRecordFromJSON(data []byte) (*GitLabActivityRecord, error) {
 	result.TimestampMs = raw.TimestampMs
 	result.EventId = raw.EventId
 	result.OwnerSpiffe = raw.OwnerSpiffe
+	result.SchemeVersion = raw.SchemeVersion
 	result.ActorSub = raw.ActorSub
 	result.Email = raw.Email
 	result.AuthorEmail = raw.AuthorEmail
@@ -2991,6 +3385,7 @@ func GitLabConnectorEventToEnvVar(v *GitLabConnectorEvent) map[string]string {
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_CONNECTOR_EVENT_AUTHOR_USERNAME"] = v.AuthorUsername
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_CONNECTOR_EVENT_EVENT_TYPE"] = GitLabEventTypeToString(v.EventType)
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_CONNECTOR_EVENT_INGESTION_SOURCE"] = v.IngestionSource
+	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_CONNECTOR_EVENT_SCHEME_VERSION"] = v.SchemeVersion
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_CONNECTOR_EVENT_TRACE_ID"] = v.TraceId
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_CONNECTOR_EVENT_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -3052,6 +3447,9 @@ func GitLabConnectorEventFromEnvVar(env map[string]string) (*GitLabConnectorEven
 	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_CONNECTOR_EVENT_INGESTION_SOURCE"]; ok && val != "" {
 		result.IngestionSource = val
 	}
+	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_CONNECTOR_EVENT_SCHEME_VERSION"]; ok && val != "" {
+		result.SchemeVersion = val
+	}
 	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_CONNECTOR_EVENT_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -3093,6 +3491,53 @@ func GitLabConnectorEventBusFromEnvVar(env map[string]string) (*GitLabConnectorE
 		result.TraceId = val
 	}
 	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_CONNECTOR_EVENT_BUS_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// GitLabConnectorEventBusEventStreamSubscribeRecordToEnvVar converts GitLabConnectorEventBusEventStreamSubscribeRecord to environment variable key-value pairs.
+func GitLabConnectorEventBusEventStreamSubscribeRecordToEnvVar(v *GitLabConnectorEventBusEventStreamSubscribeRecord) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.Meta != nil {
+		for k, val := range EventBusRecordMetaToEnvVar(v.Meta) {
+			result[k] = val
+		}
+	}
+	if v.Payload != nil {
+		for k, val := range GitLabConnectorEventToEnvVar(v.Payload) {
+			result[k] = val
+		}
+	}
+	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// GitLabConnectorEventBusEventStreamSubscribeRecordFromEnvVar creates GitLabConnectorEventBusEventStreamSubscribeRecord from environment variable key-value pairs.
+func GitLabConnectorEventBusEventStreamSubscribeRecordFromEnvVar(env map[string]string) (*GitLabConnectorEventBusEventStreamSubscribeRecord, error) {
+	result := &GitLabConnectorEventBusEventStreamSubscribeRecord{}
+	if sub, err := EventBusRecordMetaFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Meta = sub
+	}
+	if sub, err := GitLabConnectorEventFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Payload = sub
+	}
+	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -3155,6 +3600,61 @@ func TopicPublishReceiptFromEnvVar(env map[string]string) (*TopicPublishReceipt,
 		result.TraceId = val
 	}
 	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_TOPIC_PUBLISH_RECEIPT_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// EventBusRecordMetaToEnvVar converts EventBusRecordMeta to environment variable key-value pairs.
+func EventBusRecordMetaToEnvVar(v *EventBusRecordMeta) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_KEY"] = base64.StdEncoding.EncodeToString(v.Key)
+	result["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_TOPIC"] = v.Topic
+	result["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_PARTITION"] = strconv.FormatInt(int64(v.Partition), 10)
+	result["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_OFFSET"] = strconv.FormatInt(v.Offset, 10)
+	result["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// EventBusRecordMetaFromEnvVar creates EventBusRecordMeta from environment variable key-value pairs.
+func EventBusRecordMetaFromEnvVar(env map[string]string) (*EventBusRecordMeta, error) {
+	result := &EventBusRecordMeta{}
+	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_KEY"]; ok && val != "" {
+		parsed, err := base64.StdEncoding.DecodeString(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Key = parsed
+	}
+	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_TOPIC"]; ok && val != "" {
+		result.Topic = val
+	}
+	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_PARTITION"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.Partition = int32(parsed)
+	}
+	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_OFFSET"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.Offset = parsed
+	}
+	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -3231,6 +3731,7 @@ func GitLabActivityNodeToEnvVar(v *GitLabActivityNode) map[string]string {
 	result := make(map[string]string)
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_NODE_EVENT_ID"] = v.EventId
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_NODE_OWNER_SPIFFE"] = v.OwnerSpiffe
+	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_NODE_SCHEME_VERSION"] = v.SchemeVersion
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_NODE_TENANT_NAMESPACE"] = v.TenantNamespace
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_NODE_PROJECT"] = v.Project
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_NODE_ACTOR_SUB"] = v.ActorSub
@@ -3251,6 +3752,9 @@ func GitLabActivityNodeFromEnvVar(env map[string]string) (*GitLabActivityNode, e
 	}
 	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_NODE_OWNER_SPIFFE"]; ok && val != "" {
 		result.OwnerSpiffe = val
+	}
+	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_NODE_SCHEME_VERSION"]; ok && val != "" {
+		result.SchemeVersion = val
 	}
 	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_NODE_TENANT_NAMESPACE"]; ok && val != "" {
 		result.TenantNamespace = val
@@ -3306,6 +3810,7 @@ func GitLabActivityRecordToEnvVar(v *GitLabActivityRecord) map[string]string {
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_RECORD_TIMESTAMP_MS"] = strconv.FormatInt(v.TimestampMs, 10)
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_RECORD_EVENT_ID"] = v.EventId
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_RECORD_OWNER_SPIFFE"] = v.OwnerSpiffe
+	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_RECORD_SCHEME_VERSION"] = v.SchemeVersion
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_RECORD_ACTOR_SUB"] = v.ActorSub
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_RECORD_EMAIL"] = v.Email
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_RECORD_AUTHOR_EMAIL"] = v.AuthorEmail
@@ -3343,6 +3848,9 @@ func GitLabActivityRecordFromEnvVar(env map[string]string) (*GitLabActivityRecor
 	}
 	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_RECORD_OWNER_SPIFFE"]; ok && val != "" {
 		result.OwnerSpiffe = val
+	}
+	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_RECORD_SCHEME_VERSION"]; ok && val != "" {
+		result.SchemeVersion = val
 	}
 	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_ACTIVITY_RECORD_ACTOR_SUB"]; ok && val != "" {
 		result.ActorSub = val
@@ -3697,14 +4205,14 @@ func ValidateGitLabConnectorEventWithDepth(m *GitLabConnectorEvent, depth int) e
 	if m.TimestampMs <= 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TimestampMs must be > 0, got: %v", m.TimestampMs)
 	}
-	// Validate TenantNamespace (assert_required)
-	if m.TenantNamespace == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TenantNamespace is required")
-	}
-
 	// Validate TenantNamespace (assert_max_length: 256)
 	if len(m.TenantNamespace) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TenantNamespace must be at most 256 characters, got: %d", len(m.TenantNamespace))
+	}
+
+	// Validate TenantNamespace (assert_required)
+	if m.TenantNamespace == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TenantNamespace is required")
 	}
 
 	// Validate OwnerSpiffe (assert_required)
@@ -3765,6 +4273,16 @@ func ValidateGitLabConnectorEventWithDepth(m *GitLabConnectorEvent, depth int) e
 	// Validate IngestionSource (assert_max_length: 32)
 	if len(m.IngestionSource) > 32 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field IngestionSource must be at most 32 characters, got: %d", len(m.IngestionSource))
+	}
+
+	// Validate SchemeVersion (assert_required)
+	if m.SchemeVersion == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SchemeVersion is required")
+	}
+
+	// Validate SchemeVersion (assert_max_length: 16)
+	if len(m.SchemeVersion) > 16 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SchemeVersion must be at most 16 characters, got: %d", len(m.SchemeVersion))
 	}
 
 	// Validate EventId (default max size: 32768 bytes)
@@ -3830,6 +4348,11 @@ func ValidateGitLabConnectorEventWithDepth(m *GitLabConnectorEvent, depth int) e
 	// Validate IngestionSource (default max size: 32768 bytes)
 	if len(m.IngestionSource) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field IngestionSource exceeds max size of 32768 bytes, got: %d", len(m.IngestionSource))
+	}
+
+	// Validate SchemeVersion (default max size: 32768 bytes)
+	if len(m.SchemeVersion) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SchemeVersion exceeds max size of 32768 bytes, got: %d", len(m.SchemeVersion))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -3904,6 +4427,44 @@ func ValidateGitLabConnectorEventBusWithDepth(m *GitLabConnectorEventBus, depth 
 	return nil
 }
 
+// ValidateGitLabConnectorEventBusEventStreamSubscribeRecord validates all fields in GitLabConnectorEventBusEventStreamSubscribeRecord according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateGitLabConnectorEventBusEventStreamSubscribeRecord(m *GitLabConnectorEventBusEventStreamSubscribeRecord) error {
+	return ValidateGitLabConnectorEventBusEventStreamSubscribeRecordWithDepth(m, 0)
+}
+
+// ValidateGitLabConnectorEventBusEventStreamSubscribeRecordWithDepth validates GitLabConnectorEventBusEventStreamSubscribeRecord and carries nested-message depth across
+// generated package boundaries.
+func ValidateGitLabConnectorEventBusEventStreamSubscribeRecordWithDepth(m *GitLabConnectorEventBusEventStreamSubscribeRecord, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Meta nested message
+	if m.Meta != nil {
+		if err := ValidateEventBusRecordMetaWithDepth(m.Meta, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Meta validation failed")
+		}
+	}
+
+	// Validate Payload nested message
+	if m.Payload != nil {
+		if err := ValidateGitLabConnectorEventWithDepth(m.Payload, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Payload validation failed")
+		}
+	}
+
+	return nil
+}
+
 // ValidateMapEmpty validates all fields in MapEmpty according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateMapEmpty(m *MapEmpty) error {
@@ -3942,6 +4503,40 @@ func ValidateTopicPublishReceiptWithDepth(m *TopicPublishReceipt, depth int) err
 	}
 	if depth > 24 {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateEventBusRecordMeta validates all fields in EventBusRecordMeta according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateEventBusRecordMeta(m *EventBusRecordMeta) error {
+	return ValidateEventBusRecordMetaWithDepth(m, 0)
+}
+
+// ValidateEventBusRecordMetaWithDepth validates EventBusRecordMeta and carries nested-message depth across
+// generated package boundaries.
+func ValidateEventBusRecordMetaWithDepth(m *EventBusRecordMeta, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Key (default max size: 32768 bytes)
+	if len(m.Key) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key exceeds max size of 32768 bytes, got: %d", len(m.Key))
+	}
+
+	// Validate Topic (default max size: 32768 bytes)
+	if len(m.Topic) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Topic exceeds max size of 32768 bytes, got: %d", len(m.Topic))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -4032,6 +4627,11 @@ func ValidateGitLabActivityNodeWithDepth(m *GitLabActivityNode, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field OwnerSpiffe exceeds max size of 32768 bytes, got: %d", len(m.OwnerSpiffe))
 	}
 
+	// Validate SchemeVersion (default max size: 32768 bytes)
+	if len(m.SchemeVersion) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SchemeVersion exceeds max size of 32768 bytes, got: %d", len(m.SchemeVersion))
+	}
+
 	// Validate TenantNamespace (default max size: 32768 bytes)
 	if len(m.TenantNamespace) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TenantNamespace exceeds max size of 32768 bytes, got: %d", len(m.TenantNamespace))
@@ -4111,6 +4711,11 @@ func ValidateGitLabActivityRecordWithDepth(m *GitLabActivityRecord, depth int) e
 		return protoerrors.NewErrMissingInvalidData(nil, "field OwnerSpiffe exceeds max size of 32768 bytes, got: %d", len(m.OwnerSpiffe))
 	}
 
+	// Validate SchemeVersion (default max size: 32768 bytes)
+	if len(m.SchemeVersion) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SchemeVersion exceeds max size of 32768 bytes, got: %d", len(m.SchemeVersion))
+	}
+
 	// Validate ActorSub (default max size: 32768 bytes)
 	if len(m.ActorSub) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ActorSub exceeds max size of 32768 bytes, got: %d", len(m.ActorSub))
@@ -4160,73 +4765,88 @@ func ValidateGitLabActivityRecordWithDepth(m *GitLabActivityRecord, depth int) e
 }
 
 // ============================================================
+// Constants
+// ============================================================
+const (
+	GitlabEventResourceKind string = "gitlab-event"
+	SpiffeSchemeVersion     string = "v1"
+)
+
+// ============================================================
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizePushpayloadBranch                   int = 32768
-	MaxSizePushpayloadBeforeSha                int = 32768
-	MaxSizePushpayloadAfterSha                 int = 32768
-	MaxSizePushpayloadTraceId                  int = 32768
-	MaxSizeMergerequestpayloadState            int = 32768
-	MaxSizeMergerequestpayloadAction           int = 32768
-	MaxSizeMergerequestpayloadSourceBranch     int = 32768
-	MaxSizeMergerequestpayloadTargetBranch     int = 32768
-	MaxSizeMergerequestpayloadTitle            int = 32768
-	MaxSizeMergerequestpayloadTraceId          int = 32768
-	MaxSizePipelinepayloadStatus               int = 32768
-	MaxSizePipelinepayloadGitRef               int = 32768
-	MaxSizePipelinepayloadSha                  int = 32768
-	MaxSizePipelinepayloadSource               int = 32768
-	MaxSizePipelinepayloadTraceId              int = 32768
-	MaxSizeIssuepayloadState                   int = 32768
-	MaxSizeIssuepayloadAction                  int = 32768
-	MaxSizeIssuepayloadTitle                   int = 32768
-	MaxSizeIssuepayloadTraceId                 int = 32768
-	MaxSizeGitlabconnectoreventEventId         int = 32768
-	MaxSizeGitlabconnectoreventGitlabId        int = 32768
-	MaxSizeGitlabconnectoreventTenantNamespace int = 32768
-	MaxSizeGitlabconnectoreventOwnerSpiffe     int = 32768
-	MaxSizeGitlabconnectoreventActorSub        int = 32768
-	MaxSizeGitlabconnectoreventGitlabUrl       int = 32768
-	MaxSizeGitlabconnectoreventGitlabNamespace int = 32768
-	MaxSizeGitlabconnectoreventProjectPath     int = 32768
-	MaxSizeGitlabconnectoreventProjectKey      int = 32768
-	MaxSizeGitlabconnectoreventEmail           int = 32768
-	MaxSizeGitlabconnectoreventAuthorEmail     int = 32768
-	MaxSizeGitlabconnectoreventAuthorUsername  int = 32768
-	MaxSizeGitlabconnectoreventIngestionSource int = 32768
-	MaxSizeGitlabconnectoreventTraceId         int = 32768
-	MaxSizeGitlabconnectoreventbusTraceId      int = 32768
-	MaxSizeMapemptyTraceId                     int = 32768
-	MaxSizeTopicpublishreceiptTraceId          int = 32768
-	MaxSizeGitlabprojectnodeProjectKey         int = 32768
-	MaxSizeGitlabprojectnodeTenantNamespace    int = 32768
-	MaxSizeGitlabprojectnodeGitlabUrl          int = 32768
-	MaxSizeGitlabprojectnodeGitlabNamespace    int = 32768
-	MaxSizeGitlabprojectnodeProjectPath        int = 32768
-	MaxSizeGitlabprojectnodeEventId            int = 32768
-	MaxSizeGitlabprojectnodeTraceId            int = 32768
-	MaxSizeGitlabactivitynodeEventId           int = 32768
-	MaxSizeGitlabactivitynodeOwnerSpiffe       int = 32768
-	MaxSizeGitlabactivitynodeTenantNamespace   int = 32768
-	MaxSizeGitlabactivitynodeProject           int = 32768
-	MaxSizeGitlabactivitynodeActorSub          int = 32768
-	MaxSizeGitlabactivitynodeEmail             int = 32768
-	MaxSizeGitlabactivitynodeAuthorEmail       int = 32768
-	MaxSizeGitlabactivitynodeTraceId           int = 32768
-	MaxSizeGitlabactivityrecordTenantNamespace int = 32768
-	MaxSizeGitlabactivityrecordGitlabNamespace int = 32768
-	MaxSizeGitlabactivityrecordProjectPath     int = 32768
-	MaxSizeGitlabactivityrecordEventId         int = 32768
-	MaxSizeGitlabactivityrecordOwnerSpiffe     int = 32768
-	MaxSizeGitlabactivityrecordActorSub        int = 32768
-	MaxSizeGitlabactivityrecordEmail           int = 32768
-	MaxSizeGitlabactivityrecordAuthorEmail     int = 32768
-	MaxSizeGitlabactivityrecordAuthorUsername  int = 32768
-	MaxSizeGitlabactivityrecordGitlabUrl       int = 32768
-	MaxSizeGitlabactivityrecordProjectKey      int = 32768
-	MaxSizeGitlabactivityrecordIngestionSource int = 32768
-	MaxSizeGitlabactivityrecordTraceId         int = 32768
+	MaxSizePushpayloadBranch                                        int = 32768
+	MaxSizePushpayloadBeforeSha                                     int = 32768
+	MaxSizePushpayloadAfterSha                                      int = 32768
+	MaxSizePushpayloadTraceId                                       int = 32768
+	MaxSizeMergerequestpayloadState                                 int = 32768
+	MaxSizeMergerequestpayloadAction                                int = 32768
+	MaxSizeMergerequestpayloadSourceBranch                          int = 32768
+	MaxSizeMergerequestpayloadTargetBranch                          int = 32768
+	MaxSizeMergerequestpayloadTitle                                 int = 32768
+	MaxSizeMergerequestpayloadTraceId                               int = 32768
+	MaxSizePipelinepayloadStatus                                    int = 32768
+	MaxSizePipelinepayloadGitRef                                    int = 32768
+	MaxSizePipelinepayloadSha                                       int = 32768
+	MaxSizePipelinepayloadSource                                    int = 32768
+	MaxSizePipelinepayloadTraceId                                   int = 32768
+	MaxSizeIssuepayloadState                                        int = 32768
+	MaxSizeIssuepayloadAction                                       int = 32768
+	MaxSizeIssuepayloadTitle                                        int = 32768
+	MaxSizeIssuepayloadTraceId                                      int = 32768
+	MaxSizeGitlabconnectoreventEventId                              int = 32768
+	MaxSizeGitlabconnectoreventGitlabId                             int = 32768
+	MaxSizeGitlabconnectoreventTenantNamespace                      int = 32768
+	MaxSizeGitlabconnectoreventOwnerSpiffe                          int = 32768
+	MaxSizeGitlabconnectoreventActorSub                             int = 32768
+	MaxSizeGitlabconnectoreventGitlabUrl                            int = 32768
+	MaxSizeGitlabconnectoreventGitlabNamespace                      int = 32768
+	MaxSizeGitlabconnectoreventProjectPath                          int = 32768
+	MaxSizeGitlabconnectoreventProjectKey                           int = 32768
+	MaxSizeGitlabconnectoreventEmail                                int = 32768
+	MaxSizeGitlabconnectoreventAuthorEmail                          int = 32768
+	MaxSizeGitlabconnectoreventAuthorUsername                       int = 32768
+	MaxSizeGitlabconnectoreventIngestionSource                      int = 32768
+	MaxSizeGitlabconnectoreventSchemeVersion                        int = 32768
+	MaxSizeGitlabconnectoreventTraceId                              int = 32768
+	MaxSizeGitlabconnectoreventbusTraceId                           int = 32768
+	MaxSizeGitlabconnectoreventbuseventstreamsubscriberecordTraceId int = 32768
+	MaxSizeMapemptyTraceId                                          int = 32768
+	MaxSizeTopicpublishreceiptTraceId                               int = 32768
+	MaxSizeEventbusrecordmetaKey                                    int = 32768
+	MaxSizeEventbusrecordmetaTopic                                  int = 32768
+	MaxSizeEventbusrecordmetaTraceId                                int = 32768
+	MaxSizeGitlabprojectnodeProjectKey                              int = 32768
+	MaxSizeGitlabprojectnodeTenantNamespace                         int = 32768
+	MaxSizeGitlabprojectnodeGitlabUrl                               int = 32768
+	MaxSizeGitlabprojectnodeGitlabNamespace                         int = 32768
+	MaxSizeGitlabprojectnodeProjectPath                             int = 32768
+	MaxSizeGitlabprojectnodeEventId                                 int = 32768
+	MaxSizeGitlabprojectnodeTraceId                                 int = 32768
+	MaxSizeGitlabactivitynodeEventId                                int = 32768
+	MaxSizeGitlabactivitynodeOwnerSpiffe                            int = 32768
+	MaxSizeGitlabactivitynodeSchemeVersion                          int = 32768
+	MaxSizeGitlabactivitynodeTenantNamespace                        int = 32768
+	MaxSizeGitlabactivitynodeProject                                int = 32768
+	MaxSizeGitlabactivitynodeActorSub                               int = 32768
+	MaxSizeGitlabactivitynodeEmail                                  int = 32768
+	MaxSizeGitlabactivitynodeAuthorEmail                            int = 32768
+	MaxSizeGitlabactivitynodeTraceId                                int = 32768
+	MaxSizeGitlabactivityrecordTenantNamespace                      int = 32768
+	MaxSizeGitlabactivityrecordGitlabNamespace                      int = 32768
+	MaxSizeGitlabactivityrecordProjectPath                          int = 32768
+	MaxSizeGitlabactivityrecordEventId                              int = 32768
+	MaxSizeGitlabactivityrecordOwnerSpiffe                          int = 32768
+	MaxSizeGitlabactivityrecordSchemeVersion                        int = 32768
+	MaxSizeGitlabactivityrecordActorSub                             int = 32768
+	MaxSizeGitlabactivityrecordEmail                                int = 32768
+	MaxSizeGitlabactivityrecordAuthorEmail                          int = 32768
+	MaxSizeGitlabactivityrecordAuthorUsername                       int = 32768
+	MaxSizeGitlabactivityrecordGitlabUrl                            int = 32768
+	MaxSizeGitlabactivityrecordProjectKey                           int = 32768
+	MaxSizeGitlabactivityrecordIngestionSource                      int = 32768
+	MaxSizeGitlabactivityrecordTraceId                              int = 32768
 )
 
 // ============================================================
@@ -4277,6 +4897,9 @@ func GitLabConnectorEventDefaults(v *GitLabConnectorEvent) {
 	if v == nil {
 		return
 	}
+	if v.SchemeVersion == "" {
+		v.SchemeVersion = SpiffeSchemeVersion
+	}
 }
 
 // ============================================================
@@ -4286,6 +4909,22 @@ func GitLabConnectorEventDefaults(v *GitLabConnectorEvent) {
 func GitLabConnectorEventBusDefaults(v *GitLabConnectorEventBus) {
 	if v == nil {
 		return
+	}
+	if v.EventStream != nil {
+		GitLabConnectorEventDefaults(v.EventStream)
+	}
+}
+
+// ============================================================
+// TypeDefaults: GitLabConnectorEventBusEventStreamSubscribeRecord
+// ============================================================
+// GitLabConnectorEventBusEventStreamSubscribeRecordDefaults applies field-level default values to zero-valued fields.
+func GitLabConnectorEventBusEventStreamSubscribeRecordDefaults(v *GitLabConnectorEventBusEventStreamSubscribeRecord) {
+	if v == nil {
+		return
+	}
+	if v.Payload != nil {
+		GitLabConnectorEventDefaults(v.Payload)
 	}
 }
 
@@ -4304,6 +4943,16 @@ func MapEmptyDefaults(v *MapEmpty) {
 // ============================================================
 // TopicPublishReceiptDefaults applies field-level default values to zero-valued fields.
 func TopicPublishReceiptDefaults(v *TopicPublishReceipt) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: EventBusRecordMeta
+// ============================================================
+// EventBusRecordMetaDefaults applies field-level default values to zero-valued fields.
+func EventBusRecordMetaDefaults(v *EventBusRecordMeta) {
 	if v == nil {
 		return
 	}
@@ -4392,6 +5041,9 @@ func GitLabConnectorEventUndefaults(v *GitLabConnectorEvent) {
 	if v == nil {
 		return
 	}
+	if v.SchemeVersion == SpiffeSchemeVersion {
+		v.SchemeVersion = ""
+	}
 }
 
 // ============================================================
@@ -4402,6 +5054,23 @@ func GitLabConnectorEventUndefaults(v *GitLabConnectorEvent) {
 func GitLabConnectorEventBusUndefaults(v *GitLabConnectorEventBus) {
 	if v == nil {
 		return
+	}
+	if v.EventStream != nil {
+		GitLabConnectorEventUndefaults(v.EventStream)
+	}
+}
+
+// ============================================================
+// TypeUndefaults: GitLabConnectorEventBusEventStreamSubscribeRecord
+// ============================================================
+// GitLabConnectorEventBusEventStreamSubscribeRecordUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func GitLabConnectorEventBusEventStreamSubscribeRecordUndefaults(v *GitLabConnectorEventBusEventStreamSubscribeRecord) {
+	if v == nil {
+		return
+	}
+	if v.Payload != nil {
+		GitLabConnectorEventUndefaults(v.Payload)
 	}
 }
 
@@ -4422,6 +5091,17 @@ func MapEmptyUndefaults(v *MapEmpty) {
 // TopicPublishReceiptUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
 func TopicPublishReceiptUndefaults(v *TopicPublishReceipt) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: EventBusRecordMeta
+// ============================================================
+// EventBusRecordMetaUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func EventBusRecordMetaUndefaults(v *EventBusRecordMeta) {
 	if v == nil {
 		return
 	}
@@ -4637,6 +5317,9 @@ func MergeGitLabConnectorEvent(dst, src *GitLabConnectorEvent) {
 	if dst.IngestionSource == "" {
 		dst.IngestionSource = src.IngestionSource
 	}
+	if dst.SchemeVersion == "" {
+		dst.SchemeVersion = src.SchemeVersion
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -4667,6 +5350,29 @@ func MergeGitLabConnectorEventBus(dst, src *GitLabConnectorEventBus) {
 }
 
 // ============================================================
+// Merge: GitLabConnectorEventBusEventStreamSubscribeRecord
+// ============================================================
+// MergeGitLabConnectorEventBusEventStreamSubscribeRecord fills zero-valued fields in dst from src.
+func MergeGitLabConnectorEventBusEventStreamSubscribeRecord(dst, src *GitLabConnectorEventBusEventStreamSubscribeRecord) {
+	if dst.Meta == nil {
+		dst.Meta = src.Meta
+	} else if src.Meta != nil {
+		MergeEventBusRecordMeta(dst.Meta, src.Meta)
+	}
+	if dst.Payload == nil {
+		dst.Payload = src.Payload
+	} else if src.Payload != nil {
+		MergeGitLabConnectorEvent(dst.Payload, src.Payload)
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
 // Merge: MapEmpty
 // ============================================================
 // MergeMapEmpty fills zero-valued fields in dst from src.
@@ -4686,6 +5392,34 @@ func MergeMapEmpty(dst, src *MapEmpty) {
 func MergeTopicPublishReceipt(dst, src *TopicPublishReceipt) {
 	if !dst.Published {
 		dst.Published = src.Published
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: EventBusRecordMeta
+// ============================================================
+// MergeEventBusRecordMeta fills zero-valued fields in dst from src.
+func MergeEventBusRecordMeta(dst, src *EventBusRecordMeta) {
+	if len(dst.Key) == 0 {
+		dst.Key = src.Key
+	}
+	if dst.Topic == "" {
+		dst.Topic = src.Topic
+	}
+	if dst.Partition == 0 {
+		dst.Partition = src.Partition
+	}
+	if dst.Offset == 0 {
+		dst.Offset = src.Offset
+	}
+	if dst.Timestamp == nil {
+		dst.Timestamp = src.Timestamp
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -4740,6 +5474,9 @@ func MergeGitLabActivityNode(dst, src *GitLabActivityNode) {
 	if dst.OwnerSpiffe == "" {
 		dst.OwnerSpiffe = src.OwnerSpiffe
 	}
+	if dst.SchemeVersion == "" {
+		dst.SchemeVersion = src.SchemeVersion
+	}
 	if dst.TenantNamespace == "" {
 		dst.TenantNamespace = src.TenantNamespace
 	}
@@ -4791,6 +5528,9 @@ func MergeGitLabActivityRecord(dst, src *GitLabActivityRecord) {
 	}
 	if dst.OwnerSpiffe == "" {
 		dst.OwnerSpiffe = src.OwnerSpiffe
+	}
+	if dst.SchemeVersion == "" {
+		dst.SchemeVersion = src.SchemeVersion
 	}
 	if dst.ActorSub == "" {
 		dst.ActorSub = src.ActorSub

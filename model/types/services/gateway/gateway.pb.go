@@ -157,15 +157,15 @@ func (TypeID) EnumDescriptor() ([]byte, []int) {
 type MintRpcId int32
 
 const (
-	MintRpcId_MINT_RPC_ID_UNSPECIFIED    MintRpcId = 0
-	MintRpcId_MINT_RPC_ID_ALL_ACCESSORS  MintRpcId = 1
-	MintRpcId_MINT_RPC_ID_ALL_MUTATORS   MintRpcId = 2
-	MintRpcId_MINT_RPC_ID_ALL_EXECUTORS  MintRpcId = 3
-	MintRpcId_MINT_RPC_ID_OPEN_ID_CONFIG MintRpcId = 4
-	MintRpcId_MINT_RPC_ID_JWKS           MintRpcId = 5
-	MintRpcId_MINT_RPC_ID_TOKEN_MINT     MintRpcId = 6
-	MintRpcId_MINT_RPC_ID_X509_MINT      MintRpcId = 7
-	MintRpcId_MINT_RPC_ID_PUBLIC_CA      MintRpcId = 8
+	MintRpcId_MINT_RPC_ID_UNSPECIFIED        MintRpcId = 0
+	MintRpcId_MINT_RPC_ID_ALL_ACCESSORS      MintRpcId = 1
+	MintRpcId_MINT_RPC_ID_ALL_MUTATORS       MintRpcId = 2
+	MintRpcId_MINT_RPC_ID_ALL_EXECUTORS      MintRpcId = 3
+	MintRpcId_MINT_RPC_ID_GET_OPEN_ID_CONFIG MintRpcId = 4
+	MintRpcId_MINT_RPC_ID_LIST_JWKS          MintRpcId = 5
+	MintRpcId_MINT_RPC_ID_MINT_TOKEN         MintRpcId = 6
+	MintRpcId_MINT_RPC_ID_MINT_X509_CERT     MintRpcId = 7
+	MintRpcId_MINT_RPC_ID_LIST_PUBLIC_CA     MintRpcId = 8
 )
 
 // Enum value maps for MintRpcId.
@@ -175,22 +175,22 @@ var (
 		1: "MINT_RPC_ID_ALL_ACCESSORS",
 		2: "MINT_RPC_ID_ALL_MUTATORS",
 		3: "MINT_RPC_ID_ALL_EXECUTORS",
-		4: "MINT_RPC_ID_OPEN_ID_CONFIG",
-		5: "MINT_RPC_ID_JWKS",
-		6: "MINT_RPC_ID_TOKEN_MINT",
-		7: "MINT_RPC_ID_X509_MINT",
-		8: "MINT_RPC_ID_PUBLIC_CA",
+		4: "MINT_RPC_ID_GET_OPEN_ID_CONFIG",
+		5: "MINT_RPC_ID_LIST_JWKS",
+		6: "MINT_RPC_ID_MINT_TOKEN",
+		7: "MINT_RPC_ID_MINT_X509_CERT",
+		8: "MINT_RPC_ID_LIST_PUBLIC_CA",
 	}
 	MintRpcId_value = map[string]int32{
-		"MINT_RPC_ID_UNSPECIFIED":    0,
-		"MINT_RPC_ID_ALL_ACCESSORS":  1,
-		"MINT_RPC_ID_ALL_MUTATORS":   2,
-		"MINT_RPC_ID_ALL_EXECUTORS":  3,
-		"MINT_RPC_ID_OPEN_ID_CONFIG": 4,
-		"MINT_RPC_ID_JWKS":           5,
-		"MINT_RPC_ID_TOKEN_MINT":     6,
-		"MINT_RPC_ID_X509_MINT":      7,
-		"MINT_RPC_ID_PUBLIC_CA":      8,
+		"MINT_RPC_ID_UNSPECIFIED":        0,
+		"MINT_RPC_ID_ALL_ACCESSORS":      1,
+		"MINT_RPC_ID_ALL_MUTATORS":       2,
+		"MINT_RPC_ID_ALL_EXECUTORS":      3,
+		"MINT_RPC_ID_GET_OPEN_ID_CONFIG": 4,
+		"MINT_RPC_ID_LIST_JWKS":          5,
+		"MINT_RPC_ID_MINT_TOKEN":         6,
+		"MINT_RPC_ID_MINT_X509_CERT":     7,
+		"MINT_RPC_ID_LIST_PUBLIC_CA":     8,
 	}
 )
 
@@ -620,7 +620,7 @@ var File_services_gateway_proto protoreflect.FileDescriptor
 
 const file_services_gateway_proto_rawDesc = "" +
 	"\n" +
-	"\x16services/gateway.proto\x12\agateway\x1a\x0flibs/spec.proto\x1a\x0flibs/host.proto\x1a\x0elibs/jwk.proto\x1a\x0flibs/x509.proto\x1a\x19common/tokenrequest.proto\x1a\x10libs/trace.proto\"\x8a\x05\n" +
+	"\x16services/gateway.proto\x12\agateway\x1a\x0flibs/spec.proto\x1a\x0flibs/host.proto\x1a\x0elibs/jwk.proto\x1a\x0flibs/x509.proto\x1a\x19common/tokenrequest.proto\x1a\x10libs/trace.proto\"\xbc\x05\n" +
 	"\x06Config\x12E\n" +
 	"\x1chealth_poll_interval_seconds\x18\x01 \x01(\x03B\x04\x90\xa8\x1d\x05R\x19healthPollIntervalSeconds\x12%\n" +
 	"\venable_http\x18\x02 \x01(\bB\x04\xa0\xa8\x1d\x01R\n" +
@@ -641,17 +641,19 @@ const file_services_gateway_proto_rawDesc = "" +
 	" \x01(\tR\x0eexternalKeyPem\x12-\n" +
 	"\aroot_ca\x18\v \x03(\v2\x0e.x509.X509CertB\x04\xb8\xa8\x1d\x04R\x06rootCa\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\rҨ\x1d\t\n" +
-	"\agateway\"o\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:?Ҩ\x1d\t\n" +
+	"\agatewayʪ\x1d.\n" +
+	"'claudesensor.TraceEventBus.trace_events\x12\x03\n" +
+	"\x01*\"o\n" +
 	"\x10PublicCaResponse\x12*\n" +
 	"\x05certs\x18\x01 \x03(\v2\x0e.x509.X509CertB\x04\xb8\xa8\x1d\x10R\x05certs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9e\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa0\x01\n" +
 	"\x12GatewayConfigState\x121\n" +
 	"\x06config\x18\x01 \x01(\v2\x0f.gateway.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:$\x9a\xa8\x1d\x1c\n" +
-	"\x12GatewayConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:&\x9a\xa8\x1d\x1e\n" +
+	"\x12GatewayConfigState\x1a\beventbus\xa0\xa8\x1d\x02\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*y\n" +
@@ -664,17 +666,17 @@ const file_services_gateway_proto_rawDesc = "" +
 	"\x0eTYPE_ID_CONFIG\x10\x01\x12\x1e\n" +
 	"\x1aTYPE_ID_PUBLIC_CA_RESPONSE\x10\x02\x12 \n" +
 	"\x1cTYPE_ID_GATEWAY_CONFIG_STATE\x10\x03\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10\x04*\x8c\x02\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x10\x04*\x9f\x02\n" +
 	"\tMintRpcId\x12\x1b\n" +
 	"\x17MINT_RPC_ID_UNSPECIFIED\x10\x00\x12\x1d\n" +
 	"\x19MINT_RPC_ID_ALL_ACCESSORS\x10\x01\x12\x1c\n" +
 	"\x18MINT_RPC_ID_ALL_MUTATORS\x10\x02\x12\x1d\n" +
-	"\x19MINT_RPC_ID_ALL_EXECUTORS\x10\x03\x12\x1e\n" +
-	"\x1aMINT_RPC_ID_OPEN_ID_CONFIG\x10\x04\x12\x14\n" +
-	"\x10MINT_RPC_ID_JWKS\x10\x05\x12\x1a\n" +
-	"\x16MINT_RPC_ID_TOKEN_MINT\x10\x06\x12\x19\n" +
-	"\x15MINT_RPC_ID_X509_MINT\x10\a\x12\x19\n" +
-	"\x15MINT_RPC_ID_PUBLIC_CA\x10\b*\x97\x03\n" +
+	"\x19MINT_RPC_ID_ALL_EXECUTORS\x10\x03\x12\"\n" +
+	"\x1eMINT_RPC_ID_GET_OPEN_ID_CONFIG\x10\x04\x12\x19\n" +
+	"\x15MINT_RPC_ID_LIST_JWKS\x10\x05\x12\x1a\n" +
+	"\x16MINT_RPC_ID_MINT_TOKEN\x10\x06\x12\x1e\n" +
+	"\x1aMINT_RPC_ID_MINT_X509_CERT\x10\a\x12\x1e\n" +
+	"\x1aMINT_RPC_ID_LIST_PUBLIC_CA\x10\b*\x97\x03\n" +
 	"\x1eGatewayConfigStateServiceRpcId\x123\n" +
 	"/GATEWAY_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x125\n" +
 	"1GATEWAY_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x124\n" +
@@ -682,16 +684,16 @@ const file_services_gateway_proto_rawDesc = "" +
 	"1GATEWAY_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x122\n" +
 	".GATEWAY_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x122\n" +
 	".GATEWAY_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x124\n" +
-	"0GATEWAY_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xbd\x03\n" +
-	"\x04Mint\x12p\n" +
-	"\fOpenIdConfig\x12\x13.trace.TraceRequest\x1a\x18.jwk.OpenIdConfiguration\"1\u0088' .well-known/openid-configurationʈ'\x03\n" +
-	"\x01\x01\xea\x88'\x02\b\x01\x12N\n" +
-	"\x04Jwks\x12\x13.trace.TraceRequest\x1a\t.jwk.Jwks\"&\u0088'\x15.well-known/jwks.jsonʈ'\x03\n" +
-	"\x01\x01\xea\x88'\x02\b\x01\x12T\n" +
-	"\tTokenMint\x12\x1e.tokenrequest.TokenMintRequest\x1a\x1f.tokenrequest.TokenMintResponse\"\x06\xea\x88'\x02\b\x01\x12F\n" +
-	"\bX509Mint\x12\x1d.tokenrequest.X509MintRequest\x1a\x13.x509.X509CertChain\"\x06\xea\x88'\x02\b\x01\x12I\n" +
-	"\bPublicCa\x12\x13.trace.TraceRequest\x1a\x19.gateway.PublicCaResponse\"\rʈ'\x03\n" +
-	"\x01\x01\xea\x88'\x02\b\x01\x1a\n" +
+	"0GATEWAY_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xe5\x03\n" +
+	"\x04Mint\x12s\n" +
+	"\x0fGetOpenIdConfig\x12\x13.trace.TraceRequest\x1a\x18.jwk.OpenIdConfiguration\"1\u0088' .well-known/openid-configurationʈ'\x03\n" +
+	"\x01\x01\xea\x88'\x02\b\x01\x12_\n" +
+	"\bListJwks\x12\x13.trace.TraceRequest\x1a\t.jwk.Jwks\"3\u0088'\x15.well-known/jwks.jsonʈ'\x03\n" +
+	"\x01\x01\xea\x88'\x02\b\x01\xf2\x88'\t\b\x01\x12\x03kid\x18\x10\x12T\n" +
+	"\tMintToken\x12\x1e.tokenrequest.TokenMintRequest\x1a\x1f.tokenrequest.TokenMintResponse\"\x06\xea\x88'\x02\b\x01\x12J\n" +
+	"\fMintX509Cert\x12\x1d.tokenrequest.X509MintRequest\x1a\x13.x509.X509CertChain\"\x06\xea\x88'\x02\b\x01\x12Y\n" +
+	"\fListPublicCa\x12\x13.trace.TraceRequest\x1a\x19.gateway.PublicCaResponse\"\x19ʈ'\x03\n" +
+	"\x01\x01\xea\x88'\x02\b\x01\xf2\x88'\b\b\x01\x12\x02id\x18\x10\x1a\n" +
 	"\xf2\x97\"\x00\x82\x98\"\x02\b\x012\xba\x01\n" +
 	"\x19GatewayConfigStateService\x121\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x0f.gateway.Config\x12-\n" +
@@ -740,19 +742,19 @@ var file_services_gateway_proto_depIdxs = []int32{
 	9,  // 3: gateway.Config.root_ca:type_name -> x509.X509Cert
 	9,  // 4: gateway.PublicCaResponse.certs:type_name -> x509.X509Cert
 	4,  // 5: gateway.GatewayConfigState.config:type_name -> gateway.Config
-	10, // 6: gateway.Mint.OpenIdConfig:input_type -> trace.TraceRequest
-	10, // 7: gateway.Mint.Jwks:input_type -> trace.TraceRequest
-	11, // 8: gateway.Mint.TokenMint:input_type -> tokenrequest.TokenMintRequest
-	12, // 9: gateway.Mint.X509Mint:input_type -> tokenrequest.X509MintRequest
-	10, // 10: gateway.Mint.PublicCa:input_type -> trace.TraceRequest
+	10, // 6: gateway.Mint.GetOpenIdConfig:input_type -> trace.TraceRequest
+	10, // 7: gateway.Mint.ListJwks:input_type -> trace.TraceRequest
+	11, // 8: gateway.Mint.MintToken:input_type -> tokenrequest.TokenMintRequest
+	12, // 9: gateway.Mint.MintX509Cert:input_type -> tokenrequest.X509MintRequest
+	10, // 10: gateway.Mint.ListPublicCa:input_type -> trace.TraceRequest
 	10, // 11: gateway.GatewayConfigStateService.GetConfig:input_type -> trace.TraceRequest
 	4,  // 12: gateway.GatewayConfigStateService.SetConfig:input_type -> gateway.Config
 	10, // 13: gateway.GatewayConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	13, // 14: gateway.Mint.OpenIdConfig:output_type -> jwk.OpenIdConfiguration
-	14, // 15: gateway.Mint.Jwks:output_type -> jwk.Jwks
-	15, // 16: gateway.Mint.TokenMint:output_type -> tokenrequest.TokenMintResponse
-	16, // 17: gateway.Mint.X509Mint:output_type -> x509.X509CertChain
-	5,  // 18: gateway.Mint.PublicCa:output_type -> gateway.PublicCaResponse
+	13, // 14: gateway.Mint.GetOpenIdConfig:output_type -> jwk.OpenIdConfiguration
+	14, // 15: gateway.Mint.ListJwks:output_type -> jwk.Jwks
+	15, // 16: gateway.Mint.MintToken:output_type -> tokenrequest.TokenMintResponse
+	16, // 17: gateway.Mint.MintX509Cert:output_type -> x509.X509CertChain
+	5,  // 18: gateway.Mint.ListPublicCa:output_type -> gateway.PublicCaResponse
 	4,  // 19: gateway.GatewayConfigStateService.GetConfig:output_type -> gateway.Config
 	4,  // 20: gateway.GatewayConfigStateService.SetConfig:output_type -> gateway.Config
 	4,  // 21: gateway.GatewayConfigStateService.WatchConfig:output_type -> gateway.Config

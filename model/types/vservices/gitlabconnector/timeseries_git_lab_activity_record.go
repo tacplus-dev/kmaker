@@ -30,6 +30,7 @@ func GitLabActivityRecordTimeseriesColumns() []string {
 		"timestamp_ms",
 		"event_id",
 		"owner_spiffe",
+		"scheme_version",
 		"actor_sub",
 		"email",
 		"author_email",
@@ -54,6 +55,7 @@ func GitLabActivityRecordToTimeseriesRow(msg *GitLabActivityRecord) []interface{
 		msg.TimestampMs,
 		msg.EventId,
 		msg.OwnerSpiffe,
+		msg.SchemeVersion,
 		msg.ActorSub,
 		msg.Email,
 		msg.AuthorEmail,
@@ -70,29 +72,30 @@ func GitLabActivityRecordToTimeseriesRow(msg *GitLabActivityRecord) []interface{
 // GitLabActivityRecordApplyTimeseriesRow to set enum/timestamp/message values on the proto message.
 func GitLabActivityRecordTimeseriesScanDest() ([]interface{}, *GitLabActivityRecord) {
 	msg := &GitLabActivityRecord{}
-	dest := make([]interface{}, 14)
+	dest := make([]interface{}, 15)
 	dest[0] = &msg.TenantNamespace
 	dest[1] = &msg.GitlabNamespace
 	dest[2] = &msg.ProjectPath
 	dest[3] = &msg.TimestampMs
 	dest[4] = &msg.EventId
 	dest[5] = &msg.OwnerSpiffe
-	dest[6] = &msg.ActorSub
-	dest[7] = &msg.Email
-	dest[8] = &msg.AuthorEmail
-	dest[9] = &msg.AuthorUsername
-	var _col10 string
-	dest[10] = &_col10
-	dest[11] = &msg.GitlabUrl
-	dest[12] = &msg.ProjectKey
-	dest[13] = &msg.IngestionSource
+	dest[6] = &msg.SchemeVersion
+	dest[7] = &msg.ActorSub
+	dest[8] = &msg.Email
+	dest[9] = &msg.AuthorEmail
+	dest[10] = &msg.AuthorUsername
+	var _col11 string
+	dest[11] = &_col11
+	dest[12] = &msg.GitlabUrl
+	dest[13] = &msg.ProjectKey
+	dest[14] = &msg.IngestionSource
 	return dest, msg
 }
 
 // GitLabActivityRecordApplyTimeseriesRow applies scanned timeseries values to a proto message.
 // Call after rows.Scan() with the dest from GitLabActivityRecordTimeseriesScanDest().
 func GitLabActivityRecordApplyTimeseriesRow(dest []interface{}, msg *GitLabActivityRecord) {
-	if s, ok := dest[10].(*string); ok && *s != "" {
+	if s, ok := dest[11].(*string); ok && *s != "" {
 		if v, ok := GitLabEventType_value[*s]; ok {
 			msg.EventType = GitLabEventType(v)
 		}
@@ -108,6 +111,7 @@ func GitLabActivityRecordTimeseriesDDL() string {
     timestamp_ms Int64,
     event_id String,
     owner_spiffe String,
+    scheme_version LowCardinality(String),
     actor_sub String,
     email String,
     author_email String,

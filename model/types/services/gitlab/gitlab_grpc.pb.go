@@ -62,7 +62,7 @@ const (
 	Proxy_ListBranches_FullMethodName            = "/gitlab.Proxy/ListBranches"
 	Proxy_CreateBranch_FullMethodName            = "/gitlab.Proxy/CreateBranch"
 	Proxy_ListCommits_FullMethodName             = "/gitlab.Proxy/ListCommits"
-	Proxy_SearchBlobs_FullMethodName             = "/gitlab.Proxy/SearchBlobs"
+	Proxy_ListBlobSearchResults_FullMethodName   = "/gitlab.Proxy/ListBlobSearchResults"
 )
 
 // ProxyClient is the client API for Proxy service.
@@ -105,7 +105,7 @@ type ProxyClient interface {
 	// Commits
 	ListCommits(ctx context.Context, in *ListCommitsRequest, opts ...grpc.CallOption) (*ListCommitsResponse, error)
 	// Search
-	SearchBlobs(ctx context.Context, in *SearchBlobsRequest, opts ...grpc.CallOption) (*SearchBlobsResponse, error)
+	ListBlobSearchResults(ctx context.Context, in *SearchBlobsRequest, opts ...grpc.CallOption) (*SearchBlobsResponse, error)
 }
 
 type proxyClient struct {
@@ -376,10 +376,10 @@ func (c *proxyClient) ListCommits(ctx context.Context, in *ListCommitsRequest, o
 	return out, nil
 }
 
-func (c *proxyClient) SearchBlobs(ctx context.Context, in *SearchBlobsRequest, opts ...grpc.CallOption) (*SearchBlobsResponse, error) {
+func (c *proxyClient) ListBlobSearchResults(ctx context.Context, in *SearchBlobsRequest, opts ...grpc.CallOption) (*SearchBlobsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SearchBlobsResponse)
-	err := c.cc.Invoke(ctx, Proxy_SearchBlobs_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Proxy_ListBlobSearchResults_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -426,7 +426,7 @@ type ProxyServer interface {
 	// Commits
 	ListCommits(context.Context, *ListCommitsRequest) (*ListCommitsResponse, error)
 	// Search
-	SearchBlobs(context.Context, *SearchBlobsRequest) (*SearchBlobsResponse, error)
+	ListBlobSearchResults(context.Context, *SearchBlobsRequest) (*SearchBlobsResponse, error)
 	mustEmbedUnimplementedProxyServer()
 }
 
@@ -515,8 +515,8 @@ func (UnimplementedProxyServer) CreateBranch(context.Context, *CreateBranchReque
 func (UnimplementedProxyServer) ListCommits(context.Context, *ListCommitsRequest) (*ListCommitsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListCommits not implemented")
 }
-func (UnimplementedProxyServer) SearchBlobs(context.Context, *SearchBlobsRequest) (*SearchBlobsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method SearchBlobs not implemented")
+func (UnimplementedProxyServer) ListBlobSearchResults(context.Context, *SearchBlobsRequest) (*SearchBlobsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListBlobSearchResults not implemented")
 }
 func (UnimplementedProxyServer) mustEmbedUnimplementedProxyServer() {}
 func (UnimplementedProxyServer) testEmbeddedByValue()               {}
@@ -1007,20 +1007,20 @@ func _Proxy_ListCommits_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Proxy_SearchBlobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Proxy_ListBlobSearchResults_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SearchBlobsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProxyServer).SearchBlobs(ctx, in)
+		return srv.(ProxyServer).ListBlobSearchResults(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Proxy_SearchBlobs_FullMethodName,
+		FullMethod: Proxy_ListBlobSearchResults_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProxyServer).SearchBlobs(ctx, req.(*SearchBlobsRequest))
+		return srv.(ProxyServer).ListBlobSearchResults(ctx, req.(*SearchBlobsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1137,8 +1137,8 @@ var Proxy_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Proxy_ListCommits_Handler,
 		},
 		{
-			MethodName: "SearchBlobs",
-			Handler:    _Proxy_SearchBlobs_Handler,
+			MethodName: "ListBlobSearchResults",
+			Handler:    _Proxy_ListBlobSearchResults_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

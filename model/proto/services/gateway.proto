@@ -107,28 +107,28 @@ message PublicCaResponse {
 service Mint {
   // Client-reachable C2S front that proxies the authoritative S2S minter.
 
-  // OpenIdConfig returns the OpenID Connect discovery document.
+  // GetOpenIdConfig returns the OpenID Connect discovery document.
   // Gateway is the public-facing authority; the issuer URL is the gateway FQDN.
-  rpc OpenIdConfig(trace.TraceRequest) returns (jwk.OpenIdConfiguration) {
+  rpc GetOpenIdConfig(trace.TraceRequest) returns (jwk.OpenIdConfiguration) {
   }
 
-  // Jwks returns the current JSON Web Key Set for token verification.
+  // ListJwks returns the current JSON Web Key Set for token verification.
   // Gateway watches kernel's verifying keys and serves them at this endpoint.
-  rpc Jwks(trace.TraceRequest) returns (jwk.Jwks) {
+  rpc ListJwks(trace.TraceRequest) returns (jwk.Jwks) {
   }
 
-  // TokenMint mints a signed JWT token. Delegated to kernel's MintService.
-  rpc TokenMint(tokenrequest.TokenMintRequest) returns (tokenrequest.TokenMintResponse) {
+  // MintToken mints a signed JWT token. Delegated to kernel's Mint service.
+  rpc MintToken(tokenrequest.TokenMintRequest) returns (tokenrequest.TokenMintResponse) {
   }
 
-  // X509Mint signs an X.509 certificate. Delegated to kernel's MintService.
-  rpc X509Mint(tokenrequest.X509MintRequest) returns (x509.X509CertChain) {
+  // MintX509Cert signs an X.509 certificate. Delegated to kernel's Mint service.
+  rpc MintX509Cert(tokenrequest.X509MintRequest) returns (x509.X509CertChain) {
   }
 
-  // PublicCa returns the cluster root CA certificate(s).
+  // ListPublicCa returns the cluster root CA certificate(s).
   // Clients (e.g. cavalierctl) use these to verify TLS connections to the gateway.
   // No authentication required — the CA is public trust anchor information.
-  rpc PublicCa(trace.TraceRequest) returns (PublicCaResponse) {
+  rpc ListPublicCa(trace.TraceRequest) returns (PublicCaResponse) {
   }
 }
 
@@ -173,11 +173,11 @@ enum MintRpcId {
   MINT_RPC_ID_ALL_ACCESSORS = 1;
   MINT_RPC_ID_ALL_MUTATORS = 2;
   MINT_RPC_ID_ALL_EXECUTORS = 3;
-  MINT_RPC_ID_OPEN_ID_CONFIG = 4;
-  MINT_RPC_ID_JWKS = 5;
-  MINT_RPC_ID_TOKEN_MINT = 6;
-  MINT_RPC_ID_X509_MINT = 7;
-  MINT_RPC_ID_PUBLIC_CA = 8;
+  MINT_RPC_ID_GET_OPEN_ID_CONFIG = 4;
+  MINT_RPC_ID_LIST_JWKS = 5;
+  MINT_RPC_ID_MINT_TOKEN = 6;
+  MINT_RPC_ID_MINT_X509_CERT = 7;
+  MINT_RPC_ID_LIST_PUBLIC_CA = 8;
 }
 
 enum GatewayConfigStateServiceRpcId {

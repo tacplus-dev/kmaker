@@ -367,44 +367,44 @@ func (TypeID) EnumDescriptor() ([]byte, []int) {
 type ArgusRpcId int32
 
 const (
-	ArgusRpcId_ARGUS_RPC_ID_UNSPECIFIED              ArgusRpcId = 0
-	ArgusRpcId_ARGUS_RPC_ID_ALL_ACCESSORS            ArgusRpcId = 1
-	ArgusRpcId_ARGUS_RPC_ID_ALL_MUTATORS             ArgusRpcId = 2
-	ArgusRpcId_ARGUS_RPC_ID_ALL_EXECUTORS            ArgusRpcId = 3
-	ArgusRpcId_ARGUS_RPC_ID_GET_DASHBOARD            ArgusRpcId = 4
-	ArgusRpcId_ARGUS_RPC_ID_LIST_ACTIVE_SESSIONS     ArgusRpcId = 5
-	ArgusRpcId_ARGUS_RPC_ID_GET_SESSION_DETAIL       ArgusRpcId = 6
-	ArgusRpcId_ARGUS_RPC_ID_GET_USER_ACTIVITY        ArgusRpcId = 7
-	ArgusRpcId_ARGUS_RPC_ID_SEARCH_SESSIONS          ArgusRpcId = 8
-	ArgusRpcId_ARGUS_RPC_ID_WATCH_LIVE_SESSIONS      ArgusRpcId = 9
-	ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_READ          ArgusRpcId = 10
-	ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_WRITE         ArgusRpcId = 11
-	ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_DELETE        ArgusRpcId = 12
-	ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_LIST          ArgusRpcId = 13
-	ArgusRpcId_ARGUS_RPC_ID_SCRATCHPAD_CLEAR         ArgusRpcId = 14
-	ArgusRpcId_ARGUS_RPC_ID_GET_SUPERVISOR_CONTEXT   ArgusRpcId = 15
-	ArgusRpcId_ARGUS_RPC_ID_WATCH_DASHBOARD          ArgusRpcId = 16
-	ArgusRpcId_ARGUS_RPC_ID_WATCH_SESSION_DETAIL     ArgusRpcId = 17
-	ArgusRpcId_ARGUS_RPC_ID_WATCH_USER_ACTIVITY      ArgusRpcId = 18
-	ArgusRpcId_ARGUS_RPC_ID_WATCH_SUPERVISOR_CONTEXT ArgusRpcId = 19
-	ArgusRpcId_ARGUS_RPC_ID_WATCH_SCRATCHPAD_LIST    ArgusRpcId = 20
-	ArgusRpcId_ARGUS_RPC_ID_WATCH_SCRATCHPAD_READ    ArgusRpcId = 21
-	ArgusRpcId_ARGUS_RPC_ID_LIST_USERS               ArgusRpcId = 22
-	ArgusRpcId_ARGUS_RPC_ID_GET_USER_PROFILE         ArgusRpcId = 23
-	ArgusRpcId_ARGUS_RPC_ID_GET_USER_TOKEN_STATS     ArgusRpcId = 24
-	ArgusRpcId_ARGUS_RPC_ID_WATCH_USER_PROFILE       ArgusRpcId = 25
-	ArgusRpcId_ARGUS_RPC_ID_GET_USER_COMMIT_ACTIVITY ArgusRpcId = 26
-	ArgusRpcId_ARGUS_RPC_ID_GET_FILE_ACTIVITY        ArgusRpcId = 27
-	ArgusRpcId_ARGUS_RPC_ID_GET_SESSION_TIMELINE     ArgusRpcId = 28
-	ArgusRpcId_ARGUS_RPC_ID_GET_AGENT_TREE           ArgusRpcId = 29
-	ArgusRpcId_ARGUS_RPC_ID_GET_SYSTEM_STATS         ArgusRpcId = 30
-	ArgusRpcId_ARGUS_RPC_ID_GET_TOOL_LEADERBOARD     ArgusRpcId = 31
-	ArgusRpcId_ARGUS_RPC_ID_GET_MODEL_USAGE          ArgusRpcId = 32
-	ArgusRpcId_ARGUS_RPC_ID_GET_ACTIVITY_TIMESERIES  ArgusRpcId = 33
-	ArgusRpcId_ARGUS_RPC_ID_WATCH_SYSTEM_STATS       ArgusRpcId = 34
-	ArgusRpcId_ARGUS_RPC_ID_WATCH_TOOL_LEADERBOARD   ArgusRpcId = 35
-	ArgusRpcId_ARGUS_RPC_ID_SEARCH_EVENTS            ArgusRpcId = 36
-	ArgusRpcId_ARGUS_RPC_ID_SEARCH_BY_FILE_PATH      ArgusRpcId = 37
+	ArgusRpcId_ARGUS_RPC_ID_UNSPECIFIED                  ArgusRpcId = 0
+	ArgusRpcId_ARGUS_RPC_ID_ALL_ACCESSORS                ArgusRpcId = 1
+	ArgusRpcId_ARGUS_RPC_ID_ALL_MUTATORS                 ArgusRpcId = 2
+	ArgusRpcId_ARGUS_RPC_ID_ALL_EXECUTORS                ArgusRpcId = 3
+	ArgusRpcId_ARGUS_RPC_ID_GET_DASHBOARD                ArgusRpcId = 4
+	ArgusRpcId_ARGUS_RPC_ID_LIST_ACTIVE_SESSIONS         ArgusRpcId = 5
+	ArgusRpcId_ARGUS_RPC_ID_GET_SESSION_DETAIL           ArgusRpcId = 6
+	ArgusRpcId_ARGUS_RPC_ID_GET_USER_ACTIVITY            ArgusRpcId = 7
+	ArgusRpcId_ARGUS_RPC_ID_LIST_SESSION_SEARCH_RESULTS  ArgusRpcId = 8
+	ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_LIVE_SESSIONS      ArgusRpcId = 9
+	ArgusRpcId_ARGUS_RPC_ID_GET_SCRATCHPAD               ArgusRpcId = 10
+	ArgusRpcId_ARGUS_RPC_ID_UPDATE_SCRATCHPAD            ArgusRpcId = 11
+	ArgusRpcId_ARGUS_RPC_ID_DELETE_SCRATCHPAD            ArgusRpcId = 12
+	ArgusRpcId_ARGUS_RPC_ID_LIST_SCRATCHPADS             ArgusRpcId = 13
+	ArgusRpcId_ARGUS_RPC_ID_DELETE_SCRATCHPADS           ArgusRpcId = 14
+	ArgusRpcId_ARGUS_RPC_ID_GET_SUPERVISOR_CONTEXT       ArgusRpcId = 15
+	ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_DASHBOARD          ArgusRpcId = 16
+	ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SESSION_DETAIL     ArgusRpcId = 17
+	ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_USER_ACTIVITY      ArgusRpcId = 18
+	ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SUPERVISOR_CONTEXT ArgusRpcId = 19
+	ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_LIST    ArgusRpcId = 20
+	ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_READ    ArgusRpcId = 21
+	ArgusRpcId_ARGUS_RPC_ID_LIST_USERS                   ArgusRpcId = 22
+	ArgusRpcId_ARGUS_RPC_ID_GET_USER_PROFILE             ArgusRpcId = 23
+	ArgusRpcId_ARGUS_RPC_ID_GET_USER_TOKEN_STATS         ArgusRpcId = 24
+	ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE       ArgusRpcId = 25
+	ArgusRpcId_ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY    ArgusRpcId = 26
+	ArgusRpcId_ARGUS_RPC_ID_GET_FILE_ACTIVITY            ArgusRpcId = 27
+	ArgusRpcId_ARGUS_RPC_ID_GET_SESSION_TIMELINE         ArgusRpcId = 28
+	ArgusRpcId_ARGUS_RPC_ID_GET_AGENT_TREE               ArgusRpcId = 29
+	ArgusRpcId_ARGUS_RPC_ID_GET_SYSTEM_STATS             ArgusRpcId = 30
+	ArgusRpcId_ARGUS_RPC_ID_LIST_TOOL_LEADERBOARD        ArgusRpcId = 31
+	ArgusRpcId_ARGUS_RPC_ID_LIST_MODEL_USAGE             ArgusRpcId = 32
+	ArgusRpcId_ARGUS_RPC_ID_LIST_ACTIVITY_TIMESERIES     ArgusRpcId = 33
+	ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_SYSTEM_STATS       ArgusRpcId = 34
+	ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_TOOL_LEADERBOARD   ArgusRpcId = 35
+	ArgusRpcId_ARGUS_RPC_ID_LIST_EVENT_SEARCH_RESULTS    ArgusRpcId = 36
+	ArgusRpcId_ARGUS_RPC_ID_LIST_FILE_PATH_MATCHES       ArgusRpcId = 37
 )
 
 // Enum value maps for ArgusRpcId.
@@ -418,76 +418,76 @@ var (
 		5:  "ARGUS_RPC_ID_LIST_ACTIVE_SESSIONS",
 		6:  "ARGUS_RPC_ID_GET_SESSION_DETAIL",
 		7:  "ARGUS_RPC_ID_GET_USER_ACTIVITY",
-		8:  "ARGUS_RPC_ID_SEARCH_SESSIONS",
-		9:  "ARGUS_RPC_ID_WATCH_LIVE_SESSIONS",
-		10: "ARGUS_RPC_ID_SCRATCHPAD_READ",
-		11: "ARGUS_RPC_ID_SCRATCHPAD_WRITE",
-		12: "ARGUS_RPC_ID_SCRATCHPAD_DELETE",
-		13: "ARGUS_RPC_ID_SCRATCHPAD_LIST",
-		14: "ARGUS_RPC_ID_SCRATCHPAD_CLEAR",
+		8:  "ARGUS_RPC_ID_LIST_SESSION_SEARCH_RESULTS",
+		9:  "ARGUS_RPC_ID_SUBSCRIBE_LIVE_SESSIONS",
+		10: "ARGUS_RPC_ID_GET_SCRATCHPAD",
+		11: "ARGUS_RPC_ID_UPDATE_SCRATCHPAD",
+		12: "ARGUS_RPC_ID_DELETE_SCRATCHPAD",
+		13: "ARGUS_RPC_ID_LIST_SCRATCHPADS",
+		14: "ARGUS_RPC_ID_DELETE_SCRATCHPADS",
 		15: "ARGUS_RPC_ID_GET_SUPERVISOR_CONTEXT",
-		16: "ARGUS_RPC_ID_WATCH_DASHBOARD",
-		17: "ARGUS_RPC_ID_WATCH_SESSION_DETAIL",
-		18: "ARGUS_RPC_ID_WATCH_USER_ACTIVITY",
-		19: "ARGUS_RPC_ID_WATCH_SUPERVISOR_CONTEXT",
-		20: "ARGUS_RPC_ID_WATCH_SCRATCHPAD_LIST",
-		21: "ARGUS_RPC_ID_WATCH_SCRATCHPAD_READ",
+		16: "ARGUS_RPC_ID_SUBSCRIBE_DASHBOARD",
+		17: "ARGUS_RPC_ID_SUBSCRIBE_SESSION_DETAIL",
+		18: "ARGUS_RPC_ID_SUBSCRIBE_USER_ACTIVITY",
+		19: "ARGUS_RPC_ID_SUBSCRIBE_SUPERVISOR_CONTEXT",
+		20: "ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_LIST",
+		21: "ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_READ",
 		22: "ARGUS_RPC_ID_LIST_USERS",
 		23: "ARGUS_RPC_ID_GET_USER_PROFILE",
 		24: "ARGUS_RPC_ID_GET_USER_TOKEN_STATS",
-		25: "ARGUS_RPC_ID_WATCH_USER_PROFILE",
-		26: "ARGUS_RPC_ID_GET_USER_COMMIT_ACTIVITY",
+		25: "ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE",
+		26: "ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY",
 		27: "ARGUS_RPC_ID_GET_FILE_ACTIVITY",
 		28: "ARGUS_RPC_ID_GET_SESSION_TIMELINE",
 		29: "ARGUS_RPC_ID_GET_AGENT_TREE",
 		30: "ARGUS_RPC_ID_GET_SYSTEM_STATS",
-		31: "ARGUS_RPC_ID_GET_TOOL_LEADERBOARD",
-		32: "ARGUS_RPC_ID_GET_MODEL_USAGE",
-		33: "ARGUS_RPC_ID_GET_ACTIVITY_TIMESERIES",
-		34: "ARGUS_RPC_ID_WATCH_SYSTEM_STATS",
-		35: "ARGUS_RPC_ID_WATCH_TOOL_LEADERBOARD",
-		36: "ARGUS_RPC_ID_SEARCH_EVENTS",
-		37: "ARGUS_RPC_ID_SEARCH_BY_FILE_PATH",
+		31: "ARGUS_RPC_ID_LIST_TOOL_LEADERBOARD",
+		32: "ARGUS_RPC_ID_LIST_MODEL_USAGE",
+		33: "ARGUS_RPC_ID_LIST_ACTIVITY_TIMESERIES",
+		34: "ARGUS_RPC_ID_SUBSCRIBE_SYSTEM_STATS",
+		35: "ARGUS_RPC_ID_SUBSCRIBE_TOOL_LEADERBOARD",
+		36: "ARGUS_RPC_ID_LIST_EVENT_SEARCH_RESULTS",
+		37: "ARGUS_RPC_ID_LIST_FILE_PATH_MATCHES",
 	}
 	ArgusRpcId_value = map[string]int32{
-		"ARGUS_RPC_ID_UNSPECIFIED":              0,
-		"ARGUS_RPC_ID_ALL_ACCESSORS":            1,
-		"ARGUS_RPC_ID_ALL_MUTATORS":             2,
-		"ARGUS_RPC_ID_ALL_EXECUTORS":            3,
-		"ARGUS_RPC_ID_GET_DASHBOARD":            4,
-		"ARGUS_RPC_ID_LIST_ACTIVE_SESSIONS":     5,
-		"ARGUS_RPC_ID_GET_SESSION_DETAIL":       6,
-		"ARGUS_RPC_ID_GET_USER_ACTIVITY":        7,
-		"ARGUS_RPC_ID_SEARCH_SESSIONS":          8,
-		"ARGUS_RPC_ID_WATCH_LIVE_SESSIONS":      9,
-		"ARGUS_RPC_ID_SCRATCHPAD_READ":          10,
-		"ARGUS_RPC_ID_SCRATCHPAD_WRITE":         11,
-		"ARGUS_RPC_ID_SCRATCHPAD_DELETE":        12,
-		"ARGUS_RPC_ID_SCRATCHPAD_LIST":          13,
-		"ARGUS_RPC_ID_SCRATCHPAD_CLEAR":         14,
-		"ARGUS_RPC_ID_GET_SUPERVISOR_CONTEXT":   15,
-		"ARGUS_RPC_ID_WATCH_DASHBOARD":          16,
-		"ARGUS_RPC_ID_WATCH_SESSION_DETAIL":     17,
-		"ARGUS_RPC_ID_WATCH_USER_ACTIVITY":      18,
-		"ARGUS_RPC_ID_WATCH_SUPERVISOR_CONTEXT": 19,
-		"ARGUS_RPC_ID_WATCH_SCRATCHPAD_LIST":    20,
-		"ARGUS_RPC_ID_WATCH_SCRATCHPAD_READ":    21,
-		"ARGUS_RPC_ID_LIST_USERS":               22,
-		"ARGUS_RPC_ID_GET_USER_PROFILE":         23,
-		"ARGUS_RPC_ID_GET_USER_TOKEN_STATS":     24,
-		"ARGUS_RPC_ID_WATCH_USER_PROFILE":       25,
-		"ARGUS_RPC_ID_GET_USER_COMMIT_ACTIVITY": 26,
-		"ARGUS_RPC_ID_GET_FILE_ACTIVITY":        27,
-		"ARGUS_RPC_ID_GET_SESSION_TIMELINE":     28,
-		"ARGUS_RPC_ID_GET_AGENT_TREE":           29,
-		"ARGUS_RPC_ID_GET_SYSTEM_STATS":         30,
-		"ARGUS_RPC_ID_GET_TOOL_LEADERBOARD":     31,
-		"ARGUS_RPC_ID_GET_MODEL_USAGE":          32,
-		"ARGUS_RPC_ID_GET_ACTIVITY_TIMESERIES":  33,
-		"ARGUS_RPC_ID_WATCH_SYSTEM_STATS":       34,
-		"ARGUS_RPC_ID_WATCH_TOOL_LEADERBOARD":   35,
-		"ARGUS_RPC_ID_SEARCH_EVENTS":            36,
-		"ARGUS_RPC_ID_SEARCH_BY_FILE_PATH":      37,
+		"ARGUS_RPC_ID_UNSPECIFIED":                  0,
+		"ARGUS_RPC_ID_ALL_ACCESSORS":                1,
+		"ARGUS_RPC_ID_ALL_MUTATORS":                 2,
+		"ARGUS_RPC_ID_ALL_EXECUTORS":                3,
+		"ARGUS_RPC_ID_GET_DASHBOARD":                4,
+		"ARGUS_RPC_ID_LIST_ACTIVE_SESSIONS":         5,
+		"ARGUS_RPC_ID_GET_SESSION_DETAIL":           6,
+		"ARGUS_RPC_ID_GET_USER_ACTIVITY":            7,
+		"ARGUS_RPC_ID_LIST_SESSION_SEARCH_RESULTS":  8,
+		"ARGUS_RPC_ID_SUBSCRIBE_LIVE_SESSIONS":      9,
+		"ARGUS_RPC_ID_GET_SCRATCHPAD":               10,
+		"ARGUS_RPC_ID_UPDATE_SCRATCHPAD":            11,
+		"ARGUS_RPC_ID_DELETE_SCRATCHPAD":            12,
+		"ARGUS_RPC_ID_LIST_SCRATCHPADS":             13,
+		"ARGUS_RPC_ID_DELETE_SCRATCHPADS":           14,
+		"ARGUS_RPC_ID_GET_SUPERVISOR_CONTEXT":       15,
+		"ARGUS_RPC_ID_SUBSCRIBE_DASHBOARD":          16,
+		"ARGUS_RPC_ID_SUBSCRIBE_SESSION_DETAIL":     17,
+		"ARGUS_RPC_ID_SUBSCRIBE_USER_ACTIVITY":      18,
+		"ARGUS_RPC_ID_SUBSCRIBE_SUPERVISOR_CONTEXT": 19,
+		"ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_LIST":    20,
+		"ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_READ":    21,
+		"ARGUS_RPC_ID_LIST_USERS":                   22,
+		"ARGUS_RPC_ID_GET_USER_PROFILE":             23,
+		"ARGUS_RPC_ID_GET_USER_TOKEN_STATS":         24,
+		"ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE":       25,
+		"ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY":    26,
+		"ARGUS_RPC_ID_GET_FILE_ACTIVITY":            27,
+		"ARGUS_RPC_ID_GET_SESSION_TIMELINE":         28,
+		"ARGUS_RPC_ID_GET_AGENT_TREE":               29,
+		"ARGUS_RPC_ID_GET_SYSTEM_STATS":             30,
+		"ARGUS_RPC_ID_LIST_TOOL_LEADERBOARD":        31,
+		"ARGUS_RPC_ID_LIST_MODEL_USAGE":             32,
+		"ARGUS_RPC_ID_LIST_ACTIVITY_TIMESERIES":     33,
+		"ARGUS_RPC_ID_SUBSCRIBE_SYSTEM_STATS":       34,
+		"ARGUS_RPC_ID_SUBSCRIBE_TOOL_LEADERBOARD":   35,
+		"ARGUS_RPC_ID_LIST_EVENT_SEARCH_RESULTS":    36,
+		"ARGUS_RPC_ID_LIST_FILE_PATH_MATCHES":       37,
 	}
 )
 
@@ -1492,7 +1492,7 @@ func (x *SearchSessionsResponse) GetNoop() bool {
 	return false
 }
 
-// ScratchpadEntry is one key listing returned by ScratchpadList.
+// ScratchpadEntry is one key listing returned by ListScratchpads.
 type ScratchpadEntry struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Key           string                 `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
@@ -6649,12 +6649,12 @@ const file_services_argus_proto_rawDesc = "" +
 	"\amatches\x18\x01 \x03(\v2\x14.argus.FilePathMatchB\x05\xb8\xa8\x1d\x90NR\amatches\x12&\n" +
 	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x98\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9a\x01\n" +
 	"\x10ArgusConfigState\x12/\n" +
 	"\x06config\x18\x01 \x01(\v2\r.argus.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\"\x9a\xa8\x1d\x1a\n" +
-	"\x10ArgusConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:$\x9a\xa8\x1d\x1c\n" +
+	"\x10ArgusConfigState\x1a\beventbus\xa0\xa8\x1d\x02\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\x8f\x01\n" +
@@ -6740,8 +6740,7 @@ const file_services_argus_proto_rawDesc = "" +
 	"#TYPE_ID_SEARCH_BY_FILE_PATH_REQUEST\x10H\x12(\n" +
 	"$TYPE_ID_SEARCH_BY_FILE_PATH_RESPONSE\x10I\x12\x1e\n" +
 	"\x1aTYPE_ID_ARGUS_CONFIG_STATE\x10J\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10K*\xef\n" +
-	"\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x10K*\xb9\v\n" +
 	"\n" +
 	"ArgusRpcId\x12\x1c\n" +
 	"\x18ARGUS_RPC_ID_UNSPECIFIED\x10\x00\x12\x1e\n" +
@@ -6751,38 +6750,38 @@ const file_services_argus_proto_rawDesc = "" +
 	"\x1aARGUS_RPC_ID_GET_DASHBOARD\x10\x04\x12%\n" +
 	"!ARGUS_RPC_ID_LIST_ACTIVE_SESSIONS\x10\x05\x12#\n" +
 	"\x1fARGUS_RPC_ID_GET_SESSION_DETAIL\x10\x06\x12\"\n" +
-	"\x1eARGUS_RPC_ID_GET_USER_ACTIVITY\x10\a\x12 \n" +
-	"\x1cARGUS_RPC_ID_SEARCH_SESSIONS\x10\b\x12$\n" +
-	" ARGUS_RPC_ID_WATCH_LIVE_SESSIONS\x10\t\x12 \n" +
-	"\x1cARGUS_RPC_ID_SCRATCHPAD_READ\x10\n" +
-	"\x12!\n" +
-	"\x1dARGUS_RPC_ID_SCRATCHPAD_WRITE\x10\v\x12\"\n" +
-	"\x1eARGUS_RPC_ID_SCRATCHPAD_DELETE\x10\f\x12 \n" +
-	"\x1cARGUS_RPC_ID_SCRATCHPAD_LIST\x10\r\x12!\n" +
-	"\x1dARGUS_RPC_ID_SCRATCHPAD_CLEAR\x10\x0e\x12'\n" +
-	"#ARGUS_RPC_ID_GET_SUPERVISOR_CONTEXT\x10\x0f\x12 \n" +
-	"\x1cARGUS_RPC_ID_WATCH_DASHBOARD\x10\x10\x12%\n" +
-	"!ARGUS_RPC_ID_WATCH_SESSION_DETAIL\x10\x11\x12$\n" +
-	" ARGUS_RPC_ID_WATCH_USER_ACTIVITY\x10\x12\x12)\n" +
-	"%ARGUS_RPC_ID_WATCH_SUPERVISOR_CONTEXT\x10\x13\x12&\n" +
-	"\"ARGUS_RPC_ID_WATCH_SCRATCHPAD_LIST\x10\x14\x12&\n" +
-	"\"ARGUS_RPC_ID_WATCH_SCRATCHPAD_READ\x10\x15\x12\x1b\n" +
+	"\x1eARGUS_RPC_ID_GET_USER_ACTIVITY\x10\a\x12,\n" +
+	"(ARGUS_RPC_ID_LIST_SESSION_SEARCH_RESULTS\x10\b\x12(\n" +
+	"$ARGUS_RPC_ID_SUBSCRIBE_LIVE_SESSIONS\x10\t\x12\x1f\n" +
+	"\x1bARGUS_RPC_ID_GET_SCRATCHPAD\x10\n" +
+	"\x12\"\n" +
+	"\x1eARGUS_RPC_ID_UPDATE_SCRATCHPAD\x10\v\x12\"\n" +
+	"\x1eARGUS_RPC_ID_DELETE_SCRATCHPAD\x10\f\x12!\n" +
+	"\x1dARGUS_RPC_ID_LIST_SCRATCHPADS\x10\r\x12#\n" +
+	"\x1fARGUS_RPC_ID_DELETE_SCRATCHPADS\x10\x0e\x12'\n" +
+	"#ARGUS_RPC_ID_GET_SUPERVISOR_CONTEXT\x10\x0f\x12$\n" +
+	" ARGUS_RPC_ID_SUBSCRIBE_DASHBOARD\x10\x10\x12)\n" +
+	"%ARGUS_RPC_ID_SUBSCRIBE_SESSION_DETAIL\x10\x11\x12(\n" +
+	"$ARGUS_RPC_ID_SUBSCRIBE_USER_ACTIVITY\x10\x12\x12-\n" +
+	")ARGUS_RPC_ID_SUBSCRIBE_SUPERVISOR_CONTEXT\x10\x13\x12*\n" +
+	"&ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_LIST\x10\x14\x12*\n" +
+	"&ARGUS_RPC_ID_SUBSCRIBE_SCRATCHPAD_READ\x10\x15\x12\x1b\n" +
 	"\x17ARGUS_RPC_ID_LIST_USERS\x10\x16\x12!\n" +
 	"\x1dARGUS_RPC_ID_GET_USER_PROFILE\x10\x17\x12%\n" +
-	"!ARGUS_RPC_ID_GET_USER_TOKEN_STATS\x10\x18\x12#\n" +
-	"\x1fARGUS_RPC_ID_WATCH_USER_PROFILE\x10\x19\x12)\n" +
-	"%ARGUS_RPC_ID_GET_USER_COMMIT_ACTIVITY\x10\x1a\x12\"\n" +
+	"!ARGUS_RPC_ID_GET_USER_TOKEN_STATS\x10\x18\x12'\n" +
+	"#ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE\x10\x19\x12*\n" +
+	"&ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY\x10\x1a\x12\"\n" +
 	"\x1eARGUS_RPC_ID_GET_FILE_ACTIVITY\x10\x1b\x12%\n" +
 	"!ARGUS_RPC_ID_GET_SESSION_TIMELINE\x10\x1c\x12\x1f\n" +
 	"\x1bARGUS_RPC_ID_GET_AGENT_TREE\x10\x1d\x12!\n" +
-	"\x1dARGUS_RPC_ID_GET_SYSTEM_STATS\x10\x1e\x12%\n" +
-	"!ARGUS_RPC_ID_GET_TOOL_LEADERBOARD\x10\x1f\x12 \n" +
-	"\x1cARGUS_RPC_ID_GET_MODEL_USAGE\x10 \x12(\n" +
-	"$ARGUS_RPC_ID_GET_ACTIVITY_TIMESERIES\x10!\x12#\n" +
-	"\x1fARGUS_RPC_ID_WATCH_SYSTEM_STATS\x10\"\x12'\n" +
-	"#ARGUS_RPC_ID_WATCH_TOOL_LEADERBOARD\x10#\x12\x1e\n" +
-	"\x1aARGUS_RPC_ID_SEARCH_EVENTS\x10$\x12$\n" +
-	" ARGUS_RPC_ID_SEARCH_BY_FILE_PATH\x10%*\x87\x03\n" +
+	"\x1dARGUS_RPC_ID_GET_SYSTEM_STATS\x10\x1e\x12&\n" +
+	"\"ARGUS_RPC_ID_LIST_TOOL_LEADERBOARD\x10\x1f\x12!\n" +
+	"\x1dARGUS_RPC_ID_LIST_MODEL_USAGE\x10 \x12)\n" +
+	"%ARGUS_RPC_ID_LIST_ACTIVITY_TIMESERIES\x10!\x12'\n" +
+	"#ARGUS_RPC_ID_SUBSCRIBE_SYSTEM_STATS\x10\"\x12+\n" +
+	"'ARGUS_RPC_ID_SUBSCRIBE_TOOL_LEADERBOARD\x10#\x12*\n" +
+	"&ARGUS_RPC_ID_LIST_EVENT_SEARCH_RESULTS\x10$\x12'\n" +
+	"#ARGUS_RPC_ID_LIST_FILE_PATH_MATCHES\x10%*\x87\x03\n" +
 	"\x1cArgusConfigStateServiceRpcId\x121\n" +
 	"-ARGUS_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x123\n" +
 	"/ARGUS_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x122\n" +
@@ -6790,42 +6789,45 @@ const file_services_argus_proto_rawDesc = "" +
 	"/ARGUS_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x120\n" +
 	",ARGUS_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x120\n" +
 	",ARGUS_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x122\n" +
-	".ARGUS_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xe9\x16\n" +
+	".ARGUS_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xe1\x19\n" +
 	"\x05Argus\x12G\n" +
-	"\fGetDashboard\x12\x1a.argus.GetDashboardRequest\x1a\x1b.argus.GetDashboardResponse\x12Y\n" +
-	"\x12ListActiveSessions\x12 .argus.ListActiveSessionsRequest\x1a!.argus.ListActiveSessionsResponse\x12S\n" +
+	"\fGetDashboard\x12\x1a.argus.GetDashboardRequest\x1a\x1b.argus.GetDashboardResponse\x12~\n" +
+	"\x12ListActiveSessions\x12 .argus.ListActiveSessionsRequest\x1a!.argus.ListActiveSessionsResponse\"#\xf2\x88'\x1f\b\x01\x12\flast_seen_ms\x12\n" +
+	"session_id\x18\x90N\x12S\n" +
 	"\x10GetSessionDetail\x12\x1e.argus.GetSessionDetailRequest\x1a\x1f.argus.GetSessionDetailResponse\x12P\n" +
-	"\x0fGetUserActivity\x12\x1d.argus.GetUserActivityRequest\x1a\x1e.argus.GetUserActivityResponse\x12M\n" +
-	"\x0eSearchSessions\x12\x1c.argus.SearchSessionsRequest\x1a\x1d.argus.SearchSessionsResponse\x12c\n" +
-	"\x11WatchLiveSessions\x12&.claudesensor.WatchLiveSessionsRequest\x1a$.claudesensor.WatchLiveSessionsEvent0\x01\x12M\n" +
-	"\x0eScratchpadRead\x12\x1c.argus.ScratchpadReadRequest\x1a\x1d.argus.ScratchpadReadResponse\x12P\n" +
-	"\x0fScratchpadWrite\x12\x1d.argus.ScratchpadWriteRequest\x1a\x1e.argus.ScratchpadWriteResponse\x12S\n" +
-	"\x10ScratchpadDelete\x12\x1e.argus.ScratchpadDeleteRequest\x1a\x1f.argus.ScratchpadDeleteResponse\x12M\n" +
-	"\x0eScratchpadList\x12\x1c.argus.ScratchpadListRequest\x1a\x1d.argus.ScratchpadListResponse\x12P\n" +
-	"\x0fScratchpadClear\x12\x1d.argus.ScratchpadClearRequest\x1a\x1e.argus.ScratchpadClearResponse\x12_\n" +
-	"\x14GetSupervisorContext\x12\".argus.GetSupervisorContextRequest\x1a#.argus.GetSupervisorContextResponse\x12M\n" +
-	"\x0eWatchDashboard\x12\x1c.argus.WatchDashboardRequest\x1a\x1b.argus.GetDashboardResponse0\x01\x12Y\n" +
-	"\x12WatchSessionDetail\x12 .argus.WatchSessionDetailRequest\x1a\x1f.argus.GetSessionDetailResponse0\x01\x12V\n" +
-	"\x11WatchUserActivity\x12\x1f.argus.WatchUserActivityRequest\x1a\x1e.argus.GetUserActivityResponse0\x01\x12e\n" +
-	"\x16WatchSupervisorContext\x12$.argus.WatchSupervisorContextRequest\x1a#.argus.GetSupervisorContextResponse0\x01\x12Y\n" +
-	"\x13WatchScratchpadList\x12!.argus.WatchScratchpadListRequest\x1a\x1d.argus.ScratchpadListResponse0\x01\x12Y\n" +
-	"\x13WatchScratchpadRead\x12!.argus.WatchScratchpadReadRequest\x1a\x1d.argus.ScratchpadReadResponse0\x01\x12>\n" +
-	"\tListUsers\x12\x17.argus.ListUsersRequest\x1a\x18.argus.ListUsersResponse\x12M\n" +
+	"\x0fGetUserActivity\x12\x1d.argus.GetUserActivityRequest\x1a\x1e.argus.GetUserActivityResponse\x12|\n" +
+	"\x18ListSessionSearchResults\x12\x1c.argus.SearchSessionsRequest\x1a\x1d.argus.SearchSessionsResponse\"#\xf2\x88'\x1f\b\x01\x12\flast_seen_ms\x12\n" +
+	"session_id\x18\x90N\x12g\n" +
+	"\x15SubscribeLiveSessions\x12&.claudesensor.WatchLiveSessionsRequest\x1a$.claudesensor.WatchLiveSessionsEvent0\x01\x12L\n" +
+	"\rGetScratchpad\x12\x1c.argus.ScratchpadReadRequest\x1a\x1d.argus.ScratchpadReadResponse\x12Q\n" +
+	"\x10UpdateScratchpad\x12\x1d.argus.ScratchpadWriteRequest\x1a\x1e.argus.ScratchpadWriteResponse\x12S\n" +
+	"\x10DeleteScratchpad\x12\x1e.argus.ScratchpadDeleteRequest\x1a\x1f.argus.ScratchpadDeleteResponse\x12^\n" +
+	"\x0fListScratchpads\x12\x1c.argus.ScratchpadListRequest\x1a\x1d.argus.ScratchpadListResponse\"\x0e\xf2\x88'\n" +
+	"\b\x01\x12\x03key\x18\xe8\a\x12R\n" +
+	"\x11DeleteScratchpads\x12\x1d.argus.ScratchpadClearRequest\x1a\x1e.argus.ScratchpadClearResponse\x12_\n" +
+	"\x14GetSupervisorContext\x12\".argus.GetSupervisorContextRequest\x1a#.argus.GetSupervisorContextResponse\x12Q\n" +
+	"\x12SubscribeDashboard\x12\x1c.argus.WatchDashboardRequest\x1a\x1b.argus.GetDashboardResponse0\x01\x12]\n" +
+	"\x16SubscribeSessionDetail\x12 .argus.WatchSessionDetailRequest\x1a\x1f.argus.GetSessionDetailResponse0\x01\x12Z\n" +
+	"\x15SubscribeUserActivity\x12\x1f.argus.WatchUserActivityRequest\x1a\x1e.argus.GetUserActivityResponse0\x01\x12i\n" +
+	"\x1aSubscribeSupervisorContext\x12$.argus.WatchSupervisorContextRequest\x1a#.argus.GetSupervisorContextResponse0\x01\x12]\n" +
+	"\x17SubscribeScratchpadList\x12!.argus.WatchScratchpadListRequest\x1a\x1d.argus.ScratchpadListResponse0\x01\x12]\n" +
+	"\x17SubscribeScratchpadRead\x12!.argus.WatchScratchpadReadRequest\x1a\x1d.argus.ScratchpadReadResponse0\x01\x12P\n" +
+	"\tListUsers\x12\x17.argus.ListUsersRequest\x1a\x18.argus.ListUsersResponse\"\x10\xf2\x88'\f\b\x01\x12\x05email\x18\xe8\a\x12M\n" +
 	"\x0eGetUserProfile\x12\x1c.argus.GetUserProfileRequest\x1a\x1d.argus.GetUserProfileResponse\x12V\n" +
-	"\x11GetUserTokenStats\x12\x1f.argus.GetUserTokenStatsRequest\x1a .argus.GetUserTokenStatsResponse\x12S\n" +
-	"\x10WatchUserProfile\x12\x1e.argus.WatchUserProfileRequest\x1a\x1d.argus.GetUserProfileResponse0\x01\x12b\n" +
-	"\x15GetUserCommitActivity\x12#.argus.GetUserCommitActivityRequest\x1a$.argus.GetUserCommitActivityResponse\x12P\n" +
+	"\x11GetUserTokenStats\x12\x1f.argus.GetUserTokenStatsRequest\x1a .argus.GetUserTokenStatsResponse\x12W\n" +
+	"\x14SubscribeUserProfile\x12\x1e.argus.WatchUserProfileRequest\x1a\x1d.argus.GetUserProfileResponse0\x01\x12\x86\x01\n" +
+	"\x16ListUserCommitActivity\x12#.argus.GetUserCommitActivityRequest\x1a$.argus.GetUserCommitActivityResponse\"!\xf2\x88'\x1d\b\x01\x12\ftimestamp_ms\x12\bevent_id\x18\xf4\x03\x12P\n" +
 	"\x0fGetFileActivity\x12\x1d.argus.GetFileActivityRequest\x1a\x1e.argus.GetFileActivityResponse\x12Y\n" +
 	"\x12GetSessionTimeline\x12 .argus.GetSessionTimelineRequest\x1a!.argus.GetSessionTimelineResponse\x12G\n" +
 	"\fGetAgentTree\x12\x1a.argus.GetAgentTreeRequest\x1a\x1b.argus.GetAgentTreeResponse\x12M\n" +
-	"\x0eGetSystemStats\x12\x1c.argus.GetSystemStatsRequest\x1a\x1d.argus.GetSystemStatsResponse\x12Y\n" +
-	"\x12GetToolLeaderboard\x12 .argus.GetToolLeaderboardRequest\x1a!.argus.GetToolLeaderboardResponse\x12J\n" +
-	"\rGetModelUsage\x12\x1b.argus.GetModelUsageRequest\x1a\x1c.argus.GetModelUsageResponse\x12b\n" +
-	"\x15GetActivityTimeseries\x12#.argus.GetActivityTimeseriesRequest\x1a$.argus.GetActivityTimeseriesResponse\x12S\n" +
-	"\x10WatchSystemStats\x12\x1e.argus.WatchSystemStatsRequest\x1a\x1d.argus.GetSystemStatsResponse0\x01\x12_\n" +
-	"\x14WatchToolLeaderboard\x12\".argus.WatchToolLeaderboardRequest\x1a!.argus.GetToolLeaderboardResponse0\x01\x12G\n" +
-	"\fSearchEvents\x12\x1a.argus.SearchEventsRequest\x1a\x1b.argus.SearchEventsResponse\x12S\n" +
-	"\x10SearchByFilePath\x12\x1e.argus.SearchByFilePathRequest\x1a\x1f.argus.SearchByFilePathResponse\x1a\x06\xf2\x97\"\x02\x18\x012\x19\n" +
+	"\x0eGetSystemStats\x12\x1c.argus.GetSystemStatsRequest\x1a\x1d.argus.GetSystemStatsResponse\x12{\n" +
+	"\x13ListToolLeaderboard\x12 .argus.GetToolLeaderboardRequest\x1a!.argus.GetToolLeaderboardResponse\"\x1f\xf2\x88'\x1b\b\x01\x12\tuse_count\x12\ttool_name\x18\xe8\a\x12]\n" +
+	"\x0eListModelUsage\x12\x1b.argus.GetModelUsageRequest\x1a\x1c.argus.GetModelUsageResponse\"\x10\xf2\x88'\f\b\x01\x12\x05model\x18\xe8\a\x12\x8a\x01\n" +
+	"\x16ListActivityTimeseries\x12#.argus.GetActivityTimeseriesRequest\x1a$.argus.GetActivityTimeseriesResponse\"%\xf2\x88'!\b\x01\x12\x0fbucket_start_ms\x12\tgroup_key\x18\xe8\a\x12W\n" +
+	"\x14SubscribeSystemStats\x12\x1e.argus.WatchSystemStatsRequest\x1a\x1d.argus.GetSystemStatsResponse0\x01\x12c\n" +
+	"\x18SubscribeToolLeaderboard\x12\".argus.WatchToolLeaderboardRequest\x1a!.argus.GetToolLeaderboardResponse0\x01\x12t\n" +
+	"\x16ListEventSearchResults\x12\x1a.argus.SearchEventsRequest\x1a\x1b.argus.SearchEventsResponse\"!\xf2\x88'\x1d\b\x01\x12\ftimestamp_ms\x12\bevent_id\x18\x90N\x12z\n" +
+	"\x13ListFilePathMatches\x12\x1e.argus.SearchByFilePathRequest\x1a\x1f.argus.SearchByFilePathResponse\"\"\xf2\x88'\x1e\b\x01\x12\ftimestamp_ms\x12\tfile_path\x18\x90N\x1a\x06\xf2\x97\"\x02\x18\x012\x19\n" +
 	"\x11ArgusStateService\x1a\x04\xea\x97\"\x002\xb0\x01\n" +
 	"\x17ArgusConfigStateService\x12/\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\r.argus.Config\x12)\n" +
@@ -6988,36 +6990,36 @@ var file_services_argus_proto_depIdxs = []int32{
 	9,  // 44: argus.Argus.ListActiveSessions:input_type -> argus.ListActiveSessionsRequest
 	11, // 45: argus.Argus.GetSessionDetail:input_type -> argus.GetSessionDetailRequest
 	13, // 46: argus.Argus.GetUserActivity:input_type -> argus.GetUserActivityRequest
-	15, // 47: argus.Argus.SearchSessions:input_type -> argus.SearchSessionsRequest
-	85, // 48: argus.Argus.WatchLiveSessions:input_type -> claudesensor.WatchLiveSessionsRequest
-	18, // 49: argus.Argus.ScratchpadRead:input_type -> argus.ScratchpadReadRequest
-	20, // 50: argus.Argus.ScratchpadWrite:input_type -> argus.ScratchpadWriteRequest
-	22, // 51: argus.Argus.ScratchpadDelete:input_type -> argus.ScratchpadDeleteRequest
-	24, // 52: argus.Argus.ScratchpadList:input_type -> argus.ScratchpadListRequest
-	26, // 53: argus.Argus.ScratchpadClear:input_type -> argus.ScratchpadClearRequest
+	15, // 47: argus.Argus.ListSessionSearchResults:input_type -> argus.SearchSessionsRequest
+	85, // 48: argus.Argus.SubscribeLiveSessions:input_type -> claudesensor.WatchLiveSessionsRequest
+	18, // 49: argus.Argus.GetScratchpad:input_type -> argus.ScratchpadReadRequest
+	20, // 50: argus.Argus.UpdateScratchpad:input_type -> argus.ScratchpadWriteRequest
+	22, // 51: argus.Argus.DeleteScratchpad:input_type -> argus.ScratchpadDeleteRequest
+	24, // 52: argus.Argus.ListScratchpads:input_type -> argus.ScratchpadListRequest
+	26, // 53: argus.Argus.DeleteScratchpads:input_type -> argus.ScratchpadClearRequest
 	28, // 54: argus.Argus.GetSupervisorContext:input_type -> argus.GetSupervisorContextRequest
-	30, // 55: argus.Argus.WatchDashboard:input_type -> argus.WatchDashboardRequest
-	31, // 56: argus.Argus.WatchSessionDetail:input_type -> argus.WatchSessionDetailRequest
-	32, // 57: argus.Argus.WatchUserActivity:input_type -> argus.WatchUserActivityRequest
-	33, // 58: argus.Argus.WatchSupervisorContext:input_type -> argus.WatchSupervisorContextRequest
-	34, // 59: argus.Argus.WatchScratchpadList:input_type -> argus.WatchScratchpadListRequest
-	35, // 60: argus.Argus.WatchScratchpadRead:input_type -> argus.WatchScratchpadReadRequest
+	30, // 55: argus.Argus.SubscribeDashboard:input_type -> argus.WatchDashboardRequest
+	31, // 56: argus.Argus.SubscribeSessionDetail:input_type -> argus.WatchSessionDetailRequest
+	32, // 57: argus.Argus.SubscribeUserActivity:input_type -> argus.WatchUserActivityRequest
+	33, // 58: argus.Argus.SubscribeSupervisorContext:input_type -> argus.WatchSupervisorContextRequest
+	34, // 59: argus.Argus.SubscribeScratchpadList:input_type -> argus.WatchScratchpadListRequest
+	35, // 60: argus.Argus.SubscribeScratchpadRead:input_type -> argus.WatchScratchpadReadRequest
 	37, // 61: argus.Argus.ListUsers:input_type -> argus.ListUsersRequest
 	41, // 62: argus.Argus.GetUserProfile:input_type -> argus.GetUserProfileRequest
 	45, // 63: argus.Argus.GetUserTokenStats:input_type -> argus.GetUserTokenStatsRequest
-	43, // 64: argus.Argus.WatchUserProfile:input_type -> argus.WatchUserProfileRequest
-	48, // 65: argus.Argus.GetUserCommitActivity:input_type -> argus.GetUserCommitActivityRequest
+	43, // 64: argus.Argus.SubscribeUserProfile:input_type -> argus.WatchUserProfileRequest
+	48, // 65: argus.Argus.ListUserCommitActivity:input_type -> argus.GetUserCommitActivityRequest
 	51, // 66: argus.Argus.GetFileActivity:input_type -> argus.GetFileActivityRequest
 	53, // 67: argus.Argus.GetSessionTimeline:input_type -> argus.GetSessionTimelineRequest
 	56, // 68: argus.Argus.GetAgentTree:input_type -> argus.GetAgentTreeRequest
 	58, // 69: argus.Argus.GetSystemStats:input_type -> argus.GetSystemStatsRequest
-	62, // 70: argus.Argus.GetToolLeaderboard:input_type -> argus.GetToolLeaderboardRequest
-	66, // 71: argus.Argus.GetModelUsage:input_type -> argus.GetModelUsageRequest
-	69, // 72: argus.Argus.GetActivityTimeseries:input_type -> argus.GetActivityTimeseriesRequest
-	60, // 73: argus.Argus.WatchSystemStats:input_type -> argus.WatchSystemStatsRequest
-	64, // 74: argus.Argus.WatchToolLeaderboard:input_type -> argus.WatchToolLeaderboardRequest
-	72, // 75: argus.Argus.SearchEvents:input_type -> argus.SearchEventsRequest
-	75, // 76: argus.Argus.SearchByFilePath:input_type -> argus.SearchByFilePathRequest
+	62, // 70: argus.Argus.ListToolLeaderboard:input_type -> argus.GetToolLeaderboardRequest
+	66, // 71: argus.Argus.ListModelUsage:input_type -> argus.GetModelUsageRequest
+	69, // 72: argus.Argus.ListActivityTimeseries:input_type -> argus.GetActivityTimeseriesRequest
+	60, // 73: argus.Argus.SubscribeSystemStats:input_type -> argus.WatchSystemStatsRequest
+	64, // 74: argus.Argus.SubscribeToolLeaderboard:input_type -> argus.WatchToolLeaderboardRequest
+	72, // 75: argus.Argus.ListEventSearchResults:input_type -> argus.SearchEventsRequest
+	75, // 76: argus.Argus.ListFilePathMatches:input_type -> argus.SearchByFilePathRequest
 	86, // 77: argus.ArgusConfigStateService.GetConfig:input_type -> trace.TraceRequest
 	4,  // 78: argus.ArgusConfigStateService.SetConfig:input_type -> argus.Config
 	86, // 79: argus.ArgusConfigStateService.WatchConfig:input_type -> trace.TraceRequest
@@ -7025,36 +7027,36 @@ var file_services_argus_proto_depIdxs = []int32{
 	10, // 81: argus.Argus.ListActiveSessions:output_type -> argus.ListActiveSessionsResponse
 	12, // 82: argus.Argus.GetSessionDetail:output_type -> argus.GetSessionDetailResponse
 	14, // 83: argus.Argus.GetUserActivity:output_type -> argus.GetUserActivityResponse
-	16, // 84: argus.Argus.SearchSessions:output_type -> argus.SearchSessionsResponse
-	87, // 85: argus.Argus.WatchLiveSessions:output_type -> claudesensor.WatchLiveSessionsEvent
-	19, // 86: argus.Argus.ScratchpadRead:output_type -> argus.ScratchpadReadResponse
-	21, // 87: argus.Argus.ScratchpadWrite:output_type -> argus.ScratchpadWriteResponse
-	23, // 88: argus.Argus.ScratchpadDelete:output_type -> argus.ScratchpadDeleteResponse
-	25, // 89: argus.Argus.ScratchpadList:output_type -> argus.ScratchpadListResponse
-	27, // 90: argus.Argus.ScratchpadClear:output_type -> argus.ScratchpadClearResponse
+	16, // 84: argus.Argus.ListSessionSearchResults:output_type -> argus.SearchSessionsResponse
+	87, // 85: argus.Argus.SubscribeLiveSessions:output_type -> claudesensor.WatchLiveSessionsEvent
+	19, // 86: argus.Argus.GetScratchpad:output_type -> argus.ScratchpadReadResponse
+	21, // 87: argus.Argus.UpdateScratchpad:output_type -> argus.ScratchpadWriteResponse
+	23, // 88: argus.Argus.DeleteScratchpad:output_type -> argus.ScratchpadDeleteResponse
+	25, // 89: argus.Argus.ListScratchpads:output_type -> argus.ScratchpadListResponse
+	27, // 90: argus.Argus.DeleteScratchpads:output_type -> argus.ScratchpadClearResponse
 	29, // 91: argus.Argus.GetSupervisorContext:output_type -> argus.GetSupervisorContextResponse
-	8,  // 92: argus.Argus.WatchDashboard:output_type -> argus.GetDashboardResponse
-	12, // 93: argus.Argus.WatchSessionDetail:output_type -> argus.GetSessionDetailResponse
-	14, // 94: argus.Argus.WatchUserActivity:output_type -> argus.GetUserActivityResponse
-	29, // 95: argus.Argus.WatchSupervisorContext:output_type -> argus.GetSupervisorContextResponse
-	25, // 96: argus.Argus.WatchScratchpadList:output_type -> argus.ScratchpadListResponse
-	19, // 97: argus.Argus.WatchScratchpadRead:output_type -> argus.ScratchpadReadResponse
+	8,  // 92: argus.Argus.SubscribeDashboard:output_type -> argus.GetDashboardResponse
+	12, // 93: argus.Argus.SubscribeSessionDetail:output_type -> argus.GetSessionDetailResponse
+	14, // 94: argus.Argus.SubscribeUserActivity:output_type -> argus.GetUserActivityResponse
+	29, // 95: argus.Argus.SubscribeSupervisorContext:output_type -> argus.GetSupervisorContextResponse
+	25, // 96: argus.Argus.SubscribeScratchpadList:output_type -> argus.ScratchpadListResponse
+	19, // 97: argus.Argus.SubscribeScratchpadRead:output_type -> argus.ScratchpadReadResponse
 	38, // 98: argus.Argus.ListUsers:output_type -> argus.ListUsersResponse
 	42, // 99: argus.Argus.GetUserProfile:output_type -> argus.GetUserProfileResponse
 	46, // 100: argus.Argus.GetUserTokenStats:output_type -> argus.GetUserTokenStatsResponse
-	42, // 101: argus.Argus.WatchUserProfile:output_type -> argus.GetUserProfileResponse
-	49, // 102: argus.Argus.GetUserCommitActivity:output_type -> argus.GetUserCommitActivityResponse
+	42, // 101: argus.Argus.SubscribeUserProfile:output_type -> argus.GetUserProfileResponse
+	49, // 102: argus.Argus.ListUserCommitActivity:output_type -> argus.GetUserCommitActivityResponse
 	52, // 103: argus.Argus.GetFileActivity:output_type -> argus.GetFileActivityResponse
 	54, // 104: argus.Argus.GetSessionTimeline:output_type -> argus.GetSessionTimelineResponse
 	57, // 105: argus.Argus.GetAgentTree:output_type -> argus.GetAgentTreeResponse
 	59, // 106: argus.Argus.GetSystemStats:output_type -> argus.GetSystemStatsResponse
-	63, // 107: argus.Argus.GetToolLeaderboard:output_type -> argus.GetToolLeaderboardResponse
-	67, // 108: argus.Argus.GetModelUsage:output_type -> argus.GetModelUsageResponse
-	70, // 109: argus.Argus.GetActivityTimeseries:output_type -> argus.GetActivityTimeseriesResponse
-	59, // 110: argus.Argus.WatchSystemStats:output_type -> argus.GetSystemStatsResponse
-	63, // 111: argus.Argus.WatchToolLeaderboard:output_type -> argus.GetToolLeaderboardResponse
-	73, // 112: argus.Argus.SearchEvents:output_type -> argus.SearchEventsResponse
-	76, // 113: argus.Argus.SearchByFilePath:output_type -> argus.SearchByFilePathResponse
+	63, // 107: argus.Argus.ListToolLeaderboard:output_type -> argus.GetToolLeaderboardResponse
+	67, // 108: argus.Argus.ListModelUsage:output_type -> argus.GetModelUsageResponse
+	70, // 109: argus.Argus.ListActivityTimeseries:output_type -> argus.GetActivityTimeseriesResponse
+	59, // 110: argus.Argus.SubscribeSystemStats:output_type -> argus.GetSystemStatsResponse
+	63, // 111: argus.Argus.SubscribeToolLeaderboard:output_type -> argus.GetToolLeaderboardResponse
+	73, // 112: argus.Argus.ListEventSearchResults:output_type -> argus.SearchEventsResponse
+	76, // 113: argus.Argus.ListFilePathMatches:output_type -> argus.SearchByFilePathResponse
 	4,  // 114: argus.ArgusConfigStateService.GetConfig:output_type -> argus.Config
 	4,  // 115: argus.ArgusConfigStateService.SetConfig:output_type -> argus.Config
 	4,  // 116: argus.ArgusConfigStateService.WatchConfig:output_type -> argus.Config

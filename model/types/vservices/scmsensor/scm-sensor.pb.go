@@ -27,6 +27,7 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -253,14 +254,16 @@ func (ScmOperationType) EnumDescriptor() ([]byte, []int) {
 type TypeID int32
 
 const (
-	TypeID_TYPE_ID_UNSPECIFIED           TypeID = 0
-	TypeID_TYPE_ID_SCM_EVENT             TypeID = 1
-	TypeID_TYPE_ID_SCM_EVENT_BUS         TypeID = 2
-	TypeID_TYPE_ID_MAP_EMPTY             TypeID = 3
-	TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT TypeID = 4
-	TypeID_TYPE_ID_REPOSITORY_NODE       TypeID = 5
-	TypeID_TYPE_ID_SCM_OPERATION_NODE    TypeID = 6
-	TypeID_TYPE_ID_SCM_OPERATION_RECORD  TypeID = 7
+	TypeID_TYPE_ID_UNSPECIFIED                                 TypeID = 0
+	TypeID_TYPE_ID_SCM_EVENT                                   TypeID = 1
+	TypeID_TYPE_ID_SCM_EVENT_BUS                               TypeID = 2
+	TypeID_TYPE_ID_SCM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD TypeID = 3
+	TypeID_TYPE_ID_MAP_EMPTY                                   TypeID = 4
+	TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT                       TypeID = 5
+	TypeID_TYPE_ID_EVENT_BUS_RECORD_META                       TypeID = 6
+	TypeID_TYPE_ID_REPOSITORY_NODE                             TypeID = 7
+	TypeID_TYPE_ID_SCM_OPERATION_NODE                          TypeID = 8
+	TypeID_TYPE_ID_SCM_OPERATION_RECORD                        TypeID = 9
 )
 
 // Enum value maps for TypeID.
@@ -269,21 +272,25 @@ var (
 		0: "TYPE_ID_UNSPECIFIED",
 		1: "TYPE_ID_SCM_EVENT",
 		2: "TYPE_ID_SCM_EVENT_BUS",
-		3: "TYPE_ID_MAP_EMPTY",
-		4: "TYPE_ID_TOPIC_PUBLISH_RECEIPT",
-		5: "TYPE_ID_REPOSITORY_NODE",
-		6: "TYPE_ID_SCM_OPERATION_NODE",
-		7: "TYPE_ID_SCM_OPERATION_RECORD",
+		3: "TYPE_ID_SCM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD",
+		4: "TYPE_ID_MAP_EMPTY",
+		5: "TYPE_ID_TOPIC_PUBLISH_RECEIPT",
+		6: "TYPE_ID_EVENT_BUS_RECORD_META",
+		7: "TYPE_ID_REPOSITORY_NODE",
+		8: "TYPE_ID_SCM_OPERATION_NODE",
+		9: "TYPE_ID_SCM_OPERATION_RECORD",
 	}
 	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":           0,
-		"TYPE_ID_SCM_EVENT":             1,
-		"TYPE_ID_SCM_EVENT_BUS":         2,
-		"TYPE_ID_MAP_EMPTY":             3,
-		"TYPE_ID_TOPIC_PUBLISH_RECEIPT": 4,
-		"TYPE_ID_REPOSITORY_NODE":       5,
-		"TYPE_ID_SCM_OPERATION_NODE":    6,
-		"TYPE_ID_SCM_OPERATION_RECORD":  7,
+		"TYPE_ID_UNSPECIFIED":   0,
+		"TYPE_ID_SCM_EVENT":     1,
+		"TYPE_ID_SCM_EVENT_BUS": 2,
+		"TYPE_ID_SCM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD": 3,
+		"TYPE_ID_MAP_EMPTY":             4,
+		"TYPE_ID_TOPIC_PUBLISH_RECEIPT": 5,
+		"TYPE_ID_EVENT_BUS_RECORD_META": 6,
+		"TYPE_ID_REPOSITORY_NODE":       7,
+		"TYPE_ID_SCM_OPERATION_NODE":    8,
+		"TYPE_ID_SCM_OPERATION_RECORD":  9,
 	}
 )
 
@@ -742,6 +749,74 @@ func (x *ScmEventBus) GetNoop() bool {
 	return false
 }
 
+type ScmEventBusEventStreamSubscribeRecord struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Meta          *EventBusRecordMeta    `protobuf:"bytes,1,opt,name=meta,proto3" json:"meta,omitempty"`
+	Payload       *ScmEvent              `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ScmEventBusEventStreamSubscribeRecord) Reset() {
+	*x = ScmEventBusEventStreamSubscribeRecord{}
+	mi := &file_vservices_scm_sensor_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ScmEventBusEventStreamSubscribeRecord) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ScmEventBusEventStreamSubscribeRecord) ProtoMessage() {}
+
+func (x *ScmEventBusEventStreamSubscribeRecord) ProtoReflect() protoreflect.Message {
+	mi := &file_vservices_scm_sensor_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ScmEventBusEventStreamSubscribeRecord.ProtoReflect.Descriptor instead.
+func (*ScmEventBusEventStreamSubscribeRecord) Descriptor() ([]byte, []int) {
+	return file_vservices_scm_sensor_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ScmEventBusEventStreamSubscribeRecord) GetMeta() *EventBusRecordMeta {
+	if x != nil {
+		return x.Meta
+	}
+	return nil
+}
+
+func (x *ScmEventBusEventStreamSubscribeRecord) GetPayload() *ScmEvent {
+	if x != nil {
+		return x.Payload
+	}
+	return nil
+}
+
+func (x *ScmEventBusEventStreamSubscribeRecord) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *ScmEventBusEventStreamSubscribeRecord) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
 type MapEmpty struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -752,7 +827,7 @@ type MapEmpty struct {
 
 func (x *MapEmpty) Reset() {
 	*x = MapEmpty{}
-	mi := &file_vservices_scm_sensor_proto_msgTypes[2]
+	mi := &file_vservices_scm_sensor_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -764,7 +839,7 @@ func (x *MapEmpty) String() string {
 func (*MapEmpty) ProtoMessage() {}
 
 func (x *MapEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_scm_sensor_proto_msgTypes[2]
+	mi := &file_vservices_scm_sensor_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -777,7 +852,7 @@ func (x *MapEmpty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MapEmpty.ProtoReflect.Descriptor instead.
 func (*MapEmpty) Descriptor() ([]byte, []int) {
-	return file_vservices_scm_sensor_proto_rawDescGZIP(), []int{2}
+	return file_vservices_scm_sensor_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *MapEmpty) GetTraceId() string {
@@ -805,7 +880,7 @@ type TopicPublishReceipt struct {
 
 func (x *TopicPublishReceipt) Reset() {
 	*x = TopicPublishReceipt{}
-	mi := &file_vservices_scm_sensor_proto_msgTypes[3]
+	mi := &file_vservices_scm_sensor_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -817,7 +892,7 @@ func (x *TopicPublishReceipt) String() string {
 func (*TopicPublishReceipt) ProtoMessage() {}
 
 func (x *TopicPublishReceipt) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_scm_sensor_proto_msgTypes[3]
+	mi := &file_vservices_scm_sensor_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -830,7 +905,7 @@ func (x *TopicPublishReceipt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TopicPublishReceipt.ProtoReflect.Descriptor instead.
 func (*TopicPublishReceipt) Descriptor() ([]byte, []int) {
-	return file_vservices_scm_sensor_proto_rawDescGZIP(), []int{3}
+	return file_vservices_scm_sensor_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *TopicPublishReceipt) GetPublished() bool {
@@ -848,6 +923,98 @@ func (x *TopicPublishReceipt) GetTraceId() string {
 }
 
 func (x *TopicPublishReceipt) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type EventBusRecordMeta struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Key           []byte                 `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	Topic         string                 `protobuf:"bytes,2,opt,name=topic,proto3" json:"topic,omitempty"`
+	Partition     int32                  `protobuf:"varint,3,opt,name=partition,proto3" json:"partition,omitempty"`
+	Offset        int64                  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`
+	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EventBusRecordMeta) Reset() {
+	*x = EventBusRecordMeta{}
+	mi := &file_vservices_scm_sensor_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EventBusRecordMeta) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EventBusRecordMeta) ProtoMessage() {}
+
+func (x *EventBusRecordMeta) ProtoReflect() protoreflect.Message {
+	mi := &file_vservices_scm_sensor_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EventBusRecordMeta.ProtoReflect.Descriptor instead.
+func (*EventBusRecordMeta) Descriptor() ([]byte, []int) {
+	return file_vservices_scm_sensor_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *EventBusRecordMeta) GetKey() []byte {
+	if x != nil {
+		return x.Key
+	}
+	return nil
+}
+
+func (x *EventBusRecordMeta) GetTopic() string {
+	if x != nil {
+		return x.Topic
+	}
+	return ""
+}
+
+func (x *EventBusRecordMeta) GetPartition() int32 {
+	if x != nil {
+		return x.Partition
+	}
+	return 0
+}
+
+func (x *EventBusRecordMeta) GetOffset() int64 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
+}
+
+func (x *EventBusRecordMeta) GetTimestamp() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Timestamp
+	}
+	return nil
+}
+
+func (x *EventBusRecordMeta) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *EventBusRecordMeta) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
@@ -872,7 +1039,7 @@ type RepositoryNode struct {
 
 func (x *RepositoryNode) Reset() {
 	*x = RepositoryNode{}
-	mi := &file_vservices_scm_sensor_proto_msgTypes[4]
+	mi := &file_vservices_scm_sensor_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -884,7 +1051,7 @@ func (x *RepositoryNode) String() string {
 func (*RepositoryNode) ProtoMessage() {}
 
 func (x *RepositoryNode) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_scm_sensor_proto_msgTypes[4]
+	mi := &file_vservices_scm_sensor_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -897,7 +1064,7 @@ func (x *RepositoryNode) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RepositoryNode.ProtoReflect.Descriptor instead.
 func (*RepositoryNode) Descriptor() ([]byte, []int) {
-	return file_vservices_scm_sensor_proto_rawDescGZIP(), []int{4}
+	return file_vservices_scm_sensor_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *RepositoryNode) GetRepoKey() string {
@@ -982,7 +1149,7 @@ type ScmOperationNode struct {
 
 func (x *ScmOperationNode) Reset() {
 	*x = ScmOperationNode{}
-	mi := &file_vservices_scm_sensor_proto_msgTypes[5]
+	mi := &file_vservices_scm_sensor_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -994,7 +1161,7 @@ func (x *ScmOperationNode) String() string {
 func (*ScmOperationNode) ProtoMessage() {}
 
 func (x *ScmOperationNode) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_scm_sensor_proto_msgTypes[5]
+	mi := &file_vservices_scm_sensor_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1007,7 +1174,7 @@ func (x *ScmOperationNode) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ScmOperationNode.ProtoReflect.Descriptor instead.
 func (*ScmOperationNode) Descriptor() ([]byte, []int) {
-	return file_vservices_scm_sensor_proto_rawDescGZIP(), []int{5}
+	return file_vservices_scm_sensor_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ScmOperationNode) GetEventId() string {
@@ -1107,7 +1274,7 @@ type ScmOperationRecord struct {
 
 func (x *ScmOperationRecord) Reset() {
 	*x = ScmOperationRecord{}
-	mi := &file_vservices_scm_sensor_proto_msgTypes[6]
+	mi := &file_vservices_scm_sensor_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1119,7 +1286,7 @@ func (x *ScmOperationRecord) String() string {
 func (*ScmOperationRecord) ProtoMessage() {}
 
 func (x *ScmOperationRecord) ProtoReflect() protoreflect.Message {
-	mi := &file_vservices_scm_sensor_proto_msgTypes[6]
+	mi := &file_vservices_scm_sensor_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1132,7 +1299,7 @@ func (x *ScmOperationRecord) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ScmOperationRecord.ProtoReflect.Descriptor instead.
 func (*ScmOperationRecord) Descriptor() ([]byte, []int) {
-	return file_vservices_scm_sensor_proto_rawDescGZIP(), []int{6}
+	return file_vservices_scm_sensor_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ScmOperationRecord) GetOwner() string {
@@ -1265,7 +1432,7 @@ var File_vservices_scm_sensor_proto protoreflect.FileDescriptor
 
 const file_vservices_scm_sensor_proto_rawDesc = "" +
 	"\n" +
-	"\x1avservices/scm-sensor.proto\x12\tscmsensor\x1a\x0flibs/spec.proto\x1a\x10libs/trace.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xf5\v\n" +
+	"\x1avservices/scm-sensor.proto\x12\tscmsensor\x1a\x0flibs/spec.proto\x1a\x10libs/trace.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xf5\v\n" +
 	"\bScmEvent\x12\x1b\n" +
 	"\x05email\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x02R\x05email\x12$\n" +
 	"\bevent_id\x18\x02 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x04R\aeventId\x12'\n" +
@@ -1334,12 +1501,25 @@ const file_vservices_scm_sensor_proto_rawDesc = "" +
 	"\fevent_stream\x18\x01 \x01(\v2\x13.scmsensor.ScmEventB\x04\x88\xb6\x18\x01R\veventStream\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x10\xe2\xa9\x1d\f\n" +
-	"\beventbus\x18\x01\";\n" +
+	"\beventbus\x18\x01\"\xba\x01\n" +
+	"%ScmEventBusEventStreamSubscribeRecord\x121\n" +
+	"\x04meta\x18\x01 \x01(\v2\x1d.scmsensor.EventBusRecordMetaR\x04meta\x12-\n" +
+	"\apayload\x18\x02 \x01(\v2\x13.scmsensor.ScmEventR\apayload\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"d\n" +
 	"\x13TopicPublishReceipt\x12\x1c\n" +
 	"\tpublished\x18\x01 \x01(\bR\tpublished\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xdd\x01\n" +
+	"\x12EventBusRecordMeta\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\fR\x03key\x12\x14\n" +
+	"\x05topic\x18\x02 \x01(\tR\x05topic\x12\x1c\n" +
+	"\tpartition\x18\x03 \x01(\x05R\tpartition\x12\x16\n" +
+	"\x06offset\x18\x04 \x01(\x03R\x06offset\x128\n" +
+	"\ttimestamp\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xcd\x04\n" +
 	"\x0eRepositoryNode\x12?\n" +
@@ -1438,16 +1618,18 @@ const file_vservices_scm_sensor_proto_rawDesc = "" +
 	" SCM_OPERATION_TYPE_CREATE_BRANCH\x10\"\x12#\n" +
 	"\x1fSCM_OPERATION_TYPE_LIST_COMMITS\x10#\x12\"\n" +
 	"\x1eSCM_OPERATION_TYPE_SEARCH_CODE\x10$\x12#\n" +
-	"\x1fSCM_OPERATION_TYPE_SEARCH_BLOBS\x10%*\xec\x01\n" +
+	"\x1fSCM_OPERATION_TYPE_SEARCH_BLOBS\x10%*\xc8\x02\n" +
 	"\x06TypeID\x12\x17\n" +
 	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11TYPE_ID_SCM_EVENT\x10\x01\x12\x19\n" +
-	"\x15TYPE_ID_SCM_EVENT_BUS\x10\x02\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10\x03\x12!\n" +
-	"\x1dTYPE_ID_TOPIC_PUBLISH_RECEIPT\x10\x04\x12\x1b\n" +
-	"\x17TYPE_ID_REPOSITORY_NODE\x10\x05\x12\x1e\n" +
-	"\x1aTYPE_ID_SCM_OPERATION_NODE\x10\x06\x12 \n" +
-	"\x1cTYPE_ID_SCM_OPERATION_RECORD\x10\a*\xf5\x02\n" +
+	"\x15TYPE_ID_SCM_EVENT_BUS\x10\x02\x127\n" +
+	"3TYPE_ID_SCM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD\x10\x03\x12\x15\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x10\x04\x12!\n" +
+	"\x1dTYPE_ID_TOPIC_PUBLISH_RECEIPT\x10\x05\x12!\n" +
+	"\x1dTYPE_ID_EVENT_BUS_RECORD_META\x10\x06\x12\x1b\n" +
+	"\x17TYPE_ID_REPOSITORY_NODE\x10\a\x12\x1e\n" +
+	"\x1aTYPE_ID_SCM_OPERATION_NODE\x10\b\x12 \n" +
+	"\x1cTYPE_ID_SCM_OPERATION_RECORD\x10\t*\xf5\x02\n" +
 	"\x1cScmEventBusStateServiceRpcId\x122\n" +
 	".SCM_EVENT_BUS_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x124\n" +
 	"0SCM_EVENT_BUS_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x123\n" +
@@ -1467,10 +1649,10 @@ const file_vservices_scm_sensor_proto_rawDesc = "" +
 	"(TIMESERIES_MUTATION_RPC_ID_ALL_ACCESSORS\x10\x01\x12+\n" +
 	"'TIMESERIES_MUTATION_RPC_ID_ALL_MUTATORS\x10\x02\x12,\n" +
 	"(TIMESERIES_MUTATION_RPC_ID_ALL_EXECUTORS\x10\x03\x12:\n" +
-	"6TIMESERIES_MUTATION_RPC_ID_INSERT_SCM_OPERATION_RECORD\x10\x042\xbe\x01\n" +
+	"6TIMESERIES_MUTATION_RPC_ID_INSERT_SCM_OPERATION_RECORD\x10\x042\xdb\x01\n" +
 	"\x17ScmEventBusStateService\x12K\n" +
-	"\x14PublishToEventStream\x12\x13.scmsensor.ScmEvent\x1a\x1e.scmsensor.TopicPublishReceipt\x12D\n" +
-	"\x16SubscribeToEventStream\x12\x13.trace.TraceRequest\x1a\x13.scmsensor.ScmEvent0\x01\x1a\x10\xe2\x97\"\beventbus\xea\x97\"\x002\xaf\x01\n" +
+	"\x14PublishToEventStream\x12\x13.scmsensor.ScmEvent\x1a\x1e.scmsensor.TopicPublishReceipt\x12a\n" +
+	"\x16SubscribeToEventStream\x12\x13.trace.TraceRequest\x1a0.scmsensor.ScmEventBusEventStreamSubscribeRecord0\x01\x1a\x10\xe2\x97\"\beventbus\xea\x97\"\x002\xaf\x01\n" +
 	"\rGraphMutation\x12I\n" +
 	"\x14InsertRepositoryNode\x12\x19.scmsensor.RepositoryNode\x1a\x16.google.protobuf.Empty\x12M\n" +
 	"\x16InsertScmOperationNode\x12\x1b.scmsensor.ScmOperationNode\x1a\x16.google.protobuf.Empty\x1a\x04\xea\x97\"\x002m\n" +
@@ -1491,48 +1673,54 @@ func file_vservices_scm_sensor_proto_rawDescGZIP() []byte {
 }
 
 var file_vservices_scm_sensor_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
-var file_vservices_scm_sensor_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_vservices_scm_sensor_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_vservices_scm_sensor_proto_goTypes = []any{
-	(ScmProvider)(0),                  // 0: scmsensor.ScmProvider
-	(ScmOperationType)(0),             // 1: scmsensor.ScmOperationType
-	(TypeID)(0),                       // 2: scmsensor.TypeID
-	(ScmEventBusStateServiceRpcId)(0), // 3: scmsensor.ScmEventBusStateServiceRpcId
-	(GraphMutationRpcId)(0),           // 4: scmsensor.GraphMutationRpcId
-	(TimeseriesMutationRpcId)(0),      // 5: scmsensor.TimeseriesMutationRpcId
-	(*ScmEvent)(nil),                  // 6: scmsensor.ScmEvent
-	(*ScmEventBus)(nil),               // 7: scmsensor.ScmEventBus
-	(*MapEmpty)(nil),                  // 8: scmsensor.MapEmpty
-	(*TopicPublishReceipt)(nil),       // 9: scmsensor.TopicPublishReceipt
-	(*RepositoryNode)(nil),            // 10: scmsensor.RepositoryNode
-	(*ScmOperationNode)(nil),          // 11: scmsensor.ScmOperationNode
-	(*ScmOperationRecord)(nil),        // 12: scmsensor.ScmOperationRecord
-	(*trace.TraceRequest)(nil),        // 13: trace.TraceRequest
-	(*emptypb.Empty)(nil),             // 14: google.protobuf.Empty
+	(ScmProvider)(0),                              // 0: scmsensor.ScmProvider
+	(ScmOperationType)(0),                         // 1: scmsensor.ScmOperationType
+	(TypeID)(0),                                   // 2: scmsensor.TypeID
+	(ScmEventBusStateServiceRpcId)(0),             // 3: scmsensor.ScmEventBusStateServiceRpcId
+	(GraphMutationRpcId)(0),                       // 4: scmsensor.GraphMutationRpcId
+	(TimeseriesMutationRpcId)(0),                  // 5: scmsensor.TimeseriesMutationRpcId
+	(*ScmEvent)(nil),                              // 6: scmsensor.ScmEvent
+	(*ScmEventBus)(nil),                           // 7: scmsensor.ScmEventBus
+	(*ScmEventBusEventStreamSubscribeRecord)(nil), // 8: scmsensor.ScmEventBusEventStreamSubscribeRecord
+	(*MapEmpty)(nil),                              // 9: scmsensor.MapEmpty
+	(*TopicPublishReceipt)(nil),                   // 10: scmsensor.TopicPublishReceipt
+	(*EventBusRecordMeta)(nil),                    // 11: scmsensor.EventBusRecordMeta
+	(*RepositoryNode)(nil),                        // 12: scmsensor.RepositoryNode
+	(*ScmOperationNode)(nil),                      // 13: scmsensor.ScmOperationNode
+	(*ScmOperationRecord)(nil),                    // 14: scmsensor.ScmOperationRecord
+	(*timestamppb.Timestamp)(nil),                 // 15: google.protobuf.Timestamp
+	(*trace.TraceRequest)(nil),                    // 16: trace.TraceRequest
+	(*emptypb.Empty)(nil),                         // 17: google.protobuf.Empty
 }
 var file_vservices_scm_sensor_proto_depIdxs = []int32{
 	0,  // 0: scmsensor.ScmEvent.provider:type_name -> scmsensor.ScmProvider
 	1,  // 1: scmsensor.ScmEvent.operation:type_name -> scmsensor.ScmOperationType
 	6,  // 2: scmsensor.ScmEventBus.event_stream:type_name -> scmsensor.ScmEvent
-	0,  // 3: scmsensor.RepositoryNode.provider:type_name -> scmsensor.ScmProvider
-	0,  // 4: scmsensor.ScmOperationNode.provider:type_name -> scmsensor.ScmProvider
-	1,  // 5: scmsensor.ScmOperationNode.operation:type_name -> scmsensor.ScmOperationType
-	0,  // 6: scmsensor.ScmOperationRecord.provider:type_name -> scmsensor.ScmProvider
-	1,  // 7: scmsensor.ScmOperationRecord.operation:type_name -> scmsensor.ScmOperationType
-	6,  // 8: scmsensor.ScmEventBusStateService.PublishToEventStream:input_type -> scmsensor.ScmEvent
-	13, // 9: scmsensor.ScmEventBusStateService.SubscribeToEventStream:input_type -> trace.TraceRequest
-	10, // 10: scmsensor.GraphMutation.InsertRepositoryNode:input_type -> scmsensor.RepositoryNode
-	11, // 11: scmsensor.GraphMutation.InsertScmOperationNode:input_type -> scmsensor.ScmOperationNode
-	12, // 12: scmsensor.TimeseriesMutation.InsertScmOperationRecord:input_type -> scmsensor.ScmOperationRecord
-	9,  // 13: scmsensor.ScmEventBusStateService.PublishToEventStream:output_type -> scmsensor.TopicPublishReceipt
-	6,  // 14: scmsensor.ScmEventBusStateService.SubscribeToEventStream:output_type -> scmsensor.ScmEvent
-	14, // 15: scmsensor.GraphMutation.InsertRepositoryNode:output_type -> google.protobuf.Empty
-	14, // 16: scmsensor.GraphMutation.InsertScmOperationNode:output_type -> google.protobuf.Empty
-	14, // 17: scmsensor.TimeseriesMutation.InsertScmOperationRecord:output_type -> google.protobuf.Empty
-	13, // [13:18] is the sub-list for method output_type
-	8,  // [8:13] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	11, // 3: scmsensor.ScmEventBusEventStreamSubscribeRecord.meta:type_name -> scmsensor.EventBusRecordMeta
+	6,  // 4: scmsensor.ScmEventBusEventStreamSubscribeRecord.payload:type_name -> scmsensor.ScmEvent
+	15, // 5: scmsensor.EventBusRecordMeta.timestamp:type_name -> google.protobuf.Timestamp
+	0,  // 6: scmsensor.RepositoryNode.provider:type_name -> scmsensor.ScmProvider
+	0,  // 7: scmsensor.ScmOperationNode.provider:type_name -> scmsensor.ScmProvider
+	1,  // 8: scmsensor.ScmOperationNode.operation:type_name -> scmsensor.ScmOperationType
+	0,  // 9: scmsensor.ScmOperationRecord.provider:type_name -> scmsensor.ScmProvider
+	1,  // 10: scmsensor.ScmOperationRecord.operation:type_name -> scmsensor.ScmOperationType
+	6,  // 11: scmsensor.ScmEventBusStateService.PublishToEventStream:input_type -> scmsensor.ScmEvent
+	16, // 12: scmsensor.ScmEventBusStateService.SubscribeToEventStream:input_type -> trace.TraceRequest
+	12, // 13: scmsensor.GraphMutation.InsertRepositoryNode:input_type -> scmsensor.RepositoryNode
+	13, // 14: scmsensor.GraphMutation.InsertScmOperationNode:input_type -> scmsensor.ScmOperationNode
+	14, // 15: scmsensor.TimeseriesMutation.InsertScmOperationRecord:input_type -> scmsensor.ScmOperationRecord
+	10, // 16: scmsensor.ScmEventBusStateService.PublishToEventStream:output_type -> scmsensor.TopicPublishReceipt
+	8,  // 17: scmsensor.ScmEventBusStateService.SubscribeToEventStream:output_type -> scmsensor.ScmEventBusEventStreamSubscribeRecord
+	17, // 18: scmsensor.GraphMutation.InsertRepositoryNode:output_type -> google.protobuf.Empty
+	17, // 19: scmsensor.GraphMutation.InsertScmOperationNode:output_type -> google.protobuf.Empty
+	17, // 20: scmsensor.TimeseriesMutation.InsertScmOperationRecord:output_type -> google.protobuf.Empty
+	16, // [16:21] is the sub-list for method output_type
+	11, // [11:16] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_vservices_scm_sensor_proto_init() }
@@ -1546,7 +1734,7 @@ func file_vservices_scm_sensor_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_vservices_scm_sensor_proto_rawDesc), len(file_vservices_scm_sensor_proto_rawDesc)),
 			NumEnums:      6,
-			NumMessages:   7,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   3,
 		},

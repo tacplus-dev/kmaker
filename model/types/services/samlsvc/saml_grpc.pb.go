@@ -35,19 +35,19 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Inbound_ACS_FullMethodName       = "/samlsvc.Inbound/ACS"
-	Inbound_Authorize_FullMethodName = "/samlsvc.Inbound/Authorize"
+	Inbound_MintAcsTokens_FullMethodName = "/samlsvc.Inbound/MintAcsTokens"
+	Inbound_Authorize_FullMethodName     = "/samlsvc.Inbound/Authorize"
 )
 
 // InboundClient is the client API for Inbound service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type InboundClient interface {
-	// ACS (AssertionConsumerService) accepts an inbound SAML assertion from an
-	// external IDP, verifies it, and mints a Cavalier JWT.
+	// MintAcsTokens accepts an inbound SAML assertion from an external IDP,
+	// verifies it, and mints Cavalier tokens.
 	// This is the POST endpoint that external IDPs redirect users to.
 	// The SAMLResponse form field contains the base64-encoded signed XML.
-	ACS(ctx context.Context, in *AcsRequest, opts ...grpc.CallOption) (*AcsResponse, error)
+	MintAcsTokens(ctx context.Context, in *AcsRequest, opts ...grpc.CallOption) (*AcsResponse, error)
 	// Authorize initiates a SAML SP-initiated flow by building an AuthnRequest
 	// and returning the IDP redirect URL.
 	Authorize(ctx context.Context, in *SamlAuthorizeRequest, opts ...grpc.CallOption) (*SamlAuthorizeResponse, error)
@@ -61,10 +61,10 @@ func NewInboundClient(cc grpc.ClientConnInterface) InboundClient {
 	return &inboundClient{cc}
 }
 
-func (c *inboundClient) ACS(ctx context.Context, in *AcsRequest, opts ...grpc.CallOption) (*AcsResponse, error) {
+func (c *inboundClient) MintAcsTokens(ctx context.Context, in *AcsRequest, opts ...grpc.CallOption) (*AcsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AcsResponse)
-	err := c.cc.Invoke(ctx, Inbound_ACS_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Inbound_MintAcsTokens_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -85,11 +85,11 @@ func (c *inboundClient) Authorize(ctx context.Context, in *SamlAuthorizeRequest,
 // All implementations must embed UnimplementedInboundServer
 // for forward compatibility.
 type InboundServer interface {
-	// ACS (AssertionConsumerService) accepts an inbound SAML assertion from an
-	// external IDP, verifies it, and mints a Cavalier JWT.
+	// MintAcsTokens accepts an inbound SAML assertion from an external IDP,
+	// verifies it, and mints Cavalier tokens.
 	// This is the POST endpoint that external IDPs redirect users to.
 	// The SAMLResponse form field contains the base64-encoded signed XML.
-	ACS(context.Context, *AcsRequest) (*AcsResponse, error)
+	MintAcsTokens(context.Context, *AcsRequest) (*AcsResponse, error)
 	// Authorize initiates a SAML SP-initiated flow by building an AuthnRequest
 	// and returning the IDP redirect URL.
 	Authorize(context.Context, *SamlAuthorizeRequest) (*SamlAuthorizeResponse, error)
@@ -103,8 +103,8 @@ type InboundServer interface {
 // pointer dereference when methods are called.
 type UnimplementedInboundServer struct{}
 
-func (UnimplementedInboundServer) ACS(context.Context, *AcsRequest) (*AcsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ACS not implemented")
+func (UnimplementedInboundServer) MintAcsTokens(context.Context, *AcsRequest) (*AcsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MintAcsTokens not implemented")
 }
 func (UnimplementedInboundServer) Authorize(context.Context, *SamlAuthorizeRequest) (*SamlAuthorizeResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Authorize not implemented")
@@ -130,20 +130,20 @@ func RegisterInboundServer(s grpc.ServiceRegistrar, srv InboundServer) {
 	s.RegisterService(&Inbound_ServiceDesc, srv)
 }
 
-func _Inbound_ACS_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Inbound_MintAcsTokens_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AcsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(InboundServer).ACS(ctx, in)
+		return srv.(InboundServer).MintAcsTokens(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Inbound_ACS_FullMethodName,
+		FullMethod: Inbound_MintAcsTokens_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(InboundServer).ACS(ctx, req.(*AcsRequest))
+		return srv.(InboundServer).MintAcsTokens(ctx, req.(*AcsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -174,8 +174,8 @@ var Inbound_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*InboundServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ACS",
-			Handler:    _Inbound_ACS_Handler,
+			MethodName: "MintAcsTokens",
+			Handler:    _Inbound_MintAcsTokens_Handler,
 		},
 		{
 			MethodName: "Authorize",
@@ -341,8 +341,8 @@ var Outbound_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	Metadata_IdpMetadata_FullMethodName      = "/samlsvc.Metadata/IdpMetadata"
-	Metadata_SpMetadata_FullMethodName       = "/samlsvc.Metadata/SpMetadata"
+	Metadata_GetIdpMetadata_FullMethodName   = "/samlsvc.Metadata/GetIdpMetadata"
+	Metadata_GetSpMetadata_FullMethodName    = "/samlsvc.Metadata/GetSpMetadata"
 	Metadata_GetIdpDescriptor_FullMethodName = "/samlsvc.Metadata/GetIdpDescriptor"
 )
 
@@ -350,12 +350,12 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MetadataClient interface {
-	// IdpMetadata returns this entity's EntityDescriptor XML for the IDP role.
+	// GetIdpMetadata returns this entity's EntityDescriptor XML for the IDP role.
 	// External SPs fetch this to discover our SSO endpoints and signing cert.
-	IdpMetadata(ctx context.Context, in *MetadataRequest, opts ...grpc.CallOption) (*MetadataResponse, error)
-	// SpMetadata returns this entity's EntityDescriptor XML for the SP role.
+	GetIdpMetadata(ctx context.Context, in *MetadataRequest, opts ...grpc.CallOption) (*MetadataResponse, error)
+	// GetSpMetadata returns this entity's EntityDescriptor XML for the SP role.
 	// External IDPs fetch this to discover our ACS endpoints and entity ID.
-	SpMetadata(ctx context.Context, in *MetadataRequest, opts ...grpc.CallOption) (*MetadataResponse, error)
+	GetSpMetadata(ctx context.Context, in *MetadataRequest, opts ...grpc.CallOption) (*MetadataResponse, error)
 	// GetIdpDescriptor returns the parsed EntityDescriptor for a named inbound IDP.
 	// Returns the cached entry if available, or fetches and caches it now.
 	GetIdpDescriptor(ctx context.Context, in *GetDescriptorRequest, opts ...grpc.CallOption) (*GetDescriptorResponse, error)
@@ -369,20 +369,20 @@ func NewMetadataClient(cc grpc.ClientConnInterface) MetadataClient {
 	return &metadataClient{cc}
 }
 
-func (c *metadataClient) IdpMetadata(ctx context.Context, in *MetadataRequest, opts ...grpc.CallOption) (*MetadataResponse, error) {
+func (c *metadataClient) GetIdpMetadata(ctx context.Context, in *MetadataRequest, opts ...grpc.CallOption) (*MetadataResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MetadataResponse)
-	err := c.cc.Invoke(ctx, Metadata_IdpMetadata_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Metadata_GetIdpMetadata_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *metadataClient) SpMetadata(ctx context.Context, in *MetadataRequest, opts ...grpc.CallOption) (*MetadataResponse, error) {
+func (c *metadataClient) GetSpMetadata(ctx context.Context, in *MetadataRequest, opts ...grpc.CallOption) (*MetadataResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MetadataResponse)
-	err := c.cc.Invoke(ctx, Metadata_SpMetadata_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Metadata_GetSpMetadata_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -403,12 +403,12 @@ func (c *metadataClient) GetIdpDescriptor(ctx context.Context, in *GetDescriptor
 // All implementations must embed UnimplementedMetadataServer
 // for forward compatibility.
 type MetadataServer interface {
-	// IdpMetadata returns this entity's EntityDescriptor XML for the IDP role.
+	// GetIdpMetadata returns this entity's EntityDescriptor XML for the IDP role.
 	// External SPs fetch this to discover our SSO endpoints and signing cert.
-	IdpMetadata(context.Context, *MetadataRequest) (*MetadataResponse, error)
-	// SpMetadata returns this entity's EntityDescriptor XML for the SP role.
+	GetIdpMetadata(context.Context, *MetadataRequest) (*MetadataResponse, error)
+	// GetSpMetadata returns this entity's EntityDescriptor XML for the SP role.
 	// External IDPs fetch this to discover our ACS endpoints and entity ID.
-	SpMetadata(context.Context, *MetadataRequest) (*MetadataResponse, error)
+	GetSpMetadata(context.Context, *MetadataRequest) (*MetadataResponse, error)
 	// GetIdpDescriptor returns the parsed EntityDescriptor for a named inbound IDP.
 	// Returns the cached entry if available, or fetches and caches it now.
 	GetIdpDescriptor(context.Context, *GetDescriptorRequest) (*GetDescriptorResponse, error)
@@ -422,11 +422,11 @@ type MetadataServer interface {
 // pointer dereference when methods are called.
 type UnimplementedMetadataServer struct{}
 
-func (UnimplementedMetadataServer) IdpMetadata(context.Context, *MetadataRequest) (*MetadataResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method IdpMetadata not implemented")
+func (UnimplementedMetadataServer) GetIdpMetadata(context.Context, *MetadataRequest) (*MetadataResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetIdpMetadata not implemented")
 }
-func (UnimplementedMetadataServer) SpMetadata(context.Context, *MetadataRequest) (*MetadataResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method SpMetadata not implemented")
+func (UnimplementedMetadataServer) GetSpMetadata(context.Context, *MetadataRequest) (*MetadataResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetSpMetadata not implemented")
 }
 func (UnimplementedMetadataServer) GetIdpDescriptor(context.Context, *GetDescriptorRequest) (*GetDescriptorResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetIdpDescriptor not implemented")
@@ -452,38 +452,38 @@ func RegisterMetadataServer(s grpc.ServiceRegistrar, srv MetadataServer) {
 	s.RegisterService(&Metadata_ServiceDesc, srv)
 }
 
-func _Metadata_IdpMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Metadata_GetIdpMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MetadataRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MetadataServer).IdpMetadata(ctx, in)
+		return srv.(MetadataServer).GetIdpMetadata(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Metadata_IdpMetadata_FullMethodName,
+		FullMethod: Metadata_GetIdpMetadata_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MetadataServer).IdpMetadata(ctx, req.(*MetadataRequest))
+		return srv.(MetadataServer).GetIdpMetadata(ctx, req.(*MetadataRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Metadata_SpMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Metadata_GetSpMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MetadataRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MetadataServer).SpMetadata(ctx, in)
+		return srv.(MetadataServer).GetSpMetadata(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Metadata_SpMetadata_FullMethodName,
+		FullMethod: Metadata_GetSpMetadata_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MetadataServer).SpMetadata(ctx, req.(*MetadataRequest))
+		return srv.(MetadataServer).GetSpMetadata(ctx, req.(*MetadataRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -514,12 +514,12 @@ var Metadata_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*MetadataServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "IdpMetadata",
-			Handler:    _Metadata_IdpMetadata_Handler,
+			MethodName: "GetIdpMetadata",
+			Handler:    _Metadata_GetIdpMetadata_Handler,
 		},
 		{
-			MethodName: "SpMetadata",
-			Handler:    _Metadata_SpMetadata_Handler,
+			MethodName: "GetSpMetadata",
+			Handler:    _Metadata_GetSpMetadata_Handler,
 		},
 		{
 			MethodName: "GetIdpDescriptor",

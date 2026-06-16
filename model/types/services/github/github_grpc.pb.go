@@ -36,24 +36,24 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Proxy_Proxy_FullMethodName                = "/github.Proxy/Proxy"
-	Proxy_GetRepository_FullMethodName        = "/github.Proxy/GetRepository"
-	Proxy_ListIssues_FullMethodName           = "/github.Proxy/ListIssues"
-	Proxy_GetIssue_FullMethodName             = "/github.Proxy/GetIssue"
-	Proxy_CreateIssue_FullMethodName          = "/github.Proxy/CreateIssue"
-	Proxy_UpdateIssue_FullMethodName          = "/github.Proxy/UpdateIssue"
-	Proxy_CreateIssueComment_FullMethodName   = "/github.Proxy/CreateIssueComment"
-	Proxy_ListPullRequests_FullMethodName     = "/github.Proxy/ListPullRequests"
-	Proxy_GetPullRequest_FullMethodName       = "/github.Proxy/GetPullRequest"
-	Proxy_CreatePullRequest_FullMethodName    = "/github.Proxy/CreatePullRequest"
-	Proxy_MergePullRequest_FullMethodName     = "/github.Proxy/MergePullRequest"
-	Proxy_ListPullRequestFiles_FullMethodName = "/github.Proxy/ListPullRequestFiles"
-	Proxy_GetContent_FullMethodName           = "/github.Proxy/GetContent"
-	Proxy_CreateOrUpdateFile_FullMethodName   = "/github.Proxy/CreateOrUpdateFile"
-	Proxy_ListBranches_FullMethodName         = "/github.Proxy/ListBranches"
-	Proxy_CreateBranch_FullMethodName         = "/github.Proxy/CreateBranch"
-	Proxy_ListCommits_FullMethodName          = "/github.Proxy/ListCommits"
-	Proxy_SearchCode_FullMethodName           = "/github.Proxy/SearchCode"
+	Proxy_Proxy_FullMethodName                 = "/github.Proxy/Proxy"
+	Proxy_GetRepository_FullMethodName         = "/github.Proxy/GetRepository"
+	Proxy_ListIssues_FullMethodName            = "/github.Proxy/ListIssues"
+	Proxy_GetIssue_FullMethodName              = "/github.Proxy/GetIssue"
+	Proxy_CreateIssue_FullMethodName           = "/github.Proxy/CreateIssue"
+	Proxy_UpdateIssue_FullMethodName           = "/github.Proxy/UpdateIssue"
+	Proxy_CreateIssueComment_FullMethodName    = "/github.Proxy/CreateIssueComment"
+	Proxy_ListPullRequests_FullMethodName      = "/github.Proxy/ListPullRequests"
+	Proxy_GetPullRequest_FullMethodName        = "/github.Proxy/GetPullRequest"
+	Proxy_CreatePullRequest_FullMethodName     = "/github.Proxy/CreatePullRequest"
+	Proxy_MergePullRequest_FullMethodName      = "/github.Proxy/MergePullRequest"
+	Proxy_ListPullRequestFiles_FullMethodName  = "/github.Proxy/ListPullRequestFiles"
+	Proxy_GetContent_FullMethodName            = "/github.Proxy/GetContent"
+	Proxy_CreateOrUpdateFile_FullMethodName    = "/github.Proxy/CreateOrUpdateFile"
+	Proxy_ListBranches_FullMethodName          = "/github.Proxy/ListBranches"
+	Proxy_CreateBranch_FullMethodName          = "/github.Proxy/CreateBranch"
+	Proxy_ListCommits_FullMethodName           = "/github.Proxy/ListCommits"
+	Proxy_ListCodeSearchResults_FullMethodName = "/github.Proxy/ListCodeSearchResults"
 )
 
 // ProxyClient is the client API for Proxy service.
@@ -86,7 +86,7 @@ type ProxyClient interface {
 	// Commits
 	ListCommits(ctx context.Context, in *ListCommitsRequest, opts ...grpc.CallOption) (*ListCommitsResponse, error)
 	// Search
-	SearchCode(ctx context.Context, in *SearchCodeRequest, opts ...grpc.CallOption) (*SearchCodeResponse, error)
+	ListCodeSearchResults(ctx context.Context, in *SearchCodeRequest, opts ...grpc.CallOption) (*SearchCodeResponse, error)
 }
 
 type proxyClient struct {
@@ -267,10 +267,10 @@ func (c *proxyClient) ListCommits(ctx context.Context, in *ListCommitsRequest, o
 	return out, nil
 }
 
-func (c *proxyClient) SearchCode(ctx context.Context, in *SearchCodeRequest, opts ...grpc.CallOption) (*SearchCodeResponse, error) {
+func (c *proxyClient) ListCodeSearchResults(ctx context.Context, in *SearchCodeRequest, opts ...grpc.CallOption) (*SearchCodeResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SearchCodeResponse)
-	err := c.cc.Invoke(ctx, Proxy_SearchCode_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Proxy_ListCodeSearchResults_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -307,7 +307,7 @@ type ProxyServer interface {
 	// Commits
 	ListCommits(context.Context, *ListCommitsRequest) (*ListCommitsResponse, error)
 	// Search
-	SearchCode(context.Context, *SearchCodeRequest) (*SearchCodeResponse, error)
+	ListCodeSearchResults(context.Context, *SearchCodeRequest) (*SearchCodeResponse, error)
 	mustEmbedUnimplementedProxyServer()
 }
 
@@ -369,8 +369,8 @@ func (UnimplementedProxyServer) CreateBranch(context.Context, *CreateBranchReque
 func (UnimplementedProxyServer) ListCommits(context.Context, *ListCommitsRequest) (*ListCommitsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListCommits not implemented")
 }
-func (UnimplementedProxyServer) SearchCode(context.Context, *SearchCodeRequest) (*SearchCodeResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method SearchCode not implemented")
+func (UnimplementedProxyServer) ListCodeSearchResults(context.Context, *SearchCodeRequest) (*SearchCodeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListCodeSearchResults not implemented")
 }
 func (UnimplementedProxyServer) mustEmbedUnimplementedProxyServer() {}
 func (UnimplementedProxyServer) testEmbeddedByValue()               {}
@@ -699,20 +699,20 @@ func _Proxy_ListCommits_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Proxy_SearchCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Proxy_ListCodeSearchResults_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SearchCodeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProxyServer).SearchCode(ctx, in)
+		return srv.(ProxyServer).ListCodeSearchResults(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Proxy_SearchCode_FullMethodName,
+		FullMethod: Proxy_ListCodeSearchResults_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProxyServer).SearchCode(ctx, req.(*SearchCodeRequest))
+		return srv.(ProxyServer).ListCodeSearchResults(ctx, req.(*SearchCodeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -793,8 +793,8 @@ var Proxy_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Proxy_ListCommits_Handler,
 		},
 		{
-			MethodName: "SearchCode",
-			Handler:    _Proxy_SearchCode_Handler,
+			MethodName: "ListCodeSearchResults",
+			Handler:    _Proxy_ListCodeSearchResults_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

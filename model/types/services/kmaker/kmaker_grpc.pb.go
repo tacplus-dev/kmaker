@@ -36,16 +36,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Kmaker_SignKernelCert_FullMethodName = "/kmaker.Kmaker/SignKernelCert"
+	Kmaker_MintKernelCert_FullMethodName = "/kmaker.Kmaker/MintKernelCert"
 )
 
 // KmakerClient is the client API for Kmaker service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type KmakerClient interface {
-	// SignKernelCert signs a kernel certificate after validating the Kubernetes
+	// MintKernelCert issues a kernel certificate after validating the Kubernetes
 	// projected service account token with the Kubernetes TokenReview API.
-	SignKernelCert(ctx context.Context, in *SignKernelCertRequest, opts ...grpc.CallOption) (*x509.X509CertChain, error)
+	MintKernelCert(ctx context.Context, in *MintKernelCertRequest, opts ...grpc.CallOption) (*x509.X509CertChain, error)
 }
 
 type kmakerClient struct {
@@ -56,10 +56,10 @@ func NewKmakerClient(cc grpc.ClientConnInterface) KmakerClient {
 	return &kmakerClient{cc}
 }
 
-func (c *kmakerClient) SignKernelCert(ctx context.Context, in *SignKernelCertRequest, opts ...grpc.CallOption) (*x509.X509CertChain, error) {
+func (c *kmakerClient) MintKernelCert(ctx context.Context, in *MintKernelCertRequest, opts ...grpc.CallOption) (*x509.X509CertChain, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(x509.X509CertChain)
-	err := c.cc.Invoke(ctx, Kmaker_SignKernelCert_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Kmaker_MintKernelCert_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -70,9 +70,9 @@ func (c *kmakerClient) SignKernelCert(ctx context.Context, in *SignKernelCertReq
 // All implementations must embed UnimplementedKmakerServer
 // for forward compatibility.
 type KmakerServer interface {
-	// SignKernelCert signs a kernel certificate after validating the Kubernetes
+	// MintKernelCert issues a kernel certificate after validating the Kubernetes
 	// projected service account token with the Kubernetes TokenReview API.
-	SignKernelCert(context.Context, *SignKernelCertRequest) (*x509.X509CertChain, error)
+	MintKernelCert(context.Context, *MintKernelCertRequest) (*x509.X509CertChain, error)
 	mustEmbedUnimplementedKmakerServer()
 }
 
@@ -83,8 +83,8 @@ type KmakerServer interface {
 // pointer dereference when methods are called.
 type UnimplementedKmakerServer struct{}
 
-func (UnimplementedKmakerServer) SignKernelCert(context.Context, *SignKernelCertRequest) (*x509.X509CertChain, error) {
-	return nil, status.Error(codes.Unimplemented, "method SignKernelCert not implemented")
+func (UnimplementedKmakerServer) MintKernelCert(context.Context, *MintKernelCertRequest) (*x509.X509CertChain, error) {
+	return nil, status.Error(codes.Unimplemented, "method MintKernelCert not implemented")
 }
 func (UnimplementedKmakerServer) mustEmbedUnimplementedKmakerServer() {}
 func (UnimplementedKmakerServer) testEmbeddedByValue()                {}
@@ -107,20 +107,20 @@ func RegisterKmakerServer(s grpc.ServiceRegistrar, srv KmakerServer) {
 	s.RegisterService(&Kmaker_ServiceDesc, srv)
 }
 
-func _Kmaker_SignKernelCert_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SignKernelCertRequest)
+func _Kmaker_MintKernelCert_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MintKernelCertRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KmakerServer).SignKernelCert(ctx, in)
+		return srv.(KmakerServer).MintKernelCert(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Kmaker_SignKernelCert_FullMethodName,
+		FullMethod: Kmaker_MintKernelCert_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KmakerServer).SignKernelCert(ctx, req.(*SignKernelCertRequest))
+		return srv.(KmakerServer).MintKernelCert(ctx, req.(*MintKernelCertRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -133,8 +133,8 @@ var Kmaker_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*KmakerServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SignKernelCert",
-			Handler:    _Kmaker_SignKernelCert_Handler,
+			MethodName: "MintKernelCert",
+			Handler:    _Kmaker_MintKernelCert_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

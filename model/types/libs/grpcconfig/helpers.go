@@ -28,6 +28,7 @@ import (
 	"strings"
 
 	"github.com/pelletier/go-toml/v2"
+	diskstore "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/diskstore"
 	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/errors"
 	host "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/host"
 	key "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/key"
@@ -172,453 +173,6 @@ func MemberStatusToSpecName(v MemberStatus) string {
 	}
 }
 
-// TypeIDValues returns all valid TypeID values (excluding UNDEFINED)
-func TypeIDValues() []TypeID {
-	return []TypeID{
-		TypeID_TYPE_ID_CONFIG,
-		TypeID_TYPE_ID_LOG_MESSAGE,
-		TypeID_TYPE_ID_CLUSTER_MEMBER,
-		TypeID_TYPE_ID_CLUSTER_INFO,
-		TypeID_TYPE_ID_CLUSTER_STATE,
-		TypeID_TYPE_ID_PING_RESPONSE,
-		TypeID_TYPE_ID_SERVICE_CONFIG_STATE,
-		TypeID_TYPE_ID_MAP_EMPTY,
-	}
-}
-
-// TypeIDStringValues returns all valid TypeID names as strings
-func TypeIDStringValues() []string {
-	return []string{"config", "log-message", "cluster-member", "cluster-info", "cluster-state", "ping-response", "service-config-state", "map-empty"}
-}
-
-// ParseTypeID converts a string to a TypeID enum value
-// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseTypeID(s string) (TypeID, error) {
-	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
-	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
-	switch normalized {
-	case "":
-		return TypeID_TYPE_ID_UNSPECIFIED, nil
-	case "config", "type-id-config":
-		return TypeID_TYPE_ID_CONFIG, nil
-	case "log-message", "type-id-log-message":
-		return TypeID_TYPE_ID_LOG_MESSAGE, nil
-	case "cluster-member", "type-id-cluster-member":
-		return TypeID_TYPE_ID_CLUSTER_MEMBER, nil
-	case "cluster-info", "type-id-cluster-info":
-		return TypeID_TYPE_ID_CLUSTER_INFO, nil
-	case "cluster-state", "type-id-cluster-state":
-		return TypeID_TYPE_ID_CLUSTER_STATE, nil
-	case "ping-response", "type-id-ping-response":
-		return TypeID_TYPE_ID_PING_RESPONSE, nil
-	case "service-config-state", "type-id-service-config-state":
-		return TypeID_TYPE_ID_SERVICE_CONFIG_STATE, nil
-	case "map-empty", "type-id-map-empty":
-		return TypeID_TYPE_ID_MAP_EMPTY, nil
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid typeid %s, expecting one of: %v", s, TypeIDStringValues())
-	}
-}
-
-// ParseTypeIDs converts a comma-separated string to a slice of TypeID enum values
-// Returns an error if any value is invalid
-func ParseTypeIDs(s string) ([]TypeID, error) {
-	if s == "" {
-		return nil, nil
-	}
-	parts := strings.Split(s, ",")
-	result := make([]TypeID, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed == "" {
-			continue
-		}
-		val, err := ParseTypeID(trimmed)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, val)
-	}
-	return result, nil
-}
-
-// TypeIDToString converts a TypeID to its lowercase string representation
-func TypeIDToString(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_CONFIG:
-		return "config"
-	case TypeID_TYPE_ID_LOG_MESSAGE:
-		return "log-message"
-	case TypeID_TYPE_ID_CLUSTER_MEMBER:
-		return "cluster-member"
-	case TypeID_TYPE_ID_CLUSTER_INFO:
-		return "cluster-info"
-	case TypeID_TYPE_ID_CLUSTER_STATE:
-		return "cluster-state"
-	case TypeID_TYPE_ID_PING_RESPONSE:
-		return "ping-response"
-	case TypeID_TYPE_ID_SERVICE_CONFIG_STATE:
-		return "service-config-state"
-	case TypeID_TYPE_ID_MAP_EMPTY:
-		return "map-empty"
-	default:
-		return ""
-	}
-}
-
-// ParseTypeIDLiberal parses a TypeID liberally, accepting:
-// - Integer values (as string or int)
-// - Enum names in any case
-// - RFC-compliant JSON names
-func ParseTypeIDLiberal(s string) TypeID {
-	if s == "" {
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-	// Try parsing as integer
-	if num, err := strconv.Atoi(s); err == nil {
-		return TypeID(num)
-	}
-	// Normalize and try parsing
-	normalized := strings.ToLower(strings.TrimSpace(s))
-	normalized = strings.ReplaceAll(normalized, "_", "-")
-	normalized = strings.ReplaceAll(normalized, " ", "-")
-	switch normalized {
-	case "config", "type-id-config":
-		return TypeID_TYPE_ID_CONFIG
-	case "log-message", "type-id-log-message":
-		return TypeID_TYPE_ID_LOG_MESSAGE
-	case "cluster-member", "type-id-cluster-member":
-		return TypeID_TYPE_ID_CLUSTER_MEMBER
-	case "cluster-info", "type-id-cluster-info":
-		return TypeID_TYPE_ID_CLUSTER_INFO
-	case "cluster-state", "type-id-cluster-state":
-		return TypeID_TYPE_ID_CLUSTER_STATE
-	case "ping-response", "type-id-ping-response":
-		return TypeID_TYPE_ID_PING_RESPONSE
-	case "service-config-state", "type-id-service-config-state":
-		return TypeID_TYPE_ID_SERVICE_CONFIG_STATE
-	case "map-empty", "type-id-map-empty":
-		return TypeID_TYPE_ID_MAP_EMPTY
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-}
-
-// TypeIDToSpecName converts a TypeID to its canonical protobuf spec name
-func TypeIDToSpecName(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_UNSPECIFIED:
-		return "TYPE_ID_UNSPECIFIED"
-	case TypeID_TYPE_ID_CONFIG:
-		return "TYPE_ID_CONFIG"
-	case TypeID_TYPE_ID_LOG_MESSAGE:
-		return "TYPE_ID_LOG_MESSAGE"
-	case TypeID_TYPE_ID_CLUSTER_MEMBER:
-		return "TYPE_ID_CLUSTER_MEMBER"
-	case TypeID_TYPE_ID_CLUSTER_INFO:
-		return "TYPE_ID_CLUSTER_INFO"
-	case TypeID_TYPE_ID_CLUSTER_STATE:
-		return "TYPE_ID_CLUSTER_STATE"
-	case TypeID_TYPE_ID_PING_RESPONSE:
-		return "TYPE_ID_PING_RESPONSE"
-	case TypeID_TYPE_ID_SERVICE_CONFIG_STATE:
-		return "TYPE_ID_SERVICE_CONFIG_STATE"
-	case TypeID_TYPE_ID_MAP_EMPTY:
-		return "TYPE_ID_MAP_EMPTY"
-	default:
-		return ""
-	}
-}
-
-// ClusterServiceRpcIdValues returns all valid ClusterServiceRpcId values (excluding UNDEFINED)
-func ClusterServiceRpcIdValues() []ClusterServiceRpcId {
-	return []ClusterServiceRpcId{
-		ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_ALL_ACCESSORS,
-		ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_ALL_MUTATORS,
-		ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_ALL_EXECUTORS,
-		ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_LOG,
-		ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_PING,
-		ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_SUBSCRIBE,
-		ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_WATCH_JWKS,
-	}
-}
-
-// ClusterServiceRpcIdStringValues returns all valid ClusterServiceRpcId names as strings
-func ClusterServiceRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "log", "ping", "subscribe", "watch-jwks"}
-}
-
-// ParseClusterServiceRpcId converts a string to a ClusterServiceRpcId enum value
-// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseClusterServiceRpcId(s string) (ClusterServiceRpcId, error) {
-	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
-	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
-	switch normalized {
-	case "":
-		return ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_UNSPECIFIED, nil
-	case "all-accessors", "cluster-service-rpc-id-all-accessors":
-		return ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_ALL_ACCESSORS, nil
-	case "all-mutators", "cluster-service-rpc-id-all-mutators":
-		return ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_ALL_MUTATORS, nil
-	case "all-executors", "cluster-service-rpc-id-all-executors":
-		return ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_ALL_EXECUTORS, nil
-	case "log", "cluster-service-rpc-id-log":
-		return ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_LOG, nil
-	case "ping", "cluster-service-rpc-id-ping":
-		return ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_PING, nil
-	case "subscribe", "cluster-service-rpc-id-subscribe":
-		return ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_SUBSCRIBE, nil
-	case "watch-jwks", "cluster-service-rpc-id-watch-jwks":
-		return ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_WATCH_JWKS, nil
-	default:
-		return ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid clusterservicerpcid %s, expecting one of: %v", s, ClusterServiceRpcIdStringValues())
-	}
-}
-
-// ParseClusterServiceRpcIds converts a comma-separated string to a slice of ClusterServiceRpcId enum values
-// Returns an error if any value is invalid
-func ParseClusterServiceRpcIds(s string) ([]ClusterServiceRpcId, error) {
-	if s == "" {
-		return nil, nil
-	}
-	parts := strings.Split(s, ",")
-	result := make([]ClusterServiceRpcId, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed == "" {
-			continue
-		}
-		val, err := ParseClusterServiceRpcId(trimmed)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, val)
-	}
-	return result, nil
-}
-
-// ClusterServiceRpcIdToString converts a ClusterServiceRpcId to its lowercase string representation
-func ClusterServiceRpcIdToString(v ClusterServiceRpcId) string {
-	switch v {
-	case ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_ALL_ACCESSORS:
-		return "all-accessors"
-	case ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_ALL_MUTATORS:
-		return "all-mutators"
-	case ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_ALL_EXECUTORS:
-		return "all-executors"
-	case ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_LOG:
-		return "log"
-	case ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_PING:
-		return "ping"
-	case ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_SUBSCRIBE:
-		return "subscribe"
-	case ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_WATCH_JWKS:
-		return "watch-jwks"
-	default:
-		return ""
-	}
-}
-
-// ParseClusterServiceRpcIdLiberal parses a ClusterServiceRpcId liberally, accepting:
-// - Integer values (as string or int)
-// - Enum names in any case
-// - RFC-compliant JSON names
-func ParseClusterServiceRpcIdLiberal(s string) ClusterServiceRpcId {
-	if s == "" {
-		return ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_UNSPECIFIED
-	}
-	// Try parsing as integer
-	if num, err := strconv.Atoi(s); err == nil {
-		return ClusterServiceRpcId(num)
-	}
-	// Normalize and try parsing
-	normalized := strings.ToLower(strings.TrimSpace(s))
-	normalized = strings.ReplaceAll(normalized, "_", "-")
-	normalized = strings.ReplaceAll(normalized, " ", "-")
-	switch normalized {
-	case "all-accessors", "cluster-service-rpc-id-all-accessors":
-		return ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_ALL_ACCESSORS
-	case "all-mutators", "cluster-service-rpc-id-all-mutators":
-		return ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_ALL_MUTATORS
-	case "all-executors", "cluster-service-rpc-id-all-executors":
-		return ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_ALL_EXECUTORS
-	case "log", "cluster-service-rpc-id-log":
-		return ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_LOG
-	case "ping", "cluster-service-rpc-id-ping":
-		return ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_PING
-	case "subscribe", "cluster-service-rpc-id-subscribe":
-		return ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_SUBSCRIBE
-	case "watch-jwks", "cluster-service-rpc-id-watch-jwks":
-		return ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_WATCH_JWKS
-	default:
-		return ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_UNSPECIFIED
-	}
-}
-
-// ClusterServiceRpcIdToSpecName converts a ClusterServiceRpcId to its canonical protobuf spec name
-func ClusterServiceRpcIdToSpecName(v ClusterServiceRpcId) string {
-	switch v {
-	case ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_UNSPECIFIED:
-		return "CLUSTER_SERVICE_RPC_ID_UNSPECIFIED"
-	case ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_ALL_ACCESSORS:
-		return "CLUSTER_SERVICE_RPC_ID_ALL_ACCESSORS"
-	case ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_ALL_MUTATORS:
-		return "CLUSTER_SERVICE_RPC_ID_ALL_MUTATORS"
-	case ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_ALL_EXECUTORS:
-		return "CLUSTER_SERVICE_RPC_ID_ALL_EXECUTORS"
-	case ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_LOG:
-		return "CLUSTER_SERVICE_RPC_ID_LOG"
-	case ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_PING:
-		return "CLUSTER_SERVICE_RPC_ID_PING"
-	case ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_SUBSCRIBE:
-		return "CLUSTER_SERVICE_RPC_ID_SUBSCRIBE"
-	case ClusterServiceRpcId_CLUSTER_SERVICE_RPC_ID_WATCH_JWKS:
-		return "CLUSTER_SERVICE_RPC_ID_WATCH_JWKS"
-	default:
-		return ""
-	}
-}
-
-// ServiceConfigStateServiceRpcIdValues returns all valid ServiceConfigStateServiceRpcId values (excluding UNDEFINED)
-func ServiceConfigStateServiceRpcIdValues() []ServiceConfigStateServiceRpcId {
-	return []ServiceConfigStateServiceRpcId{
-		ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS,
-		ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_MUTATORS,
-		ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS,
-		ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG,
-		ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG,
-		ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG,
-	}
-}
-
-// ServiceConfigStateServiceRpcIdStringValues returns all valid ServiceConfigStateServiceRpcId names as strings
-func ServiceConfigStateServiceRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "get-config", "set-config", "watch-config"}
-}
-
-// ParseServiceConfigStateServiceRpcId converts a string to a ServiceConfigStateServiceRpcId enum value
-// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseServiceConfigStateServiceRpcId(s string) (ServiceConfigStateServiceRpcId, error) {
-	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
-	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
-	switch normalized {
-	case "":
-		return ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED, nil
-	case "all-accessors", "service-config-state-service-rpc-id-all-accessors":
-		return ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS, nil
-	case "all-mutators", "service-config-state-service-rpc-id-all-mutators":
-		return ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_MUTATORS, nil
-	case "all-executors", "service-config-state-service-rpc-id-all-executors":
-		return ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS, nil
-	case "get-config", "service-config-state-service-rpc-id-get-config":
-		return ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG, nil
-	case "set-config", "service-config-state-service-rpc-id-set-config":
-		return ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG, nil
-	case "watch-config", "service-config-state-service-rpc-id-watch-config":
-		return ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG, nil
-	default:
-		return ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid serviceconfigstateservicerpcid %s, expecting one of: %v", s, ServiceConfigStateServiceRpcIdStringValues())
-	}
-}
-
-// ParseServiceConfigStateServiceRpcIds converts a comma-separated string to a slice of ServiceConfigStateServiceRpcId enum values
-// Returns an error if any value is invalid
-func ParseServiceConfigStateServiceRpcIds(s string) ([]ServiceConfigStateServiceRpcId, error) {
-	if s == "" {
-		return nil, nil
-	}
-	parts := strings.Split(s, ",")
-	result := make([]ServiceConfigStateServiceRpcId, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed == "" {
-			continue
-		}
-		val, err := ParseServiceConfigStateServiceRpcId(trimmed)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, val)
-	}
-	return result, nil
-}
-
-// ServiceConfigStateServiceRpcIdToString converts a ServiceConfigStateServiceRpcId to its lowercase string representation
-func ServiceConfigStateServiceRpcIdToString(v ServiceConfigStateServiceRpcId) string {
-	switch v {
-	case ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS:
-		return "all-accessors"
-	case ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_MUTATORS:
-		return "all-mutators"
-	case ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS:
-		return "all-executors"
-	case ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG:
-		return "get-config"
-	case ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG:
-		return "set-config"
-	case ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG:
-		return "watch-config"
-	default:
-		return ""
-	}
-}
-
-// ParseServiceConfigStateServiceRpcIdLiberal parses a ServiceConfigStateServiceRpcId liberally, accepting:
-// - Integer values (as string or int)
-// - Enum names in any case
-// - RFC-compliant JSON names
-func ParseServiceConfigStateServiceRpcIdLiberal(s string) ServiceConfigStateServiceRpcId {
-	if s == "" {
-		return ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED
-	}
-	// Try parsing as integer
-	if num, err := strconv.Atoi(s); err == nil {
-		return ServiceConfigStateServiceRpcId(num)
-	}
-	// Normalize and try parsing
-	normalized := strings.ToLower(strings.TrimSpace(s))
-	normalized = strings.ReplaceAll(normalized, "_", "-")
-	normalized = strings.ReplaceAll(normalized, " ", "-")
-	switch normalized {
-	case "all-accessors", "service-config-state-service-rpc-id-all-accessors":
-		return ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS
-	case "all-mutators", "service-config-state-service-rpc-id-all-mutators":
-		return ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_MUTATORS
-	case "all-executors", "service-config-state-service-rpc-id-all-executors":
-		return ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS
-	case "get-config", "service-config-state-service-rpc-id-get-config":
-		return ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG
-	case "set-config", "service-config-state-service-rpc-id-set-config":
-		return ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG
-	case "watch-config", "service-config-state-service-rpc-id-watch-config":
-		return ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG
-	default:
-		return ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED
-	}
-}
-
-// ServiceConfigStateServiceRpcIdToSpecName converts a ServiceConfigStateServiceRpcId to its canonical protobuf spec name
-func ServiceConfigStateServiceRpcIdToSpecName(v ServiceConfigStateServiceRpcId) string {
-	switch v {
-	case ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED:
-		return "SERVICE_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED"
-	case ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS:
-		return "SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS"
-	case ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_MUTATORS:
-		return "SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_MUTATORS"
-	case ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS:
-		return "SERVICE_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS"
-	case ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG:
-		return "SERVICE_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG"
-	case ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG:
-		return "SERVICE_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG"
-	case ServiceConfigStateServiceRpcId_SERVICE_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG:
-		return "SERVICE_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG"
-	default:
-		return ""
-	}
-}
-
 // ============================================================
 // JSON/YAML/TOML Serialization Helpers
 // ============================================================
@@ -642,6 +196,7 @@ type configJSON struct {
 	TrustedCas              []json.RawMessage `json:"trusted_cas,omitempty"`
 	SpiffeTrustDomain       string            `json:"spiffe_trust_domain,omitempty"`
 	LocationPath            string            `json:"location_path,omitempty"`
+	DiskPersistence         json.RawMessage   `json:"disk_persistence,omitempty"`
 }
 
 // ConfigToJSON converts Config to JSON bytes.
@@ -712,6 +267,13 @@ func ConfigToJSON(v *Config) ([]byte, error) {
 		}(),
 		SpiffeTrustDomain: v.SpiffeTrustDomain,
 		LocationPath:      v.LocationPath,
+		DiskPersistence: func() json.RawMessage {
+			if v.DiskPersistence == nil {
+				return nil
+			}
+			data, _ := diskstore.DiskPersistenceConfigToJSON(v.DiskPersistence)
+			return data
+		}(),
 	}
 	return json.Marshal(helper)
 }
@@ -784,6 +346,13 @@ func ConfigToJSONPretty(v *Config) ([]byte, error) {
 		}(),
 		SpiffeTrustDomain: v.SpiffeTrustDomain,
 		LocationPath:      v.LocationPath,
+		DiskPersistence: func() json.RawMessage {
+			if v.DiskPersistence == nil {
+				return nil
+			}
+			data, _ := diskstore.DiskPersistenceConfigToJSON(v.DiskPersistence)
+			return data
+		}(),
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -904,6 +473,13 @@ func ConfigFromJSON(data []byte) (*Config, error) {
 	}
 	result.SpiffeTrustDomain = raw.SpiffeTrustDomain
 	result.LocationPath = raw.LocationPath
+	// Parse message field: DiskPersistence
+	if len(raw.DiskPersistence) > 0 {
+		parsed, err := diskstore.DiskPersistenceConfigFromJSON(raw.DiskPersistence)
+		if err == nil {
+			result.DiskPersistence = parsed
+		}
+	}
 	return result, nil
 }
 
@@ -2110,6 +1686,11 @@ func ConfigToEnvVar(v *Config) map[string]string {
 	result["PROTO_LIBS_GRPCCONFIG_CONFIG_KEEPALIVE_MIN_TIME_SECONDS"] = strconv.FormatInt(v.KeepaliveMinTimeSeconds, 10)
 	result["PROTO_LIBS_GRPCCONFIG_CONFIG_SPIFFE_TRUST_DOMAIN"] = v.SpiffeTrustDomain
 	result["PROTO_LIBS_GRPCCONFIG_CONFIG_LOCATION_PATH"] = v.LocationPath
+	if v.DiskPersistence != nil {
+		for k, val := range diskstore.DiskPersistenceConfigToEnvVar(v.DiskPersistence) {
+			result[k] = val
+		}
+	}
 	return result
 }
 
@@ -2195,6 +1776,11 @@ func ConfigFromEnvVar(env map[string]string) (*Config, error) {
 	}
 	if val, ok := env["PROTO_LIBS_GRPCCONFIG_CONFIG_LOCATION_PATH"]; ok && val != "" {
 		result.LocationPath = val
+	}
+	if sub, err := diskstore.DiskPersistenceConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.DiskPersistence = sub
 	}
 	return result, nil
 }
@@ -2486,6 +2072,13 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 	for i, val := range m.TrustedCas {
 		if err := x509.ValidateX509CertWithDepth(val, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field TrustedCas[%d] validation failed", i)
+		}
+	}
+
+	// Validate DiskPersistence nested message
+	if m.DiskPersistence != nil {
+		if err := diskstore.ValidateDiskPersistenceConfigWithDepth(m.DiskPersistence, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field DiskPersistence validation failed")
 		}
 	}
 
@@ -3073,6 +2666,9 @@ func MergeConfig(dst, src *Config) {
 	}
 	if dst.LocationPath == "" {
 		dst.LocationPath = src.LocationPath
+	}
+	if dst.DiskPersistence == nil {
+		dst.DiskPersistence = src.DiskPersistence
 	}
 }
 

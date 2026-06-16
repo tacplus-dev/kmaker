@@ -101,9 +101,9 @@ message WatchedGitLabGroup {
   // group_path is the GitLab group path, e.g. "myorg/platform".
   string group_path = 1;
 
-  // project_namespace optionally narrows ownership to a Cavalier project under
-  // the tenant. Empty means the tenant namespace itself owns the events.
-  string project_namespace = 2;
+  // workspace_namespace optionally narrows ownership to a Cavalier workspace
+  // under the tenant. Empty means the tenant namespace itself owns the events.
+  string workspace_namespace = 2;
   string trace_id = 200;
   bool noop = 201;
 }

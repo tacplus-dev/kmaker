@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"strings"
 	"sync"
 	"syscall"
 	"time"
@@ -101,6 +102,30 @@ func (s *serviceTaskScope) Wait() {
 	}
 }
 
+func (s *serviceTaskScope) WaitContext(ctx context.Context) bool {
+	if s == nil {
+		return true
+	}
+	done := make(chan struct{})
+	go func() {
+		s.wg.Wait()
+		close(done)
+	}()
+	select {
+	case <-done:
+		return true
+	case <-ctx.Done():
+		return false
+	}
+}
+
+func isPermanentIdentityInitError(err error) bool {
+	if err == nil {
+		return false
+	}
+	return strings.Contains(err.Error(), "service token minter is not configured")
+}
+
 // New creates a ServiceManager: loads config, creates the
 // ServiceManager connection pool, StateClients, Grpc, and Authorizer.
 func New() (*ServiceManager, error) {
@@ -118,6 +143,10 @@ func New() (*ServiceManager, error) {
 		var idErr, scErr error
 		identity, idErr = service_im.New(ctx, cfg)
 		if idErr != nil {
+			if isPermanentIdentityInitError(idErr) {
+				stop()
+				return nil, fmt.Errorf("identity permanent startup failure: %w", idErr)
+			}
 			if attempt >= maxInitRetries {
 				stop()
 				return nil, fmt.Errorf("identity failed after %d attempts: %w", attempt, idErr)
@@ -177,8 +206,8 @@ func New() (*ServiceManager, error) {
 		zap.String("service", "kmaker"),
 		zap.String("tacplus_version", "0.0.0"),
 		zap.String("tacplus_sha", "unknown"),
-		zap.String("proto_version", "v1.2.181-main.182"),
-		zap.String("proto_sha", "14038bdf71a212f02766d5e7a749db893b8216dc"),
+		zap.String("proto_version", "v1.2.183-main.183"),
+		zap.String("proto_sha", "c882fb89c61faa704e084e652a50c87c79954463"),
 	)
 
 	return &ServiceManager{
@@ -326,15 +355,26 @@ func (sm *ServiceManager) TokenForService(audience string) (string, error) {
 // Close releases all resources held by the ServiceManager.
 // Use this when not calling Run(), e.g. in gateway or other custom entrypoints.
 func (sm *ServiceManager) Close() {
-	sm.stop()
+	if sm == nil {
+		return
+	}
+	if sm.stop != nil {
+		sm.stop()
+	}
 	if sm.tasks != nil {
 		sm.tasks.Cancel()
 		sm.tasks.Wait()
 	}
 
-	sm.bc.Close()
-	sm.sc.Close()
-	sm.identity.Close()
+	if sm.bc != nil {
+		sm.bc.Close()
+	}
+	if sm.sc != nil {
+		_ = sm.sc.Close()
+	}
+	if sm.identity != nil {
+		sm.identity.Close()
+	}
 }
 
 // StateClients returns the state client instances.
@@ -369,14 +409,37 @@ func (m *multiWrapper) RegisterServices(grpcServer *grpc.Server) error {
 // runtime config, fetches typed config, creates the gRPC server, starts
 // serving, and manages graceful shutdown.
 func (sm *ServiceManager) Run(h Handler) error {
-	defer sm.tasks.Wait()
+
+	defer func() {
+		waitCtx, waitCancel := context.WithTimeout(context.Background(), sm.shutdownTimeout())
+		defer waitCancel()
+		if !sm.tasks.WaitContext(waitCtx) {
+			zap.L().Warn("Background task shutdown timeout expired; returning")
+		}
+	}()
 	defer sm.tasks.Cancel()
 
-	defer sm.bc.Close()
+	defer func() {
+		if sm.bc != nil {
+			sm.bc.Close()
+		}
+	}()
 
-	defer sm.sc.Close()
-	defer sm.identity.Close()
-	defer sm.stop()
+	defer func() {
+		if sm.sc != nil {
+			_ = sm.sc.Close()
+		}
+	}()
+	defer func() {
+		if sm.identity != nil {
+			sm.identity.Close()
+		}
+	}()
+	defer func() {
+		if sm.stop != nil {
+			sm.stop()
+		}
+	}()
 
 	// Subscribe to shared runtime config (listen address, logger, timeouts).
 	// Runtime config from the cluster merges into the boot config.
@@ -512,10 +575,7 @@ func (sm *ServiceManager) Run(h Handler) error {
 	zap.L().Info("Shutdown signal received, starting graceful shutdown")
 	sm.stop()
 
-	shutdownTimeout := time.Duration(sm.cfg.ShutdownTimeoutSeconds) * time.Second
-	if shutdownTimeout <= 0 {
-		shutdownTimeout = 30 * time.Second
-	}
+	shutdownTimeout := sm.shutdownTimeout()
 	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), shutdownTimeout)
 	defer shutdownCancel()
 
@@ -536,6 +596,14 @@ func (sm *ServiceManager) Run(h Handler) error {
 		zap.L().Info("Second signal received, exiting immediately")
 	}
 	return nil
+}
+
+func (sm *ServiceManager) shutdownTimeout() time.Duration {
+	shutdownTimeout := time.Duration(sm.cfg.ShutdownTimeoutSeconds) * time.Second
+	if shutdownTimeout <= 0 {
+		shutdownTimeout = 30 * time.Second
+	}
+	return shutdownTimeout
 }
 
 func buildMetricsProvider(listenAddr *host_pb.Host) healthreporter.MetricsProvider {
@@ -590,16 +658,48 @@ func (*tracePublishAck) ProtoMessage()            {}
 func (*tracePublishAck) Marshal() ([]byte, error) { return nil, nil }
 func (*tracePublishAck) Unmarshal([]byte) error   { return nil }
 
-// tracePublishLoop drains trace events from the channel into a bidi stream
-// to EventBus. Reconnects with exponential backoff on stream errors.
-// Trace events are best-effort — drops on backpressure.
-func tracePublishLoop(ctx context.Context, conn grpc.ClientConnInterface, tp func() (string, error), ch <-chan *trace_pb.TraceEvent) {
+// tracePublishLoop drains trace events to EventBus. It keeps the current event
+// pending until the publish stream acknowledges it; later trace events may still
+// be dropped at enqueue time when the bounded queue is full.
+func tracePublishLoop(ctx context.Context, resolve func(context.Context) (grpc.ClientConnInterface, error), tp func() (string, error), ch <-chan *trace_pb.TraceEvent) {
 	const minBackoff = 3 * time.Second
 	const maxBackoff = 30 * time.Second
 	backoff := minBackoff
+	var pending *trace_pb.TraceEvent
 
 	for ctx.Err() == nil {
-		if err := tracePublishStream(ctx, conn, tp, ch); err != nil {
+		if pending == nil {
+			select {
+			case event, ok := <-ch:
+				if !ok {
+					return
+				}
+				pending = event
+			case <-ctx.Done():
+				return
+			}
+		}
+		conn, err := resolve(ctx)
+		if err != nil {
+			if ctx.Err() != nil {
+				return
+			}
+			zap.L().Warn("trace publisher: failed to resolve broker, retrying",
+				zap.Error(err), zap.Duration("backoff", backoff))
+			select {
+			case <-time.After(backoff):
+			case <-ctx.Done():
+				return
+			}
+			if backoff < maxBackoff {
+				backoff *= 2
+				if backoff > maxBackoff {
+					backoff = maxBackoff
+				}
+			}
+			continue
+		}
+		if err := tracePublishStream(ctx, conn, tp, pending); err != nil {
 			if ctx.Err() != nil {
 				return
 			}
@@ -616,32 +716,16 @@ func tracePublishLoop(ctx context.Context, conn grpc.ClientConnInterface, tp fun
 					backoff = maxBackoff
 				}
 			}
-		} else {
-			return // ch closed — shutdown
+			continue
 		}
+		pending = nil
+		backoff = minBackoff
 	}
 }
 
-// tracePublishStream opens a bidi stream to EventBus and sends trace events
-// as they arrive. Returns nil when the channel is closed (shutdown),
-// error on stream failure.
-//
-// The stream is opened lazily on the first event so that an idle service
-// does not accumulate a stale (EOF) stream that would cause the first real
-// trace event to fail and incur a reconnect backoff.
-func tracePublishStream(ctx context.Context, conn grpc.ClientConnInterface, tp func() (string, error), ch <-chan *trace_pb.TraceEvent) error {
-	// Wait for the first event before opening the stream.
-	var first *trace_pb.TraceEvent
-	select {
-	case event, ok := <-ch:
-		if !ok {
-			return nil
-		}
-		first = event
-	case <-ctx.Done():
-		return ctx.Err()
-	}
-
+// tracePublishStream publishes one trace event and returns only after the
+// EventBus stream sends an ack. The caller keeps the event pending on error.
+func tracePublishStream(ctx context.Context, conn grpc.ClientConnInterface, tp func() (string, error), event *trace_pb.TraceEvent) error {
 	token, err := tp()
 	if err != nil {
 		return fmt.Errorf("token for trace publish: %w", err)
@@ -657,32 +741,22 @@ func tracePublishStream(ctx context.Context, conn grpc.ClientConnInterface, tp f
 	if err != nil {
 		return fmt.Errorf("open trace publish stream: %w", err)
 	}
-
-	// Drain acks in background (content ignored).
-	go func() {
-		for {
-			if err := stream.RecvMsg(&tracePublishAck{}); err != nil {
-				return
-			}
+	sendClosed := false
+	defer func() {
+		if !sendClosed {
+			_ = stream.CloseSend()
 		}
 	}()
 
-	// Send the event that triggered stream open.
-	if err := stream.SendMsg(first); err != nil {
+	if err := stream.SendMsg(event); err != nil {
 		return fmt.Errorf("send trace event: %w", err)
 	}
-
-	for {
-		select {
-		case event, ok := <-ch:
-			if !ok {
-				return nil
-			}
-			if err := stream.SendMsg(event); err != nil {
-				return fmt.Errorf("send trace event: %w", err)
-			}
-		case <-ctx.Done():
-			return ctx.Err()
-		}
+	if err := stream.CloseSend(); err != nil {
+		return fmt.Errorf("close trace publish send stream: %w", err)
 	}
+	sendClosed = true
+	if err := stream.RecvMsg(&tracePublishAck{}); err != nil {
+		return fmt.Errorf("receive trace publish ack: %w", err)
+	}
+	return nil
 }

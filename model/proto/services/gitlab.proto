@@ -878,28 +878,33 @@ service Proxy {
   rpc GetProject(GetProjectRequest) returns (GetProjectResponse);
 
   // Issues
-  rpc ListIssues(ListIssuesRequest) returns (ListIssuesResponse);
+  rpc ListIssues(ListIssuesRequest) returns (ListIssuesResponse) {
+  }
   rpc GetIssue(GetIssueRequest) returns (GetIssueResponse);
   rpc CreateIssue(CreateIssueRequest) returns (CreateIssueResponse);
   rpc UpdateIssue(UpdateIssueRequest) returns (UpdateIssueResponse);
   rpc CreateIssueNote(CreateIssueNoteRequest) returns (CreateIssueNoteResponse);
 
   // Merge Requests
-  rpc ListMergeRequests(ListMergeRequestsRequest) returns (ListMergeRequestsResponse);
+  rpc ListMergeRequests(ListMergeRequestsRequest) returns (ListMergeRequestsResponse) {
+  }
   rpc GetMergeRequest(GetMergeRequestRequest) returns (GetMergeRequestResponse);
   rpc CreateMergeRequest(CreateMergeRequestRequest) returns (CreateMergeRequestResponse);
   rpc UpdateMergeRequest(UpdateMergeRequestRequest) returns (UpdateMergeRequestResponse);
   rpc MergeMergeRequest(MergeMergeRequestRequest) returns (MergeMergeRequestResponse);
-  rpc ListMergeRequestChanges(ListMergeRequestChangesRequest) returns (ListMergeRequestChangesResponse);
+  rpc ListMergeRequestChanges(ListMergeRequestChangesRequest) returns (ListMergeRequestChangesResponse) {
+  }
   rpc CreateMergeRequestNote(CreateMergeRequestNoteRequest) returns (CreateMergeRequestNoteResponse);
 
   // Pipelines
-  rpc ListPipelines(ListPipelinesRequest) returns (ListPipelinesResponse);
+  rpc ListPipelines(ListPipelinesRequest) returns (ListPipelinesResponse) {
+  }
   rpc GetPipeline(GetPipelineRequest) returns (GetPipelineResponse);
   rpc CreatePipeline(CreatePipelineRequest) returns (CreatePipelineResponse);
   rpc CancelPipeline(CancelPipelineRequest) returns (CancelPipelineResponse);
   rpc RetryPipeline(RetryPipelineRequest) returns (RetryPipelineResponse);
-  rpc ListPipelineJobs(ListPipelineJobsRequest) returns (ListPipelineJobsResponse);
+  rpc ListPipelineJobs(ListPipelineJobsRequest) returns (ListPipelineJobsResponse) {
+  }
 
   // Repository Files
   rpc GetRepositoryFile(GetRepositoryFileRequest) returns (GetRepositoryFileResponse);
@@ -907,14 +912,17 @@ service Proxy {
   rpc UpdateRepositoryFile(UpdateRepositoryFileRequest) returns (UpdateRepositoryFileResponse);
 
   // Branches
-  rpc ListBranches(ListBranchesRequest) returns (ListBranchesResponse);
+  rpc ListBranches(ListBranchesRequest) returns (ListBranchesResponse) {
+  }
   rpc CreateBranch(CreateBranchRequest) returns (CreateBranchResponse);
 
   // Commits
-  rpc ListCommits(ListCommitsRequest) returns (ListCommitsResponse);
+  rpc ListCommits(ListCommitsRequest) returns (ListCommitsResponse) {
+  }
 
   // Search
-  rpc SearchBlobs(SearchBlobsRequest) returns (SearchBlobsResponse);
+  rpc ListBlobSearchResults(SearchBlobsRequest) returns (SearchBlobsResponse) {
+  }
 }
 
 // ============================================================================
@@ -1095,7 +1103,7 @@ enum ProxyRpcId {
   PROXY_RPC_ID_LIST_BRANCHES = 27;
   PROXY_RPC_ID_CREATE_BRANCH = 28;
   PROXY_RPC_ID_LIST_COMMITS = 29;
-  PROXY_RPC_ID_SEARCH_BLOBS = 30;
+  PROXY_RPC_ID_LIST_BLOB_SEARCH_RESULTS = 30;
 }
 
 enum GitlabConfigStateServiceRpcId {

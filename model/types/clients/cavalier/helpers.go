@@ -722,21 +722,21 @@ func DaemonControlRpcIdValues() []DaemonControlRpcId {
 		DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_ALL_ACCESSORS,
 		DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_ALL_MUTATORS,
 		DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_ALL_EXECUTORS,
-		DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_AUTH,
+		DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_BROKER_AUTH,
 		DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_PING,
-		DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_STATUS,
-		DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_WATCH_STATUS,
+		DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_STATUS,
+		DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_SUBSCRIBE_STATUS,
 		DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_RESET_PROXY_STATS,
 		DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_TOKEN,
 		DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_PROXY_ENV,
 		DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_REFRESH_TOKEN,
-		DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_SET_REFRESH_TOKEN,
+		DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_UPDATE_REFRESH_TOKEN,
 	}
 }
 
 // DaemonControlRpcIdStringValues returns all valid DaemonControlRpcId names as strings
 func DaemonControlRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "auth", "ping", "status", "watch-status", "reset-proxy-stats", "get-token", "get-proxy-env", "get-refresh-token", "set-refresh-token"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "broker-auth", "ping", "get-status", "subscribe-status", "reset-proxy-stats", "get-token", "get-proxy-env", "get-refresh-token", "update-refresh-token"}
 }
 
 // ParseDaemonControlRpcId converts a string to a DaemonControlRpcId enum value
@@ -753,14 +753,14 @@ func ParseDaemonControlRpcId(s string) (DaemonControlRpcId, error) {
 		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_ALL_MUTATORS, nil
 	case "all-executors", "daemon-control-rpc-id-all-executors":
 		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_ALL_EXECUTORS, nil
-	case "auth", "daemon-control-rpc-id-auth":
-		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_AUTH, nil
+	case "broker-auth", "daemon-control-rpc-id-broker-auth":
+		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_BROKER_AUTH, nil
 	case "ping", "daemon-control-rpc-id-ping":
 		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_PING, nil
-	case "status", "daemon-control-rpc-id-status":
-		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_STATUS, nil
-	case "watch-status", "daemon-control-rpc-id-watch-status":
-		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_WATCH_STATUS, nil
+	case "get-status", "daemon-control-rpc-id-get-status":
+		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_STATUS, nil
+	case "subscribe-status", "daemon-control-rpc-id-subscribe-status":
+		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_SUBSCRIBE_STATUS, nil
 	case "reset-proxy-stats", "daemon-control-rpc-id-reset-proxy-stats":
 		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_RESET_PROXY_STATS, nil
 	case "get-token", "daemon-control-rpc-id-get-token":
@@ -769,8 +769,8 @@ func ParseDaemonControlRpcId(s string) (DaemonControlRpcId, error) {
 		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_PROXY_ENV, nil
 	case "get-refresh-token", "daemon-control-rpc-id-get-refresh-token":
 		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_REFRESH_TOKEN, nil
-	case "set-refresh-token", "daemon-control-rpc-id-set-refresh-token":
-		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_SET_REFRESH_TOKEN, nil
+	case "update-refresh-token", "daemon-control-rpc-id-update-refresh-token":
+		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_UPDATE_REFRESH_TOKEN, nil
 	default:
 		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid daemoncontrolrpcid %s, expecting one of: %v", s, DaemonControlRpcIdStringValues())
 	}
@@ -807,14 +807,14 @@ func DaemonControlRpcIdToString(v DaemonControlRpcId) string {
 		return "all-mutators"
 	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_ALL_EXECUTORS:
 		return "all-executors"
-	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_AUTH:
-		return "auth"
+	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_BROKER_AUTH:
+		return "broker-auth"
 	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_PING:
 		return "ping"
-	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_STATUS:
-		return "status"
-	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_WATCH_STATUS:
-		return "watch-status"
+	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_STATUS:
+		return "get-status"
+	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_SUBSCRIBE_STATUS:
+		return "subscribe-status"
 	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_RESET_PROXY_STATS:
 		return "reset-proxy-stats"
 	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_TOKEN:
@@ -823,8 +823,8 @@ func DaemonControlRpcIdToString(v DaemonControlRpcId) string {
 		return "get-proxy-env"
 	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_REFRESH_TOKEN:
 		return "get-refresh-token"
-	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_SET_REFRESH_TOKEN:
-		return "set-refresh-token"
+	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_UPDATE_REFRESH_TOKEN:
+		return "update-refresh-token"
 	default:
 		return ""
 	}
@@ -853,14 +853,14 @@ func ParseDaemonControlRpcIdLiberal(s string) DaemonControlRpcId {
 		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_ALL_MUTATORS
 	case "all-executors", "daemon-control-rpc-id-all-executors":
 		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_ALL_EXECUTORS
-	case "auth", "daemon-control-rpc-id-auth":
-		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_AUTH
+	case "broker-auth", "daemon-control-rpc-id-broker-auth":
+		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_BROKER_AUTH
 	case "ping", "daemon-control-rpc-id-ping":
 		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_PING
-	case "status", "daemon-control-rpc-id-status":
-		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_STATUS
-	case "watch-status", "daemon-control-rpc-id-watch-status":
-		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_WATCH_STATUS
+	case "get-status", "daemon-control-rpc-id-get-status":
+		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_STATUS
+	case "subscribe-status", "daemon-control-rpc-id-subscribe-status":
+		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_SUBSCRIBE_STATUS
 	case "reset-proxy-stats", "daemon-control-rpc-id-reset-proxy-stats":
 		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_RESET_PROXY_STATS
 	case "get-token", "daemon-control-rpc-id-get-token":
@@ -869,8 +869,8 @@ func ParseDaemonControlRpcIdLiberal(s string) DaemonControlRpcId {
 		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_PROXY_ENV
 	case "get-refresh-token", "daemon-control-rpc-id-get-refresh-token":
 		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_REFRESH_TOKEN
-	case "set-refresh-token", "daemon-control-rpc-id-set-refresh-token":
-		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_SET_REFRESH_TOKEN
+	case "update-refresh-token", "daemon-control-rpc-id-update-refresh-token":
+		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_UPDATE_REFRESH_TOKEN
 	default:
 		return DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_UNSPECIFIED
 	}
@@ -887,14 +887,14 @@ func DaemonControlRpcIdToSpecName(v DaemonControlRpcId) string {
 		return "DAEMON_CONTROL_RPC_ID_ALL_MUTATORS"
 	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_ALL_EXECUTORS:
 		return "DAEMON_CONTROL_RPC_ID_ALL_EXECUTORS"
-	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_AUTH:
-		return "DAEMON_CONTROL_RPC_ID_AUTH"
+	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_BROKER_AUTH:
+		return "DAEMON_CONTROL_RPC_ID_BROKER_AUTH"
 	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_PING:
 		return "DAEMON_CONTROL_RPC_ID_PING"
-	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_STATUS:
-		return "DAEMON_CONTROL_RPC_ID_STATUS"
-	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_WATCH_STATUS:
-		return "DAEMON_CONTROL_RPC_ID_WATCH_STATUS"
+	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_STATUS:
+		return "DAEMON_CONTROL_RPC_ID_GET_STATUS"
+	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_SUBSCRIBE_STATUS:
+		return "DAEMON_CONTROL_RPC_ID_SUBSCRIBE_STATUS"
 	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_RESET_PROXY_STATS:
 		return "DAEMON_CONTROL_RPC_ID_RESET_PROXY_STATS"
 	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_TOKEN:
@@ -903,8 +903,8 @@ func DaemonControlRpcIdToSpecName(v DaemonControlRpcId) string {
 		return "DAEMON_CONTROL_RPC_ID_GET_PROXY_ENV"
 	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_GET_REFRESH_TOKEN:
 		return "DAEMON_CONTROL_RPC_ID_GET_REFRESH_TOKEN"
-	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_SET_REFRESH_TOKEN:
-		return "DAEMON_CONTROL_RPC_ID_SET_REFRESH_TOKEN"
+	case DaemonControlRpcId_DAEMON_CONTROL_RPC_ID_UPDATE_REFRESH_TOKEN:
+		return "DAEMON_CONTROL_RPC_ID_UPDATE_REFRESH_TOKEN"
 	default:
 		return ""
 	}
@@ -3461,9 +3461,10 @@ func ResetProxyStatsRequestToTOML(v *ResetProxyStatsRequest) ([]byte, error) {
 // ResetProxyStatsResponseJSON represents ResetProxyStatsResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type resetproxystatsresponseJSON struct {
-	ProxyStats []json.RawMessage `json:"proxy_stats,omitempty"`
-	TraceId    string            `json:"trace_id,omitempty"`
-	Noop       bool              `json:"noop,omitempty"`
+	ProxyStats  []json.RawMessage `json:"proxy_stats,omitempty"`
+	TimestampMs int64             `json:"timestamp_ms,omitempty"`
+	TraceId     string            `json:"trace_id,omitempty"`
+	Noop        bool              `json:"noop,omitempty"`
 }
 
 // ResetProxyStatsResponseToJSON converts ResetProxyStatsResponse to JSON bytes.
@@ -3488,8 +3489,9 @@ func ResetProxyStatsResponseToJSON(v *ResetProxyStatsResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		TimestampMs: v.TimestampMs,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -3516,8 +3518,9 @@ func ResetProxyStatsResponseToJSONPretty(v *ResetProxyStatsResponse) ([]byte, er
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		TimestampMs: v.TimestampMs,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -3594,6 +3597,7 @@ func ResetProxyStatsResponseFromJSON(data []byte) (*ResetProxyStatsResponse, err
 			}
 		}
 	}
+	result.TimestampMs = raw.TimestampMs
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -6005,6 +6009,7 @@ func ResetProxyStatsResponseToEnvVar(v *ResetProxyStatsResponse) map[string]stri
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_CLIENTS_CAVALIER_RESET_PROXY_STATS_RESPONSE_TIMESTAMP_MS"] = strconv.FormatInt(v.TimestampMs, 10)
 	result["PROTO_CLIENTS_CAVALIER_RESET_PROXY_STATS_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_CLIENTS_CAVALIER_RESET_PROXY_STATS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -6013,6 +6018,13 @@ func ResetProxyStatsResponseToEnvVar(v *ResetProxyStatsResponse) map[string]stri
 // ResetProxyStatsResponseFromEnvVar creates ResetProxyStatsResponse from environment variable key-value pairs.
 func ResetProxyStatsResponseFromEnvVar(env map[string]string) (*ResetProxyStatsResponse, error) {
 	result := &ResetProxyStatsResponse{}
+	if val, ok := env["PROTO_CLIENTS_CAVALIER_RESET_PROXY_STATS_RESPONSE_TIMESTAMP_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TimestampMs = parsed
+	}
 	if val, ok := env["PROTO_CLIENTS_CAVALIER_RESET_PROXY_STATS_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -6411,14 +6423,14 @@ func ValidateListenerWithDepth(m *Listener, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Kind (assert_required)
-	if m.Kind == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Kind is required")
-	}
-
 	// Validate Kind (assert_max_length: 64)
 	if len(m.Kind) > 64 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Kind must be at most 64 characters, got: %d", len(m.Kind))
+	}
+
+	// Validate Kind (assert_required)
+	if m.Kind == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Kind is required")
 	}
 
 	// Validate Port (assert_gt: 1024)
@@ -6484,13 +6496,13 @@ func ValidateProxyConfigWithDepth(m *ProxyConfig, depth int) error {
 	if m.AnthropicPort > 65535 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field AnthropicPort must be <= 65535, got: %v", m.AnthropicPort)
 	}
-	// Validate GitlabPort (assert_le: 65535)
-	if m.GitlabPort > 65535 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field GitlabPort must be <= 65535, got: %v", m.GitlabPort)
-	}
 	// Validate GitlabPort (assert_gt: 1024)
 	if m.GitlabPort <= 1024 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field GitlabPort must be > 1024, got: %v", m.GitlabPort)
+	}
+	// Validate GitlabPort (assert_le: 65535)
+	if m.GitlabPort > 65535 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field GitlabPort must be <= 65535, got: %v", m.GitlabPort)
 	}
 	// Validate GithubPort (assert_le: 65535)
 	if m.GithubPort > 65535 {
@@ -6687,13 +6699,13 @@ func ValidateAgenticConfigWithDepth(m *AgenticConfig, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate FlushIntervalMs (assert_le: 60000)
-	if m.FlushIntervalMs > 60000 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field FlushIntervalMs must be <= 60000, got: %v", m.FlushIntervalMs)
-	}
 	// Validate FlushIntervalMs (assert_ge: 100)
 	if m.FlushIntervalMs < 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field FlushIntervalMs must be >= 100, got: %v", m.FlushIntervalMs)
+	}
+	// Validate FlushIntervalMs (assert_le: 60000)
+	if m.FlushIntervalMs > 60000 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field FlushIntervalMs must be <= 60000, got: %v", m.FlushIntervalMs)
 	}
 	// Validate BatchSize (assert_ge: 1)
 	if m.BatchSize < 1 {
@@ -6721,13 +6733,13 @@ func ValidateAgenticConfigWithDepth(m *AgenticConfig, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field FilePatternExcludelist exceeds max size of 256, got: %d", len(m.FilePatternExcludelist))
 	}
 
-	// Validate SpoolMaxBytes (assert_le: 2147483648)
-	if m.SpoolMaxBytes > 2147483648 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field SpoolMaxBytes must be <= 2147483648, got: %v", m.SpoolMaxBytes)
-	}
 	// Validate SpoolMaxBytes (assert_ge: 1024)
 	if m.SpoolMaxBytes < 1024 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SpoolMaxBytes must be >= 1024, got: %v", m.SpoolMaxBytes)
+	}
+	// Validate SpoolMaxBytes (assert_le: 2147483648)
+	if m.SpoolMaxBytes > 2147483648 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpoolMaxBytes must be <= 2147483648, got: %v", m.SpoolMaxBytes)
 	}
 	// Validate FilePatternExcludelist elements (default max size: 32768 bytes)
 	for i, val := range m.FilePatternExcludelist {
@@ -6982,13 +6994,13 @@ func ValidateDaemonProxyStatsWithDepth(m *DaemonProxyStats, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ListenAddress must be at most 256 characters, got: %d", len(m.ListenAddress))
 	}
 
-	// Validate Port (assert_ge: 0)
-	if m.Port < 0 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Port must be >= 0, got: %v", m.Port)
-	}
 	// Validate Port (assert_le: 65535)
 	if m.Port > 65535 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Port must be <= 65535, got: %v", m.Port)
+	}
+	// Validate Port (assert_ge: 0)
+	if m.Port < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Port must be >= 0, got: %v", m.Port)
 	}
 	// Validate Message (assert_max_length: 512)
 	if len(m.Message) > 512 {
@@ -7182,6 +7194,10 @@ func ValidateResetProxyStatsResponseWithDepth(m *ResetProxyStatsResponse, depth 
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProxyStats exceeds max size of 64, got: %d", len(m.ProxyStats))
 	}
 
+	// Validate TimestampMs (assert_ge: 0)
+	if m.TimestampMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TimestampMs must be >= 0, got: %v", m.TimestampMs)
+	}
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
@@ -8733,6 +8749,9 @@ func MergeResetProxyStatsRequest(dst, src *ResetProxyStatsRequest) {
 func MergeResetProxyStatsResponse(dst, src *ResetProxyStatsResponse) {
 	if len(dst.ProxyStats) == 0 {
 		dst.ProxyStats = src.ProxyStats
+	}
+	if dst.TimestampMs == 0 {
+		dst.TimestampMs = src.TimestampMs
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

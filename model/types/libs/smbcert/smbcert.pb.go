@@ -39,126 +39,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED         TypeID = 0
-	TypeID_TYPE_ID_SMB_CERT_CLIENT_MSG TypeID = 1
-	TypeID_TYPE_ID_SMB_CERT_INIT       TypeID = 2
-	TypeID_TYPE_ID_SMB_CERT_CSR        TypeID = 3
-	TypeID_TYPE_ID_SMB_CERT_SERVER_MSG TypeID = 4
-	TypeID_TYPE_ID_SMB_CERT_DELIVERY   TypeID = 5
-	TypeID_TYPE_ID_SMB_CERT_RENEW      TypeID = 6
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_SMB_CERT_CLIENT_MSG",
-		2: "TYPE_ID_SMB_CERT_INIT",
-		3: "TYPE_ID_SMB_CERT_CSR",
-		4: "TYPE_ID_SMB_CERT_SERVER_MSG",
-		5: "TYPE_ID_SMB_CERT_DELIVERY",
-		6: "TYPE_ID_SMB_CERT_RENEW",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":         0,
-		"TYPE_ID_SMB_CERT_CLIENT_MSG": 1,
-		"TYPE_ID_SMB_CERT_INIT":       2,
-		"TYPE_ID_SMB_CERT_CSR":        3,
-		"TYPE_ID_SMB_CERT_SERVER_MSG": 4,
-		"TYPE_ID_SMB_CERT_DELIVERY":   5,
-		"TYPE_ID_SMB_CERT_RENEW":      6,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_smbcert_proto_enumTypes[0].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_smbcert_proto_enumTypes[0]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_smbcert_proto_rawDescGZIP(), []int{0}
-}
-
-type SmbCertServiceRpcId int32
-
-const (
-	SmbCertServiceRpcId_SMB_CERT_SERVICE_RPC_ID_UNSPECIFIED     SmbCertServiceRpcId = 0
-	SmbCertServiceRpcId_SMB_CERT_SERVICE_RPC_ID_ALL_ACCESSORS   SmbCertServiceRpcId = 1
-	SmbCertServiceRpcId_SMB_CERT_SERVICE_RPC_ID_ALL_MUTATORS    SmbCertServiceRpcId = 2
-	SmbCertServiceRpcId_SMB_CERT_SERVICE_RPC_ID_ALL_EXECUTORS   SmbCertServiceRpcId = 3
-	SmbCertServiceRpcId_SMB_CERT_SERVICE_RPC_ID_MANAGE_SMB_CERT SmbCertServiceRpcId = 4
-)
-
-// Enum value maps for SmbCertServiceRpcId.
-var (
-	SmbCertServiceRpcId_name = map[int32]string{
-		0: "SMB_CERT_SERVICE_RPC_ID_UNSPECIFIED",
-		1: "SMB_CERT_SERVICE_RPC_ID_ALL_ACCESSORS",
-		2: "SMB_CERT_SERVICE_RPC_ID_ALL_MUTATORS",
-		3: "SMB_CERT_SERVICE_RPC_ID_ALL_EXECUTORS",
-		4: "SMB_CERT_SERVICE_RPC_ID_MANAGE_SMB_CERT",
-	}
-	SmbCertServiceRpcId_value = map[string]int32{
-		"SMB_CERT_SERVICE_RPC_ID_UNSPECIFIED":     0,
-		"SMB_CERT_SERVICE_RPC_ID_ALL_ACCESSORS":   1,
-		"SMB_CERT_SERVICE_RPC_ID_ALL_MUTATORS":    2,
-		"SMB_CERT_SERVICE_RPC_ID_ALL_EXECUTORS":   3,
-		"SMB_CERT_SERVICE_RPC_ID_MANAGE_SMB_CERT": 4,
-	}
-)
-
-func (x SmbCertServiceRpcId) Enum() *SmbCertServiceRpcId {
-	p := new(SmbCertServiceRpcId)
-	*p = x
-	return p
-}
-
-func (x SmbCertServiceRpcId) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (SmbCertServiceRpcId) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_smbcert_proto_enumTypes[1].Descriptor()
-}
-
-func (SmbCertServiceRpcId) Type() protoreflect.EnumType {
-	return &file_libs_smbcert_proto_enumTypes[1]
-}
-
-func (x SmbCertServiceRpcId) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use SmbCertServiceRpcId.Descriptor instead.
-func (SmbCertServiceRpcId) EnumDescriptor() ([]byte, []int) {
-	return file_libs_smbcert_proto_rawDescGZIP(), []int{1}
-}
-
 // SmbCertClientMsg is sent by the SMB service instance on the bidi stream.
 type SmbCertClientMsg struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -590,21 +470,7 @@ const file_libs_smbcert_proto_rawDesc = "" +
 	"\fmember_chain\x18\x01 \x01(\v2\x13.x509.X509CertChainB\x04\x88\xa6\x1d\x01R\vmemberChain\x12$\n" +
 	"\x02ca\x18\x02 \x01(\v2\x0e.x509.X509CertB\x04\x88\xa6\x1d\x01R\x02ca\"&\n" +
 	"\fSmbCertRenew\x12\x16\n" +
-	"\x06reason\x18\x01 \x01(\tR\x06reason*\xd3\x01\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x1f\n" +
-	"\x1bTYPE_ID_SMB_CERT_CLIENT_MSG\x10\x01\x12\x19\n" +
-	"\x15TYPE_ID_SMB_CERT_INIT\x10\x02\x12\x18\n" +
-	"\x14TYPE_ID_SMB_CERT_CSR\x10\x03\x12\x1f\n" +
-	"\x1bTYPE_ID_SMB_CERT_SERVER_MSG\x10\x04\x12\x1d\n" +
-	"\x19TYPE_ID_SMB_CERT_DELIVERY\x10\x05\x12\x1a\n" +
-	"\x16TYPE_ID_SMB_CERT_RENEW\x10\x06*\xeb\x01\n" +
-	"\x13SmbCertServiceRpcId\x12'\n" +
-	"#SMB_CERT_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x12)\n" +
-	"%SMB_CERT_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x12(\n" +
-	"$SMB_CERT_SERVICE_RPC_ID_ALL_MUTATORS\x10\x02\x12)\n" +
-	"%SMB_CERT_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x12+\n" +
-	"'SMB_CERT_SERVICE_RPC_ID_MANAGE_SMB_CERT\x10\x042d\n" +
+	"\x06reason\x18\x01 \x01(\tR\x06reason2d\n" +
 	"\x0eSmbCertService\x12R\n" +
 	"\rManageSmbCert\x12\x19.smbcert.SmbCertClientMsg\x1a\x19.smbcert.SmbCertServerMsg\"\a\xe2\x88'\x03\n" +
 	"\x01*(\x010\x01BYZWgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/smbcertb\x06proto3"
@@ -621,36 +487,33 @@ func file_libs_smbcert_proto_rawDescGZIP() []byte {
 	return file_libs_smbcert_proto_rawDescData
 }
 
-var file_libs_smbcert_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_libs_smbcert_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_libs_smbcert_proto_goTypes = []any{
-	(TypeID)(0),                // 0: smbcert.TypeID
-	(SmbCertServiceRpcId)(0),   // 1: smbcert.SmbCertServiceRpcId
-	(*SmbCertClientMsg)(nil),   // 2: smbcert.SmbCertClientMsg
-	(*SmbCertInit)(nil),        // 3: smbcert.SmbCertInit
-	(*SmbCertCsr)(nil),         // 4: smbcert.SmbCertCsr
-	(*SmbCertServerMsg)(nil),   // 5: smbcert.SmbCertServerMsg
-	(*SmbCertDelivery)(nil),    // 6: smbcert.SmbCertDelivery
-	(*SmbCertRenew)(nil),       // 7: smbcert.SmbCertRenew
-	(*key.PublicKey)(nil),      // 8: key.PublicKey
-	(*x509.X509CertChain)(nil), // 9: x509.X509CertChain
-	(*x509.X509Cert)(nil),      // 10: x509.X509Cert
+	(*SmbCertClientMsg)(nil),   // 0: smbcert.SmbCertClientMsg
+	(*SmbCertInit)(nil),        // 1: smbcert.SmbCertInit
+	(*SmbCertCsr)(nil),         // 2: smbcert.SmbCertCsr
+	(*SmbCertServerMsg)(nil),   // 3: smbcert.SmbCertServerMsg
+	(*SmbCertDelivery)(nil),    // 4: smbcert.SmbCertDelivery
+	(*SmbCertRenew)(nil),       // 5: smbcert.SmbCertRenew
+	(*key.PublicKey)(nil),      // 6: key.PublicKey
+	(*x509.X509CertChain)(nil), // 7: x509.X509CertChain
+	(*x509.X509Cert)(nil),      // 8: x509.X509Cert
 }
 var file_libs_smbcert_proto_depIdxs = []int32{
-	3,  // 0: smbcert.SmbCertClientMsg.init:type_name -> smbcert.SmbCertInit
-	4,  // 1: smbcert.SmbCertClientMsg.csr:type_name -> smbcert.SmbCertCsr
-	8,  // 2: smbcert.SmbCertCsr.public_key:type_name -> key.PublicKey
-	6,  // 3: smbcert.SmbCertServerMsg.cert:type_name -> smbcert.SmbCertDelivery
-	7,  // 4: smbcert.SmbCertServerMsg.renew:type_name -> smbcert.SmbCertRenew
-	9,  // 5: smbcert.SmbCertDelivery.member_chain:type_name -> x509.X509CertChain
-	10, // 6: smbcert.SmbCertDelivery.ca:type_name -> x509.X509Cert
-	2,  // 7: smbcert.SmbCertService.ManageSmbCert:input_type -> smbcert.SmbCertClientMsg
-	5,  // 8: smbcert.SmbCertService.ManageSmbCert:output_type -> smbcert.SmbCertServerMsg
-	8,  // [8:9] is the sub-list for method output_type
-	7,  // [7:8] is the sub-list for method input_type
-	7,  // [7:7] is the sub-list for extension type_name
-	7,  // [7:7] is the sub-list for extension extendee
-	0,  // [0:7] is the sub-list for field type_name
+	1, // 0: smbcert.SmbCertClientMsg.init:type_name -> smbcert.SmbCertInit
+	2, // 1: smbcert.SmbCertClientMsg.csr:type_name -> smbcert.SmbCertCsr
+	6, // 2: smbcert.SmbCertCsr.public_key:type_name -> key.PublicKey
+	4, // 3: smbcert.SmbCertServerMsg.cert:type_name -> smbcert.SmbCertDelivery
+	5, // 4: smbcert.SmbCertServerMsg.renew:type_name -> smbcert.SmbCertRenew
+	7, // 5: smbcert.SmbCertDelivery.member_chain:type_name -> x509.X509CertChain
+	8, // 6: smbcert.SmbCertDelivery.ca:type_name -> x509.X509Cert
+	0, // 7: smbcert.SmbCertService.ManageSmbCert:input_type -> smbcert.SmbCertClientMsg
+	3, // 8: smbcert.SmbCertService.ManageSmbCert:output_type -> smbcert.SmbCertServerMsg
+	8, // [8:9] is the sub-list for method output_type
+	7, // [7:8] is the sub-list for method input_type
+	7, // [7:7] is the sub-list for extension type_name
+	7, // [7:7] is the sub-list for extension extendee
+	0, // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_libs_smbcert_proto_init() }
@@ -672,14 +535,13 @@ func file_libs_smbcert_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_smbcert_proto_rawDesc), len(file_libs_smbcert_proto_rawDesc)),
-			NumEnums:      2,
+			NumEnums:      0,
 			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_libs_smbcert_proto_goTypes,
 		DependencyIndexes: file_libs_smbcert_proto_depIdxs,
-		EnumInfos:         file_libs_smbcert_proto_enumTypes,
 		MessageInfos:      file_libs_smbcert_proto_msgTypes,
 	}.Build()
 	File_libs_smbcert_proto = out.File

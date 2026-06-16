@@ -90,56 +90,6 @@ func (Compression) EnumDescriptor() ([]byte, []int) {
 	return file_libs_diskstore_proto_rawDescGZIP(), []int{0}
 }
 
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-type TypeID int32
-
-const (
-	TypeID_TYPE_ID_UNSPECIFIED             TypeID = 0
-	TypeID_TYPE_ID_DISK_PERSISTENCE_CONFIG TypeID = 1
-)
-
-// Enum value maps for TypeID.
-var (
-	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_DISK_PERSISTENCE_CONFIG",
-	}
-	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":             0,
-		"TYPE_ID_DISK_PERSISTENCE_CONFIG": 1,
-	}
-)
-
-func (x TypeID) Enum() *TypeID {
-	p := new(TypeID)
-	*p = x
-	return p
-}
-
-func (x TypeID) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_libs_diskstore_proto_enumTypes[1].Descriptor()
-}
-
-func (TypeID) Type() protoreflect.EnumType {
-	return &file_libs_diskstore_proto_enumTypes[1]
-}
-
-func (x TypeID) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use TypeID.Descriptor instead.
-func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_libs_diskstore_proto_rawDescGZIP(), []int{1}
-}
-
 // DiskPersistenceConfig configures the SM-managed persistence component that
 // automates the redo-log lifecycle (UC2) for service_store-annotated types.
 // It is embedded in the ServiceManager config.
@@ -231,21 +181,18 @@ var File_libs_diskstore_proto protoreflect.FileDescriptor
 
 const file_libs_diskstore_proto_rawDesc = "" +
 	"\n" +
-	"\x14libs/diskstore.proto\x12\tdiskstore\x1a\x0flibs/spec.proto\x1a\x15libs/filesystem.proto\"\x9c\x02\n" +
+	"\x14libs/diskstore.proto\x12\tdiskstore\x1a\x0flibs/spec.proto\x1a\x15libs/filesystem.proto\"\xa0\x02\n" +
 	"\x15DiskPersistenceConfig\x12>\n" +
 	"\x15roll_interval_seconds\x18\x01 \x01(\x03B\n" +
 	"\xc0\xa6\x1d\x01\x90\xa8\x1d\x80\xa3\x05R\x13rollIntervalSeconds\x12)\n" +
-	"\rarchive_count\x18\x02 \x01(\rB\x04\x90\xa8\x1d\x03R\farchiveCount\x12\x17\n" +
-	"\x03dir\x18\x03 \x01(\tB\x05\x90\xa7\x1d\x80 R\x03dir\x12?\n" +
+	"\rarchive_count\x18\x02 \x01(\rB\x04\x90\xa8\x1d\x03R\farchiveCount\x12\x1b\n" +
+	"\x03dir\x18\x03 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80 R\x03dir\x12?\n" +
 	"\x0ffile_permission\x18\x04 \x01(\v2\x16.filesystem.PermissionR\x0efilePermission\x12>\n" +
 	"\vcompression\x18\x05 \x01(\x0e2\x16.diskstore.CompressionB\x04\x98\xa7\x1d\x01R\vcompression*K\n" +
 	"\vCompression\x12\x14\n" +
 	"\x10COMPRESSION_NONE\x10\x00\x12\x12\n" +
 	"\x0eCOMPRESSION_GZ\x10\x01\x12\x12\n" +
-	"\x0eCOMPRESSION_BZ\x10\x02*F\n" +
-	"\x06TypeID\x12\x17\n" +
-	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12#\n" +
-	"\x1fTYPE_ID_DISK_PERSISTENCE_CONFIG\x10\x01B[ZYgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/diskstoreb\x06proto3"
+	"\x0eCOMPRESSION_BZ\x10\x02B[ZYgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/diskstoreb\x06proto3"
 
 var (
 	file_libs_diskstore_proto_rawDescOnce sync.Once
@@ -259,16 +206,15 @@ func file_libs_diskstore_proto_rawDescGZIP() []byte {
 	return file_libs_diskstore_proto_rawDescData
 }
 
-var file_libs_diskstore_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_libs_diskstore_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_libs_diskstore_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_libs_diskstore_proto_goTypes = []any{
 	(Compression)(0),              // 0: diskstore.Compression
-	(TypeID)(0),                   // 1: diskstore.TypeID
-	(*DiskPersistenceConfig)(nil), // 2: diskstore.DiskPersistenceConfig
-	(*filesystem.Permission)(nil), // 3: filesystem.Permission
+	(*DiskPersistenceConfig)(nil), // 1: diskstore.DiskPersistenceConfig
+	(*filesystem.Permission)(nil), // 2: filesystem.Permission
 }
 var file_libs_diskstore_proto_depIdxs = []int32{
-	3, // 0: diskstore.DiskPersistenceConfig.file_permission:type_name -> filesystem.Permission
+	2, // 0: diskstore.DiskPersistenceConfig.file_permission:type_name -> filesystem.Permission
 	0, // 1: diskstore.DiskPersistenceConfig.compression:type_name -> diskstore.Compression
 	2, // [2:2] is the sub-list for method output_type
 	2, // [2:2] is the sub-list for method input_type
@@ -287,7 +233,7 @@ func file_libs_diskstore_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_libs_diskstore_proto_rawDesc), len(file_libs_diskstore_proto_rawDesc)),
-			NumEnums:      2,
+			NumEnums:      1,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,

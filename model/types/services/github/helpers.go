@@ -800,13 +800,13 @@ func ProxyRpcIdValues() []ProxyRpcId {
 		ProxyRpcId_PROXY_RPC_ID_LIST_BRANCHES,
 		ProxyRpcId_PROXY_RPC_ID_CREATE_BRANCH,
 		ProxyRpcId_PROXY_RPC_ID_LIST_COMMITS,
-		ProxyRpcId_PROXY_RPC_ID_SEARCH_CODE,
+		ProxyRpcId_PROXY_RPC_ID_LIST_CODE_SEARCH_RESULTS,
 	}
 }
 
 // ProxyRpcIdStringValues returns all valid ProxyRpcId names as strings
 func ProxyRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "proxy", "get-repository", "list-issues", "get-issue", "create-issue", "update-issue", "create-issue-comment", "list-pull-requests", "get-pull-request", "create-pull-request", "merge-pull-request", "list-pull-request-files", "get-content", "create-or-update-file", "list-branches", "create-branch", "list-commits", "search-code"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "proxy", "get-repository", "list-issues", "get-issue", "create-issue", "update-issue", "create-issue-comment", "list-pull-requests", "get-pull-request", "create-pull-request", "merge-pull-request", "list-pull-request-files", "get-content", "create-or-update-file", "list-branches", "create-branch", "list-commits", "list-code-search-results"}
 }
 
 // ParseProxyRpcId converts a string to a ProxyRpcId enum value
@@ -857,8 +857,8 @@ func ParseProxyRpcId(s string) (ProxyRpcId, error) {
 		return ProxyRpcId_PROXY_RPC_ID_CREATE_BRANCH, nil
 	case "list-commits", "proxy-rpc-id-list-commits":
 		return ProxyRpcId_PROXY_RPC_ID_LIST_COMMITS, nil
-	case "search-code", "proxy-rpc-id-search-code":
-		return ProxyRpcId_PROXY_RPC_ID_SEARCH_CODE, nil
+	case "list-code-search-results", "proxy-rpc-id-list-code-search-results":
+		return ProxyRpcId_PROXY_RPC_ID_LIST_CODE_SEARCH_RESULTS, nil
 	default:
 		return ProxyRpcId_PROXY_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid proxyrpcid %s, expecting one of: %v", s, ProxyRpcIdStringValues())
 	}
@@ -929,8 +929,8 @@ func ProxyRpcIdToString(v ProxyRpcId) string {
 		return "create-branch"
 	case ProxyRpcId_PROXY_RPC_ID_LIST_COMMITS:
 		return "list-commits"
-	case ProxyRpcId_PROXY_RPC_ID_SEARCH_CODE:
-		return "search-code"
+	case ProxyRpcId_PROXY_RPC_ID_LIST_CODE_SEARCH_RESULTS:
+		return "list-code-search-results"
 	default:
 		return ""
 	}
@@ -993,8 +993,8 @@ func ParseProxyRpcIdLiberal(s string) ProxyRpcId {
 		return ProxyRpcId_PROXY_RPC_ID_CREATE_BRANCH
 	case "list-commits", "proxy-rpc-id-list-commits":
 		return ProxyRpcId_PROXY_RPC_ID_LIST_COMMITS
-	case "search-code", "proxy-rpc-id-search-code":
-		return ProxyRpcId_PROXY_RPC_ID_SEARCH_CODE
+	case "list-code-search-results", "proxy-rpc-id-list-code-search-results":
+		return ProxyRpcId_PROXY_RPC_ID_LIST_CODE_SEARCH_RESULTS
 	default:
 		return ProxyRpcId_PROXY_RPC_ID_UNSPECIFIED
 	}
@@ -1045,8 +1045,8 @@ func ProxyRpcIdToSpecName(v ProxyRpcId) string {
 		return "PROXY_RPC_ID_CREATE_BRANCH"
 	case ProxyRpcId_PROXY_RPC_ID_LIST_COMMITS:
 		return "PROXY_RPC_ID_LIST_COMMITS"
-	case ProxyRpcId_PROXY_RPC_ID_SEARCH_CODE:
-		return "PROXY_RPC_ID_SEARCH_CODE"
+	case ProxyRpcId_PROXY_RPC_ID_LIST_CODE_SEARCH_RESULTS:
+		return "PROXY_RPC_ID_LIST_CODE_SEARCH_RESULTS"
 	default:
 		return ""
 	}
@@ -17610,11 +17610,6 @@ func ValidateGetRepositoryRequestWithDepth(m *GetRepositoryRequest, depth int) e
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate Owner (assert_max_length: 256)
-	if len(m.Owner) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at most 256 characters, got: %d", len(m.Owner))
-	}
-
 	// Validate Owner (assert_required)
 	if m.Owner == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner is required")
@@ -17623,6 +17618,11 @@ func ValidateGetRepositoryRequestWithDepth(m *GetRepositoryRequest, depth int) e
 	// Validate Owner (assert_min_length: 1)
 	if len(m.Owner) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at least 1 characters, got: %d", len(m.Owner))
+	}
+
+	// Validate Owner (assert_max_length: 256)
+	if len(m.Owner) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at most 256 characters, got: %d", len(m.Owner))
 	}
 
 	// Validate Repo (assert_max_length: 256)
@@ -17737,11 +17737,6 @@ func ValidateListIssuesRequestWithDepth(m *ListIssuesRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at most 256 characters, got: %d", len(m.Owner))
 	}
 
-	// Validate Repo (assert_required)
-	if m.Repo == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Repo is required")
-	}
-
 	// Validate Repo (assert_min_length: 1)
 	if len(m.Repo) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Repo must be at least 1 characters, got: %d", len(m.Repo))
@@ -17750,6 +17745,11 @@ func ValidateListIssuesRequestWithDepth(m *ListIssuesRequest, depth int) error {
 	// Validate Repo (assert_max_length: 256)
 	if len(m.Repo) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Repo must be at most 256 characters, got: %d", len(m.Repo))
+	}
+
+	// Validate Repo (assert_required)
+	if m.Repo == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Repo is required")
 	}
 
 	// Validate State (assert_max_length: 16)
@@ -18101,14 +18101,14 @@ func ValidateCreateIssueRequestWithDepth(m *CreateIssueRequest, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field Assignees exceeds max size of 32, got: %d", len(m.Assignees))
 	}
 
-	// Validate Labels (assert_max_length: 256)
-	if len(m.Labels) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Labels must be at most 256 characters, got: %d", len(m.Labels))
-	}
-
 	// Validate Labels (assert_max_size: 32)
 	if len(m.Labels) > 32 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Labels exceeds max size of 32, got: %d", len(m.Labels))
+	}
+
+	// Validate Labels (assert_max_length: 256)
+	if len(m.Labels) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Labels must be at most 256 characters, got: %d", len(m.Labels))
 	}
 
 	// Validate Milestone (assert_ge: 0)
@@ -18221,11 +18221,6 @@ func ValidateUpdateIssueRequestWithDepth(m *UpdateIssueRequest, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate Owner (assert_max_length: 256)
-	if len(m.Owner) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at most 256 characters, got: %d", len(m.Owner))
-	}
-
 	// Validate Owner (assert_required)
 	if m.Owner == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner is required")
@@ -18234,6 +18229,11 @@ func ValidateUpdateIssueRequestWithDepth(m *UpdateIssueRequest, depth int) error
 	// Validate Owner (assert_min_length: 1)
 	if len(m.Owner) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at least 1 characters, got: %d", len(m.Owner))
+	}
+
+	// Validate Owner (assert_max_length: 256)
+	if len(m.Owner) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at most 256 characters, got: %d", len(m.Owner))
 	}
 
 	// Validate Repo (assert_required)
@@ -18415,11 +18415,6 @@ func ValidateCreateIssueCommentRequestWithDepth(m *CreateIssueCommentRequest, de
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate Owner (assert_max_length: 256)
-	if len(m.Owner) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at most 256 characters, got: %d", len(m.Owner))
-	}
-
 	// Validate Owner (assert_required)
 	if m.Owner == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner is required")
@@ -18428,6 +18423,11 @@ func ValidateCreateIssueCommentRequestWithDepth(m *CreateIssueCommentRequest, de
 	// Validate Owner (assert_min_length: 1)
 	if len(m.Owner) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at least 1 characters, got: %d", len(m.Owner))
+	}
+
+	// Validate Owner (assert_max_length: 256)
+	if len(m.Owner) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at most 256 characters, got: %d", len(m.Owner))
 	}
 
 	// Validate Repo (assert_required)
@@ -18551,11 +18551,6 @@ func ValidateListPullRequestsRequestWithDepth(m *ListPullRequestsRequest, depth 
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate Owner (assert_required)
-	if m.Owner == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Owner is required")
-	}
-
 	// Validate Owner (assert_min_length: 1)
 	if len(m.Owner) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at least 1 characters, got: %d", len(m.Owner))
@@ -18566,6 +18561,16 @@ func ValidateListPullRequestsRequestWithDepth(m *ListPullRequestsRequest, depth 
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at most 256 characters, got: %d", len(m.Owner))
 	}
 
+	// Validate Owner (assert_required)
+	if m.Owner == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Owner is required")
+	}
+
+	// Validate Repo (assert_max_length: 256)
+	if len(m.Repo) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Repo must be at most 256 characters, got: %d", len(m.Repo))
+	}
+
 	// Validate Repo (assert_required)
 	if m.Repo == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Repo is required")
@@ -18574,11 +18579,6 @@ func ValidateListPullRequestsRequestWithDepth(m *ListPullRequestsRequest, depth 
 	// Validate Repo (assert_min_length: 1)
 	if len(m.Repo) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Repo must be at least 1 characters, got: %d", len(m.Repo))
-	}
-
-	// Validate Repo (assert_max_length: 256)
-	if len(m.Repo) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Repo must be at most 256 characters, got: %d", len(m.Repo))
 	}
 
 	// Validate State (assert_max_length: 16)
@@ -18610,13 +18610,13 @@ func ValidateListPullRequestsRequestWithDepth(m *ListPullRequestsRequest, depth 
 	if m.Page < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Page must be >= 0, got: %v", m.Page)
 	}
-	// Validate PerPage (assert_le: 100)
-	if m.PerPage > 100 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be <= 100, got: %v", m.PerPage)
-	}
 	// Validate PerPage (assert_ge: 0)
 	if m.PerPage < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be >= 0, got: %v", m.PerPage)
+	}
+	// Validate PerPage (assert_le: 100)
+	if m.PerPage > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be <= 100, got: %v", m.PerPage)
 	}
 	// Validate Metadata (default max size: 32768 bytes)
 	if len(m.Metadata) > 32768 {
@@ -18752,6 +18752,11 @@ func ValidateGetPullRequestRequestWithDepth(m *GetPullRequestRequest, depth int)
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at most 256 characters, got: %d", len(m.Owner))
 	}
 
+	// Validate Repo (assert_required)
+	if m.Repo == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Repo is required")
+	}
+
 	// Validate Repo (assert_min_length: 1)
 	if len(m.Repo) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Repo must be at least 1 characters, got: %d", len(m.Repo))
@@ -18760,11 +18765,6 @@ func ValidateGetPullRequestRequestWithDepth(m *GetPullRequestRequest, depth int)
 	// Validate Repo (assert_max_length: 256)
 	if len(m.Repo) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Repo must be at most 256 characters, got: %d", len(m.Repo))
-	}
-
-	// Validate Repo (assert_required)
-	if m.Repo == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Repo is required")
 	}
 
 	// Validate PullNumber (assert_ge: 1)
@@ -18883,6 +18883,11 @@ func ValidateCreatePullRequestRequestWithDepth(m *CreatePullRequestRequest, dept
 		return protoerrors.NewErrMissingInvalidData(nil, "field Repo must be at most 256 characters, got: %d", len(m.Repo))
 	}
 
+	// Validate Title (assert_max_length: 1024)
+	if len(m.Title) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Title must be at most 1024 characters, got: %d", len(m.Title))
+	}
+
 	// Validate Title (assert_required)
 	if m.Title == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Title is required")
@@ -18891,11 +18896,6 @@ func ValidateCreatePullRequestRequestWithDepth(m *CreatePullRequestRequest, dept
 	// Validate Title (assert_min_length: 1)
 	if len(m.Title) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Title must be at least 1 characters, got: %d", len(m.Title))
-	}
-
-	// Validate Title (assert_max_length: 1024)
-	if len(m.Title) > 1024 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Title must be at most 1024 characters, got: %d", len(m.Title))
 	}
 
 	// Validate Body (assert_max_length: 262144)
@@ -19035,11 +19035,6 @@ func ValidateMergePullRequestRequestWithDepth(m *MergePullRequestRequest, depth 
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate Owner (assert_max_length: 256)
-	if len(m.Owner) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at most 256 characters, got: %d", len(m.Owner))
-	}
-
 	// Validate Owner (assert_required)
 	if m.Owner == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner is required")
@@ -19050,6 +19045,16 @@ func ValidateMergePullRequestRequestWithDepth(m *MergePullRequestRequest, depth 
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at least 1 characters, got: %d", len(m.Owner))
 	}
 
+	// Validate Owner (assert_max_length: 256)
+	if len(m.Owner) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at most 256 characters, got: %d", len(m.Owner))
+	}
+
+	// Validate Repo (assert_min_length: 1)
+	if len(m.Repo) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Repo must be at least 1 characters, got: %d", len(m.Repo))
+	}
+
 	// Validate Repo (assert_max_length: 256)
 	if len(m.Repo) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Repo must be at most 256 characters, got: %d", len(m.Repo))
@@ -19058,11 +19063,6 @@ func ValidateMergePullRequestRequestWithDepth(m *MergePullRequestRequest, depth 
 	// Validate Repo (assert_required)
 	if m.Repo == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Repo is required")
-	}
-
-	// Validate Repo (assert_min_length: 1)
-	if len(m.Repo) < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Repo must be at least 1 characters, got: %d", len(m.Repo))
 	}
 
 	// Validate PullNumber (assert_ge: 1)
@@ -19204,11 +19204,6 @@ func ValidateListPullRequestFilesRequestWithDepth(m *ListPullRequestFilesRequest
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate Owner (assert_max_length: 256)
-	if len(m.Owner) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at most 256 characters, got: %d", len(m.Owner))
-	}
-
 	// Validate Owner (assert_required)
 	if m.Owner == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner is required")
@@ -19217,6 +19212,11 @@ func ValidateListPullRequestFilesRequestWithDepth(m *ListPullRequestFilesRequest
 	// Validate Owner (assert_min_length: 1)
 	if len(m.Owner) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at least 1 characters, got: %d", len(m.Owner))
+	}
+
+	// Validate Owner (assert_max_length: 256)
+	if len(m.Owner) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at most 256 characters, got: %d", len(m.Owner))
 	}
 
 	// Validate Repo (assert_required)
@@ -19359,6 +19359,11 @@ func ValidateGetContentRequestWithDepth(m *GetContentRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at most 256 characters, got: %d", len(m.Owner))
 	}
 
+	// Validate Repo (assert_max_length: 256)
+	if len(m.Repo) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Repo must be at most 256 characters, got: %d", len(m.Repo))
+	}
+
 	// Validate Repo (assert_required)
 	if m.Repo == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Repo is required")
@@ -19367,11 +19372,6 @@ func ValidateGetContentRequestWithDepth(m *GetContentRequest, depth int) error {
 	// Validate Repo (assert_min_length: 1)
 	if len(m.Repo) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Repo must be at least 1 characters, got: %d", len(m.Repo))
-	}
-
-	// Validate Repo (assert_max_length: 256)
-	if len(m.Repo) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Repo must be at most 256 characters, got: %d", len(m.Repo))
 	}
 
 	// Validate Path (assert_required)
@@ -19493,6 +19493,11 @@ func ValidateCreateOrUpdateFileRequestWithDepth(m *CreateOrUpdateFileRequest, de
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
+	// Validate Owner (assert_required)
+	if m.Owner == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Owner is required")
+	}
+
 	// Validate Owner (assert_min_length: 1)
 	if len(m.Owner) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at least 1 characters, got: %d", len(m.Owner))
@@ -19501,11 +19506,6 @@ func ValidateCreateOrUpdateFileRequestWithDepth(m *CreateOrUpdateFileRequest, de
 	// Validate Owner (assert_max_length: 256)
 	if len(m.Owner) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at most 256 characters, got: %d", len(m.Owner))
-	}
-
-	// Validate Owner (assert_required)
-	if m.Owner == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Owner is required")
 	}
 
 	// Validate Repo (assert_required)
@@ -19538,11 +19538,6 @@ func ValidateCreateOrUpdateFileRequestWithDepth(m *CreateOrUpdateFileRequest, de
 		return protoerrors.NewErrMissingInvalidData(nil, "field Path must be at most 2048 characters, got: %d", len(m.Path))
 	}
 
-	// Validate Message (assert_required)
-	if m.Message == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Message is required")
-	}
-
 	// Validate Message (assert_min_length: 1)
 	if len(m.Message) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Message must be at least 1 characters, got: %d", len(m.Message))
@@ -19551,6 +19546,11 @@ func ValidateCreateOrUpdateFileRequestWithDepth(m *CreateOrUpdateFileRequest, de
 	// Validate Message (assert_max_length: 4096)
 	if len(m.Message) > 4096 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Message must be at most 4096 characters, got: %d", len(m.Message))
+	}
+
+	// Validate Message (assert_required)
+	if m.Message == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Message is required")
 	}
 
 	// Validate Content (assert_required)
@@ -19716,11 +19716,6 @@ func ValidateListBranchesRequestWithDepth(m *ListBranchesRequest, depth int) err
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at most 256 characters, got: %d", len(m.Owner))
 	}
 
-	// Validate Repo (assert_max_length: 256)
-	if len(m.Repo) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Repo must be at most 256 characters, got: %d", len(m.Repo))
-	}
-
 	// Validate Repo (assert_required)
 	if m.Repo == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Repo is required")
@@ -19729,6 +19724,11 @@ func ValidateListBranchesRequestWithDepth(m *ListBranchesRequest, depth int) err
 	// Validate Repo (assert_min_length: 1)
 	if len(m.Repo) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Repo must be at least 1 characters, got: %d", len(m.Repo))
+	}
+
+	// Validate Repo (assert_max_length: 256)
+	if len(m.Repo) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Repo must be at most 256 characters, got: %d", len(m.Repo))
 	}
 
 	// Validate Page (assert_ge: 0)
@@ -19882,11 +19882,6 @@ func ValidateCreateBranchRequestWithDepth(m *CreateBranchRequest, depth int) err
 		return protoerrors.NewErrMissingInvalidData(nil, "field Ref must be at most 512 characters, got: %d", len(m.Ref))
 	}
 
-	// Validate Sha (assert_min_length: 1)
-	if len(m.Sha) < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Sha must be at least 1 characters, got: %d", len(m.Sha))
-	}
-
 	// Validate Sha (assert_max_length: 64)
 	if len(m.Sha) > 64 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Sha must be at most 64 characters, got: %d", len(m.Sha))
@@ -19895,6 +19890,11 @@ func ValidateCreateBranchRequestWithDepth(m *CreateBranchRequest, depth int) err
 	// Validate Sha (assert_required)
 	if m.Sha == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Sha is required")
+	}
+
+	// Validate Sha (assert_min_length: 1)
+	if len(m.Sha) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Sha must be at least 1 characters, got: %d", len(m.Sha))
 	}
 
 	// Validate Metadata (default max size: 32768 bytes)
@@ -19989,6 +19989,11 @@ func ValidateListCommitsRequestWithDepth(m *ListCommitsRequest, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
+	// Validate Owner (assert_required)
+	if m.Owner == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Owner is required")
+	}
+
 	// Validate Owner (assert_min_length: 1)
 	if len(m.Owner) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at least 1 characters, got: %d", len(m.Owner))
@@ -19997,11 +20002,6 @@ func ValidateListCommitsRequestWithDepth(m *ListCommitsRequest, depth int) error
 	// Validate Owner (assert_max_length: 256)
 	if len(m.Owner) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be at most 256 characters, got: %d", len(m.Owner))
-	}
-
-	// Validate Owner (assert_required)
-	if m.Owner == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Owner is required")
 	}
 
 	// Validate Repo (assert_required)
@@ -20175,6 +20175,11 @@ func ValidateSearchCodeRequestWithDepth(m *SearchCodeRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
+	// Validate Query (assert_required)
+	if m.Query == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Query is required")
+	}
+
 	// Validate Query (assert_min_length: 1)
 	if len(m.Query) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Query must be at least 1 characters, got: %d", len(m.Query))
@@ -20183,11 +20188,6 @@ func ValidateSearchCodeRequestWithDepth(m *SearchCodeRequest, depth int) error {
 	// Validate Query (assert_max_length: 4096)
 	if len(m.Query) > 4096 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Query must be at most 4096 characters, got: %d", len(m.Query))
-	}
-
-	// Validate Query (assert_required)
-	if m.Query == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Query is required")
 	}
 
 	// Validate Sort (assert_max_length: 16)
@@ -20303,11 +20303,6 @@ func ValidateProxyEventWithDepth(m *ProxyEvent, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Subject (assert_max_length: 256)
-	if len(m.Subject) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Subject must be at most 256 characters, got: %d", len(m.Subject))
-	}
-
 	// Validate Subject (assert_required)
 	if m.Subject == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Subject is required")
@@ -20316,6 +20311,11 @@ func ValidateProxyEventWithDepth(m *ProxyEvent, depth int) error {
 	// Validate Subject (assert_min_length: 1)
 	if len(m.Subject) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Subject must be at least 1 characters, got: %d", len(m.Subject))
+	}
+
+	// Validate Subject (assert_max_length: 256)
+	if len(m.Subject) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Subject must be at most 256 characters, got: %d", len(m.Subject))
 	}
 
 	// Validate Method (assert_enum_defined)

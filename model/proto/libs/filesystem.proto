@@ -41,14 +41,3 @@ message Directory {
   // files holds zero or more files in this directory
   repeated File files = 4;
 }
-
-// ============================================================================
-// Generated Proto Registry IDs
-// Auto-injected by tacplus for shared type/RPC identifiers.
-// ============================================================================
-enum TypeID {
-  TYPE_ID_UNSPECIFIED = 0;
-  TYPE_ID_PERMISSION = 1;
-  TYPE_ID_FILE = 2;
-  TYPE_ID_DIRECTORY = 3;
-}

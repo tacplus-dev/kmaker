@@ -514,119 +514,6 @@ func X509ExtKeyUsageToSpecName(v X509ExtKeyUsage) string {
 	}
 }
 
-// TypeIDValues returns all valid TypeID values (excluding UNDEFINED)
-func TypeIDValues() []TypeID {
-	return []TypeID{
-		TypeID_TYPE_ID_X509_CERT,
-		TypeID_TYPE_ID_X509_CERT_REQUEST,
-		TypeID_TYPE_ID_X509_CERT_CHAIN,
-	}
-}
-
-// TypeIDStringValues returns all valid TypeID names as strings
-func TypeIDStringValues() []string {
-	return []string{"x509-cert", "x509-cert-request", "x509-cert-chain"}
-}
-
-// ParseTypeID converts a string to a TypeID enum value
-// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseTypeID(s string) (TypeID, error) {
-	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
-	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
-	switch normalized {
-	case "":
-		return TypeID_TYPE_ID_UNSPECIFIED, nil
-	case "x509-cert", "type-id-x509-cert":
-		return TypeID_TYPE_ID_X509_CERT, nil
-	case "x509-cert-request", "type-id-x509-cert-request":
-		return TypeID_TYPE_ID_X509_CERT_REQUEST, nil
-	case "x509-cert-chain", "type-id-x509-cert-chain":
-		return TypeID_TYPE_ID_X509_CERT_CHAIN, nil
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid typeid %s, expecting one of: %v", s, TypeIDStringValues())
-	}
-}
-
-// ParseTypeIDs converts a comma-separated string to a slice of TypeID enum values
-// Returns an error if any value is invalid
-func ParseTypeIDs(s string) ([]TypeID, error) {
-	if s == "" {
-		return nil, nil
-	}
-	parts := strings.Split(s, ",")
-	result := make([]TypeID, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed == "" {
-			continue
-		}
-		val, err := ParseTypeID(trimmed)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, val)
-	}
-	return result, nil
-}
-
-// TypeIDToString converts a TypeID to its lowercase string representation
-func TypeIDToString(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_X509_CERT:
-		return "x509-cert"
-	case TypeID_TYPE_ID_X509_CERT_REQUEST:
-		return "x509-cert-request"
-	case TypeID_TYPE_ID_X509_CERT_CHAIN:
-		return "x509-cert-chain"
-	default:
-		return ""
-	}
-}
-
-// ParseTypeIDLiberal parses a TypeID liberally, accepting:
-// - Integer values (as string or int)
-// - Enum names in any case
-// - RFC-compliant JSON names
-func ParseTypeIDLiberal(s string) TypeID {
-	if s == "" {
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-	// Try parsing as integer
-	if num, err := strconv.Atoi(s); err == nil {
-		return TypeID(num)
-	}
-	// Normalize and try parsing
-	normalized := strings.ToLower(strings.TrimSpace(s))
-	normalized = strings.ReplaceAll(normalized, "_", "-")
-	normalized = strings.ReplaceAll(normalized, " ", "-")
-	switch normalized {
-	case "x509-cert", "type-id-x509-cert":
-		return TypeID_TYPE_ID_X509_CERT
-	case "x509-cert-request", "type-id-x509-cert-request":
-		return TypeID_TYPE_ID_X509_CERT_REQUEST
-	case "x509-cert-chain", "type-id-x509-cert-chain":
-		return TypeID_TYPE_ID_X509_CERT_CHAIN
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-}
-
-// TypeIDToSpecName converts a TypeID to its canonical protobuf spec name
-func TypeIDToSpecName(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_UNSPECIFIED:
-		return "TYPE_ID_UNSPECIFIED"
-	case TypeID_TYPE_ID_X509_CERT:
-		return "TYPE_ID_X509_CERT"
-	case TypeID_TYPE_ID_X509_CERT_REQUEST:
-		return "TYPE_ID_X509_CERT_REQUEST"
-	case TypeID_TYPE_ID_X509_CERT_CHAIN:
-		return "TYPE_ID_X509_CERT_CHAIN"
-	default:
-		return ""
-	}
-}
-
 // ============================================================
 // JSON/YAML/TOML Serialization Helpers
 // ============================================================
@@ -1408,6 +1295,16 @@ func ValidateX509CertWithDepth(m *X509Cert, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
+	// Validate Id (assert_max_size: 256 bytes)
+	if len(m.Id) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Id exceeds max size of 256 bytes, got: %d", len(m.Id))
+	}
+
+	// Validate Base64 (assert_max_size: 16384 bytes)
+	if len(m.Base64) > 16384 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Base64 exceeds max size of 16384 bytes, got: %d", len(m.Base64))
+	}
+
 	// Validate Base64 (assert_required)
 	if m.Base64 == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Base64 is required")
@@ -1418,16 +1315,6 @@ func ValidateX509CertWithDepth(m *X509Cert, depth int) error {
 		if err := utils.ValidateAssertBase64(m.Base64); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field Base64 base64 validation failed")
 		}
-	}
-
-	// Validate Id (default max size: 32768 bytes)
-	if len(m.Id) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Id exceeds max size of 32768 bytes, got: %d", len(m.Id))
-	}
-
-	// Validate Base64 (default max size: 32768 bytes)
-	if len(m.Base64) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Base64 exceeds max size of 32768 bytes, got: %d", len(m.Base64))
 	}
 
 	return nil
@@ -1464,14 +1351,19 @@ func ValidateX509CertRequestWithDepth(m *X509CertRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ExtKeyUsage exceeds max size of 16, got: %d", len(m.ExtKeyUsage))
 	}
 
+	// Validate Issuer (assert_required)
+	if m.Issuer == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Issuer is required")
+	}
+
 	// Validate Issuer (assert_min_length: 1)
 	if len(m.Issuer) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Issuer must be at least 1 characters, got: %d", len(m.Issuer))
 	}
 
-	// Validate Issuer (assert_required)
-	if m.Issuer == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Issuer is required")
+	// Validate Issuer (assert_max_size: 1024 bytes)
+	if len(m.Issuer) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Issuer exceeds max size of 1024 bytes, got: %d", len(m.Issuer))
 	}
 
 	// Validate DnsNames (assert_max_size: 32)
@@ -1496,11 +1388,6 @@ func ValidateX509CertRequestWithDepth(m *X509CertRequest, depth int) error {
 		if len(val) > 32768 {
 			return protoerrors.NewErrMissingInvalidData(nil, "field UriSans[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
 		}
-	}
-
-	// Validate Issuer (default max size: 32768 bytes)
-	if len(m.Issuer) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Issuer exceeds max size of 32768 bytes, got: %d", len(m.Issuer))
 	}
 
 	// Validate KeyUsage enum value is known
@@ -1541,19 +1428,19 @@ func ValidateX509CertChainWithDepth(m *X509CertChain, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Chain (assert_min_size: 1)
-	if len(m.Chain) < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Chain below min size of 1, got: %d", len(m.Chain))
-	}
-
 	// Validate Chain (assert_max_size: 8)
 	if len(m.Chain) > 8 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Chain exceeds max size of 8, got: %d", len(m.Chain))
 	}
 
-	// Validate Id (default max size: 32768 bytes)
-	if len(m.Id) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Id exceeds max size of 32768 bytes, got: %d", len(m.Id))
+	// Validate Chain (assert_min_size: 1)
+	if len(m.Chain) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Chain below min size of 1, got: %d", len(m.Chain))
+	}
+
+	// Validate Id (assert_max_size: 256 bytes)
+	if len(m.Id) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Id exceeds max size of 256 bytes, got: %d", len(m.Id))
 	}
 
 	// Validate Chain nested messages
@@ -1577,14 +1464,14 @@ func ValidateX509CertChainWithDepth(m *X509CertChain, depth int) error {
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizeX509certId                 int = 32768
-	MaxSizeX509certBase64             int = 32768
+	MaxSizeX509certId                 int = 256
+	MaxSizeX509certBase64             int = 16384
 	MaxSizeX509certrequestExtKeyUsage int = 16
-	MaxSizeX509certrequestIssuer      int = 32768
+	MaxSizeX509certrequestIssuer      int = 1024
 	MaxSizeX509certrequestDnsNames    int = 32
 	MaxSizeX509certrequestUriSans     int = 8
 	MaxSizeX509certchainChain         int = 8
-	MaxSizeX509certchainId            int = 32768
+	MaxSizeX509certchainId            int = 256
 )
 
 // ============================================================

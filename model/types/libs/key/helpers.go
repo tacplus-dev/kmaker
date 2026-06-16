@@ -260,110 +260,6 @@ func UseTypeToSpecName(v UseType) string {
 	}
 }
 
-// TypeIDValues returns all valid TypeID values (excluding UNDEFINED)
-func TypeIDValues() []TypeID {
-	return []TypeID{
-		TypeID_TYPE_ID_PUBLIC_KEY,
-		TypeID_TYPE_ID_KEY,
-	}
-}
-
-// TypeIDStringValues returns all valid TypeID names as strings
-func TypeIDStringValues() []string {
-	return []string{"public-key", "key"}
-}
-
-// ParseTypeID converts a string to a TypeID enum value
-// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseTypeID(s string) (TypeID, error) {
-	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
-	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
-	switch normalized {
-	case "":
-		return TypeID_TYPE_ID_UNSPECIFIED, nil
-	case "public-key", "type-id-public-key":
-		return TypeID_TYPE_ID_PUBLIC_KEY, nil
-	case "key", "type-id-key":
-		return TypeID_TYPE_ID_KEY, nil
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid typeid %s, expecting one of: %v", s, TypeIDStringValues())
-	}
-}
-
-// ParseTypeIDs converts a comma-separated string to a slice of TypeID enum values
-// Returns an error if any value is invalid
-func ParseTypeIDs(s string) ([]TypeID, error) {
-	if s == "" {
-		return nil, nil
-	}
-	parts := strings.Split(s, ",")
-	result := make([]TypeID, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed == "" {
-			continue
-		}
-		val, err := ParseTypeID(trimmed)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, val)
-	}
-	return result, nil
-}
-
-// TypeIDToString converts a TypeID to its lowercase string representation
-func TypeIDToString(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_PUBLIC_KEY:
-		return "public-key"
-	case TypeID_TYPE_ID_KEY:
-		return "key"
-	default:
-		return ""
-	}
-}
-
-// ParseTypeIDLiberal parses a TypeID liberally, accepting:
-// - Integer values (as string or int)
-// - Enum names in any case
-// - RFC-compliant JSON names
-func ParseTypeIDLiberal(s string) TypeID {
-	if s == "" {
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-	// Try parsing as integer
-	if num, err := strconv.Atoi(s); err == nil {
-		return TypeID(num)
-	}
-	// Normalize and try parsing
-	normalized := strings.ToLower(strings.TrimSpace(s))
-	normalized = strings.ReplaceAll(normalized, "_", "-")
-	normalized = strings.ReplaceAll(normalized, " ", "-")
-	switch normalized {
-	case "public-key", "type-id-public-key":
-		return TypeID_TYPE_ID_PUBLIC_KEY
-	case "key", "type-id-key":
-		return TypeID_TYPE_ID_KEY
-	default:
-		return TypeID_TYPE_ID_UNSPECIFIED
-	}
-}
-
-// TypeIDToSpecName converts a TypeID to its canonical protobuf spec name
-func TypeIDToSpecName(v TypeID) string {
-	switch v {
-	case TypeID_TYPE_ID_UNSPECIFIED:
-		return "TYPE_ID_UNSPECIFIED"
-	case TypeID_TYPE_ID_PUBLIC_KEY:
-		return "TYPE_ID_PUBLIC_KEY"
-	case TypeID_TYPE_ID_KEY:
-		return "TYPE_ID_KEY"
-	default:
-		return ""
-	}
-}
-
 // ============================================================
 // JSON/YAML/TOML Serialization Helpers
 // ============================================================
@@ -779,11 +675,9 @@ func ValidatePublicKeyWithDepth(m *PublicKey, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Id must be at least 1 characters, got: %d", len(m.Id))
 	}
 
-	// Validate Base64 (assert_base64)
-	if m.Base64 != "" {
-		if err := utils.ValidateAssertBase64(m.Base64); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field Base64 base64 validation failed")
-		}
+	// Validate Id (assert_max_size: 256 bytes)
+	if len(m.Id) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Id exceeds max size of 256 bytes, got: %d", len(m.Id))
 	}
 
 	// Validate Base64 (assert_required)
@@ -791,6 +685,22 @@ func ValidatePublicKeyWithDepth(m *PublicKey, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Base64 is required")
 	}
 
+	// Validate Base64 (assert_base64)
+	if m.Base64 != "" {
+		if err := utils.ValidateAssertBase64(m.Base64); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Base64 base64 validation failed")
+		}
+	}
+
+	// Validate Base64 (assert_max_size: 8192 bytes)
+	if len(m.Base64) > 8192 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Base64 exceeds max size of 8192 bytes, got: %d", len(m.Base64))
+	}
+
+	// Validate Created (assert_le: 8045740800)
+	if m.Created > 8045740800 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Created must be <= 8045740800, got: %v", m.Created)
+	}
 	// Validate Created (assert_required: must be > 0)
 	if m.Created <= 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Created is required and must be greater than zero")
@@ -800,20 +710,6 @@ func ValidatePublicKeyWithDepth(m *PublicKey, depth int) error {
 	if m.Created < 1735689600 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Created must be >= 1735689600, got: %v", m.Created)
 	}
-	// Validate Created (assert_le: 8045740800)
-	if m.Created > 8045740800 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Created must be <= 8045740800, got: %v", m.Created)
-	}
-	// Validate Id (default max size: 32768 bytes)
-	if len(m.Id) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Id exceeds max size of 32768 bytes, got: %d", len(m.Id))
-	}
-
-	// Validate Base64 (default max size: 32768 bytes)
-	if len(m.Base64) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Base64 exceeds max size of 32768 bytes, got: %d", len(m.Base64))
-	}
-
 	return nil
 }
 
@@ -833,14 +729,24 @@ func ValidateKeyWithDepth(m *Key, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
+	// Validate Id (assert_required)
+	if m.Id == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Id is required")
+	}
+
 	// Validate Id (assert_min_length: 1)
 	if len(m.Id) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Id must be at least 1 characters, got: %d", len(m.Id))
 	}
 
-	// Validate Id (assert_required)
-	if m.Id == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Id is required")
+	// Validate Id (assert_max_size: 256 bytes)
+	if len(m.Id) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Id exceeds max size of 256 bytes, got: %d", len(m.Id))
+	}
+
+	// Validate Base64 (assert_required)
+	if m.Base64 == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Base64 is required")
 	}
 
 	// Validate Base64 (assert_base64)
@@ -857,11 +763,15 @@ func ValidateKeyWithDepth(m *Key, depth int) error {
 		}
 	}
 
-	// Validate Base64 (assert_required)
-	if m.Base64 == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Base64 is required")
+	// Validate Base64 (assert_max_size: 16384 bytes)
+	if len(m.Base64) > 16384 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Base64 exceeds max size of 16384 bytes, got: %d", len(m.Base64))
 	}
 
+	// Validate Created (assert_ge: 1735689600)
+	if m.Created < 1735689600 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Created must be >= 1735689600, got: %v", m.Created)
+	}
 	// Validate Created (assert_le: 8045740800)
 	if m.Created > 8045740800 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Created must be <= 8045740800, got: %v", m.Created)
@@ -869,20 +779,6 @@ func ValidateKeyWithDepth(m *Key, depth int) error {
 	// Validate Created (assert_required: must be > 0)
 	if m.Created <= 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Created is required and must be greater than zero")
-	}
-
-	// Validate Created (assert_ge: 1735689600)
-	if m.Created < 1735689600 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Created must be >= 1735689600, got: %v", m.Created)
-	}
-	// Validate Id (default max size: 32768 bytes)
-	if len(m.Id) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Id exceeds max size of 32768 bytes, got: %d", len(m.Id))
-	}
-
-	// Validate Base64 (default max size: 32768 bytes)
-	if len(m.Base64) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Base64 exceeds max size of 32768 bytes, got: %d", len(m.Base64))
 	}
 
 	return nil
@@ -1150,10 +1046,10 @@ func validateENC_TYPE_X509_CERT_ANY(pemData string) error {
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizePublickeyId     int = 32768
-	MaxSizePublickeyBase64 int = 32768
-	MaxSizeKeyId           int = 32768
-	MaxSizeKeyBase64       int = 32768
+	MaxSizePublickeyId     int = 256
+	MaxSizePublickeyBase64 int = 8192
+	MaxSizeKeyId           int = 256
+	MaxSizeKeyBase64       int = 16384
 )
 
 // ============================================================

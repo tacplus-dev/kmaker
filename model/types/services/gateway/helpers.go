@@ -271,17 +271,17 @@ func MintRpcIdValues() []MintRpcId {
 		MintRpcId_MINT_RPC_ID_ALL_ACCESSORS,
 		MintRpcId_MINT_RPC_ID_ALL_MUTATORS,
 		MintRpcId_MINT_RPC_ID_ALL_EXECUTORS,
-		MintRpcId_MINT_RPC_ID_OPEN_ID_CONFIG,
-		MintRpcId_MINT_RPC_ID_JWKS,
-		MintRpcId_MINT_RPC_ID_TOKEN_MINT,
-		MintRpcId_MINT_RPC_ID_X509_MINT,
-		MintRpcId_MINT_RPC_ID_PUBLIC_CA,
+		MintRpcId_MINT_RPC_ID_GET_OPEN_ID_CONFIG,
+		MintRpcId_MINT_RPC_ID_LIST_JWKS,
+		MintRpcId_MINT_RPC_ID_MINT_TOKEN,
+		MintRpcId_MINT_RPC_ID_MINT_X509_CERT,
+		MintRpcId_MINT_RPC_ID_LIST_PUBLIC_CA,
 	}
 }
 
 // MintRpcIdStringValues returns all valid MintRpcId names as strings
 func MintRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "open-id-config", "jwks", "token-mint", "x509-mint", "public-ca"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "get-open-id-config", "list-jwks", "mint-token", "mint-x509-cert", "list-public-ca"}
 }
 
 // ParseMintRpcId converts a string to a MintRpcId enum value
@@ -298,16 +298,16 @@ func ParseMintRpcId(s string) (MintRpcId, error) {
 		return MintRpcId_MINT_RPC_ID_ALL_MUTATORS, nil
 	case "all-executors", "mint-rpc-id-all-executors":
 		return MintRpcId_MINT_RPC_ID_ALL_EXECUTORS, nil
-	case "open-id-config", "mint-rpc-id-open-id-config":
-		return MintRpcId_MINT_RPC_ID_OPEN_ID_CONFIG, nil
-	case "jwks", "mint-rpc-id-jwks":
-		return MintRpcId_MINT_RPC_ID_JWKS, nil
-	case "token-mint", "mint-rpc-id-token-mint":
-		return MintRpcId_MINT_RPC_ID_TOKEN_MINT, nil
-	case "x509-mint", "mint-rpc-id-x509-mint":
-		return MintRpcId_MINT_RPC_ID_X509_MINT, nil
-	case "public-ca", "mint-rpc-id-public-ca":
-		return MintRpcId_MINT_RPC_ID_PUBLIC_CA, nil
+	case "get-open-id-config", "mint-rpc-id-get-open-id-config":
+		return MintRpcId_MINT_RPC_ID_GET_OPEN_ID_CONFIG, nil
+	case "list-jwks", "mint-rpc-id-list-jwks":
+		return MintRpcId_MINT_RPC_ID_LIST_JWKS, nil
+	case "mint-token", "mint-rpc-id-mint-token":
+		return MintRpcId_MINT_RPC_ID_MINT_TOKEN, nil
+	case "mint-x509-cert", "mint-rpc-id-mint-x509-cert":
+		return MintRpcId_MINT_RPC_ID_MINT_X509_CERT, nil
+	case "list-public-ca", "mint-rpc-id-list-public-ca":
+		return MintRpcId_MINT_RPC_ID_LIST_PUBLIC_CA, nil
 	default:
 		return MintRpcId_MINT_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid mintrpcid %s, expecting one of: %v", s, MintRpcIdStringValues())
 	}
@@ -344,16 +344,16 @@ func MintRpcIdToString(v MintRpcId) string {
 		return "all-mutators"
 	case MintRpcId_MINT_RPC_ID_ALL_EXECUTORS:
 		return "all-executors"
-	case MintRpcId_MINT_RPC_ID_OPEN_ID_CONFIG:
-		return "open-id-config"
-	case MintRpcId_MINT_RPC_ID_JWKS:
-		return "jwks"
-	case MintRpcId_MINT_RPC_ID_TOKEN_MINT:
-		return "token-mint"
-	case MintRpcId_MINT_RPC_ID_X509_MINT:
-		return "x509-mint"
-	case MintRpcId_MINT_RPC_ID_PUBLIC_CA:
-		return "public-ca"
+	case MintRpcId_MINT_RPC_ID_GET_OPEN_ID_CONFIG:
+		return "get-open-id-config"
+	case MintRpcId_MINT_RPC_ID_LIST_JWKS:
+		return "list-jwks"
+	case MintRpcId_MINT_RPC_ID_MINT_TOKEN:
+		return "mint-token"
+	case MintRpcId_MINT_RPC_ID_MINT_X509_CERT:
+		return "mint-x509-cert"
+	case MintRpcId_MINT_RPC_ID_LIST_PUBLIC_CA:
+		return "list-public-ca"
 	default:
 		return ""
 	}
@@ -382,16 +382,16 @@ func ParseMintRpcIdLiberal(s string) MintRpcId {
 		return MintRpcId_MINT_RPC_ID_ALL_MUTATORS
 	case "all-executors", "mint-rpc-id-all-executors":
 		return MintRpcId_MINT_RPC_ID_ALL_EXECUTORS
-	case "open-id-config", "mint-rpc-id-open-id-config":
-		return MintRpcId_MINT_RPC_ID_OPEN_ID_CONFIG
-	case "jwks", "mint-rpc-id-jwks":
-		return MintRpcId_MINT_RPC_ID_JWKS
-	case "token-mint", "mint-rpc-id-token-mint":
-		return MintRpcId_MINT_RPC_ID_TOKEN_MINT
-	case "x509-mint", "mint-rpc-id-x509-mint":
-		return MintRpcId_MINT_RPC_ID_X509_MINT
-	case "public-ca", "mint-rpc-id-public-ca":
-		return MintRpcId_MINT_RPC_ID_PUBLIC_CA
+	case "get-open-id-config", "mint-rpc-id-get-open-id-config":
+		return MintRpcId_MINT_RPC_ID_GET_OPEN_ID_CONFIG
+	case "list-jwks", "mint-rpc-id-list-jwks":
+		return MintRpcId_MINT_RPC_ID_LIST_JWKS
+	case "mint-token", "mint-rpc-id-mint-token":
+		return MintRpcId_MINT_RPC_ID_MINT_TOKEN
+	case "mint-x509-cert", "mint-rpc-id-mint-x509-cert":
+		return MintRpcId_MINT_RPC_ID_MINT_X509_CERT
+	case "list-public-ca", "mint-rpc-id-list-public-ca":
+		return MintRpcId_MINT_RPC_ID_LIST_PUBLIC_CA
 	default:
 		return MintRpcId_MINT_RPC_ID_UNSPECIFIED
 	}
@@ -408,16 +408,16 @@ func MintRpcIdToSpecName(v MintRpcId) string {
 		return "MINT_RPC_ID_ALL_MUTATORS"
 	case MintRpcId_MINT_RPC_ID_ALL_EXECUTORS:
 		return "MINT_RPC_ID_ALL_EXECUTORS"
-	case MintRpcId_MINT_RPC_ID_OPEN_ID_CONFIG:
-		return "MINT_RPC_ID_OPEN_ID_CONFIG"
-	case MintRpcId_MINT_RPC_ID_JWKS:
-		return "MINT_RPC_ID_JWKS"
-	case MintRpcId_MINT_RPC_ID_TOKEN_MINT:
-		return "MINT_RPC_ID_TOKEN_MINT"
-	case MintRpcId_MINT_RPC_ID_X509_MINT:
-		return "MINT_RPC_ID_X509_MINT"
-	case MintRpcId_MINT_RPC_ID_PUBLIC_CA:
-		return "MINT_RPC_ID_PUBLIC_CA"
+	case MintRpcId_MINT_RPC_ID_GET_OPEN_ID_CONFIG:
+		return "MINT_RPC_ID_GET_OPEN_ID_CONFIG"
+	case MintRpcId_MINT_RPC_ID_LIST_JWKS:
+		return "MINT_RPC_ID_LIST_JWKS"
+	case MintRpcId_MINT_RPC_ID_MINT_TOKEN:
+		return "MINT_RPC_ID_MINT_TOKEN"
+	case MintRpcId_MINT_RPC_ID_MINT_X509_CERT:
+		return "MINT_RPC_ID_MINT_X509_CERT"
+	case MintRpcId_MINT_RPC_ID_LIST_PUBLIC_CA:
+		return "MINT_RPC_ID_LIST_PUBLIC_CA"
 	default:
 		return ""
 	}

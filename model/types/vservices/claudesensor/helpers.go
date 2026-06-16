@@ -23,6 +23,7 @@ package claudesensor
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"strconv"
 	"strings"
@@ -32,6 +33,7 @@ import (
 	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/trace"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	"gopkg.in/yaml.v3"
 )
 
@@ -560,48 +562,51 @@ func TypeIDValues() []TypeID {
 		TypeID_TYPE_ID_MAP_DETAIL,
 		TypeID_TYPE_ID_SESSION_SUMMARY,
 		TypeID_TYPE_ID_EVENT_TIME_RANGE,
-		TypeID_TYPE_ID_NEW_MAP_REQUEST,
-		TypeID_TYPE_ID_NEW_MAP_RESPONSE,
+		TypeID_TYPE_ID_CREATE_MAP_REQUEST,
+		TypeID_TYPE_ID_CREATE_MAP_RESPONSE,
 		TypeID_TYPE_ID_DELETE_MAP_REQUEST,
 		TypeID_TYPE_ID_DELETE_MAP_RESPONSE,
 		TypeID_TYPE_ID_LIST_MAPS_REQUEST,
 		TypeID_TYPE_ID_LIST_MAPS_RESPONSE,
-		TypeID_TYPE_ID_DESCRIBE_MAP_REQUEST,
-		TypeID_TYPE_ID_DESCRIBE_MAP_RESPONSE,
+		TypeID_TYPE_ID_GET_MAP_DETAIL_REQUEST,
+		TypeID_TYPE_ID_GET_MAP_DETAIL_RESPONSE,
 		TypeID_TYPE_ID_MAP_SIZE_REQUEST,
 		TypeID_TYPE_ID_MAP_SIZE_RESPONSE,
-		TypeID_TYPE_ID_LOAD_BY_IDS_REQUEST,
-		TypeID_TYPE_ID_LOAD_BY_IDS_RESPONSE,
-		TypeID_TYPE_ID_LOAD_BY_SQL_REQUEST,
-		TypeID_TYPE_ID_LOAD_BY_SQL_RESPONSE,
-		TypeID_TYPE_ID_LOAD_BY_TIMEDB_REQUEST,
-		TypeID_TYPE_ID_LOAD_BY_TIMEDB_RESPONSE,
-		TypeID_TYPE_ID_LOAD_BY_GRAPHDB_REQUEST,
-		TypeID_TYPE_ID_LOAD_BY_GRAPHDB_RESPONSE,
-		TypeID_TYPE_ID_FILTER_MAP_REQUEST,
-		TypeID_TYPE_ID_FILTER_MAP_RESPONSE,
+		TypeID_TYPE_ID_UPDATE_MAP_BY_IDS_REQUEST,
+		TypeID_TYPE_ID_UPDATE_MAP_BY_IDS_RESPONSE,
+		TypeID_TYPE_ID_UPDATE_MAP_BY_SQL_REQUEST,
+		TypeID_TYPE_ID_UPDATE_MAP_BY_SQL_RESPONSE,
+		TypeID_TYPE_ID_UPDATE_MAP_BY_TIMEDB_REQUEST,
+		TypeID_TYPE_ID_UPDATE_MAP_BY_TIMEDB_RESPONSE,
+		TypeID_TYPE_ID_UPDATE_MAP_BY_GRAPHDB_REQUEST,
+		TypeID_TYPE_ID_UPDATE_MAP_BY_GRAPHDB_RESPONSE,
+		TypeID_TYPE_ID_UPDATE_MAP_FILTER_REQUEST,
+		TypeID_TYPE_ID_UPDATE_MAP_FILTER_RESPONSE,
 		TypeID_TYPE_ID_MERGE_REQUEST,
 		TypeID_TYPE_ID_MERGE_RESPONSE,
-		TypeID_TYPE_ID_QUERY_MAP_REQUEST,
-		TypeID_TYPE_ID_QUERY_MAP_RESPONSE,
+		TypeID_TYPE_ID_EXECUTE_MAP_QUERY_REQUEST,
+		TypeID_TYPE_ID_EXECUTE_MAP_QUERY_RESPONSE,
 		TypeID_TYPE_ID_LIST_ACTIVE_SESSIONS_REQUEST,
 		TypeID_TYPE_ID_LIST_ACTIVE_SESSIONS_RESPONSE,
 		TypeID_TYPE_ID_GET_SESSION_EVENTS_REQUEST,
 		TypeID_TYPE_ID_GET_SESSION_EVENTS_RESPONSE,
 		TypeID_TYPE_ID_GET_USER_SESSIONS_REQUEST,
 		TypeID_TYPE_ID_GET_USER_SESSIONS_RESPONSE,
-		TypeID_TYPE_ID_QUERY_BY_TIME_RANGE_REQUEST,
-		TypeID_TYPE_ID_QUERY_BY_TIME_RANGE_RESPONSE,
-		TypeID_TYPE_ID_QUERY_BY_EMAIL_REQUEST,
-		TypeID_TYPE_ID_QUERY_BY_EMAIL_RESPONSE,
+		TypeID_TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_REQUEST,
+		TypeID_TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_RESPONSE,
+		TypeID_TYPE_ID_LIST_EVENTS_BY_EMAIL_REQUEST,
+		TypeID_TYPE_ID_LIST_EVENTS_BY_EMAIL_RESPONSE,
 		TypeID_TYPE_ID_WATCH_LIVE_SESSIONS_REQUEST,
 		TypeID_TYPE_ID_WATCH_LIVE_SESSIONS_EVENT,
 		TypeID_TYPE_ID_TIMEDB_QUERY_REQUEST,
 		TypeID_TYPE_ID_TIMEDB_QUERY_RESPONSE,
 		TypeID_TYPE_ID_DQL_QUERY_REQUEST,
 		TypeID_TYPE_ID_DQL_QUERY_RESPONSE,
+		TypeID_TYPE_ID_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD,
+		TypeID_TYPE_ID_TRACE_EVENT_BUS_TRACE_EVENTS_SUBSCRIBE_RECORD,
 		TypeID_TYPE_ID_MAP_EMPTY,
 		TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT,
+		TypeID_TYPE_ID_EVENT_BUS_RECORD_META,
 		TypeID_TYPE_ID_SESSION_NODE,
 		TypeID_TYPE_ID_AGENT_NODE,
 		TypeID_TYPE_ID_TOOL_USE_NODE,
@@ -615,7 +620,7 @@ func TypeIDValues() []TypeID {
 
 // TypeIDStringValues returns all valid TypeID names as strings
 func TypeIDStringValues() []string {
-	return []string{"session-event", "tool-use-event", "subagent-event", "file-event", "prompt-event", "stop-event", "sensor-event", "agentic-code-event-bus", "trace-event-bus", "map-entry", "map-detail", "session-summary", "event-time-range", "new-map-request", "new-map-response", "delete-map-request", "delete-map-response", "list-maps-request", "list-maps-response", "describe-map-request", "describe-map-response", "map-size-request", "map-size-response", "load-by-ids-request", "load-by-ids-response", "load-by-sql-request", "load-by-sql-response", "load-by-timedb-request", "load-by-timedb-response", "load-by-graphdb-request", "load-by-graphdb-response", "filter-map-request", "filter-map-response", "merge-request", "merge-response", "query-map-request", "query-map-response", "list-active-sessions-request", "list-active-sessions-response", "get-session-events-request", "get-session-events-response", "get-user-sessions-request", "get-user-sessions-response", "query-by-time-range-request", "query-by-time-range-response", "query-by-email-request", "query-by-email-response", "watch-live-sessions-request", "watch-live-sessions-event", "timedb-query-request", "timedb-query-response", "dql-query-request", "dql-query-response", "map-empty", "topic-publish-receipt", "session-node", "agent-node", "tool-use-node", "session-record", "tool-use-record", "subagent-record", "prompt-record", "stop-record"}
+	return []string{"session-event", "tool-use-event", "subagent-event", "file-event", "prompt-event", "stop-event", "sensor-event", "agentic-code-event-bus", "trace-event-bus", "map-entry", "map-detail", "session-summary", "event-time-range", "create-map-request", "create-map-response", "delete-map-request", "delete-map-response", "list-maps-request", "list-maps-response", "get-map-detail-request", "get-map-detail-response", "map-size-request", "map-size-response", "update-map-by-ids-request", "update-map-by-ids-response", "update-map-by-sql-request", "update-map-by-sql-response", "update-map-by-timedb-request", "update-map-by-timedb-response", "update-map-by-graphdb-request", "update-map-by-graphdb-response", "update-map-filter-request", "update-map-filter-response", "merge-request", "merge-response", "execute-map-query-request", "execute-map-query-response", "list-active-sessions-request", "list-active-sessions-response", "get-session-events-request", "get-session-events-response", "get-user-sessions-request", "get-user-sessions-response", "list-events-by-time-range-request", "list-events-by-time-range-response", "list-events-by-email-request", "list-events-by-email-response", "watch-live-sessions-request", "watch-live-sessions-event", "timedb-query-request", "timedb-query-response", "dql-query-request", "dql-query-response", "agentic-code-event-bus-event-stream-subscribe-record", "trace-event-bus-trace-events-subscribe-record", "map-empty", "topic-publish-receipt", "event-bus-record-meta", "session-node", "agent-node", "tool-use-node", "session-record", "tool-use-record", "subagent-record", "prompt-record", "stop-record"}
 }
 
 // ParseTypeID converts a string to a TypeID enum value
@@ -652,10 +657,10 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_SESSION_SUMMARY, nil
 	case "event-time-range", "type-id-event-time-range":
 		return TypeID_TYPE_ID_EVENT_TIME_RANGE, nil
-	case "new-map-request", "type-id-new-map-request":
-		return TypeID_TYPE_ID_NEW_MAP_REQUEST, nil
-	case "new-map-response", "type-id-new-map-response":
-		return TypeID_TYPE_ID_NEW_MAP_RESPONSE, nil
+	case "create-map-request", "type-id-create-map-request":
+		return TypeID_TYPE_ID_CREATE_MAP_REQUEST, nil
+	case "create-map-response", "type-id-create-map-response":
+		return TypeID_TYPE_ID_CREATE_MAP_RESPONSE, nil
 	case "delete-map-request", "type-id-delete-map-request":
 		return TypeID_TYPE_ID_DELETE_MAP_REQUEST, nil
 	case "delete-map-response", "type-id-delete-map-response":
@@ -664,42 +669,42 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_LIST_MAPS_REQUEST, nil
 	case "list-maps-response", "type-id-list-maps-response":
 		return TypeID_TYPE_ID_LIST_MAPS_RESPONSE, nil
-	case "describe-map-request", "type-id-describe-map-request":
-		return TypeID_TYPE_ID_DESCRIBE_MAP_REQUEST, nil
-	case "describe-map-response", "type-id-describe-map-response":
-		return TypeID_TYPE_ID_DESCRIBE_MAP_RESPONSE, nil
+	case "get-map-detail-request", "type-id-get-map-detail-request":
+		return TypeID_TYPE_ID_GET_MAP_DETAIL_REQUEST, nil
+	case "get-map-detail-response", "type-id-get-map-detail-response":
+		return TypeID_TYPE_ID_GET_MAP_DETAIL_RESPONSE, nil
 	case "map-size-request", "type-id-map-size-request":
 		return TypeID_TYPE_ID_MAP_SIZE_REQUEST, nil
 	case "map-size-response", "type-id-map-size-response":
 		return TypeID_TYPE_ID_MAP_SIZE_RESPONSE, nil
-	case "load-by-ids-request", "type-id-load-by-ids-request":
-		return TypeID_TYPE_ID_LOAD_BY_IDS_REQUEST, nil
-	case "load-by-ids-response", "type-id-load-by-ids-response":
-		return TypeID_TYPE_ID_LOAD_BY_IDS_RESPONSE, nil
-	case "load-by-sql-request", "type-id-load-by-sql-request":
-		return TypeID_TYPE_ID_LOAD_BY_SQL_REQUEST, nil
-	case "load-by-sql-response", "type-id-load-by-sql-response":
-		return TypeID_TYPE_ID_LOAD_BY_SQL_RESPONSE, nil
-	case "load-by-timedb-request", "type-id-load-by-timedb-request":
-		return TypeID_TYPE_ID_LOAD_BY_TIMEDB_REQUEST, nil
-	case "load-by-timedb-response", "type-id-load-by-timedb-response":
-		return TypeID_TYPE_ID_LOAD_BY_TIMEDB_RESPONSE, nil
-	case "load-by-graphdb-request", "type-id-load-by-graphdb-request":
-		return TypeID_TYPE_ID_LOAD_BY_GRAPHDB_REQUEST, nil
-	case "load-by-graphdb-response", "type-id-load-by-graphdb-response":
-		return TypeID_TYPE_ID_LOAD_BY_GRAPHDB_RESPONSE, nil
-	case "filter-map-request", "type-id-filter-map-request":
-		return TypeID_TYPE_ID_FILTER_MAP_REQUEST, nil
-	case "filter-map-response", "type-id-filter-map-response":
-		return TypeID_TYPE_ID_FILTER_MAP_RESPONSE, nil
+	case "update-map-by-ids-request", "type-id-update-map-by-ids-request":
+		return TypeID_TYPE_ID_UPDATE_MAP_BY_IDS_REQUEST, nil
+	case "update-map-by-ids-response", "type-id-update-map-by-ids-response":
+		return TypeID_TYPE_ID_UPDATE_MAP_BY_IDS_RESPONSE, nil
+	case "update-map-by-sql-request", "type-id-update-map-by-sql-request":
+		return TypeID_TYPE_ID_UPDATE_MAP_BY_SQL_REQUEST, nil
+	case "update-map-by-sql-response", "type-id-update-map-by-sql-response":
+		return TypeID_TYPE_ID_UPDATE_MAP_BY_SQL_RESPONSE, nil
+	case "update-map-by-timedb-request", "type-id-update-map-by-timedb-request":
+		return TypeID_TYPE_ID_UPDATE_MAP_BY_TIMEDB_REQUEST, nil
+	case "update-map-by-timedb-response", "type-id-update-map-by-timedb-response":
+		return TypeID_TYPE_ID_UPDATE_MAP_BY_TIMEDB_RESPONSE, nil
+	case "update-map-by-graphdb-request", "type-id-update-map-by-graphdb-request":
+		return TypeID_TYPE_ID_UPDATE_MAP_BY_GRAPHDB_REQUEST, nil
+	case "update-map-by-graphdb-response", "type-id-update-map-by-graphdb-response":
+		return TypeID_TYPE_ID_UPDATE_MAP_BY_GRAPHDB_RESPONSE, nil
+	case "update-map-filter-request", "type-id-update-map-filter-request":
+		return TypeID_TYPE_ID_UPDATE_MAP_FILTER_REQUEST, nil
+	case "update-map-filter-response", "type-id-update-map-filter-response":
+		return TypeID_TYPE_ID_UPDATE_MAP_FILTER_RESPONSE, nil
 	case "merge-request", "type-id-merge-request":
 		return TypeID_TYPE_ID_MERGE_REQUEST, nil
 	case "merge-response", "type-id-merge-response":
 		return TypeID_TYPE_ID_MERGE_RESPONSE, nil
-	case "query-map-request", "type-id-query-map-request":
-		return TypeID_TYPE_ID_QUERY_MAP_REQUEST, nil
-	case "query-map-response", "type-id-query-map-response":
-		return TypeID_TYPE_ID_QUERY_MAP_RESPONSE, nil
+	case "execute-map-query-request", "type-id-execute-map-query-request":
+		return TypeID_TYPE_ID_EXECUTE_MAP_QUERY_REQUEST, nil
+	case "execute-map-query-response", "type-id-execute-map-query-response":
+		return TypeID_TYPE_ID_EXECUTE_MAP_QUERY_RESPONSE, nil
 	case "list-active-sessions-request", "type-id-list-active-sessions-request":
 		return TypeID_TYPE_ID_LIST_ACTIVE_SESSIONS_REQUEST, nil
 	case "list-active-sessions-response", "type-id-list-active-sessions-response":
@@ -712,14 +717,14 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_GET_USER_SESSIONS_REQUEST, nil
 	case "get-user-sessions-response", "type-id-get-user-sessions-response":
 		return TypeID_TYPE_ID_GET_USER_SESSIONS_RESPONSE, nil
-	case "query-by-time-range-request", "type-id-query-by-time-range-request":
-		return TypeID_TYPE_ID_QUERY_BY_TIME_RANGE_REQUEST, nil
-	case "query-by-time-range-response", "type-id-query-by-time-range-response":
-		return TypeID_TYPE_ID_QUERY_BY_TIME_RANGE_RESPONSE, nil
-	case "query-by-email-request", "type-id-query-by-email-request":
-		return TypeID_TYPE_ID_QUERY_BY_EMAIL_REQUEST, nil
-	case "query-by-email-response", "type-id-query-by-email-response":
-		return TypeID_TYPE_ID_QUERY_BY_EMAIL_RESPONSE, nil
+	case "list-events-by-time-range-request", "type-id-list-events-by-time-range-request":
+		return TypeID_TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_REQUEST, nil
+	case "list-events-by-time-range-response", "type-id-list-events-by-time-range-response":
+		return TypeID_TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_RESPONSE, nil
+	case "list-events-by-email-request", "type-id-list-events-by-email-request":
+		return TypeID_TYPE_ID_LIST_EVENTS_BY_EMAIL_REQUEST, nil
+	case "list-events-by-email-response", "type-id-list-events-by-email-response":
+		return TypeID_TYPE_ID_LIST_EVENTS_BY_EMAIL_RESPONSE, nil
 	case "watch-live-sessions-request", "type-id-watch-live-sessions-request":
 		return TypeID_TYPE_ID_WATCH_LIVE_SESSIONS_REQUEST, nil
 	case "watch-live-sessions-event", "type-id-watch-live-sessions-event":
@@ -732,10 +737,16 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_DQL_QUERY_REQUEST, nil
 	case "dql-query-response", "type-id-dql-query-response":
 		return TypeID_TYPE_ID_DQL_QUERY_RESPONSE, nil
+	case "agentic-code-event-bus-event-stream-subscribe-record", "type-id-agentic-code-event-bus-event-stream-subscribe-record":
+		return TypeID_TYPE_ID_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD, nil
+	case "trace-event-bus-trace-events-subscribe-record", "type-id-trace-event-bus-trace-events-subscribe-record":
+		return TypeID_TYPE_ID_TRACE_EVENT_BUS_TRACE_EVENTS_SUBSCRIBE_RECORD, nil
 	case "map-empty", "type-id-map-empty":
 		return TypeID_TYPE_ID_MAP_EMPTY, nil
 	case "topic-publish-receipt", "type-id-topic-publish-receipt":
 		return TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT, nil
+	case "event-bus-record-meta", "type-id-event-bus-record-meta":
+		return TypeID_TYPE_ID_EVENT_BUS_RECORD_META, nil
 	case "session-node", "type-id-session-node":
 		return TypeID_TYPE_ID_SESSION_NODE, nil
 	case "agent-node", "type-id-agent-node":
@@ -808,10 +819,10 @@ func TypeIDToString(v TypeID) string {
 		return "session-summary"
 	case TypeID_TYPE_ID_EVENT_TIME_RANGE:
 		return "event-time-range"
-	case TypeID_TYPE_ID_NEW_MAP_REQUEST:
-		return "new-map-request"
-	case TypeID_TYPE_ID_NEW_MAP_RESPONSE:
-		return "new-map-response"
+	case TypeID_TYPE_ID_CREATE_MAP_REQUEST:
+		return "create-map-request"
+	case TypeID_TYPE_ID_CREATE_MAP_RESPONSE:
+		return "create-map-response"
 	case TypeID_TYPE_ID_DELETE_MAP_REQUEST:
 		return "delete-map-request"
 	case TypeID_TYPE_ID_DELETE_MAP_RESPONSE:
@@ -820,42 +831,42 @@ func TypeIDToString(v TypeID) string {
 		return "list-maps-request"
 	case TypeID_TYPE_ID_LIST_MAPS_RESPONSE:
 		return "list-maps-response"
-	case TypeID_TYPE_ID_DESCRIBE_MAP_REQUEST:
-		return "describe-map-request"
-	case TypeID_TYPE_ID_DESCRIBE_MAP_RESPONSE:
-		return "describe-map-response"
+	case TypeID_TYPE_ID_GET_MAP_DETAIL_REQUEST:
+		return "get-map-detail-request"
+	case TypeID_TYPE_ID_GET_MAP_DETAIL_RESPONSE:
+		return "get-map-detail-response"
 	case TypeID_TYPE_ID_MAP_SIZE_REQUEST:
 		return "map-size-request"
 	case TypeID_TYPE_ID_MAP_SIZE_RESPONSE:
 		return "map-size-response"
-	case TypeID_TYPE_ID_LOAD_BY_IDS_REQUEST:
-		return "load-by-ids-request"
-	case TypeID_TYPE_ID_LOAD_BY_IDS_RESPONSE:
-		return "load-by-ids-response"
-	case TypeID_TYPE_ID_LOAD_BY_SQL_REQUEST:
-		return "load-by-sql-request"
-	case TypeID_TYPE_ID_LOAD_BY_SQL_RESPONSE:
-		return "load-by-sql-response"
-	case TypeID_TYPE_ID_LOAD_BY_TIMEDB_REQUEST:
-		return "load-by-timedb-request"
-	case TypeID_TYPE_ID_LOAD_BY_TIMEDB_RESPONSE:
-		return "load-by-timedb-response"
-	case TypeID_TYPE_ID_LOAD_BY_GRAPHDB_REQUEST:
-		return "load-by-graphdb-request"
-	case TypeID_TYPE_ID_LOAD_BY_GRAPHDB_RESPONSE:
-		return "load-by-graphdb-response"
-	case TypeID_TYPE_ID_FILTER_MAP_REQUEST:
-		return "filter-map-request"
-	case TypeID_TYPE_ID_FILTER_MAP_RESPONSE:
-		return "filter-map-response"
+	case TypeID_TYPE_ID_UPDATE_MAP_BY_IDS_REQUEST:
+		return "update-map-by-ids-request"
+	case TypeID_TYPE_ID_UPDATE_MAP_BY_IDS_RESPONSE:
+		return "update-map-by-ids-response"
+	case TypeID_TYPE_ID_UPDATE_MAP_BY_SQL_REQUEST:
+		return "update-map-by-sql-request"
+	case TypeID_TYPE_ID_UPDATE_MAP_BY_SQL_RESPONSE:
+		return "update-map-by-sql-response"
+	case TypeID_TYPE_ID_UPDATE_MAP_BY_TIMEDB_REQUEST:
+		return "update-map-by-timedb-request"
+	case TypeID_TYPE_ID_UPDATE_MAP_BY_TIMEDB_RESPONSE:
+		return "update-map-by-timedb-response"
+	case TypeID_TYPE_ID_UPDATE_MAP_BY_GRAPHDB_REQUEST:
+		return "update-map-by-graphdb-request"
+	case TypeID_TYPE_ID_UPDATE_MAP_BY_GRAPHDB_RESPONSE:
+		return "update-map-by-graphdb-response"
+	case TypeID_TYPE_ID_UPDATE_MAP_FILTER_REQUEST:
+		return "update-map-filter-request"
+	case TypeID_TYPE_ID_UPDATE_MAP_FILTER_RESPONSE:
+		return "update-map-filter-response"
 	case TypeID_TYPE_ID_MERGE_REQUEST:
 		return "merge-request"
 	case TypeID_TYPE_ID_MERGE_RESPONSE:
 		return "merge-response"
-	case TypeID_TYPE_ID_QUERY_MAP_REQUEST:
-		return "query-map-request"
-	case TypeID_TYPE_ID_QUERY_MAP_RESPONSE:
-		return "query-map-response"
+	case TypeID_TYPE_ID_EXECUTE_MAP_QUERY_REQUEST:
+		return "execute-map-query-request"
+	case TypeID_TYPE_ID_EXECUTE_MAP_QUERY_RESPONSE:
+		return "execute-map-query-response"
 	case TypeID_TYPE_ID_LIST_ACTIVE_SESSIONS_REQUEST:
 		return "list-active-sessions-request"
 	case TypeID_TYPE_ID_LIST_ACTIVE_SESSIONS_RESPONSE:
@@ -868,14 +879,14 @@ func TypeIDToString(v TypeID) string {
 		return "get-user-sessions-request"
 	case TypeID_TYPE_ID_GET_USER_SESSIONS_RESPONSE:
 		return "get-user-sessions-response"
-	case TypeID_TYPE_ID_QUERY_BY_TIME_RANGE_REQUEST:
-		return "query-by-time-range-request"
-	case TypeID_TYPE_ID_QUERY_BY_TIME_RANGE_RESPONSE:
-		return "query-by-time-range-response"
-	case TypeID_TYPE_ID_QUERY_BY_EMAIL_REQUEST:
-		return "query-by-email-request"
-	case TypeID_TYPE_ID_QUERY_BY_EMAIL_RESPONSE:
-		return "query-by-email-response"
+	case TypeID_TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_REQUEST:
+		return "list-events-by-time-range-request"
+	case TypeID_TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_RESPONSE:
+		return "list-events-by-time-range-response"
+	case TypeID_TYPE_ID_LIST_EVENTS_BY_EMAIL_REQUEST:
+		return "list-events-by-email-request"
+	case TypeID_TYPE_ID_LIST_EVENTS_BY_EMAIL_RESPONSE:
+		return "list-events-by-email-response"
 	case TypeID_TYPE_ID_WATCH_LIVE_SESSIONS_REQUEST:
 		return "watch-live-sessions-request"
 	case TypeID_TYPE_ID_WATCH_LIVE_SESSIONS_EVENT:
@@ -888,10 +899,16 @@ func TypeIDToString(v TypeID) string {
 		return "dql-query-request"
 	case TypeID_TYPE_ID_DQL_QUERY_RESPONSE:
 		return "dql-query-response"
+	case TypeID_TYPE_ID_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD:
+		return "agentic-code-event-bus-event-stream-subscribe-record"
+	case TypeID_TYPE_ID_TRACE_EVENT_BUS_TRACE_EVENTS_SUBSCRIBE_RECORD:
+		return "trace-event-bus-trace-events-subscribe-record"
 	case TypeID_TYPE_ID_MAP_EMPTY:
 		return "map-empty"
 	case TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT:
 		return "topic-publish-receipt"
+	case TypeID_TYPE_ID_EVENT_BUS_RECORD_META:
+		return "event-bus-record-meta"
 	case TypeID_TYPE_ID_SESSION_NODE:
 		return "session-node"
 	case TypeID_TYPE_ID_AGENT_NODE:
@@ -956,10 +973,10 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_SESSION_SUMMARY
 	case "event-time-range", "type-id-event-time-range":
 		return TypeID_TYPE_ID_EVENT_TIME_RANGE
-	case "new-map-request", "type-id-new-map-request":
-		return TypeID_TYPE_ID_NEW_MAP_REQUEST
-	case "new-map-response", "type-id-new-map-response":
-		return TypeID_TYPE_ID_NEW_MAP_RESPONSE
+	case "create-map-request", "type-id-create-map-request":
+		return TypeID_TYPE_ID_CREATE_MAP_REQUEST
+	case "create-map-response", "type-id-create-map-response":
+		return TypeID_TYPE_ID_CREATE_MAP_RESPONSE
 	case "delete-map-request", "type-id-delete-map-request":
 		return TypeID_TYPE_ID_DELETE_MAP_REQUEST
 	case "delete-map-response", "type-id-delete-map-response":
@@ -968,42 +985,42 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_LIST_MAPS_REQUEST
 	case "list-maps-response", "type-id-list-maps-response":
 		return TypeID_TYPE_ID_LIST_MAPS_RESPONSE
-	case "describe-map-request", "type-id-describe-map-request":
-		return TypeID_TYPE_ID_DESCRIBE_MAP_REQUEST
-	case "describe-map-response", "type-id-describe-map-response":
-		return TypeID_TYPE_ID_DESCRIBE_MAP_RESPONSE
+	case "get-map-detail-request", "type-id-get-map-detail-request":
+		return TypeID_TYPE_ID_GET_MAP_DETAIL_REQUEST
+	case "get-map-detail-response", "type-id-get-map-detail-response":
+		return TypeID_TYPE_ID_GET_MAP_DETAIL_RESPONSE
 	case "map-size-request", "type-id-map-size-request":
 		return TypeID_TYPE_ID_MAP_SIZE_REQUEST
 	case "map-size-response", "type-id-map-size-response":
 		return TypeID_TYPE_ID_MAP_SIZE_RESPONSE
-	case "load-by-ids-request", "type-id-load-by-ids-request":
-		return TypeID_TYPE_ID_LOAD_BY_IDS_REQUEST
-	case "load-by-ids-response", "type-id-load-by-ids-response":
-		return TypeID_TYPE_ID_LOAD_BY_IDS_RESPONSE
-	case "load-by-sql-request", "type-id-load-by-sql-request":
-		return TypeID_TYPE_ID_LOAD_BY_SQL_REQUEST
-	case "load-by-sql-response", "type-id-load-by-sql-response":
-		return TypeID_TYPE_ID_LOAD_BY_SQL_RESPONSE
-	case "load-by-timedb-request", "type-id-load-by-timedb-request":
-		return TypeID_TYPE_ID_LOAD_BY_TIMEDB_REQUEST
-	case "load-by-timedb-response", "type-id-load-by-timedb-response":
-		return TypeID_TYPE_ID_LOAD_BY_TIMEDB_RESPONSE
-	case "load-by-graphdb-request", "type-id-load-by-graphdb-request":
-		return TypeID_TYPE_ID_LOAD_BY_GRAPHDB_REQUEST
-	case "load-by-graphdb-response", "type-id-load-by-graphdb-response":
-		return TypeID_TYPE_ID_LOAD_BY_GRAPHDB_RESPONSE
-	case "filter-map-request", "type-id-filter-map-request":
-		return TypeID_TYPE_ID_FILTER_MAP_REQUEST
-	case "filter-map-response", "type-id-filter-map-response":
-		return TypeID_TYPE_ID_FILTER_MAP_RESPONSE
+	case "update-map-by-ids-request", "type-id-update-map-by-ids-request":
+		return TypeID_TYPE_ID_UPDATE_MAP_BY_IDS_REQUEST
+	case "update-map-by-ids-response", "type-id-update-map-by-ids-response":
+		return TypeID_TYPE_ID_UPDATE_MAP_BY_IDS_RESPONSE
+	case "update-map-by-sql-request", "type-id-update-map-by-sql-request":
+		return TypeID_TYPE_ID_UPDATE_MAP_BY_SQL_REQUEST
+	case "update-map-by-sql-response", "type-id-update-map-by-sql-response":
+		return TypeID_TYPE_ID_UPDATE_MAP_BY_SQL_RESPONSE
+	case "update-map-by-timedb-request", "type-id-update-map-by-timedb-request":
+		return TypeID_TYPE_ID_UPDATE_MAP_BY_TIMEDB_REQUEST
+	case "update-map-by-timedb-response", "type-id-update-map-by-timedb-response":
+		return TypeID_TYPE_ID_UPDATE_MAP_BY_TIMEDB_RESPONSE
+	case "update-map-by-graphdb-request", "type-id-update-map-by-graphdb-request":
+		return TypeID_TYPE_ID_UPDATE_MAP_BY_GRAPHDB_REQUEST
+	case "update-map-by-graphdb-response", "type-id-update-map-by-graphdb-response":
+		return TypeID_TYPE_ID_UPDATE_MAP_BY_GRAPHDB_RESPONSE
+	case "update-map-filter-request", "type-id-update-map-filter-request":
+		return TypeID_TYPE_ID_UPDATE_MAP_FILTER_REQUEST
+	case "update-map-filter-response", "type-id-update-map-filter-response":
+		return TypeID_TYPE_ID_UPDATE_MAP_FILTER_RESPONSE
 	case "merge-request", "type-id-merge-request":
 		return TypeID_TYPE_ID_MERGE_REQUEST
 	case "merge-response", "type-id-merge-response":
 		return TypeID_TYPE_ID_MERGE_RESPONSE
-	case "query-map-request", "type-id-query-map-request":
-		return TypeID_TYPE_ID_QUERY_MAP_REQUEST
-	case "query-map-response", "type-id-query-map-response":
-		return TypeID_TYPE_ID_QUERY_MAP_RESPONSE
+	case "execute-map-query-request", "type-id-execute-map-query-request":
+		return TypeID_TYPE_ID_EXECUTE_MAP_QUERY_REQUEST
+	case "execute-map-query-response", "type-id-execute-map-query-response":
+		return TypeID_TYPE_ID_EXECUTE_MAP_QUERY_RESPONSE
 	case "list-active-sessions-request", "type-id-list-active-sessions-request":
 		return TypeID_TYPE_ID_LIST_ACTIVE_SESSIONS_REQUEST
 	case "list-active-sessions-response", "type-id-list-active-sessions-response":
@@ -1016,14 +1033,14 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_GET_USER_SESSIONS_REQUEST
 	case "get-user-sessions-response", "type-id-get-user-sessions-response":
 		return TypeID_TYPE_ID_GET_USER_SESSIONS_RESPONSE
-	case "query-by-time-range-request", "type-id-query-by-time-range-request":
-		return TypeID_TYPE_ID_QUERY_BY_TIME_RANGE_REQUEST
-	case "query-by-time-range-response", "type-id-query-by-time-range-response":
-		return TypeID_TYPE_ID_QUERY_BY_TIME_RANGE_RESPONSE
-	case "query-by-email-request", "type-id-query-by-email-request":
-		return TypeID_TYPE_ID_QUERY_BY_EMAIL_REQUEST
-	case "query-by-email-response", "type-id-query-by-email-response":
-		return TypeID_TYPE_ID_QUERY_BY_EMAIL_RESPONSE
+	case "list-events-by-time-range-request", "type-id-list-events-by-time-range-request":
+		return TypeID_TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_REQUEST
+	case "list-events-by-time-range-response", "type-id-list-events-by-time-range-response":
+		return TypeID_TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_RESPONSE
+	case "list-events-by-email-request", "type-id-list-events-by-email-request":
+		return TypeID_TYPE_ID_LIST_EVENTS_BY_EMAIL_REQUEST
+	case "list-events-by-email-response", "type-id-list-events-by-email-response":
+		return TypeID_TYPE_ID_LIST_EVENTS_BY_EMAIL_RESPONSE
 	case "watch-live-sessions-request", "type-id-watch-live-sessions-request":
 		return TypeID_TYPE_ID_WATCH_LIVE_SESSIONS_REQUEST
 	case "watch-live-sessions-event", "type-id-watch-live-sessions-event":
@@ -1036,10 +1053,16 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_DQL_QUERY_REQUEST
 	case "dql-query-response", "type-id-dql-query-response":
 		return TypeID_TYPE_ID_DQL_QUERY_RESPONSE
+	case "agentic-code-event-bus-event-stream-subscribe-record", "type-id-agentic-code-event-bus-event-stream-subscribe-record":
+		return TypeID_TYPE_ID_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD
+	case "trace-event-bus-trace-events-subscribe-record", "type-id-trace-event-bus-trace-events-subscribe-record":
+		return TypeID_TYPE_ID_TRACE_EVENT_BUS_TRACE_EVENTS_SUBSCRIBE_RECORD
 	case "map-empty", "type-id-map-empty":
 		return TypeID_TYPE_ID_MAP_EMPTY
 	case "topic-publish-receipt", "type-id-topic-publish-receipt":
 		return TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT
+	case "event-bus-record-meta", "type-id-event-bus-record-meta":
+		return TypeID_TYPE_ID_EVENT_BUS_RECORD_META
 	case "session-node", "type-id-session-node":
 		return TypeID_TYPE_ID_SESSION_NODE
 	case "agent-node", "type-id-agent-node":
@@ -1092,10 +1115,10 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_SESSION_SUMMARY"
 	case TypeID_TYPE_ID_EVENT_TIME_RANGE:
 		return "TYPE_ID_EVENT_TIME_RANGE"
-	case TypeID_TYPE_ID_NEW_MAP_REQUEST:
-		return "TYPE_ID_NEW_MAP_REQUEST"
-	case TypeID_TYPE_ID_NEW_MAP_RESPONSE:
-		return "TYPE_ID_NEW_MAP_RESPONSE"
+	case TypeID_TYPE_ID_CREATE_MAP_REQUEST:
+		return "TYPE_ID_CREATE_MAP_REQUEST"
+	case TypeID_TYPE_ID_CREATE_MAP_RESPONSE:
+		return "TYPE_ID_CREATE_MAP_RESPONSE"
 	case TypeID_TYPE_ID_DELETE_MAP_REQUEST:
 		return "TYPE_ID_DELETE_MAP_REQUEST"
 	case TypeID_TYPE_ID_DELETE_MAP_RESPONSE:
@@ -1104,42 +1127,42 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_LIST_MAPS_REQUEST"
 	case TypeID_TYPE_ID_LIST_MAPS_RESPONSE:
 		return "TYPE_ID_LIST_MAPS_RESPONSE"
-	case TypeID_TYPE_ID_DESCRIBE_MAP_REQUEST:
-		return "TYPE_ID_DESCRIBE_MAP_REQUEST"
-	case TypeID_TYPE_ID_DESCRIBE_MAP_RESPONSE:
-		return "TYPE_ID_DESCRIBE_MAP_RESPONSE"
+	case TypeID_TYPE_ID_GET_MAP_DETAIL_REQUEST:
+		return "TYPE_ID_GET_MAP_DETAIL_REQUEST"
+	case TypeID_TYPE_ID_GET_MAP_DETAIL_RESPONSE:
+		return "TYPE_ID_GET_MAP_DETAIL_RESPONSE"
 	case TypeID_TYPE_ID_MAP_SIZE_REQUEST:
 		return "TYPE_ID_MAP_SIZE_REQUEST"
 	case TypeID_TYPE_ID_MAP_SIZE_RESPONSE:
 		return "TYPE_ID_MAP_SIZE_RESPONSE"
-	case TypeID_TYPE_ID_LOAD_BY_IDS_REQUEST:
-		return "TYPE_ID_LOAD_BY_IDS_REQUEST"
-	case TypeID_TYPE_ID_LOAD_BY_IDS_RESPONSE:
-		return "TYPE_ID_LOAD_BY_IDS_RESPONSE"
-	case TypeID_TYPE_ID_LOAD_BY_SQL_REQUEST:
-		return "TYPE_ID_LOAD_BY_SQL_REQUEST"
-	case TypeID_TYPE_ID_LOAD_BY_SQL_RESPONSE:
-		return "TYPE_ID_LOAD_BY_SQL_RESPONSE"
-	case TypeID_TYPE_ID_LOAD_BY_TIMEDB_REQUEST:
-		return "TYPE_ID_LOAD_BY_TIMEDB_REQUEST"
-	case TypeID_TYPE_ID_LOAD_BY_TIMEDB_RESPONSE:
-		return "TYPE_ID_LOAD_BY_TIMEDB_RESPONSE"
-	case TypeID_TYPE_ID_LOAD_BY_GRAPHDB_REQUEST:
-		return "TYPE_ID_LOAD_BY_GRAPHDB_REQUEST"
-	case TypeID_TYPE_ID_LOAD_BY_GRAPHDB_RESPONSE:
-		return "TYPE_ID_LOAD_BY_GRAPHDB_RESPONSE"
-	case TypeID_TYPE_ID_FILTER_MAP_REQUEST:
-		return "TYPE_ID_FILTER_MAP_REQUEST"
-	case TypeID_TYPE_ID_FILTER_MAP_RESPONSE:
-		return "TYPE_ID_FILTER_MAP_RESPONSE"
+	case TypeID_TYPE_ID_UPDATE_MAP_BY_IDS_REQUEST:
+		return "TYPE_ID_UPDATE_MAP_BY_IDS_REQUEST"
+	case TypeID_TYPE_ID_UPDATE_MAP_BY_IDS_RESPONSE:
+		return "TYPE_ID_UPDATE_MAP_BY_IDS_RESPONSE"
+	case TypeID_TYPE_ID_UPDATE_MAP_BY_SQL_REQUEST:
+		return "TYPE_ID_UPDATE_MAP_BY_SQL_REQUEST"
+	case TypeID_TYPE_ID_UPDATE_MAP_BY_SQL_RESPONSE:
+		return "TYPE_ID_UPDATE_MAP_BY_SQL_RESPONSE"
+	case TypeID_TYPE_ID_UPDATE_MAP_BY_TIMEDB_REQUEST:
+		return "TYPE_ID_UPDATE_MAP_BY_TIMEDB_REQUEST"
+	case TypeID_TYPE_ID_UPDATE_MAP_BY_TIMEDB_RESPONSE:
+		return "TYPE_ID_UPDATE_MAP_BY_TIMEDB_RESPONSE"
+	case TypeID_TYPE_ID_UPDATE_MAP_BY_GRAPHDB_REQUEST:
+		return "TYPE_ID_UPDATE_MAP_BY_GRAPHDB_REQUEST"
+	case TypeID_TYPE_ID_UPDATE_MAP_BY_GRAPHDB_RESPONSE:
+		return "TYPE_ID_UPDATE_MAP_BY_GRAPHDB_RESPONSE"
+	case TypeID_TYPE_ID_UPDATE_MAP_FILTER_REQUEST:
+		return "TYPE_ID_UPDATE_MAP_FILTER_REQUEST"
+	case TypeID_TYPE_ID_UPDATE_MAP_FILTER_RESPONSE:
+		return "TYPE_ID_UPDATE_MAP_FILTER_RESPONSE"
 	case TypeID_TYPE_ID_MERGE_REQUEST:
 		return "TYPE_ID_MERGE_REQUEST"
 	case TypeID_TYPE_ID_MERGE_RESPONSE:
 		return "TYPE_ID_MERGE_RESPONSE"
-	case TypeID_TYPE_ID_QUERY_MAP_REQUEST:
-		return "TYPE_ID_QUERY_MAP_REQUEST"
-	case TypeID_TYPE_ID_QUERY_MAP_RESPONSE:
-		return "TYPE_ID_QUERY_MAP_RESPONSE"
+	case TypeID_TYPE_ID_EXECUTE_MAP_QUERY_REQUEST:
+		return "TYPE_ID_EXECUTE_MAP_QUERY_REQUEST"
+	case TypeID_TYPE_ID_EXECUTE_MAP_QUERY_RESPONSE:
+		return "TYPE_ID_EXECUTE_MAP_QUERY_RESPONSE"
 	case TypeID_TYPE_ID_LIST_ACTIVE_SESSIONS_REQUEST:
 		return "TYPE_ID_LIST_ACTIVE_SESSIONS_REQUEST"
 	case TypeID_TYPE_ID_LIST_ACTIVE_SESSIONS_RESPONSE:
@@ -1152,14 +1175,14 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_GET_USER_SESSIONS_REQUEST"
 	case TypeID_TYPE_ID_GET_USER_SESSIONS_RESPONSE:
 		return "TYPE_ID_GET_USER_SESSIONS_RESPONSE"
-	case TypeID_TYPE_ID_QUERY_BY_TIME_RANGE_REQUEST:
-		return "TYPE_ID_QUERY_BY_TIME_RANGE_REQUEST"
-	case TypeID_TYPE_ID_QUERY_BY_TIME_RANGE_RESPONSE:
-		return "TYPE_ID_QUERY_BY_TIME_RANGE_RESPONSE"
-	case TypeID_TYPE_ID_QUERY_BY_EMAIL_REQUEST:
-		return "TYPE_ID_QUERY_BY_EMAIL_REQUEST"
-	case TypeID_TYPE_ID_QUERY_BY_EMAIL_RESPONSE:
-		return "TYPE_ID_QUERY_BY_EMAIL_RESPONSE"
+	case TypeID_TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_REQUEST:
+		return "TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_REQUEST"
+	case TypeID_TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_RESPONSE:
+		return "TYPE_ID_LIST_EVENTS_BY_TIME_RANGE_RESPONSE"
+	case TypeID_TYPE_ID_LIST_EVENTS_BY_EMAIL_REQUEST:
+		return "TYPE_ID_LIST_EVENTS_BY_EMAIL_REQUEST"
+	case TypeID_TYPE_ID_LIST_EVENTS_BY_EMAIL_RESPONSE:
+		return "TYPE_ID_LIST_EVENTS_BY_EMAIL_RESPONSE"
 	case TypeID_TYPE_ID_WATCH_LIVE_SESSIONS_REQUEST:
 		return "TYPE_ID_WATCH_LIVE_SESSIONS_REQUEST"
 	case TypeID_TYPE_ID_WATCH_LIVE_SESSIONS_EVENT:
@@ -1172,10 +1195,16 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_DQL_QUERY_REQUEST"
 	case TypeID_TYPE_ID_DQL_QUERY_RESPONSE:
 		return "TYPE_ID_DQL_QUERY_RESPONSE"
+	case TypeID_TYPE_ID_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD:
+		return "TYPE_ID_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD"
+	case TypeID_TYPE_ID_TRACE_EVENT_BUS_TRACE_EVENTS_SUBSCRIBE_RECORD:
+		return "TYPE_ID_TRACE_EVENT_BUS_TRACE_EVENTS_SUBSCRIBE_RECORD"
 	case TypeID_TYPE_ID_MAP_EMPTY:
 		return "TYPE_ID_MAP_EMPTY"
 	case TypeID_TYPE_ID_TOPIC_PUBLISH_RECEIPT:
 		return "TYPE_ID_TOPIC_PUBLISH_RECEIPT"
+	case TypeID_TYPE_ID_EVENT_BUS_RECORD_META:
+		return "TYPE_ID_EVENT_BUS_RECORD_META"
 	case TypeID_TYPE_ID_SESSION_NODE:
 		return "TYPE_ID_SESSION_NODE"
 	case TypeID_TYPE_ID_AGENT_NODE:
@@ -1203,30 +1232,30 @@ func StratumQueryRpcIdValues() []StratumQueryRpcId {
 		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_ALL_ACCESSORS,
 		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_ALL_MUTATORS,
 		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_ALL_EXECUTORS,
-		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_NEW_MAP,
+		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_CREATE_MAP,
 		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_DELETE_MAP,
 		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_MAPS,
-		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_DESCRIBE_MAP,
-		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_MAP_SIZE,
-		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_IDS,
-		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_SQL,
-		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_TIMEDB,
-		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_GRAPHDB,
-		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_FILTER_MAP,
+		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_MAP_DETAIL,
+		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_MAP_SIZE,
+		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_IDS,
+		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_SQL,
+		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_TIMEDB,
+		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_GRAPHDB,
+		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_FILTER,
 		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_MERGE,
-		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_QUERY_MAP,
+		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_EXECUTE_MAP_QUERY,
 		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_ACTIVE_SESSIONS,
 		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_SESSION_EVENTS,
 		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_USER_SESSIONS,
-		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_QUERY_BY_TIME_RANGE,
-		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_QUERY_BY_EMAIL,
-		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_WATCH_LIVE_SESSIONS,
+		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_TIME_RANGE,
+		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_EMAIL,
+		StratumQueryRpcId_STRATUM_QUERY_RPC_ID_SUBSCRIBE_LIVE_SESSIONS,
 	}
 }
 
 // StratumQueryRpcIdStringValues returns all valid StratumQueryRpcId names as strings
 func StratumQueryRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "new-map", "delete-map", "list-maps", "describe-map", "map-size", "load-by-ids", "load-by-sql", "load-by-timedb", "load-by-graphdb", "filter-map", "merge", "query-map", "list-active-sessions", "get-session-events", "get-user-sessions", "query-by-time-range", "query-by-email", "watch-live-sessions"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "create-map", "delete-map", "list-maps", "get-map-detail", "get-map-size", "update-map-by-ids", "update-map-by-sql", "update-map-by-timedb", "update-map-by-graphdb", "update-map-filter", "merge", "execute-map-query", "list-active-sessions", "get-session-events", "get-user-sessions", "list-events-by-time-range", "list-events-by-email", "subscribe-live-sessions"}
 }
 
 // ParseStratumQueryRpcId converts a string to a StratumQueryRpcId enum value
@@ -1243,42 +1272,42 @@ func ParseStratumQueryRpcId(s string) (StratumQueryRpcId, error) {
 		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_ALL_MUTATORS, nil
 	case "all-executors", "stratum-query-rpc-id-all-executors":
 		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_ALL_EXECUTORS, nil
-	case "new-map", "stratum-query-rpc-id-new-map":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_NEW_MAP, nil
+	case "create-map", "stratum-query-rpc-id-create-map":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_CREATE_MAP, nil
 	case "delete-map", "stratum-query-rpc-id-delete-map":
 		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_DELETE_MAP, nil
 	case "list-maps", "stratum-query-rpc-id-list-maps":
 		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_MAPS, nil
-	case "describe-map", "stratum-query-rpc-id-describe-map":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_DESCRIBE_MAP, nil
-	case "map-size", "stratum-query-rpc-id-map-size":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_MAP_SIZE, nil
-	case "load-by-ids", "stratum-query-rpc-id-load-by-ids":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_IDS, nil
-	case "load-by-sql", "stratum-query-rpc-id-load-by-sql":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_SQL, nil
-	case "load-by-timedb", "stratum-query-rpc-id-load-by-timedb":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_TIMEDB, nil
-	case "load-by-graphdb", "stratum-query-rpc-id-load-by-graphdb":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_GRAPHDB, nil
-	case "filter-map", "stratum-query-rpc-id-filter-map":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_FILTER_MAP, nil
+	case "get-map-detail", "stratum-query-rpc-id-get-map-detail":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_MAP_DETAIL, nil
+	case "get-map-size", "stratum-query-rpc-id-get-map-size":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_MAP_SIZE, nil
+	case "update-map-by-ids", "stratum-query-rpc-id-update-map-by-ids":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_IDS, nil
+	case "update-map-by-sql", "stratum-query-rpc-id-update-map-by-sql":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_SQL, nil
+	case "update-map-by-timedb", "stratum-query-rpc-id-update-map-by-timedb":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_TIMEDB, nil
+	case "update-map-by-graphdb", "stratum-query-rpc-id-update-map-by-graphdb":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_GRAPHDB, nil
+	case "update-map-filter", "stratum-query-rpc-id-update-map-filter":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_FILTER, nil
 	case "merge", "stratum-query-rpc-id-merge":
 		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_MERGE, nil
-	case "query-map", "stratum-query-rpc-id-query-map":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_QUERY_MAP, nil
+	case "execute-map-query", "stratum-query-rpc-id-execute-map-query":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_EXECUTE_MAP_QUERY, nil
 	case "list-active-sessions", "stratum-query-rpc-id-list-active-sessions":
 		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_ACTIVE_SESSIONS, nil
 	case "get-session-events", "stratum-query-rpc-id-get-session-events":
 		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_SESSION_EVENTS, nil
 	case "get-user-sessions", "stratum-query-rpc-id-get-user-sessions":
 		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_USER_SESSIONS, nil
-	case "query-by-time-range", "stratum-query-rpc-id-query-by-time-range":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_QUERY_BY_TIME_RANGE, nil
-	case "query-by-email", "stratum-query-rpc-id-query-by-email":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_QUERY_BY_EMAIL, nil
-	case "watch-live-sessions", "stratum-query-rpc-id-watch-live-sessions":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_WATCH_LIVE_SESSIONS, nil
+	case "list-events-by-time-range", "stratum-query-rpc-id-list-events-by-time-range":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_TIME_RANGE, nil
+	case "list-events-by-email", "stratum-query-rpc-id-list-events-by-email":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_EMAIL, nil
+	case "subscribe-live-sessions", "stratum-query-rpc-id-subscribe-live-sessions":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_SUBSCRIBE_LIVE_SESSIONS, nil
 	default:
 		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid stratumqueryrpcid %s, expecting one of: %v", s, StratumQueryRpcIdStringValues())
 	}
@@ -1315,42 +1344,42 @@ func StratumQueryRpcIdToString(v StratumQueryRpcId) string {
 		return "all-mutators"
 	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_ALL_EXECUTORS:
 		return "all-executors"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_NEW_MAP:
-		return "new-map"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_CREATE_MAP:
+		return "create-map"
 	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_DELETE_MAP:
 		return "delete-map"
 	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_MAPS:
 		return "list-maps"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_DESCRIBE_MAP:
-		return "describe-map"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_MAP_SIZE:
-		return "map-size"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_IDS:
-		return "load-by-ids"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_SQL:
-		return "load-by-sql"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_TIMEDB:
-		return "load-by-timedb"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_GRAPHDB:
-		return "load-by-graphdb"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_FILTER_MAP:
-		return "filter-map"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_MAP_DETAIL:
+		return "get-map-detail"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_MAP_SIZE:
+		return "get-map-size"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_IDS:
+		return "update-map-by-ids"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_SQL:
+		return "update-map-by-sql"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_TIMEDB:
+		return "update-map-by-timedb"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_GRAPHDB:
+		return "update-map-by-graphdb"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_FILTER:
+		return "update-map-filter"
 	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_MERGE:
 		return "merge"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_QUERY_MAP:
-		return "query-map"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_EXECUTE_MAP_QUERY:
+		return "execute-map-query"
 	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_ACTIVE_SESSIONS:
 		return "list-active-sessions"
 	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_SESSION_EVENTS:
 		return "get-session-events"
 	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_USER_SESSIONS:
 		return "get-user-sessions"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_QUERY_BY_TIME_RANGE:
-		return "query-by-time-range"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_QUERY_BY_EMAIL:
-		return "query-by-email"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_WATCH_LIVE_SESSIONS:
-		return "watch-live-sessions"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_TIME_RANGE:
+		return "list-events-by-time-range"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_EMAIL:
+		return "list-events-by-email"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_SUBSCRIBE_LIVE_SESSIONS:
+		return "subscribe-live-sessions"
 	default:
 		return ""
 	}
@@ -1379,42 +1408,42 @@ func ParseStratumQueryRpcIdLiberal(s string) StratumQueryRpcId {
 		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_ALL_MUTATORS
 	case "all-executors", "stratum-query-rpc-id-all-executors":
 		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_ALL_EXECUTORS
-	case "new-map", "stratum-query-rpc-id-new-map":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_NEW_MAP
+	case "create-map", "stratum-query-rpc-id-create-map":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_CREATE_MAP
 	case "delete-map", "stratum-query-rpc-id-delete-map":
 		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_DELETE_MAP
 	case "list-maps", "stratum-query-rpc-id-list-maps":
 		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_MAPS
-	case "describe-map", "stratum-query-rpc-id-describe-map":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_DESCRIBE_MAP
-	case "map-size", "stratum-query-rpc-id-map-size":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_MAP_SIZE
-	case "load-by-ids", "stratum-query-rpc-id-load-by-ids":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_IDS
-	case "load-by-sql", "stratum-query-rpc-id-load-by-sql":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_SQL
-	case "load-by-timedb", "stratum-query-rpc-id-load-by-timedb":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_TIMEDB
-	case "load-by-graphdb", "stratum-query-rpc-id-load-by-graphdb":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_GRAPHDB
-	case "filter-map", "stratum-query-rpc-id-filter-map":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_FILTER_MAP
+	case "get-map-detail", "stratum-query-rpc-id-get-map-detail":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_MAP_DETAIL
+	case "get-map-size", "stratum-query-rpc-id-get-map-size":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_MAP_SIZE
+	case "update-map-by-ids", "stratum-query-rpc-id-update-map-by-ids":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_IDS
+	case "update-map-by-sql", "stratum-query-rpc-id-update-map-by-sql":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_SQL
+	case "update-map-by-timedb", "stratum-query-rpc-id-update-map-by-timedb":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_TIMEDB
+	case "update-map-by-graphdb", "stratum-query-rpc-id-update-map-by-graphdb":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_GRAPHDB
+	case "update-map-filter", "stratum-query-rpc-id-update-map-filter":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_FILTER
 	case "merge", "stratum-query-rpc-id-merge":
 		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_MERGE
-	case "query-map", "stratum-query-rpc-id-query-map":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_QUERY_MAP
+	case "execute-map-query", "stratum-query-rpc-id-execute-map-query":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_EXECUTE_MAP_QUERY
 	case "list-active-sessions", "stratum-query-rpc-id-list-active-sessions":
 		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_ACTIVE_SESSIONS
 	case "get-session-events", "stratum-query-rpc-id-get-session-events":
 		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_SESSION_EVENTS
 	case "get-user-sessions", "stratum-query-rpc-id-get-user-sessions":
 		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_USER_SESSIONS
-	case "query-by-time-range", "stratum-query-rpc-id-query-by-time-range":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_QUERY_BY_TIME_RANGE
-	case "query-by-email", "stratum-query-rpc-id-query-by-email":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_QUERY_BY_EMAIL
-	case "watch-live-sessions", "stratum-query-rpc-id-watch-live-sessions":
-		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_WATCH_LIVE_SESSIONS
+	case "list-events-by-time-range", "stratum-query-rpc-id-list-events-by-time-range":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_TIME_RANGE
+	case "list-events-by-email", "stratum-query-rpc-id-list-events-by-email":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_EMAIL
+	case "subscribe-live-sessions", "stratum-query-rpc-id-subscribe-live-sessions":
+		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_SUBSCRIBE_LIVE_SESSIONS
 	default:
 		return StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UNSPECIFIED
 	}
@@ -1431,42 +1460,42 @@ func StratumQueryRpcIdToSpecName(v StratumQueryRpcId) string {
 		return "STRATUM_QUERY_RPC_ID_ALL_MUTATORS"
 	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_ALL_EXECUTORS:
 		return "STRATUM_QUERY_RPC_ID_ALL_EXECUTORS"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_NEW_MAP:
-		return "STRATUM_QUERY_RPC_ID_NEW_MAP"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_CREATE_MAP:
+		return "STRATUM_QUERY_RPC_ID_CREATE_MAP"
 	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_DELETE_MAP:
 		return "STRATUM_QUERY_RPC_ID_DELETE_MAP"
 	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_MAPS:
 		return "STRATUM_QUERY_RPC_ID_LIST_MAPS"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_DESCRIBE_MAP:
-		return "STRATUM_QUERY_RPC_ID_DESCRIBE_MAP"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_MAP_SIZE:
-		return "STRATUM_QUERY_RPC_ID_MAP_SIZE"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_IDS:
-		return "STRATUM_QUERY_RPC_ID_LOAD_BY_IDS"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_SQL:
-		return "STRATUM_QUERY_RPC_ID_LOAD_BY_SQL"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_TIMEDB:
-		return "STRATUM_QUERY_RPC_ID_LOAD_BY_TIMEDB"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LOAD_BY_GRAPHDB:
-		return "STRATUM_QUERY_RPC_ID_LOAD_BY_GRAPHDB"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_FILTER_MAP:
-		return "STRATUM_QUERY_RPC_ID_FILTER_MAP"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_MAP_DETAIL:
+		return "STRATUM_QUERY_RPC_ID_GET_MAP_DETAIL"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_MAP_SIZE:
+		return "STRATUM_QUERY_RPC_ID_GET_MAP_SIZE"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_IDS:
+		return "STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_IDS"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_SQL:
+		return "STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_SQL"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_TIMEDB:
+		return "STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_TIMEDB"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_GRAPHDB:
+		return "STRATUM_QUERY_RPC_ID_UPDATE_MAP_BY_GRAPHDB"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_UPDATE_MAP_FILTER:
+		return "STRATUM_QUERY_RPC_ID_UPDATE_MAP_FILTER"
 	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_MERGE:
 		return "STRATUM_QUERY_RPC_ID_MERGE"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_QUERY_MAP:
-		return "STRATUM_QUERY_RPC_ID_QUERY_MAP"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_EXECUTE_MAP_QUERY:
+		return "STRATUM_QUERY_RPC_ID_EXECUTE_MAP_QUERY"
 	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_ACTIVE_SESSIONS:
 		return "STRATUM_QUERY_RPC_ID_LIST_ACTIVE_SESSIONS"
 	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_SESSION_EVENTS:
 		return "STRATUM_QUERY_RPC_ID_GET_SESSION_EVENTS"
 	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_GET_USER_SESSIONS:
 		return "STRATUM_QUERY_RPC_ID_GET_USER_SESSIONS"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_QUERY_BY_TIME_RANGE:
-		return "STRATUM_QUERY_RPC_ID_QUERY_BY_TIME_RANGE"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_QUERY_BY_EMAIL:
-		return "STRATUM_QUERY_RPC_ID_QUERY_BY_EMAIL"
-	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_WATCH_LIVE_SESSIONS:
-		return "STRATUM_QUERY_RPC_ID_WATCH_LIVE_SESSIONS"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_TIME_RANGE:
+		return "STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_TIME_RANGE"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_EMAIL:
+		return "STRATUM_QUERY_RPC_ID_LIST_EVENTS_BY_EMAIL"
+	case StratumQueryRpcId_STRATUM_QUERY_RPC_ID_SUBSCRIBE_LIVE_SESSIONS:
+		return "STRATUM_QUERY_RPC_ID_SUBSCRIBE_LIVE_SESSIONS"
 	default:
 		return ""
 	}
@@ -1478,13 +1507,13 @@ func TimedbQueryRpcIdValues() []TimedbQueryRpcId {
 		TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_ALL_ACCESSORS,
 		TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_ALL_MUTATORS,
 		TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_ALL_EXECUTORS,
-		TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_QUERY,
+		TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_EXECUTE_QUERY,
 	}
 }
 
 // TimedbQueryRpcIdStringValues returns all valid TimedbQueryRpcId names as strings
 func TimedbQueryRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "query"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "execute-query"}
 }
 
 // ParseTimedbQueryRpcId converts a string to a TimedbQueryRpcId enum value
@@ -1501,8 +1530,8 @@ func ParseTimedbQueryRpcId(s string) (TimedbQueryRpcId, error) {
 		return TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_ALL_MUTATORS, nil
 	case "all-executors", "timedb-query-rpc-id-all-executors":
 		return TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_ALL_EXECUTORS, nil
-	case "query", "timedb-query-rpc-id-query":
-		return TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_QUERY, nil
+	case "execute-query", "timedb-query-rpc-id-execute-query":
+		return TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_EXECUTE_QUERY, nil
 	default:
 		return TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid timedbqueryrpcid %s, expecting one of: %v", s, TimedbQueryRpcIdStringValues())
 	}
@@ -1539,8 +1568,8 @@ func TimedbQueryRpcIdToString(v TimedbQueryRpcId) string {
 		return "all-mutators"
 	case TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_ALL_EXECUTORS:
 		return "all-executors"
-	case TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_QUERY:
-		return "query"
+	case TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_EXECUTE_QUERY:
+		return "execute-query"
 	default:
 		return ""
 	}
@@ -1569,8 +1598,8 @@ func ParseTimedbQueryRpcIdLiberal(s string) TimedbQueryRpcId {
 		return TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_ALL_MUTATORS
 	case "all-executors", "timedb-query-rpc-id-all-executors":
 		return TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_ALL_EXECUTORS
-	case "query", "timedb-query-rpc-id-query":
-		return TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_QUERY
+	case "execute-query", "timedb-query-rpc-id-execute-query":
+		return TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_EXECUTE_QUERY
 	default:
 		return TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_UNSPECIFIED
 	}
@@ -1587,8 +1616,8 @@ func TimedbQueryRpcIdToSpecName(v TimedbQueryRpcId) string {
 		return "TIMEDB_QUERY_RPC_ID_ALL_MUTATORS"
 	case TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_ALL_EXECUTORS:
 		return "TIMEDB_QUERY_RPC_ID_ALL_EXECUTORS"
-	case TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_QUERY:
-		return "TIMEDB_QUERY_RPC_ID_QUERY"
+	case TimedbQueryRpcId_TIMEDB_QUERY_RPC_ID_EXECUTE_QUERY:
+		return "TIMEDB_QUERY_RPC_ID_EXECUTE_QUERY"
 	default:
 		return ""
 	}
@@ -4581,22 +4610,22 @@ func EventTimeRangeToTOML(v *EventTimeRange) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// NewMapRequestJSON represents NewMapRequest in external JSON format (with string enums)
+// CreateMapRequestJSON represents CreateMapRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type newmaprequestJSON struct {
+type createmaprequestJSON struct {
 	MapId   string `json:"map_id,omitempty"`
 	TraceId string `json:"trace_id,omitempty"`
 	Noop    bool   `json:"noop,omitempty"`
 }
 
-// NewMapRequestToJSON converts NewMapRequest to JSON bytes.
+// CreateMapRequestToJSON converts CreateMapRequest to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func NewMapRequestToJSON(v *NewMapRequest) ([]byte, error) {
+func CreateMapRequestToJSON(v *CreateMapRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "newmaprequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createmaprequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := newmaprequestJSON{
+	helper := createmaprequestJSON{
 		MapId:   v.MapId,
 		TraceId: v.TraceId,
 		Noop:    v.Noop,
@@ -4604,14 +4633,14 @@ func NewMapRequestToJSON(v *NewMapRequest) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// NewMapRequestToJSONPretty converts NewMapRequest to indented JSON bytes.
+// CreateMapRequestToJSONPretty converts CreateMapRequest to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func NewMapRequestToJSONPretty(v *NewMapRequest) ([]byte, error) {
+func CreateMapRequestToJSONPretty(v *CreateMapRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "newmaprequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createmaprequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := newmaprequestJSON{
+	helper := createmaprequestJSON{
 		MapId:   v.MapId,
 		TraceId: v.TraceId,
 		Noop:    v.Noop,
@@ -4619,9 +4648,9 @@ func NewMapRequestToJSONPretty(v *NewMapRequest) ([]byte, error) {
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// NewMapRequestFromBytes creates NewMapRequest from bytes, auto-detecting the format.
+// CreateMapRequestFromBytes creates CreateMapRequest from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func NewMapRequestFromBytes(data []byte) (*NewMapRequest, error) {
+func CreateMapRequestFromBytes(data []byte) (*CreateMapRequest, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -4629,7 +4658,7 @@ func NewMapRequestFromBytes(data []byte) (*NewMapRequest, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := NewMapRequestFromJSON(data); err == nil {
+		if result, err := CreateMapRequestFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -4639,7 +4668,7 @@ func NewMapRequestFromBytes(data []byte) (*NewMapRequest, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := NewMapRequestFromJSON(jsonData); err == nil {
+			if result, err := CreateMapRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -4650,49 +4679,49 @@ func NewMapRequestFromBytes(data []byte) (*NewMapRequest, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := NewMapRequestFromJSON(jsonData); err == nil {
+			if result, err := CreateMapRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &NewMapRequest{}
+	v := &CreateMapRequest{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse NewMapRequest: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse CreateMapRequest: unsupported format or invalid data")
 }
 
-// NewMapRequestFromJSON creates NewMapRequest from JSON bytes.
+// CreateMapRequestFromJSON creates CreateMapRequest from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func NewMapRequestFromJSON(data []byte) (*NewMapRequest, error) {
+func CreateMapRequestFromJSON(data []byte) (*CreateMapRequest, error) {
 	// Unmarshal into helper struct with string enums
-	var raw newmaprequestJSON
+	var raw createmaprequestJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &NewMapRequest{}
+		v := &CreateMapRequest{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &NewMapRequest{}
+	result := &CreateMapRequest{}
 	result.MapId = raw.MapId
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
 }
 
-// NewMapRequestToYAML converts NewMapRequest to YAML bytes.
+// CreateMapRequestToYAML converts CreateMapRequest to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func NewMapRequestToYAML(v *NewMapRequest) ([]byte, error) {
+func CreateMapRequestToYAML(v *CreateMapRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "newmaprequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createmaprequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := NewMapRequestToJSON(v)
+	jsonData, err := CreateMapRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -4706,14 +4735,14 @@ func NewMapRequestToYAML(v *NewMapRequest) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// NewMapRequestToTOML converts NewMapRequest to TOML bytes.
+// CreateMapRequestToTOML converts CreateMapRequest to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func NewMapRequestToTOML(v *NewMapRequest) ([]byte, error) {
+func CreateMapRequestToTOML(v *CreateMapRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "newmaprequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createmaprequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := NewMapRequestToJSON(v)
+	jsonData, err := CreateMapRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -4725,44 +4754,44 @@ func NewMapRequestToTOML(v *NewMapRequest) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// NewMapResponseJSON represents NewMapResponse in external JSON format (with string enums)
+// CreateMapResponseJSON represents CreateMapResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type newmapresponseJSON struct {
+type createmapresponseJSON struct {
 	TraceId string `json:"trace_id,omitempty"`
 	Noop    bool   `json:"noop,omitempty"`
 }
 
-// NewMapResponseToJSON converts NewMapResponse to JSON bytes.
+// CreateMapResponseToJSON converts CreateMapResponse to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func NewMapResponseToJSON(v *NewMapResponse) ([]byte, error) {
+func CreateMapResponseToJSON(v *CreateMapResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "newmapresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createmapresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := newmapresponseJSON{
+	helper := createmapresponseJSON{
 		TraceId: v.TraceId,
 		Noop:    v.Noop,
 	}
 	return json.Marshal(helper)
 }
 
-// NewMapResponseToJSONPretty converts NewMapResponse to indented JSON bytes.
+// CreateMapResponseToJSONPretty converts CreateMapResponse to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func NewMapResponseToJSONPretty(v *NewMapResponse) ([]byte, error) {
+func CreateMapResponseToJSONPretty(v *CreateMapResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "newmapresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createmapresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := newmapresponseJSON{
+	helper := createmapresponseJSON{
 		TraceId: v.TraceId,
 		Noop:    v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// NewMapResponseFromBytes creates NewMapResponse from bytes, auto-detecting the format.
+// CreateMapResponseFromBytes creates CreateMapResponse from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func NewMapResponseFromBytes(data []byte) (*NewMapResponse, error) {
+func CreateMapResponseFromBytes(data []byte) (*CreateMapResponse, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -4770,7 +4799,7 @@ func NewMapResponseFromBytes(data []byte) (*NewMapResponse, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := NewMapResponseFromJSON(data); err == nil {
+		if result, err := CreateMapResponseFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -4780,7 +4809,7 @@ func NewMapResponseFromBytes(data []byte) (*NewMapResponse, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := NewMapResponseFromJSON(jsonData); err == nil {
+			if result, err := CreateMapResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -4791,48 +4820,48 @@ func NewMapResponseFromBytes(data []byte) (*NewMapResponse, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := NewMapResponseFromJSON(jsonData); err == nil {
+			if result, err := CreateMapResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &NewMapResponse{}
+	v := &CreateMapResponse{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse NewMapResponse: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse CreateMapResponse: unsupported format or invalid data")
 }
 
-// NewMapResponseFromJSON creates NewMapResponse from JSON bytes.
+// CreateMapResponseFromJSON creates CreateMapResponse from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func NewMapResponseFromJSON(data []byte) (*NewMapResponse, error) {
+func CreateMapResponseFromJSON(data []byte) (*CreateMapResponse, error) {
 	// Unmarshal into helper struct with string enums
-	var raw newmapresponseJSON
+	var raw createmapresponseJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &NewMapResponse{}
+		v := &CreateMapResponse{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &NewMapResponse{}
+	result := &CreateMapResponse{}
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
 }
 
-// NewMapResponseToYAML converts NewMapResponse to YAML bytes.
+// CreateMapResponseToYAML converts CreateMapResponse to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func NewMapResponseToYAML(v *NewMapResponse) ([]byte, error) {
+func CreateMapResponseToYAML(v *CreateMapResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "newmapresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createmapresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := NewMapResponseToJSON(v)
+	jsonData, err := CreateMapResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -4846,14 +4875,14 @@ func NewMapResponseToYAML(v *NewMapResponse) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// NewMapResponseToTOML converts NewMapResponse to TOML bytes.
+// CreateMapResponseToTOML converts CreateMapResponse to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func NewMapResponseToTOML(v *NewMapResponse) ([]byte, error) {
+func CreateMapResponseToTOML(v *CreateMapResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "newmapresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createmapresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := NewMapResponseToJSON(v)
+	jsonData, err := CreateMapResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -5470,22 +5499,22 @@ func ListMapsResponseToTOML(v *ListMapsResponse) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// DescribeMapRequestJSON represents DescribeMapRequest in external JSON format (with string enums)
+// GetMapDetailRequestJSON represents GetMapDetailRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type describemaprequestJSON struct {
+type getmapdetailrequestJSON struct {
 	MapId   string `json:"map_id,omitempty"`
 	TraceId string `json:"trace_id,omitempty"`
 	Noop    bool   `json:"noop,omitempty"`
 }
 
-// DescribeMapRequestToJSON converts DescribeMapRequest to JSON bytes.
+// GetMapDetailRequestToJSON converts GetMapDetailRequest to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func DescribeMapRequestToJSON(v *DescribeMapRequest) ([]byte, error) {
+func GetMapDetailRequestToJSON(v *GetMapDetailRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "describemaprequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "getmapdetailrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := describemaprequestJSON{
+	helper := getmapdetailrequestJSON{
 		MapId:   v.MapId,
 		TraceId: v.TraceId,
 		Noop:    v.Noop,
@@ -5493,14 +5522,14 @@ func DescribeMapRequestToJSON(v *DescribeMapRequest) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// DescribeMapRequestToJSONPretty converts DescribeMapRequest to indented JSON bytes.
+// GetMapDetailRequestToJSONPretty converts GetMapDetailRequest to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func DescribeMapRequestToJSONPretty(v *DescribeMapRequest) ([]byte, error) {
+func GetMapDetailRequestToJSONPretty(v *GetMapDetailRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "describemaprequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "getmapdetailrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := describemaprequestJSON{
+	helper := getmapdetailrequestJSON{
 		MapId:   v.MapId,
 		TraceId: v.TraceId,
 		Noop:    v.Noop,
@@ -5508,9 +5537,9 @@ func DescribeMapRequestToJSONPretty(v *DescribeMapRequest) ([]byte, error) {
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// DescribeMapRequestFromBytes creates DescribeMapRequest from bytes, auto-detecting the format.
+// GetMapDetailRequestFromBytes creates GetMapDetailRequest from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func DescribeMapRequestFromBytes(data []byte) (*DescribeMapRequest, error) {
+func GetMapDetailRequestFromBytes(data []byte) (*GetMapDetailRequest, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -5518,7 +5547,7 @@ func DescribeMapRequestFromBytes(data []byte) (*DescribeMapRequest, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := DescribeMapRequestFromJSON(data); err == nil {
+		if result, err := GetMapDetailRequestFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -5528,7 +5557,7 @@ func DescribeMapRequestFromBytes(data []byte) (*DescribeMapRequest, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := DescribeMapRequestFromJSON(jsonData); err == nil {
+			if result, err := GetMapDetailRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -5539,49 +5568,49 @@ func DescribeMapRequestFromBytes(data []byte) (*DescribeMapRequest, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := DescribeMapRequestFromJSON(jsonData); err == nil {
+			if result, err := GetMapDetailRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &DescribeMapRequest{}
+	v := &GetMapDetailRequest{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse DescribeMapRequest: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse GetMapDetailRequest: unsupported format or invalid data")
 }
 
-// DescribeMapRequestFromJSON creates DescribeMapRequest from JSON bytes.
+// GetMapDetailRequestFromJSON creates GetMapDetailRequest from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func DescribeMapRequestFromJSON(data []byte) (*DescribeMapRequest, error) {
+func GetMapDetailRequestFromJSON(data []byte) (*GetMapDetailRequest, error) {
 	// Unmarshal into helper struct with string enums
-	var raw describemaprequestJSON
+	var raw getmapdetailrequestJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &DescribeMapRequest{}
+		v := &GetMapDetailRequest{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &DescribeMapRequest{}
+	result := &GetMapDetailRequest{}
 	result.MapId = raw.MapId
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
 }
 
-// DescribeMapRequestToYAML converts DescribeMapRequest to YAML bytes.
+// GetMapDetailRequestToYAML converts GetMapDetailRequest to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func DescribeMapRequestToYAML(v *DescribeMapRequest) ([]byte, error) {
+func GetMapDetailRequestToYAML(v *GetMapDetailRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "describemaprequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "getmapdetailrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := DescribeMapRequestToJSON(v)
+	jsonData, err := GetMapDetailRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -5595,14 +5624,14 @@ func DescribeMapRequestToYAML(v *DescribeMapRequest) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// DescribeMapRequestToTOML converts DescribeMapRequest to TOML bytes.
+// GetMapDetailRequestToTOML converts GetMapDetailRequest to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func DescribeMapRequestToTOML(v *DescribeMapRequest) ([]byte, error) {
+func GetMapDetailRequestToTOML(v *GetMapDetailRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "describemaprequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "getmapdetailrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := DescribeMapRequestToJSON(v)
+	jsonData, err := GetMapDetailRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -5614,22 +5643,22 @@ func DescribeMapRequestToTOML(v *DescribeMapRequest) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// DescribeMapResponseJSON represents DescribeMapResponse in external JSON format (with string enums)
+// GetMapDetailResponseJSON represents GetMapDetailResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type describemapresponseJSON struct {
+type getmapdetailresponseJSON struct {
 	Detail  json.RawMessage `json:"detail,omitempty"`
 	TraceId string          `json:"trace_id,omitempty"`
 	Noop    bool            `json:"noop,omitempty"`
 }
 
-// DescribeMapResponseToJSON converts DescribeMapResponse to JSON bytes.
+// GetMapDetailResponseToJSON converts GetMapDetailResponse to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func DescribeMapResponseToJSON(v *DescribeMapResponse) ([]byte, error) {
+func GetMapDetailResponseToJSON(v *GetMapDetailResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "describemapresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "getmapdetailresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := describemapresponseJSON{
+	helper := getmapdetailresponseJSON{
 		Detail: func() json.RawMessage {
 			if v.Detail == nil {
 				return nil
@@ -5643,14 +5672,14 @@ func DescribeMapResponseToJSON(v *DescribeMapResponse) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// DescribeMapResponseToJSONPretty converts DescribeMapResponse to indented JSON bytes.
+// GetMapDetailResponseToJSONPretty converts GetMapDetailResponse to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func DescribeMapResponseToJSONPretty(v *DescribeMapResponse) ([]byte, error) {
+func GetMapDetailResponseToJSONPretty(v *GetMapDetailResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "describemapresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "getmapdetailresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := describemapresponseJSON{
+	helper := getmapdetailresponseJSON{
 		Detail: func() json.RawMessage {
 			if v.Detail == nil {
 				return nil
@@ -5664,9 +5693,9 @@ func DescribeMapResponseToJSONPretty(v *DescribeMapResponse) ([]byte, error) {
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// DescribeMapResponseFromBytes creates DescribeMapResponse from bytes, auto-detecting the format.
+// GetMapDetailResponseFromBytes creates GetMapDetailResponse from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func DescribeMapResponseFromBytes(data []byte) (*DescribeMapResponse, error) {
+func GetMapDetailResponseFromBytes(data []byte) (*GetMapDetailResponse, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -5674,7 +5703,7 @@ func DescribeMapResponseFromBytes(data []byte) (*DescribeMapResponse, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := DescribeMapResponseFromJSON(data); err == nil {
+		if result, err := GetMapDetailResponseFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -5684,7 +5713,7 @@ func DescribeMapResponseFromBytes(data []byte) (*DescribeMapResponse, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := DescribeMapResponseFromJSON(jsonData); err == nil {
+			if result, err := GetMapDetailResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -5695,35 +5724,35 @@ func DescribeMapResponseFromBytes(data []byte) (*DescribeMapResponse, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := DescribeMapResponseFromJSON(jsonData); err == nil {
+			if result, err := GetMapDetailResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &DescribeMapResponse{}
+	v := &GetMapDetailResponse{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse DescribeMapResponse: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse GetMapDetailResponse: unsupported format or invalid data")
 }
 
-// DescribeMapResponseFromJSON creates DescribeMapResponse from JSON bytes.
+// GetMapDetailResponseFromJSON creates GetMapDetailResponse from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func DescribeMapResponseFromJSON(data []byte) (*DescribeMapResponse, error) {
+func GetMapDetailResponseFromJSON(data []byte) (*GetMapDetailResponse, error) {
 	// Unmarshal into helper struct with string enums
-	var raw describemapresponseJSON
+	var raw getmapdetailresponseJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &DescribeMapResponse{}
+		v := &GetMapDetailResponse{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &DescribeMapResponse{}
+	result := &GetMapDetailResponse{}
 	// Parse message field: Detail
 	if len(raw.Detail) > 0 {
 		parsed, err := MapDetailFromJSON(raw.Detail)
@@ -5736,14 +5765,14 @@ func DescribeMapResponseFromJSON(data []byte) (*DescribeMapResponse, error) {
 	return result, nil
 }
 
-// DescribeMapResponseToYAML converts DescribeMapResponse to YAML bytes.
+// GetMapDetailResponseToYAML converts GetMapDetailResponse to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func DescribeMapResponseToYAML(v *DescribeMapResponse) ([]byte, error) {
+func GetMapDetailResponseToYAML(v *GetMapDetailResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "describemapresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "getmapdetailresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := DescribeMapResponseToJSON(v)
+	jsonData, err := GetMapDetailResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -5757,14 +5786,14 @@ func DescribeMapResponseToYAML(v *DescribeMapResponse) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// DescribeMapResponseToTOML converts DescribeMapResponse to TOML bytes.
+// GetMapDetailResponseToTOML converts GetMapDetailResponse to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func DescribeMapResponseToTOML(v *DescribeMapResponse) ([]byte, error) {
+func GetMapDetailResponseToTOML(v *GetMapDetailResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "describemapresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "getmapdetailresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := DescribeMapResponseToJSON(v)
+	jsonData, err := GetMapDetailResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -6068,23 +6097,23 @@ func MapSizeResponseToTOML(v *MapSizeResponse) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// LoadByIdsRequestJSON represents LoadByIdsRequest in external JSON format (with string enums)
+// UpdateMapByIdsRequestJSON represents UpdateMapByIdsRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type loadbyidsrequestJSON struct {
+type updatemapbyidsrequestJSON struct {
 	MapId    string   `json:"map_id,omitempty"`
 	EventIds []string `json:"event_ids,omitempty"`
 	TraceId  string   `json:"trace_id,omitempty"`
 	Noop     bool     `json:"noop,omitempty"`
 }
 
-// LoadByIdsRequestToJSON converts LoadByIdsRequest to JSON bytes.
+// UpdateMapByIdsRequestToJSON converts UpdateMapByIdsRequest to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func LoadByIdsRequestToJSON(v *LoadByIdsRequest) ([]byte, error) {
+func UpdateMapByIdsRequestToJSON(v *UpdateMapByIdsRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbyidsrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbyidsrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := loadbyidsrequestJSON{
+	helper := updatemapbyidsrequestJSON{
 		MapId:    v.MapId,
 		EventIds: v.EventIds,
 		TraceId:  v.TraceId,
@@ -6093,14 +6122,14 @@ func LoadByIdsRequestToJSON(v *LoadByIdsRequest) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// LoadByIdsRequestToJSONPretty converts LoadByIdsRequest to indented JSON bytes.
+// UpdateMapByIdsRequestToJSONPretty converts UpdateMapByIdsRequest to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func LoadByIdsRequestToJSONPretty(v *LoadByIdsRequest) ([]byte, error) {
+func UpdateMapByIdsRequestToJSONPretty(v *UpdateMapByIdsRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbyidsrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbyidsrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := loadbyidsrequestJSON{
+	helper := updatemapbyidsrequestJSON{
 		MapId:    v.MapId,
 		EventIds: v.EventIds,
 		TraceId:  v.TraceId,
@@ -6109,9 +6138,9 @@ func LoadByIdsRequestToJSONPretty(v *LoadByIdsRequest) ([]byte, error) {
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// LoadByIdsRequestFromBytes creates LoadByIdsRequest from bytes, auto-detecting the format.
+// UpdateMapByIdsRequestFromBytes creates UpdateMapByIdsRequest from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func LoadByIdsRequestFromBytes(data []byte) (*LoadByIdsRequest, error) {
+func UpdateMapByIdsRequestFromBytes(data []byte) (*UpdateMapByIdsRequest, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -6119,7 +6148,7 @@ func LoadByIdsRequestFromBytes(data []byte) (*LoadByIdsRequest, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := LoadByIdsRequestFromJSON(data); err == nil {
+		if result, err := UpdateMapByIdsRequestFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -6129,7 +6158,7 @@ func LoadByIdsRequestFromBytes(data []byte) (*LoadByIdsRequest, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := LoadByIdsRequestFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapByIdsRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -6140,35 +6169,35 @@ func LoadByIdsRequestFromBytes(data []byte) (*LoadByIdsRequest, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := LoadByIdsRequestFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapByIdsRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &LoadByIdsRequest{}
+	v := &UpdateMapByIdsRequest{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse LoadByIdsRequest: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse UpdateMapByIdsRequest: unsupported format or invalid data")
 }
 
-// LoadByIdsRequestFromJSON creates LoadByIdsRequest from JSON bytes.
+// UpdateMapByIdsRequestFromJSON creates UpdateMapByIdsRequest from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func LoadByIdsRequestFromJSON(data []byte) (*LoadByIdsRequest, error) {
+func UpdateMapByIdsRequestFromJSON(data []byte) (*UpdateMapByIdsRequest, error) {
 	// Unmarshal into helper struct with string enums
-	var raw loadbyidsrequestJSON
+	var raw updatemapbyidsrequestJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &LoadByIdsRequest{}
+		v := &UpdateMapByIdsRequest{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &LoadByIdsRequest{}
+	result := &UpdateMapByIdsRequest{}
 	result.MapId = raw.MapId
 	result.EventIds = raw.EventIds
 	result.TraceId = raw.TraceId
@@ -6176,14 +6205,14 @@ func LoadByIdsRequestFromJSON(data []byte) (*LoadByIdsRequest, error) {
 	return result, nil
 }
 
-// LoadByIdsRequestToYAML converts LoadByIdsRequest to YAML bytes.
+// UpdateMapByIdsRequestToYAML converts UpdateMapByIdsRequest to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func LoadByIdsRequestToYAML(v *LoadByIdsRequest) ([]byte, error) {
+func UpdateMapByIdsRequestToYAML(v *UpdateMapByIdsRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbyidsrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbyidsrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := LoadByIdsRequestToJSON(v)
+	jsonData, err := UpdateMapByIdsRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -6197,14 +6226,14 @@ func LoadByIdsRequestToYAML(v *LoadByIdsRequest) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// LoadByIdsRequestToTOML converts LoadByIdsRequest to TOML bytes.
+// UpdateMapByIdsRequestToTOML converts UpdateMapByIdsRequest to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func LoadByIdsRequestToTOML(v *LoadByIdsRequest) ([]byte, error) {
+func UpdateMapByIdsRequestToTOML(v *UpdateMapByIdsRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbyidsrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbyidsrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := LoadByIdsRequestToJSON(v)
+	jsonData, err := UpdateMapByIdsRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -6216,22 +6245,22 @@ func LoadByIdsRequestToTOML(v *LoadByIdsRequest) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// LoadByIdsResponseJSON represents LoadByIdsResponse in external JSON format (with string enums)
+// UpdateMapByIdsResponseJSON represents UpdateMapByIdsResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type loadbyidsresponseJSON struct {
+type updatemapbyidsresponseJSON struct {
 	EventsAdded int64  `json:"events_added,omitempty"`
 	TraceId     string `json:"trace_id,omitempty"`
 	Noop        bool   `json:"noop,omitempty"`
 }
 
-// LoadByIdsResponseToJSON converts LoadByIdsResponse to JSON bytes.
+// UpdateMapByIdsResponseToJSON converts UpdateMapByIdsResponse to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func LoadByIdsResponseToJSON(v *LoadByIdsResponse) ([]byte, error) {
+func UpdateMapByIdsResponseToJSON(v *UpdateMapByIdsResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbyidsresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbyidsresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := loadbyidsresponseJSON{
+	helper := updatemapbyidsresponseJSON{
 		EventsAdded: v.EventsAdded,
 		TraceId:     v.TraceId,
 		Noop:        v.Noop,
@@ -6239,14 +6268,14 @@ func LoadByIdsResponseToJSON(v *LoadByIdsResponse) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// LoadByIdsResponseToJSONPretty converts LoadByIdsResponse to indented JSON bytes.
+// UpdateMapByIdsResponseToJSONPretty converts UpdateMapByIdsResponse to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func LoadByIdsResponseToJSONPretty(v *LoadByIdsResponse) ([]byte, error) {
+func UpdateMapByIdsResponseToJSONPretty(v *UpdateMapByIdsResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbyidsresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbyidsresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := loadbyidsresponseJSON{
+	helper := updatemapbyidsresponseJSON{
 		EventsAdded: v.EventsAdded,
 		TraceId:     v.TraceId,
 		Noop:        v.Noop,
@@ -6254,9 +6283,9 @@ func LoadByIdsResponseToJSONPretty(v *LoadByIdsResponse) ([]byte, error) {
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// LoadByIdsResponseFromBytes creates LoadByIdsResponse from bytes, auto-detecting the format.
+// UpdateMapByIdsResponseFromBytes creates UpdateMapByIdsResponse from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func LoadByIdsResponseFromBytes(data []byte) (*LoadByIdsResponse, error) {
+func UpdateMapByIdsResponseFromBytes(data []byte) (*UpdateMapByIdsResponse, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -6264,7 +6293,7 @@ func LoadByIdsResponseFromBytes(data []byte) (*LoadByIdsResponse, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := LoadByIdsResponseFromJSON(data); err == nil {
+		if result, err := UpdateMapByIdsResponseFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -6274,7 +6303,7 @@ func LoadByIdsResponseFromBytes(data []byte) (*LoadByIdsResponse, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := LoadByIdsResponseFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapByIdsResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -6285,49 +6314,49 @@ func LoadByIdsResponseFromBytes(data []byte) (*LoadByIdsResponse, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := LoadByIdsResponseFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapByIdsResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &LoadByIdsResponse{}
+	v := &UpdateMapByIdsResponse{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse LoadByIdsResponse: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse UpdateMapByIdsResponse: unsupported format or invalid data")
 }
 
-// LoadByIdsResponseFromJSON creates LoadByIdsResponse from JSON bytes.
+// UpdateMapByIdsResponseFromJSON creates UpdateMapByIdsResponse from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func LoadByIdsResponseFromJSON(data []byte) (*LoadByIdsResponse, error) {
+func UpdateMapByIdsResponseFromJSON(data []byte) (*UpdateMapByIdsResponse, error) {
 	// Unmarshal into helper struct with string enums
-	var raw loadbyidsresponseJSON
+	var raw updatemapbyidsresponseJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &LoadByIdsResponse{}
+		v := &UpdateMapByIdsResponse{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &LoadByIdsResponse{}
+	result := &UpdateMapByIdsResponse{}
 	result.EventsAdded = raw.EventsAdded
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
 }
 
-// LoadByIdsResponseToYAML converts LoadByIdsResponse to YAML bytes.
+// UpdateMapByIdsResponseToYAML converts UpdateMapByIdsResponse to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func LoadByIdsResponseToYAML(v *LoadByIdsResponse) ([]byte, error) {
+func UpdateMapByIdsResponseToYAML(v *UpdateMapByIdsResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbyidsresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbyidsresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := LoadByIdsResponseToJSON(v)
+	jsonData, err := UpdateMapByIdsResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -6341,14 +6370,14 @@ func LoadByIdsResponseToYAML(v *LoadByIdsResponse) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// LoadByIdsResponseToTOML converts LoadByIdsResponse to TOML bytes.
+// UpdateMapByIdsResponseToTOML converts UpdateMapByIdsResponse to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func LoadByIdsResponseToTOML(v *LoadByIdsResponse) ([]byte, error) {
+func UpdateMapByIdsResponseToTOML(v *UpdateMapByIdsResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbyidsresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbyidsresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := LoadByIdsResponseToJSON(v)
+	jsonData, err := UpdateMapByIdsResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -6360,23 +6389,23 @@ func LoadByIdsResponseToTOML(v *LoadByIdsResponse) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// LoadBySqlRequestJSON represents LoadBySqlRequest in external JSON format (with string enums)
+// UpdateMapBySqlRequestJSON represents UpdateMapBySqlRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type loadbysqlrequestJSON struct {
+type updatemapbysqlrequestJSON struct {
 	MapId   string `json:"map_id,omitempty"`
 	Sql     string `json:"sql,omitempty"`
 	TraceId string `json:"trace_id,omitempty"`
 	Noop    bool   `json:"noop,omitempty"`
 }
 
-// LoadBySqlRequestToJSON converts LoadBySqlRequest to JSON bytes.
+// UpdateMapBySqlRequestToJSON converts UpdateMapBySqlRequest to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func LoadBySqlRequestToJSON(v *LoadBySqlRequest) ([]byte, error) {
+func UpdateMapBySqlRequestToJSON(v *UpdateMapBySqlRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbysqlrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbysqlrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := loadbysqlrequestJSON{
+	helper := updatemapbysqlrequestJSON{
 		MapId:   v.MapId,
 		Sql:     v.Sql,
 		TraceId: v.TraceId,
@@ -6385,14 +6414,14 @@ func LoadBySqlRequestToJSON(v *LoadBySqlRequest) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// LoadBySqlRequestToJSONPretty converts LoadBySqlRequest to indented JSON bytes.
+// UpdateMapBySqlRequestToJSONPretty converts UpdateMapBySqlRequest to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func LoadBySqlRequestToJSONPretty(v *LoadBySqlRequest) ([]byte, error) {
+func UpdateMapBySqlRequestToJSONPretty(v *UpdateMapBySqlRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbysqlrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbysqlrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := loadbysqlrequestJSON{
+	helper := updatemapbysqlrequestJSON{
 		MapId:   v.MapId,
 		Sql:     v.Sql,
 		TraceId: v.TraceId,
@@ -6401,9 +6430,9 @@ func LoadBySqlRequestToJSONPretty(v *LoadBySqlRequest) ([]byte, error) {
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// LoadBySqlRequestFromBytes creates LoadBySqlRequest from bytes, auto-detecting the format.
+// UpdateMapBySqlRequestFromBytes creates UpdateMapBySqlRequest from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func LoadBySqlRequestFromBytes(data []byte) (*LoadBySqlRequest, error) {
+func UpdateMapBySqlRequestFromBytes(data []byte) (*UpdateMapBySqlRequest, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -6411,7 +6440,7 @@ func LoadBySqlRequestFromBytes(data []byte) (*LoadBySqlRequest, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := LoadBySqlRequestFromJSON(data); err == nil {
+		if result, err := UpdateMapBySqlRequestFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -6421,7 +6450,7 @@ func LoadBySqlRequestFromBytes(data []byte) (*LoadBySqlRequest, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := LoadBySqlRequestFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapBySqlRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -6432,35 +6461,35 @@ func LoadBySqlRequestFromBytes(data []byte) (*LoadBySqlRequest, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := LoadBySqlRequestFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapBySqlRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &LoadBySqlRequest{}
+	v := &UpdateMapBySqlRequest{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse LoadBySqlRequest: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse UpdateMapBySqlRequest: unsupported format or invalid data")
 }
 
-// LoadBySqlRequestFromJSON creates LoadBySqlRequest from JSON bytes.
+// UpdateMapBySqlRequestFromJSON creates UpdateMapBySqlRequest from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func LoadBySqlRequestFromJSON(data []byte) (*LoadBySqlRequest, error) {
+func UpdateMapBySqlRequestFromJSON(data []byte) (*UpdateMapBySqlRequest, error) {
 	// Unmarshal into helper struct with string enums
-	var raw loadbysqlrequestJSON
+	var raw updatemapbysqlrequestJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &LoadBySqlRequest{}
+		v := &UpdateMapBySqlRequest{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &LoadBySqlRequest{}
+	result := &UpdateMapBySqlRequest{}
 	result.MapId = raw.MapId
 	result.Sql = raw.Sql
 	result.TraceId = raw.TraceId
@@ -6468,14 +6497,14 @@ func LoadBySqlRequestFromJSON(data []byte) (*LoadBySqlRequest, error) {
 	return result, nil
 }
 
-// LoadBySqlRequestToYAML converts LoadBySqlRequest to YAML bytes.
+// UpdateMapBySqlRequestToYAML converts UpdateMapBySqlRequest to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func LoadBySqlRequestToYAML(v *LoadBySqlRequest) ([]byte, error) {
+func UpdateMapBySqlRequestToYAML(v *UpdateMapBySqlRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbysqlrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbysqlrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := LoadBySqlRequestToJSON(v)
+	jsonData, err := UpdateMapBySqlRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -6489,14 +6518,14 @@ func LoadBySqlRequestToYAML(v *LoadBySqlRequest) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// LoadBySqlRequestToTOML converts LoadBySqlRequest to TOML bytes.
+// UpdateMapBySqlRequestToTOML converts UpdateMapBySqlRequest to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func LoadBySqlRequestToTOML(v *LoadBySqlRequest) ([]byte, error) {
+func UpdateMapBySqlRequestToTOML(v *UpdateMapBySqlRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbysqlrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbysqlrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := LoadBySqlRequestToJSON(v)
+	jsonData, err := UpdateMapBySqlRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -6508,22 +6537,22 @@ func LoadBySqlRequestToTOML(v *LoadBySqlRequest) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// LoadBySqlResponseJSON represents LoadBySqlResponse in external JSON format (with string enums)
+// UpdateMapBySqlResponseJSON represents UpdateMapBySqlResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type loadbysqlresponseJSON struct {
+type updatemapbysqlresponseJSON struct {
 	EventsAdded int64  `json:"events_added,omitempty"`
 	TraceId     string `json:"trace_id,omitempty"`
 	Noop        bool   `json:"noop,omitempty"`
 }
 
-// LoadBySqlResponseToJSON converts LoadBySqlResponse to JSON bytes.
+// UpdateMapBySqlResponseToJSON converts UpdateMapBySqlResponse to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func LoadBySqlResponseToJSON(v *LoadBySqlResponse) ([]byte, error) {
+func UpdateMapBySqlResponseToJSON(v *UpdateMapBySqlResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbysqlresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbysqlresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := loadbysqlresponseJSON{
+	helper := updatemapbysqlresponseJSON{
 		EventsAdded: v.EventsAdded,
 		TraceId:     v.TraceId,
 		Noop:        v.Noop,
@@ -6531,14 +6560,14 @@ func LoadBySqlResponseToJSON(v *LoadBySqlResponse) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// LoadBySqlResponseToJSONPretty converts LoadBySqlResponse to indented JSON bytes.
+// UpdateMapBySqlResponseToJSONPretty converts UpdateMapBySqlResponse to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func LoadBySqlResponseToJSONPretty(v *LoadBySqlResponse) ([]byte, error) {
+func UpdateMapBySqlResponseToJSONPretty(v *UpdateMapBySqlResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbysqlresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbysqlresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := loadbysqlresponseJSON{
+	helper := updatemapbysqlresponseJSON{
 		EventsAdded: v.EventsAdded,
 		TraceId:     v.TraceId,
 		Noop:        v.Noop,
@@ -6546,9 +6575,9 @@ func LoadBySqlResponseToJSONPretty(v *LoadBySqlResponse) ([]byte, error) {
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// LoadBySqlResponseFromBytes creates LoadBySqlResponse from bytes, auto-detecting the format.
+// UpdateMapBySqlResponseFromBytes creates UpdateMapBySqlResponse from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func LoadBySqlResponseFromBytes(data []byte) (*LoadBySqlResponse, error) {
+func UpdateMapBySqlResponseFromBytes(data []byte) (*UpdateMapBySqlResponse, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -6556,7 +6585,7 @@ func LoadBySqlResponseFromBytes(data []byte) (*LoadBySqlResponse, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := LoadBySqlResponseFromJSON(data); err == nil {
+		if result, err := UpdateMapBySqlResponseFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -6566,7 +6595,7 @@ func LoadBySqlResponseFromBytes(data []byte) (*LoadBySqlResponse, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := LoadBySqlResponseFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapBySqlResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -6577,49 +6606,49 @@ func LoadBySqlResponseFromBytes(data []byte) (*LoadBySqlResponse, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := LoadBySqlResponseFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapBySqlResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &LoadBySqlResponse{}
+	v := &UpdateMapBySqlResponse{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse LoadBySqlResponse: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse UpdateMapBySqlResponse: unsupported format or invalid data")
 }
 
-// LoadBySqlResponseFromJSON creates LoadBySqlResponse from JSON bytes.
+// UpdateMapBySqlResponseFromJSON creates UpdateMapBySqlResponse from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func LoadBySqlResponseFromJSON(data []byte) (*LoadBySqlResponse, error) {
+func UpdateMapBySqlResponseFromJSON(data []byte) (*UpdateMapBySqlResponse, error) {
 	// Unmarshal into helper struct with string enums
-	var raw loadbysqlresponseJSON
+	var raw updatemapbysqlresponseJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &LoadBySqlResponse{}
+		v := &UpdateMapBySqlResponse{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &LoadBySqlResponse{}
+	result := &UpdateMapBySqlResponse{}
 	result.EventsAdded = raw.EventsAdded
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
 }
 
-// LoadBySqlResponseToYAML converts LoadBySqlResponse to YAML bytes.
+// UpdateMapBySqlResponseToYAML converts UpdateMapBySqlResponse to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func LoadBySqlResponseToYAML(v *LoadBySqlResponse) ([]byte, error) {
+func UpdateMapBySqlResponseToYAML(v *UpdateMapBySqlResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbysqlresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbysqlresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := LoadBySqlResponseToJSON(v)
+	jsonData, err := UpdateMapBySqlResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -6633,14 +6662,14 @@ func LoadBySqlResponseToYAML(v *LoadBySqlResponse) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// LoadBySqlResponseToTOML converts LoadBySqlResponse to TOML bytes.
+// UpdateMapBySqlResponseToTOML converts UpdateMapBySqlResponse to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func LoadBySqlResponseToTOML(v *LoadBySqlResponse) ([]byte, error) {
+func UpdateMapBySqlResponseToTOML(v *UpdateMapBySqlResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbysqlresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbysqlresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := LoadBySqlResponseToJSON(v)
+	jsonData, err := UpdateMapBySqlResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -6652,23 +6681,23 @@ func LoadBySqlResponseToTOML(v *LoadBySqlResponse) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// LoadByTimedbRequestJSON represents LoadByTimedbRequest in external JSON format (with string enums)
+// UpdateMapByTimedbRequestJSON represents UpdateMapByTimedbRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type loadbytimedbrequestJSON struct {
+type updatemapbytimedbrequestJSON struct {
 	MapId   string `json:"map_id,omitempty"`
 	Sql     string `json:"sql,omitempty"`
 	TraceId string `json:"trace_id,omitempty"`
 	Noop    bool   `json:"noop,omitempty"`
 }
 
-// LoadByTimedbRequestToJSON converts LoadByTimedbRequest to JSON bytes.
+// UpdateMapByTimedbRequestToJSON converts UpdateMapByTimedbRequest to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func LoadByTimedbRequestToJSON(v *LoadByTimedbRequest) ([]byte, error) {
+func UpdateMapByTimedbRequestToJSON(v *UpdateMapByTimedbRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbytimedbrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbytimedbrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := loadbytimedbrequestJSON{
+	helper := updatemapbytimedbrequestJSON{
 		MapId:   v.MapId,
 		Sql:     v.Sql,
 		TraceId: v.TraceId,
@@ -6677,14 +6706,14 @@ func LoadByTimedbRequestToJSON(v *LoadByTimedbRequest) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// LoadByTimedbRequestToJSONPretty converts LoadByTimedbRequest to indented JSON bytes.
+// UpdateMapByTimedbRequestToJSONPretty converts UpdateMapByTimedbRequest to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func LoadByTimedbRequestToJSONPretty(v *LoadByTimedbRequest) ([]byte, error) {
+func UpdateMapByTimedbRequestToJSONPretty(v *UpdateMapByTimedbRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbytimedbrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbytimedbrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := loadbytimedbrequestJSON{
+	helper := updatemapbytimedbrequestJSON{
 		MapId:   v.MapId,
 		Sql:     v.Sql,
 		TraceId: v.TraceId,
@@ -6693,9 +6722,9 @@ func LoadByTimedbRequestToJSONPretty(v *LoadByTimedbRequest) ([]byte, error) {
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// LoadByTimedbRequestFromBytes creates LoadByTimedbRequest from bytes, auto-detecting the format.
+// UpdateMapByTimedbRequestFromBytes creates UpdateMapByTimedbRequest from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func LoadByTimedbRequestFromBytes(data []byte) (*LoadByTimedbRequest, error) {
+func UpdateMapByTimedbRequestFromBytes(data []byte) (*UpdateMapByTimedbRequest, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -6703,7 +6732,7 @@ func LoadByTimedbRequestFromBytes(data []byte) (*LoadByTimedbRequest, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := LoadByTimedbRequestFromJSON(data); err == nil {
+		if result, err := UpdateMapByTimedbRequestFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -6713,7 +6742,7 @@ func LoadByTimedbRequestFromBytes(data []byte) (*LoadByTimedbRequest, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := LoadByTimedbRequestFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapByTimedbRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -6724,35 +6753,35 @@ func LoadByTimedbRequestFromBytes(data []byte) (*LoadByTimedbRequest, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := LoadByTimedbRequestFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapByTimedbRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &LoadByTimedbRequest{}
+	v := &UpdateMapByTimedbRequest{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse LoadByTimedbRequest: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse UpdateMapByTimedbRequest: unsupported format or invalid data")
 }
 
-// LoadByTimedbRequestFromJSON creates LoadByTimedbRequest from JSON bytes.
+// UpdateMapByTimedbRequestFromJSON creates UpdateMapByTimedbRequest from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func LoadByTimedbRequestFromJSON(data []byte) (*LoadByTimedbRequest, error) {
+func UpdateMapByTimedbRequestFromJSON(data []byte) (*UpdateMapByTimedbRequest, error) {
 	// Unmarshal into helper struct with string enums
-	var raw loadbytimedbrequestJSON
+	var raw updatemapbytimedbrequestJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &LoadByTimedbRequest{}
+		v := &UpdateMapByTimedbRequest{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &LoadByTimedbRequest{}
+	result := &UpdateMapByTimedbRequest{}
 	result.MapId = raw.MapId
 	result.Sql = raw.Sql
 	result.TraceId = raw.TraceId
@@ -6760,14 +6789,14 @@ func LoadByTimedbRequestFromJSON(data []byte) (*LoadByTimedbRequest, error) {
 	return result, nil
 }
 
-// LoadByTimedbRequestToYAML converts LoadByTimedbRequest to YAML bytes.
+// UpdateMapByTimedbRequestToYAML converts UpdateMapByTimedbRequest to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func LoadByTimedbRequestToYAML(v *LoadByTimedbRequest) ([]byte, error) {
+func UpdateMapByTimedbRequestToYAML(v *UpdateMapByTimedbRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbytimedbrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbytimedbrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := LoadByTimedbRequestToJSON(v)
+	jsonData, err := UpdateMapByTimedbRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -6781,14 +6810,14 @@ func LoadByTimedbRequestToYAML(v *LoadByTimedbRequest) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// LoadByTimedbRequestToTOML converts LoadByTimedbRequest to TOML bytes.
+// UpdateMapByTimedbRequestToTOML converts UpdateMapByTimedbRequest to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func LoadByTimedbRequestToTOML(v *LoadByTimedbRequest) ([]byte, error) {
+func UpdateMapByTimedbRequestToTOML(v *UpdateMapByTimedbRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbytimedbrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbytimedbrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := LoadByTimedbRequestToJSON(v)
+	jsonData, err := UpdateMapByTimedbRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -6800,22 +6829,22 @@ func LoadByTimedbRequestToTOML(v *LoadByTimedbRequest) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// LoadByTimedbResponseJSON represents LoadByTimedbResponse in external JSON format (with string enums)
+// UpdateMapByTimedbResponseJSON represents UpdateMapByTimedbResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type loadbytimedbresponseJSON struct {
+type updatemapbytimedbresponseJSON struct {
 	EventsAdded int64  `json:"events_added,omitempty"`
 	TraceId     string `json:"trace_id,omitempty"`
 	Noop        bool   `json:"noop,omitempty"`
 }
 
-// LoadByTimedbResponseToJSON converts LoadByTimedbResponse to JSON bytes.
+// UpdateMapByTimedbResponseToJSON converts UpdateMapByTimedbResponse to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func LoadByTimedbResponseToJSON(v *LoadByTimedbResponse) ([]byte, error) {
+func UpdateMapByTimedbResponseToJSON(v *UpdateMapByTimedbResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbytimedbresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbytimedbresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := loadbytimedbresponseJSON{
+	helper := updatemapbytimedbresponseJSON{
 		EventsAdded: v.EventsAdded,
 		TraceId:     v.TraceId,
 		Noop:        v.Noop,
@@ -6823,14 +6852,14 @@ func LoadByTimedbResponseToJSON(v *LoadByTimedbResponse) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// LoadByTimedbResponseToJSONPretty converts LoadByTimedbResponse to indented JSON bytes.
+// UpdateMapByTimedbResponseToJSONPretty converts UpdateMapByTimedbResponse to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func LoadByTimedbResponseToJSONPretty(v *LoadByTimedbResponse) ([]byte, error) {
+func UpdateMapByTimedbResponseToJSONPretty(v *UpdateMapByTimedbResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbytimedbresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbytimedbresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := loadbytimedbresponseJSON{
+	helper := updatemapbytimedbresponseJSON{
 		EventsAdded: v.EventsAdded,
 		TraceId:     v.TraceId,
 		Noop:        v.Noop,
@@ -6838,9 +6867,9 @@ func LoadByTimedbResponseToJSONPretty(v *LoadByTimedbResponse) ([]byte, error) {
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// LoadByTimedbResponseFromBytes creates LoadByTimedbResponse from bytes, auto-detecting the format.
+// UpdateMapByTimedbResponseFromBytes creates UpdateMapByTimedbResponse from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func LoadByTimedbResponseFromBytes(data []byte) (*LoadByTimedbResponse, error) {
+func UpdateMapByTimedbResponseFromBytes(data []byte) (*UpdateMapByTimedbResponse, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -6848,7 +6877,7 @@ func LoadByTimedbResponseFromBytes(data []byte) (*LoadByTimedbResponse, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := LoadByTimedbResponseFromJSON(data); err == nil {
+		if result, err := UpdateMapByTimedbResponseFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -6858,7 +6887,7 @@ func LoadByTimedbResponseFromBytes(data []byte) (*LoadByTimedbResponse, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := LoadByTimedbResponseFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapByTimedbResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -6869,49 +6898,49 @@ func LoadByTimedbResponseFromBytes(data []byte) (*LoadByTimedbResponse, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := LoadByTimedbResponseFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapByTimedbResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &LoadByTimedbResponse{}
+	v := &UpdateMapByTimedbResponse{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse LoadByTimedbResponse: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse UpdateMapByTimedbResponse: unsupported format or invalid data")
 }
 
-// LoadByTimedbResponseFromJSON creates LoadByTimedbResponse from JSON bytes.
+// UpdateMapByTimedbResponseFromJSON creates UpdateMapByTimedbResponse from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func LoadByTimedbResponseFromJSON(data []byte) (*LoadByTimedbResponse, error) {
+func UpdateMapByTimedbResponseFromJSON(data []byte) (*UpdateMapByTimedbResponse, error) {
 	// Unmarshal into helper struct with string enums
-	var raw loadbytimedbresponseJSON
+	var raw updatemapbytimedbresponseJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &LoadByTimedbResponse{}
+		v := &UpdateMapByTimedbResponse{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &LoadByTimedbResponse{}
+	result := &UpdateMapByTimedbResponse{}
 	result.EventsAdded = raw.EventsAdded
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
 }
 
-// LoadByTimedbResponseToYAML converts LoadByTimedbResponse to YAML bytes.
+// UpdateMapByTimedbResponseToYAML converts UpdateMapByTimedbResponse to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func LoadByTimedbResponseToYAML(v *LoadByTimedbResponse) ([]byte, error) {
+func UpdateMapByTimedbResponseToYAML(v *UpdateMapByTimedbResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbytimedbresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbytimedbresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := LoadByTimedbResponseToJSON(v)
+	jsonData, err := UpdateMapByTimedbResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -6925,14 +6954,14 @@ func LoadByTimedbResponseToYAML(v *LoadByTimedbResponse) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// LoadByTimedbResponseToTOML converts LoadByTimedbResponse to TOML bytes.
+// UpdateMapByTimedbResponseToTOML converts UpdateMapByTimedbResponse to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func LoadByTimedbResponseToTOML(v *LoadByTimedbResponse) ([]byte, error) {
+func UpdateMapByTimedbResponseToTOML(v *UpdateMapByTimedbResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbytimedbresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbytimedbresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := LoadByTimedbResponseToJSON(v)
+	jsonData, err := UpdateMapByTimedbResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -6944,23 +6973,23 @@ func LoadByTimedbResponseToTOML(v *LoadByTimedbResponse) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// LoadByGraphdbRequestJSON represents LoadByGraphdbRequest in external JSON format (with string enums)
+// UpdateMapByGraphdbRequestJSON represents UpdateMapByGraphdbRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type loadbygraphdbrequestJSON struct {
+type updatemapbygraphdbrequestJSON struct {
 	MapId   string `json:"map_id,omitempty"`
 	Dql     string `json:"dql,omitempty"`
 	TraceId string `json:"trace_id,omitempty"`
 	Noop    bool   `json:"noop,omitempty"`
 }
 
-// LoadByGraphdbRequestToJSON converts LoadByGraphdbRequest to JSON bytes.
+// UpdateMapByGraphdbRequestToJSON converts UpdateMapByGraphdbRequest to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func LoadByGraphdbRequestToJSON(v *LoadByGraphdbRequest) ([]byte, error) {
+func UpdateMapByGraphdbRequestToJSON(v *UpdateMapByGraphdbRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbygraphdbrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbygraphdbrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := loadbygraphdbrequestJSON{
+	helper := updatemapbygraphdbrequestJSON{
 		MapId:   v.MapId,
 		Dql:     v.Dql,
 		TraceId: v.TraceId,
@@ -6969,14 +6998,14 @@ func LoadByGraphdbRequestToJSON(v *LoadByGraphdbRequest) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// LoadByGraphdbRequestToJSONPretty converts LoadByGraphdbRequest to indented JSON bytes.
+// UpdateMapByGraphdbRequestToJSONPretty converts UpdateMapByGraphdbRequest to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func LoadByGraphdbRequestToJSONPretty(v *LoadByGraphdbRequest) ([]byte, error) {
+func UpdateMapByGraphdbRequestToJSONPretty(v *UpdateMapByGraphdbRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbygraphdbrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbygraphdbrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := loadbygraphdbrequestJSON{
+	helper := updatemapbygraphdbrequestJSON{
 		MapId:   v.MapId,
 		Dql:     v.Dql,
 		TraceId: v.TraceId,
@@ -6985,9 +7014,9 @@ func LoadByGraphdbRequestToJSONPretty(v *LoadByGraphdbRequest) ([]byte, error) {
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// LoadByGraphdbRequestFromBytes creates LoadByGraphdbRequest from bytes, auto-detecting the format.
+// UpdateMapByGraphdbRequestFromBytes creates UpdateMapByGraphdbRequest from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func LoadByGraphdbRequestFromBytes(data []byte) (*LoadByGraphdbRequest, error) {
+func UpdateMapByGraphdbRequestFromBytes(data []byte) (*UpdateMapByGraphdbRequest, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -6995,7 +7024,7 @@ func LoadByGraphdbRequestFromBytes(data []byte) (*LoadByGraphdbRequest, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := LoadByGraphdbRequestFromJSON(data); err == nil {
+		if result, err := UpdateMapByGraphdbRequestFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -7005,7 +7034,7 @@ func LoadByGraphdbRequestFromBytes(data []byte) (*LoadByGraphdbRequest, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := LoadByGraphdbRequestFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapByGraphdbRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -7016,35 +7045,35 @@ func LoadByGraphdbRequestFromBytes(data []byte) (*LoadByGraphdbRequest, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := LoadByGraphdbRequestFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapByGraphdbRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &LoadByGraphdbRequest{}
+	v := &UpdateMapByGraphdbRequest{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse LoadByGraphdbRequest: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse UpdateMapByGraphdbRequest: unsupported format or invalid data")
 }
 
-// LoadByGraphdbRequestFromJSON creates LoadByGraphdbRequest from JSON bytes.
+// UpdateMapByGraphdbRequestFromJSON creates UpdateMapByGraphdbRequest from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func LoadByGraphdbRequestFromJSON(data []byte) (*LoadByGraphdbRequest, error) {
+func UpdateMapByGraphdbRequestFromJSON(data []byte) (*UpdateMapByGraphdbRequest, error) {
 	// Unmarshal into helper struct with string enums
-	var raw loadbygraphdbrequestJSON
+	var raw updatemapbygraphdbrequestJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &LoadByGraphdbRequest{}
+		v := &UpdateMapByGraphdbRequest{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &LoadByGraphdbRequest{}
+	result := &UpdateMapByGraphdbRequest{}
 	result.MapId = raw.MapId
 	result.Dql = raw.Dql
 	result.TraceId = raw.TraceId
@@ -7052,14 +7081,14 @@ func LoadByGraphdbRequestFromJSON(data []byte) (*LoadByGraphdbRequest, error) {
 	return result, nil
 }
 
-// LoadByGraphdbRequestToYAML converts LoadByGraphdbRequest to YAML bytes.
+// UpdateMapByGraphdbRequestToYAML converts UpdateMapByGraphdbRequest to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func LoadByGraphdbRequestToYAML(v *LoadByGraphdbRequest) ([]byte, error) {
+func UpdateMapByGraphdbRequestToYAML(v *UpdateMapByGraphdbRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbygraphdbrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbygraphdbrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := LoadByGraphdbRequestToJSON(v)
+	jsonData, err := UpdateMapByGraphdbRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -7073,14 +7102,14 @@ func LoadByGraphdbRequestToYAML(v *LoadByGraphdbRequest) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// LoadByGraphdbRequestToTOML converts LoadByGraphdbRequest to TOML bytes.
+// UpdateMapByGraphdbRequestToTOML converts UpdateMapByGraphdbRequest to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func LoadByGraphdbRequestToTOML(v *LoadByGraphdbRequest) ([]byte, error) {
+func UpdateMapByGraphdbRequestToTOML(v *UpdateMapByGraphdbRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbygraphdbrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbygraphdbrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := LoadByGraphdbRequestToJSON(v)
+	jsonData, err := UpdateMapByGraphdbRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -7092,22 +7121,22 @@ func LoadByGraphdbRequestToTOML(v *LoadByGraphdbRequest) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// LoadByGraphdbResponseJSON represents LoadByGraphdbResponse in external JSON format (with string enums)
+// UpdateMapByGraphdbResponseJSON represents UpdateMapByGraphdbResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type loadbygraphdbresponseJSON struct {
+type updatemapbygraphdbresponseJSON struct {
 	EventsAdded int64  `json:"events_added,omitempty"`
 	TraceId     string `json:"trace_id,omitempty"`
 	Noop        bool   `json:"noop,omitempty"`
 }
 
-// LoadByGraphdbResponseToJSON converts LoadByGraphdbResponse to JSON bytes.
+// UpdateMapByGraphdbResponseToJSON converts UpdateMapByGraphdbResponse to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func LoadByGraphdbResponseToJSON(v *LoadByGraphdbResponse) ([]byte, error) {
+func UpdateMapByGraphdbResponseToJSON(v *UpdateMapByGraphdbResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbygraphdbresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbygraphdbresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := loadbygraphdbresponseJSON{
+	helper := updatemapbygraphdbresponseJSON{
 		EventsAdded: v.EventsAdded,
 		TraceId:     v.TraceId,
 		Noop:        v.Noop,
@@ -7115,14 +7144,14 @@ func LoadByGraphdbResponseToJSON(v *LoadByGraphdbResponse) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// LoadByGraphdbResponseToJSONPretty converts LoadByGraphdbResponse to indented JSON bytes.
+// UpdateMapByGraphdbResponseToJSONPretty converts UpdateMapByGraphdbResponse to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func LoadByGraphdbResponseToJSONPretty(v *LoadByGraphdbResponse) ([]byte, error) {
+func UpdateMapByGraphdbResponseToJSONPretty(v *UpdateMapByGraphdbResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbygraphdbresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbygraphdbresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := loadbygraphdbresponseJSON{
+	helper := updatemapbygraphdbresponseJSON{
 		EventsAdded: v.EventsAdded,
 		TraceId:     v.TraceId,
 		Noop:        v.Noop,
@@ -7130,9 +7159,9 @@ func LoadByGraphdbResponseToJSONPretty(v *LoadByGraphdbResponse) ([]byte, error)
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// LoadByGraphdbResponseFromBytes creates LoadByGraphdbResponse from bytes, auto-detecting the format.
+// UpdateMapByGraphdbResponseFromBytes creates UpdateMapByGraphdbResponse from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func LoadByGraphdbResponseFromBytes(data []byte) (*LoadByGraphdbResponse, error) {
+func UpdateMapByGraphdbResponseFromBytes(data []byte) (*UpdateMapByGraphdbResponse, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -7140,7 +7169,7 @@ func LoadByGraphdbResponseFromBytes(data []byte) (*LoadByGraphdbResponse, error)
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := LoadByGraphdbResponseFromJSON(data); err == nil {
+		if result, err := UpdateMapByGraphdbResponseFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -7150,7 +7179,7 @@ func LoadByGraphdbResponseFromBytes(data []byte) (*LoadByGraphdbResponse, error)
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := LoadByGraphdbResponseFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapByGraphdbResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -7161,49 +7190,49 @@ func LoadByGraphdbResponseFromBytes(data []byte) (*LoadByGraphdbResponse, error)
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := LoadByGraphdbResponseFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapByGraphdbResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &LoadByGraphdbResponse{}
+	v := &UpdateMapByGraphdbResponse{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse LoadByGraphdbResponse: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse UpdateMapByGraphdbResponse: unsupported format or invalid data")
 }
 
-// LoadByGraphdbResponseFromJSON creates LoadByGraphdbResponse from JSON bytes.
+// UpdateMapByGraphdbResponseFromJSON creates UpdateMapByGraphdbResponse from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func LoadByGraphdbResponseFromJSON(data []byte) (*LoadByGraphdbResponse, error) {
+func UpdateMapByGraphdbResponseFromJSON(data []byte) (*UpdateMapByGraphdbResponse, error) {
 	// Unmarshal into helper struct with string enums
-	var raw loadbygraphdbresponseJSON
+	var raw updatemapbygraphdbresponseJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &LoadByGraphdbResponse{}
+		v := &UpdateMapByGraphdbResponse{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &LoadByGraphdbResponse{}
+	result := &UpdateMapByGraphdbResponse{}
 	result.EventsAdded = raw.EventsAdded
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
 }
 
-// LoadByGraphdbResponseToYAML converts LoadByGraphdbResponse to YAML bytes.
+// UpdateMapByGraphdbResponseToYAML converts UpdateMapByGraphdbResponse to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func LoadByGraphdbResponseToYAML(v *LoadByGraphdbResponse) ([]byte, error) {
+func UpdateMapByGraphdbResponseToYAML(v *UpdateMapByGraphdbResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbygraphdbresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbygraphdbresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := LoadByGraphdbResponseToJSON(v)
+	jsonData, err := UpdateMapByGraphdbResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -7217,14 +7246,14 @@ func LoadByGraphdbResponseToYAML(v *LoadByGraphdbResponse) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// LoadByGraphdbResponseToTOML converts LoadByGraphdbResponse to TOML bytes.
+// UpdateMapByGraphdbResponseToTOML converts UpdateMapByGraphdbResponse to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func LoadByGraphdbResponseToTOML(v *LoadByGraphdbResponse) ([]byte, error) {
+func UpdateMapByGraphdbResponseToTOML(v *UpdateMapByGraphdbResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "loadbygraphdbresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapbygraphdbresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := LoadByGraphdbResponseToJSON(v)
+	jsonData, err := UpdateMapByGraphdbResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -7236,23 +7265,23 @@ func LoadByGraphdbResponseToTOML(v *LoadByGraphdbResponse) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// FilterMapRequestJSON represents FilterMapRequest in external JSON format (with string enums)
+// UpdateMapFilterRequestJSON represents UpdateMapFilterRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type filtermaprequestJSON struct {
+type updatemapfilterrequestJSON struct {
 	MapId   string `json:"map_id,omitempty"`
 	Sql     string `json:"sql,omitempty"`
 	TraceId string `json:"trace_id,omitempty"`
 	Noop    bool   `json:"noop,omitempty"`
 }
 
-// FilterMapRequestToJSON converts FilterMapRequest to JSON bytes.
+// UpdateMapFilterRequestToJSON converts UpdateMapFilterRequest to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func FilterMapRequestToJSON(v *FilterMapRequest) ([]byte, error) {
+func UpdateMapFilterRequestToJSON(v *UpdateMapFilterRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "filtermaprequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapfilterrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := filtermaprequestJSON{
+	helper := updatemapfilterrequestJSON{
 		MapId:   v.MapId,
 		Sql:     v.Sql,
 		TraceId: v.TraceId,
@@ -7261,14 +7290,14 @@ func FilterMapRequestToJSON(v *FilterMapRequest) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// FilterMapRequestToJSONPretty converts FilterMapRequest to indented JSON bytes.
+// UpdateMapFilterRequestToJSONPretty converts UpdateMapFilterRequest to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func FilterMapRequestToJSONPretty(v *FilterMapRequest) ([]byte, error) {
+func UpdateMapFilterRequestToJSONPretty(v *UpdateMapFilterRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "filtermaprequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapfilterrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := filtermaprequestJSON{
+	helper := updatemapfilterrequestJSON{
 		MapId:   v.MapId,
 		Sql:     v.Sql,
 		TraceId: v.TraceId,
@@ -7277,9 +7306,9 @@ func FilterMapRequestToJSONPretty(v *FilterMapRequest) ([]byte, error) {
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// FilterMapRequestFromBytes creates FilterMapRequest from bytes, auto-detecting the format.
+// UpdateMapFilterRequestFromBytes creates UpdateMapFilterRequest from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func FilterMapRequestFromBytes(data []byte) (*FilterMapRequest, error) {
+func UpdateMapFilterRequestFromBytes(data []byte) (*UpdateMapFilterRequest, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -7287,7 +7316,7 @@ func FilterMapRequestFromBytes(data []byte) (*FilterMapRequest, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := FilterMapRequestFromJSON(data); err == nil {
+		if result, err := UpdateMapFilterRequestFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -7297,7 +7326,7 @@ func FilterMapRequestFromBytes(data []byte) (*FilterMapRequest, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := FilterMapRequestFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapFilterRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -7308,35 +7337,35 @@ func FilterMapRequestFromBytes(data []byte) (*FilterMapRequest, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := FilterMapRequestFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapFilterRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &FilterMapRequest{}
+	v := &UpdateMapFilterRequest{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse FilterMapRequest: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse UpdateMapFilterRequest: unsupported format or invalid data")
 }
 
-// FilterMapRequestFromJSON creates FilterMapRequest from JSON bytes.
+// UpdateMapFilterRequestFromJSON creates UpdateMapFilterRequest from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func FilterMapRequestFromJSON(data []byte) (*FilterMapRequest, error) {
+func UpdateMapFilterRequestFromJSON(data []byte) (*UpdateMapFilterRequest, error) {
 	// Unmarshal into helper struct with string enums
-	var raw filtermaprequestJSON
+	var raw updatemapfilterrequestJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &FilterMapRequest{}
+		v := &UpdateMapFilterRequest{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &FilterMapRequest{}
+	result := &UpdateMapFilterRequest{}
 	result.MapId = raw.MapId
 	result.Sql = raw.Sql
 	result.TraceId = raw.TraceId
@@ -7344,14 +7373,14 @@ func FilterMapRequestFromJSON(data []byte) (*FilterMapRequest, error) {
 	return result, nil
 }
 
-// FilterMapRequestToYAML converts FilterMapRequest to YAML bytes.
+// UpdateMapFilterRequestToYAML converts UpdateMapFilterRequest to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func FilterMapRequestToYAML(v *FilterMapRequest) ([]byte, error) {
+func UpdateMapFilterRequestToYAML(v *UpdateMapFilterRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "filtermaprequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapfilterrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := FilterMapRequestToJSON(v)
+	jsonData, err := UpdateMapFilterRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -7365,14 +7394,14 @@ func FilterMapRequestToYAML(v *FilterMapRequest) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// FilterMapRequestToTOML converts FilterMapRequest to TOML bytes.
+// UpdateMapFilterRequestToTOML converts UpdateMapFilterRequest to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func FilterMapRequestToTOML(v *FilterMapRequest) ([]byte, error) {
+func UpdateMapFilterRequestToTOML(v *UpdateMapFilterRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "filtermaprequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapfilterrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := FilterMapRequestToJSON(v)
+	jsonData, err := UpdateMapFilterRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -7384,22 +7413,22 @@ func FilterMapRequestToTOML(v *FilterMapRequest) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// FilterMapResponseJSON represents FilterMapResponse in external JSON format (with string enums)
+// UpdateMapFilterResponseJSON represents UpdateMapFilterResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type filtermapresponseJSON struct {
+type updatemapfilterresponseJSON struct {
 	EventsRemoved int64  `json:"events_removed,omitempty"`
 	TraceId       string `json:"trace_id,omitempty"`
 	Noop          bool   `json:"noop,omitempty"`
 }
 
-// FilterMapResponseToJSON converts FilterMapResponse to JSON bytes.
+// UpdateMapFilterResponseToJSON converts UpdateMapFilterResponse to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func FilterMapResponseToJSON(v *FilterMapResponse) ([]byte, error) {
+func UpdateMapFilterResponseToJSON(v *UpdateMapFilterResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "filtermapresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapfilterresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := filtermapresponseJSON{
+	helper := updatemapfilterresponseJSON{
 		EventsRemoved: v.EventsRemoved,
 		TraceId:       v.TraceId,
 		Noop:          v.Noop,
@@ -7407,14 +7436,14 @@ func FilterMapResponseToJSON(v *FilterMapResponse) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// FilterMapResponseToJSONPretty converts FilterMapResponse to indented JSON bytes.
+// UpdateMapFilterResponseToJSONPretty converts UpdateMapFilterResponse to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func FilterMapResponseToJSONPretty(v *FilterMapResponse) ([]byte, error) {
+func UpdateMapFilterResponseToJSONPretty(v *UpdateMapFilterResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "filtermapresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapfilterresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := filtermapresponseJSON{
+	helper := updatemapfilterresponseJSON{
 		EventsRemoved: v.EventsRemoved,
 		TraceId:       v.TraceId,
 		Noop:          v.Noop,
@@ -7422,9 +7451,9 @@ func FilterMapResponseToJSONPretty(v *FilterMapResponse) ([]byte, error) {
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// FilterMapResponseFromBytes creates FilterMapResponse from bytes, auto-detecting the format.
+// UpdateMapFilterResponseFromBytes creates UpdateMapFilterResponse from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func FilterMapResponseFromBytes(data []byte) (*FilterMapResponse, error) {
+func UpdateMapFilterResponseFromBytes(data []byte) (*UpdateMapFilterResponse, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -7432,7 +7461,7 @@ func FilterMapResponseFromBytes(data []byte) (*FilterMapResponse, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := FilterMapResponseFromJSON(data); err == nil {
+		if result, err := UpdateMapFilterResponseFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -7442,7 +7471,7 @@ func FilterMapResponseFromBytes(data []byte) (*FilterMapResponse, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := FilterMapResponseFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapFilterResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -7453,49 +7482,49 @@ func FilterMapResponseFromBytes(data []byte) (*FilterMapResponse, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := FilterMapResponseFromJSON(jsonData); err == nil {
+			if result, err := UpdateMapFilterResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &FilterMapResponse{}
+	v := &UpdateMapFilterResponse{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse FilterMapResponse: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse UpdateMapFilterResponse: unsupported format or invalid data")
 }
 
-// FilterMapResponseFromJSON creates FilterMapResponse from JSON bytes.
+// UpdateMapFilterResponseFromJSON creates UpdateMapFilterResponse from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func FilterMapResponseFromJSON(data []byte) (*FilterMapResponse, error) {
+func UpdateMapFilterResponseFromJSON(data []byte) (*UpdateMapFilterResponse, error) {
 	// Unmarshal into helper struct with string enums
-	var raw filtermapresponseJSON
+	var raw updatemapfilterresponseJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &FilterMapResponse{}
+		v := &UpdateMapFilterResponse{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &FilterMapResponse{}
+	result := &UpdateMapFilterResponse{}
 	result.EventsRemoved = raw.EventsRemoved
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
 }
 
-// FilterMapResponseToYAML converts FilterMapResponse to YAML bytes.
+// UpdateMapFilterResponseToYAML converts UpdateMapFilterResponse to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func FilterMapResponseToYAML(v *FilterMapResponse) ([]byte, error) {
+func UpdateMapFilterResponseToYAML(v *UpdateMapFilterResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "filtermapresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapfilterresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := FilterMapResponseToJSON(v)
+	jsonData, err := UpdateMapFilterResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -7509,14 +7538,14 @@ func FilterMapResponseToYAML(v *FilterMapResponse) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// FilterMapResponseToTOML converts FilterMapResponse to TOML bytes.
+// UpdateMapFilterResponseToTOML converts UpdateMapFilterResponse to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func FilterMapResponseToTOML(v *FilterMapResponse) ([]byte, error) {
+func UpdateMapFilterResponseToTOML(v *UpdateMapFilterResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "filtermapresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "updatemapfilterresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := FilterMapResponseToJSON(v)
+	jsonData, err := UpdateMapFilterResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -7820,9 +7849,9 @@ func MergeResponseToTOML(v *MergeResponse) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// QueryMapRequestJSON represents QueryMapRequest in external JSON format (with string enums)
+// ExecuteMapQueryRequestJSON represents ExecuteMapQueryRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type querymaprequestJSON struct {
+type executemapqueryrequestJSON struct {
 	MapId   string `json:"map_id,omitempty"`
 	Sql     string `json:"sql,omitempty"`
 	Limit   int32  `json:"limit,omitempty"`
@@ -7830,14 +7859,14 @@ type querymaprequestJSON struct {
 	Noop    bool   `json:"noop,omitempty"`
 }
 
-// QueryMapRequestToJSON converts QueryMapRequest to JSON bytes.
+// ExecuteMapQueryRequestToJSON converts ExecuteMapQueryRequest to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func QueryMapRequestToJSON(v *QueryMapRequest) ([]byte, error) {
+func ExecuteMapQueryRequestToJSON(v *ExecuteMapQueryRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querymaprequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "executemapqueryrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := querymaprequestJSON{
+	helper := executemapqueryrequestJSON{
 		MapId:   v.MapId,
 		Sql:     v.Sql,
 		Limit:   v.Limit,
@@ -7847,14 +7876,14 @@ func QueryMapRequestToJSON(v *QueryMapRequest) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// QueryMapRequestToJSONPretty converts QueryMapRequest to indented JSON bytes.
+// ExecuteMapQueryRequestToJSONPretty converts ExecuteMapQueryRequest to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func QueryMapRequestToJSONPretty(v *QueryMapRequest) ([]byte, error) {
+func ExecuteMapQueryRequestToJSONPretty(v *ExecuteMapQueryRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querymaprequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "executemapqueryrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := querymaprequestJSON{
+	helper := executemapqueryrequestJSON{
 		MapId:   v.MapId,
 		Sql:     v.Sql,
 		Limit:   v.Limit,
@@ -7864,9 +7893,9 @@ func QueryMapRequestToJSONPretty(v *QueryMapRequest) ([]byte, error) {
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// QueryMapRequestFromBytes creates QueryMapRequest from bytes, auto-detecting the format.
+// ExecuteMapQueryRequestFromBytes creates ExecuteMapQueryRequest from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func QueryMapRequestFromBytes(data []byte) (*QueryMapRequest, error) {
+func ExecuteMapQueryRequestFromBytes(data []byte) (*ExecuteMapQueryRequest, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -7874,7 +7903,7 @@ func QueryMapRequestFromBytes(data []byte) (*QueryMapRequest, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := QueryMapRequestFromJSON(data); err == nil {
+		if result, err := ExecuteMapQueryRequestFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -7884,7 +7913,7 @@ func QueryMapRequestFromBytes(data []byte) (*QueryMapRequest, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := QueryMapRequestFromJSON(jsonData); err == nil {
+			if result, err := ExecuteMapQueryRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -7895,35 +7924,35 @@ func QueryMapRequestFromBytes(data []byte) (*QueryMapRequest, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := QueryMapRequestFromJSON(jsonData); err == nil {
+			if result, err := ExecuteMapQueryRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &QueryMapRequest{}
+	v := &ExecuteMapQueryRequest{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse QueryMapRequest: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse ExecuteMapQueryRequest: unsupported format or invalid data")
 }
 
-// QueryMapRequestFromJSON creates QueryMapRequest from JSON bytes.
+// ExecuteMapQueryRequestFromJSON creates ExecuteMapQueryRequest from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func QueryMapRequestFromJSON(data []byte) (*QueryMapRequest, error) {
+func ExecuteMapQueryRequestFromJSON(data []byte) (*ExecuteMapQueryRequest, error) {
 	// Unmarshal into helper struct with string enums
-	var raw querymaprequestJSON
+	var raw executemapqueryrequestJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &QueryMapRequest{}
+		v := &ExecuteMapQueryRequest{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &QueryMapRequest{}
+	result := &ExecuteMapQueryRequest{}
 	result.MapId = raw.MapId
 	result.Sql = raw.Sql
 	result.Limit = raw.Limit
@@ -7932,14 +7961,14 @@ func QueryMapRequestFromJSON(data []byte) (*QueryMapRequest, error) {
 	return result, nil
 }
 
-// QueryMapRequestToYAML converts QueryMapRequest to YAML bytes.
+// ExecuteMapQueryRequestToYAML converts ExecuteMapQueryRequest to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func QueryMapRequestToYAML(v *QueryMapRequest) ([]byte, error) {
+func ExecuteMapQueryRequestToYAML(v *ExecuteMapQueryRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querymaprequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "executemapqueryrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := QueryMapRequestToJSON(v)
+	jsonData, err := ExecuteMapQueryRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -7953,14 +7982,14 @@ func QueryMapRequestToYAML(v *QueryMapRequest) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// QueryMapRequestToTOML converts QueryMapRequest to TOML bytes.
+// ExecuteMapQueryRequestToTOML converts ExecuteMapQueryRequest to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func QueryMapRequestToTOML(v *QueryMapRequest) ([]byte, error) {
+func ExecuteMapQueryRequestToTOML(v *ExecuteMapQueryRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querymaprequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "executemapqueryrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := QueryMapRequestToJSON(v)
+	jsonData, err := ExecuteMapQueryRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -7972,23 +8001,23 @@ func QueryMapRequestToTOML(v *QueryMapRequest) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// QueryMapResponseJSON represents QueryMapResponse in external JSON format (with string enums)
+// ExecuteMapQueryResponseJSON represents ExecuteMapQueryResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type querymapresponseJSON struct {
+type executemapqueryresponseJSON struct {
 	ResultsJson string `json:"results_json,omitempty"`
 	TotalRows   int64  `json:"total_rows,omitempty"`
 	TraceId     string `json:"trace_id,omitempty"`
 	Noop        bool   `json:"noop,omitempty"`
 }
 
-// QueryMapResponseToJSON converts QueryMapResponse to JSON bytes.
+// ExecuteMapQueryResponseToJSON converts ExecuteMapQueryResponse to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func QueryMapResponseToJSON(v *QueryMapResponse) ([]byte, error) {
+func ExecuteMapQueryResponseToJSON(v *ExecuteMapQueryResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querymapresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "executemapqueryresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := querymapresponseJSON{
+	helper := executemapqueryresponseJSON{
 		ResultsJson: v.ResultsJson,
 		TotalRows:   v.TotalRows,
 		TraceId:     v.TraceId,
@@ -7997,14 +8026,14 @@ func QueryMapResponseToJSON(v *QueryMapResponse) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// QueryMapResponseToJSONPretty converts QueryMapResponse to indented JSON bytes.
+// ExecuteMapQueryResponseToJSONPretty converts ExecuteMapQueryResponse to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func QueryMapResponseToJSONPretty(v *QueryMapResponse) ([]byte, error) {
+func ExecuteMapQueryResponseToJSONPretty(v *ExecuteMapQueryResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querymapresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "executemapqueryresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := querymapresponseJSON{
+	helper := executemapqueryresponseJSON{
 		ResultsJson: v.ResultsJson,
 		TotalRows:   v.TotalRows,
 		TraceId:     v.TraceId,
@@ -8013,9 +8042,9 @@ func QueryMapResponseToJSONPretty(v *QueryMapResponse) ([]byte, error) {
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// QueryMapResponseFromBytes creates QueryMapResponse from bytes, auto-detecting the format.
+// ExecuteMapQueryResponseFromBytes creates ExecuteMapQueryResponse from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func QueryMapResponseFromBytes(data []byte) (*QueryMapResponse, error) {
+func ExecuteMapQueryResponseFromBytes(data []byte) (*ExecuteMapQueryResponse, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -8023,7 +8052,7 @@ func QueryMapResponseFromBytes(data []byte) (*QueryMapResponse, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := QueryMapResponseFromJSON(data); err == nil {
+		if result, err := ExecuteMapQueryResponseFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -8033,7 +8062,7 @@ func QueryMapResponseFromBytes(data []byte) (*QueryMapResponse, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := QueryMapResponseFromJSON(jsonData); err == nil {
+			if result, err := ExecuteMapQueryResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -8044,35 +8073,35 @@ func QueryMapResponseFromBytes(data []byte) (*QueryMapResponse, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := QueryMapResponseFromJSON(jsonData); err == nil {
+			if result, err := ExecuteMapQueryResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &QueryMapResponse{}
+	v := &ExecuteMapQueryResponse{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse QueryMapResponse: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse ExecuteMapQueryResponse: unsupported format or invalid data")
 }
 
-// QueryMapResponseFromJSON creates QueryMapResponse from JSON bytes.
+// ExecuteMapQueryResponseFromJSON creates ExecuteMapQueryResponse from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func QueryMapResponseFromJSON(data []byte) (*QueryMapResponse, error) {
+func ExecuteMapQueryResponseFromJSON(data []byte) (*ExecuteMapQueryResponse, error) {
 	// Unmarshal into helper struct with string enums
-	var raw querymapresponseJSON
+	var raw executemapqueryresponseJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &QueryMapResponse{}
+		v := &ExecuteMapQueryResponse{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &QueryMapResponse{}
+	result := &ExecuteMapQueryResponse{}
 	result.ResultsJson = raw.ResultsJson
 	result.TotalRows = raw.TotalRows
 	result.TraceId = raw.TraceId
@@ -8080,14 +8109,14 @@ func QueryMapResponseFromJSON(data []byte) (*QueryMapResponse, error) {
 	return result, nil
 }
 
-// QueryMapResponseToYAML converts QueryMapResponse to YAML bytes.
+// ExecuteMapQueryResponseToYAML converts ExecuteMapQueryResponse to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func QueryMapResponseToYAML(v *QueryMapResponse) ([]byte, error) {
+func ExecuteMapQueryResponseToYAML(v *ExecuteMapQueryResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querymapresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "executemapqueryresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := QueryMapResponseToJSON(v)
+	jsonData, err := ExecuteMapQueryResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -8101,14 +8130,14 @@ func QueryMapResponseToYAML(v *QueryMapResponse) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// QueryMapResponseToTOML converts QueryMapResponse to TOML bytes.
+// ExecuteMapQueryResponseToTOML converts ExecuteMapQueryResponse to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func QueryMapResponseToTOML(v *QueryMapResponse) ([]byte, error) {
+func ExecuteMapQueryResponseToTOML(v *ExecuteMapQueryResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querymapresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "executemapqueryresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := QueryMapResponseToJSON(v)
+	jsonData, err := ExecuteMapQueryResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -9171,9 +9200,9 @@ func GetUserSessionsResponseToTOML(v *GetUserSessionsResponse) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// QueryByTimeRangeRequestJSON represents QueryByTimeRangeRequest in external JSON format (with string enums)
+// ListEventsByTimeRangeRequestJSON represents ListEventsByTimeRangeRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type querybytimerangerequestJSON struct {
+type listeventsbytimerangerequestJSON struct {
 	TimeRange json.RawMessage `json:"time_range,omitempty"`
 	PageToken string          `json:"page_token,omitempty"`
 	PageSize  int32           `json:"page_size,omitempty"`
@@ -9181,14 +9210,14 @@ type querybytimerangerequestJSON struct {
 	Noop      bool            `json:"noop,omitempty"`
 }
 
-// QueryByTimeRangeRequestToJSON converts QueryByTimeRangeRequest to JSON bytes.
+// ListEventsByTimeRangeRequestToJSON converts ListEventsByTimeRangeRequest to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func QueryByTimeRangeRequestToJSON(v *QueryByTimeRangeRequest) ([]byte, error) {
+func ListEventsByTimeRangeRequestToJSON(v *ListEventsByTimeRangeRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querybytimerangerequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listeventsbytimerangerequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := querybytimerangerequestJSON{
+	helper := listeventsbytimerangerequestJSON{
 		TimeRange: func() json.RawMessage {
 			if v.TimeRange == nil {
 				return nil
@@ -9204,14 +9233,14 @@ func QueryByTimeRangeRequestToJSON(v *QueryByTimeRangeRequest) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// QueryByTimeRangeRequestToJSONPretty converts QueryByTimeRangeRequest to indented JSON bytes.
+// ListEventsByTimeRangeRequestToJSONPretty converts ListEventsByTimeRangeRequest to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func QueryByTimeRangeRequestToJSONPretty(v *QueryByTimeRangeRequest) ([]byte, error) {
+func ListEventsByTimeRangeRequestToJSONPretty(v *ListEventsByTimeRangeRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querybytimerangerequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listeventsbytimerangerequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := querybytimerangerequestJSON{
+	helper := listeventsbytimerangerequestJSON{
 		TimeRange: func() json.RawMessage {
 			if v.TimeRange == nil {
 				return nil
@@ -9227,9 +9256,9 @@ func QueryByTimeRangeRequestToJSONPretty(v *QueryByTimeRangeRequest) ([]byte, er
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// QueryByTimeRangeRequestFromBytes creates QueryByTimeRangeRequest from bytes, auto-detecting the format.
+// ListEventsByTimeRangeRequestFromBytes creates ListEventsByTimeRangeRequest from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func QueryByTimeRangeRequestFromBytes(data []byte) (*QueryByTimeRangeRequest, error) {
+func ListEventsByTimeRangeRequestFromBytes(data []byte) (*ListEventsByTimeRangeRequest, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -9237,7 +9266,7 @@ func QueryByTimeRangeRequestFromBytes(data []byte) (*QueryByTimeRangeRequest, er
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := QueryByTimeRangeRequestFromJSON(data); err == nil {
+		if result, err := ListEventsByTimeRangeRequestFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -9247,7 +9276,7 @@ func QueryByTimeRangeRequestFromBytes(data []byte) (*QueryByTimeRangeRequest, er
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := QueryByTimeRangeRequestFromJSON(jsonData); err == nil {
+			if result, err := ListEventsByTimeRangeRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -9258,35 +9287,35 @@ func QueryByTimeRangeRequestFromBytes(data []byte) (*QueryByTimeRangeRequest, er
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := QueryByTimeRangeRequestFromJSON(jsonData); err == nil {
+			if result, err := ListEventsByTimeRangeRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &QueryByTimeRangeRequest{}
+	v := &ListEventsByTimeRangeRequest{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse QueryByTimeRangeRequest: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse ListEventsByTimeRangeRequest: unsupported format or invalid data")
 }
 
-// QueryByTimeRangeRequestFromJSON creates QueryByTimeRangeRequest from JSON bytes.
+// ListEventsByTimeRangeRequestFromJSON creates ListEventsByTimeRangeRequest from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func QueryByTimeRangeRequestFromJSON(data []byte) (*QueryByTimeRangeRequest, error) {
+func ListEventsByTimeRangeRequestFromJSON(data []byte) (*ListEventsByTimeRangeRequest, error) {
 	// Unmarshal into helper struct with string enums
-	var raw querybytimerangerequestJSON
+	var raw listeventsbytimerangerequestJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &QueryByTimeRangeRequest{}
+		v := &ListEventsByTimeRangeRequest{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &QueryByTimeRangeRequest{}
+	result := &ListEventsByTimeRangeRequest{}
 	// Parse message field: TimeRange
 	if len(raw.TimeRange) > 0 {
 		parsed, err := EventTimeRangeFromJSON(raw.TimeRange)
@@ -9301,14 +9330,14 @@ func QueryByTimeRangeRequestFromJSON(data []byte) (*QueryByTimeRangeRequest, err
 	return result, nil
 }
 
-// QueryByTimeRangeRequestToYAML converts QueryByTimeRangeRequest to YAML bytes.
+// ListEventsByTimeRangeRequestToYAML converts ListEventsByTimeRangeRequest to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func QueryByTimeRangeRequestToYAML(v *QueryByTimeRangeRequest) ([]byte, error) {
+func ListEventsByTimeRangeRequestToYAML(v *ListEventsByTimeRangeRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querybytimerangerequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listeventsbytimerangerequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := QueryByTimeRangeRequestToJSON(v)
+	jsonData, err := ListEventsByTimeRangeRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -9322,14 +9351,14 @@ func QueryByTimeRangeRequestToYAML(v *QueryByTimeRangeRequest) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// QueryByTimeRangeRequestToTOML converts QueryByTimeRangeRequest to TOML bytes.
+// ListEventsByTimeRangeRequestToTOML converts ListEventsByTimeRangeRequest to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func QueryByTimeRangeRequestToTOML(v *QueryByTimeRangeRequest) ([]byte, error) {
+func ListEventsByTimeRangeRequestToTOML(v *ListEventsByTimeRangeRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querybytimerangerequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listeventsbytimerangerequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := QueryByTimeRangeRequestToJSON(v)
+	jsonData, err := ListEventsByTimeRangeRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -9341,23 +9370,23 @@ func QueryByTimeRangeRequestToTOML(v *QueryByTimeRangeRequest) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// QueryByTimeRangeResponseJSON represents QueryByTimeRangeResponse in external JSON format (with string enums)
+// ListEventsByTimeRangeResponseJSON represents ListEventsByTimeRangeResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type querybytimerangeresponseJSON struct {
+type listeventsbytimerangeresponseJSON struct {
 	Events        []json.RawMessage `json:"events,omitempty"`
 	NextPageToken string            `json:"next_page_token,omitempty"`
 	TraceId       string            `json:"trace_id,omitempty"`
 	Noop          bool              `json:"noop,omitempty"`
 }
 
-// QueryByTimeRangeResponseToJSON converts QueryByTimeRangeResponse to JSON bytes.
+// ListEventsByTimeRangeResponseToJSON converts ListEventsByTimeRangeResponse to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func QueryByTimeRangeResponseToJSON(v *QueryByTimeRangeResponse) ([]byte, error) {
+func ListEventsByTimeRangeResponseToJSON(v *ListEventsByTimeRangeResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querybytimerangeresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listeventsbytimerangeresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := querybytimerangeresponseJSON{
+	helper := listeventsbytimerangeresponseJSON{
 		Events: func() []json.RawMessage {
 			if len(v.Events) == 0 {
 				return nil
@@ -9379,14 +9408,14 @@ func QueryByTimeRangeResponseToJSON(v *QueryByTimeRangeResponse) ([]byte, error)
 	return json.Marshal(helper)
 }
 
-// QueryByTimeRangeResponseToJSONPretty converts QueryByTimeRangeResponse to indented JSON bytes.
+// ListEventsByTimeRangeResponseToJSONPretty converts ListEventsByTimeRangeResponse to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func QueryByTimeRangeResponseToJSONPretty(v *QueryByTimeRangeResponse) ([]byte, error) {
+func ListEventsByTimeRangeResponseToJSONPretty(v *ListEventsByTimeRangeResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querybytimerangeresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listeventsbytimerangeresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := querybytimerangeresponseJSON{
+	helper := listeventsbytimerangeresponseJSON{
 		Events: func() []json.RawMessage {
 			if len(v.Events) == 0 {
 				return nil
@@ -9408,9 +9437,9 @@ func QueryByTimeRangeResponseToJSONPretty(v *QueryByTimeRangeResponse) ([]byte, 
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// QueryByTimeRangeResponseFromBytes creates QueryByTimeRangeResponse from bytes, auto-detecting the format.
+// ListEventsByTimeRangeResponseFromBytes creates ListEventsByTimeRangeResponse from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func QueryByTimeRangeResponseFromBytes(data []byte) (*QueryByTimeRangeResponse, error) {
+func ListEventsByTimeRangeResponseFromBytes(data []byte) (*ListEventsByTimeRangeResponse, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -9418,7 +9447,7 @@ func QueryByTimeRangeResponseFromBytes(data []byte) (*QueryByTimeRangeResponse, 
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := QueryByTimeRangeResponseFromJSON(data); err == nil {
+		if result, err := ListEventsByTimeRangeResponseFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -9428,7 +9457,7 @@ func QueryByTimeRangeResponseFromBytes(data []byte) (*QueryByTimeRangeResponse, 
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := QueryByTimeRangeResponseFromJSON(jsonData); err == nil {
+			if result, err := ListEventsByTimeRangeResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -9439,35 +9468,35 @@ func QueryByTimeRangeResponseFromBytes(data []byte) (*QueryByTimeRangeResponse, 
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := QueryByTimeRangeResponseFromJSON(jsonData); err == nil {
+			if result, err := ListEventsByTimeRangeResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &QueryByTimeRangeResponse{}
+	v := &ListEventsByTimeRangeResponse{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse QueryByTimeRangeResponse: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse ListEventsByTimeRangeResponse: unsupported format or invalid data")
 }
 
-// QueryByTimeRangeResponseFromJSON creates QueryByTimeRangeResponse from JSON bytes.
+// ListEventsByTimeRangeResponseFromJSON creates ListEventsByTimeRangeResponse from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func QueryByTimeRangeResponseFromJSON(data []byte) (*QueryByTimeRangeResponse, error) {
+func ListEventsByTimeRangeResponseFromJSON(data []byte) (*ListEventsByTimeRangeResponse, error) {
 	// Unmarshal into helper struct with string enums
-	var raw querybytimerangeresponseJSON
+	var raw listeventsbytimerangeresponseJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &QueryByTimeRangeResponse{}
+		v := &ListEventsByTimeRangeResponse{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &QueryByTimeRangeResponse{}
+	result := &ListEventsByTimeRangeResponse{}
 	// Parse repeated message field: Events
 	if len(raw.Events) > 0 {
 		result.Events = make([]*SensorEvent, 0, len(raw.Events))
@@ -9486,14 +9515,14 @@ func QueryByTimeRangeResponseFromJSON(data []byte) (*QueryByTimeRangeResponse, e
 	return result, nil
 }
 
-// QueryByTimeRangeResponseToYAML converts QueryByTimeRangeResponse to YAML bytes.
+// ListEventsByTimeRangeResponseToYAML converts ListEventsByTimeRangeResponse to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func QueryByTimeRangeResponseToYAML(v *QueryByTimeRangeResponse) ([]byte, error) {
+func ListEventsByTimeRangeResponseToYAML(v *ListEventsByTimeRangeResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querybytimerangeresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listeventsbytimerangeresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := QueryByTimeRangeResponseToJSON(v)
+	jsonData, err := ListEventsByTimeRangeResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -9507,14 +9536,14 @@ func QueryByTimeRangeResponseToYAML(v *QueryByTimeRangeResponse) ([]byte, error)
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// QueryByTimeRangeResponseToTOML converts QueryByTimeRangeResponse to TOML bytes.
+// ListEventsByTimeRangeResponseToTOML converts ListEventsByTimeRangeResponse to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func QueryByTimeRangeResponseToTOML(v *QueryByTimeRangeResponse) ([]byte, error) {
+func ListEventsByTimeRangeResponseToTOML(v *ListEventsByTimeRangeResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querybytimerangeresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listeventsbytimerangeresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := QueryByTimeRangeResponseToJSON(v)
+	jsonData, err := ListEventsByTimeRangeResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -9526,9 +9555,9 @@ func QueryByTimeRangeResponseToTOML(v *QueryByTimeRangeResponse) ([]byte, error)
 	return toml.Marshal(obj)
 }
 
-// QueryByEmailRequestJSON represents QueryByEmailRequest in external JSON format (with string enums)
+// ListEventsByEmailRequestJSON represents ListEventsByEmailRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type querybyemailrequestJSON struct {
+type listeventsbyemailrequestJSON struct {
 	Email     string          `json:"email,omitempty"`
 	TimeRange json.RawMessage `json:"time_range,omitempty"`
 	PageToken string          `json:"page_token,omitempty"`
@@ -9537,14 +9566,14 @@ type querybyemailrequestJSON struct {
 	Noop      bool            `json:"noop,omitempty"`
 }
 
-// QueryByEmailRequestToJSON converts QueryByEmailRequest to JSON bytes.
+// ListEventsByEmailRequestToJSON converts ListEventsByEmailRequest to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func QueryByEmailRequestToJSON(v *QueryByEmailRequest) ([]byte, error) {
+func ListEventsByEmailRequestToJSON(v *ListEventsByEmailRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querybyemailrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listeventsbyemailrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := querybyemailrequestJSON{
+	helper := listeventsbyemailrequestJSON{
 		Email: v.Email,
 		TimeRange: func() json.RawMessage {
 			if v.TimeRange == nil {
@@ -9561,14 +9590,14 @@ func QueryByEmailRequestToJSON(v *QueryByEmailRequest) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// QueryByEmailRequestToJSONPretty converts QueryByEmailRequest to indented JSON bytes.
+// ListEventsByEmailRequestToJSONPretty converts ListEventsByEmailRequest to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func QueryByEmailRequestToJSONPretty(v *QueryByEmailRequest) ([]byte, error) {
+func ListEventsByEmailRequestToJSONPretty(v *ListEventsByEmailRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querybyemailrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listeventsbyemailrequest is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := querybyemailrequestJSON{
+	helper := listeventsbyemailrequestJSON{
 		Email: v.Email,
 		TimeRange: func() json.RawMessage {
 			if v.TimeRange == nil {
@@ -9585,9 +9614,9 @@ func QueryByEmailRequestToJSONPretty(v *QueryByEmailRequest) ([]byte, error) {
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// QueryByEmailRequestFromBytes creates QueryByEmailRequest from bytes, auto-detecting the format.
+// ListEventsByEmailRequestFromBytes creates ListEventsByEmailRequest from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func QueryByEmailRequestFromBytes(data []byte) (*QueryByEmailRequest, error) {
+func ListEventsByEmailRequestFromBytes(data []byte) (*ListEventsByEmailRequest, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -9595,7 +9624,7 @@ func QueryByEmailRequestFromBytes(data []byte) (*QueryByEmailRequest, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := QueryByEmailRequestFromJSON(data); err == nil {
+		if result, err := ListEventsByEmailRequestFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -9605,7 +9634,7 @@ func QueryByEmailRequestFromBytes(data []byte) (*QueryByEmailRequest, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := QueryByEmailRequestFromJSON(jsonData); err == nil {
+			if result, err := ListEventsByEmailRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -9616,35 +9645,35 @@ func QueryByEmailRequestFromBytes(data []byte) (*QueryByEmailRequest, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := QueryByEmailRequestFromJSON(jsonData); err == nil {
+			if result, err := ListEventsByEmailRequestFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &QueryByEmailRequest{}
+	v := &ListEventsByEmailRequest{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse QueryByEmailRequest: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse ListEventsByEmailRequest: unsupported format or invalid data")
 }
 
-// QueryByEmailRequestFromJSON creates QueryByEmailRequest from JSON bytes.
+// ListEventsByEmailRequestFromJSON creates ListEventsByEmailRequest from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func QueryByEmailRequestFromJSON(data []byte) (*QueryByEmailRequest, error) {
+func ListEventsByEmailRequestFromJSON(data []byte) (*ListEventsByEmailRequest, error) {
 	// Unmarshal into helper struct with string enums
-	var raw querybyemailrequestJSON
+	var raw listeventsbyemailrequestJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &QueryByEmailRequest{}
+		v := &ListEventsByEmailRequest{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &QueryByEmailRequest{}
+	result := &ListEventsByEmailRequest{}
 	result.Email = raw.Email
 	// Parse message field: TimeRange
 	if len(raw.TimeRange) > 0 {
@@ -9660,14 +9689,14 @@ func QueryByEmailRequestFromJSON(data []byte) (*QueryByEmailRequest, error) {
 	return result, nil
 }
 
-// QueryByEmailRequestToYAML converts QueryByEmailRequest to YAML bytes.
+// ListEventsByEmailRequestToYAML converts ListEventsByEmailRequest to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func QueryByEmailRequestToYAML(v *QueryByEmailRequest) ([]byte, error) {
+func ListEventsByEmailRequestToYAML(v *ListEventsByEmailRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querybyemailrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listeventsbyemailrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := QueryByEmailRequestToJSON(v)
+	jsonData, err := ListEventsByEmailRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -9681,14 +9710,14 @@ func QueryByEmailRequestToYAML(v *QueryByEmailRequest) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// QueryByEmailRequestToTOML converts QueryByEmailRequest to TOML bytes.
+// ListEventsByEmailRequestToTOML converts ListEventsByEmailRequest to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func QueryByEmailRequestToTOML(v *QueryByEmailRequest) ([]byte, error) {
+func ListEventsByEmailRequestToTOML(v *ListEventsByEmailRequest) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querybyemailrequest is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listeventsbyemailrequest is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := QueryByEmailRequestToJSON(v)
+	jsonData, err := ListEventsByEmailRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -9700,23 +9729,23 @@ func QueryByEmailRequestToTOML(v *QueryByEmailRequest) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// QueryByEmailResponseJSON represents QueryByEmailResponse in external JSON format (with string enums)
+// ListEventsByEmailResponseJSON represents ListEventsByEmailResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
-type querybyemailresponseJSON struct {
+type listeventsbyemailresponseJSON struct {
 	Events        []json.RawMessage `json:"events,omitempty"`
 	NextPageToken string            `json:"next_page_token,omitempty"`
 	TraceId       string            `json:"trace_id,omitempty"`
 	Noop          bool              `json:"noop,omitempty"`
 }
 
-// QueryByEmailResponseToJSON converts QueryByEmailResponse to JSON bytes.
+// ListEventsByEmailResponseToJSON converts ListEventsByEmailResponse to JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func QueryByEmailResponseToJSON(v *QueryByEmailResponse) ([]byte, error) {
+func ListEventsByEmailResponseToJSON(v *ListEventsByEmailResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querybyemailresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listeventsbyemailresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := querybyemailresponseJSON{
+	helper := listeventsbyemailresponseJSON{
 		Events: func() []json.RawMessage {
 			if len(v.Events) == 0 {
 				return nil
@@ -9738,14 +9767,14 @@ func QueryByEmailResponseToJSON(v *QueryByEmailResponse) ([]byte, error) {
 	return json.Marshal(helper)
 }
 
-// QueryByEmailResponseToJSONPretty converts QueryByEmailResponse to indented JSON bytes.
+// ListEventsByEmailResponseToJSONPretty converts ListEventsByEmailResponse to indented JSON bytes.
 // Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func QueryByEmailResponseToJSONPretty(v *QueryByEmailResponse) ([]byte, error) {
+func ListEventsByEmailResponseToJSONPretty(v *ListEventsByEmailResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querybyemailresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listeventsbyemailresponse is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := querybyemailresponseJSON{
+	helper := listeventsbyemailresponseJSON{
 		Events: func() []json.RawMessage {
 			if len(v.Events) == 0 {
 				return nil
@@ -9767,9 +9796,9 @@ func QueryByEmailResponseToJSONPretty(v *QueryByEmailResponse) ([]byte, error) {
 	return json.MarshalIndent(helper, "", "  ")
 }
 
-// QueryByEmailResponseFromBytes creates QueryByEmailResponse from bytes, auto-detecting the format.
+// ListEventsByEmailResponseFromBytes creates ListEventsByEmailResponse from bytes, auto-detecting the format.
 // Supports JSON, YAML, TOML, and binary protobuf formats.
-func QueryByEmailResponseFromBytes(data []byte) (*QueryByEmailResponse, error) {
+func ListEventsByEmailResponseFromBytes(data []byte) (*ListEventsByEmailResponse, error) {
 	// Trim leading whitespace to check format
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 {
@@ -9777,7 +9806,7 @@ func QueryByEmailResponseFromBytes(data []byte) (*QueryByEmailResponse, error) {
 	}
 	// Try JSON first (most common, starts with { or [)
 	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := QueryByEmailResponseFromJSON(data); err == nil {
+		if result, err := ListEventsByEmailResponseFromJSON(data); err == nil {
 			return result, nil
 		}
 	}
@@ -9787,7 +9816,7 @@ func QueryByEmailResponseFromBytes(data []byte) (*QueryByEmailResponse, error) {
 		// Convert TOML to JSON, then parse
 		jsonData, err := json.Marshal(tomlObj)
 		if err == nil {
-			if result, err := QueryByEmailResponseFromJSON(jsonData); err == nil {
+			if result, err := ListEventsByEmailResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
@@ -9798,35 +9827,35 @@ func QueryByEmailResponseFromBytes(data []byte) (*QueryByEmailResponse, error) {
 		// Convert YAML to JSON, then parse
 		jsonData, err := json.Marshal(yamlObj)
 		if err == nil {
-			if result, err := QueryByEmailResponseFromJSON(jsonData); err == nil {
+			if result, err := ListEventsByEmailResponseFromJSON(jsonData); err == nil {
 				return result, nil
 			}
 		}
 	}
 	// Try binary protobuf
-	v := &QueryByEmailResponse{}
+	v := &ListEventsByEmailResponse{}
 	if err := proto.Unmarshal(data, v); err == nil {
 		return v, nil
 	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse QueryByEmailResponse: unsupported format or invalid data")
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse ListEventsByEmailResponse: unsupported format or invalid data")
 }
 
-// QueryByEmailResponseFromJSON creates QueryByEmailResponse from JSON bytes.
+// ListEventsByEmailResponseFromJSON creates ListEventsByEmailResponse from JSON bytes.
 // Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func QueryByEmailResponseFromJSON(data []byte) (*QueryByEmailResponse, error) {
+func ListEventsByEmailResponseFromJSON(data []byte) (*ListEventsByEmailResponse, error) {
 	// Unmarshal into helper struct with string enums
-	var raw querybyemailresponseJSON
+	var raw listeventsbyemailresponseJSON
 	if err := json.Unmarshal(data, &raw); err != nil {
 		// Fall back to protojson which handles proto3 JSON conventions
 		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &QueryByEmailResponse{}
+		v := &ListEventsByEmailResponse{}
 		if pErr := protojson.Unmarshal(data, v); pErr != nil {
 			return nil, err
 		}
 		return v, nil
 	}
 	// Build result with parsed enums
-	result := &QueryByEmailResponse{}
+	result := &ListEventsByEmailResponse{}
 	// Parse repeated message field: Events
 	if len(raw.Events) > 0 {
 		result.Events = make([]*SensorEvent, 0, len(raw.Events))
@@ -9845,14 +9874,14 @@ func QueryByEmailResponseFromJSON(data []byte) (*QueryByEmailResponse, error) {
 	return result, nil
 }
 
-// QueryByEmailResponseToYAML converts QueryByEmailResponse to YAML bytes.
+// ListEventsByEmailResponseToYAML converts ListEventsByEmailResponse to YAML bytes.
 // Converts to JSON first, then to YAML for proper protobuf handling.
-func QueryByEmailResponseToYAML(v *QueryByEmailResponse) ([]byte, error) {
+func ListEventsByEmailResponseToYAML(v *ListEventsByEmailResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querybyemailresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listeventsbyemailresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := QueryByEmailResponseToJSON(v)
+	jsonData, err := ListEventsByEmailResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -9866,14 +9895,14 @@ func QueryByEmailResponseToYAML(v *QueryByEmailResponse) ([]byte, error) {
 	return yaml.Marshal(convertJSONNumbers(obj))
 }
 
-// QueryByEmailResponseToTOML converts QueryByEmailResponse to TOML bytes.
+// ListEventsByEmailResponseToTOML converts ListEventsByEmailResponse to TOML bytes.
 // Converts to JSON first, then to TOML for proper protobuf handling.
-func QueryByEmailResponseToTOML(v *QueryByEmailResponse) ([]byte, error) {
+func ListEventsByEmailResponseToTOML(v *ListEventsByEmailResponse) ([]byte, error) {
 	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "querybyemailresponse is nil")
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listeventsbyemailresponse is nil")
 	}
 	// Convert to JSON first
-	jsonData, err := QueryByEmailResponseToJSON(v)
+	jsonData, err := ListEventsByEmailResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -10887,6 +10916,374 @@ func DqlQueryResponseToTOML(v *DqlQueryResponse) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
+// AgenticCodeEventBusEventStreamSubscribeRecordJSON represents AgenticCodeEventBusEventStreamSubscribeRecord in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type agenticcodeeventbuseventstreamsubscriberecordJSON struct {
+	Meta    json.RawMessage `json:"meta,omitempty"`
+	Payload json.RawMessage `json:"payload,omitempty"`
+	TraceId string          `json:"trace_id,omitempty"`
+	Noop    bool            `json:"noop,omitempty"`
+}
+
+// AgenticCodeEventBusEventStreamSubscribeRecordToJSON converts AgenticCodeEventBusEventStreamSubscribeRecord to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func AgenticCodeEventBusEventStreamSubscribeRecordToJSON(v *AgenticCodeEventBusEventStreamSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "agenticcodeeventbuseventstreamsubscriberecord is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := agenticcodeeventbuseventstreamsubscriberecordJSON{
+		Meta: func() json.RawMessage {
+			if v.Meta == nil {
+				return nil
+			}
+			data, _ := EventBusRecordMetaToJSON(v.Meta)
+			return data
+		}(),
+		Payload: func() json.RawMessage {
+			if v.Payload == nil {
+				return nil
+			}
+			data, _ := SensorEventToJSON(v.Payload)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// AgenticCodeEventBusEventStreamSubscribeRecordToJSONPretty converts AgenticCodeEventBusEventStreamSubscribeRecord to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func AgenticCodeEventBusEventStreamSubscribeRecordToJSONPretty(v *AgenticCodeEventBusEventStreamSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "agenticcodeeventbuseventstreamsubscriberecord is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := agenticcodeeventbuseventstreamsubscriberecordJSON{
+		Meta: func() json.RawMessage {
+			if v.Meta == nil {
+				return nil
+			}
+			data, _ := EventBusRecordMetaToJSON(v.Meta)
+			return data
+		}(),
+		Payload: func() json.RawMessage {
+			if v.Payload == nil {
+				return nil
+			}
+			data, _ := SensorEventToJSON(v.Payload)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// AgenticCodeEventBusEventStreamSubscribeRecordFromBytes creates AgenticCodeEventBusEventStreamSubscribeRecord from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func AgenticCodeEventBusEventStreamSubscribeRecordFromBytes(data []byte) (*AgenticCodeEventBusEventStreamSubscribeRecord, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := AgenticCodeEventBusEventStreamSubscribeRecordFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := AgenticCodeEventBusEventStreamSubscribeRecordFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := AgenticCodeEventBusEventStreamSubscribeRecordFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &AgenticCodeEventBusEventStreamSubscribeRecord{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse AgenticCodeEventBusEventStreamSubscribeRecord: unsupported format or invalid data")
+}
+
+// AgenticCodeEventBusEventStreamSubscribeRecordFromJSON creates AgenticCodeEventBusEventStreamSubscribeRecord from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func AgenticCodeEventBusEventStreamSubscribeRecordFromJSON(data []byte) (*AgenticCodeEventBusEventStreamSubscribeRecord, error) {
+	// Unmarshal into helper struct with string enums
+	var raw agenticcodeeventbuseventstreamsubscriberecordJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &AgenticCodeEventBusEventStreamSubscribeRecord{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &AgenticCodeEventBusEventStreamSubscribeRecord{}
+	// Parse message field: Meta
+	if len(raw.Meta) > 0 {
+		parsed, err := EventBusRecordMetaFromJSON(raw.Meta)
+		if err == nil {
+			result.Meta = parsed
+		}
+	}
+	// Parse message field: Payload
+	if len(raw.Payload) > 0 {
+		parsed, err := SensorEventFromJSON(raw.Payload)
+		if err == nil {
+			result.Payload = parsed
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// AgenticCodeEventBusEventStreamSubscribeRecordToYAML converts AgenticCodeEventBusEventStreamSubscribeRecord to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func AgenticCodeEventBusEventStreamSubscribeRecordToYAML(v *AgenticCodeEventBusEventStreamSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "agenticcodeeventbuseventstreamsubscriberecord is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := AgenticCodeEventBusEventStreamSubscribeRecordToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// AgenticCodeEventBusEventStreamSubscribeRecordToTOML converts AgenticCodeEventBusEventStreamSubscribeRecord to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func AgenticCodeEventBusEventStreamSubscribeRecordToTOML(v *AgenticCodeEventBusEventStreamSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "agenticcodeeventbuseventstreamsubscriberecord is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := AgenticCodeEventBusEventStreamSubscribeRecordToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// TraceEventBusTraceEventsSubscribeRecordJSON represents TraceEventBusTraceEventsSubscribeRecord in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type traceeventbustraceeventssubscriberecordJSON struct {
+	Meta    json.RawMessage `json:"meta,omitempty"`
+	Payload json.RawMessage `json:"payload,omitempty"`
+	TraceId string          `json:"trace_id,omitempty"`
+	Noop    bool            `json:"noop,omitempty"`
+}
+
+// TraceEventBusTraceEventsSubscribeRecordToJSON converts TraceEventBusTraceEventsSubscribeRecord to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TraceEventBusTraceEventsSubscribeRecordToJSON(v *TraceEventBusTraceEventsSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "traceeventbustraceeventssubscriberecord is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := traceeventbustraceeventssubscriberecordJSON{
+		Meta: func() json.RawMessage {
+			if v.Meta == nil {
+				return nil
+			}
+			data, _ := EventBusRecordMetaToJSON(v.Meta)
+			return data
+		}(),
+		Payload: func() json.RawMessage {
+			if v.Payload == nil {
+				return nil
+			}
+			data, _ := trace.TraceEventToJSON(v.Payload)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// TraceEventBusTraceEventsSubscribeRecordToJSONPretty converts TraceEventBusTraceEventsSubscribeRecord to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TraceEventBusTraceEventsSubscribeRecordToJSONPretty(v *TraceEventBusTraceEventsSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "traceeventbustraceeventssubscriberecord is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := traceeventbustraceeventssubscriberecordJSON{
+		Meta: func() json.RawMessage {
+			if v.Meta == nil {
+				return nil
+			}
+			data, _ := EventBusRecordMetaToJSON(v.Meta)
+			return data
+		}(),
+		Payload: func() json.RawMessage {
+			if v.Payload == nil {
+				return nil
+			}
+			data, _ := trace.TraceEventToJSON(v.Payload)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// TraceEventBusTraceEventsSubscribeRecordFromBytes creates TraceEventBusTraceEventsSubscribeRecord from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func TraceEventBusTraceEventsSubscribeRecordFromBytes(data []byte) (*TraceEventBusTraceEventsSubscribeRecord, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := TraceEventBusTraceEventsSubscribeRecordFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := TraceEventBusTraceEventsSubscribeRecordFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := TraceEventBusTraceEventsSubscribeRecordFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &TraceEventBusTraceEventsSubscribeRecord{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse TraceEventBusTraceEventsSubscribeRecord: unsupported format or invalid data")
+}
+
+// TraceEventBusTraceEventsSubscribeRecordFromJSON creates TraceEventBusTraceEventsSubscribeRecord from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func TraceEventBusTraceEventsSubscribeRecordFromJSON(data []byte) (*TraceEventBusTraceEventsSubscribeRecord, error) {
+	// Unmarshal into helper struct with string enums
+	var raw traceeventbustraceeventssubscriberecordJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &TraceEventBusTraceEventsSubscribeRecord{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &TraceEventBusTraceEventsSubscribeRecord{}
+	// Parse message field: Meta
+	if len(raw.Meta) > 0 {
+		parsed, err := EventBusRecordMetaFromJSON(raw.Meta)
+		if err == nil {
+			result.Meta = parsed
+		}
+	}
+	// Parse message field: Payload
+	if len(raw.Payload) > 0 {
+		parsed, err := trace.TraceEventFromJSON(raw.Payload)
+		if err == nil {
+			result.Payload = parsed
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// TraceEventBusTraceEventsSubscribeRecordToYAML converts TraceEventBusTraceEventsSubscribeRecord to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func TraceEventBusTraceEventsSubscribeRecordToYAML(v *TraceEventBusTraceEventsSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "traceeventbustraceeventssubscriberecord is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TraceEventBusTraceEventsSubscribeRecordToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// TraceEventBusTraceEventsSubscribeRecordToTOML converts TraceEventBusTraceEventsSubscribeRecord to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func TraceEventBusTraceEventsSubscribeRecordToTOML(v *TraceEventBusTraceEventsSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "traceeventbustraceeventssubscriberecord is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TraceEventBusTraceEventsSubscribeRecordToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
 // MapEmptyJSON represents MapEmpty in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type mapemptyJSON struct {
@@ -11160,6 +11557,184 @@ func TopicPublishReceiptToTOML(v *TopicPublishReceipt) ([]byte, error) {
 	}
 	// Convert to JSON first
 	jsonData, err := TopicPublishReceiptToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// EventBusRecordMetaJSON represents EventBusRecordMeta in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type eventbusrecordmetaJSON struct {
+	Key       []byte          `json:"key,omitempty"`
+	Topic     string          `json:"topic,omitempty"`
+	Partition int32           `json:"partition,omitempty"`
+	Offset    int64           `json:"offset,omitempty"`
+	Timestamp json.RawMessage `json:"timestamp,omitempty"`
+	TraceId   string          `json:"trace_id,omitempty"`
+	Noop      bool            `json:"noop,omitempty"`
+}
+
+// EventBusRecordMetaToJSON converts EventBusRecordMeta to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func EventBusRecordMetaToJSON(v *EventBusRecordMeta) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusrecordmeta is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := eventbusrecordmetaJSON{
+		Key:       v.Key,
+		Topic:     v.Topic,
+		Partition: v.Partition,
+		Offset:    v.Offset,
+		Timestamp: func() json.RawMessage {
+			if v.Timestamp == nil {
+				return nil
+			}
+			data, _ := protojson.Marshal(v.Timestamp)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// EventBusRecordMetaToJSONPretty converts EventBusRecordMeta to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func EventBusRecordMetaToJSONPretty(v *EventBusRecordMeta) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusrecordmeta is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := eventbusrecordmetaJSON{
+		Key:       v.Key,
+		Topic:     v.Topic,
+		Partition: v.Partition,
+		Offset:    v.Offset,
+		Timestamp: func() json.RawMessage {
+			if v.Timestamp == nil {
+				return nil
+			}
+			data, _ := protojson.Marshal(v.Timestamp)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// EventBusRecordMetaFromBytes creates EventBusRecordMeta from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func EventBusRecordMetaFromBytes(data []byte) (*EventBusRecordMeta, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := EventBusRecordMetaFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := EventBusRecordMetaFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := EventBusRecordMetaFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &EventBusRecordMeta{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse EventBusRecordMeta: unsupported format or invalid data")
+}
+
+// EventBusRecordMetaFromJSON creates EventBusRecordMeta from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func EventBusRecordMetaFromJSON(data []byte) (*EventBusRecordMeta, error) {
+	// Unmarshal into helper struct with string enums
+	var raw eventbusrecordmetaJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &EventBusRecordMeta{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &EventBusRecordMeta{}
+	result.Key = raw.Key
+	result.Topic = raw.Topic
+	result.Partition = raw.Partition
+	result.Offset = raw.Offset
+	// Parse well-known type: Timestamp
+	if len(raw.Timestamp) > 0 {
+		result.Timestamp = &timestamppb.Timestamp{}
+		if err := protojson.Unmarshal(raw.Timestamp, result.Timestamp); err != nil {
+			result.Timestamp = nil
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// EventBusRecordMetaToYAML converts EventBusRecordMeta to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func EventBusRecordMetaToYAML(v *EventBusRecordMeta) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusrecordmeta is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := EventBusRecordMetaToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// EventBusRecordMetaToTOML converts EventBusRecordMeta to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func EventBusRecordMetaToTOML(v *EventBusRecordMeta) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusrecordmeta is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := EventBusRecordMetaToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -13447,28 +14022,28 @@ func EventTimeRangeFromEnvVar(env map[string]string) (*EventTimeRange, error) {
 	return result, nil
 }
 
-// NewMapRequestToEnvVar converts NewMapRequest to environment variable key-value pairs.
-func NewMapRequestToEnvVar(v *NewMapRequest) map[string]string {
+// CreateMapRequestToEnvVar converts CreateMapRequest to environment variable key-value pairs.
+func CreateMapRequestToEnvVar(v *CreateMapRequest) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_NEW_MAP_REQUEST_MAP_ID"] = v.MapId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_NEW_MAP_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_NEW_MAP_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_CREATE_MAP_REQUEST_MAP_ID"] = v.MapId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_CREATE_MAP_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_CREATE_MAP_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// NewMapRequestFromEnvVar creates NewMapRequest from environment variable key-value pairs.
-func NewMapRequestFromEnvVar(env map[string]string) (*NewMapRequest, error) {
-	result := &NewMapRequest{}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_NEW_MAP_REQUEST_MAP_ID"]; ok && val != "" {
+// CreateMapRequestFromEnvVar creates CreateMapRequest from environment variable key-value pairs.
+func CreateMapRequestFromEnvVar(env map[string]string) (*CreateMapRequest, error) {
+	result := &CreateMapRequest{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_CREATE_MAP_REQUEST_MAP_ID"]; ok && val != "" {
 		result.MapId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_NEW_MAP_REQUEST_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_CREATE_MAP_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_NEW_MAP_REQUEST_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_CREATE_MAP_REQUEST_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -13478,24 +14053,24 @@ func NewMapRequestFromEnvVar(env map[string]string) (*NewMapRequest, error) {
 	return result, nil
 }
 
-// NewMapResponseToEnvVar converts NewMapResponse to environment variable key-value pairs.
-func NewMapResponseToEnvVar(v *NewMapResponse) map[string]string {
+// CreateMapResponseToEnvVar converts CreateMapResponse to environment variable key-value pairs.
+func CreateMapResponseToEnvVar(v *CreateMapResponse) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_NEW_MAP_RESPONSE_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_NEW_MAP_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_CREATE_MAP_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_CREATE_MAP_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// NewMapResponseFromEnvVar creates NewMapResponse from environment variable key-value pairs.
-func NewMapResponseFromEnvVar(env map[string]string) (*NewMapResponse, error) {
-	result := &NewMapResponse{}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_NEW_MAP_RESPONSE_TRACE_ID"]; ok && val != "" {
+// CreateMapResponseFromEnvVar creates CreateMapResponse from environment variable key-value pairs.
+func CreateMapResponseFromEnvVar(env map[string]string) (*CreateMapResponse, error) {
+	result := &CreateMapResponse{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_CREATE_MAP_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_NEW_MAP_RESPONSE_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_CREATE_MAP_RESPONSE_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -13617,28 +14192,28 @@ func ListMapsResponseFromEnvVar(env map[string]string) (*ListMapsResponse, error
 	return result, nil
 }
 
-// DescribeMapRequestToEnvVar converts DescribeMapRequest to environment variable key-value pairs.
-func DescribeMapRequestToEnvVar(v *DescribeMapRequest) map[string]string {
+// GetMapDetailRequestToEnvVar converts GetMapDetailRequest to environment variable key-value pairs.
+func GetMapDetailRequestToEnvVar(v *GetMapDetailRequest) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_DESCRIBE_MAP_REQUEST_MAP_ID"] = v.MapId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_DESCRIBE_MAP_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_DESCRIBE_MAP_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_GET_MAP_DETAIL_REQUEST_MAP_ID"] = v.MapId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_GET_MAP_DETAIL_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_GET_MAP_DETAIL_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// DescribeMapRequestFromEnvVar creates DescribeMapRequest from environment variable key-value pairs.
-func DescribeMapRequestFromEnvVar(env map[string]string) (*DescribeMapRequest, error) {
-	result := &DescribeMapRequest{}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_DESCRIBE_MAP_REQUEST_MAP_ID"]; ok && val != "" {
+// GetMapDetailRequestFromEnvVar creates GetMapDetailRequest from environment variable key-value pairs.
+func GetMapDetailRequestFromEnvVar(env map[string]string) (*GetMapDetailRequest, error) {
+	result := &GetMapDetailRequest{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_GET_MAP_DETAIL_REQUEST_MAP_ID"]; ok && val != "" {
 		result.MapId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_DESCRIBE_MAP_REQUEST_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_GET_MAP_DETAIL_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_DESCRIBE_MAP_REQUEST_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_GET_MAP_DETAIL_REQUEST_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -13648,8 +14223,8 @@ func DescribeMapRequestFromEnvVar(env map[string]string) (*DescribeMapRequest, e
 	return result, nil
 }
 
-// DescribeMapResponseToEnvVar converts DescribeMapResponse to environment variable key-value pairs.
-func DescribeMapResponseToEnvVar(v *DescribeMapResponse) map[string]string {
+// GetMapDetailResponseToEnvVar converts GetMapDetailResponse to environment variable key-value pairs.
+func GetMapDetailResponseToEnvVar(v *GetMapDetailResponse) map[string]string {
 	if v == nil {
 		return nil
 	}
@@ -13659,23 +14234,23 @@ func DescribeMapResponseToEnvVar(v *DescribeMapResponse) map[string]string {
 			result[k] = val
 		}
 	}
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_DESCRIBE_MAP_RESPONSE_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_DESCRIBE_MAP_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_GET_MAP_DETAIL_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_GET_MAP_DETAIL_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// DescribeMapResponseFromEnvVar creates DescribeMapResponse from environment variable key-value pairs.
-func DescribeMapResponseFromEnvVar(env map[string]string) (*DescribeMapResponse, error) {
-	result := &DescribeMapResponse{}
+// GetMapDetailResponseFromEnvVar creates GetMapDetailResponse from environment variable key-value pairs.
+func GetMapDetailResponseFromEnvVar(env map[string]string) (*GetMapDetailResponse, error) {
+	result := &GetMapDetailResponse{}
 	if sub, err := MapDetailFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.Detail = sub
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_DESCRIBE_MAP_RESPONSE_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_GET_MAP_DETAIL_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_DESCRIBE_MAP_RESPONSE_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_GET_MAP_DETAIL_RESPONSE_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -13759,34 +14334,34 @@ func MapSizeResponseFromEnvVar(env map[string]string) (*MapSizeResponse, error) 
 	return result, nil
 }
 
-// LoadByIdsRequestToEnvVar converts LoadByIdsRequest to environment variable key-value pairs.
-func LoadByIdsRequestToEnvVar(v *LoadByIdsRequest) map[string]string {
+// UpdateMapByIdsRequestToEnvVar converts UpdateMapByIdsRequest to environment variable key-value pairs.
+func UpdateMapByIdsRequestToEnvVar(v *UpdateMapByIdsRequest) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_IDS_REQUEST_MAP_ID"] = v.MapId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_IDS_REQUEST_MAP_ID"] = v.MapId
 	if len(v.EventIds) > 0 {
-		result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_IDS_REQUEST_EVENT_IDS"] = strings.Join(v.EventIds, ",")
+		result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_IDS_REQUEST_EVENT_IDS"] = strings.Join(v.EventIds, ",")
 	}
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_IDS_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_IDS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_IDS_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_IDS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// LoadByIdsRequestFromEnvVar creates LoadByIdsRequest from environment variable key-value pairs.
-func LoadByIdsRequestFromEnvVar(env map[string]string) (*LoadByIdsRequest, error) {
-	result := &LoadByIdsRequest{}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_IDS_REQUEST_MAP_ID"]; ok && val != "" {
+// UpdateMapByIdsRequestFromEnvVar creates UpdateMapByIdsRequest from environment variable key-value pairs.
+func UpdateMapByIdsRequestFromEnvVar(env map[string]string) (*UpdateMapByIdsRequest, error) {
+	result := &UpdateMapByIdsRequest{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_IDS_REQUEST_MAP_ID"]; ok && val != "" {
 		result.MapId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_IDS_REQUEST_EVENT_IDS"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_IDS_REQUEST_EVENT_IDS"]; ok && val != "" {
 		result.EventIds = strings.Split(val, ",")
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_IDS_REQUEST_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_IDS_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_IDS_REQUEST_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_IDS_REQUEST_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -13796,32 +14371,32 @@ func LoadByIdsRequestFromEnvVar(env map[string]string) (*LoadByIdsRequest, error
 	return result, nil
 }
 
-// LoadByIdsResponseToEnvVar converts LoadByIdsResponse to environment variable key-value pairs.
-func LoadByIdsResponseToEnvVar(v *LoadByIdsResponse) map[string]string {
+// UpdateMapByIdsResponseToEnvVar converts UpdateMapByIdsResponse to environment variable key-value pairs.
+func UpdateMapByIdsResponseToEnvVar(v *UpdateMapByIdsResponse) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_IDS_RESPONSE_EVENTS_ADDED"] = strconv.FormatInt(v.EventsAdded, 10)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_IDS_RESPONSE_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_IDS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_IDS_RESPONSE_EVENTS_ADDED"] = strconv.FormatInt(v.EventsAdded, 10)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_IDS_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_IDS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// LoadByIdsResponseFromEnvVar creates LoadByIdsResponse from environment variable key-value pairs.
-func LoadByIdsResponseFromEnvVar(env map[string]string) (*LoadByIdsResponse, error) {
-	result := &LoadByIdsResponse{}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_IDS_RESPONSE_EVENTS_ADDED"]; ok && val != "" {
+// UpdateMapByIdsResponseFromEnvVar creates UpdateMapByIdsResponse from environment variable key-value pairs.
+func UpdateMapByIdsResponseFromEnvVar(env map[string]string) (*UpdateMapByIdsResponse, error) {
+	result := &UpdateMapByIdsResponse{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_IDS_RESPONSE_EVENTS_ADDED"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 64)
 		if err != nil {
 			return nil, err
 		}
 		result.EventsAdded = parsed
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_IDS_RESPONSE_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_IDS_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_IDS_RESPONSE_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_IDS_RESPONSE_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -13831,32 +14406,32 @@ func LoadByIdsResponseFromEnvVar(env map[string]string) (*LoadByIdsResponse, err
 	return result, nil
 }
 
-// LoadBySqlRequestToEnvVar converts LoadBySqlRequest to environment variable key-value pairs.
-func LoadBySqlRequestToEnvVar(v *LoadBySqlRequest) map[string]string {
+// UpdateMapBySqlRequestToEnvVar converts UpdateMapBySqlRequest to environment variable key-value pairs.
+func UpdateMapBySqlRequestToEnvVar(v *UpdateMapBySqlRequest) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_SQL_REQUEST_MAP_ID"] = v.MapId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_SQL_REQUEST_SQL"] = v.Sql
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_SQL_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_SQL_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_SQL_REQUEST_MAP_ID"] = v.MapId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_SQL_REQUEST_SQL"] = v.Sql
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_SQL_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_SQL_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// LoadBySqlRequestFromEnvVar creates LoadBySqlRequest from environment variable key-value pairs.
-func LoadBySqlRequestFromEnvVar(env map[string]string) (*LoadBySqlRequest, error) {
-	result := &LoadBySqlRequest{}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_SQL_REQUEST_MAP_ID"]; ok && val != "" {
+// UpdateMapBySqlRequestFromEnvVar creates UpdateMapBySqlRequest from environment variable key-value pairs.
+func UpdateMapBySqlRequestFromEnvVar(env map[string]string) (*UpdateMapBySqlRequest, error) {
+	result := &UpdateMapBySqlRequest{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_SQL_REQUEST_MAP_ID"]; ok && val != "" {
 		result.MapId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_SQL_REQUEST_SQL"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_SQL_REQUEST_SQL"]; ok && val != "" {
 		result.Sql = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_SQL_REQUEST_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_SQL_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_SQL_REQUEST_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_SQL_REQUEST_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -13866,32 +14441,32 @@ func LoadBySqlRequestFromEnvVar(env map[string]string) (*LoadBySqlRequest, error
 	return result, nil
 }
 
-// LoadBySqlResponseToEnvVar converts LoadBySqlResponse to environment variable key-value pairs.
-func LoadBySqlResponseToEnvVar(v *LoadBySqlResponse) map[string]string {
+// UpdateMapBySqlResponseToEnvVar converts UpdateMapBySqlResponse to environment variable key-value pairs.
+func UpdateMapBySqlResponseToEnvVar(v *UpdateMapBySqlResponse) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_SQL_RESPONSE_EVENTS_ADDED"] = strconv.FormatInt(v.EventsAdded, 10)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_SQL_RESPONSE_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_SQL_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_SQL_RESPONSE_EVENTS_ADDED"] = strconv.FormatInt(v.EventsAdded, 10)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_SQL_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_SQL_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// LoadBySqlResponseFromEnvVar creates LoadBySqlResponse from environment variable key-value pairs.
-func LoadBySqlResponseFromEnvVar(env map[string]string) (*LoadBySqlResponse, error) {
-	result := &LoadBySqlResponse{}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_SQL_RESPONSE_EVENTS_ADDED"]; ok && val != "" {
+// UpdateMapBySqlResponseFromEnvVar creates UpdateMapBySqlResponse from environment variable key-value pairs.
+func UpdateMapBySqlResponseFromEnvVar(env map[string]string) (*UpdateMapBySqlResponse, error) {
+	result := &UpdateMapBySqlResponse{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_SQL_RESPONSE_EVENTS_ADDED"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 64)
 		if err != nil {
 			return nil, err
 		}
 		result.EventsAdded = parsed
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_SQL_RESPONSE_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_SQL_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_SQL_RESPONSE_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_SQL_RESPONSE_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -13901,32 +14476,32 @@ func LoadBySqlResponseFromEnvVar(env map[string]string) (*LoadBySqlResponse, err
 	return result, nil
 }
 
-// LoadByTimedbRequestToEnvVar converts LoadByTimedbRequest to environment variable key-value pairs.
-func LoadByTimedbRequestToEnvVar(v *LoadByTimedbRequest) map[string]string {
+// UpdateMapByTimedbRequestToEnvVar converts UpdateMapByTimedbRequest to environment variable key-value pairs.
+func UpdateMapByTimedbRequestToEnvVar(v *UpdateMapByTimedbRequest) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_TIMEDB_REQUEST_MAP_ID"] = v.MapId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_TIMEDB_REQUEST_SQL"] = v.Sql
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_TIMEDB_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_TIMEDB_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_TIMEDB_REQUEST_MAP_ID"] = v.MapId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_TIMEDB_REQUEST_SQL"] = v.Sql
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_TIMEDB_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_TIMEDB_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// LoadByTimedbRequestFromEnvVar creates LoadByTimedbRequest from environment variable key-value pairs.
-func LoadByTimedbRequestFromEnvVar(env map[string]string) (*LoadByTimedbRequest, error) {
-	result := &LoadByTimedbRequest{}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_TIMEDB_REQUEST_MAP_ID"]; ok && val != "" {
+// UpdateMapByTimedbRequestFromEnvVar creates UpdateMapByTimedbRequest from environment variable key-value pairs.
+func UpdateMapByTimedbRequestFromEnvVar(env map[string]string) (*UpdateMapByTimedbRequest, error) {
+	result := &UpdateMapByTimedbRequest{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_TIMEDB_REQUEST_MAP_ID"]; ok && val != "" {
 		result.MapId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_TIMEDB_REQUEST_SQL"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_TIMEDB_REQUEST_SQL"]; ok && val != "" {
 		result.Sql = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_TIMEDB_REQUEST_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_TIMEDB_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_TIMEDB_REQUEST_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_TIMEDB_REQUEST_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -13936,32 +14511,32 @@ func LoadByTimedbRequestFromEnvVar(env map[string]string) (*LoadByTimedbRequest,
 	return result, nil
 }
 
-// LoadByTimedbResponseToEnvVar converts LoadByTimedbResponse to environment variable key-value pairs.
-func LoadByTimedbResponseToEnvVar(v *LoadByTimedbResponse) map[string]string {
+// UpdateMapByTimedbResponseToEnvVar converts UpdateMapByTimedbResponse to environment variable key-value pairs.
+func UpdateMapByTimedbResponseToEnvVar(v *UpdateMapByTimedbResponse) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_TIMEDB_RESPONSE_EVENTS_ADDED"] = strconv.FormatInt(v.EventsAdded, 10)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_TIMEDB_RESPONSE_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_TIMEDB_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_TIMEDB_RESPONSE_EVENTS_ADDED"] = strconv.FormatInt(v.EventsAdded, 10)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_TIMEDB_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_TIMEDB_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// LoadByTimedbResponseFromEnvVar creates LoadByTimedbResponse from environment variable key-value pairs.
-func LoadByTimedbResponseFromEnvVar(env map[string]string) (*LoadByTimedbResponse, error) {
-	result := &LoadByTimedbResponse{}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_TIMEDB_RESPONSE_EVENTS_ADDED"]; ok && val != "" {
+// UpdateMapByTimedbResponseFromEnvVar creates UpdateMapByTimedbResponse from environment variable key-value pairs.
+func UpdateMapByTimedbResponseFromEnvVar(env map[string]string) (*UpdateMapByTimedbResponse, error) {
+	result := &UpdateMapByTimedbResponse{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_TIMEDB_RESPONSE_EVENTS_ADDED"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 64)
 		if err != nil {
 			return nil, err
 		}
 		result.EventsAdded = parsed
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_TIMEDB_RESPONSE_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_TIMEDB_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_TIMEDB_RESPONSE_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_TIMEDB_RESPONSE_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -13971,32 +14546,32 @@ func LoadByTimedbResponseFromEnvVar(env map[string]string) (*LoadByTimedbRespons
 	return result, nil
 }
 
-// LoadByGraphdbRequestToEnvVar converts LoadByGraphdbRequest to environment variable key-value pairs.
-func LoadByGraphdbRequestToEnvVar(v *LoadByGraphdbRequest) map[string]string {
+// UpdateMapByGraphdbRequestToEnvVar converts UpdateMapByGraphdbRequest to environment variable key-value pairs.
+func UpdateMapByGraphdbRequestToEnvVar(v *UpdateMapByGraphdbRequest) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_GRAPHDB_REQUEST_MAP_ID"] = v.MapId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_GRAPHDB_REQUEST_DQL"] = v.Dql
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_GRAPHDB_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_GRAPHDB_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_GRAPHDB_REQUEST_MAP_ID"] = v.MapId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_GRAPHDB_REQUEST_DQL"] = v.Dql
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_GRAPHDB_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_GRAPHDB_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// LoadByGraphdbRequestFromEnvVar creates LoadByGraphdbRequest from environment variable key-value pairs.
-func LoadByGraphdbRequestFromEnvVar(env map[string]string) (*LoadByGraphdbRequest, error) {
-	result := &LoadByGraphdbRequest{}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_GRAPHDB_REQUEST_MAP_ID"]; ok && val != "" {
+// UpdateMapByGraphdbRequestFromEnvVar creates UpdateMapByGraphdbRequest from environment variable key-value pairs.
+func UpdateMapByGraphdbRequestFromEnvVar(env map[string]string) (*UpdateMapByGraphdbRequest, error) {
+	result := &UpdateMapByGraphdbRequest{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_GRAPHDB_REQUEST_MAP_ID"]; ok && val != "" {
 		result.MapId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_GRAPHDB_REQUEST_DQL"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_GRAPHDB_REQUEST_DQL"]; ok && val != "" {
 		result.Dql = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_GRAPHDB_REQUEST_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_GRAPHDB_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_GRAPHDB_REQUEST_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_GRAPHDB_REQUEST_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -14006,32 +14581,32 @@ func LoadByGraphdbRequestFromEnvVar(env map[string]string) (*LoadByGraphdbReques
 	return result, nil
 }
 
-// LoadByGraphdbResponseToEnvVar converts LoadByGraphdbResponse to environment variable key-value pairs.
-func LoadByGraphdbResponseToEnvVar(v *LoadByGraphdbResponse) map[string]string {
+// UpdateMapByGraphdbResponseToEnvVar converts UpdateMapByGraphdbResponse to environment variable key-value pairs.
+func UpdateMapByGraphdbResponseToEnvVar(v *UpdateMapByGraphdbResponse) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_GRAPHDB_RESPONSE_EVENTS_ADDED"] = strconv.FormatInt(v.EventsAdded, 10)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_GRAPHDB_RESPONSE_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_GRAPHDB_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_GRAPHDB_RESPONSE_EVENTS_ADDED"] = strconv.FormatInt(v.EventsAdded, 10)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_GRAPHDB_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_GRAPHDB_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// LoadByGraphdbResponseFromEnvVar creates LoadByGraphdbResponse from environment variable key-value pairs.
-func LoadByGraphdbResponseFromEnvVar(env map[string]string) (*LoadByGraphdbResponse, error) {
-	result := &LoadByGraphdbResponse{}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_GRAPHDB_RESPONSE_EVENTS_ADDED"]; ok && val != "" {
+// UpdateMapByGraphdbResponseFromEnvVar creates UpdateMapByGraphdbResponse from environment variable key-value pairs.
+func UpdateMapByGraphdbResponseFromEnvVar(env map[string]string) (*UpdateMapByGraphdbResponse, error) {
+	result := &UpdateMapByGraphdbResponse{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_GRAPHDB_RESPONSE_EVENTS_ADDED"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 64)
 		if err != nil {
 			return nil, err
 		}
 		result.EventsAdded = parsed
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_GRAPHDB_RESPONSE_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_GRAPHDB_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LOAD_BY_GRAPHDB_RESPONSE_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_BY_GRAPHDB_RESPONSE_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -14041,32 +14616,32 @@ func LoadByGraphdbResponseFromEnvVar(env map[string]string) (*LoadByGraphdbRespo
 	return result, nil
 }
 
-// FilterMapRequestToEnvVar converts FilterMapRequest to environment variable key-value pairs.
-func FilterMapRequestToEnvVar(v *FilterMapRequest) map[string]string {
+// UpdateMapFilterRequestToEnvVar converts UpdateMapFilterRequest to environment variable key-value pairs.
+func UpdateMapFilterRequestToEnvVar(v *UpdateMapFilterRequest) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_FILTER_MAP_REQUEST_MAP_ID"] = v.MapId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_FILTER_MAP_REQUEST_SQL"] = v.Sql
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_FILTER_MAP_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_FILTER_MAP_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_FILTER_REQUEST_MAP_ID"] = v.MapId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_FILTER_REQUEST_SQL"] = v.Sql
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_FILTER_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_FILTER_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// FilterMapRequestFromEnvVar creates FilterMapRequest from environment variable key-value pairs.
-func FilterMapRequestFromEnvVar(env map[string]string) (*FilterMapRequest, error) {
-	result := &FilterMapRequest{}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_FILTER_MAP_REQUEST_MAP_ID"]; ok && val != "" {
+// UpdateMapFilterRequestFromEnvVar creates UpdateMapFilterRequest from environment variable key-value pairs.
+func UpdateMapFilterRequestFromEnvVar(env map[string]string) (*UpdateMapFilterRequest, error) {
+	result := &UpdateMapFilterRequest{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_FILTER_REQUEST_MAP_ID"]; ok && val != "" {
 		result.MapId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_FILTER_MAP_REQUEST_SQL"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_FILTER_REQUEST_SQL"]; ok && val != "" {
 		result.Sql = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_FILTER_MAP_REQUEST_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_FILTER_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_FILTER_MAP_REQUEST_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_FILTER_REQUEST_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -14076,32 +14651,32 @@ func FilterMapRequestFromEnvVar(env map[string]string) (*FilterMapRequest, error
 	return result, nil
 }
 
-// FilterMapResponseToEnvVar converts FilterMapResponse to environment variable key-value pairs.
-func FilterMapResponseToEnvVar(v *FilterMapResponse) map[string]string {
+// UpdateMapFilterResponseToEnvVar converts UpdateMapFilterResponse to environment variable key-value pairs.
+func UpdateMapFilterResponseToEnvVar(v *UpdateMapFilterResponse) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_FILTER_MAP_RESPONSE_EVENTS_REMOVED"] = strconv.FormatInt(v.EventsRemoved, 10)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_FILTER_MAP_RESPONSE_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_FILTER_MAP_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_FILTER_RESPONSE_EVENTS_REMOVED"] = strconv.FormatInt(v.EventsRemoved, 10)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_FILTER_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_FILTER_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// FilterMapResponseFromEnvVar creates FilterMapResponse from environment variable key-value pairs.
-func FilterMapResponseFromEnvVar(env map[string]string) (*FilterMapResponse, error) {
-	result := &FilterMapResponse{}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_FILTER_MAP_RESPONSE_EVENTS_REMOVED"]; ok && val != "" {
+// UpdateMapFilterResponseFromEnvVar creates UpdateMapFilterResponse from environment variable key-value pairs.
+func UpdateMapFilterResponseFromEnvVar(env map[string]string) (*UpdateMapFilterResponse, error) {
+	result := &UpdateMapFilterResponse{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_FILTER_RESPONSE_EVENTS_REMOVED"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 64)
 		if err != nil {
 			return nil, err
 		}
 		result.EventsRemoved = parsed
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_FILTER_MAP_RESPONSE_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_FILTER_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_FILTER_MAP_RESPONSE_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_UPDATE_MAP_FILTER_RESPONSE_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -14181,40 +14756,40 @@ func MergeResponseFromEnvVar(env map[string]string) (*MergeResponse, error) {
 	return result, nil
 }
 
-// QueryMapRequestToEnvVar converts QueryMapRequest to environment variable key-value pairs.
-func QueryMapRequestToEnvVar(v *QueryMapRequest) map[string]string {
+// ExecuteMapQueryRequestToEnvVar converts ExecuteMapQueryRequest to environment variable key-value pairs.
+func ExecuteMapQueryRequestToEnvVar(v *ExecuteMapQueryRequest) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_MAP_REQUEST_MAP_ID"] = v.MapId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_MAP_REQUEST_SQL"] = v.Sql
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_MAP_REQUEST_LIMIT"] = strconv.FormatInt(int64(v.Limit), 10)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_MAP_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_MAP_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_EXECUTE_MAP_QUERY_REQUEST_MAP_ID"] = v.MapId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_EXECUTE_MAP_QUERY_REQUEST_SQL"] = v.Sql
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_EXECUTE_MAP_QUERY_REQUEST_LIMIT"] = strconv.FormatInt(int64(v.Limit), 10)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_EXECUTE_MAP_QUERY_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_EXECUTE_MAP_QUERY_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// QueryMapRequestFromEnvVar creates QueryMapRequest from environment variable key-value pairs.
-func QueryMapRequestFromEnvVar(env map[string]string) (*QueryMapRequest, error) {
-	result := &QueryMapRequest{}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_MAP_REQUEST_MAP_ID"]; ok && val != "" {
+// ExecuteMapQueryRequestFromEnvVar creates ExecuteMapQueryRequest from environment variable key-value pairs.
+func ExecuteMapQueryRequestFromEnvVar(env map[string]string) (*ExecuteMapQueryRequest, error) {
+	result := &ExecuteMapQueryRequest{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_EXECUTE_MAP_QUERY_REQUEST_MAP_ID"]; ok && val != "" {
 		result.MapId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_MAP_REQUEST_SQL"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_EXECUTE_MAP_QUERY_REQUEST_SQL"]; ok && val != "" {
 		result.Sql = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_MAP_REQUEST_LIMIT"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_EXECUTE_MAP_QUERY_REQUEST_LIMIT"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 32)
 		if err != nil {
 			return nil, err
 		}
 		result.Limit = int32(parsed)
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_MAP_REQUEST_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_EXECUTE_MAP_QUERY_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_MAP_REQUEST_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_EXECUTE_MAP_QUERY_REQUEST_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -14224,36 +14799,36 @@ func QueryMapRequestFromEnvVar(env map[string]string) (*QueryMapRequest, error) 
 	return result, nil
 }
 
-// QueryMapResponseToEnvVar converts QueryMapResponse to environment variable key-value pairs.
-func QueryMapResponseToEnvVar(v *QueryMapResponse) map[string]string {
+// ExecuteMapQueryResponseToEnvVar converts ExecuteMapQueryResponse to environment variable key-value pairs.
+func ExecuteMapQueryResponseToEnvVar(v *ExecuteMapQueryResponse) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_MAP_RESPONSE_RESULTS_JSON"] = v.ResultsJson
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_MAP_RESPONSE_TOTAL_ROWS"] = strconv.FormatInt(v.TotalRows, 10)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_MAP_RESPONSE_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_MAP_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_EXECUTE_MAP_QUERY_RESPONSE_RESULTS_JSON"] = v.ResultsJson
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_EXECUTE_MAP_QUERY_RESPONSE_TOTAL_ROWS"] = strconv.FormatInt(v.TotalRows, 10)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_EXECUTE_MAP_QUERY_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_EXECUTE_MAP_QUERY_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// QueryMapResponseFromEnvVar creates QueryMapResponse from environment variable key-value pairs.
-func QueryMapResponseFromEnvVar(env map[string]string) (*QueryMapResponse, error) {
-	result := &QueryMapResponse{}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_MAP_RESPONSE_RESULTS_JSON"]; ok && val != "" {
+// ExecuteMapQueryResponseFromEnvVar creates ExecuteMapQueryResponse from environment variable key-value pairs.
+func ExecuteMapQueryResponseFromEnvVar(env map[string]string) (*ExecuteMapQueryResponse, error) {
+	result := &ExecuteMapQueryResponse{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_EXECUTE_MAP_QUERY_RESPONSE_RESULTS_JSON"]; ok && val != "" {
 		result.ResultsJson = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_MAP_RESPONSE_TOTAL_ROWS"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_EXECUTE_MAP_QUERY_RESPONSE_TOTAL_ROWS"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 64)
 		if err != nil {
 			return nil, err
 		}
 		result.TotalRows = parsed
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_MAP_RESPONSE_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_EXECUTE_MAP_QUERY_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_MAP_RESPONSE_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_EXECUTE_MAP_QUERY_RESPONSE_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -14501,8 +15076,8 @@ func GetUserSessionsResponseFromEnvVar(env map[string]string) (*GetUserSessionsR
 	return result, nil
 }
 
-// QueryByTimeRangeRequestToEnvVar converts QueryByTimeRangeRequest to environment variable key-value pairs.
-func QueryByTimeRangeRequestToEnvVar(v *QueryByTimeRangeRequest) map[string]string {
+// ListEventsByTimeRangeRequestToEnvVar converts ListEventsByTimeRangeRequest to environment variable key-value pairs.
+func ListEventsByTimeRangeRequestToEnvVar(v *ListEventsByTimeRangeRequest) map[string]string {
 	if v == nil {
 		return nil
 	}
@@ -14512,35 +15087,35 @@ func QueryByTimeRangeRequestToEnvVar(v *QueryByTimeRangeRequest) map[string]stri
 			result[k] = val
 		}
 	}
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_TIME_RANGE_REQUEST_PAGE_TOKEN"] = v.PageToken
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_TIME_RANGE_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_TIME_RANGE_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_TIME_RANGE_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_TIME_RANGE_REQUEST_PAGE_TOKEN"] = v.PageToken
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_TIME_RANGE_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_TIME_RANGE_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_TIME_RANGE_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// QueryByTimeRangeRequestFromEnvVar creates QueryByTimeRangeRequest from environment variable key-value pairs.
-func QueryByTimeRangeRequestFromEnvVar(env map[string]string) (*QueryByTimeRangeRequest, error) {
-	result := &QueryByTimeRangeRequest{}
+// ListEventsByTimeRangeRequestFromEnvVar creates ListEventsByTimeRangeRequest from environment variable key-value pairs.
+func ListEventsByTimeRangeRequestFromEnvVar(env map[string]string) (*ListEventsByTimeRangeRequest, error) {
+	result := &ListEventsByTimeRangeRequest{}
 	if sub, err := EventTimeRangeFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.TimeRange = sub
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_TIME_RANGE_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_TIME_RANGE_REQUEST_PAGE_TOKEN"]; ok && val != "" {
 		result.PageToken = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_TIME_RANGE_REQUEST_PAGE_SIZE"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_TIME_RANGE_REQUEST_PAGE_SIZE"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 32)
 		if err != nil {
 			return nil, err
 		}
 		result.PageSize = int32(parsed)
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_TIME_RANGE_REQUEST_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_TIME_RANGE_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_TIME_RANGE_REQUEST_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_TIME_RANGE_REQUEST_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -14550,28 +15125,28 @@ func QueryByTimeRangeRequestFromEnvVar(env map[string]string) (*QueryByTimeRange
 	return result, nil
 }
 
-// QueryByTimeRangeResponseToEnvVar converts QueryByTimeRangeResponse to environment variable key-value pairs.
-func QueryByTimeRangeResponseToEnvVar(v *QueryByTimeRangeResponse) map[string]string {
+// ListEventsByTimeRangeResponseToEnvVar converts ListEventsByTimeRangeResponse to environment variable key-value pairs.
+func ListEventsByTimeRangeResponseToEnvVar(v *ListEventsByTimeRangeResponse) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_TIME_RANGE_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_TIME_RANGE_RESPONSE_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_TIME_RANGE_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_TIME_RANGE_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_TIME_RANGE_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_TIME_RANGE_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// QueryByTimeRangeResponseFromEnvVar creates QueryByTimeRangeResponse from environment variable key-value pairs.
-func QueryByTimeRangeResponseFromEnvVar(env map[string]string) (*QueryByTimeRangeResponse, error) {
-	result := &QueryByTimeRangeResponse{}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_TIME_RANGE_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+// ListEventsByTimeRangeResponseFromEnvVar creates ListEventsByTimeRangeResponse from environment variable key-value pairs.
+func ListEventsByTimeRangeResponseFromEnvVar(env map[string]string) (*ListEventsByTimeRangeResponse, error) {
+	result := &ListEventsByTimeRangeResponse{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_TIME_RANGE_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
 		result.NextPageToken = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_TIME_RANGE_RESPONSE_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_TIME_RANGE_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_TIME_RANGE_RESPONSE_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_TIME_RANGE_RESPONSE_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -14581,29 +15156,29 @@ func QueryByTimeRangeResponseFromEnvVar(env map[string]string) (*QueryByTimeRang
 	return result, nil
 }
 
-// QueryByEmailRequestToEnvVar converts QueryByEmailRequest to environment variable key-value pairs.
-func QueryByEmailRequestToEnvVar(v *QueryByEmailRequest) map[string]string {
+// ListEventsByEmailRequestToEnvVar converts ListEventsByEmailRequest to environment variable key-value pairs.
+func ListEventsByEmailRequestToEnvVar(v *ListEventsByEmailRequest) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_EMAIL_REQUEST_EMAIL"] = v.Email
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_EMAIL_REQUEST_EMAIL"] = v.Email
 	if v.TimeRange != nil {
 		for k, val := range EventTimeRangeToEnvVar(v.TimeRange) {
 			result[k] = val
 		}
 	}
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_EMAIL_REQUEST_PAGE_TOKEN"] = v.PageToken
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_EMAIL_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_EMAIL_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_EMAIL_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_EMAIL_REQUEST_PAGE_TOKEN"] = v.PageToken
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_EMAIL_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_EMAIL_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_EMAIL_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// QueryByEmailRequestFromEnvVar creates QueryByEmailRequest from environment variable key-value pairs.
-func QueryByEmailRequestFromEnvVar(env map[string]string) (*QueryByEmailRequest, error) {
-	result := &QueryByEmailRequest{}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_EMAIL_REQUEST_EMAIL"]; ok && val != "" {
+// ListEventsByEmailRequestFromEnvVar creates ListEventsByEmailRequest from environment variable key-value pairs.
+func ListEventsByEmailRequestFromEnvVar(env map[string]string) (*ListEventsByEmailRequest, error) {
+	result := &ListEventsByEmailRequest{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_EMAIL_REQUEST_EMAIL"]; ok && val != "" {
 		result.Email = val
 	}
 	if sub, err := EventTimeRangeFromEnvVar(env); err != nil {
@@ -14611,20 +15186,20 @@ func QueryByEmailRequestFromEnvVar(env map[string]string) (*QueryByEmailRequest,
 	} else if sub != nil {
 		result.TimeRange = sub
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_EMAIL_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_EMAIL_REQUEST_PAGE_TOKEN"]; ok && val != "" {
 		result.PageToken = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_EMAIL_REQUEST_PAGE_SIZE"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_EMAIL_REQUEST_PAGE_SIZE"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 32)
 		if err != nil {
 			return nil, err
 		}
 		result.PageSize = int32(parsed)
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_EMAIL_REQUEST_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_EMAIL_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_EMAIL_REQUEST_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_EMAIL_REQUEST_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -14634,28 +15209,28 @@ func QueryByEmailRequestFromEnvVar(env map[string]string) (*QueryByEmailRequest,
 	return result, nil
 }
 
-// QueryByEmailResponseToEnvVar converts QueryByEmailResponse to environment variable key-value pairs.
-func QueryByEmailResponseToEnvVar(v *QueryByEmailResponse) map[string]string {
+// ListEventsByEmailResponseToEnvVar converts ListEventsByEmailResponse to environment variable key-value pairs.
+func ListEventsByEmailResponseToEnvVar(v *ListEventsByEmailResponse) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_EMAIL_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_EMAIL_RESPONSE_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_EMAIL_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_EMAIL_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_EMAIL_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_EMAIL_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
-// QueryByEmailResponseFromEnvVar creates QueryByEmailResponse from environment variable key-value pairs.
-func QueryByEmailResponseFromEnvVar(env map[string]string) (*QueryByEmailResponse, error) {
-	result := &QueryByEmailResponse{}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_EMAIL_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+// ListEventsByEmailResponseFromEnvVar creates ListEventsByEmailResponse from environment variable key-value pairs.
+func ListEventsByEmailResponseFromEnvVar(env map[string]string) (*ListEventsByEmailResponse, error) {
+	result := &ListEventsByEmailResponse{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_EMAIL_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
 		result.NextPageToken = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_EMAIL_RESPONSE_TRACE_ID"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_EMAIL_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_QUERY_BY_EMAIL_RESPONSE_NOOP"]; ok && val != "" {
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_LIST_EVENTS_BY_EMAIL_RESPONSE_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -14917,6 +15492,100 @@ func DqlQueryResponseFromEnvVar(env map[string]string) (*DqlQueryResponse, error
 	return result, nil
 }
 
+// AgenticCodeEventBusEventStreamSubscribeRecordToEnvVar converts AgenticCodeEventBusEventStreamSubscribeRecord to environment variable key-value pairs.
+func AgenticCodeEventBusEventStreamSubscribeRecordToEnvVar(v *AgenticCodeEventBusEventStreamSubscribeRecord) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.Meta != nil {
+		for k, val := range EventBusRecordMetaToEnvVar(v.Meta) {
+			result[k] = val
+		}
+	}
+	if v.Payload != nil {
+		for k, val := range SensorEventToEnvVar(v.Payload) {
+			result[k] = val
+		}
+	}
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// AgenticCodeEventBusEventStreamSubscribeRecordFromEnvVar creates AgenticCodeEventBusEventStreamSubscribeRecord from environment variable key-value pairs.
+func AgenticCodeEventBusEventStreamSubscribeRecordFromEnvVar(env map[string]string) (*AgenticCodeEventBusEventStreamSubscribeRecord, error) {
+	result := &AgenticCodeEventBusEventStreamSubscribeRecord{}
+	if sub, err := EventBusRecordMetaFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Meta = sub
+	}
+	if sub, err := SensorEventFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Payload = sub
+	}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// TraceEventBusTraceEventsSubscribeRecordToEnvVar converts TraceEventBusTraceEventsSubscribeRecord to environment variable key-value pairs.
+func TraceEventBusTraceEventsSubscribeRecordToEnvVar(v *TraceEventBusTraceEventsSubscribeRecord) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.Meta != nil {
+		for k, val := range EventBusRecordMetaToEnvVar(v.Meta) {
+			result[k] = val
+		}
+	}
+	if v.Payload != nil {
+		for k, val := range trace.TraceEventToEnvVar(v.Payload) {
+			result[k] = val
+		}
+	}
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_TRACE_EVENT_BUS_TRACE_EVENTS_SUBSCRIBE_RECORD_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_TRACE_EVENT_BUS_TRACE_EVENTS_SUBSCRIBE_RECORD_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// TraceEventBusTraceEventsSubscribeRecordFromEnvVar creates TraceEventBusTraceEventsSubscribeRecord from environment variable key-value pairs.
+func TraceEventBusTraceEventsSubscribeRecordFromEnvVar(env map[string]string) (*TraceEventBusTraceEventsSubscribeRecord, error) {
+	result := &TraceEventBusTraceEventsSubscribeRecord{}
+	if sub, err := EventBusRecordMetaFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Meta = sub
+	}
+	if sub, err := trace.TraceEventFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Payload = sub
+	}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_TRACE_EVENT_BUS_TRACE_EVENTS_SUBSCRIBE_RECORD_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_TRACE_EVENT_BUS_TRACE_EVENTS_SUBSCRIBE_RECORD_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
 // MapEmptyToEnvVar converts MapEmpty to environment variable key-value pairs.
 func MapEmptyToEnvVar(v *MapEmpty) map[string]string {
 	if v == nil {
@@ -14970,6 +15639,61 @@ func TopicPublishReceiptFromEnvVar(env map[string]string) (*TopicPublishReceipt,
 		result.TraceId = val
 	}
 	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_TOPIC_PUBLISH_RECEIPT_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// EventBusRecordMetaToEnvVar converts EventBusRecordMeta to environment variable key-value pairs.
+func EventBusRecordMetaToEnvVar(v *EventBusRecordMeta) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_EVENT_BUS_RECORD_META_KEY"] = base64.StdEncoding.EncodeToString(v.Key)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_EVENT_BUS_RECORD_META_TOPIC"] = v.Topic
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_EVENT_BUS_RECORD_META_PARTITION"] = strconv.FormatInt(int64(v.Partition), 10)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_EVENT_BUS_RECORD_META_OFFSET"] = strconv.FormatInt(v.Offset, 10)
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_EVENT_BUS_RECORD_META_TRACE_ID"] = v.TraceId
+	result["PROTO_VSERVICES_CLAUDE-SENSOR_EVENT_BUS_RECORD_META_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// EventBusRecordMetaFromEnvVar creates EventBusRecordMeta from environment variable key-value pairs.
+func EventBusRecordMetaFromEnvVar(env map[string]string) (*EventBusRecordMeta, error) {
+	result := &EventBusRecordMeta{}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_EVENT_BUS_RECORD_META_KEY"]; ok && val != "" {
+		parsed, err := base64.StdEncoding.DecodeString(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Key = parsed
+	}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_EVENT_BUS_RECORD_META_TOPIC"]; ok && val != "" {
+		result.Topic = val
+	}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_EVENT_BUS_RECORD_META_PARTITION"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.Partition = int32(parsed)
+	}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_EVENT_BUS_RECORD_META_OFFSET"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.Offset = parsed
+	}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_EVENT_BUS_RECORD_META_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_VSERVICES_CLAUDE-SENSOR_EVENT_BUS_RECORD_META_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -15861,14 +16585,14 @@ func ValidateFileEventWithDepth(m *FileEvent, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate FilePath (assert_required)
-	if m.FilePath == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field FilePath is required")
-	}
-
 	// Validate FilePath (assert_max_length: 4096)
 	if len(m.FilePath) > 4096 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field FilePath must be at most 4096 characters, got: %d", len(m.FilePath))
+	}
+
+	// Validate FilePath (assert_required)
+	if m.FilePath == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field FilePath is required")
 	}
 
 	// Validate Operation (assert_enum_defined)
@@ -16029,14 +16753,14 @@ func ValidateSensorEventWithDepth(m *SensorEvent, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field WorkingDirectory must be at most 4096 characters, got: %d", len(m.WorkingDirectory))
 	}
 
-	// Validate AgentId (assert_required)
-	if m.AgentId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field AgentId is required")
-	}
-
 	// Validate AgentId (assert_max_length: 256)
 	if len(m.AgentId) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field AgentId must be at most 256 characters, got: %d", len(m.AgentId))
+	}
+
+	// Validate AgentId (assert_required)
+	if m.AgentId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field AgentId is required")
 	}
 
 	// Validate ParentAgentId (assert_max_length: 256)
@@ -16422,15 +17146,15 @@ func ValidateEventTimeRangeWithDepth(m *EventTimeRange, depth int) error {
 	return nil
 }
 
-// ValidateNewMapRequest validates all fields in NewMapRequest according to their annotations.
+// ValidateCreateMapRequest validates all fields in CreateMapRequest according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateNewMapRequest(m *NewMapRequest) error {
-	return ValidateNewMapRequestWithDepth(m, 0)
+func ValidateCreateMapRequest(m *CreateMapRequest) error {
+	return ValidateCreateMapRequestWithDepth(m, 0)
 }
 
-// ValidateNewMapRequestWithDepth validates NewMapRequest and carries nested-message depth across
+// ValidateCreateMapRequestWithDepth validates CreateMapRequest and carries nested-message depth across
 // generated package boundaries.
-func ValidateNewMapRequestWithDepth(m *NewMapRequest, depth int) error {
+func ValidateCreateMapRequestWithDepth(m *CreateMapRequest, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -16438,14 +17162,14 @@ func ValidateNewMapRequestWithDepth(m *NewMapRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate MapId (assert_max_length: 128)
-	if len(m.MapId) > 128 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field MapId must be at most 128 characters, got: %d", len(m.MapId))
-	}
-
 	// Validate MapId (assert_required)
 	if m.MapId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field MapId is required")
+	}
+
+	// Validate MapId (assert_max_length: 128)
+	if len(m.MapId) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field MapId must be at most 128 characters, got: %d", len(m.MapId))
 	}
 
 	// Validate MapId (default max size: 32768 bytes)
@@ -16461,15 +17185,15 @@ func ValidateNewMapRequestWithDepth(m *NewMapRequest, depth int) error {
 	return nil
 }
 
-// ValidateNewMapResponse validates all fields in NewMapResponse according to their annotations.
+// ValidateCreateMapResponse validates all fields in CreateMapResponse according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateNewMapResponse(m *NewMapResponse) error {
-	return ValidateNewMapResponseWithDepth(m, 0)
+func ValidateCreateMapResponse(m *CreateMapResponse) error {
+	return ValidateCreateMapResponseWithDepth(m, 0)
 }
 
-// ValidateNewMapResponseWithDepth validates NewMapResponse and carries nested-message depth across
+// ValidateCreateMapResponseWithDepth validates CreateMapResponse and carries nested-message depth across
 // generated package boundaries.
-func ValidateNewMapResponseWithDepth(m *NewMapResponse, depth int) error {
+func ValidateCreateMapResponseWithDepth(m *CreateMapResponse, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -16603,15 +17327,15 @@ func ValidateListMapsResponseWithDepth(m *ListMapsResponse, depth int) error {
 	return nil
 }
 
-// ValidateDescribeMapRequest validates all fields in DescribeMapRequest according to their annotations.
+// ValidateGetMapDetailRequest validates all fields in GetMapDetailRequest according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateDescribeMapRequest(m *DescribeMapRequest) error {
-	return ValidateDescribeMapRequestWithDepth(m, 0)
+func ValidateGetMapDetailRequest(m *GetMapDetailRequest) error {
+	return ValidateGetMapDetailRequestWithDepth(m, 0)
 }
 
-// ValidateDescribeMapRequestWithDepth validates DescribeMapRequest and carries nested-message depth across
+// ValidateGetMapDetailRequestWithDepth validates GetMapDetailRequest and carries nested-message depth across
 // generated package boundaries.
-func ValidateDescribeMapRequestWithDepth(m *DescribeMapRequest, depth int) error {
+func ValidateGetMapDetailRequestWithDepth(m *GetMapDetailRequest, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -16637,15 +17361,15 @@ func ValidateDescribeMapRequestWithDepth(m *DescribeMapRequest, depth int) error
 	return nil
 }
 
-// ValidateDescribeMapResponse validates all fields in DescribeMapResponse according to their annotations.
+// ValidateGetMapDetailResponse validates all fields in GetMapDetailResponse according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateDescribeMapResponse(m *DescribeMapResponse) error {
-	return ValidateDescribeMapResponseWithDepth(m, 0)
+func ValidateGetMapDetailResponse(m *GetMapDetailResponse) error {
+	return ValidateGetMapDetailResponseWithDepth(m, 0)
 }
 
-// ValidateDescribeMapResponseWithDepth validates DescribeMapResponse and carries nested-message depth across
+// ValidateGetMapDetailResponseWithDepth validates GetMapDetailResponse and carries nested-message depth across
 // generated package boundaries.
-func ValidateDescribeMapResponseWithDepth(m *DescribeMapResponse, depth int) error {
+func ValidateGetMapDetailResponseWithDepth(m *GetMapDetailResponse, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -16726,15 +17450,15 @@ func ValidateMapSizeResponseWithDepth(m *MapSizeResponse, depth int) error {
 	return nil
 }
 
-// ValidateLoadByIdsRequest validates all fields in LoadByIdsRequest according to their annotations.
+// ValidateUpdateMapByIdsRequest validates all fields in UpdateMapByIdsRequest according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateLoadByIdsRequest(m *LoadByIdsRequest) error {
-	return ValidateLoadByIdsRequestWithDepth(m, 0)
+func ValidateUpdateMapByIdsRequest(m *UpdateMapByIdsRequest) error {
+	return ValidateUpdateMapByIdsRequestWithDepth(m, 0)
 }
 
-// ValidateLoadByIdsRequestWithDepth validates LoadByIdsRequest and carries nested-message depth across
+// ValidateUpdateMapByIdsRequestWithDepth validates UpdateMapByIdsRequest and carries nested-message depth across
 // generated package boundaries.
-func ValidateLoadByIdsRequestWithDepth(m *LoadByIdsRequest, depth int) error {
+func ValidateUpdateMapByIdsRequestWithDepth(m *UpdateMapByIdsRequest, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -16777,15 +17501,15 @@ func ValidateLoadByIdsRequestWithDepth(m *LoadByIdsRequest, depth int) error {
 	return nil
 }
 
-// ValidateLoadByIdsResponse validates all fields in LoadByIdsResponse according to their annotations.
+// ValidateUpdateMapByIdsResponse validates all fields in UpdateMapByIdsResponse according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateLoadByIdsResponse(m *LoadByIdsResponse) error {
-	return ValidateLoadByIdsResponseWithDepth(m, 0)
+func ValidateUpdateMapByIdsResponse(m *UpdateMapByIdsResponse) error {
+	return ValidateUpdateMapByIdsResponseWithDepth(m, 0)
 }
 
-// ValidateLoadByIdsResponseWithDepth validates LoadByIdsResponse and carries nested-message depth across
+// ValidateUpdateMapByIdsResponseWithDepth validates UpdateMapByIdsResponse and carries nested-message depth across
 // generated package boundaries.
-func ValidateLoadByIdsResponseWithDepth(m *LoadByIdsResponse, depth int) error {
+func ValidateUpdateMapByIdsResponseWithDepth(m *UpdateMapByIdsResponse, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -16801,83 +17525,15 @@ func ValidateLoadByIdsResponseWithDepth(m *LoadByIdsResponse, depth int) error {
 	return nil
 }
 
-// ValidateLoadBySqlRequest validates all fields in LoadBySqlRequest according to their annotations.
+// ValidateUpdateMapBySqlRequest validates all fields in UpdateMapBySqlRequest according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateLoadBySqlRequest(m *LoadBySqlRequest) error {
-	return ValidateLoadBySqlRequestWithDepth(m, 0)
+func ValidateUpdateMapBySqlRequest(m *UpdateMapBySqlRequest) error {
+	return ValidateUpdateMapBySqlRequestWithDepth(m, 0)
 }
 
-// ValidateLoadBySqlRequestWithDepth validates LoadBySqlRequest and carries nested-message depth across
+// ValidateUpdateMapBySqlRequestWithDepth validates UpdateMapBySqlRequest and carries nested-message depth across
 // generated package boundaries.
-func ValidateLoadBySqlRequestWithDepth(m *LoadBySqlRequest, depth int) error {
-	if m == nil {
-		return nil
-	}
-	if depth > 24 {
-		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
-	}
-
-	// Validate MapId (assert_required)
-	if m.MapId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field MapId is required")
-	}
-
-	// Validate Sql (assert_required)
-	if m.Sql == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Sql is required")
-	}
-
-	// Validate MapId (default max size: 32768 bytes)
-	if len(m.MapId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field MapId exceeds max size of 32768 bytes, got: %d", len(m.MapId))
-	}
-
-	// Validate Sql (default max size: 32768 bytes)
-	if len(m.Sql) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Sql exceeds max size of 32768 bytes, got: %d", len(m.Sql))
-	}
-
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
-	return nil
-}
-
-// ValidateLoadBySqlResponse validates all fields in LoadBySqlResponse according to their annotations.
-// Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateLoadBySqlResponse(m *LoadBySqlResponse) error {
-	return ValidateLoadBySqlResponseWithDepth(m, 0)
-}
-
-// ValidateLoadBySqlResponseWithDepth validates LoadBySqlResponse and carries nested-message depth across
-// generated package boundaries.
-func ValidateLoadBySqlResponseWithDepth(m *LoadBySqlResponse, depth int) error {
-	if m == nil {
-		return nil
-	}
-	if depth > 24 {
-		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
-	}
-
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
-	return nil
-}
-
-// ValidateLoadByTimedbRequest validates all fields in LoadByTimedbRequest according to their annotations.
-// Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateLoadByTimedbRequest(m *LoadByTimedbRequest) error {
-	return ValidateLoadByTimedbRequestWithDepth(m, 0)
-}
-
-// ValidateLoadByTimedbRequestWithDepth validates LoadByTimedbRequest and carries nested-message depth across
-// generated package boundaries.
-func ValidateLoadByTimedbRequestWithDepth(m *LoadByTimedbRequest, depth int) error {
+func ValidateUpdateMapBySqlRequestWithDepth(m *UpdateMapBySqlRequest, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -16913,15 +17569,15 @@ func ValidateLoadByTimedbRequestWithDepth(m *LoadByTimedbRequest, depth int) err
 	return nil
 }
 
-// ValidateLoadByTimedbResponse validates all fields in LoadByTimedbResponse according to their annotations.
+// ValidateUpdateMapBySqlResponse validates all fields in UpdateMapBySqlResponse according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateLoadByTimedbResponse(m *LoadByTimedbResponse) error {
-	return ValidateLoadByTimedbResponseWithDepth(m, 0)
+func ValidateUpdateMapBySqlResponse(m *UpdateMapBySqlResponse) error {
+	return ValidateUpdateMapBySqlResponseWithDepth(m, 0)
 }
 
-// ValidateLoadByTimedbResponseWithDepth validates LoadByTimedbResponse and carries nested-message depth across
+// ValidateUpdateMapBySqlResponseWithDepth validates UpdateMapBySqlResponse and carries nested-message depth across
 // generated package boundaries.
-func ValidateLoadByTimedbResponseWithDepth(m *LoadByTimedbResponse, depth int) error {
+func ValidateUpdateMapBySqlResponseWithDepth(m *UpdateMapBySqlResponse, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -16937,15 +17593,83 @@ func ValidateLoadByTimedbResponseWithDepth(m *LoadByTimedbResponse, depth int) e
 	return nil
 }
 
-// ValidateLoadByGraphdbRequest validates all fields in LoadByGraphdbRequest according to their annotations.
+// ValidateUpdateMapByTimedbRequest validates all fields in UpdateMapByTimedbRequest according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateLoadByGraphdbRequest(m *LoadByGraphdbRequest) error {
-	return ValidateLoadByGraphdbRequestWithDepth(m, 0)
+func ValidateUpdateMapByTimedbRequest(m *UpdateMapByTimedbRequest) error {
+	return ValidateUpdateMapByTimedbRequestWithDepth(m, 0)
 }
 
-// ValidateLoadByGraphdbRequestWithDepth validates LoadByGraphdbRequest and carries nested-message depth across
+// ValidateUpdateMapByTimedbRequestWithDepth validates UpdateMapByTimedbRequest and carries nested-message depth across
 // generated package boundaries.
-func ValidateLoadByGraphdbRequestWithDepth(m *LoadByGraphdbRequest, depth int) error {
+func ValidateUpdateMapByTimedbRequestWithDepth(m *UpdateMapByTimedbRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate MapId (assert_required)
+	if m.MapId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field MapId is required")
+	}
+
+	// Validate Sql (assert_required)
+	if m.Sql == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Sql is required")
+	}
+
+	// Validate MapId (default max size: 32768 bytes)
+	if len(m.MapId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field MapId exceeds max size of 32768 bytes, got: %d", len(m.MapId))
+	}
+
+	// Validate Sql (default max size: 32768 bytes)
+	if len(m.Sql) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Sql exceeds max size of 32768 bytes, got: %d", len(m.Sql))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateUpdateMapByTimedbResponse validates all fields in UpdateMapByTimedbResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateUpdateMapByTimedbResponse(m *UpdateMapByTimedbResponse) error {
+	return ValidateUpdateMapByTimedbResponseWithDepth(m, 0)
+}
+
+// ValidateUpdateMapByTimedbResponseWithDepth validates UpdateMapByTimedbResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateUpdateMapByTimedbResponseWithDepth(m *UpdateMapByTimedbResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateUpdateMapByGraphdbRequest validates all fields in UpdateMapByGraphdbRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateUpdateMapByGraphdbRequest(m *UpdateMapByGraphdbRequest) error {
+	return ValidateUpdateMapByGraphdbRequestWithDepth(m, 0)
+}
+
+// ValidateUpdateMapByGraphdbRequestWithDepth validates UpdateMapByGraphdbRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateUpdateMapByGraphdbRequestWithDepth(m *UpdateMapByGraphdbRequest, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -16981,15 +17705,15 @@ func ValidateLoadByGraphdbRequestWithDepth(m *LoadByGraphdbRequest, depth int) e
 	return nil
 }
 
-// ValidateLoadByGraphdbResponse validates all fields in LoadByGraphdbResponse according to their annotations.
+// ValidateUpdateMapByGraphdbResponse validates all fields in UpdateMapByGraphdbResponse according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateLoadByGraphdbResponse(m *LoadByGraphdbResponse) error {
-	return ValidateLoadByGraphdbResponseWithDepth(m, 0)
+func ValidateUpdateMapByGraphdbResponse(m *UpdateMapByGraphdbResponse) error {
+	return ValidateUpdateMapByGraphdbResponseWithDepth(m, 0)
 }
 
-// ValidateLoadByGraphdbResponseWithDepth validates LoadByGraphdbResponse and carries nested-message depth across
+// ValidateUpdateMapByGraphdbResponseWithDepth validates UpdateMapByGraphdbResponse and carries nested-message depth across
 // generated package boundaries.
-func ValidateLoadByGraphdbResponseWithDepth(m *LoadByGraphdbResponse, depth int) error {
+func ValidateUpdateMapByGraphdbResponseWithDepth(m *UpdateMapByGraphdbResponse, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -17005,15 +17729,15 @@ func ValidateLoadByGraphdbResponseWithDepth(m *LoadByGraphdbResponse, depth int)
 	return nil
 }
 
-// ValidateFilterMapRequest validates all fields in FilterMapRequest according to their annotations.
+// ValidateUpdateMapFilterRequest validates all fields in UpdateMapFilterRequest according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateFilterMapRequest(m *FilterMapRequest) error {
-	return ValidateFilterMapRequestWithDepth(m, 0)
+func ValidateUpdateMapFilterRequest(m *UpdateMapFilterRequest) error {
+	return ValidateUpdateMapFilterRequestWithDepth(m, 0)
 }
 
-// ValidateFilterMapRequestWithDepth validates FilterMapRequest and carries nested-message depth across
+// ValidateUpdateMapFilterRequestWithDepth validates UpdateMapFilterRequest and carries nested-message depth across
 // generated package boundaries.
-func ValidateFilterMapRequestWithDepth(m *FilterMapRequest, depth int) error {
+func ValidateUpdateMapFilterRequestWithDepth(m *UpdateMapFilterRequest, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -17049,15 +17773,15 @@ func ValidateFilterMapRequestWithDepth(m *FilterMapRequest, depth int) error {
 	return nil
 }
 
-// ValidateFilterMapResponse validates all fields in FilterMapResponse according to their annotations.
+// ValidateUpdateMapFilterResponse validates all fields in UpdateMapFilterResponse according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateFilterMapResponse(m *FilterMapResponse) error {
-	return ValidateFilterMapResponseWithDepth(m, 0)
+func ValidateUpdateMapFilterResponse(m *UpdateMapFilterResponse) error {
+	return ValidateUpdateMapFilterResponseWithDepth(m, 0)
 }
 
-// ValidateFilterMapResponseWithDepth validates FilterMapResponse and carries nested-message depth across
+// ValidateUpdateMapFilterResponseWithDepth validates UpdateMapFilterResponse and carries nested-message depth across
 // generated package boundaries.
-func ValidateFilterMapResponseWithDepth(m *FilterMapResponse, depth int) error {
+func ValidateUpdateMapFilterResponseWithDepth(m *UpdateMapFilterResponse, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -17141,15 +17865,15 @@ func ValidateMergeResponseWithDepth(m *MergeResponse, depth int) error {
 	return nil
 }
 
-// ValidateQueryMapRequest validates all fields in QueryMapRequest according to their annotations.
+// ValidateExecuteMapQueryRequest validates all fields in ExecuteMapQueryRequest according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateQueryMapRequest(m *QueryMapRequest) error {
-	return ValidateQueryMapRequestWithDepth(m, 0)
+func ValidateExecuteMapQueryRequest(m *ExecuteMapQueryRequest) error {
+	return ValidateExecuteMapQueryRequestWithDepth(m, 0)
 }
 
-// ValidateQueryMapRequestWithDepth validates QueryMapRequest and carries nested-message depth across
+// ValidateExecuteMapQueryRequestWithDepth validates ExecuteMapQueryRequest and carries nested-message depth across
 // generated package boundaries.
-func ValidateQueryMapRequestWithDepth(m *QueryMapRequest, depth int) error {
+func ValidateExecuteMapQueryRequestWithDepth(m *ExecuteMapQueryRequest, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -17189,15 +17913,15 @@ func ValidateQueryMapRequestWithDepth(m *QueryMapRequest, depth int) error {
 	return nil
 }
 
-// ValidateQueryMapResponse validates all fields in QueryMapResponse according to their annotations.
+// ValidateExecuteMapQueryResponse validates all fields in ExecuteMapQueryResponse according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateQueryMapResponse(m *QueryMapResponse) error {
-	return ValidateQueryMapResponseWithDepth(m, 0)
+func ValidateExecuteMapQueryResponse(m *ExecuteMapQueryResponse) error {
+	return ValidateExecuteMapQueryResponseWithDepth(m, 0)
 }
 
-// ValidateQueryMapResponseWithDepth validates QueryMapResponse and carries nested-message depth across
+// ValidateExecuteMapQueryResponseWithDepth validates ExecuteMapQueryResponse and carries nested-message depth across
 // generated package boundaries.
-func ValidateQueryMapResponseWithDepth(m *QueryMapResponse, depth int) error {
+func ValidateExecuteMapQueryResponseWithDepth(m *ExecuteMapQueryResponse, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -17234,13 +17958,13 @@ func ValidateListActiveSessionsRequestWithDepth(m *ListActiveSessionsRequest, de
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate PageSize (assert_ge: 1)
-	if m.PageSize < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 1, got: %v", m.PageSize)
-	}
 	// Validate PageSize (assert_le: 500)
 	if m.PageSize > 500 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 500, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_ge: 1)
+	if m.PageSize < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 1, got: %v", m.PageSize)
 	}
 	// Validate PageToken (default max size: 32768 bytes)
 	if len(m.PageToken) > 32768 {
@@ -17486,15 +18210,15 @@ func ValidateGetUserSessionsResponseWithDepth(m *GetUserSessionsResponse, depth 
 	return nil
 }
 
-// ValidateQueryByTimeRangeRequest validates all fields in QueryByTimeRangeRequest according to their annotations.
+// ValidateListEventsByTimeRangeRequest validates all fields in ListEventsByTimeRangeRequest according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateQueryByTimeRangeRequest(m *QueryByTimeRangeRequest) error {
-	return ValidateQueryByTimeRangeRequestWithDepth(m, 0)
+func ValidateListEventsByTimeRangeRequest(m *ListEventsByTimeRangeRequest) error {
+	return ValidateListEventsByTimeRangeRequestWithDepth(m, 0)
 }
 
-// ValidateQueryByTimeRangeRequestWithDepth validates QueryByTimeRangeRequest and carries nested-message depth across
+// ValidateListEventsByTimeRangeRequestWithDepth validates ListEventsByTimeRangeRequest and carries nested-message depth across
 // generated package boundaries.
-func ValidateQueryByTimeRangeRequestWithDepth(m *QueryByTimeRangeRequest, depth int) error {
+func ValidateListEventsByTimeRangeRequestWithDepth(m *ListEventsByTimeRangeRequest, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -17535,15 +18259,15 @@ func ValidateQueryByTimeRangeRequestWithDepth(m *QueryByTimeRangeRequest, depth 
 	return nil
 }
 
-// ValidateQueryByTimeRangeResponse validates all fields in QueryByTimeRangeResponse according to their annotations.
+// ValidateListEventsByTimeRangeResponse validates all fields in ListEventsByTimeRangeResponse according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateQueryByTimeRangeResponse(m *QueryByTimeRangeResponse) error {
-	return ValidateQueryByTimeRangeResponseWithDepth(m, 0)
+func ValidateListEventsByTimeRangeResponse(m *ListEventsByTimeRangeResponse) error {
+	return ValidateListEventsByTimeRangeResponseWithDepth(m, 0)
 }
 
-// ValidateQueryByTimeRangeResponseWithDepth validates QueryByTimeRangeResponse and carries nested-message depth across
+// ValidateListEventsByTimeRangeResponseWithDepth validates ListEventsByTimeRangeResponse and carries nested-message depth across
 // generated package boundaries.
-func ValidateQueryByTimeRangeResponseWithDepth(m *QueryByTimeRangeResponse, depth int) error {
+func ValidateListEventsByTimeRangeResponseWithDepth(m *ListEventsByTimeRangeResponse, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -17576,15 +18300,15 @@ func ValidateQueryByTimeRangeResponseWithDepth(m *QueryByTimeRangeResponse, dept
 	return nil
 }
 
-// ValidateQueryByEmailRequest validates all fields in QueryByEmailRequest according to their annotations.
+// ValidateListEventsByEmailRequest validates all fields in ListEventsByEmailRequest according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateQueryByEmailRequest(m *QueryByEmailRequest) error {
-	return ValidateQueryByEmailRequestWithDepth(m, 0)
+func ValidateListEventsByEmailRequest(m *ListEventsByEmailRequest) error {
+	return ValidateListEventsByEmailRequestWithDepth(m, 0)
 }
 
-// ValidateQueryByEmailRequestWithDepth validates QueryByEmailRequest and carries nested-message depth across
+// ValidateListEventsByEmailRequestWithDepth validates ListEventsByEmailRequest and carries nested-message depth across
 // generated package boundaries.
-func ValidateQueryByEmailRequestWithDepth(m *QueryByEmailRequest, depth int) error {
+func ValidateListEventsByEmailRequestWithDepth(m *ListEventsByEmailRequest, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -17630,15 +18354,15 @@ func ValidateQueryByEmailRequestWithDepth(m *QueryByEmailRequest, depth int) err
 	return nil
 }
 
-// ValidateQueryByEmailResponse validates all fields in QueryByEmailResponse according to their annotations.
+// ValidateListEventsByEmailResponse validates all fields in ListEventsByEmailResponse according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateQueryByEmailResponse(m *QueryByEmailResponse) error {
-	return ValidateQueryByEmailResponseWithDepth(m, 0)
+func ValidateListEventsByEmailResponse(m *ListEventsByEmailResponse) error {
+	return ValidateListEventsByEmailResponseWithDepth(m, 0)
 }
 
-// ValidateQueryByEmailResponseWithDepth validates QueryByEmailResponse and carries nested-message depth across
+// ValidateListEventsByEmailResponseWithDepth validates ListEventsByEmailResponse and carries nested-message depth across
 // generated package boundaries.
-func ValidateQueryByEmailResponseWithDepth(m *QueryByEmailResponse, depth int) error {
+func ValidateListEventsByEmailResponseWithDepth(m *ListEventsByEmailResponse, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -17899,6 +18623,82 @@ func ValidateDqlQueryResponseWithDepth(m *DqlQueryResponse, depth int) error {
 	return nil
 }
 
+// ValidateAgenticCodeEventBusEventStreamSubscribeRecord validates all fields in AgenticCodeEventBusEventStreamSubscribeRecord according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateAgenticCodeEventBusEventStreamSubscribeRecord(m *AgenticCodeEventBusEventStreamSubscribeRecord) error {
+	return ValidateAgenticCodeEventBusEventStreamSubscribeRecordWithDepth(m, 0)
+}
+
+// ValidateAgenticCodeEventBusEventStreamSubscribeRecordWithDepth validates AgenticCodeEventBusEventStreamSubscribeRecord and carries nested-message depth across
+// generated package boundaries.
+func ValidateAgenticCodeEventBusEventStreamSubscribeRecordWithDepth(m *AgenticCodeEventBusEventStreamSubscribeRecord, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Meta nested message
+	if m.Meta != nil {
+		if err := ValidateEventBusRecordMetaWithDepth(m.Meta, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Meta validation failed")
+		}
+	}
+
+	// Validate Payload nested message
+	if m.Payload != nil {
+		if err := ValidateSensorEventWithDepth(m.Payload, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Payload validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidateTraceEventBusTraceEventsSubscribeRecord validates all fields in TraceEventBusTraceEventsSubscribeRecord according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateTraceEventBusTraceEventsSubscribeRecord(m *TraceEventBusTraceEventsSubscribeRecord) error {
+	return ValidateTraceEventBusTraceEventsSubscribeRecordWithDepth(m, 0)
+}
+
+// ValidateTraceEventBusTraceEventsSubscribeRecordWithDepth validates TraceEventBusTraceEventsSubscribeRecord and carries nested-message depth across
+// generated package boundaries.
+func ValidateTraceEventBusTraceEventsSubscribeRecordWithDepth(m *TraceEventBusTraceEventsSubscribeRecord, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Meta nested message
+	if m.Meta != nil {
+		if err := ValidateEventBusRecordMetaWithDepth(m.Meta, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Meta validation failed")
+		}
+	}
+
+	// Validate Payload nested message
+	if m.Payload != nil {
+		if err := trace.ValidateTraceEventWithDepth(m.Payload, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Payload validation failed")
+		}
+	}
+
+	return nil
+}
+
 // ValidateMapEmpty validates all fields in MapEmpty according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateMapEmpty(m *MapEmpty) error {
@@ -17937,6 +18737,40 @@ func ValidateTopicPublishReceiptWithDepth(m *TopicPublishReceipt, depth int) err
 	}
 	if depth > 24 {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateEventBusRecordMeta validates all fields in EventBusRecordMeta according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateEventBusRecordMeta(m *EventBusRecordMeta) error {
+	return ValidateEventBusRecordMetaWithDepth(m, 0)
+}
+
+// ValidateEventBusRecordMetaWithDepth validates EventBusRecordMeta and carries nested-message depth across
+// generated package boundaries.
+func ValidateEventBusRecordMetaWithDepth(m *EventBusRecordMeta, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Key (default max size: 32768 bytes)
+	if len(m.Key) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key exceeds max size of 32768 bytes, got: %d", len(m.Key))
+	}
+
+	// Validate Topic (default max size: 32768 bytes)
+	if len(m.Topic) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Topic exceeds max size of 32768 bytes, got: %d", len(m.Topic))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -18418,201 +19252,206 @@ func ValidateStopRecordWithDepth(m *StopRecord, depth int) error {
 // Constants
 // ============================================================
 const (
-	DefaultLimit                             int64 = 100
-	DefaultListactivesessionsrequestPageSize int64 = 50
-	DefaultGetsessioneventsrequestPageSize   int64 = 100
-	DefaultGetusersessionsrequestPageSize    int64 = 50
-	DefaultQuerybytimerangerequestPageSize   int64 = 100
-	DefaultQuerybyemailrequestPageSize       int64 = 100
+	DefaultLimit                                int64 = 100
+	DefaultListactivesessionsrequestPageSize    int64 = 50
+	DefaultGetsessioneventsrequestPageSize      int64 = 100
+	DefaultGetusersessionsrequestPageSize       int64 = 50
+	DefaultListeventsbytimerangerequestPageSize int64 = 100
+	DefaultListeventsbyemailrequestPageSize     int64 = 100
 )
 
 // ============================================================
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizeSessioneventSource                      int = 32768
-	MaxSizeSessioneventModel                       int = 32768
-	MaxSizeSessioneventPermissionMode              int = 32768
-	MaxSizeSessioneventTraceId                     int = 32768
-	MaxSizeTooluseeventToolName                    int = 32768
-	MaxSizeTooluseeventToolInput                   int = 65536
-	MaxSizeTooluseeventToolOutput                  int = 65536
-	MaxSizeTooluseeventErrorMessage                int = 32768
-	MaxSizeTooluseeventFileEvents                  int = 256
-	MaxSizeTooluseeventToolUseId                   int = 32768
-	MaxSizeTooluseeventTraceId                     int = 32768
-	MaxSizeSubagenteventSubagentType               int = 32768
-	MaxSizeSubagenteventDescription                int = 32768
-	MaxSizeSubagenteventModel                      int = 32768
-	MaxSizeSubagenteventTraceId                    int = 32768
-	MaxSizeFileeventFilePath                       int = 32768
-	MaxSizeFileeventLanguage                       int = 32768
-	MaxSizeFileeventTraceId                        int = 32768
-	MaxSizePrompteventTraceId                      int = 32768
-	MaxSizeStopeventReason                         int = 32768
-	MaxSizeStopeventTraceId                        int = 32768
-	MaxSizeSensoreventEmail                        int = 32768
-	MaxSizeSensoreventEventId                      int = 32768
-	MaxSizeSensoreventSessionId                    int = 32768
-	MaxSizeSensoreventWorkingDirectory             int = 32768
-	MaxSizeSensoreventAgentId                      int = 32768
-	MaxSizeSensoreventParentAgentId                int = 32768
-	MaxSizeSensoreventSensorNodeId                 int = 32768
-	MaxSizeSensoreventUsername                     int = 32768
-	MaxSizeSensoreventTranscriptPath               int = 32768
-	MaxSizeSensoreventTraceId                      int = 32768
-	MaxSizeAgenticcodeeventbusTraceId              int = 32768
-	MaxSizeTraceeventbusTraceId                    int = 32768
-	MaxSizeMapentryMapId                           int = 32768
-	MaxSizeMapentryTraceId                         int = 32768
-	MaxSizeMapdetailEventTypeBreakdown             int = 1024
-	MaxSizeMapdetailTopEmails                      int = 100
-	MaxSizeMapdetailTopSessions                    int = 100
-	MaxSizeMapdetailTopAgents                      int = 100
-	MaxSizeMapdetailTraceId                        int = 32768
-	MaxSizeSessionsummarySessionId                 int = 32768
-	MaxSizeSessionsummaryEmail                     int = 32768
-	MaxSizeSessionsummaryWorkingDirectory          int = 32768
-	MaxSizeSessionsummaryTraceId                   int = 32768
-	MaxSizeEventtimerangeTraceId                   int = 32768
-	MaxSizeNewmaprequestMapId                      int = 32768
-	MaxSizeNewmaprequestTraceId                    int = 32768
-	MaxSizeNewmapresponseTraceId                   int = 32768
-	MaxSizeDeletemaprequestMapId                   int = 32768
-	MaxSizeDeletemaprequestTraceId                 int = 32768
-	MaxSizeDeletemapresponseTraceId                int = 32768
-	MaxSizeListmapsrequestTraceId                  int = 32768
-	MaxSizeListmapsresponseMaps                    int = 10000
-	MaxSizeListmapsresponseTraceId                 int = 32768
-	MaxSizeDescribemaprequestMapId                 int = 32768
-	MaxSizeDescribemaprequestTraceId               int = 32768
-	MaxSizeDescribemapresponseTraceId              int = 32768
-	MaxSizeMapsizerequestMapId                     int = 32768
-	MaxSizeMapsizerequestTraceId                   int = 32768
-	MaxSizeMapsizeresponseTraceId                  int = 32768
-	MaxSizeLoadbyidsrequestMapId                   int = 32768
-	MaxSizeLoadbyidsrequestEventIds                int = 10000
-	MaxSizeLoadbyidsrequestTraceId                 int = 32768
-	MaxSizeLoadbyidsresponseTraceId                int = 32768
-	MaxSizeLoadbysqlrequestMapId                   int = 32768
-	MaxSizeLoadbysqlrequestSql                     int = 32768
-	MaxSizeLoadbysqlrequestTraceId                 int = 32768
-	MaxSizeLoadbysqlresponseTraceId                int = 32768
-	MaxSizeLoadbytimedbrequestMapId                int = 32768
-	MaxSizeLoadbytimedbrequestSql                  int = 32768
-	MaxSizeLoadbytimedbrequestTraceId              int = 32768
-	MaxSizeLoadbytimedbresponseTraceId             int = 32768
-	MaxSizeLoadbygraphdbrequestMapId               int = 32768
-	MaxSizeLoadbygraphdbrequestDql                 int = 32768
-	MaxSizeLoadbygraphdbrequestTraceId             int = 32768
-	MaxSizeLoadbygraphdbresponseTraceId            int = 32768
-	MaxSizeFiltermaprequestMapId                   int = 32768
-	MaxSizeFiltermaprequestSql                     int = 32768
-	MaxSizeFiltermaprequestTraceId                 int = 32768
-	MaxSizeFiltermapresponseTraceId                int = 32768
-	MaxSizeMergerequestSrcMapId                    int = 32768
-	MaxSizeMergerequestDestMapId                   int = 32768
-	MaxSizeMergerequestTraceId                     int = 32768
-	MaxSizeMergeresponseTraceId                    int = 32768
-	MaxSizeQuerymaprequestMapId                    int = 32768
-	MaxSizeQuerymaprequestSql                      int = 32768
-	MaxSizeQuerymaprequestTraceId                  int = 32768
-	MaxSizeQuerymapresponseResultsJson             int = 32768
-	MaxSizeQuerymapresponseTraceId                 int = 32768
-	MaxSizeListactivesessionsrequestPageToken      int = 32768
-	MaxSizeListactivesessionsrequestTraceId        int = 32768
-	MaxSizeListactivesessionsresponseSessions      int = 10000
-	MaxSizeListactivesessionsresponseNextPageToken int = 32768
-	MaxSizeListactivesessionsresponseTraceId       int = 32768
-	MaxSizeGetsessioneventsrequestSessionId        int = 32768
-	MaxSizeGetsessioneventsrequestPageToken        int = 32768
-	MaxSizeGetsessioneventsrequestTraceId          int = 32768
-	MaxSizeGetsessioneventsresponseEvents          int = 10000
-	MaxSizeGetsessioneventsresponseNextPageToken   int = 32768
-	MaxSizeGetsessioneventsresponseTraceId         int = 32768
-	MaxSizeGetusersessionsrequestEmail             int = 32768
-	MaxSizeGetusersessionsrequestPageToken         int = 32768
-	MaxSizeGetusersessionsrequestTraceId           int = 32768
-	MaxSizeGetusersessionsresponseSessions         int = 10000
-	MaxSizeGetusersessionsresponseNextPageToken    int = 32768
-	MaxSizeGetusersessionsresponseTraceId          int = 32768
-	MaxSizeQuerybytimerangerequestPageToken        int = 32768
-	MaxSizeQuerybytimerangerequestTraceId          int = 32768
-	MaxSizeQuerybytimerangeresponseEvents          int = 10000
-	MaxSizeQuerybytimerangeresponseNextPageToken   int = 32768
-	MaxSizeQuerybytimerangeresponseTraceId         int = 32768
-	MaxSizeQuerybyemailrequestEmail                int = 32768
-	MaxSizeQuerybyemailrequestPageToken            int = 32768
-	MaxSizeQuerybyemailrequestTraceId              int = 32768
-	MaxSizeQuerybyemailresponseEvents              int = 10000
-	MaxSizeQuerybyemailresponseNextPageToken       int = 32768
-	MaxSizeQuerybyemailresponseTraceId             int = 32768
-	MaxSizeWatchlivesessionsrequestFilterEmail     int = 32768
-	MaxSizeWatchlivesessionsrequestTraceId         int = 32768
-	MaxSizeWatchlivesessionseventTraceId           int = 32768
-	MaxSizeTimedbqueryrequestSql                   int = 32768
-	MaxSizeTimedbqueryrequestTraceId               int = 32768
-	MaxSizeTimedbqueryresponseRowsJson             int = 32768
-	MaxSizeTimedbqueryresponseTraceId              int = 32768
-	MaxSizeDqlqueryrequestDql                      int = 32768
-	MaxSizeDqlqueryrequestVariablesJson            int = 32768
-	MaxSizeDqlqueryrequestTraceId                  int = 32768
-	MaxSizeDqlqueryresponseResultJson              int = 32768
-	MaxSizeDqlqueryresponseTraceId                 int = 32768
-	MaxSizeMapemptyTraceId                         int = 32768
-	MaxSizeTopicpublishreceiptTraceId              int = 32768
-	MaxSizeSessionnodeSessionId                    int = 32768
-	MaxSizeSessionnodeEmail                        int = 32768
-	MaxSizeSessionnodeWorkingDirectory             int = 32768
-	MaxSizeSessionnodeEventId                      int = 32768
-	MaxSizeSessionnodeTraceId                      int = 32768
-	MaxSizeAgentnodeAgentId                        int = 32768
-	MaxSizeAgentnodeSession                        int = 32768
-	MaxSizeAgentnodeParent                         int = 32768
-	MaxSizeAgentnodeEmail                          int = 32768
-	MaxSizeAgentnodeEventId                        int = 32768
-	MaxSizeAgentnodeTraceId                        int = 32768
-	MaxSizeToolusenodeToolUseId                    int = 32768
-	MaxSizeToolusenodeAgent                        int = 32768
-	MaxSizeToolusenodeSession                      int = 32768
-	MaxSizeToolusenodeEmail                        int = 32768
-	MaxSizeToolusenodeToolName                     int = 32768
-	MaxSizeToolusenodeEventId                      int = 32768
-	MaxSizeToolusenodeTraceId                      int = 32768
-	MaxSizeSessionrecordSessionId                  int = 32768
-	MaxSizeSessionrecordEventId                    int = 32768
-	MaxSizeSessionrecordAgentId                    int = 32768
-	MaxSizeSessionrecordEmail                      int = 32768
-	MaxSizeSessionrecordSource                     int = 32768
-	MaxSizeSessionrecordModel                      int = 32768
-	MaxSizeSessionrecordPermissionMode             int = 32768
-	MaxSizeSessionrecordTraceId                    int = 32768
-	MaxSizeTooluserecordSessionId                  int = 32768
-	MaxSizeTooluserecordEventId                    int = 32768
-	MaxSizeTooluserecordAgentId                    int = 32768
-	MaxSizeTooluserecordEmail                      int = 32768
-	MaxSizeTooluserecordToolName                   int = 32768
-	MaxSizeTooluserecordToolUseId                  int = 32768
-	MaxSizeTooluserecordTraceId                    int = 32768
-	MaxSizeSubagentrecordSessionId                 int = 32768
-	MaxSizeSubagentrecordEventId                   int = 32768
-	MaxSizeSubagentrecordAgentId                   int = 32768
-	MaxSizeSubagentrecordEmail                     int = 32768
-	MaxSizeSubagentrecordParentAgentId             int = 32768
-	MaxSizeSubagentrecordSubagentType              int = 32768
-	MaxSizeSubagentrecordModel                     int = 32768
-	MaxSizeSubagentrecordTraceId                   int = 32768
-	MaxSizePromptrecordSessionId                   int = 32768
-	MaxSizePromptrecordEventId                     int = 32768
-	MaxSizePromptrecordAgentId                     int = 32768
-	MaxSizePromptrecordEmail                       int = 32768
-	MaxSizePromptrecordTraceId                     int = 32768
-	MaxSizeStoprecordSessionId                     int = 32768
-	MaxSizeStoprecordEventId                       int = 32768
-	MaxSizeStoprecordAgentId                       int = 32768
-	MaxSizeStoprecordEmail                         int = 32768
-	MaxSizeStoprecordReason                        int = 32768
-	MaxSizeStoprecordTraceId                       int = 32768
+	MaxSizeSessioneventSource                                   int = 32768
+	MaxSizeSessioneventModel                                    int = 32768
+	MaxSizeSessioneventPermissionMode                           int = 32768
+	MaxSizeSessioneventTraceId                                  int = 32768
+	MaxSizeTooluseeventToolName                                 int = 32768
+	MaxSizeTooluseeventToolInput                                int = 65536
+	MaxSizeTooluseeventToolOutput                               int = 65536
+	MaxSizeTooluseeventErrorMessage                             int = 32768
+	MaxSizeTooluseeventFileEvents                               int = 256
+	MaxSizeTooluseeventToolUseId                                int = 32768
+	MaxSizeTooluseeventTraceId                                  int = 32768
+	MaxSizeSubagenteventSubagentType                            int = 32768
+	MaxSizeSubagenteventDescription                             int = 32768
+	MaxSizeSubagenteventModel                                   int = 32768
+	MaxSizeSubagenteventTraceId                                 int = 32768
+	MaxSizeFileeventFilePath                                    int = 32768
+	MaxSizeFileeventLanguage                                    int = 32768
+	MaxSizeFileeventTraceId                                     int = 32768
+	MaxSizePrompteventTraceId                                   int = 32768
+	MaxSizeStopeventReason                                      int = 32768
+	MaxSizeStopeventTraceId                                     int = 32768
+	MaxSizeSensoreventEmail                                     int = 32768
+	MaxSizeSensoreventEventId                                   int = 32768
+	MaxSizeSensoreventSessionId                                 int = 32768
+	MaxSizeSensoreventWorkingDirectory                          int = 32768
+	MaxSizeSensoreventAgentId                                   int = 32768
+	MaxSizeSensoreventParentAgentId                             int = 32768
+	MaxSizeSensoreventSensorNodeId                              int = 32768
+	MaxSizeSensoreventUsername                                  int = 32768
+	MaxSizeSensoreventTranscriptPath                            int = 32768
+	MaxSizeSensoreventTraceId                                   int = 32768
+	MaxSizeAgenticcodeeventbusTraceId                           int = 32768
+	MaxSizeTraceeventbusTraceId                                 int = 32768
+	MaxSizeMapentryMapId                                        int = 32768
+	MaxSizeMapentryTraceId                                      int = 32768
+	MaxSizeMapdetailEventTypeBreakdown                          int = 1024
+	MaxSizeMapdetailTopEmails                                   int = 100
+	MaxSizeMapdetailTopSessions                                 int = 100
+	MaxSizeMapdetailTopAgents                                   int = 100
+	MaxSizeMapdetailTraceId                                     int = 32768
+	MaxSizeSessionsummarySessionId                              int = 32768
+	MaxSizeSessionsummaryEmail                                  int = 32768
+	MaxSizeSessionsummaryWorkingDirectory                       int = 32768
+	MaxSizeSessionsummaryTraceId                                int = 32768
+	MaxSizeEventtimerangeTraceId                                int = 32768
+	MaxSizeCreatemaprequestMapId                                int = 32768
+	MaxSizeCreatemaprequestTraceId                              int = 32768
+	MaxSizeCreatemapresponseTraceId                             int = 32768
+	MaxSizeDeletemaprequestMapId                                int = 32768
+	MaxSizeDeletemaprequestTraceId                              int = 32768
+	MaxSizeDeletemapresponseTraceId                             int = 32768
+	MaxSizeListmapsrequestTraceId                               int = 32768
+	MaxSizeListmapsresponseMaps                                 int = 10000
+	MaxSizeListmapsresponseTraceId                              int = 32768
+	MaxSizeGetmapdetailrequestMapId                             int = 32768
+	MaxSizeGetmapdetailrequestTraceId                           int = 32768
+	MaxSizeGetmapdetailresponseTraceId                          int = 32768
+	MaxSizeMapsizerequestMapId                                  int = 32768
+	MaxSizeMapsizerequestTraceId                                int = 32768
+	MaxSizeMapsizeresponseTraceId                               int = 32768
+	MaxSizeUpdatemapbyidsrequestMapId                           int = 32768
+	MaxSizeUpdatemapbyidsrequestEventIds                        int = 10000
+	MaxSizeUpdatemapbyidsrequestTraceId                         int = 32768
+	MaxSizeUpdatemapbyidsresponseTraceId                        int = 32768
+	MaxSizeUpdatemapbysqlrequestMapId                           int = 32768
+	MaxSizeUpdatemapbysqlrequestSql                             int = 32768
+	MaxSizeUpdatemapbysqlrequestTraceId                         int = 32768
+	MaxSizeUpdatemapbysqlresponseTraceId                        int = 32768
+	MaxSizeUpdatemapbytimedbrequestMapId                        int = 32768
+	MaxSizeUpdatemapbytimedbrequestSql                          int = 32768
+	MaxSizeUpdatemapbytimedbrequestTraceId                      int = 32768
+	MaxSizeUpdatemapbytimedbresponseTraceId                     int = 32768
+	MaxSizeUpdatemapbygraphdbrequestMapId                       int = 32768
+	MaxSizeUpdatemapbygraphdbrequestDql                         int = 32768
+	MaxSizeUpdatemapbygraphdbrequestTraceId                     int = 32768
+	MaxSizeUpdatemapbygraphdbresponseTraceId                    int = 32768
+	MaxSizeUpdatemapfilterrequestMapId                          int = 32768
+	MaxSizeUpdatemapfilterrequestSql                            int = 32768
+	MaxSizeUpdatemapfilterrequestTraceId                        int = 32768
+	MaxSizeUpdatemapfilterresponseTraceId                       int = 32768
+	MaxSizeMergerequestSrcMapId                                 int = 32768
+	MaxSizeMergerequestDestMapId                                int = 32768
+	MaxSizeMergerequestTraceId                                  int = 32768
+	MaxSizeMergeresponseTraceId                                 int = 32768
+	MaxSizeExecutemapqueryrequestMapId                          int = 32768
+	MaxSizeExecutemapqueryrequestSql                            int = 32768
+	MaxSizeExecutemapqueryrequestTraceId                        int = 32768
+	MaxSizeExecutemapqueryresponseResultsJson                   int = 32768
+	MaxSizeExecutemapqueryresponseTraceId                       int = 32768
+	MaxSizeListactivesessionsrequestPageToken                   int = 32768
+	MaxSizeListactivesessionsrequestTraceId                     int = 32768
+	MaxSizeListactivesessionsresponseSessions                   int = 10000
+	MaxSizeListactivesessionsresponseNextPageToken              int = 32768
+	MaxSizeListactivesessionsresponseTraceId                    int = 32768
+	MaxSizeGetsessioneventsrequestSessionId                     int = 32768
+	MaxSizeGetsessioneventsrequestPageToken                     int = 32768
+	MaxSizeGetsessioneventsrequestTraceId                       int = 32768
+	MaxSizeGetsessioneventsresponseEvents                       int = 10000
+	MaxSizeGetsessioneventsresponseNextPageToken                int = 32768
+	MaxSizeGetsessioneventsresponseTraceId                      int = 32768
+	MaxSizeGetusersessionsrequestEmail                          int = 32768
+	MaxSizeGetusersessionsrequestPageToken                      int = 32768
+	MaxSizeGetusersessionsrequestTraceId                        int = 32768
+	MaxSizeGetusersessionsresponseSessions                      int = 10000
+	MaxSizeGetusersessionsresponseNextPageToken                 int = 32768
+	MaxSizeGetusersessionsresponseTraceId                       int = 32768
+	MaxSizeListeventsbytimerangerequestPageToken                int = 32768
+	MaxSizeListeventsbytimerangerequestTraceId                  int = 32768
+	MaxSizeListeventsbytimerangeresponseEvents                  int = 10000
+	MaxSizeListeventsbytimerangeresponseNextPageToken           int = 32768
+	MaxSizeListeventsbytimerangeresponseTraceId                 int = 32768
+	MaxSizeListeventsbyemailrequestEmail                        int = 32768
+	MaxSizeListeventsbyemailrequestPageToken                    int = 32768
+	MaxSizeListeventsbyemailrequestTraceId                      int = 32768
+	MaxSizeListeventsbyemailresponseEvents                      int = 10000
+	MaxSizeListeventsbyemailresponseNextPageToken               int = 32768
+	MaxSizeListeventsbyemailresponseTraceId                     int = 32768
+	MaxSizeWatchlivesessionsrequestFilterEmail                  int = 32768
+	MaxSizeWatchlivesessionsrequestTraceId                      int = 32768
+	MaxSizeWatchlivesessionseventTraceId                        int = 32768
+	MaxSizeTimedbqueryrequestSql                                int = 32768
+	MaxSizeTimedbqueryrequestTraceId                            int = 32768
+	MaxSizeTimedbqueryresponseRowsJson                          int = 32768
+	MaxSizeTimedbqueryresponseTraceId                           int = 32768
+	MaxSizeDqlqueryrequestDql                                   int = 32768
+	MaxSizeDqlqueryrequestVariablesJson                         int = 32768
+	MaxSizeDqlqueryrequestTraceId                               int = 32768
+	MaxSizeDqlqueryresponseResultJson                           int = 32768
+	MaxSizeDqlqueryresponseTraceId                              int = 32768
+	MaxSizeAgenticcodeeventbuseventstreamsubscriberecordTraceId int = 32768
+	MaxSizeTraceeventbustraceeventssubscriberecordTraceId       int = 32768
+	MaxSizeMapemptyTraceId                                      int = 32768
+	MaxSizeTopicpublishreceiptTraceId                           int = 32768
+	MaxSizeEventbusrecordmetaKey                                int = 32768
+	MaxSizeEventbusrecordmetaTopic                              int = 32768
+	MaxSizeEventbusrecordmetaTraceId                            int = 32768
+	MaxSizeSessionnodeSessionId                                 int = 32768
+	MaxSizeSessionnodeEmail                                     int = 32768
+	MaxSizeSessionnodeWorkingDirectory                          int = 32768
+	MaxSizeSessionnodeEventId                                   int = 32768
+	MaxSizeSessionnodeTraceId                                   int = 32768
+	MaxSizeAgentnodeAgentId                                     int = 32768
+	MaxSizeAgentnodeSession                                     int = 32768
+	MaxSizeAgentnodeParent                                      int = 32768
+	MaxSizeAgentnodeEmail                                       int = 32768
+	MaxSizeAgentnodeEventId                                     int = 32768
+	MaxSizeAgentnodeTraceId                                     int = 32768
+	MaxSizeToolusenodeToolUseId                                 int = 32768
+	MaxSizeToolusenodeAgent                                     int = 32768
+	MaxSizeToolusenodeSession                                   int = 32768
+	MaxSizeToolusenodeEmail                                     int = 32768
+	MaxSizeToolusenodeToolName                                  int = 32768
+	MaxSizeToolusenodeEventId                                   int = 32768
+	MaxSizeToolusenodeTraceId                                   int = 32768
+	MaxSizeSessionrecordSessionId                               int = 32768
+	MaxSizeSessionrecordEventId                                 int = 32768
+	MaxSizeSessionrecordAgentId                                 int = 32768
+	MaxSizeSessionrecordEmail                                   int = 32768
+	MaxSizeSessionrecordSource                                  int = 32768
+	MaxSizeSessionrecordModel                                   int = 32768
+	MaxSizeSessionrecordPermissionMode                          int = 32768
+	MaxSizeSessionrecordTraceId                                 int = 32768
+	MaxSizeTooluserecordSessionId                               int = 32768
+	MaxSizeTooluserecordEventId                                 int = 32768
+	MaxSizeTooluserecordAgentId                                 int = 32768
+	MaxSizeTooluserecordEmail                                   int = 32768
+	MaxSizeTooluserecordToolName                                int = 32768
+	MaxSizeTooluserecordToolUseId                               int = 32768
+	MaxSizeTooluserecordTraceId                                 int = 32768
+	MaxSizeSubagentrecordSessionId                              int = 32768
+	MaxSizeSubagentrecordEventId                                int = 32768
+	MaxSizeSubagentrecordAgentId                                int = 32768
+	MaxSizeSubagentrecordEmail                                  int = 32768
+	MaxSizeSubagentrecordParentAgentId                          int = 32768
+	MaxSizeSubagentrecordSubagentType                           int = 32768
+	MaxSizeSubagentrecordModel                                  int = 32768
+	MaxSizeSubagentrecordTraceId                                int = 32768
+	MaxSizePromptrecordSessionId                                int = 32768
+	MaxSizePromptrecordEventId                                  int = 32768
+	MaxSizePromptrecordAgentId                                  int = 32768
+	MaxSizePromptrecordEmail                                    int = 32768
+	MaxSizePromptrecordTraceId                                  int = 32768
+	MaxSizeStoprecordSessionId                                  int = 32768
+	MaxSizeStoprecordEventId                                    int = 32768
+	MaxSizeStoprecordAgentId                                    int = 32768
+	MaxSizeStoprecordEmail                                      int = 32768
+	MaxSizeStoprecordReason                                     int = 32768
+	MaxSizeStoprecordTraceId                                    int = 32768
 )
 
 // ============================================================
@@ -18746,20 +19585,20 @@ func EventTimeRangeDefaults(v *EventTimeRange) {
 }
 
 // ============================================================
-// TypeDefaults: NewMapRequest
+// TypeDefaults: CreateMapRequest
 // ============================================================
-// NewMapRequestDefaults applies field-level default values to zero-valued fields.
-func NewMapRequestDefaults(v *NewMapRequest) {
+// CreateMapRequestDefaults applies field-level default values to zero-valued fields.
+func CreateMapRequestDefaults(v *CreateMapRequest) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeDefaults: NewMapResponse
+// TypeDefaults: CreateMapResponse
 // ============================================================
-// NewMapResponseDefaults applies field-level default values to zero-valued fields.
-func NewMapResponseDefaults(v *NewMapResponse) {
+// CreateMapResponseDefaults applies field-level default values to zero-valued fields.
+func CreateMapResponseDefaults(v *CreateMapResponse) {
 	if v == nil {
 		return
 	}
@@ -18806,20 +19645,20 @@ func ListMapsResponseDefaults(v *ListMapsResponse) {
 }
 
 // ============================================================
-// TypeDefaults: DescribeMapRequest
+// TypeDefaults: GetMapDetailRequest
 // ============================================================
-// DescribeMapRequestDefaults applies field-level default values to zero-valued fields.
-func DescribeMapRequestDefaults(v *DescribeMapRequest) {
+// GetMapDetailRequestDefaults applies field-level default values to zero-valued fields.
+func GetMapDetailRequestDefaults(v *GetMapDetailRequest) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeDefaults: DescribeMapResponse
+// TypeDefaults: GetMapDetailResponse
 // ============================================================
-// DescribeMapResponseDefaults applies field-level default values to zero-valued fields.
-func DescribeMapResponseDefaults(v *DescribeMapResponse) {
+// GetMapDetailResponseDefaults applies field-level default values to zero-valued fields.
+func GetMapDetailResponseDefaults(v *GetMapDetailResponse) {
 	if v == nil {
 		return
 	}
@@ -18846,100 +19685,100 @@ func MapSizeResponseDefaults(v *MapSizeResponse) {
 }
 
 // ============================================================
-// TypeDefaults: LoadByIdsRequest
+// TypeDefaults: UpdateMapByIdsRequest
 // ============================================================
-// LoadByIdsRequestDefaults applies field-level default values to zero-valued fields.
-func LoadByIdsRequestDefaults(v *LoadByIdsRequest) {
+// UpdateMapByIdsRequestDefaults applies field-level default values to zero-valued fields.
+func UpdateMapByIdsRequestDefaults(v *UpdateMapByIdsRequest) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeDefaults: LoadByIdsResponse
+// TypeDefaults: UpdateMapByIdsResponse
 // ============================================================
-// LoadByIdsResponseDefaults applies field-level default values to zero-valued fields.
-func LoadByIdsResponseDefaults(v *LoadByIdsResponse) {
+// UpdateMapByIdsResponseDefaults applies field-level default values to zero-valued fields.
+func UpdateMapByIdsResponseDefaults(v *UpdateMapByIdsResponse) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeDefaults: LoadBySqlRequest
+// TypeDefaults: UpdateMapBySqlRequest
 // ============================================================
-// LoadBySqlRequestDefaults applies field-level default values to zero-valued fields.
-func LoadBySqlRequestDefaults(v *LoadBySqlRequest) {
+// UpdateMapBySqlRequestDefaults applies field-level default values to zero-valued fields.
+func UpdateMapBySqlRequestDefaults(v *UpdateMapBySqlRequest) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeDefaults: LoadBySqlResponse
+// TypeDefaults: UpdateMapBySqlResponse
 // ============================================================
-// LoadBySqlResponseDefaults applies field-level default values to zero-valued fields.
-func LoadBySqlResponseDefaults(v *LoadBySqlResponse) {
+// UpdateMapBySqlResponseDefaults applies field-level default values to zero-valued fields.
+func UpdateMapBySqlResponseDefaults(v *UpdateMapBySqlResponse) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeDefaults: LoadByTimedbRequest
+// TypeDefaults: UpdateMapByTimedbRequest
 // ============================================================
-// LoadByTimedbRequestDefaults applies field-level default values to zero-valued fields.
-func LoadByTimedbRequestDefaults(v *LoadByTimedbRequest) {
+// UpdateMapByTimedbRequestDefaults applies field-level default values to zero-valued fields.
+func UpdateMapByTimedbRequestDefaults(v *UpdateMapByTimedbRequest) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeDefaults: LoadByTimedbResponse
+// TypeDefaults: UpdateMapByTimedbResponse
 // ============================================================
-// LoadByTimedbResponseDefaults applies field-level default values to zero-valued fields.
-func LoadByTimedbResponseDefaults(v *LoadByTimedbResponse) {
+// UpdateMapByTimedbResponseDefaults applies field-level default values to zero-valued fields.
+func UpdateMapByTimedbResponseDefaults(v *UpdateMapByTimedbResponse) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeDefaults: LoadByGraphdbRequest
+// TypeDefaults: UpdateMapByGraphdbRequest
 // ============================================================
-// LoadByGraphdbRequestDefaults applies field-level default values to zero-valued fields.
-func LoadByGraphdbRequestDefaults(v *LoadByGraphdbRequest) {
+// UpdateMapByGraphdbRequestDefaults applies field-level default values to zero-valued fields.
+func UpdateMapByGraphdbRequestDefaults(v *UpdateMapByGraphdbRequest) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeDefaults: LoadByGraphdbResponse
+// TypeDefaults: UpdateMapByGraphdbResponse
 // ============================================================
-// LoadByGraphdbResponseDefaults applies field-level default values to zero-valued fields.
-func LoadByGraphdbResponseDefaults(v *LoadByGraphdbResponse) {
+// UpdateMapByGraphdbResponseDefaults applies field-level default values to zero-valued fields.
+func UpdateMapByGraphdbResponseDefaults(v *UpdateMapByGraphdbResponse) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeDefaults: FilterMapRequest
+// TypeDefaults: UpdateMapFilterRequest
 // ============================================================
-// FilterMapRequestDefaults applies field-level default values to zero-valued fields.
-func FilterMapRequestDefaults(v *FilterMapRequest) {
+// UpdateMapFilterRequestDefaults applies field-level default values to zero-valued fields.
+func UpdateMapFilterRequestDefaults(v *UpdateMapFilterRequest) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeDefaults: FilterMapResponse
+// TypeDefaults: UpdateMapFilterResponse
 // ============================================================
-// FilterMapResponseDefaults applies field-level default values to zero-valued fields.
-func FilterMapResponseDefaults(v *FilterMapResponse) {
+// UpdateMapFilterResponseDefaults applies field-level default values to zero-valued fields.
+func UpdateMapFilterResponseDefaults(v *UpdateMapFilterResponse) {
 	if v == nil {
 		return
 	}
@@ -18966,10 +19805,10 @@ func MergeResponseDefaults(v *MergeResponse) {
 }
 
 // ============================================================
-// TypeDefaults: QueryMapRequest
+// TypeDefaults: ExecuteMapQueryRequest
 // ============================================================
-// QueryMapRequestDefaults applies field-level default values to zero-valued fields.
-func QueryMapRequestDefaults(v *QueryMapRequest) {
+// ExecuteMapQueryRequestDefaults applies field-level default values to zero-valued fields.
+func ExecuteMapQueryRequestDefaults(v *ExecuteMapQueryRequest) {
 	if v == nil {
 		return
 	}
@@ -18979,10 +19818,10 @@ func QueryMapRequestDefaults(v *QueryMapRequest) {
 }
 
 // ============================================================
-// TypeDefaults: QueryMapResponse
+// TypeDefaults: ExecuteMapQueryResponse
 // ============================================================
-// QueryMapResponseDefaults applies field-level default values to zero-valued fields.
-func QueryMapResponseDefaults(v *QueryMapResponse) {
+// ExecuteMapQueryResponseDefaults applies field-level default values to zero-valued fields.
+func ExecuteMapQueryResponseDefaults(v *ExecuteMapQueryResponse) {
 	if v == nil {
 		return
 	}
@@ -19058,15 +19897,15 @@ func GetUserSessionsResponseDefaults(v *GetUserSessionsResponse) {
 }
 
 // ============================================================
-// TypeDefaults: QueryByTimeRangeRequest
+// TypeDefaults: ListEventsByTimeRangeRequest
 // ============================================================
-// QueryByTimeRangeRequestDefaults applies field-level default values to zero-valued fields.
-func QueryByTimeRangeRequestDefaults(v *QueryByTimeRangeRequest) {
+// ListEventsByTimeRangeRequestDefaults applies field-level default values to zero-valued fields.
+func ListEventsByTimeRangeRequestDefaults(v *ListEventsByTimeRangeRequest) {
 	if v == nil {
 		return
 	}
 	if v.PageSize == 0 {
-		v.PageSize = int32(DefaultQuerybytimerangerequestPageSize)
+		v.PageSize = int32(DefaultListeventsbytimerangerequestPageSize)
 	}
 	if v.TimeRange == nil {
 		v.TimeRange = &EventTimeRange{}
@@ -19074,33 +19913,33 @@ func QueryByTimeRangeRequestDefaults(v *QueryByTimeRangeRequest) {
 }
 
 // ============================================================
-// TypeDefaults: QueryByTimeRangeResponse
+// TypeDefaults: ListEventsByTimeRangeResponse
 // ============================================================
-// QueryByTimeRangeResponseDefaults applies field-level default values to zero-valued fields.
-func QueryByTimeRangeResponseDefaults(v *QueryByTimeRangeResponse) {
+// ListEventsByTimeRangeResponseDefaults applies field-level default values to zero-valued fields.
+func ListEventsByTimeRangeResponseDefaults(v *ListEventsByTimeRangeResponse) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeDefaults: QueryByEmailRequest
+// TypeDefaults: ListEventsByEmailRequest
 // ============================================================
-// QueryByEmailRequestDefaults applies field-level default values to zero-valued fields.
-func QueryByEmailRequestDefaults(v *QueryByEmailRequest) {
+// ListEventsByEmailRequestDefaults applies field-level default values to zero-valued fields.
+func ListEventsByEmailRequestDefaults(v *ListEventsByEmailRequest) {
 	if v == nil {
 		return
 	}
 	if v.PageSize == 0 {
-		v.PageSize = int32(DefaultQuerybyemailrequestPageSize)
+		v.PageSize = int32(DefaultListeventsbyemailrequestPageSize)
 	}
 }
 
 // ============================================================
-// TypeDefaults: QueryByEmailResponse
+// TypeDefaults: ListEventsByEmailResponse
 // ============================================================
-// QueryByEmailResponseDefaults applies field-level default values to zero-valued fields.
-func QueryByEmailResponseDefaults(v *QueryByEmailResponse) {
+// ListEventsByEmailResponseDefaults applies field-level default values to zero-valued fields.
+func ListEventsByEmailResponseDefaults(v *ListEventsByEmailResponse) {
 	if v == nil {
 		return
 	}
@@ -19170,6 +20009,26 @@ func DqlQueryResponseDefaults(v *DqlQueryResponse) {
 }
 
 // ============================================================
+// TypeDefaults: AgenticCodeEventBusEventStreamSubscribeRecord
+// ============================================================
+// AgenticCodeEventBusEventStreamSubscribeRecordDefaults applies field-level default values to zero-valued fields.
+func AgenticCodeEventBusEventStreamSubscribeRecordDefaults(v *AgenticCodeEventBusEventStreamSubscribeRecord) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: TraceEventBusTraceEventsSubscribeRecord
+// ============================================================
+// TraceEventBusTraceEventsSubscribeRecordDefaults applies field-level default values to zero-valued fields.
+func TraceEventBusTraceEventsSubscribeRecordDefaults(v *TraceEventBusTraceEventsSubscribeRecord) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
 // TypeDefaults: MapEmpty
 // ============================================================
 // MapEmptyDefaults applies field-level default values to zero-valued fields.
@@ -19184,6 +20043,16 @@ func MapEmptyDefaults(v *MapEmpty) {
 // ============================================================
 // TopicPublishReceiptDefaults applies field-level default values to zero-valued fields.
 func TopicPublishReceiptDefaults(v *TopicPublishReceipt) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: EventBusRecordMeta
+// ============================================================
+// EventBusRecordMetaDefaults applies field-level default values to zero-valued fields.
+func EventBusRecordMetaDefaults(v *EventBusRecordMeta) {
 	if v == nil {
 		return
 	}
@@ -19413,22 +20282,22 @@ func EventTimeRangeUndefaults(v *EventTimeRange) {
 }
 
 // ============================================================
-// TypeUndefaults: NewMapRequest
+// TypeUndefaults: CreateMapRequest
 // ============================================================
-// NewMapRequestUndefaults resets fields that match their default values back to zero.
+// CreateMapRequestUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func NewMapRequestUndefaults(v *NewMapRequest) {
+func CreateMapRequestUndefaults(v *CreateMapRequest) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeUndefaults: NewMapResponse
+// TypeUndefaults: CreateMapResponse
 // ============================================================
-// NewMapResponseUndefaults resets fields that match their default values back to zero.
+// CreateMapResponseUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func NewMapResponseUndefaults(v *NewMapResponse) {
+func CreateMapResponseUndefaults(v *CreateMapResponse) {
 	if v == nil {
 		return
 	}
@@ -19479,22 +20348,22 @@ func ListMapsResponseUndefaults(v *ListMapsResponse) {
 }
 
 // ============================================================
-// TypeUndefaults: DescribeMapRequest
+// TypeUndefaults: GetMapDetailRequest
 // ============================================================
-// DescribeMapRequestUndefaults resets fields that match their default values back to zero.
+// GetMapDetailRequestUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func DescribeMapRequestUndefaults(v *DescribeMapRequest) {
+func GetMapDetailRequestUndefaults(v *GetMapDetailRequest) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeUndefaults: DescribeMapResponse
+// TypeUndefaults: GetMapDetailResponse
 // ============================================================
-// DescribeMapResponseUndefaults resets fields that match their default values back to zero.
+// GetMapDetailResponseUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func DescribeMapResponseUndefaults(v *DescribeMapResponse) {
+func GetMapDetailResponseUndefaults(v *GetMapDetailResponse) {
 	if v == nil {
 		return
 	}
@@ -19523,110 +20392,110 @@ func MapSizeResponseUndefaults(v *MapSizeResponse) {
 }
 
 // ============================================================
-// TypeUndefaults: LoadByIdsRequest
+// TypeUndefaults: UpdateMapByIdsRequest
 // ============================================================
-// LoadByIdsRequestUndefaults resets fields that match their default values back to zero.
+// UpdateMapByIdsRequestUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func LoadByIdsRequestUndefaults(v *LoadByIdsRequest) {
+func UpdateMapByIdsRequestUndefaults(v *UpdateMapByIdsRequest) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeUndefaults: LoadByIdsResponse
+// TypeUndefaults: UpdateMapByIdsResponse
 // ============================================================
-// LoadByIdsResponseUndefaults resets fields that match their default values back to zero.
+// UpdateMapByIdsResponseUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func LoadByIdsResponseUndefaults(v *LoadByIdsResponse) {
+func UpdateMapByIdsResponseUndefaults(v *UpdateMapByIdsResponse) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeUndefaults: LoadBySqlRequest
+// TypeUndefaults: UpdateMapBySqlRequest
 // ============================================================
-// LoadBySqlRequestUndefaults resets fields that match their default values back to zero.
+// UpdateMapBySqlRequestUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func LoadBySqlRequestUndefaults(v *LoadBySqlRequest) {
+func UpdateMapBySqlRequestUndefaults(v *UpdateMapBySqlRequest) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeUndefaults: LoadBySqlResponse
+// TypeUndefaults: UpdateMapBySqlResponse
 // ============================================================
-// LoadBySqlResponseUndefaults resets fields that match their default values back to zero.
+// UpdateMapBySqlResponseUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func LoadBySqlResponseUndefaults(v *LoadBySqlResponse) {
+func UpdateMapBySqlResponseUndefaults(v *UpdateMapBySqlResponse) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeUndefaults: LoadByTimedbRequest
+// TypeUndefaults: UpdateMapByTimedbRequest
 // ============================================================
-// LoadByTimedbRequestUndefaults resets fields that match their default values back to zero.
+// UpdateMapByTimedbRequestUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func LoadByTimedbRequestUndefaults(v *LoadByTimedbRequest) {
+func UpdateMapByTimedbRequestUndefaults(v *UpdateMapByTimedbRequest) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeUndefaults: LoadByTimedbResponse
+// TypeUndefaults: UpdateMapByTimedbResponse
 // ============================================================
-// LoadByTimedbResponseUndefaults resets fields that match their default values back to zero.
+// UpdateMapByTimedbResponseUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func LoadByTimedbResponseUndefaults(v *LoadByTimedbResponse) {
+func UpdateMapByTimedbResponseUndefaults(v *UpdateMapByTimedbResponse) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeUndefaults: LoadByGraphdbRequest
+// TypeUndefaults: UpdateMapByGraphdbRequest
 // ============================================================
-// LoadByGraphdbRequestUndefaults resets fields that match their default values back to zero.
+// UpdateMapByGraphdbRequestUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func LoadByGraphdbRequestUndefaults(v *LoadByGraphdbRequest) {
+func UpdateMapByGraphdbRequestUndefaults(v *UpdateMapByGraphdbRequest) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeUndefaults: LoadByGraphdbResponse
+// TypeUndefaults: UpdateMapByGraphdbResponse
 // ============================================================
-// LoadByGraphdbResponseUndefaults resets fields that match their default values back to zero.
+// UpdateMapByGraphdbResponseUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func LoadByGraphdbResponseUndefaults(v *LoadByGraphdbResponse) {
+func UpdateMapByGraphdbResponseUndefaults(v *UpdateMapByGraphdbResponse) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeUndefaults: FilterMapRequest
+// TypeUndefaults: UpdateMapFilterRequest
 // ============================================================
-// FilterMapRequestUndefaults resets fields that match their default values back to zero.
+// UpdateMapFilterRequestUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func FilterMapRequestUndefaults(v *FilterMapRequest) {
+func UpdateMapFilterRequestUndefaults(v *UpdateMapFilterRequest) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeUndefaults: FilterMapResponse
+// TypeUndefaults: UpdateMapFilterResponse
 // ============================================================
-// FilterMapResponseUndefaults resets fields that match their default values back to zero.
+// UpdateMapFilterResponseUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func FilterMapResponseUndefaults(v *FilterMapResponse) {
+func UpdateMapFilterResponseUndefaults(v *UpdateMapFilterResponse) {
 	if v == nil {
 		return
 	}
@@ -19655,11 +20524,11 @@ func MergeResponseUndefaults(v *MergeResponse) {
 }
 
 // ============================================================
-// TypeUndefaults: QueryMapRequest
+// TypeUndefaults: ExecuteMapQueryRequest
 // ============================================================
-// QueryMapRequestUndefaults resets fields that match their default values back to zero.
+// ExecuteMapQueryRequestUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func QueryMapRequestUndefaults(v *QueryMapRequest) {
+func ExecuteMapQueryRequestUndefaults(v *ExecuteMapQueryRequest) {
 	if v == nil {
 		return
 	}
@@ -19669,11 +20538,11 @@ func QueryMapRequestUndefaults(v *QueryMapRequest) {
 }
 
 // ============================================================
-// TypeUndefaults: QueryMapResponse
+// TypeUndefaults: ExecuteMapQueryResponse
 // ============================================================
-// QueryMapResponseUndefaults resets fields that match their default values back to zero.
+// ExecuteMapQueryResponseUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func QueryMapResponseUndefaults(v *QueryMapResponse) {
+func ExecuteMapQueryResponseUndefaults(v *ExecuteMapQueryResponse) {
 	if v == nil {
 		return
 	}
@@ -19755,50 +20624,50 @@ func GetUserSessionsResponseUndefaults(v *GetUserSessionsResponse) {
 }
 
 // ============================================================
-// TypeUndefaults: QueryByTimeRangeRequest
+// TypeUndefaults: ListEventsByTimeRangeRequest
 // ============================================================
-// QueryByTimeRangeRequestUndefaults resets fields that match their default values back to zero.
+// ListEventsByTimeRangeRequestUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func QueryByTimeRangeRequestUndefaults(v *QueryByTimeRangeRequest) {
+func ListEventsByTimeRangeRequestUndefaults(v *ListEventsByTimeRangeRequest) {
 	if v == nil {
 		return
 	}
-	if v.PageSize == int32(DefaultQuerybytimerangerequestPageSize) {
+	if v.PageSize == int32(DefaultListeventsbytimerangerequestPageSize) {
 		v.PageSize = 0
 	}
 }
 
 // ============================================================
-// TypeUndefaults: QueryByTimeRangeResponse
+// TypeUndefaults: ListEventsByTimeRangeResponse
 // ============================================================
-// QueryByTimeRangeResponseUndefaults resets fields that match their default values back to zero.
+// ListEventsByTimeRangeResponseUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func QueryByTimeRangeResponseUndefaults(v *QueryByTimeRangeResponse) {
+func ListEventsByTimeRangeResponseUndefaults(v *ListEventsByTimeRangeResponse) {
 	if v == nil {
 		return
 	}
 }
 
 // ============================================================
-// TypeUndefaults: QueryByEmailRequest
+// TypeUndefaults: ListEventsByEmailRequest
 // ============================================================
-// QueryByEmailRequestUndefaults resets fields that match their default values back to zero.
+// ListEventsByEmailRequestUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func QueryByEmailRequestUndefaults(v *QueryByEmailRequest) {
+func ListEventsByEmailRequestUndefaults(v *ListEventsByEmailRequest) {
 	if v == nil {
 		return
 	}
-	if v.PageSize == int32(DefaultQuerybyemailrequestPageSize) {
+	if v.PageSize == int32(DefaultListeventsbyemailrequestPageSize) {
 		v.PageSize = 0
 	}
 }
 
 // ============================================================
-// TypeUndefaults: QueryByEmailResponse
+// TypeUndefaults: ListEventsByEmailResponse
 // ============================================================
-// QueryByEmailResponseUndefaults resets fields that match their default values back to zero.
+// ListEventsByEmailResponseUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
-func QueryByEmailResponseUndefaults(v *QueryByEmailResponse) {
+func ListEventsByEmailResponseUndefaults(v *ListEventsByEmailResponse) {
 	if v == nil {
 		return
 	}
@@ -19871,6 +20740,28 @@ func DqlQueryResponseUndefaults(v *DqlQueryResponse) {
 }
 
 // ============================================================
+// TypeUndefaults: AgenticCodeEventBusEventStreamSubscribeRecord
+// ============================================================
+// AgenticCodeEventBusEventStreamSubscribeRecordUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func AgenticCodeEventBusEventStreamSubscribeRecordUndefaults(v *AgenticCodeEventBusEventStreamSubscribeRecord) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: TraceEventBusTraceEventsSubscribeRecord
+// ============================================================
+// TraceEventBusTraceEventsSubscribeRecordUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func TraceEventBusTraceEventsSubscribeRecordUndefaults(v *TraceEventBusTraceEventsSubscribeRecord) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
 // TypeUndefaults: MapEmpty
 // ============================================================
 // MapEmptyUndefaults resets fields that match their default values back to zero.
@@ -19887,6 +20778,17 @@ func MapEmptyUndefaults(v *MapEmpty) {
 // TopicPublishReceiptUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
 func TopicPublishReceiptUndefaults(v *TopicPublishReceipt) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: EventBusRecordMeta
+// ============================================================
+// EventBusRecordMetaUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func EventBusRecordMetaUndefaults(v *EventBusRecordMeta) {
 	if v == nil {
 		return
 	}
@@ -20356,10 +21258,10 @@ func MergeEventTimeRange(dst, src *EventTimeRange) {
 }
 
 // ============================================================
-// Merge: NewMapRequest
+// Merge: CreateMapRequest
 // ============================================================
-// MergeNewMapRequest fills zero-valued fields in dst from src.
-func MergeNewMapRequest(dst, src *NewMapRequest) {
+// MergeCreateMapRequest fills zero-valued fields in dst from src.
+func MergeCreateMapRequest(dst, src *CreateMapRequest) {
 	if dst.MapId == "" {
 		dst.MapId = src.MapId
 	}
@@ -20372,10 +21274,10 @@ func MergeNewMapRequest(dst, src *NewMapRequest) {
 }
 
 // ============================================================
-// Merge: NewMapResponse
+// Merge: CreateMapResponse
 // ============================================================
-// MergeNewMapResponse fills zero-valued fields in dst from src.
-func MergeNewMapResponse(dst, src *NewMapResponse) {
+// MergeCreateMapResponse fills zero-valued fields in dst from src.
+func MergeCreateMapResponse(dst, src *CreateMapResponse) {
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -20443,10 +21345,10 @@ func MergeListMapsResponse(dst, src *ListMapsResponse) {
 }
 
 // ============================================================
-// Merge: DescribeMapRequest
+// Merge: GetMapDetailRequest
 // ============================================================
-// MergeDescribeMapRequest fills zero-valued fields in dst from src.
-func MergeDescribeMapRequest(dst, src *DescribeMapRequest) {
+// MergeGetMapDetailRequest fills zero-valued fields in dst from src.
+func MergeGetMapDetailRequest(dst, src *GetMapDetailRequest) {
 	if dst.MapId == "" {
 		dst.MapId = src.MapId
 	}
@@ -20459,10 +21361,10 @@ func MergeDescribeMapRequest(dst, src *DescribeMapRequest) {
 }
 
 // ============================================================
-// Merge: DescribeMapResponse
+// Merge: GetMapDetailResponse
 // ============================================================
-// MergeDescribeMapResponse fills zero-valued fields in dst from src.
-func MergeDescribeMapResponse(dst, src *DescribeMapResponse) {
+// MergeGetMapDetailResponse fills zero-valued fields in dst from src.
+func MergeGetMapDetailResponse(dst, src *GetMapDetailResponse) {
 	if dst.Detail == nil {
 		dst.Detail = src.Detail
 	} else if src.Detail != nil {
@@ -20512,10 +21414,10 @@ func MergeMapSizeResponse(dst, src *MapSizeResponse) {
 }
 
 // ============================================================
-// Merge: LoadByIdsRequest
+// Merge: UpdateMapByIdsRequest
 // ============================================================
-// MergeLoadByIdsRequest fills zero-valued fields in dst from src.
-func MergeLoadByIdsRequest(dst, src *LoadByIdsRequest) {
+// MergeUpdateMapByIdsRequest fills zero-valued fields in dst from src.
+func MergeUpdateMapByIdsRequest(dst, src *UpdateMapByIdsRequest) {
 	if dst.MapId == "" {
 		dst.MapId = src.MapId
 	}
@@ -20531,10 +21433,10 @@ func MergeLoadByIdsRequest(dst, src *LoadByIdsRequest) {
 }
 
 // ============================================================
-// Merge: LoadByIdsResponse
+// Merge: UpdateMapByIdsResponse
 // ============================================================
-// MergeLoadByIdsResponse fills zero-valued fields in dst from src.
-func MergeLoadByIdsResponse(dst, src *LoadByIdsResponse) {
+// MergeUpdateMapByIdsResponse fills zero-valued fields in dst from src.
+func MergeUpdateMapByIdsResponse(dst, src *UpdateMapByIdsResponse) {
 	if dst.EventsAdded == 0 {
 		dst.EventsAdded = src.EventsAdded
 	}
@@ -20547,10 +21449,10 @@ func MergeLoadByIdsResponse(dst, src *LoadByIdsResponse) {
 }
 
 // ============================================================
-// Merge: LoadBySqlRequest
+// Merge: UpdateMapBySqlRequest
 // ============================================================
-// MergeLoadBySqlRequest fills zero-valued fields in dst from src.
-func MergeLoadBySqlRequest(dst, src *LoadBySqlRequest) {
+// MergeUpdateMapBySqlRequest fills zero-valued fields in dst from src.
+func MergeUpdateMapBySqlRequest(dst, src *UpdateMapBySqlRequest) {
 	if dst.MapId == "" {
 		dst.MapId = src.MapId
 	}
@@ -20566,10 +21468,10 @@ func MergeLoadBySqlRequest(dst, src *LoadBySqlRequest) {
 }
 
 // ============================================================
-// Merge: LoadBySqlResponse
+// Merge: UpdateMapBySqlResponse
 // ============================================================
-// MergeLoadBySqlResponse fills zero-valued fields in dst from src.
-func MergeLoadBySqlResponse(dst, src *LoadBySqlResponse) {
+// MergeUpdateMapBySqlResponse fills zero-valued fields in dst from src.
+func MergeUpdateMapBySqlResponse(dst, src *UpdateMapBySqlResponse) {
 	if dst.EventsAdded == 0 {
 		dst.EventsAdded = src.EventsAdded
 	}
@@ -20582,10 +21484,10 @@ func MergeLoadBySqlResponse(dst, src *LoadBySqlResponse) {
 }
 
 // ============================================================
-// Merge: LoadByTimedbRequest
+// Merge: UpdateMapByTimedbRequest
 // ============================================================
-// MergeLoadByTimedbRequest fills zero-valued fields in dst from src.
-func MergeLoadByTimedbRequest(dst, src *LoadByTimedbRequest) {
+// MergeUpdateMapByTimedbRequest fills zero-valued fields in dst from src.
+func MergeUpdateMapByTimedbRequest(dst, src *UpdateMapByTimedbRequest) {
 	if dst.MapId == "" {
 		dst.MapId = src.MapId
 	}
@@ -20601,10 +21503,10 @@ func MergeLoadByTimedbRequest(dst, src *LoadByTimedbRequest) {
 }
 
 // ============================================================
-// Merge: LoadByTimedbResponse
+// Merge: UpdateMapByTimedbResponse
 // ============================================================
-// MergeLoadByTimedbResponse fills zero-valued fields in dst from src.
-func MergeLoadByTimedbResponse(dst, src *LoadByTimedbResponse) {
+// MergeUpdateMapByTimedbResponse fills zero-valued fields in dst from src.
+func MergeUpdateMapByTimedbResponse(dst, src *UpdateMapByTimedbResponse) {
 	if dst.EventsAdded == 0 {
 		dst.EventsAdded = src.EventsAdded
 	}
@@ -20617,10 +21519,10 @@ func MergeLoadByTimedbResponse(dst, src *LoadByTimedbResponse) {
 }
 
 // ============================================================
-// Merge: LoadByGraphdbRequest
+// Merge: UpdateMapByGraphdbRequest
 // ============================================================
-// MergeLoadByGraphdbRequest fills zero-valued fields in dst from src.
-func MergeLoadByGraphdbRequest(dst, src *LoadByGraphdbRequest) {
+// MergeUpdateMapByGraphdbRequest fills zero-valued fields in dst from src.
+func MergeUpdateMapByGraphdbRequest(dst, src *UpdateMapByGraphdbRequest) {
 	if dst.MapId == "" {
 		dst.MapId = src.MapId
 	}
@@ -20636,10 +21538,10 @@ func MergeLoadByGraphdbRequest(dst, src *LoadByGraphdbRequest) {
 }
 
 // ============================================================
-// Merge: LoadByGraphdbResponse
+// Merge: UpdateMapByGraphdbResponse
 // ============================================================
-// MergeLoadByGraphdbResponse fills zero-valued fields in dst from src.
-func MergeLoadByGraphdbResponse(dst, src *LoadByGraphdbResponse) {
+// MergeUpdateMapByGraphdbResponse fills zero-valued fields in dst from src.
+func MergeUpdateMapByGraphdbResponse(dst, src *UpdateMapByGraphdbResponse) {
 	if dst.EventsAdded == 0 {
 		dst.EventsAdded = src.EventsAdded
 	}
@@ -20652,10 +21554,10 @@ func MergeLoadByGraphdbResponse(dst, src *LoadByGraphdbResponse) {
 }
 
 // ============================================================
-// Merge: FilterMapRequest
+// Merge: UpdateMapFilterRequest
 // ============================================================
-// MergeFilterMapRequest fills zero-valued fields in dst from src.
-func MergeFilterMapRequest(dst, src *FilterMapRequest) {
+// MergeUpdateMapFilterRequest fills zero-valued fields in dst from src.
+func MergeUpdateMapFilterRequest(dst, src *UpdateMapFilterRequest) {
 	if dst.MapId == "" {
 		dst.MapId = src.MapId
 	}
@@ -20671,10 +21573,10 @@ func MergeFilterMapRequest(dst, src *FilterMapRequest) {
 }
 
 // ============================================================
-// Merge: FilterMapResponse
+// Merge: UpdateMapFilterResponse
 // ============================================================
-// MergeFilterMapResponse fills zero-valued fields in dst from src.
-func MergeFilterMapResponse(dst, src *FilterMapResponse) {
+// MergeUpdateMapFilterResponse fills zero-valued fields in dst from src.
+func MergeUpdateMapFilterResponse(dst, src *UpdateMapFilterResponse) {
 	if dst.EventsRemoved == 0 {
 		dst.EventsRemoved = src.EventsRemoved
 	}
@@ -20722,10 +21624,10 @@ func MergeMergeResponse(dst, src *MergeResponse) {
 }
 
 // ============================================================
-// Merge: QueryMapRequest
+// Merge: ExecuteMapQueryRequest
 // ============================================================
-// MergeQueryMapRequest fills zero-valued fields in dst from src.
-func MergeQueryMapRequest(dst, src *QueryMapRequest) {
+// MergeExecuteMapQueryRequest fills zero-valued fields in dst from src.
+func MergeExecuteMapQueryRequest(dst, src *ExecuteMapQueryRequest) {
 	if dst.MapId == "" {
 		dst.MapId = src.MapId
 	}
@@ -20744,10 +21646,10 @@ func MergeQueryMapRequest(dst, src *QueryMapRequest) {
 }
 
 // ============================================================
-// Merge: QueryMapResponse
+// Merge: ExecuteMapQueryResponse
 // ============================================================
-// MergeQueryMapResponse fills zero-valued fields in dst from src.
-func MergeQueryMapResponse(dst, src *QueryMapResponse) {
+// MergeExecuteMapQueryResponse fills zero-valued fields in dst from src.
+func MergeExecuteMapQueryResponse(dst, src *ExecuteMapQueryResponse) {
 	if dst.ResultsJson == "" {
 		dst.ResultsJson = src.ResultsJson
 	}
@@ -20893,10 +21795,10 @@ func MergeGetUserSessionsResponse(dst, src *GetUserSessionsResponse) {
 }
 
 // ============================================================
-// Merge: QueryByTimeRangeRequest
+// Merge: ListEventsByTimeRangeRequest
 // ============================================================
-// MergeQueryByTimeRangeRequest fills zero-valued fields in dst from src.
-func MergeQueryByTimeRangeRequest(dst, src *QueryByTimeRangeRequest) {
+// MergeListEventsByTimeRangeRequest fills zero-valued fields in dst from src.
+func MergeListEventsByTimeRangeRequest(dst, src *ListEventsByTimeRangeRequest) {
 	if dst.TimeRange == nil {
 		dst.TimeRange = src.TimeRange
 	} else if src.TimeRange != nil {
@@ -20917,10 +21819,10 @@ func MergeQueryByTimeRangeRequest(dst, src *QueryByTimeRangeRequest) {
 }
 
 // ============================================================
-// Merge: QueryByTimeRangeResponse
+// Merge: ListEventsByTimeRangeResponse
 // ============================================================
-// MergeQueryByTimeRangeResponse fills zero-valued fields in dst from src.
-func MergeQueryByTimeRangeResponse(dst, src *QueryByTimeRangeResponse) {
+// MergeListEventsByTimeRangeResponse fills zero-valued fields in dst from src.
+func MergeListEventsByTimeRangeResponse(dst, src *ListEventsByTimeRangeResponse) {
 	if len(dst.Events) == 0 {
 		dst.Events = src.Events
 	}
@@ -20936,10 +21838,10 @@ func MergeQueryByTimeRangeResponse(dst, src *QueryByTimeRangeResponse) {
 }
 
 // ============================================================
-// Merge: QueryByEmailRequest
+// Merge: ListEventsByEmailRequest
 // ============================================================
-// MergeQueryByEmailRequest fills zero-valued fields in dst from src.
-func MergeQueryByEmailRequest(dst, src *QueryByEmailRequest) {
+// MergeListEventsByEmailRequest fills zero-valued fields in dst from src.
+func MergeListEventsByEmailRequest(dst, src *ListEventsByEmailRequest) {
 	if dst.Email == "" {
 		dst.Email = src.Email
 	}
@@ -20963,10 +21865,10 @@ func MergeQueryByEmailRequest(dst, src *QueryByEmailRequest) {
 }
 
 // ============================================================
-// Merge: QueryByEmailResponse
+// Merge: ListEventsByEmailResponse
 // ============================================================
-// MergeQueryByEmailResponse fills zero-valued fields in dst from src.
-func MergeQueryByEmailResponse(dst, src *QueryByEmailResponse) {
+// MergeListEventsByEmailResponse fills zero-valued fields in dst from src.
+func MergeListEventsByEmailResponse(dst, src *ListEventsByEmailResponse) {
 	if len(dst.Events) == 0 {
 		dst.Events = src.Events
 	}
@@ -21107,6 +22009,50 @@ func MergeDqlQueryResponse(dst, src *DqlQueryResponse) {
 }
 
 // ============================================================
+// Merge: AgenticCodeEventBusEventStreamSubscribeRecord
+// ============================================================
+// MergeAgenticCodeEventBusEventStreamSubscribeRecord fills zero-valued fields in dst from src.
+func MergeAgenticCodeEventBusEventStreamSubscribeRecord(dst, src *AgenticCodeEventBusEventStreamSubscribeRecord) {
+	if dst.Meta == nil {
+		dst.Meta = src.Meta
+	} else if src.Meta != nil {
+		MergeEventBusRecordMeta(dst.Meta, src.Meta)
+	}
+	if dst.Payload == nil {
+		dst.Payload = src.Payload
+	} else if src.Payload != nil {
+		MergeSensorEvent(dst.Payload, src.Payload)
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: TraceEventBusTraceEventsSubscribeRecord
+// ============================================================
+// MergeTraceEventBusTraceEventsSubscribeRecord fills zero-valued fields in dst from src.
+func MergeTraceEventBusTraceEventsSubscribeRecord(dst, src *TraceEventBusTraceEventsSubscribeRecord) {
+	if dst.Meta == nil {
+		dst.Meta = src.Meta
+	} else if src.Meta != nil {
+		MergeEventBusRecordMeta(dst.Meta, src.Meta)
+	}
+	if dst.Payload == nil {
+		dst.Payload = src.Payload
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
 // Merge: MapEmpty
 // ============================================================
 // MergeMapEmpty fills zero-valued fields in dst from src.
@@ -21126,6 +22072,34 @@ func MergeMapEmpty(dst, src *MapEmpty) {
 func MergeTopicPublishReceipt(dst, src *TopicPublishReceipt) {
 	if !dst.Published {
 		dst.Published = src.Published
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: EventBusRecordMeta
+// ============================================================
+// MergeEventBusRecordMeta fills zero-valued fields in dst from src.
+func MergeEventBusRecordMeta(dst, src *EventBusRecordMeta) {
+	if len(dst.Key) == 0 {
+		dst.Key = src.Key
+	}
+	if dst.Topic == "" {
+		dst.Topic = src.Topic
+	}
+	if dst.Partition == 0 {
+		dst.Partition = src.Partition
+	}
+	if dst.Offset == 0 {
+		dst.Offset = src.Offset
+	}
+	if dst.Timestamp == nil {
+		dst.Timestamp = src.Timestamp
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
