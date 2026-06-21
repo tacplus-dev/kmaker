@@ -51,8 +51,15 @@ type KubernetesPod struct {
 
 type HTTPKubernetesClient struct {
 	baseURL *url.URL
-	token   string
-	client  *http.Client
+	// tokenFile is the path to the projected service account token. It is
+	// re-read on every request because the kubelet rotates the projected
+	// token (expirationSeconds=3600); caching it leads to 401s after ~1h.
+	tokenFile string
+	// token holds the value read once at construction time. It is retained
+	// only for fail-fast behavior in the constructor and is NOT used to
+	// authorize requests; ReviewToken/GetPod read tokenFile per request.
+	token  string
+	client *http.Client
 }
 
 type HTTPTokenReviewer = HTTPKubernetesClient
@@ -92,10 +99,26 @@ func NewInClusterKubernetesClient() (*HTTPKubernetesClient, error) {
 	}
 
 	return &HTTPKubernetesClient{
-		baseURL: u,
-		token:   strings.TrimSpace(string(tokenBytes)),
-		client:  &http.Client{Transport: transport, Timeout: 10 * time.Second},
+		baseURL:   u,
+		tokenFile: tokenFile,
+		token:     strings.TrimSpace(string(tokenBytes)),
+		client:    &http.Client{Transport: transport, Timeout: 10 * time.Second},
 	}, nil
+}
+
+// reviewerToken reads and trims the current service account token from disk.
+// It is called on every request so that rotated projected tokens take effect
+// immediately. A read failure is returned so callers fail closed rather than
+// sending an empty or stale bearer token.
+func (r *HTTPKubernetesClient) reviewerToken() (string, error) {
+	if r.tokenFile == "" {
+		return "", fmt.Errorf("kubernetes service account token file is not configured")
+	}
+	tokenBytes, err := os.ReadFile(r.tokenFile)
+	if err != nil {
+		return "", fmt.Errorf("read kubernetes service account token %s: %w", r.tokenFile, err)
+	}
+	return strings.TrimSpace(string(tokenBytes)), nil
 }
 
 func NewInClusterTokenReviewer() (*HTTPTokenReviewer, error) {
@@ -125,11 +148,15 @@ func (r *HTTPKubernetesClient) ReviewToken(ctx context.Context, token string, au
 	if err != nil {
 		return nil, fmt.Errorf("marshal tokenreview: %w", err)
 	}
+	reviewerToken, err := r.reviewerToken()
+	if err != nil {
+		return nil, err
+	}
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, r.urlFor("/apis/authentication.k8s.io/v1/tokenreviews"), bytes.NewReader(data))
 	if err != nil {
 		return nil, fmt.Errorf("create tokenreview request: %w", err)
 	}
-	req.Header.Set("Authorization", "Bearer "+r.token)
+	req.Header.Set("Authorization", "Bearer "+reviewerToken)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
 
@@ -166,12 +193,16 @@ func (r *HTTPKubernetesClient) GetPod(ctx context.Context, namespace, name strin
 	if namespace == "" || name == "" {
 		return nil, fmt.Errorf("pod namespace and name are required")
 	}
+	reviewerToken, err := r.reviewerToken()
+	if err != nil {
+		return nil, err
+	}
 	p := "/api/v1/namespaces/" + url.PathEscape(namespace) + "/pods/" + url.PathEscape(name)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, r.urlFor(p), nil)
 	if err != nil {
 		return nil, fmt.Errorf("create pod get request: %w", err)
 	}
-	req.Header.Set("Authorization", "Bearer "+r.token)
+	req.Header.Set("Authorization", "Bearer "+reviewerToken)
 	req.Header.Set("Accept", "application/json")
 
 	resp, err := r.client.Do(req)
