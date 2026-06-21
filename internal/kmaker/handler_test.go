@@ -30,6 +30,15 @@ func (f fakeReviewer) ReviewToken(context.Context, string, []string) (*TokenRevi
 	return f.status, f.err
 }
 
+type fakePodGetter struct {
+	pod *KubernetesPod
+	err error
+}
+
+func (f fakePodGetter) GetPod(context.Context, string, string) (*KubernetesPod, error) {
+	return f.pod, f.err
+}
+
 func TestParseServiceAccountUsername(t *testing.T) {
 	sa, ok := ParseServiceAccountUsername("system:serviceaccount:cavalier:kernel")
 	if !ok {
@@ -54,14 +63,14 @@ func TestHandlerSignsKernelCert(t *testing.T) {
 		Username:      "system:serviceaccount:cavalier:kernel",
 		UID:           "uid-1",
 		Audiences:     []string{"kmaker"},
-	}})
+		Extra:         tokenReviewPodExtra("kernel-0", "pod-uid-0"),
+	}}, fakePodGetter{pod: testKubernetesPod("cavalier", "kernel-0", "pod-uid-0", "kernel", "Running")})
 	if err != nil {
 		t.Fatalf("NewHandler: %v", err)
 	}
 
 	req := &pb.MintKernelCertRequest{
 		K8SToken:    "token",
-		InstanceId:  "kernel-0",
 		CertRequest: testCertRequest(t, false),
 	}
 	chain, err := handler.MintKernelCert(context.Background(), nil, req)
@@ -90,6 +99,249 @@ func TestHandlerSignsKernelCert(t *testing.T) {
 	}
 }
 
+func TestHandlerRejectsCallerSuppliedKernelIdentity(t *testing.T) {
+	cfg := testConfig(t)
+	signer, err := NewSigner(cfg)
+	if err != nil {
+		t.Fatalf("NewSigner: %v", err)
+	}
+	handler, err := NewHandler(cfg, signer, fakeReviewer{status: &TokenReviewStatus{
+		Authenticated: true,
+		Username:      "system:serviceaccount:cavalier:kernel",
+		UID:           "uid-1",
+		Audiences:     []string{"kmaker"},
+		Extra:         tokenReviewPodExtra("kernel-0", "pod-uid-0"),
+	}}, fakePodGetter{pod: testKubernetesPod("cavalier", "kernel-0", "pod-uid-0", "kernel", "Running")})
+	if err != nil {
+		t.Fatalf("NewHandler: %v", err)
+	}
+
+	tests := []struct {
+		name   string
+		mutate func(*pb.MintKernelCertRequest)
+	}{
+		{
+			name: "dns san",
+			mutate: func(req *pb.MintKernelCertRequest) {
+				req.CertRequest.DnsNames = []string{"kernel-0.cavalier.svc"}
+			},
+		},
+		{
+			name: "uri san",
+			mutate: func(req *pb.MintKernelCertRequest) {
+				req.CertRequest.UriSans = []string{"spiffe://local/dev/kernel/kernel-0"}
+			},
+		},
+		{
+			name: "ca request",
+			mutate: func(req *pb.MintKernelCertRequest) {
+				req.CertRequest.IsCa = true
+				req.CertRequest.KeyUsage = x509pb.X509KeyUsage_X509_KEY_USAGE_CERT_SIGN
+			},
+		},
+		{
+			name: "non-kernel issuer",
+			mutate: func(req *pb.MintKernelCertRequest) {
+				req.CertRequest.Issuer = "oauth"
+			},
+		},
+		{
+			name: "unsafe ext key usage",
+			mutate: func(req *pb.MintKernelCertRequest) {
+				req.CertRequest.ExtKeyUsage = []x509pb.X509ExtKeyUsage{x509pb.X509ExtKeyUsage_X509_EXT_KEY_USAGE_CODE_SIGNING}
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			req := &pb.MintKernelCertRequest{
+				K8SToken:    "token",
+				CertRequest: testCertRequest(t, false),
+			}
+			tt.mutate(req)
+			_, err := handler.MintKernelCert(context.Background(), nil, req)
+			if status.Code(err) != codes.InvalidArgument {
+				t.Fatalf("expected InvalidArgument, got %v", err)
+			}
+		})
+	}
+}
+
+func TestHandlerAllowsCallerMetadataMatchingTokenBoundPod(t *testing.T) {
+	cfg := testConfig(t)
+	signer, err := NewSigner(cfg)
+	if err != nil {
+		t.Fatalf("NewSigner: %v", err)
+	}
+	handler, err := NewHandler(cfg, signer, fakeReviewer{status: &TokenReviewStatus{
+		Authenticated: true,
+		Username:      "system:serviceaccount:cavalier:kernel",
+		UID:           "uid-1",
+		Audiences:     []string{"kmaker"},
+		Extra:         tokenReviewPodExtra("kernel-0", "pod-uid-0"),
+	}}, fakePodGetter{pod: testKubernetesPod("cavalier", "kernel-0", "pod-uid-0", "kernel", "Running")})
+	if err != nil {
+		t.Fatalf("NewHandler: %v", err)
+	}
+
+	chain, err := handler.MintKernelCert(context.Background(), nil, &pb.MintKernelCertRequest{
+		K8SToken:    "token",
+		PodName:     "kernel-0",
+		PodUid:      "pod-uid-0",
+		InstanceId:  "kernel-0",
+		CertRequest: testCertRequest(t, false),
+	})
+	if err != nil {
+		t.Fatalf("MintKernelCert: %v", err)
+	}
+	leaf, err := parseCertProto(chain.GetChain()[0])
+	if err != nil {
+		t.Fatalf("parse leaf: %v", err)
+	}
+	assertURI(t, leaf.URIs, "spiffe://local/dev/kernel/kernel-0")
+}
+
+func TestHandlerRejectsCallerMetadataMismatchingTokenBoundPod(t *testing.T) {
+	cfg := testConfig(t)
+	signer, err := NewSigner(cfg)
+	if err != nil {
+		t.Fatalf("NewSigner: %v", err)
+	}
+	handler, err := NewHandler(cfg, signer, fakeReviewer{status: &TokenReviewStatus{
+		Authenticated: true,
+		Username:      "system:serviceaccount:cavalier:kernel",
+		UID:           "uid-1",
+		Audiences:     []string{"kmaker"},
+		Extra:         tokenReviewPodExtra("kernel-0", "pod-uid-0"),
+	}}, fakePodGetter{pod: testKubernetesPod("cavalier", "kernel-0", "pod-uid-0", "kernel", "Running")})
+	if err != nil {
+		t.Fatalf("NewHandler: %v", err)
+	}
+
+	tests := []struct {
+		name   string
+		mutate func(*pb.MintKernelCertRequest)
+	}{
+		{
+			name: "instance id",
+			mutate: func(req *pb.MintKernelCertRequest) {
+				req.InstanceId = "kernel-1"
+			},
+		},
+		{
+			name: "pod name",
+			mutate: func(req *pb.MintKernelCertRequest) {
+				req.PodName = "kernel-1"
+			},
+		},
+		{
+			name: "pod uid",
+			mutate: func(req *pb.MintKernelCertRequest) {
+				req.PodUid = "pod-uid-1"
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			req := &pb.MintKernelCertRequest{
+				K8SToken:    "token",
+				CertRequest: testCertRequest(t, false),
+			}
+			tt.mutate(req)
+			_, err := handler.MintKernelCert(context.Background(), nil, req)
+			if status.Code(err) != codes.PermissionDenied {
+				t.Fatalf("expected PermissionDenied, got %v", err)
+			}
+		})
+	}
+}
+
+func TestHandlerRejectsMissingTokenBoundPod(t *testing.T) {
+	cfg := testConfig(t)
+	signer, err := NewSigner(cfg)
+	if err != nil {
+		t.Fatalf("NewSigner: %v", err)
+	}
+	handler, err := NewHandler(cfg, signer, fakeReviewer{status: &TokenReviewStatus{
+		Authenticated: true,
+		Username:      "system:serviceaccount:cavalier:kernel",
+		UID:           "uid-1",
+		Audiences:     []string{"kmaker"},
+	}}, fakePodGetter{pod: testKubernetesPod("cavalier", "kernel-0", "pod-uid-0", "kernel", "Running")})
+	if err != nil {
+		t.Fatalf("NewHandler: %v", err)
+	}
+
+	_, err = handler.MintKernelCert(context.Background(), nil, &pb.MintKernelCertRequest{
+		K8SToken:    "token",
+		CertRequest: testCertRequest(t, false),
+	})
+	if status.Code(err) != codes.PermissionDenied {
+		t.Fatalf("expected PermissionDenied, got %v", err)
+	}
+}
+
+func TestHandlerRejectsLivePodMismatch(t *testing.T) {
+	tests := []struct {
+		name string
+		pod  *KubernetesPod
+		err  error
+	}{
+		{
+			name: "uid mismatch",
+			pod:  testKubernetesPod("cavalier", "kernel-0", "pod-uid-1", "kernel", "Running"),
+		},
+		{
+			name: "service account mismatch",
+			pod:  testKubernetesPod("cavalier", "kernel-0", "pod-uid-0", "not-kernel", "Running"),
+		},
+		{
+			name: "terminal pod",
+			pod:  testKubernetesPod("cavalier", "kernel-0", "pod-uid-0", "kernel", "Succeeded"),
+		},
+		{
+			name: "unknown pod phase",
+			pod:  testKubernetesPod("cavalier", "kernel-0", "pod-uid-0", "kernel", "Unknown"),
+		},
+		{
+			name: "pod lookup error",
+			err:  context.DeadlineExceeded,
+		},
+		{
+			name: "pod lookup returned nil",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			cfg := testConfig(t)
+			signer, err := NewSigner(cfg)
+			if err != nil {
+				t.Fatalf("NewSigner: %v", err)
+			}
+			handler, err := NewHandler(cfg, signer, fakeReviewer{status: &TokenReviewStatus{
+				Authenticated: true,
+				Username:      "system:serviceaccount:cavalier:kernel",
+				UID:           "uid-1",
+				Audiences:     []string{"kmaker"},
+				Extra:         tokenReviewPodExtra("kernel-0", "pod-uid-0"),
+			}}, fakePodGetter{pod: tt.pod, err: tt.err})
+			if err != nil {
+				t.Fatalf("NewHandler: %v", err)
+			}
+
+			_, err = handler.MintKernelCert(context.Background(), nil, &pb.MintKernelCertRequest{
+				K8SToken:    "token",
+				CertRequest: testCertRequest(t, false),
+			})
+			if status.Code(err) != codes.PermissionDenied {
+				t.Fatalf("expected PermissionDenied, got %v", err)
+			}
+		})
+	}
+}
+
 func TestHandlerRejectsWrongServiceAccount(t *testing.T) {
 	cfg := testConfig(t)
 	signer, err := NewSigner(cfg)
@@ -100,7 +352,7 @@ func TestHandlerRejectsWrongServiceAccount(t *testing.T) {
 		Authenticated: true,
 		Username:      "system:serviceaccount:default:not-kernel",
 		Audiences:     []string{"kmaker"},
-	}})
+	}}, fakePodGetter{pod: testKubernetesPod("default", "kernel-0", "pod-uid-0", "not-kernel", "Running")})
 	if err != nil {
 		t.Fatalf("NewHandler: %v", err)
 	}
@@ -128,7 +380,7 @@ func TestSignerRejectsOutOfScopeURISAN(t *testing.T) {
 	}
 }
 
-func TestSignerAllowsKernelPathLenZeroCA(t *testing.T) {
+func TestSignerRejectsKernelCA(t *testing.T) {
 	cfg := testConfig(t)
 	signer, err := NewSigner(cfg)
 	if err != nil {
@@ -138,19 +390,8 @@ func TestSignerAllowsKernelPathLenZeroCA(t *testing.T) {
 		InstanceId:  "kernel-ca-0",
 		CertRequest: testCertRequest(t, true),
 	}
-	chain, err := signer.MintKernelCertificate(req)
-	if err != nil {
-		t.Fatalf("MintKernelCertificate: %v", err)
-	}
-	cert, err := parseCertProto(chain.GetChain()[0])
-	if err != nil {
-		t.Fatalf("parse cert: %v", err)
-	}
-	if !cert.IsCA {
-		t.Fatal("expected CA certificate")
-	}
-	if cert.MaxPathLen != 0 || !cert.MaxPathLenZero {
-		t.Fatalf("expected pathlen zero CA, got MaxPathLen=%d MaxPathLenZero=%t", cert.MaxPathLen, cert.MaxPathLenZero)
+	if _, err := signer.MintKernelCertificate(req); err == nil {
+		t.Fatal("expected CA request to fail")
 	}
 }
 
@@ -252,4 +493,21 @@ func assertURI(t *testing.T, uris []*url.URL, want string) {
 		}
 	}
 	t.Fatalf("URI SAN %q not found in %v", want, uris)
+}
+
+func tokenReviewPodExtra(podName, podUID string) map[string][]string {
+	return map[string][]string{
+		kubernetesPodNameExtraKey: []string{podName},
+		kubernetesPodUIDExtraKey:  []string{podUID},
+	}
+}
+
+func testKubernetesPod(namespace, name, uid, serviceAccountName, phase string) *KubernetesPod {
+	return &KubernetesPod{
+		Namespace:          namespace,
+		Name:               name,
+		UID:                uid,
+		ServiceAccountName: serviceAccountName,
+		Phase:              phase,
+	}
 }

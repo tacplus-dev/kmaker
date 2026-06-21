@@ -32,11 +32,11 @@ func Run(args []string) error {
 	if err != nil {
 		return fmt.Errorf("signer: %w", err)
 	}
-	reviewer, err := NewInClusterTokenReviewer()
+	kube, err := NewInClusterKubernetesClient()
 	if err != nil {
-		return fmt.Errorf("kubernetes token reviewer: %w", err)
+		return fmt.Errorf("kubernetes client: %w", err)
 	}
-	handler, err := NewHandler(cfg, signer, reviewer)
+	handler, err := NewHandler(cfg, signer, kube, kube)
 	if err != nil {
 		return fmt.Errorf("handler: %w", err)
 	}

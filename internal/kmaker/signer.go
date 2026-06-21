@@ -70,11 +70,35 @@ func (s *Signer) MintKernelCertificate(req *pb.MintKernelCertRequest) (*x509pb.X
 		return nil, err
 	}
 
-	uriSANs, err := s.kernelURISANs(certReq.GetUriSans(), req.GetInstanceId())
-	if err != nil {
-		return nil, err
+	if certReq.GetIsCa() {
+		return nil, fmt.Errorf("kernel certificates may not request CA issuance")
 	}
-	dnsSANs, err := validateDNSNames(certReq.GetDnsNames())
+	if certReq.GetPathLenConstraint() != 0 {
+		return nil, fmt.Errorf("kernel leaf certificates may not set path_len_constraint")
+	}
+	if certReq.GetIssuer() != "" && certReq.GetIssuer() != "kernel" {
+		return nil, fmt.Errorf("kernel certificate subject is server controlled")
+	}
+	if certReq.GetKeyUsage() != x509pb.X509KeyUsage_X509_KEY_USAGE_DIGITAL_SIGNATURE {
+		return nil, fmt.Errorf("kernel certificate key usage is server controlled")
+	}
+	for _, usage := range certReq.GetExtKeyUsage() {
+		if usage != x509pb.X509ExtKeyUsage_X509_EXT_KEY_USAGE_SERVER_AUTH &&
+			usage != x509pb.X509ExtKeyUsage_X509_EXT_KEY_USAGE_CLIENT_AUTH {
+			return nil, fmt.Errorf("kernel certificate extended key usage is server controlled")
+		}
+	}
+	if len(certReq.GetDnsNames()) > 0 {
+		return nil, fmt.Errorf("kernel certificate DNS SANs are server controlled")
+	}
+	if len(certReq.GetUriSans()) > 0 {
+		return nil, fmt.Errorf("kernel certificate URI SANs are server controlled")
+	}
+	if req.GetInstanceId() == "" {
+		return nil, fmt.Errorf("kernel certificate instance_id must be derived before signing")
+	}
+
+	uriSANs, err := s.kernelURISANs(nil, req.GetInstanceId())
 	if err != nil {
 		return nil, err
 	}
@@ -89,41 +113,17 @@ func (s *Signer) MintKernelCertificate(req *pb.MintKernelCertRequest) (*x509pb.X
 		return nil, err
 	}
 
-	subjectCN := certReq.GetIssuer()
-	if subjectCN == "" {
-		subjectCN = "kernel"
-	}
-
-	isCA := certReq.GetIsCa()
-	pathLen := certReq.GetPathLenConstraint()
-	if isCA && pathLen > 0 {
-		return nil, fmt.Errorf("kernel CA requests may not set path_len_constraint above 0")
-	}
-
 	template := &stdx509.Certificate{
 		SerialNumber:          serial,
-		Subject:               pkix.Name{CommonName: subjectCN},
+		Subject:               pkix.Name{CommonName: "kernel"},
 		NotBefore:             now.Add(-1 * time.Minute),
 		NotAfter:              notAfter,
-		DNSNames:              dnsSANs,
 		URIs:                  uriSANs,
 		BasicConstraintsValid: true,
-		IsCA:                  isCA,
+		IsCA:                  false,
 	}
-	if isCA {
-		template.KeyUsage = stdx509.KeyUsageCertSign | stdx509.KeyUsageCRLSign
-		template.MaxPathLen = int(pathLen)
-		template.MaxPathLenZero = pathLen == 0
-	} else {
-		template.KeyUsage = mapKeyUsage(certReq.GetKeyUsage())
-		if template.KeyUsage&(stdx509.KeyUsageCertSign|stdx509.KeyUsageCRLSign) != 0 {
-			return nil, fmt.Errorf("leaf kernel certificates may not request CA key usage")
-		}
-		template.ExtKeyUsage = mapExtKeyUsages(certReq.GetExtKeyUsage())
-		if len(template.ExtKeyUsage) == 0 {
-			template.ExtKeyUsage = []stdx509.ExtKeyUsage{stdx509.ExtKeyUsageServerAuth, stdx509.ExtKeyUsageClientAuth}
-		}
-	}
+	template.KeyUsage = stdx509.KeyUsageDigitalSignature
+	template.ExtKeyUsage = []stdx509.ExtKeyUsage{stdx509.ExtKeyUsageServerAuth, stdx509.ExtKeyUsageClientAuth}
 
 	der, err := stdx509.CreateCertificate(rand.Reader, template, s.caCert, pub, s.caKey)
 	if err != nil {
@@ -148,7 +148,7 @@ func (s *Signer) MintKernelCertificate(req *pb.MintKernelCertRequest) (*x509pb.X
 }
 
 func (s *Signer) kernelURISANs(requested []string, instanceID string) ([]*url.URL, error) {
-	base := "spiffe://" + s.spiffePrefix + "/kernel"
+	base := s.kernelBaseURI()
 	seen := map[string]struct{}{base: {}}
 	for _, raw := range requested {
 		if raw == "" {
@@ -175,6 +175,10 @@ func (s *Signer) kernelURISANs(requested []string, instanceID string) ([]*url.UR
 		out = append(out, u)
 	}
 	return out, nil
+}
+
+func (s *Signer) kernelBaseURI() string {
+	return "spiffe://" + s.spiffePrefix + "/kernel"
 }
 
 func (s *Signer) notAfter(now time.Time, requestedExp int64) (time.Time, error) {

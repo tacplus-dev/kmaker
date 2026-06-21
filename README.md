@@ -3,8 +3,9 @@
 Kmaker is the bootstrap certificate authority for kernel instances.
 Kernel pods present Kubernetes projected service account tokens to
 `Kmaker.MintKernelCert`; kmaker validates the token with the Kubernetes
-TokenReview API and signs a Cavalier `x509.X509CertRequest` under the
-operator-provisioned cluster signing CA.
+TokenReview API, verifies the token-bound pod with the Kubernetes Pod API, and
+signs a Cavalier `x509.X509CertRequest` under the operator-provisioned cluster
+signing CA.
 
 Kmaker intentionally starts outside the normal kernel-backed service manager:
 kernel needs kmaker before kernel can mint ordinary Cavalier service
@@ -31,14 +32,22 @@ is intended only for local/development bootstrap.
 
 ## Kubernetes
 
-The kmaker pod must be allowed to create TokenReview requests:
+The kmaker pod must be allowed to create TokenReview requests and read Pods in
+the Cavalier namespace:
 
 ```yaml
 rules:
   - apiGroups: ["authentication.k8s.io"]
     resources: ["tokenreviews"]
     verbs: ["create"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get"]
 ```
+
+Kmaker derives the issued kernel instance identity from TokenReview pod metadata
+and live Pod facts. Caller-supplied SANs, CA bits, key usages, and mismatching
+pod/instance metadata are rejected.
 
 ## Build
 
