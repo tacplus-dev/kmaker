@@ -115,26 +115,14 @@ message PublishResponse {
 // ---------------------------------------------------------------------------
 
 // RecordMeta carries Kafka record metadata alongside typed payloads.
-// Used by generated Subscribe response wrappers:
-//
-//   message Subscribe{State}{Field}Record {
-//     RecordMeta meta = 1;
-//     {FieldType} payload = 2;
-//   }
-//
-// Generated Publish request wrappers use key + headers directly:
-//
-//   message Publish{State}{Field}Record {
-//     string key = 1;
-//     map<string, string> headers = 2;
-//     {FieldType} payload = 3;
-//   }
+// This shape is the wire contract for generated typed Subscribe envelopes and
+// must stay aligned with tacplus's EventBus support proto and broker emission.
 message RecordMeta {
-  string key = 1;
-  map<string, string> headers = 2;
+  bytes key = 1;
+  string topic = 2;
   int32 partition = 3;
   int64 offset = 4;
-  google.protobuf.Timestamp event_timestamp = 5;
+  google.protobuf.Timestamp timestamp = 5;
 }
 
 // ---------------------------------------------------------------------------
@@ -148,18 +136,36 @@ message TopicInfo {
   int64 retention_ms = 3;
   map<int32, int64> earliest_offsets = 4;
   map<int32, int64> latest_offsets = 5;
+  string trace_id = 200;
+  bool noop = 201;
 }
 
 message TopicInfoRequest {
   string topic = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
+message ListTopicsRequest {
+  // page_size 0 uses the method_collection default.
+  int32 page_size = 1;
+  string page_token = 2;
+  string trace_id = 200;
+  bool noop = 201;
 }
 
 message ListTopicsResponse {
   repeated TopicInfo topics = 1;
+  string next_page_token = 2;
+  int64 total_count = 3;
+  string trace_id = 200;
+  bool noop = 201;
 }
 
 message DeleteTopicRequest {
   string topic = 1;
+  string trace_id = 200;
+  bool noop = 201;
 }
 
 message UpdateTopicConfigRequest {
@@ -169,6 +175,8 @@ message UpdateTopicConfigRequest {
   // partition_count: new total partition count. Must be >= current count.
   // Kafka does not support decreasing partitions. 0 = no change.
   int32 partition_count = 3;
+  string trace_id = 200;
+  bool noop = 201;
 }
 
 // ---------------------------------------------------------------------------
@@ -189,14 +197,30 @@ message ConsumerGroupInfo {
   string state = 2;
   repeated PartitionLag partitions = 3;
   int64 total_lag = 4;
+  string trace_id = 200;
+  bool noop = 201;
 }
 
 message ConsumerGroupRequest {
   string group_id = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
+message ListConsumerGroupsRequest {
+  // page_size 0 uses the method_collection default.
+  int32 page_size = 1;
+  string page_token = 2;
+  string trace_id = 200;
+  bool noop = 201;
 }
 
 message ListConsumerGroupsResponse {
   repeated ConsumerGroupInfo groups = 1;
+  string next_page_token = 2;
+  int64 total_count = 3;
+  string trace_id = 200;
+  bool noop = 201;
 }
 
 message ResetConsumerGroupOffsetsRequest {
@@ -208,6 +232,8 @@ message ResetConsumerGroupOffsetsRequest {
     bool to_latest = 5;
     bool to_earliest = 6;
   }
+  string trace_id = 200;
+  bool noop = 201;
 }
 
 // ---------------------------------------------------------------------------
@@ -225,6 +251,8 @@ message ClusterHealthResponse {
   int32 broker_count = 1;
   repeated BrokerInfo brokers = 2;
   int32 controller_id = 3;
+  string trace_id = 200;
+  bool noop = 201;
 }
 
 // ---------------------------------------------------------------------------
@@ -237,7 +265,7 @@ message ClusterHealthResponse {
 service Admin {
 
   // Topic admin.
-  rpc ListTopics(google.protobuf.Empty) returns (ListTopicsResponse) {
+  rpc ListTopics(ListTopicsRequest) returns (ListTopicsResponse) {
   }
   rpc GetTopicInfo(TopicInfoRequest) returns (TopicInfo);
   rpc DeleteTopic(DeleteTopicRequest) returns (google.protobuf.Empty);
@@ -245,7 +273,7 @@ service Admin {
 
   // Consumer group admin.
   rpc GetConsumerGroupLag(ConsumerGroupRequest) returns (ConsumerGroupInfo);
-  rpc ListConsumerGroups(google.protobuf.Empty) returns (ListConsumerGroupsResponse) {
+  rpc ListConsumerGroups(ListConsumerGroupsRequest) returns (ListConsumerGroupsResponse) {
   }
   rpc ResetConsumerGroupOffsets(ResetConsumerGroupOffsetsRequest) returns (google.protobuf.Empty);
   rpc DeleteConsumerGroup(ConsumerGroupRequest) returns (google.protobuf.Empty);
@@ -325,6 +353,8 @@ message Config {
 
   // state_refresh_interval_seconds controls how often this node re-registers in EventbusState.
   int32 state_refresh_interval_seconds = 12;
+  string trace_id = 200;
+  bool noop = 201;
 }
 
 // ============================================================================
@@ -350,4 +380,170 @@ message EventbusState {
   // nodes is the collection of registered eventbus instances.
   // Keyed by node_id, evicted after 120s if not refreshed.
   repeated EventbusNode nodes = 1;
+}
+
+// EventbusConfigState is the state boundary for eventbus service configuration.
+// Auto-injected by tacplus from (spec.grpc_config) annotation.
+message EventbusConfigState {
+
+  eventbus.Config config = 1;
+}
+
+// Collection query types (auto-injected)
+enum ComparisonOp {
+  COMPARISON_OP_UNSPECIFIED = 0;
+  COMPARISON_OP_EQ = 1;
+  COMPARISON_OP_NE = 2;
+  COMPARISON_OP_GT = 3;
+  COMPARISON_OP_GE = 4;
+  COMPARISON_OP_LT = 5;
+  COMPARISON_OP_LE = 6;
+  COMPARISON_OP_IN = 7;
+  COMPARISON_OP_NOT_IN = 8;
+  COMPARISON_OP_LIKE = 9;
+  COMPARISON_OP_IS_NULL = 10;
+  COMPARISON_OP_IS_NOT_NULL = 11;
+}
+enum SortDirection {
+  SORT_DIRECTION_UNSPECIFIED = 0;
+  SORT_DIRECTION_ASC = 1;
+  SORT_DIRECTION_DESC = 2;
+}
+enum LogicalOp {
+  LOGICAL_OP_UNSPECIFIED = 0;
+  LOGICAL_OP_AND = 1;
+  LOGICAL_OP_OR = 2;
+}
+message QueryValue {
+  oneof value { string string_value = 1; int64 int_value = 2; double double_value = 3; bool bool_value = 4; }
+  string trace_id = 200;
+  bool noop = 201;
+}
+message Predicate {
+  string field_name = 1;
+  ComparisonOp op = 2;
+  QueryValue value = 3;
+  repeated QueryValue values = 4;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message PredicateGroup {
+  LogicalOp op = 1;
+  repeated Predicate predicates = 2;
+  repeated PredicateGroup groups = 3;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message SortField {
+  string field_name = 1;
+  SortDirection direction = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message CollectionQuery {
+  PredicateGroup where = 1;
+  repeated SortField order_by = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
+// ============================================================================
+// Auto-generated State Service (tacplus)
+// ============================================================================
+// tacplus:generated-service
+service EventbusStateService {
+	// Collection: Nodes
+	rpc GetNodes(NodesGetRequest) returns (NodesValueResponse);
+	rpc PutNodes(NodesPutRequest) returns (NodesValueResponse);
+	rpc SetNodes(NodesPutRequest) returns (MapEmpty);
+	rpc RemoveNodes(NodesGetRequest) returns (NodesValueResponse);
+	rpc DeleteNodes(NodesGetRequest) returns (MapEmpty);
+	rpc ContainsKeyNodes(NodesGetRequest) returns (NodesValueResponse);
+	rpc GetAllNodes(NodesGetAllRequest) returns (NodesEntriesResponse);
+	rpc KeySetNodes(NodesKeysRequest) returns (NodesKeysResponse);
+	rpc SizeNodes(NodesSizeRequest) returns (NodesSizeResponse);
+	rpc ClearNodes(NodesClearRequest) returns (MapEmpty);
+	rpc PutIfAbsentNodes(NodesPutRequest) returns (NodesValueResponse);
+	rpc WatchNodes(trace.TraceRequest) returns (stream NodesEntriesResponse);
+	rpc QueryNodes(NodesQueryRequest) returns (NodesQueryResponse);
+	rpc WatchQueryNodes(NodesQueryRequest) returns (stream NodesQueryResponse);
+}
+
+message NodesGetRequest {
+  string key = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message NodesPutRequest {
+  string key = 1;
+  EventbusNode value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message NodesGetAllRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message NodesKeysRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message NodesSizeRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message NodesClearRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message NodesValueResponse {
+  EventbusNode value = 1;
+  bool found = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message NodesEntriesResponse {
+  map<string, EventbusNode> entries = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message NodesKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message NodesSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message NodesQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message NodesQueryResponse {
+  repeated EventbusNode results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
+// ============================================================================
+// Auto-generated State Service (tacplus)
+// ============================================================================
+// tacplus:generated-service
+service EventbusConfigStateService {
+	// Singleton: Config
+	rpc GetConfig(trace.TraceRequest) returns (Config);
+	rpc SetConfig(Config) returns (Config);
+	rpc WatchConfig(trace.TraceRequest) returns (stream Config);
+}
+
+message MapEmpty {
+  string trace_id = 200;
+  bool noop = 201;
 }

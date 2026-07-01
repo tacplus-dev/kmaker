@@ -508,7 +508,7 @@ message ServiceInfo {
   string event_tag = 8;
 
   // smb marks a Service Mesh Blackbox service: its own instances talk over a
-  // black-box peer protocol (e.g. Hazelcast) within a single cluster (SPIFFE
+  // black-box peer protocol within a single cluster (SPIFFE
   // plan D7). Consumers read this from the registry, not proto text, to drive
   // the per-SMB CA + member-cert wiring.
   bool smb = 9;

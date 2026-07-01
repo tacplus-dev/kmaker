@@ -823,8 +823,8 @@ const (
 	ArgusRPCs_ARGUS_RPCS_GET_USER_TOKEN_STATS         ArgusRPCs = 21
 	ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_PROFILE       ArgusRPCs = 22
 	ArgusRPCs_ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY    ArgusRPCs = 23
-	ArgusRPCs_ARGUS_RPCS_GET_FILE_ACTIVITY            ArgusRPCs = 24
-	ArgusRPCs_ARGUS_RPCS_GET_SESSION_TIMELINE         ArgusRPCs = 25
+	ArgusRPCs_ARGUS_RPCS_LIST_FILE_ACTIVITY           ArgusRPCs = 24
+	ArgusRPCs_ARGUS_RPCS_LIST_SESSION_TIMELINE        ArgusRPCs = 25
 	ArgusRPCs_ARGUS_RPCS_GET_AGENT_TREE               ArgusRPCs = 26
 	ArgusRPCs_ARGUS_RPCS_GET_SYSTEM_STATS             ArgusRPCs = 27
 	ArgusRPCs_ARGUS_RPCS_LIST_TOOL_LEADERBOARD        ArgusRPCs = 28
@@ -864,8 +864,8 @@ var (
 		21: "ARGUS_RPCS_GET_USER_TOKEN_STATS",
 		22: "ARGUS_RPCS_SUBSCRIBE_USER_PROFILE",
 		23: "ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY",
-		24: "ARGUS_RPCS_GET_FILE_ACTIVITY",
-		25: "ARGUS_RPCS_GET_SESSION_TIMELINE",
+		24: "ARGUS_RPCS_LIST_FILE_ACTIVITY",
+		25: "ARGUS_RPCS_LIST_SESSION_TIMELINE",
 		26: "ARGUS_RPCS_GET_AGENT_TREE",
 		27: "ARGUS_RPCS_GET_SYSTEM_STATS",
 		28: "ARGUS_RPCS_LIST_TOOL_LEADERBOARD",
@@ -902,8 +902,8 @@ var (
 		"ARGUS_RPCS_GET_USER_TOKEN_STATS":         21,
 		"ARGUS_RPCS_SUBSCRIBE_USER_PROFILE":       22,
 		"ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY":    23,
-		"ARGUS_RPCS_GET_FILE_ACTIVITY":            24,
-		"ARGUS_RPCS_GET_SESSION_TIMELINE":         25,
+		"ARGUS_RPCS_LIST_FILE_ACTIVITY":           24,
+		"ARGUS_RPCS_LIST_SESSION_TIMELINE":        25,
 		"ARGUS_RPCS_GET_AGENT_TREE":               26,
 		"ARGUS_RPCS_GET_SYSTEM_STATS":             27,
 		"ARGUS_RPCS_LIST_TOOL_LEADERBOARD":        28,
@@ -1011,56 +1011,56 @@ func (SamlRPCs) EnumDescriptor() ([]byte, []int) {
 	return file_generated_services_proto_rawDescGZIP(), []int{12}
 }
 
-// claudesensor (vservice, hosted by eventbus)
-type ClaudesensorRPCs int32
+// agentsensor (vservice, hosted by eventbus)
+type AgentsensorRPCs int32
 
 const (
-	ClaudesensorRPCs_CLAUDESENSOR_RPCS_UNSPECIFIED                                                ClaudesensorRPCs = 0
-	ClaudesensorRPCs_CLAUDESENSOR_RPCS_PUBLISH_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM   ClaudesensorRPCs = 1
-	ClaudesensorRPCs_CLAUDESENSOR_RPCS_SUBSCRIBE_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM ClaudesensorRPCs = 2
-	ClaudesensorRPCs_CLAUDESENSOR_RPCS_ANY                                                        ClaudesensorRPCs = 99 // wildcard: allow any RPC
+	AgentsensorRPCs_AGENTSENSOR_RPCS_UNSPECIFIED                                        AgentsensorRPCs = 0
+	AgentsensorRPCs_AGENTSENSOR_RPCS_PUBLISH_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM   AgentsensorRPCs = 1
+	AgentsensorRPCs_AGENTSENSOR_RPCS_SUBSCRIBE_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM AgentsensorRPCs = 2
+	AgentsensorRPCs_AGENTSENSOR_RPCS_ANY                                                AgentsensorRPCs = 99 // wildcard: allow any RPC
 )
 
-// Enum value maps for ClaudesensorRPCs.
+// Enum value maps for AgentsensorRPCs.
 var (
-	ClaudesensorRPCs_name = map[int32]string{
-		0:  "CLAUDESENSOR_RPCS_UNSPECIFIED",
-		1:  "CLAUDESENSOR_RPCS_PUBLISH_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM",
-		2:  "CLAUDESENSOR_RPCS_SUBSCRIBE_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM",
-		99: "CLAUDESENSOR_RPCS_ANY",
+	AgentsensorRPCs_name = map[int32]string{
+		0:  "AGENTSENSOR_RPCS_UNSPECIFIED",
+		1:  "AGENTSENSOR_RPCS_PUBLISH_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM",
+		2:  "AGENTSENSOR_RPCS_SUBSCRIBE_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM",
+		99: "AGENTSENSOR_RPCS_ANY",
 	}
-	ClaudesensorRPCs_value = map[string]int32{
-		"CLAUDESENSOR_RPCS_UNSPECIFIED":                                                0,
-		"CLAUDESENSOR_RPCS_PUBLISH_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM":   1,
-		"CLAUDESENSOR_RPCS_SUBSCRIBE_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM": 2,
-		"CLAUDESENSOR_RPCS_ANY":                                                        99,
+	AgentsensorRPCs_value = map[string]int32{
+		"AGENTSENSOR_RPCS_UNSPECIFIED":                                        0,
+		"AGENTSENSOR_RPCS_PUBLISH_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM":   1,
+		"AGENTSENSOR_RPCS_SUBSCRIBE_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM": 2,
+		"AGENTSENSOR_RPCS_ANY":                                                99,
 	}
 )
 
-func (x ClaudesensorRPCs) Enum() *ClaudesensorRPCs {
-	p := new(ClaudesensorRPCs)
+func (x AgentsensorRPCs) Enum() *AgentsensorRPCs {
+	p := new(AgentsensorRPCs)
 	*p = x
 	return p
 }
 
-func (x ClaudesensorRPCs) String() string {
+func (x AgentsensorRPCs) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (ClaudesensorRPCs) Descriptor() protoreflect.EnumDescriptor {
+func (AgentsensorRPCs) Descriptor() protoreflect.EnumDescriptor {
 	return file_generated_services_proto_enumTypes[13].Descriptor()
 }
 
-func (ClaudesensorRPCs) Type() protoreflect.EnumType {
+func (AgentsensorRPCs) Type() protoreflect.EnumType {
 	return &file_generated_services_proto_enumTypes[13]
 }
 
-func (x ClaudesensorRPCs) Number() protoreflect.EnumNumber {
+func (x AgentsensorRPCs) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use ClaudesensorRPCs.Descriptor instead.
-func (ClaudesensorRPCs) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use AgentsensorRPCs.Descriptor instead.
+func (AgentsensorRPCs) EnumDescriptor() ([]byte, []int) {
 	return file_generated_services_proto_rawDescGZIP(), []int{13}
 }
 
@@ -1351,7 +1351,7 @@ const file_generated_services_proto_rawDesc = "" +
 	"\x17OPENAI_RPCS_UNSPECIFIED\x10\x00\x12&\n" +
 	"\"OPENAI_RPCS_CREATE_CHAT_COMPLETION\x10\x01\x12/\n" +
 	"+OPENAI_RPCS_GENERATE_CHAT_COMPLETION_STREAM\x10\x02\x12\x13\n" +
-	"\x0fOPENAI_RPCS_ANY\x10c*\xa7\n" +
+	"\x0fOPENAI_RPCS_ANY\x10c*\xa9\n" +
 	"\n" +
 	"\tArgusRPCs\x12\x1a\n" +
 	"\x16ARGUS_RPCS_UNSPECIFIED\x10\x00\x12\x1c\n" +
@@ -1378,9 +1378,9 @@ const file_generated_services_proto_rawDesc = "" +
 	"\x1bARGUS_RPCS_GET_USER_PROFILE\x10\x14\x12#\n" +
 	"\x1fARGUS_RPCS_GET_USER_TOKEN_STATS\x10\x15\x12%\n" +
 	"!ARGUS_RPCS_SUBSCRIBE_USER_PROFILE\x10\x16\x12(\n" +
-	"$ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY\x10\x17\x12 \n" +
-	"\x1cARGUS_RPCS_GET_FILE_ACTIVITY\x10\x18\x12#\n" +
-	"\x1fARGUS_RPCS_GET_SESSION_TIMELINE\x10\x19\x12\x1d\n" +
+	"$ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY\x10\x17\x12!\n" +
+	"\x1dARGUS_RPCS_LIST_FILE_ACTIVITY\x10\x18\x12$\n" +
+	" ARGUS_RPCS_LIST_SESSION_TIMELINE\x10\x19\x12\x1d\n" +
 	"\x19ARGUS_RPCS_GET_AGENT_TREE\x10\x1a\x12\x1f\n" +
 	"\x1bARGUS_RPCS_GET_SYSTEM_STATS\x10\x1b\x12$\n" +
 	" ARGUS_RPCS_LIST_TOOL_LEADERBOARD\x10\x1c\x12\x1f\n" +
@@ -1400,12 +1400,12 @@ const file_generated_services_proto_rawDesc = "" +
 	"\x1aSAML_RPCS_GET_IDP_METADATA\x10\x05\x12\x1d\n" +
 	"\x19SAML_RPCS_GET_SP_METADATA\x10\x06\x12 \n" +
 	"\x1cSAML_RPCS_GET_IDP_DESCRIPTOR\x10\a\x12\x11\n" +
-	"\rSAML_RPCS_ANY\x10c*\xf2\x01\n" +
-	"\x10ClaudesensorRPCs\x12!\n" +
-	"\x1dCLAUDESENSOR_RPCS_UNSPECIFIED\x10\x00\x12N\n" +
-	"JCLAUDESENSOR_RPCS_PUBLISH_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM\x10\x01\x12P\n" +
-	"LCLAUDESENSOR_RPCS_SUBSCRIBE_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM\x10\x02\x12\x19\n" +
-	"\x15CLAUDESENSOR_RPCS_ANY\x10c*\xcb\x01\n" +
+	"\rSAML_RPCS_ANY\x10c*\xdd\x01\n" +
+	"\x0fAgentsensorRPCs\x12 \n" +
+	"\x1cAGENTSENSOR_RPCS_UNSPECIFIED\x10\x00\x12E\n" +
+	"AAGENTSENSOR_RPCS_PUBLISH_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM\x10\x01\x12G\n" +
+	"CAGENTSENSOR_RPCS_SUBSCRIBE_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM\x10\x02\x12\x18\n" +
+	"\x14AGENTSENSOR_RPCS_ANY\x10c*\xcb\x01\n" +
 	"\rScmsensorRPCs\x12\x1e\n" +
 	"\x1aSCMSENSOR_RPCS_UNSPECIFIED\x10\x00\x12?\n" +
 	";SCMSENSOR_RPCS_PUBLISH_SCMSENSOR_SCM_EVENT_BUS_EVENT_STREAM\x10\x01\x12A\n" +
@@ -1449,7 +1449,7 @@ var file_generated_services_proto_goTypes = []any{
 	(OpenaiRPCs)(0),          // 10: services.OpenaiRPCs
 	(ArgusRPCs)(0),           // 11: services.ArgusRPCs
 	(SamlRPCs)(0),            // 12: services.SamlRPCs
-	(ClaudesensorRPCs)(0),    // 13: services.ClaudesensorRPCs
+	(AgentsensorRPCs)(0),     // 13: services.AgentsensorRPCs
 	(ScmsensorRPCs)(0),       // 14: services.ScmsensorRPCs
 	(LlmsensorRPCs)(0),       // 15: services.LlmsensorRPCs
 	(GitlabconnectorRPCs)(0), // 16: services.GitlabconnectorRPCs

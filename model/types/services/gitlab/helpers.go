@@ -5451,6 +5451,8 @@ type listissuesrequestJSON struct {
 	UpdatedAfter     string   `json:"updated_after,omitempty"`
 	Page             int32    `json:"page,omitempty"`
 	PerPage          int32    `json:"per_page,omitempty"`
+	PageSize         int32    `json:"page_size,omitempty"`
+	PageToken        string   `json:"page_token,omitempty"`
 	TraceId          string   `json:"trace_id,omitempty"`
 	Noop             bool     `json:"noop,omitempty"`
 }
@@ -5475,6 +5477,8 @@ func ListIssuesRequestToJSON(v *ListIssuesRequest) ([]byte, error) {
 		UpdatedAfter:     v.UpdatedAfter,
 		Page:             v.Page,
 		PerPage:          v.PerPage,
+		PageSize:         v.PageSize,
+		PageToken:        v.PageToken,
 		TraceId:          v.TraceId,
 		Noop:             v.Noop,
 	}
@@ -5501,6 +5505,8 @@ func ListIssuesRequestToJSONPretty(v *ListIssuesRequest) ([]byte, error) {
 		UpdatedAfter:     v.UpdatedAfter,
 		Page:             v.Page,
 		PerPage:          v.PerPage,
+		PageSize:         v.PageSize,
+		PageToken:        v.PageToken,
 		TraceId:          v.TraceId,
 		Noop:             v.Noop,
 	}
@@ -5579,6 +5585,8 @@ func ListIssuesRequestFromJSON(data []byte) (*ListIssuesRequest, error) {
 	result.UpdatedAfter = raw.UpdatedAfter
 	result.Page = raw.Page
 	result.PerPage = raw.PerPage
+	result.PageSize = raw.PageSize
+	result.PageToken = raw.PageToken
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -5627,11 +5635,13 @@ func ListIssuesRequestToTOML(v *ListIssuesRequest) ([]byte, error) {
 // ListIssuesResponseJSON represents ListIssuesResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type listissuesresponseJSON struct {
-	Issues     []json.RawMessage `json:"issues,omitempty"`
-	Pagination json.RawMessage   `json:"pagination,omitempty"`
-	RateLimit  json.RawMessage   `json:"rate_limit,omitempty"`
-	TraceId    string            `json:"trace_id,omitempty"`
-	Noop       bool              `json:"noop,omitempty"`
+	Issues        []json.RawMessage `json:"issues,omitempty"`
+	Pagination    json.RawMessage   `json:"pagination,omitempty"`
+	RateLimit     json.RawMessage   `json:"rate_limit,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // ListIssuesResponseToJSON converts ListIssuesResponse to JSON bytes.
@@ -5670,8 +5680,10 @@ func ListIssuesResponseToJSON(v *ListIssuesResponse) ([]byte, error) {
 			data, _ := RateLimitInfoToJSON(v.RateLimit)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -5712,8 +5724,10 @@ func ListIssuesResponseToJSONPretty(v *ListIssuesResponse) ([]byte, error) {
 			data, _ := RateLimitInfoToJSON(v.RateLimit)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -5804,6 +5818,8 @@ func ListIssuesResponseFromJSON(data []byte) (*ListIssuesResponse, error) {
 			result.RateLimit = parsed
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -7263,6 +7279,8 @@ type listmergerequestsrequestJSON struct {
 	Labels       []string `json:"labels,omitempty"`
 	Page         int32    `json:"page,omitempty"`
 	PerPage      int32    `json:"per_page,omitempty"`
+	PageSize     int32    `json:"page_size,omitempty"`
+	PageToken    string   `json:"page_token,omitempty"`
 	TraceId      string   `json:"trace_id,omitempty"`
 	Noop         bool     `json:"noop,omitempty"`
 }
@@ -7286,6 +7304,8 @@ func ListMergeRequestsRequestToJSON(v *ListMergeRequestsRequest) ([]byte, error)
 		Labels:       v.Labels,
 		Page:         v.Page,
 		PerPage:      v.PerPage,
+		PageSize:     v.PageSize,
+		PageToken:    v.PageToken,
 		TraceId:      v.TraceId,
 		Noop:         v.Noop,
 	}
@@ -7311,6 +7331,8 @@ func ListMergeRequestsRequestToJSONPretty(v *ListMergeRequestsRequest) ([]byte, 
 		Labels:       v.Labels,
 		Page:         v.Page,
 		PerPage:      v.PerPage,
+		PageSize:     v.PageSize,
+		PageToken:    v.PageToken,
 		TraceId:      v.TraceId,
 		Noop:         v.Noop,
 	}
@@ -7388,6 +7410,8 @@ func ListMergeRequestsRequestFromJSON(data []byte) (*ListMergeRequestsRequest, e
 	result.Labels = raw.Labels
 	result.Page = raw.Page
 	result.PerPage = raw.PerPage
+	result.PageSize = raw.PageSize
+	result.PageToken = raw.PageToken
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -7439,6 +7463,8 @@ type listmergerequestsresponseJSON struct {
 	MergeRequests []json.RawMessage `json:"merge_requests,omitempty"`
 	Pagination    json.RawMessage   `json:"pagination,omitempty"`
 	RateLimit     json.RawMessage   `json:"rate_limit,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
 	TraceId       string            `json:"trace_id,omitempty"`
 	Noop          bool              `json:"noop,omitempty"`
 }
@@ -7479,8 +7505,10 @@ func ListMergeRequestsResponseToJSON(v *ListMergeRequestsResponse) ([]byte, erro
 			data, _ := RateLimitInfoToJSON(v.RateLimit)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -7521,8 +7549,10 @@ func ListMergeRequestsResponseToJSONPretty(v *ListMergeRequestsResponse) ([]byte
 			data, _ := RateLimitInfoToJSON(v.RateLimit)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -7613,6 +7643,8 @@ func ListMergeRequestsResponseFromJSON(data []byte) (*ListMergeRequestsResponse,
 			result.RateLimit = parsed
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -9108,6 +9140,8 @@ type listmergerequestchangesrequestJSON struct {
 	Metadata        string `json:"metadata,omitempty"`
 	ProjectId       string `json:"project_id,omitempty"`
 	MergeRequestIid int32  `json:"merge_request_iid,omitempty"`
+	PageSize        int32  `json:"page_size,omitempty"`
+	PageToken       string `json:"page_token,omitempty"`
 	TraceId         string `json:"trace_id,omitempty"`
 	Noop            bool   `json:"noop,omitempty"`
 }
@@ -9123,6 +9157,8 @@ func ListMergeRequestChangesRequestToJSON(v *ListMergeRequestChangesRequest) ([]
 		Metadata:        v.Metadata,
 		ProjectId:       v.ProjectId,
 		MergeRequestIid: v.MergeRequestIid,
+		PageSize:        v.PageSize,
+		PageToken:       v.PageToken,
 		TraceId:         v.TraceId,
 		Noop:            v.Noop,
 	}
@@ -9140,6 +9176,8 @@ func ListMergeRequestChangesRequestToJSONPretty(v *ListMergeRequestChangesReques
 		Metadata:        v.Metadata,
 		ProjectId:       v.ProjectId,
 		MergeRequestIid: v.MergeRequestIid,
+		PageSize:        v.PageSize,
+		PageToken:       v.PageToken,
 		TraceId:         v.TraceId,
 		Noop:            v.Noop,
 	}
@@ -9209,6 +9247,8 @@ func ListMergeRequestChangesRequestFromJSON(data []byte) (*ListMergeRequestChang
 	result.Metadata = raw.Metadata
 	result.ProjectId = raw.ProjectId
 	result.MergeRequestIid = raw.MergeRequestIid
+	result.PageSize = raw.PageSize
+	result.PageToken = raw.PageToken
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -9257,10 +9297,12 @@ func ListMergeRequestChangesRequestToTOML(v *ListMergeRequestChangesRequest) ([]
 // ListMergeRequestChangesResponseJSON represents ListMergeRequestChangesResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type listmergerequestchangesresponseJSON struct {
-	Changes   []json.RawMessage `json:"changes,omitempty"`
-	RateLimit json.RawMessage   `json:"rate_limit,omitempty"`
-	TraceId   string            `json:"trace_id,omitempty"`
-	Noop      bool              `json:"noop,omitempty"`
+	Changes       []json.RawMessage `json:"changes,omitempty"`
+	RateLimit     json.RawMessage   `json:"rate_limit,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // ListMergeRequestChangesResponseToJSON converts ListMergeRequestChangesResponse to JSON bytes.
@@ -9292,8 +9334,10 @@ func ListMergeRequestChangesResponseToJSON(v *ListMergeRequestChangesResponse) (
 			data, _ := RateLimitInfoToJSON(v.RateLimit)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -9327,8 +9371,10 @@ func ListMergeRequestChangesResponseToJSONPretty(v *ListMergeRequestChangesRespo
 			data, _ := RateLimitInfoToJSON(v.RateLimit)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -9412,6 +9458,8 @@ func ListMergeRequestChangesResponseFromJSON(data []byte) (*ListMergeRequestChan
 			result.RateLimit = parsed
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -9809,6 +9857,8 @@ type listpipelinesrequestJSON struct {
 	OrderBy   string `json:"order_by,omitempty"`
 	Page      int32  `json:"page,omitempty"`
 	PerPage   int32  `json:"per_page,omitempty"`
+	PageSize  int32  `json:"page_size,omitempty"`
+	PageToken string `json:"page_token,omitempty"`
 	TraceId   string `json:"trace_id,omitempty"`
 	Noop      bool   `json:"noop,omitempty"`
 }
@@ -9830,6 +9880,8 @@ func ListPipelinesRequestToJSON(v *ListPipelinesRequest) ([]byte, error) {
 		OrderBy:   v.OrderBy,
 		Page:      v.Page,
 		PerPage:   v.PerPage,
+		PageSize:  v.PageSize,
+		PageToken: v.PageToken,
 		TraceId:   v.TraceId,
 		Noop:      v.Noop,
 	}
@@ -9853,6 +9905,8 @@ func ListPipelinesRequestToJSONPretty(v *ListPipelinesRequest) ([]byte, error) {
 		OrderBy:   v.OrderBy,
 		Page:      v.Page,
 		PerPage:   v.PerPage,
+		PageSize:  v.PageSize,
+		PageToken: v.PageToken,
 		TraceId:   v.TraceId,
 		Noop:      v.Noop,
 	}
@@ -9928,6 +9982,8 @@ func ListPipelinesRequestFromJSON(data []byte) (*ListPipelinesRequest, error) {
 	result.OrderBy = raw.OrderBy
 	result.Page = raw.Page
 	result.PerPage = raw.PerPage
+	result.PageSize = raw.PageSize
+	result.PageToken = raw.PageToken
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -9976,11 +10032,13 @@ func ListPipelinesRequestToTOML(v *ListPipelinesRequest) ([]byte, error) {
 // ListPipelinesResponseJSON represents ListPipelinesResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type listpipelinesresponseJSON struct {
-	Pipelines  []json.RawMessage `json:"pipelines,omitempty"`
-	Pagination json.RawMessage   `json:"pagination,omitempty"`
-	RateLimit  json.RawMessage   `json:"rate_limit,omitempty"`
-	TraceId    string            `json:"trace_id,omitempty"`
-	Noop       bool              `json:"noop,omitempty"`
+	Pipelines     []json.RawMessage `json:"pipelines,omitempty"`
+	Pagination    json.RawMessage   `json:"pagination,omitempty"`
+	RateLimit     json.RawMessage   `json:"rate_limit,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // ListPipelinesResponseToJSON converts ListPipelinesResponse to JSON bytes.
@@ -10019,8 +10077,10 @@ func ListPipelinesResponseToJSON(v *ListPipelinesResponse) ([]byte, error) {
 			data, _ := RateLimitInfoToJSON(v.RateLimit)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -10061,8 +10121,10 @@ func ListPipelinesResponseToJSONPretty(v *ListPipelinesResponse) ([]byte, error)
 			data, _ := RateLimitInfoToJSON(v.RateLimit)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -10153,6 +10215,8 @@ func ListPipelinesResponseFromJSON(data []byte) (*ListPipelinesResponse, error) 
 			result.RateLimit = parsed
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -11744,6 +11808,8 @@ type listpipelinejobsrequestJSON struct {
 	Scope      string `json:"scope,omitempty"`
 	Page       int32  `json:"page,omitempty"`
 	PerPage    int32  `json:"per_page,omitempty"`
+	PageSize   int32  `json:"page_size,omitempty"`
+	PageToken  string `json:"page_token,omitempty"`
 	TraceId    string `json:"trace_id,omitempty"`
 	Noop       bool   `json:"noop,omitempty"`
 }
@@ -11762,6 +11828,8 @@ func ListPipelineJobsRequestToJSON(v *ListPipelineJobsRequest) ([]byte, error) {
 		Scope:      v.Scope,
 		Page:       v.Page,
 		PerPage:    v.PerPage,
+		PageSize:   v.PageSize,
+		PageToken:  v.PageToken,
 		TraceId:    v.TraceId,
 		Noop:       v.Noop,
 	}
@@ -11782,6 +11850,8 @@ func ListPipelineJobsRequestToJSONPretty(v *ListPipelineJobsRequest) ([]byte, er
 		Scope:      v.Scope,
 		Page:       v.Page,
 		PerPage:    v.PerPage,
+		PageSize:   v.PageSize,
+		PageToken:  v.PageToken,
 		TraceId:    v.TraceId,
 		Noop:       v.Noop,
 	}
@@ -11854,6 +11924,8 @@ func ListPipelineJobsRequestFromJSON(data []byte) (*ListPipelineJobsRequest, err
 	result.Scope = raw.Scope
 	result.Page = raw.Page
 	result.PerPage = raw.PerPage
+	result.PageSize = raw.PageSize
+	result.PageToken = raw.PageToken
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -11902,11 +11974,13 @@ func ListPipelineJobsRequestToTOML(v *ListPipelineJobsRequest) ([]byte, error) {
 // ListPipelineJobsResponseJSON represents ListPipelineJobsResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type listpipelinejobsresponseJSON struct {
-	Jobs       []json.RawMessage `json:"jobs,omitempty"`
-	Pagination json.RawMessage   `json:"pagination,omitempty"`
-	RateLimit  json.RawMessage   `json:"rate_limit,omitempty"`
-	TraceId    string            `json:"trace_id,omitempty"`
-	Noop       bool              `json:"noop,omitempty"`
+	Jobs          []json.RawMessage `json:"jobs,omitempty"`
+	Pagination    json.RawMessage   `json:"pagination,omitempty"`
+	RateLimit     json.RawMessage   `json:"rate_limit,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // ListPipelineJobsResponseToJSON converts ListPipelineJobsResponse to JSON bytes.
@@ -11945,8 +12019,10 @@ func ListPipelineJobsResponseToJSON(v *ListPipelineJobsResponse) ([]byte, error)
 			data, _ := RateLimitInfoToJSON(v.RateLimit)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -11987,8 +12063,10 @@ func ListPipelineJobsResponseToJSONPretty(v *ListPipelineJobsResponse) ([]byte, 
 			data, _ := RateLimitInfoToJSON(v.RateLimit)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -12079,6 +12157,8 @@ func ListPipelineJobsResponseFromJSON(data []byte) (*ListPipelineJobsResponse, e
 			result.RateLimit = parsed
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -13200,6 +13280,8 @@ type listbranchesrequestJSON struct {
 	Search    string `json:"search,omitempty"`
 	Page      int32  `json:"page,omitempty"`
 	PerPage   int32  `json:"per_page,omitempty"`
+	PageSize  int32  `json:"page_size,omitempty"`
+	PageToken string `json:"page_token,omitempty"`
 	TraceId   string `json:"trace_id,omitempty"`
 	Noop      bool   `json:"noop,omitempty"`
 }
@@ -13217,6 +13299,8 @@ func ListBranchesRequestToJSON(v *ListBranchesRequest) ([]byte, error) {
 		Search:    v.Search,
 		Page:      v.Page,
 		PerPage:   v.PerPage,
+		PageSize:  v.PageSize,
+		PageToken: v.PageToken,
 		TraceId:   v.TraceId,
 		Noop:      v.Noop,
 	}
@@ -13236,6 +13320,8 @@ func ListBranchesRequestToJSONPretty(v *ListBranchesRequest) ([]byte, error) {
 		Search:    v.Search,
 		Page:      v.Page,
 		PerPage:   v.PerPage,
+		PageSize:  v.PageSize,
+		PageToken: v.PageToken,
 		TraceId:   v.TraceId,
 		Noop:      v.Noop,
 	}
@@ -13307,6 +13393,8 @@ func ListBranchesRequestFromJSON(data []byte) (*ListBranchesRequest, error) {
 	result.Search = raw.Search
 	result.Page = raw.Page
 	result.PerPage = raw.PerPage
+	result.PageSize = raw.PageSize
+	result.PageToken = raw.PageToken
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -13355,11 +13443,13 @@ func ListBranchesRequestToTOML(v *ListBranchesRequest) ([]byte, error) {
 // ListBranchesResponseJSON represents ListBranchesResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type listbranchesresponseJSON struct {
-	Branches   []json.RawMessage `json:"branches,omitempty"`
-	Pagination json.RawMessage   `json:"pagination,omitempty"`
-	RateLimit  json.RawMessage   `json:"rate_limit,omitempty"`
-	TraceId    string            `json:"trace_id,omitempty"`
-	Noop       bool              `json:"noop,omitempty"`
+	Branches      []json.RawMessage `json:"branches,omitempty"`
+	Pagination    json.RawMessage   `json:"pagination,omitempty"`
+	RateLimit     json.RawMessage   `json:"rate_limit,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // ListBranchesResponseToJSON converts ListBranchesResponse to JSON bytes.
@@ -13398,8 +13488,10 @@ func ListBranchesResponseToJSON(v *ListBranchesResponse) ([]byte, error) {
 			data, _ := RateLimitInfoToJSON(v.RateLimit)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -13440,8 +13532,10 @@ func ListBranchesResponseToJSONPretty(v *ListBranchesResponse) ([]byte, error) {
 			data, _ := RateLimitInfoToJSON(v.RateLimit)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -13532,6 +13626,8 @@ func ListBranchesResponseFromJSON(data []byte) (*ListBranchesResponse, error) {
 			result.RateLimit = parsed
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -13928,6 +14024,8 @@ type listcommitsrequestJSON struct {
 	Until     string `json:"until,omitempty"`
 	Page      int32  `json:"page,omitempty"`
 	PerPage   int32  `json:"per_page,omitempty"`
+	PageSize  int32  `json:"page_size,omitempty"`
+	PageToken string `json:"page_token,omitempty"`
 	TraceId   string `json:"trace_id,omitempty"`
 	Noop      bool   `json:"noop,omitempty"`
 }
@@ -13948,6 +14046,8 @@ func ListCommitsRequestToJSON(v *ListCommitsRequest) ([]byte, error) {
 		Until:     v.Until,
 		Page:      v.Page,
 		PerPage:   v.PerPage,
+		PageSize:  v.PageSize,
+		PageToken: v.PageToken,
 		TraceId:   v.TraceId,
 		Noop:      v.Noop,
 	}
@@ -13970,6 +14070,8 @@ func ListCommitsRequestToJSONPretty(v *ListCommitsRequest) ([]byte, error) {
 		Until:     v.Until,
 		Page:      v.Page,
 		PerPage:   v.PerPage,
+		PageSize:  v.PageSize,
+		PageToken: v.PageToken,
 		TraceId:   v.TraceId,
 		Noop:      v.Noop,
 	}
@@ -14044,6 +14146,8 @@ func ListCommitsRequestFromJSON(data []byte) (*ListCommitsRequest, error) {
 	result.Until = raw.Until
 	result.Page = raw.Page
 	result.PerPage = raw.PerPage
+	result.PageSize = raw.PageSize
+	result.PageToken = raw.PageToken
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -14092,11 +14196,13 @@ func ListCommitsRequestToTOML(v *ListCommitsRequest) ([]byte, error) {
 // ListCommitsResponseJSON represents ListCommitsResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type listcommitsresponseJSON struct {
-	Commits    []json.RawMessage `json:"commits,omitempty"`
-	Pagination json.RawMessage   `json:"pagination,omitempty"`
-	RateLimit  json.RawMessage   `json:"rate_limit,omitempty"`
-	TraceId    string            `json:"trace_id,omitempty"`
-	Noop       bool              `json:"noop,omitempty"`
+	Commits       []json.RawMessage `json:"commits,omitempty"`
+	Pagination    json.RawMessage   `json:"pagination,omitempty"`
+	RateLimit     json.RawMessage   `json:"rate_limit,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // ListCommitsResponseToJSON converts ListCommitsResponse to JSON bytes.
@@ -14135,8 +14241,10 @@ func ListCommitsResponseToJSON(v *ListCommitsResponse) ([]byte, error) {
 			data, _ := RateLimitInfoToJSON(v.RateLimit)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -14177,8 +14285,10 @@ func ListCommitsResponseToJSONPretty(v *ListCommitsResponse) ([]byte, error) {
 			data, _ := RateLimitInfoToJSON(v.RateLimit)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -14269,6 +14379,8 @@ func ListCommitsResponseFromJSON(data []byte) (*ListCommitsResponse, error) {
 			result.RateLimit = parsed
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -14323,6 +14435,8 @@ type searchblobsrequestJSON struct {
 	Ref       string `json:"ref,omitempty"`
 	Page      int32  `json:"page,omitempty"`
 	PerPage   int32  `json:"per_page,omitempty"`
+	PageSize  int32  `json:"page_size,omitempty"`
+	PageToken string `json:"page_token,omitempty"`
 	TraceId   string `json:"trace_id,omitempty"`
 	Noop      bool   `json:"noop,omitempty"`
 }
@@ -14341,6 +14455,8 @@ func SearchBlobsRequestToJSON(v *SearchBlobsRequest) ([]byte, error) {
 		Ref:       v.Ref,
 		Page:      v.Page,
 		PerPage:   v.PerPage,
+		PageSize:  v.PageSize,
+		PageToken: v.PageToken,
 		TraceId:   v.TraceId,
 		Noop:      v.Noop,
 	}
@@ -14361,6 +14477,8 @@ func SearchBlobsRequestToJSONPretty(v *SearchBlobsRequest) ([]byte, error) {
 		Ref:       v.Ref,
 		Page:      v.Page,
 		PerPage:   v.PerPage,
+		PageSize:  v.PageSize,
+		PageToken: v.PageToken,
 		TraceId:   v.TraceId,
 		Noop:      v.Noop,
 	}
@@ -14433,6 +14551,8 @@ func SearchBlobsRequestFromJSON(data []byte) (*SearchBlobsRequest, error) {
 	result.Ref = raw.Ref
 	result.Page = raw.Page
 	result.PerPage = raw.PerPage
+	result.PageSize = raw.PageSize
+	result.PageToken = raw.PageToken
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -14481,11 +14601,13 @@ func SearchBlobsRequestToTOML(v *SearchBlobsRequest) ([]byte, error) {
 // SearchBlobsResponseJSON represents SearchBlobsResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type searchblobsresponseJSON struct {
-	Results    []json.RawMessage `json:"results,omitempty"`
-	Pagination json.RawMessage   `json:"pagination,omitempty"`
-	RateLimit  json.RawMessage   `json:"rate_limit,omitempty"`
-	TraceId    string            `json:"trace_id,omitempty"`
-	Noop       bool              `json:"noop,omitempty"`
+	Results       []json.RawMessage `json:"results,omitempty"`
+	Pagination    json.RawMessage   `json:"pagination,omitempty"`
+	RateLimit     json.RawMessage   `json:"rate_limit,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // SearchBlobsResponseToJSON converts SearchBlobsResponse to JSON bytes.
@@ -14524,8 +14646,10 @@ func SearchBlobsResponseToJSON(v *SearchBlobsResponse) ([]byte, error) {
 			data, _ := RateLimitInfoToJSON(v.RateLimit)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -14566,8 +14690,10 @@ func SearchBlobsResponseToJSONPretty(v *SearchBlobsResponse) ([]byte, error) {
 			data, _ := RateLimitInfoToJSON(v.RateLimit)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -14658,6 +14784,8 @@ func SearchBlobsResponseFromJSON(data []byte) (*SearchBlobsResponse, error) {
 			result.RateLimit = parsed
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -16811,6 +16939,8 @@ func ListIssuesRequestToEnvVar(v *ListIssuesRequest) map[string]string {
 	result["PROTO_SERVICES_GITLAB_LIST_ISSUES_REQUEST_UPDATED_AFTER"] = v.UpdatedAfter
 	result["PROTO_SERVICES_GITLAB_LIST_ISSUES_REQUEST_PAGE"] = strconv.FormatInt(int64(v.Page), 10)
 	result["PROTO_SERVICES_GITLAB_LIST_ISSUES_REQUEST_PER_PAGE"] = strconv.FormatInt(int64(v.PerPage), 10)
+	result["PROTO_SERVICES_GITLAB_LIST_ISSUES_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
+	result["PROTO_SERVICES_GITLAB_LIST_ISSUES_REQUEST_PAGE_TOKEN"] = v.PageToken
 	result["PROTO_SERVICES_GITLAB_LIST_ISSUES_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_GITLAB_LIST_ISSUES_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -16863,6 +16993,16 @@ func ListIssuesRequestFromEnvVar(env map[string]string) (*ListIssuesRequest, err
 		}
 		result.PerPage = int32(parsed)
 	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_ISSUES_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_ISSUES_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
+	}
 	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_ISSUES_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -16892,6 +17032,8 @@ func ListIssuesResponseToEnvVar(v *ListIssuesResponse) map[string]string {
 			result[k] = val
 		}
 	}
+	result["PROTO_SERVICES_GITLAB_LIST_ISSUES_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_GITLAB_LIST_ISSUES_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_GITLAB_LIST_ISSUES_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_GITLAB_LIST_ISSUES_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -16909,6 +17051,16 @@ func ListIssuesResponseFromEnvVar(env map[string]string) (*ListIssuesResponse, e
 		return nil, err
 	} else if sub != nil {
 		result.RateLimit = sub
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_ISSUES_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_ISSUES_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
 	}
 	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_ISSUES_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -17406,6 +17558,8 @@ func ListMergeRequestsRequestToEnvVar(v *ListMergeRequestsRequest) map[string]st
 	}
 	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUESTS_REQUEST_PAGE"] = strconv.FormatInt(int64(v.Page), 10)
 	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUESTS_REQUEST_PER_PAGE"] = strconv.FormatInt(int64(v.PerPage), 10)
+	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUESTS_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
+	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUESTS_REQUEST_PAGE_TOKEN"] = v.PageToken
 	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUESTS_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUESTS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -17455,6 +17609,16 @@ func ListMergeRequestsRequestFromEnvVar(env map[string]string) (*ListMergeReques
 		}
 		result.PerPage = int32(parsed)
 	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUESTS_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUESTS_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
+	}
 	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUESTS_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -17484,6 +17648,8 @@ func ListMergeRequestsResponseToEnvVar(v *ListMergeRequestsResponse) map[string]
 			result[k] = val
 		}
 	}
+	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUESTS_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUESTS_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUESTS_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUESTS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -17501,6 +17667,16 @@ func ListMergeRequestsResponseFromEnvVar(env map[string]string) (*ListMergeReque
 		return nil, err
 	} else if sub != nil {
 		result.RateLimit = sub
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUESTS_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUESTS_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
 	}
 	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUESTS_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -18056,6 +18232,8 @@ func ListMergeRequestChangesRequestToEnvVar(v *ListMergeRequestChangesRequest) m
 	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUEST_CHANGES_REQUEST_METADATA"] = v.Metadata
 	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUEST_CHANGES_REQUEST_PROJECT_ID"] = v.ProjectId
 	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUEST_CHANGES_REQUEST_MERGE_REQUEST_IID"] = strconv.FormatInt(int64(v.MergeRequestIid), 10)
+	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUEST_CHANGES_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
+	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUEST_CHANGES_REQUEST_PAGE_TOKEN"] = v.PageToken
 	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUEST_CHANGES_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUEST_CHANGES_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -18076,6 +18254,16 @@ func ListMergeRequestChangesRequestFromEnvVar(env map[string]string) (*ListMerge
 			return nil, err
 		}
 		result.MergeRequestIid = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUEST_CHANGES_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUEST_CHANGES_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
 	}
 	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUEST_CHANGES_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -18101,6 +18289,8 @@ func ListMergeRequestChangesResponseToEnvVar(v *ListMergeRequestChangesResponse)
 			result[k] = val
 		}
 	}
+	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUEST_CHANGES_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUEST_CHANGES_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUEST_CHANGES_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUEST_CHANGES_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -18113,6 +18303,16 @@ func ListMergeRequestChangesResponseFromEnvVar(env map[string]string) (*ListMerg
 		return nil, err
 	} else if sub != nil {
 		result.RateLimit = sub
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUEST_CHANGES_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUEST_CHANGES_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
 	}
 	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_MERGE_REQUEST_CHANGES_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -18236,6 +18436,8 @@ func ListPipelinesRequestToEnvVar(v *ListPipelinesRequest) map[string]string {
 	result["PROTO_SERVICES_GITLAB_LIST_PIPELINES_REQUEST_ORDER_BY"] = v.OrderBy
 	result["PROTO_SERVICES_GITLAB_LIST_PIPELINES_REQUEST_PAGE"] = strconv.FormatInt(int64(v.Page), 10)
 	result["PROTO_SERVICES_GITLAB_LIST_PIPELINES_REQUEST_PER_PAGE"] = strconv.FormatInt(int64(v.PerPage), 10)
+	result["PROTO_SERVICES_GITLAB_LIST_PIPELINES_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
+	result["PROTO_SERVICES_GITLAB_LIST_PIPELINES_REQUEST_PAGE_TOKEN"] = v.PageToken
 	result["PROTO_SERVICES_GITLAB_LIST_PIPELINES_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_GITLAB_LIST_PIPELINES_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -18279,6 +18481,16 @@ func ListPipelinesRequestFromEnvVar(env map[string]string) (*ListPipelinesReques
 		}
 		result.PerPage = int32(parsed)
 	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_PIPELINES_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_PIPELINES_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
+	}
 	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_PIPELINES_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -18308,6 +18520,8 @@ func ListPipelinesResponseToEnvVar(v *ListPipelinesResponse) map[string]string {
 			result[k] = val
 		}
 	}
+	result["PROTO_SERVICES_GITLAB_LIST_PIPELINES_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_GITLAB_LIST_PIPELINES_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_GITLAB_LIST_PIPELINES_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_GITLAB_LIST_PIPELINES_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -18325,6 +18539,16 @@ func ListPipelinesResponseFromEnvVar(env map[string]string) (*ListPipelinesRespo
 		return nil, err
 	} else if sub != nil {
 		result.RateLimit = sub
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_PIPELINES_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_PIPELINES_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
 	}
 	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_PIPELINES_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -18746,6 +18970,8 @@ func ListPipelineJobsRequestToEnvVar(v *ListPipelineJobsRequest) map[string]stri
 	result["PROTO_SERVICES_GITLAB_LIST_PIPELINE_JOBS_REQUEST_SCOPE"] = v.Scope
 	result["PROTO_SERVICES_GITLAB_LIST_PIPELINE_JOBS_REQUEST_PAGE"] = strconv.FormatInt(int64(v.Page), 10)
 	result["PROTO_SERVICES_GITLAB_LIST_PIPELINE_JOBS_REQUEST_PER_PAGE"] = strconv.FormatInt(int64(v.PerPage), 10)
+	result["PROTO_SERVICES_GITLAB_LIST_PIPELINE_JOBS_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
+	result["PROTO_SERVICES_GITLAB_LIST_PIPELINE_JOBS_REQUEST_PAGE_TOKEN"] = v.PageToken
 	result["PROTO_SERVICES_GITLAB_LIST_PIPELINE_JOBS_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_GITLAB_LIST_PIPELINE_JOBS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -18784,6 +19010,16 @@ func ListPipelineJobsRequestFromEnvVar(env map[string]string) (*ListPipelineJobs
 		}
 		result.PerPage = int32(parsed)
 	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_PIPELINE_JOBS_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_PIPELINE_JOBS_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
+	}
 	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_PIPELINE_JOBS_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -18813,6 +19049,8 @@ func ListPipelineJobsResponseToEnvVar(v *ListPipelineJobsResponse) map[string]st
 			result[k] = val
 		}
 	}
+	result["PROTO_SERVICES_GITLAB_LIST_PIPELINE_JOBS_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_GITLAB_LIST_PIPELINE_JOBS_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_GITLAB_LIST_PIPELINE_JOBS_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_GITLAB_LIST_PIPELINE_JOBS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -18830,6 +19068,16 @@ func ListPipelineJobsResponseFromEnvVar(env map[string]string) (*ListPipelineJob
 		return nil, err
 	} else if sub != nil {
 		result.RateLimit = sub
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_PIPELINE_JOBS_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_PIPELINE_JOBS_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
 	}
 	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_PIPELINE_JOBS_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -19173,6 +19421,8 @@ func ListBranchesRequestToEnvVar(v *ListBranchesRequest) map[string]string {
 	result["PROTO_SERVICES_GITLAB_LIST_BRANCHES_REQUEST_SEARCH"] = v.Search
 	result["PROTO_SERVICES_GITLAB_LIST_BRANCHES_REQUEST_PAGE"] = strconv.FormatInt(int64(v.Page), 10)
 	result["PROTO_SERVICES_GITLAB_LIST_BRANCHES_REQUEST_PER_PAGE"] = strconv.FormatInt(int64(v.PerPage), 10)
+	result["PROTO_SERVICES_GITLAB_LIST_BRANCHES_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
+	result["PROTO_SERVICES_GITLAB_LIST_BRANCHES_REQUEST_PAGE_TOKEN"] = v.PageToken
 	result["PROTO_SERVICES_GITLAB_LIST_BRANCHES_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_GITLAB_LIST_BRANCHES_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -19204,6 +19454,16 @@ func ListBranchesRequestFromEnvVar(env map[string]string) (*ListBranchesRequest,
 		}
 		result.PerPage = int32(parsed)
 	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_BRANCHES_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_BRANCHES_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
+	}
 	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_BRANCHES_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -19233,6 +19493,8 @@ func ListBranchesResponseToEnvVar(v *ListBranchesResponse) map[string]string {
 			result[k] = val
 		}
 	}
+	result["PROTO_SERVICES_GITLAB_LIST_BRANCHES_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_GITLAB_LIST_BRANCHES_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_GITLAB_LIST_BRANCHES_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_GITLAB_LIST_BRANCHES_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -19250,6 +19512,16 @@ func ListBranchesResponseFromEnvVar(env map[string]string) (*ListBranchesRespons
 		return nil, err
 	} else if sub != nil {
 		result.RateLimit = sub
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_BRANCHES_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_BRANCHES_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
 	}
 	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_BRANCHES_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -19368,6 +19640,8 @@ func ListCommitsRequestToEnvVar(v *ListCommitsRequest) map[string]string {
 	result["PROTO_SERVICES_GITLAB_LIST_COMMITS_REQUEST_UNTIL"] = v.Until
 	result["PROTO_SERVICES_GITLAB_LIST_COMMITS_REQUEST_PAGE"] = strconv.FormatInt(int64(v.Page), 10)
 	result["PROTO_SERVICES_GITLAB_LIST_COMMITS_REQUEST_PER_PAGE"] = strconv.FormatInt(int64(v.PerPage), 10)
+	result["PROTO_SERVICES_GITLAB_LIST_COMMITS_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
+	result["PROTO_SERVICES_GITLAB_LIST_COMMITS_REQUEST_PAGE_TOKEN"] = v.PageToken
 	result["PROTO_SERVICES_GITLAB_LIST_COMMITS_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_GITLAB_LIST_COMMITS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -19408,6 +19682,16 @@ func ListCommitsRequestFromEnvVar(env map[string]string) (*ListCommitsRequest, e
 		}
 		result.PerPage = int32(parsed)
 	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_COMMITS_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_COMMITS_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
+	}
 	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_COMMITS_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -19437,6 +19721,8 @@ func ListCommitsResponseToEnvVar(v *ListCommitsResponse) map[string]string {
 			result[k] = val
 		}
 	}
+	result["PROTO_SERVICES_GITLAB_LIST_COMMITS_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_GITLAB_LIST_COMMITS_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_GITLAB_LIST_COMMITS_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_GITLAB_LIST_COMMITS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -19454,6 +19740,16 @@ func ListCommitsResponseFromEnvVar(env map[string]string) (*ListCommitsResponse,
 		return nil, err
 	} else if sub != nil {
 		result.RateLimit = sub
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_COMMITS_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_COMMITS_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
 	}
 	if val, ok := env["PROTO_SERVICES_GITLAB_LIST_COMMITS_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -19480,6 +19776,8 @@ func SearchBlobsRequestToEnvVar(v *SearchBlobsRequest) map[string]string {
 	result["PROTO_SERVICES_GITLAB_SEARCH_BLOBS_REQUEST_REF"] = v.Ref
 	result["PROTO_SERVICES_GITLAB_SEARCH_BLOBS_REQUEST_PAGE"] = strconv.FormatInt(int64(v.Page), 10)
 	result["PROTO_SERVICES_GITLAB_SEARCH_BLOBS_REQUEST_PER_PAGE"] = strconv.FormatInt(int64(v.PerPage), 10)
+	result["PROTO_SERVICES_GITLAB_SEARCH_BLOBS_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
+	result["PROTO_SERVICES_GITLAB_SEARCH_BLOBS_REQUEST_PAGE_TOKEN"] = v.PageToken
 	result["PROTO_SERVICES_GITLAB_SEARCH_BLOBS_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_GITLAB_SEARCH_BLOBS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -19514,6 +19812,16 @@ func SearchBlobsRequestFromEnvVar(env map[string]string) (*SearchBlobsRequest, e
 		}
 		result.PerPage = int32(parsed)
 	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_SEARCH_BLOBS_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_SEARCH_BLOBS_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
+	}
 	if val, ok := env["PROTO_SERVICES_GITLAB_SEARCH_BLOBS_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -19543,6 +19851,8 @@ func SearchBlobsResponseToEnvVar(v *SearchBlobsResponse) map[string]string {
 			result[k] = val
 		}
 	}
+	result["PROTO_SERVICES_GITLAB_SEARCH_BLOBS_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_GITLAB_SEARCH_BLOBS_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_GITLAB_SEARCH_BLOBS_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_GITLAB_SEARCH_BLOBS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -19560,6 +19870,16 @@ func SearchBlobsResponseFromEnvVar(env map[string]string) (*SearchBlobsResponse,
 		return nil, err
 	} else if sub != nil {
 		result.RateLimit = sub
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_SEARCH_BLOBS_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_GITLAB_SEARCH_BLOBS_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
 	}
 	if val, ok := env["PROTO_SERVICES_GITLAB_SEARCH_BLOBS_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -21635,11 +21955,6 @@ func ValidateListIssuesRequestWithDepth(m *ListIssuesRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate ProjectId (assert_required)
-	if m.ProjectId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
-	}
-
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
@@ -21648,6 +21963,11 @@ func ValidateListIssuesRequestWithDepth(m *ListIssuesRequest, depth int) error {
 	// Validate ProjectId (assert_max_length: 512)
 	if len(m.ProjectId) > 512 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
+	}
+
+	// Validate ProjectId (assert_required)
+	if m.ProjectId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
 	}
 
 	// Validate State (assert_max_length: 16)
@@ -21665,14 +21985,14 @@ func ValidateListIssuesRequestWithDepth(m *ListIssuesRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field OrderBy must be at most 16 characters, got: %d", len(m.OrderBy))
 	}
 
-	// Validate Labels (assert_max_size: 32)
-	if len(m.Labels) > 32 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Labels exceeds max size of 32, got: %d", len(m.Labels))
-	}
-
 	// Validate Labels (assert_max_length: 256)
 	if len(m.Labels) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Labels must be at most 256 characters, got: %d", len(m.Labels))
+	}
+
+	// Validate Labels (assert_max_size: 32)
+	if len(m.Labels) > 32 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Labels exceeds max size of 32, got: %d", len(m.Labels))
 	}
 
 	// Validate AssigneeUsername (assert_max_length: 256)
@@ -21707,6 +22027,19 @@ func ValidateListIssuesRequestWithDepth(m *ListIssuesRequest, depth int) error {
 	if m.PerPage < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be >= 0, got: %v", m.PerPage)
 	}
+	// Validate PageSize (assert_ge: 0)
+	if m.PageSize < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 0, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_le: 100)
+	if m.PageSize > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 100, got: %v", m.PageSize)
+	}
+	// Validate PageToken (assert_max_length: 512)
+	if len(m.PageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken must be at most 512 characters, got: %d", len(m.PageToken))
+	}
+
 	// Validate Labels elements (default max size: 32768 bytes)
 	for i, val := range m.Labels {
 		if len(val) > 32768 {
@@ -21759,6 +22092,11 @@ func ValidateListIssuesRequestWithDepth(m *ListIssuesRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field UpdatedAfter exceeds max size of 32768 bytes, got: %d", len(m.UpdatedAfter))
 	}
 
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
+	}
+
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
@@ -21786,6 +22124,20 @@ func ValidateListIssuesResponseWithDepth(m *ListIssuesResponse, depth int) error
 	// Validate Issues (assert_max_size: 100)
 	if len(m.Issues) > 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Issues exceeds max size of 100, got: %d", len(m.Issues))
+	}
+
+	// Validate NextPageToken (assert_max_length: 512)
+	if len(m.NextPageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken must be at most 512 characters, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TotalCount (assert_ge: 0)
+	if m.TotalCount < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TotalCount must be >= 0, got: %v", m.TotalCount)
+	}
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -21838,11 +22190,6 @@ func ValidateGetIssueRequestWithDepth(m *GetIssueRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate ProjectId (assert_max_length: 512)
-	if len(m.ProjectId) > 512 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
-	}
-
 	// Validate ProjectId (assert_required)
 	if m.ProjectId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
@@ -21851,6 +22198,11 @@ func ValidateGetIssueRequestWithDepth(m *GetIssueRequest, depth int) error {
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
+	}
+
+	// Validate ProjectId (assert_max_length: 512)
+	if len(m.ProjectId) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
 	}
 
 	// Validate IssueIid (assert_ge: 1)
@@ -21949,6 +22301,11 @@ func ValidateCreateIssueRequestWithDepth(m *CreateIssueRequest, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
 	}
 
+	// Validate Title (assert_max_length: 1024)
+	if len(m.Title) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Title must be at most 1024 characters, got: %d", len(m.Title))
+	}
+
 	// Validate Title (assert_required)
 	if m.Title == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Title is required")
@@ -21957,11 +22314,6 @@ func ValidateCreateIssueRequestWithDepth(m *CreateIssueRequest, depth int) error
 	// Validate Title (assert_min_length: 1)
 	if len(m.Title) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Title must be at least 1 characters, got: %d", len(m.Title))
-	}
-
-	// Validate Title (assert_max_length: 1024)
-	if len(m.Title) > 1024 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Title must be at most 1024 characters, got: %d", len(m.Title))
 	}
 
 	// Validate Description (assert_max_length: 262144)
@@ -22086,11 +22438,6 @@ func ValidateUpdateIssueRequestWithDepth(m *UpdateIssueRequest, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate ProjectId (assert_max_length: 512)
-	if len(m.ProjectId) > 512 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
-	}
-
 	// Validate ProjectId (assert_required)
 	if m.ProjectId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
@@ -22099,6 +22446,11 @@ func ValidateUpdateIssueRequestWithDepth(m *UpdateIssueRequest, depth int) error
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
+	}
+
+	// Validate ProjectId (assert_max_length: 512)
+	if len(m.ProjectId) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
 	}
 
 	// Validate IssueIid (assert_ge: 1)
@@ -22238,11 +22590,6 @@ func ValidateCreateIssueNoteRequestWithDepth(m *CreateIssueNoteRequest, depth in
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate ProjectId (assert_max_length: 512)
-	if len(m.ProjectId) > 512 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
-	}
-
 	// Validate ProjectId (assert_required)
 	if m.ProjectId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
@@ -22251,6 +22598,11 @@ func ValidateCreateIssueNoteRequestWithDepth(m *CreateIssueNoteRequest, depth in
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
+	}
+
+	// Validate ProjectId (assert_max_length: 512)
+	if len(m.ProjectId) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
 	}
 
 	// Validate IssueIid (assert_ge: 1)
@@ -22354,11 +22706,6 @@ func ValidateListMergeRequestsRequestWithDepth(m *ListMergeRequestsRequest, dept
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate ProjectId (assert_max_length: 512)
-	if len(m.ProjectId) > 512 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
-	}
-
 	// Validate ProjectId (assert_required)
 	if m.ProjectId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
@@ -22367,6 +22714,11 @@ func ValidateListMergeRequestsRequestWithDepth(m *ListMergeRequestsRequest, dept
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
+	}
+
+	// Validate ProjectId (assert_max_length: 512)
+	if len(m.ProjectId) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
 	}
 
 	// Validate State (assert_max_length: 16)
@@ -22421,6 +22773,19 @@ func ValidateListMergeRequestsRequestWithDepth(m *ListMergeRequestsRequest, dept
 	if m.PerPage > 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be <= 100, got: %v", m.PerPage)
 	}
+	// Validate PageSize (assert_ge: 0)
+	if m.PageSize < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 0, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_le: 100)
+	if m.PageSize > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 100, got: %v", m.PageSize)
+	}
+	// Validate PageToken (assert_max_length: 512)
+	if len(m.PageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken must be at most 512 characters, got: %d", len(m.PageToken))
+	}
+
 	// Validate Labels elements (default max size: 32768 bytes)
 	for i, val := range m.Labels {
 		if len(val) > 32768 {
@@ -22468,6 +22833,11 @@ func ValidateListMergeRequestsRequestWithDepth(m *ListMergeRequestsRequest, dept
 		return protoerrors.NewErrMissingInvalidData(nil, "field Search exceeds max size of 32768 bytes, got: %d", len(m.Search))
 	}
 
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
+	}
+
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
@@ -22495,6 +22865,20 @@ func ValidateListMergeRequestsResponseWithDepth(m *ListMergeRequestsResponse, de
 	// Validate MergeRequests (assert_max_size: 100)
 	if len(m.MergeRequests) > 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field MergeRequests exceeds max size of 100, got: %d", len(m.MergeRequests))
+	}
+
+	// Validate NextPageToken (assert_max_length: 512)
+	if len(m.NextPageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken must be at most 512 characters, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TotalCount (assert_ge: 0)
+	if m.TotalCount < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TotalCount must be >= 0, got: %v", m.TotalCount)
+	}
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -22643,6 +23027,11 @@ func ValidateCreateMergeRequestRequestWithDepth(m *CreateMergeRequestRequest, de
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
+	// Validate ProjectId (assert_max_length: 512)
+	if len(m.ProjectId) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
+	}
+
 	// Validate ProjectId (assert_required)
 	if m.ProjectId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
@@ -22651,11 +23040,6 @@ func ValidateCreateMergeRequestRequestWithDepth(m *CreateMergeRequestRequest, de
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
-	}
-
-	// Validate ProjectId (assert_max_length: 512)
-	if len(m.ProjectId) > 512 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
 	}
 
 	// Validate Title (assert_min_length: 1)
@@ -22673,11 +23057,6 @@ func ValidateCreateMergeRequestRequestWithDepth(m *CreateMergeRequestRequest, de
 		return protoerrors.NewErrMissingInvalidData(nil, "field Title is required")
 	}
 
-	// Validate SourceBranch (assert_required)
-	if m.SourceBranch == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field SourceBranch is required")
-	}
-
 	// Validate SourceBranch (assert_min_length: 1)
 	if len(m.SourceBranch) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SourceBranch must be at least 1 characters, got: %d", len(m.SourceBranch))
@@ -22686,6 +23065,11 @@ func ValidateCreateMergeRequestRequestWithDepth(m *CreateMergeRequestRequest, de
 	// Validate SourceBranch (assert_max_length: 256)
 	if len(m.SourceBranch) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SourceBranch must be at most 256 characters, got: %d", len(m.SourceBranch))
+	}
+
+	// Validate SourceBranch (assert_required)
+	if m.SourceBranch == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SourceBranch is required")
 	}
 
 	// Validate TargetBranch (assert_required)
@@ -22835,11 +23219,6 @@ func ValidateUpdateMergeRequestRequestWithDepth(m *UpdateMergeRequestRequest, de
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate ProjectId (assert_required)
-	if m.ProjectId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
-	}
-
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
@@ -22848,6 +23227,11 @@ func ValidateUpdateMergeRequestRequestWithDepth(m *UpdateMergeRequestRequest, de
 	// Validate ProjectId (assert_max_length: 512)
 	if len(m.ProjectId) > 512 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
+	}
+
+	// Validate ProjectId (assert_required)
+	if m.ProjectId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
 	}
 
 	// Validate MergeRequestIid (assert_ge: 1)
@@ -23146,6 +23530,19 @@ func ValidateListMergeRequestChangesRequestWithDepth(m *ListMergeRequestChangesR
 	if m.MergeRequestIid < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field MergeRequestIid must be >= 1, got: %v", m.MergeRequestIid)
 	}
+	// Validate PageSize (assert_le: 100)
+	if m.PageSize > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 100, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_ge: 0)
+	if m.PageSize < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 0, got: %v", m.PageSize)
+	}
+	// Validate PageToken (assert_max_length: 512)
+	if len(m.PageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken must be at most 512 characters, got: %d", len(m.PageToken))
+	}
+
 	// Validate Metadata (default max size: 32768 bytes)
 	if len(m.Metadata) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata exceeds max size of 32768 bytes, got: %d", len(m.Metadata))
@@ -23154,6 +23551,11 @@ func ValidateListMergeRequestChangesRequestWithDepth(m *ListMergeRequestChangesR
 	// Validate ProjectId (default max size: 32768 bytes)
 	if len(m.ProjectId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId exceeds max size of 32768 bytes, got: %d", len(m.ProjectId))
+	}
+
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -23180,9 +23582,23 @@ func ValidateListMergeRequestChangesResponseWithDepth(m *ListMergeRequestChanges
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Changes (assert_max_size: 3000)
-	if len(m.Changes) > 3000 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Changes exceeds max size of 3000, got: %d", len(m.Changes))
+	// Validate Changes (assert_max_size: 100)
+	if len(m.Changes) > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Changes exceeds max size of 100, got: %d", len(m.Changes))
+	}
+
+	// Validate NextPageToken (assert_max_length: 512)
+	if len(m.NextPageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken must be at most 512 characters, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TotalCount (assert_ge: 0)
+	if m.TotalCount < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TotalCount must be >= 0, got: %v", m.TotalCount)
+	}
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -23344,6 +23760,11 @@ func ValidateListPipelinesRequestWithDepth(m *ListPipelinesRequest, depth int) e
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
+	// Validate ProjectId (assert_required)
+	if m.ProjectId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
+	}
+
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
@@ -23352,11 +23773,6 @@ func ValidateListPipelinesRequestWithDepth(m *ListPipelinesRequest, depth int) e
 	// Validate ProjectId (assert_max_length: 512)
 	if len(m.ProjectId) > 512 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
-	}
-
-	// Validate ProjectId (assert_required)
-	if m.ProjectId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
 	}
 
 	// Validate Status (assert_max_length: 16)
@@ -23396,6 +23812,19 @@ func ValidateListPipelinesRequestWithDepth(m *ListPipelinesRequest, depth int) e
 	if m.PerPage > 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be <= 100, got: %v", m.PerPage)
 	}
+	// Validate PageSize (assert_ge: 0)
+	if m.PageSize < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 0, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_le: 100)
+	if m.PageSize > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 100, got: %v", m.PageSize)
+	}
+	// Validate PageToken (assert_max_length: 512)
+	if len(m.PageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken must be at most 512 characters, got: %d", len(m.PageToken))
+	}
+
 	// Validate Metadata (default max size: 32768 bytes)
 	if len(m.Metadata) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata exceeds max size of 32768 bytes, got: %d", len(m.Metadata))
@@ -23431,6 +23860,11 @@ func ValidateListPipelinesRequestWithDepth(m *ListPipelinesRequest, depth int) e
 		return protoerrors.NewErrMissingInvalidData(nil, "field OrderBy exceeds max size of 32768 bytes, got: %d", len(m.OrderBy))
 	}
 
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
+	}
+
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
@@ -23458,6 +23892,20 @@ func ValidateListPipelinesResponseWithDepth(m *ListPipelinesResponse, depth int)
 	// Validate Pipelines (assert_max_size: 100)
 	if len(m.Pipelines) > 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Pipelines exceeds max size of 100, got: %d", len(m.Pipelines))
+	}
+
+	// Validate NextPageToken (assert_max_length: 512)
+	if len(m.NextPageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken must be at most 512 characters, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TotalCount (assert_ge: 0)
+	if m.TotalCount < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TotalCount must be >= 0, got: %v", m.TotalCount)
+	}
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -23510,11 +23958,6 @@ func ValidateGetPipelineRequestWithDepth(m *GetPipelineRequest, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate ProjectId (assert_required)
-	if m.ProjectId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
-	}
-
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
@@ -23523,6 +23966,11 @@ func ValidateGetPipelineRequestWithDepth(m *GetPipelineRequest, depth int) error
 	// Validate ProjectId (assert_max_length: 512)
 	if len(m.ProjectId) > 512 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
+	}
+
+	// Validate ProjectId (assert_required)
+	if m.ProjectId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
 	}
 
 	// Validate PipelineId (assert_ge: 1)
@@ -23687,14 +24135,14 @@ func ValidatePipelineVariableWithDepth(m *PipelineVariable, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Key (assert_max_length: 256)
-	if len(m.Key) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Key must be at most 256 characters, got: %d", len(m.Key))
-	}
-
 	// Validate Key (assert_required)
 	if m.Key == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Key is required")
+	}
+
+	// Validate Key (assert_max_length: 256)
+	if len(m.Key) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key must be at most 256 characters, got: %d", len(m.Key))
 	}
 
 	// Validate Value (assert_max_length: 4096)
@@ -23981,6 +24429,11 @@ func ValidateListPipelineJobsRequestWithDepth(m *ListPipelineJobsRequest, depth 
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
+	// Validate ProjectId (assert_required)
+	if m.ProjectId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
+	}
+
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
@@ -23989,11 +24442,6 @@ func ValidateListPipelineJobsRequestWithDepth(m *ListPipelineJobsRequest, depth 
 	// Validate ProjectId (assert_max_length: 512)
 	if len(m.ProjectId) > 512 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
-	}
-
-	// Validate ProjectId (assert_required)
-	if m.ProjectId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
 	}
 
 	// Validate PipelineId (assert_ge: 1)
@@ -24017,6 +24465,19 @@ func ValidateListPipelineJobsRequestWithDepth(m *ListPipelineJobsRequest, depth 
 	if m.PerPage > 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be <= 100, got: %v", m.PerPage)
 	}
+	// Validate PageSize (assert_ge: 0)
+	if m.PageSize < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 0, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_le: 100)
+	if m.PageSize > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 100, got: %v", m.PageSize)
+	}
+	// Validate PageToken (assert_max_length: 512)
+	if len(m.PageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken must be at most 512 characters, got: %d", len(m.PageToken))
+	}
+
 	// Validate Metadata (default max size: 32768 bytes)
 	if len(m.Metadata) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata exceeds max size of 32768 bytes, got: %d", len(m.Metadata))
@@ -24030,6 +24491,11 @@ func ValidateListPipelineJobsRequestWithDepth(m *ListPipelineJobsRequest, depth 
 	// Validate Scope (default max size: 32768 bytes)
 	if len(m.Scope) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Scope exceeds max size of 32768 bytes, got: %d", len(m.Scope))
+	}
+
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -24059,6 +24525,20 @@ func ValidateListPipelineJobsResponseWithDepth(m *ListPipelineJobsResponse, dept
 	// Validate Jobs (assert_max_size: 100)
 	if len(m.Jobs) > 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Jobs exceeds max size of 100, got: %d", len(m.Jobs))
+	}
+
+	// Validate NextPageToken (assert_max_length: 512)
+	if len(m.NextPageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken must be at most 512 characters, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TotalCount (assert_ge: 0)
+	if m.TotalCount < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TotalCount must be >= 0, got: %v", m.TotalCount)
+	}
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -24126,11 +24606,6 @@ func ValidateGetRepositoryFileRequestWithDepth(m *GetRepositoryFileRequest, dept
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
 	}
 
-	// Validate FilePath (assert_required)
-	if m.FilePath == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field FilePath is required")
-	}
-
 	// Validate FilePath (assert_min_length: 1)
 	if len(m.FilePath) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field FilePath must be at least 1 characters, got: %d", len(m.FilePath))
@@ -24139,6 +24614,11 @@ func ValidateGetRepositoryFileRequestWithDepth(m *GetRepositoryFileRequest, dept
 	// Validate FilePath (assert_max_length: 2048)
 	if len(m.FilePath) > 2048 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field FilePath must be at most 2048 characters, got: %d", len(m.FilePath))
+	}
+
+	// Validate FilePath (assert_required)
+	if m.FilePath == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field FilePath is required")
 	}
 
 	// Validate Ref (assert_required)
@@ -24450,6 +24930,11 @@ func ValidateUpdateRepositoryFileRequestWithDepth(m *UpdateRepositoryFileRequest
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
+	// Validate ProjectId (assert_required)
+	if m.ProjectId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
+	}
+
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
@@ -24460,16 +24945,6 @@ func ValidateUpdateRepositoryFileRequestWithDepth(m *UpdateRepositoryFileRequest
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
 	}
 
-	// Validate ProjectId (assert_required)
-	if m.ProjectId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
-	}
-
-	// Validate FilePath (assert_max_length: 2048)
-	if len(m.FilePath) > 2048 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field FilePath must be at most 2048 characters, got: %d", len(m.FilePath))
-	}
-
 	// Validate FilePath (assert_required)
 	if m.FilePath == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field FilePath is required")
@@ -24478,6 +24953,11 @@ func ValidateUpdateRepositoryFileRequestWithDepth(m *UpdateRepositoryFileRequest
 	// Validate FilePath (assert_min_length: 1)
 	if len(m.FilePath) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field FilePath must be at least 1 characters, got: %d", len(m.FilePath))
+	}
+
+	// Validate FilePath (assert_max_length: 2048)
+	if len(m.FilePath) > 2048 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field FilePath must be at most 2048 characters, got: %d", len(m.FilePath))
 	}
 
 	// Validate Branch (assert_required)
@@ -24657,6 +25137,11 @@ func ValidateListBranchesRequestWithDepth(m *ListBranchesRequest, depth int) err
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
+	// Validate ProjectId (assert_required)
+	if m.ProjectId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
+	}
+
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
@@ -24665,11 +25150,6 @@ func ValidateListBranchesRequestWithDepth(m *ListBranchesRequest, depth int) err
 	// Validate ProjectId (assert_max_length: 512)
 	if len(m.ProjectId) > 512 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
-	}
-
-	// Validate ProjectId (assert_required)
-	if m.ProjectId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
 	}
 
 	// Validate Search (assert_max_length: 256)
@@ -24689,6 +25169,19 @@ func ValidateListBranchesRequestWithDepth(m *ListBranchesRequest, depth int) err
 	if m.PerPage > 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be <= 100, got: %v", m.PerPage)
 	}
+	// Validate PageSize (assert_ge: 0)
+	if m.PageSize < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 0, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_le: 100)
+	if m.PageSize > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 100, got: %v", m.PageSize)
+	}
+	// Validate PageToken (assert_max_length: 512)
+	if len(m.PageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken must be at most 512 characters, got: %d", len(m.PageToken))
+	}
+
 	// Validate Metadata (default max size: 32768 bytes)
 	if len(m.Metadata) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata exceeds max size of 32768 bytes, got: %d", len(m.Metadata))
@@ -24702,6 +25195,11 @@ func ValidateListBranchesRequestWithDepth(m *ListBranchesRequest, depth int) err
 	// Validate Search (default max size: 32768 bytes)
 	if len(m.Search) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Search exceeds max size of 32768 bytes, got: %d", len(m.Search))
+	}
+
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -24731,6 +25229,20 @@ func ValidateListBranchesResponseWithDepth(m *ListBranchesResponse, depth int) e
 	// Validate Branches (assert_max_size: 100)
 	if len(m.Branches) > 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Branches exceeds max size of 100, got: %d", len(m.Branches))
+	}
+
+	// Validate NextPageToken (assert_max_length: 512)
+	if len(m.NextPageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken must be at most 512 characters, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TotalCount (assert_ge: 0)
+	if m.TotalCount < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TotalCount must be >= 0, got: %v", m.TotalCount)
+	}
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -24915,6 +25427,11 @@ func ValidateListCommitsRequestWithDepth(m *ListCommitsRequest, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
+	// Validate ProjectId (assert_max_length: 512)
+	if len(m.ProjectId) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
+	}
+
 	// Validate ProjectId (assert_required)
 	if m.ProjectId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
@@ -24923,11 +25440,6 @@ func ValidateListCommitsRequestWithDepth(m *ListCommitsRequest, depth int) error
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
-	}
-
-	// Validate ProjectId (assert_max_length: 512)
-	if len(m.ProjectId) > 512 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
 	}
 
 	// Validate RefName (assert_max_length: 256)
@@ -24962,6 +25474,19 @@ func ValidateListCommitsRequestWithDepth(m *ListCommitsRequest, depth int) error
 	if m.PerPage > 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be <= 100, got: %v", m.PerPage)
 	}
+	// Validate PageSize (assert_ge: 0)
+	if m.PageSize < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 0, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_le: 100)
+	if m.PageSize > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 100, got: %v", m.PageSize)
+	}
+	// Validate PageToken (assert_max_length: 512)
+	if len(m.PageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken must be at most 512 characters, got: %d", len(m.PageToken))
+	}
+
 	// Validate Metadata (default max size: 32768 bytes)
 	if len(m.Metadata) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata exceeds max size of 32768 bytes, got: %d", len(m.Metadata))
@@ -24992,6 +25517,11 @@ func ValidateListCommitsRequestWithDepth(m *ListCommitsRequest, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field Until exceeds max size of 32768 bytes, got: %d", len(m.Until))
 	}
 
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
+	}
+
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
@@ -25019,6 +25549,20 @@ func ValidateListCommitsResponseWithDepth(m *ListCommitsResponse, depth int) err
 	// Validate Commits (assert_max_size: 100)
 	if len(m.Commits) > 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Commits exceeds max size of 100, got: %d", len(m.Commits))
+	}
+
+	// Validate NextPageToken (assert_max_length: 512)
+	if len(m.NextPageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken must be at most 512 characters, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TotalCount (assert_ge: 0)
+	if m.TotalCount < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TotalCount must be >= 0, got: %v", m.TotalCount)
+	}
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -25071,11 +25615,6 @@ func ValidateSearchBlobsRequestWithDepth(m *SearchBlobsRequest, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata must be at most 2048 characters, got: %d", len(m.Metadata))
 	}
 
-	// Validate ProjectId (assert_max_length: 512)
-	if len(m.ProjectId) > 512 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
-	}
-
 	// Validate ProjectId (assert_required)
 	if m.ProjectId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId is required")
@@ -25084,6 +25623,11 @@ func ValidateSearchBlobsRequestWithDepth(m *SearchBlobsRequest, depth int) error
 	// Validate ProjectId (assert_min_length: 1)
 	if len(m.ProjectId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at least 1 characters, got: %d", len(m.ProjectId))
+	}
+
+	// Validate ProjectId (assert_max_length: 512)
+	if len(m.ProjectId) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectId must be at most 512 characters, got: %d", len(m.ProjectId))
 	}
 
 	// Validate Search (assert_required)
@@ -25110,14 +25654,27 @@ func ValidateSearchBlobsRequestWithDepth(m *SearchBlobsRequest, depth int) error
 	if m.Page < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Page must be >= 0, got: %v", m.Page)
 	}
-	// Validate PerPage (assert_ge: 0)
-	if m.PerPage < 0 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be >= 0, got: %v", m.PerPage)
-	}
 	// Validate PerPage (assert_le: 100)
 	if m.PerPage > 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be <= 100, got: %v", m.PerPage)
 	}
+	// Validate PerPage (assert_ge: 0)
+	if m.PerPage < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PerPage must be >= 0, got: %v", m.PerPage)
+	}
+	// Validate PageSize (assert_ge: 0)
+	if m.PageSize < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 0, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_le: 100)
+	if m.PageSize > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 100, got: %v", m.PageSize)
+	}
+	// Validate PageToken (assert_max_length: 512)
+	if len(m.PageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken must be at most 512 characters, got: %d", len(m.PageToken))
+	}
+
 	// Validate Metadata (default max size: 32768 bytes)
 	if len(m.Metadata) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Metadata exceeds max size of 32768 bytes, got: %d", len(m.Metadata))
@@ -25136,6 +25693,11 @@ func ValidateSearchBlobsRequestWithDepth(m *SearchBlobsRequest, depth int) error
 	// Validate Ref (default max size: 32768 bytes)
 	if len(m.Ref) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Ref exceeds max size of 32768 bytes, got: %d", len(m.Ref))
+	}
+
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -25165,6 +25727,20 @@ func ValidateSearchBlobsResponseWithDepth(m *SearchBlobsResponse, depth int) err
 	// Validate Results (assert_max_size: 100)
 	if len(m.Results) > 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Results exceeds max size of 100, got: %d", len(m.Results))
+	}
+
+	// Validate NextPageToken (assert_max_length: 512)
+	if len(m.NextPageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken must be at most 512 characters, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TotalCount (assert_ge: 0)
+	if m.TotalCount < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TotalCount must be >= 0, got: %v", m.TotalCount)
+	}
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -25212,11 +25788,6 @@ func ValidateProxyEventWithDepth(m *ProxyEvent, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Subject (assert_required)
-	if m.Subject == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Subject is required")
-	}
-
 	// Validate Subject (assert_min_length: 1)
 	if len(m.Subject) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Subject must be at least 1 characters, got: %d", len(m.Subject))
@@ -25225,6 +25796,11 @@ func ValidateProxyEventWithDepth(m *ProxyEvent, depth int) error {
 	// Validate Subject (assert_max_length: 256)
 	if len(m.Subject) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Subject must be at most 256 characters, got: %d", len(m.Subject))
+	}
+
+	// Validate Subject (assert_required)
+	if m.Subject == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Subject is required")
 	}
 
 	// Validate Method (assert_enum_defined)
@@ -25252,13 +25828,13 @@ func ValidateProxyEventWithDepth(m *ProxyEvent, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field RpcMethod must be at most 128 characters, got: %d", len(m.RpcMethod))
 	}
 
-	// Validate UpstreamStatus (assert_le: 599)
-	if m.UpstreamStatus > 599 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field UpstreamStatus must be <= 599, got: %v", m.UpstreamStatus)
-	}
 	// Validate UpstreamStatus (assert_ge: 100)
 	if m.UpstreamStatus < 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field UpstreamStatus must be >= 100, got: %v", m.UpstreamStatus)
+	}
+	// Validate UpstreamStatus (assert_le: 599)
+	if m.UpstreamStatus > 599 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field UpstreamStatus must be <= 599, got: %v", m.UpstreamStatus)
 	}
 	// Validate RequestEpochMs (assert_ge: 0)
 	if m.RequestEpochMs < 0 {
@@ -25385,339 +25961,355 @@ const (
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizeConfigTraceId                               int = 32768
-	MaxSizeRatelimitinfoResetTime                      int = 32768
-	MaxSizeRatelimitinfoTraceId                        int = 32768
-	MaxSizePaginationinfoNextPageUrl                   int = 32768
-	MaxSizePaginationinfoTraceId                       int = 32768
-	MaxSizeUserUsername                                int = 32768
-	MaxSizeUserName                                    int = 32768
-	MaxSizeUserAvatarUrl                               int = 32768
-	MaxSizeUserWebUrl                                  int = 32768
-	MaxSizeUserState                                   int = 32768
-	MaxSizeUserTraceId                                 int = 32768
-	MaxSizeNamespaceName                               int = 32768
-	MaxSizeNamespacePath                               int = 32768
-	MaxSizeNamespaceKind                               int = 32768
-	MaxSizeNamespaceFullPath                           int = 32768
-	MaxSizeNamespaceWebUrl                             int = 32768
-	MaxSizeNamespaceTraceId                            int = 32768
-	MaxSizeProjectName                                 int = 32768
-	MaxSizeProjectNameWithNamespace                    int = 32768
-	MaxSizeProjectPath                                 int = 32768
-	MaxSizeProjectPathWithNamespace                    int = 32768
-	MaxSizeProjectDescription                          int = 32768
-	MaxSizeProjectDefaultBranch                        int = 32768
-	MaxSizeProjectVisibility                           int = 32768
-	MaxSizeProjectWebUrl                               int = 32768
-	MaxSizeProjectSshUrlToRepo                         int = 32768
-	MaxSizeProjectHttpUrlToRepo                        int = 32768
-	MaxSizeProjectTopics                               int = 64
-	MaxSizeProjectCreatedAt                            int = 32768
-	MaxSizeProjectLastActivityAt                       int = 32768
-	MaxSizeProjectTraceId                              int = 32768
-	MaxSizeLabelName                                   int = 32768
-	MaxSizeLabelColor                                  int = 32768
-	MaxSizeLabelDescription                            int = 32768
-	MaxSizeLabelTraceId                                int = 32768
-	MaxSizeMilestoneTitle                              int = 32768
-	MaxSizeMilestoneDescription                        int = 32768
-	MaxSizeMilestoneState                              int = 32768
-	MaxSizeMilestoneDueDate                            int = 32768
-	MaxSizeMilestoneWebUrl                             int = 32768
-	MaxSizeMilestoneTraceId                            int = 32768
-	MaxSizeIssueTitle                                  int = 32768
-	MaxSizeIssueDescription                            int = 32768
-	MaxSizeIssueState                                  int = 32768
-	MaxSizeIssueAssignees                              int = 32
-	MaxSizeIssueLabels                                 int = 128
-	MaxSizeIssueWebUrl                                 int = 32768
-	MaxSizeIssueCreatedAt                              int = 32768
-	MaxSizeIssueUpdatedAt                              int = 32768
-	MaxSizeIssueClosedAt                               int = 32768
-	MaxSizeIssueTraceId                                int = 32768
-	MaxSizeMergerequestTitle                           int = 32768
-	MaxSizeMergerequestDescription                     int = 32768
-	MaxSizeMergerequestState                           int = 32768
-	MaxSizeMergerequestAssignees                       int = 32
-	MaxSizeMergerequestReviewers                       int = 32
-	MaxSizeMergerequestLabels                          int = 128
-	MaxSizeMergerequestSourceBranch                    int = 32768
-	MaxSizeMergerequestTargetBranch                    int = 32768
-	MaxSizeMergerequestWebUrl                          int = 32768
-	MaxSizeMergerequestMergeStatus                     int = 32768
-	MaxSizeMergerequestSha                             int = 32768
-	MaxSizeMergerequestMergeCommitSha                  int = 32768
-	MaxSizeMergerequestCreatedAt                       int = 32768
-	MaxSizeMergerequestUpdatedAt                       int = 32768
-	MaxSizeMergerequestMergedAt                        int = 32768
-	MaxSizeMergerequestDetailedMergeStatus             int = 32768
-	MaxSizeMergerequestTraceId                         int = 32768
-	MaxSizeNoteBody                                    int = 32768
-	MaxSizeNoteNoteableType                            int = 32768
-	MaxSizeNoteCreatedAt                               int = 32768
-	MaxSizeNoteUpdatedAt                               int = 32768
-	MaxSizeNoteTraceId                                 int = 32768
-	MaxSizeMergerequestdiffOldPath                     int = 32768
-	MaxSizeMergerequestdiffNewPath                     int = 32768
-	MaxSizeMergerequestdiffAMode                       int = 32768
-	MaxSizeMergerequestdiffBMode                       int = 32768
-	MaxSizeMergerequestdiffDiff                        int = 32768
-	MaxSizeMergerequestdiffTraceId                     int = 32768
-	MaxSizePipelineStatus                              int = 32768
-	MaxSizePipelineRef                                 int = 32768
-	MaxSizePipelineSha                                 int = 32768
-	MaxSizePipelineSource                              int = 32768
-	MaxSizePipelineWebUrl                              int = 32768
-	MaxSizePipelineCreatedAt                           int = 32768
-	MaxSizePipelineUpdatedAt                           int = 32768
-	MaxSizePipelineStartedAt                           int = 32768
-	MaxSizePipelineFinishedAt                          int = 32768
-	MaxSizePipelineTraceId                             int = 32768
-	MaxSizeJobName                                     int = 32768
-	MaxSizeJobStage                                    int = 32768
-	MaxSizeJobStatus                                   int = 32768
-	MaxSizeJobRef                                      int = 32768
-	MaxSizeJobWebUrl                                   int = 32768
-	MaxSizeJobCreatedAt                                int = 32768
-	MaxSizeJobStartedAt                                int = 32768
-	MaxSizeJobFinishedAt                               int = 32768
-	MaxSizeJobFailureReason                            int = 32768
-	MaxSizeJobTraceId                                  int = 32768
-	MaxSizeBranchName                                  int = 32768
-	MaxSizeBranchTraceId                               int = 32768
-	MaxSizeBranchcommitId                              int = 32768
-	MaxSizeBranchcommitShortId                         int = 32768
-	MaxSizeBranchcommitTitle                           int = 32768
-	MaxSizeBranchcommitMessage                         int = 32768
-	MaxSizeBranchcommitAuthorName                      int = 32768
-	MaxSizeBranchcommitAuthorEmail                     int = 32768
-	MaxSizeBranchcommitAuthoredDate                    int = 32768
-	MaxSizeBranchcommitCommittedDate                   int = 32768
-	MaxSizeBranchcommitWebUrl                          int = 32768
-	MaxSizeBranchcommitTraceId                         int = 32768
-	MaxSizeRepositoryfileFileName                      int = 32768
-	MaxSizeRepositoryfileFilePath                      int = 32768
-	MaxSizeRepositoryfileEncoding                      int = 32768
-	MaxSizeRepositoryfileContent                       int = 32768
-	MaxSizeRepositoryfileContentSha256                 int = 32768
-	MaxSizeRepositoryfileRef                           int = 32768
-	MaxSizeRepositoryfileBlobId                        int = 32768
-	MaxSizeRepositoryfileCommitId                      int = 32768
-	MaxSizeRepositoryfileLastCommitId                  int = 32768
-	MaxSizeRepositoryfileTraceId                       int = 32768
-	MaxSizeTreeentryId                                 int = 32768
-	MaxSizeTreeentryName                               int = 32768
-	MaxSizeTreeentryType                               int = 32768
-	MaxSizeTreeentryPath                               int = 32768
-	MaxSizeTreeentryMode                               int = 32768
-	MaxSizeTreeentryTraceId                            int = 32768
-	MaxSizeSearchblobresultBasename                    int = 32768
-	MaxSizeSearchblobresultData                        int = 32768
-	MaxSizeSearchblobresultPath                        int = 32768
-	MaxSizeSearchblobresultFilename                    int = 32768
-	MaxSizeSearchblobresultRef                         int = 32768
-	MaxSizeSearchblobresultTraceId                     int = 32768
-	MaxSizeGetprojectrequestMetadata                   int = 32768
-	MaxSizeGetprojectrequestProjectId                  int = 32768
-	MaxSizeGetprojectrequestTraceId                    int = 32768
-	MaxSizeGetprojectresponseTraceId                   int = 32768
-	MaxSizeListissuesrequestMetadata                   int = 32768
-	MaxSizeListissuesrequestProjectId                  int = 32768
-	MaxSizeListissuesrequestState                      int = 32768
-	MaxSizeListissuesrequestSort                       int = 32768
-	MaxSizeListissuesrequestOrderBy                    int = 32768
-	MaxSizeListissuesrequestLabels                     int = 32
-	MaxSizeListissuesrequestAssigneeUsername           int = 32768
-	MaxSizeListissuesrequestSearch                     int = 32768
-	MaxSizeListissuesrequestCreatedAfter               int = 32768
-	MaxSizeListissuesrequestUpdatedAfter               int = 32768
-	MaxSizeListissuesrequestTraceId                    int = 32768
-	MaxSizeListissuesresponseIssues                    int = 100
-	MaxSizeListissuesresponseTraceId                   int = 32768
-	MaxSizeGetissuerequestMetadata                     int = 32768
-	MaxSizeGetissuerequestProjectId                    int = 32768
-	MaxSizeGetissuerequestTraceId                      int = 32768
-	MaxSizeGetissueresponseTraceId                     int = 32768
-	MaxSizeCreateissuerequestMetadata                  int = 32768
-	MaxSizeCreateissuerequestProjectId                 int = 32768
-	MaxSizeCreateissuerequestTitle                     int = 32768
-	MaxSizeCreateissuerequestDescription               int = 32768
-	MaxSizeCreateissuerequestLabels                    int = 32
-	MaxSizeCreateissuerequestAssigneeIds               int = 32
-	MaxSizeCreateissuerequestTraceId                   int = 32768
-	MaxSizeCreateissueresponseTraceId                  int = 32768
-	MaxSizeUpdateissuerequestMetadata                  int = 32768
-	MaxSizeUpdateissuerequestProjectId                 int = 32768
-	MaxSizeUpdateissuerequestTitle                     int = 32768
-	MaxSizeUpdateissuerequestDescription               int = 32768
-	MaxSizeUpdateissuerequestStateEvent                int = 32768
-	MaxSizeUpdateissuerequestLabels                    int = 32
-	MaxSizeUpdateissuerequestAssigneeIds               int = 32
-	MaxSizeUpdateissuerequestTraceId                   int = 32768
-	MaxSizeUpdateissueresponseTraceId                  int = 32768
-	MaxSizeCreateissuenoterequestMetadata              int = 32768
-	MaxSizeCreateissuenoterequestProjectId             int = 32768
-	MaxSizeCreateissuenoterequestBody                  int = 32768
-	MaxSizeCreateissuenoterequestTraceId               int = 32768
-	MaxSizeCreateissuenoteresponseTraceId              int = 32768
-	MaxSizeListmergerequestsrequestMetadata            int = 32768
-	MaxSizeListmergerequestsrequestProjectId           int = 32768
-	MaxSizeListmergerequestsrequestState               int = 32768
-	MaxSizeListmergerequestsrequestSort                int = 32768
-	MaxSizeListmergerequestsrequestOrderBy             int = 32768
-	MaxSizeListmergerequestsrequestSourceBranch        int = 32768
-	MaxSizeListmergerequestsrequestTargetBranch        int = 32768
-	MaxSizeListmergerequestsrequestSearch              int = 32768
-	MaxSizeListmergerequestsrequestLabels              int = 32
-	MaxSizeListmergerequestsrequestTraceId             int = 32768
-	MaxSizeListmergerequestsresponseMergeRequests      int = 100
-	MaxSizeListmergerequestsresponseTraceId            int = 32768
-	MaxSizeGetmergerequestrequestMetadata              int = 32768
-	MaxSizeGetmergerequestrequestProjectId             int = 32768
-	MaxSizeGetmergerequestrequestTraceId               int = 32768
-	MaxSizeGetmergerequestresponseTraceId              int = 32768
-	MaxSizeCreatemergerequestrequestMetadata           int = 32768
-	MaxSizeCreatemergerequestrequestProjectId          int = 32768
-	MaxSizeCreatemergerequestrequestTitle              int = 32768
-	MaxSizeCreatemergerequestrequestSourceBranch       int = 32768
-	MaxSizeCreatemergerequestrequestTargetBranch       int = 32768
-	MaxSizeCreatemergerequestrequestDescription        int = 32768
-	MaxSizeCreatemergerequestrequestLabels             int = 32
-	MaxSizeCreatemergerequestrequestReviewerIds        int = 32
-	MaxSizeCreatemergerequestrequestTraceId            int = 32768
-	MaxSizeCreatemergerequestresponseTraceId           int = 32768
-	MaxSizeUpdatemergerequestrequestMetadata           int = 32768
-	MaxSizeUpdatemergerequestrequestProjectId          int = 32768
-	MaxSizeUpdatemergerequestrequestTitle              int = 32768
-	MaxSizeUpdatemergerequestrequestDescription        int = 32768
-	MaxSizeUpdatemergerequestrequestStateEvent         int = 32768
-	MaxSizeUpdatemergerequestrequestLabels             int = 32
-	MaxSizeUpdatemergerequestrequestReviewerIds        int = 32
-	MaxSizeUpdatemergerequestrequestTargetBranch       int = 32768
-	MaxSizeUpdatemergerequestrequestTraceId            int = 32768
-	MaxSizeUpdatemergerequestresponseTraceId           int = 32768
-	MaxSizeMergemergerequestrequestMetadata            int = 32768
-	MaxSizeMergemergerequestrequestProjectId           int = 32768
-	MaxSizeMergemergerequestrequestMergeCommitMessage  int = 32768
-	MaxSizeMergemergerequestrequestSquashCommitMessage int = 32768
-	MaxSizeMergemergerequestrequestSha                 int = 32768
-	MaxSizeMergemergerequestrequestTraceId             int = 32768
-	MaxSizeMergemergerequestresponseTraceId            int = 32768
-	MaxSizeListmergerequestchangesrequestMetadata      int = 32768
-	MaxSizeListmergerequestchangesrequestProjectId     int = 32768
-	MaxSizeListmergerequestchangesrequestTraceId       int = 32768
-	MaxSizeListmergerequestchangesresponseChanges      int = 3000
-	MaxSizeListmergerequestchangesresponseTraceId      int = 32768
-	MaxSizeCreatemergerequestnoterequestMetadata       int = 32768
-	MaxSizeCreatemergerequestnoterequestProjectId      int = 32768
-	MaxSizeCreatemergerequestnoterequestBody           int = 32768
-	MaxSizeCreatemergerequestnoterequestTraceId        int = 32768
-	MaxSizeCreatemergerequestnoteresponseTraceId       int = 32768
-	MaxSizeListpipelinesrequestMetadata                int = 32768
-	MaxSizeListpipelinesrequestProjectId               int = 32768
-	MaxSizeListpipelinesrequestStatus                  int = 32768
-	MaxSizeListpipelinesrequestRef                     int = 32768
-	MaxSizeListpipelinesrequestSource                  int = 32768
-	MaxSizeListpipelinesrequestSort                    int = 32768
-	MaxSizeListpipelinesrequestOrderBy                 int = 32768
-	MaxSizeListpipelinesrequestTraceId                 int = 32768
-	MaxSizeListpipelinesresponsePipelines              int = 100
-	MaxSizeListpipelinesresponseTraceId                int = 32768
-	MaxSizeGetpipelinerequestMetadata                  int = 32768
-	MaxSizeGetpipelinerequestProjectId                 int = 32768
-	MaxSizeGetpipelinerequestTraceId                   int = 32768
-	MaxSizeGetpipelineresponseTraceId                  int = 32768
-	MaxSizeCreatepipelinerequestMetadata               int = 32768
-	MaxSizeCreatepipelinerequestProjectId              int = 32768
-	MaxSizeCreatepipelinerequestRef                    int = 32768
-	MaxSizeCreatepipelinerequestVariables              int = 64
-	MaxSizeCreatepipelinerequestTraceId                int = 32768
-	MaxSizePipelinevariableKey                         int = 32768
-	MaxSizePipelinevariableValue                       int = 32768
-	MaxSizePipelinevariableVariableType                int = 32768
-	MaxSizePipelinevariableTraceId                     int = 32768
-	MaxSizeCreatepipelineresponseTraceId               int = 32768
-	MaxSizeCancelpipelinerequestMetadata               int = 32768
-	MaxSizeCancelpipelinerequestProjectId              int = 32768
-	MaxSizeCancelpipelinerequestTraceId                int = 32768
-	MaxSizeCancelpipelineresponseTraceId               int = 32768
-	MaxSizeRetrypipelinerequestMetadata                int = 32768
-	MaxSizeRetrypipelinerequestProjectId               int = 32768
-	MaxSizeRetrypipelinerequestTraceId                 int = 32768
-	MaxSizeRetrypipelineresponseTraceId                int = 32768
-	MaxSizeListpipelinejobsrequestMetadata             int = 32768
-	MaxSizeListpipelinejobsrequestProjectId            int = 32768
-	MaxSizeListpipelinejobsrequestScope                int = 32768
-	MaxSizeListpipelinejobsrequestTraceId              int = 32768
-	MaxSizeListpipelinejobsresponseJobs                int = 100
-	MaxSizeListpipelinejobsresponseTraceId             int = 32768
-	MaxSizeGetrepositoryfilerequestMetadata            int = 32768
-	MaxSizeGetrepositoryfilerequestProjectId           int = 32768
-	MaxSizeGetrepositoryfilerequestFilePath            int = 32768
-	MaxSizeGetrepositoryfilerequestRef                 int = 32768
-	MaxSizeGetrepositoryfilerequestTraceId             int = 32768
-	MaxSizeGetrepositoryfileresponseTraceId            int = 32768
-	MaxSizeCreaterepositoryfilerequestMetadata         int = 32768
-	MaxSizeCreaterepositoryfilerequestProjectId        int = 32768
-	MaxSizeCreaterepositoryfilerequestFilePath         int = 32768
-	MaxSizeCreaterepositoryfilerequestBranch           int = 32768
-	MaxSizeCreaterepositoryfilerequestContent          int = 32768
-	MaxSizeCreaterepositoryfilerequestCommitMessage    int = 32768
-	MaxSizeCreaterepositoryfilerequestEncoding         int = 32768
-	MaxSizeCreaterepositoryfilerequestAuthorEmail      int = 32768
-	MaxSizeCreaterepositoryfilerequestAuthorName       int = 32768
-	MaxSizeCreaterepositoryfilerequestStartBranch      int = 32768
-	MaxSizeCreaterepositoryfilerequestTraceId          int = 32768
-	MaxSizeCreaterepositoryfileresponseTraceId         int = 32768
-	MaxSizeUpdaterepositoryfilerequestMetadata         int = 32768
-	MaxSizeUpdaterepositoryfilerequestProjectId        int = 32768
-	MaxSizeUpdaterepositoryfilerequestFilePath         int = 32768
-	MaxSizeUpdaterepositoryfilerequestBranch           int = 32768
-	MaxSizeUpdaterepositoryfilerequestContent          int = 32768
-	MaxSizeUpdaterepositoryfilerequestCommitMessage    int = 32768
-	MaxSizeUpdaterepositoryfilerequestEncoding         int = 32768
-	MaxSizeUpdaterepositoryfilerequestAuthorEmail      int = 32768
-	MaxSizeUpdaterepositoryfilerequestAuthorName       int = 32768
-	MaxSizeUpdaterepositoryfilerequestLastCommitId     int = 32768
-	MaxSizeUpdaterepositoryfilerequestTraceId          int = 32768
-	MaxSizeUpdaterepositoryfileresponseTraceId         int = 32768
-	MaxSizeListbranchesrequestMetadata                 int = 32768
-	MaxSizeListbranchesrequestProjectId                int = 32768
-	MaxSizeListbranchesrequestSearch                   int = 32768
-	MaxSizeListbranchesrequestTraceId                  int = 32768
-	MaxSizeListbranchesresponseBranches                int = 100
-	MaxSizeListbranchesresponseTraceId                 int = 32768
-	MaxSizeCreatebranchrequestMetadata                 int = 32768
-	MaxSizeCreatebranchrequestProjectId                int = 32768
-	MaxSizeCreatebranchrequestBranch                   int = 32768
-	MaxSizeCreatebranchrequestRef                      int = 32768
-	MaxSizeCreatebranchrequestTraceId                  int = 32768
-	MaxSizeCreatebranchresponseTraceId                 int = 32768
-	MaxSizeListcommitsrequestMetadata                  int = 32768
-	MaxSizeListcommitsrequestProjectId                 int = 32768
-	MaxSizeListcommitsrequestRefName                   int = 32768
-	MaxSizeListcommitsrequestPath                      int = 32768
-	MaxSizeListcommitsrequestSince                     int = 32768
-	MaxSizeListcommitsrequestUntil                     int = 32768
-	MaxSizeListcommitsrequestTraceId                   int = 32768
-	MaxSizeListcommitsresponseCommits                  int = 100
-	MaxSizeListcommitsresponseTraceId                  int = 32768
-	MaxSizeSearchblobsrequestMetadata                  int = 32768
-	MaxSizeSearchblobsrequestProjectId                 int = 32768
-	MaxSizeSearchblobsrequestSearch                    int = 32768
-	MaxSizeSearchblobsrequestRef                       int = 32768
-	MaxSizeSearchblobsrequestTraceId                   int = 32768
-	MaxSizeSearchblobsresponseResults                  int = 100
-	MaxSizeSearchblobsresponseTraceId                  int = 32768
-	MaxSizeProxyeventSubject                           int = 32768
-	MaxSizeProxyeventPath                              int = 32768
-	MaxSizeProxyeventProjectId                         int = 32768
-	MaxSizeProxyeventRpcMethod                         int = 32768
-	MaxSizeProxyeventProvider                          int = 32768
-	MaxSizeProxyeventTraceId                           int = 32768
-	MaxSizeGitlabconfigstateTraceId                    int = 32768
-	MaxSizeMapemptyTraceId                             int = 32768
+	MaxSizeConfigTraceId                                int = 32768
+	MaxSizeRatelimitinfoResetTime                       int = 32768
+	MaxSizeRatelimitinfoTraceId                         int = 32768
+	MaxSizePaginationinfoNextPageUrl                    int = 32768
+	MaxSizePaginationinfoTraceId                        int = 32768
+	MaxSizeUserUsername                                 int = 32768
+	MaxSizeUserName                                     int = 32768
+	MaxSizeUserAvatarUrl                                int = 32768
+	MaxSizeUserWebUrl                                   int = 32768
+	MaxSizeUserState                                    int = 32768
+	MaxSizeUserTraceId                                  int = 32768
+	MaxSizeNamespaceName                                int = 32768
+	MaxSizeNamespacePath                                int = 32768
+	MaxSizeNamespaceKind                                int = 32768
+	MaxSizeNamespaceFullPath                            int = 32768
+	MaxSizeNamespaceWebUrl                              int = 32768
+	MaxSizeNamespaceTraceId                             int = 32768
+	MaxSizeProjectName                                  int = 32768
+	MaxSizeProjectNameWithNamespace                     int = 32768
+	MaxSizeProjectPath                                  int = 32768
+	MaxSizeProjectPathWithNamespace                     int = 32768
+	MaxSizeProjectDescription                           int = 32768
+	MaxSizeProjectDefaultBranch                         int = 32768
+	MaxSizeProjectVisibility                            int = 32768
+	MaxSizeProjectWebUrl                                int = 32768
+	MaxSizeProjectSshUrlToRepo                          int = 32768
+	MaxSizeProjectHttpUrlToRepo                         int = 32768
+	MaxSizeProjectTopics                                int = 64
+	MaxSizeProjectCreatedAt                             int = 32768
+	MaxSizeProjectLastActivityAt                        int = 32768
+	MaxSizeProjectTraceId                               int = 32768
+	MaxSizeLabelName                                    int = 32768
+	MaxSizeLabelColor                                   int = 32768
+	MaxSizeLabelDescription                             int = 32768
+	MaxSizeLabelTraceId                                 int = 32768
+	MaxSizeMilestoneTitle                               int = 32768
+	MaxSizeMilestoneDescription                         int = 32768
+	MaxSizeMilestoneState                               int = 32768
+	MaxSizeMilestoneDueDate                             int = 32768
+	MaxSizeMilestoneWebUrl                              int = 32768
+	MaxSizeMilestoneTraceId                             int = 32768
+	MaxSizeIssueTitle                                   int = 32768
+	MaxSizeIssueDescription                             int = 32768
+	MaxSizeIssueState                                   int = 32768
+	MaxSizeIssueAssignees                               int = 32
+	MaxSizeIssueLabels                                  int = 128
+	MaxSizeIssueWebUrl                                  int = 32768
+	MaxSizeIssueCreatedAt                               int = 32768
+	MaxSizeIssueUpdatedAt                               int = 32768
+	MaxSizeIssueClosedAt                                int = 32768
+	MaxSizeIssueTraceId                                 int = 32768
+	MaxSizeMergerequestTitle                            int = 32768
+	MaxSizeMergerequestDescription                      int = 32768
+	MaxSizeMergerequestState                            int = 32768
+	MaxSizeMergerequestAssignees                        int = 32
+	MaxSizeMergerequestReviewers                        int = 32
+	MaxSizeMergerequestLabels                           int = 128
+	MaxSizeMergerequestSourceBranch                     int = 32768
+	MaxSizeMergerequestTargetBranch                     int = 32768
+	MaxSizeMergerequestWebUrl                           int = 32768
+	MaxSizeMergerequestMergeStatus                      int = 32768
+	MaxSizeMergerequestSha                              int = 32768
+	MaxSizeMergerequestMergeCommitSha                   int = 32768
+	MaxSizeMergerequestCreatedAt                        int = 32768
+	MaxSizeMergerequestUpdatedAt                        int = 32768
+	MaxSizeMergerequestMergedAt                         int = 32768
+	MaxSizeMergerequestDetailedMergeStatus              int = 32768
+	MaxSizeMergerequestTraceId                          int = 32768
+	MaxSizeNoteBody                                     int = 32768
+	MaxSizeNoteNoteableType                             int = 32768
+	MaxSizeNoteCreatedAt                                int = 32768
+	MaxSizeNoteUpdatedAt                                int = 32768
+	MaxSizeNoteTraceId                                  int = 32768
+	MaxSizeMergerequestdiffOldPath                      int = 32768
+	MaxSizeMergerequestdiffNewPath                      int = 32768
+	MaxSizeMergerequestdiffAMode                        int = 32768
+	MaxSizeMergerequestdiffBMode                        int = 32768
+	MaxSizeMergerequestdiffDiff                         int = 32768
+	MaxSizeMergerequestdiffTraceId                      int = 32768
+	MaxSizePipelineStatus                               int = 32768
+	MaxSizePipelineRef                                  int = 32768
+	MaxSizePipelineSha                                  int = 32768
+	MaxSizePipelineSource                               int = 32768
+	MaxSizePipelineWebUrl                               int = 32768
+	MaxSizePipelineCreatedAt                            int = 32768
+	MaxSizePipelineUpdatedAt                            int = 32768
+	MaxSizePipelineStartedAt                            int = 32768
+	MaxSizePipelineFinishedAt                           int = 32768
+	MaxSizePipelineTraceId                              int = 32768
+	MaxSizeJobName                                      int = 32768
+	MaxSizeJobStage                                     int = 32768
+	MaxSizeJobStatus                                    int = 32768
+	MaxSizeJobRef                                       int = 32768
+	MaxSizeJobWebUrl                                    int = 32768
+	MaxSizeJobCreatedAt                                 int = 32768
+	MaxSizeJobStartedAt                                 int = 32768
+	MaxSizeJobFinishedAt                                int = 32768
+	MaxSizeJobFailureReason                             int = 32768
+	MaxSizeJobTraceId                                   int = 32768
+	MaxSizeBranchName                                   int = 32768
+	MaxSizeBranchTraceId                                int = 32768
+	MaxSizeBranchcommitId                               int = 32768
+	MaxSizeBranchcommitShortId                          int = 32768
+	MaxSizeBranchcommitTitle                            int = 32768
+	MaxSizeBranchcommitMessage                          int = 32768
+	MaxSizeBranchcommitAuthorName                       int = 32768
+	MaxSizeBranchcommitAuthorEmail                      int = 32768
+	MaxSizeBranchcommitAuthoredDate                     int = 32768
+	MaxSizeBranchcommitCommittedDate                    int = 32768
+	MaxSizeBranchcommitWebUrl                           int = 32768
+	MaxSizeBranchcommitTraceId                          int = 32768
+	MaxSizeRepositoryfileFileName                       int = 32768
+	MaxSizeRepositoryfileFilePath                       int = 32768
+	MaxSizeRepositoryfileEncoding                       int = 32768
+	MaxSizeRepositoryfileContent                        int = 32768
+	MaxSizeRepositoryfileContentSha256                  int = 32768
+	MaxSizeRepositoryfileRef                            int = 32768
+	MaxSizeRepositoryfileBlobId                         int = 32768
+	MaxSizeRepositoryfileCommitId                       int = 32768
+	MaxSizeRepositoryfileLastCommitId                   int = 32768
+	MaxSizeRepositoryfileTraceId                        int = 32768
+	MaxSizeTreeentryId                                  int = 32768
+	MaxSizeTreeentryName                                int = 32768
+	MaxSizeTreeentryType                                int = 32768
+	MaxSizeTreeentryPath                                int = 32768
+	MaxSizeTreeentryMode                                int = 32768
+	MaxSizeTreeentryTraceId                             int = 32768
+	MaxSizeSearchblobresultBasename                     int = 32768
+	MaxSizeSearchblobresultData                         int = 32768
+	MaxSizeSearchblobresultPath                         int = 32768
+	MaxSizeSearchblobresultFilename                     int = 32768
+	MaxSizeSearchblobresultRef                          int = 32768
+	MaxSizeSearchblobresultTraceId                      int = 32768
+	MaxSizeGetprojectrequestMetadata                    int = 32768
+	MaxSizeGetprojectrequestProjectId                   int = 32768
+	MaxSizeGetprojectrequestTraceId                     int = 32768
+	MaxSizeGetprojectresponseTraceId                    int = 32768
+	MaxSizeListissuesrequestMetadata                    int = 32768
+	MaxSizeListissuesrequestProjectId                   int = 32768
+	MaxSizeListissuesrequestState                       int = 32768
+	MaxSizeListissuesrequestSort                        int = 32768
+	MaxSizeListissuesrequestOrderBy                     int = 32768
+	MaxSizeListissuesrequestLabels                      int = 32
+	MaxSizeListissuesrequestAssigneeUsername            int = 32768
+	MaxSizeListissuesrequestSearch                      int = 32768
+	MaxSizeListissuesrequestCreatedAfter                int = 32768
+	MaxSizeListissuesrequestUpdatedAfter                int = 32768
+	MaxSizeListissuesrequestPageToken                   int = 32768
+	MaxSizeListissuesrequestTraceId                     int = 32768
+	MaxSizeListissuesresponseIssues                     int = 100
+	MaxSizeListissuesresponseNextPageToken              int = 32768
+	MaxSizeListissuesresponseTraceId                    int = 32768
+	MaxSizeGetissuerequestMetadata                      int = 32768
+	MaxSizeGetissuerequestProjectId                     int = 32768
+	MaxSizeGetissuerequestTraceId                       int = 32768
+	MaxSizeGetissueresponseTraceId                      int = 32768
+	MaxSizeCreateissuerequestMetadata                   int = 32768
+	MaxSizeCreateissuerequestProjectId                  int = 32768
+	MaxSizeCreateissuerequestTitle                      int = 32768
+	MaxSizeCreateissuerequestDescription                int = 32768
+	MaxSizeCreateissuerequestLabels                     int = 32
+	MaxSizeCreateissuerequestAssigneeIds                int = 32
+	MaxSizeCreateissuerequestTraceId                    int = 32768
+	MaxSizeCreateissueresponseTraceId                   int = 32768
+	MaxSizeUpdateissuerequestMetadata                   int = 32768
+	MaxSizeUpdateissuerequestProjectId                  int = 32768
+	MaxSizeUpdateissuerequestTitle                      int = 32768
+	MaxSizeUpdateissuerequestDescription                int = 32768
+	MaxSizeUpdateissuerequestStateEvent                 int = 32768
+	MaxSizeUpdateissuerequestLabels                     int = 32
+	MaxSizeUpdateissuerequestAssigneeIds                int = 32
+	MaxSizeUpdateissuerequestTraceId                    int = 32768
+	MaxSizeUpdateissueresponseTraceId                   int = 32768
+	MaxSizeCreateissuenoterequestMetadata               int = 32768
+	MaxSizeCreateissuenoterequestProjectId              int = 32768
+	MaxSizeCreateissuenoterequestBody                   int = 32768
+	MaxSizeCreateissuenoterequestTraceId                int = 32768
+	MaxSizeCreateissuenoteresponseTraceId               int = 32768
+	MaxSizeListmergerequestsrequestMetadata             int = 32768
+	MaxSizeListmergerequestsrequestProjectId            int = 32768
+	MaxSizeListmergerequestsrequestState                int = 32768
+	MaxSizeListmergerequestsrequestSort                 int = 32768
+	MaxSizeListmergerequestsrequestOrderBy              int = 32768
+	MaxSizeListmergerequestsrequestSourceBranch         int = 32768
+	MaxSizeListmergerequestsrequestTargetBranch         int = 32768
+	MaxSizeListmergerequestsrequestSearch               int = 32768
+	MaxSizeListmergerequestsrequestLabels               int = 32
+	MaxSizeListmergerequestsrequestPageToken            int = 32768
+	MaxSizeListmergerequestsrequestTraceId              int = 32768
+	MaxSizeListmergerequestsresponseMergeRequests       int = 100
+	MaxSizeListmergerequestsresponseNextPageToken       int = 32768
+	MaxSizeListmergerequestsresponseTraceId             int = 32768
+	MaxSizeGetmergerequestrequestMetadata               int = 32768
+	MaxSizeGetmergerequestrequestProjectId              int = 32768
+	MaxSizeGetmergerequestrequestTraceId                int = 32768
+	MaxSizeGetmergerequestresponseTraceId               int = 32768
+	MaxSizeCreatemergerequestrequestMetadata            int = 32768
+	MaxSizeCreatemergerequestrequestProjectId           int = 32768
+	MaxSizeCreatemergerequestrequestTitle               int = 32768
+	MaxSizeCreatemergerequestrequestSourceBranch        int = 32768
+	MaxSizeCreatemergerequestrequestTargetBranch        int = 32768
+	MaxSizeCreatemergerequestrequestDescription         int = 32768
+	MaxSizeCreatemergerequestrequestLabels              int = 32
+	MaxSizeCreatemergerequestrequestReviewerIds         int = 32
+	MaxSizeCreatemergerequestrequestTraceId             int = 32768
+	MaxSizeCreatemergerequestresponseTraceId            int = 32768
+	MaxSizeUpdatemergerequestrequestMetadata            int = 32768
+	MaxSizeUpdatemergerequestrequestProjectId           int = 32768
+	MaxSizeUpdatemergerequestrequestTitle               int = 32768
+	MaxSizeUpdatemergerequestrequestDescription         int = 32768
+	MaxSizeUpdatemergerequestrequestStateEvent          int = 32768
+	MaxSizeUpdatemergerequestrequestLabels              int = 32
+	MaxSizeUpdatemergerequestrequestReviewerIds         int = 32
+	MaxSizeUpdatemergerequestrequestTargetBranch        int = 32768
+	MaxSizeUpdatemergerequestrequestTraceId             int = 32768
+	MaxSizeUpdatemergerequestresponseTraceId            int = 32768
+	MaxSizeMergemergerequestrequestMetadata             int = 32768
+	MaxSizeMergemergerequestrequestProjectId            int = 32768
+	MaxSizeMergemergerequestrequestMergeCommitMessage   int = 32768
+	MaxSizeMergemergerequestrequestSquashCommitMessage  int = 32768
+	MaxSizeMergemergerequestrequestSha                  int = 32768
+	MaxSizeMergemergerequestrequestTraceId              int = 32768
+	MaxSizeMergemergerequestresponseTraceId             int = 32768
+	MaxSizeListmergerequestchangesrequestMetadata       int = 32768
+	MaxSizeListmergerequestchangesrequestProjectId      int = 32768
+	MaxSizeListmergerequestchangesrequestPageToken      int = 32768
+	MaxSizeListmergerequestchangesrequestTraceId        int = 32768
+	MaxSizeListmergerequestchangesresponseChanges       int = 100
+	MaxSizeListmergerequestchangesresponseNextPageToken int = 32768
+	MaxSizeListmergerequestchangesresponseTraceId       int = 32768
+	MaxSizeCreatemergerequestnoterequestMetadata        int = 32768
+	MaxSizeCreatemergerequestnoterequestProjectId       int = 32768
+	MaxSizeCreatemergerequestnoterequestBody            int = 32768
+	MaxSizeCreatemergerequestnoterequestTraceId         int = 32768
+	MaxSizeCreatemergerequestnoteresponseTraceId        int = 32768
+	MaxSizeListpipelinesrequestMetadata                 int = 32768
+	MaxSizeListpipelinesrequestProjectId                int = 32768
+	MaxSizeListpipelinesrequestStatus                   int = 32768
+	MaxSizeListpipelinesrequestRef                      int = 32768
+	MaxSizeListpipelinesrequestSource                   int = 32768
+	MaxSizeListpipelinesrequestSort                     int = 32768
+	MaxSizeListpipelinesrequestOrderBy                  int = 32768
+	MaxSizeListpipelinesrequestPageToken                int = 32768
+	MaxSizeListpipelinesrequestTraceId                  int = 32768
+	MaxSizeListpipelinesresponsePipelines               int = 100
+	MaxSizeListpipelinesresponseNextPageToken           int = 32768
+	MaxSizeListpipelinesresponseTraceId                 int = 32768
+	MaxSizeGetpipelinerequestMetadata                   int = 32768
+	MaxSizeGetpipelinerequestProjectId                  int = 32768
+	MaxSizeGetpipelinerequestTraceId                    int = 32768
+	MaxSizeGetpipelineresponseTraceId                   int = 32768
+	MaxSizeCreatepipelinerequestMetadata                int = 32768
+	MaxSizeCreatepipelinerequestProjectId               int = 32768
+	MaxSizeCreatepipelinerequestRef                     int = 32768
+	MaxSizeCreatepipelinerequestVariables               int = 64
+	MaxSizeCreatepipelinerequestTraceId                 int = 32768
+	MaxSizePipelinevariableKey                          int = 32768
+	MaxSizePipelinevariableValue                        int = 32768
+	MaxSizePipelinevariableVariableType                 int = 32768
+	MaxSizePipelinevariableTraceId                      int = 32768
+	MaxSizeCreatepipelineresponseTraceId                int = 32768
+	MaxSizeCancelpipelinerequestMetadata                int = 32768
+	MaxSizeCancelpipelinerequestProjectId               int = 32768
+	MaxSizeCancelpipelinerequestTraceId                 int = 32768
+	MaxSizeCancelpipelineresponseTraceId                int = 32768
+	MaxSizeRetrypipelinerequestMetadata                 int = 32768
+	MaxSizeRetrypipelinerequestProjectId                int = 32768
+	MaxSizeRetrypipelinerequestTraceId                  int = 32768
+	MaxSizeRetrypipelineresponseTraceId                 int = 32768
+	MaxSizeListpipelinejobsrequestMetadata              int = 32768
+	MaxSizeListpipelinejobsrequestProjectId             int = 32768
+	MaxSizeListpipelinejobsrequestScope                 int = 32768
+	MaxSizeListpipelinejobsrequestPageToken             int = 32768
+	MaxSizeListpipelinejobsrequestTraceId               int = 32768
+	MaxSizeListpipelinejobsresponseJobs                 int = 100
+	MaxSizeListpipelinejobsresponseNextPageToken        int = 32768
+	MaxSizeListpipelinejobsresponseTraceId              int = 32768
+	MaxSizeGetrepositoryfilerequestMetadata             int = 32768
+	MaxSizeGetrepositoryfilerequestProjectId            int = 32768
+	MaxSizeGetrepositoryfilerequestFilePath             int = 32768
+	MaxSizeGetrepositoryfilerequestRef                  int = 32768
+	MaxSizeGetrepositoryfilerequestTraceId              int = 32768
+	MaxSizeGetrepositoryfileresponseTraceId             int = 32768
+	MaxSizeCreaterepositoryfilerequestMetadata          int = 32768
+	MaxSizeCreaterepositoryfilerequestProjectId         int = 32768
+	MaxSizeCreaterepositoryfilerequestFilePath          int = 32768
+	MaxSizeCreaterepositoryfilerequestBranch            int = 32768
+	MaxSizeCreaterepositoryfilerequestContent           int = 32768
+	MaxSizeCreaterepositoryfilerequestCommitMessage     int = 32768
+	MaxSizeCreaterepositoryfilerequestEncoding          int = 32768
+	MaxSizeCreaterepositoryfilerequestAuthorEmail       int = 32768
+	MaxSizeCreaterepositoryfilerequestAuthorName        int = 32768
+	MaxSizeCreaterepositoryfilerequestStartBranch       int = 32768
+	MaxSizeCreaterepositoryfilerequestTraceId           int = 32768
+	MaxSizeCreaterepositoryfileresponseTraceId          int = 32768
+	MaxSizeUpdaterepositoryfilerequestMetadata          int = 32768
+	MaxSizeUpdaterepositoryfilerequestProjectId         int = 32768
+	MaxSizeUpdaterepositoryfilerequestFilePath          int = 32768
+	MaxSizeUpdaterepositoryfilerequestBranch            int = 32768
+	MaxSizeUpdaterepositoryfilerequestContent           int = 32768
+	MaxSizeUpdaterepositoryfilerequestCommitMessage     int = 32768
+	MaxSizeUpdaterepositoryfilerequestEncoding          int = 32768
+	MaxSizeUpdaterepositoryfilerequestAuthorEmail       int = 32768
+	MaxSizeUpdaterepositoryfilerequestAuthorName        int = 32768
+	MaxSizeUpdaterepositoryfilerequestLastCommitId      int = 32768
+	MaxSizeUpdaterepositoryfilerequestTraceId           int = 32768
+	MaxSizeUpdaterepositoryfileresponseTraceId          int = 32768
+	MaxSizeListbranchesrequestMetadata                  int = 32768
+	MaxSizeListbranchesrequestProjectId                 int = 32768
+	MaxSizeListbranchesrequestSearch                    int = 32768
+	MaxSizeListbranchesrequestPageToken                 int = 32768
+	MaxSizeListbranchesrequestTraceId                   int = 32768
+	MaxSizeListbranchesresponseBranches                 int = 100
+	MaxSizeListbranchesresponseNextPageToken            int = 32768
+	MaxSizeListbranchesresponseTraceId                  int = 32768
+	MaxSizeCreatebranchrequestMetadata                  int = 32768
+	MaxSizeCreatebranchrequestProjectId                 int = 32768
+	MaxSizeCreatebranchrequestBranch                    int = 32768
+	MaxSizeCreatebranchrequestRef                       int = 32768
+	MaxSizeCreatebranchrequestTraceId                   int = 32768
+	MaxSizeCreatebranchresponseTraceId                  int = 32768
+	MaxSizeListcommitsrequestMetadata                   int = 32768
+	MaxSizeListcommitsrequestProjectId                  int = 32768
+	MaxSizeListcommitsrequestRefName                    int = 32768
+	MaxSizeListcommitsrequestPath                       int = 32768
+	MaxSizeListcommitsrequestSince                      int = 32768
+	MaxSizeListcommitsrequestUntil                      int = 32768
+	MaxSizeListcommitsrequestPageToken                  int = 32768
+	MaxSizeListcommitsrequestTraceId                    int = 32768
+	MaxSizeListcommitsresponseCommits                   int = 100
+	MaxSizeListcommitsresponseNextPageToken             int = 32768
+	MaxSizeListcommitsresponseTraceId                   int = 32768
+	MaxSizeSearchblobsrequestMetadata                   int = 32768
+	MaxSizeSearchblobsrequestProjectId                  int = 32768
+	MaxSizeSearchblobsrequestSearch                     int = 32768
+	MaxSizeSearchblobsrequestRef                        int = 32768
+	MaxSizeSearchblobsrequestPageToken                  int = 32768
+	MaxSizeSearchblobsrequestTraceId                    int = 32768
+	MaxSizeSearchblobsresponseResults                   int = 100
+	MaxSizeSearchblobsresponseNextPageToken             int = 32768
+	MaxSizeSearchblobsresponseTraceId                   int = 32768
+	MaxSizeProxyeventSubject                            int = 32768
+	MaxSizeProxyeventPath                               int = 32768
+	MaxSizeProxyeventProjectId                          int = 32768
+	MaxSizeProxyeventRpcMethod                          int = 32768
+	MaxSizeProxyeventProvider                           int = 32768
+	MaxSizeProxyeventTraceId                            int = 32768
+	MaxSizeGitlabconfigstateTraceId                     int = 32768
+	MaxSizeMapemptyTraceId                              int = 32768
 )
 
 // ============================================================
@@ -28190,6 +28782,12 @@ func MergeListIssuesRequest(dst, src *ListIssuesRequest) {
 	if dst.PerPage == 0 {
 		dst.PerPage = src.PerPage
 	}
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
+	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -28215,6 +28813,12 @@ func MergeListIssuesResponse(dst, src *ListIssuesResponse) {
 		dst.RateLimit = src.RateLimit
 	} else if src.RateLimit != nil {
 		MergeRateLimitInfo(dst.RateLimit, src.RateLimit)
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -28484,6 +29088,12 @@ func MergeListMergeRequestsRequest(dst, src *ListMergeRequestsRequest) {
 	if dst.PerPage == 0 {
 		dst.PerPage = src.PerPage
 	}
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
+	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -28509,6 +29119,12 @@ func MergeListMergeRequestsResponse(dst, src *ListMergeRequestsResponse) {
 		dst.RateLimit = src.RateLimit
 	} else if src.RateLimit != nil {
 		MergeRateLimitInfo(dst.RateLimit, src.RateLimit)
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -28787,6 +29403,12 @@ func MergeListMergeRequestChangesRequest(dst, src *ListMergeRequestChangesReques
 	if dst.MergeRequestIid == 0 {
 		dst.MergeRequestIid = src.MergeRequestIid
 	}
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
+	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -28807,6 +29429,12 @@ func MergeListMergeRequestChangesResponse(dst, src *ListMergeRequestChangesRespo
 		dst.RateLimit = src.RateLimit
 	} else if src.RateLimit != nil {
 		MergeRateLimitInfo(dst.RateLimit, src.RateLimit)
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -28896,6 +29524,12 @@ func MergeListPipelinesRequest(dst, src *ListPipelinesRequest) {
 	if dst.PerPage == 0 {
 		dst.PerPage = src.PerPage
 	}
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
+	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -28921,6 +29555,12 @@ func MergeListPipelinesResponse(dst, src *ListPipelinesResponse) {
 		dst.RateLimit = src.RateLimit
 	} else if src.RateLimit != nil {
 		MergeRateLimitInfo(dst.RateLimit, src.RateLimit)
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -29158,6 +29798,12 @@ func MergeListPipelineJobsRequest(dst, src *ListPipelineJobsRequest) {
 	if dst.PerPage == 0 {
 		dst.PerPage = src.PerPage
 	}
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
+	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -29183,6 +29829,12 @@ func MergeListPipelineJobsResponse(dst, src *ListPipelineJobsResponse) {
 		dst.RateLimit = src.RateLimit
 	} else if src.RateLimit != nil {
 		MergeRateLimitInfo(dst.RateLimit, src.RateLimit)
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -29392,6 +30044,12 @@ func MergeListBranchesRequest(dst, src *ListBranchesRequest) {
 	if dst.PerPage == 0 {
 		dst.PerPage = src.PerPage
 	}
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
+	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -29417,6 +30075,12 @@ func MergeListBranchesResponse(dst, src *ListBranchesResponse) {
 		dst.RateLimit = src.RateLimit
 	} else if src.RateLimit != nil {
 		MergeRateLimitInfo(dst.RateLimit, src.RateLimit)
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -29503,6 +30167,12 @@ func MergeListCommitsRequest(dst, src *ListCommitsRequest) {
 	if dst.PerPage == 0 {
 		dst.PerPage = src.PerPage
 	}
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
+	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -29528,6 +30198,12 @@ func MergeListCommitsResponse(dst, src *ListCommitsResponse) {
 		dst.RateLimit = src.RateLimit
 	} else if src.RateLimit != nil {
 		MergeRateLimitInfo(dst.RateLimit, src.RateLimit)
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -29560,6 +30236,12 @@ func MergeSearchBlobsRequest(dst, src *SearchBlobsRequest) {
 	if dst.PerPage == 0 {
 		dst.PerPage = src.PerPage
 	}
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
+	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -29585,6 +30267,12 @@ func MergeSearchBlobsResponse(dst, src *SearchBlobsResponse) {
 		dst.RateLimit = src.RateLimit
 	} else if src.RateLimit != nil {
 		MergeRateLimitInfo(dst.RateLimit, src.RateLimit)
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

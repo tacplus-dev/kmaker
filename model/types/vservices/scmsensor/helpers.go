@@ -1120,7 +1120,7 @@ func TimeseriesMutationRpcIdToSpecName(v TimeseriesMutationRpcId) string {
 // ScmEventJSON represents ScmEvent in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type scmeventJSON struct {
-	Email              string `json:"email,omitempty"`
+	SpiffeId           string `json:"spiffe_id,omitempty"`
 	EventId            string `json:"event_id,omitempty"`
 	TimestampMs        int64  `json:"timestamp_ms,omitempty"`
 	Provider           string `json:"provider,omitempty"`
@@ -1149,7 +1149,7 @@ func ScmEventToJSON(v *ScmEvent) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := scmeventJSON{
-		Email:              v.Email,
+		SpiffeId:           v.SpiffeId,
 		EventId:            v.EventId,
 		TimestampMs:        v.TimestampMs,
 		Provider:           ScmProviderToString(v.Provider),
@@ -1180,7 +1180,7 @@ func ScmEventToJSONPretty(v *ScmEvent) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := scmeventJSON{
-		Email:              v.Email,
+		SpiffeId:           v.SpiffeId,
 		EventId:            v.EventId,
 		TimestampMs:        v.TimestampMs,
 		Provider:           ScmProviderToString(v.Provider),
@@ -1263,7 +1263,7 @@ func ScmEventFromJSON(data []byte) (*ScmEvent, error) {
 	}
 	// Build result with parsed enums
 	result := &ScmEvent{}
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	result.EventId = raw.EventId
 	result.TimestampMs = raw.TimestampMs
 	// Parse enum field: Provider
@@ -1502,8 +1502,6 @@ func ScmEventBusToTOML(v *ScmEventBus) ([]byte, error) {
 type scmeventbuseventstreamsubscriberecordJSON struct {
 	Meta    json.RawMessage `json:"meta,omitempty"`
 	Payload json.RawMessage `json:"payload,omitempty"`
-	TraceId string          `json:"trace_id,omitempty"`
-	Noop    bool            `json:"noop,omitempty"`
 }
 
 // ScmEventBusEventStreamSubscribeRecordToJSON converts ScmEventBusEventStreamSubscribeRecord to JSON bytes.
@@ -1528,8 +1526,6 @@ func ScmEventBusEventStreamSubscribeRecordToJSON(v *ScmEventBusEventStreamSubscr
 			data, _ := ScmEventToJSON(v.Payload)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1556,8 +1552,6 @@ func ScmEventBusEventStreamSubscribeRecordToJSONPretty(v *ScmEventBusEventStream
 			data, _ := ScmEventToJSON(v.Payload)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1636,8 +1630,6 @@ func ScmEventBusEventStreamSubscribeRecordFromJSON(data []byte) (*ScmEventBusEve
 			result.Payload = parsed
 		}
 	}
-	result.TraceId = raw.TraceId
-	result.Noop = raw.Noop
 	return result, nil
 }
 
@@ -1973,8 +1965,6 @@ type eventbusrecordmetaJSON struct {
 	Partition int32           `json:"partition,omitempty"`
 	Offset    int64           `json:"offset,omitempty"`
 	Timestamp json.RawMessage `json:"timestamp,omitempty"`
-	TraceId   string          `json:"trace_id,omitempty"`
-	Noop      bool            `json:"noop,omitempty"`
 }
 
 // EventBusRecordMetaToJSON converts EventBusRecordMeta to JSON bytes.
@@ -1996,8 +1986,6 @@ func EventBusRecordMetaToJSON(v *EventBusRecordMeta) ([]byte, error) {
 			data, _ := protojson.Marshal(v.Timestamp)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -2021,8 +2009,6 @@ func EventBusRecordMetaToJSONPretty(v *EventBusRecordMeta) ([]byte, error) {
 			data, _ := protojson.Marshal(v.Timestamp)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -2098,8 +2084,6 @@ func EventBusRecordMetaFromJSON(data []byte) (*EventBusRecordMeta, error) {
 			result.Timestamp = nil
 		}
 	}
-	result.TraceId = raw.TraceId
-	result.Noop = raw.Noop
 	return result, nil
 }
 
@@ -2321,7 +2305,7 @@ func RepositoryNodeToTOML(v *RepositoryNode) ([]byte, error) {
 type scmoperationnodeJSON struct {
 	EventId     string `json:"event_id,omitempty"`
 	Repository  string `json:"repository,omitempty"`
-	Email       string `json:"email,omitempty"`
+	SpiffeId    string `json:"spiffe_id,omitempty"`
 	Provider    string `json:"provider,omitempty"`
 	Operation   string `json:"operation,omitempty"`
 	Succeeded   bool   `json:"succeeded,omitempty"`
@@ -2341,7 +2325,7 @@ func ScmOperationNodeToJSON(v *ScmOperationNode) ([]byte, error) {
 	helper := scmoperationnodeJSON{
 		EventId:     v.EventId,
 		Repository:  v.Repository,
-		Email:       v.Email,
+		SpiffeId:    v.SpiffeId,
 		Provider:    ScmProviderToString(v.Provider),
 		Operation:   ScmOperationTypeToString(v.Operation),
 		Succeeded:   v.Succeeded,
@@ -2363,7 +2347,7 @@ func ScmOperationNodeToJSONPretty(v *ScmOperationNode) ([]byte, error) {
 	helper := scmoperationnodeJSON{
 		EventId:     v.EventId,
 		Repository:  v.Repository,
-		Email:       v.Email,
+		SpiffeId:    v.SpiffeId,
 		Provider:    ScmProviderToString(v.Provider),
 		Operation:   ScmOperationTypeToString(v.Operation),
 		Succeeded:   v.Succeeded,
@@ -2437,7 +2421,7 @@ func ScmOperationNodeFromJSON(data []byte) (*ScmOperationNode, error) {
 	result := &ScmOperationNode{}
 	result.EventId = raw.EventId
 	result.Repository = raw.Repository
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	// Parse enum field: Provider
 	if raw.Provider != "" {
 		if parsed, err := ParseScmProvider(raw.Provider); err == nil {
@@ -2505,7 +2489,7 @@ type scmoperationrecordJSON struct {
 	Repo               string `json:"repo,omitempty"`
 	TimestampMs        int64  `json:"timestamp_ms,omitempty"`
 	EventId            string `json:"event_id,omitempty"`
-	Email              string `json:"email,omitempty"`
+	SpiffeId           string `json:"spiffe_id,omitempty"`
 	Provider           string `json:"provider,omitempty"`
 	ApiEndpoint        string `json:"api_endpoint,omitempty"`
 	Operation          string `json:"operation,omitempty"`
@@ -2533,7 +2517,7 @@ func ScmOperationRecordToJSON(v *ScmOperationRecord) ([]byte, error) {
 		Repo:               v.Repo,
 		TimestampMs:        v.TimestampMs,
 		EventId:            v.EventId,
-		Email:              v.Email,
+		SpiffeId:           v.SpiffeId,
 		Provider:           ScmProviderToString(v.Provider),
 		ApiEndpoint:        v.ApiEndpoint,
 		Operation:          ScmOperationTypeToString(v.Operation),
@@ -2563,7 +2547,7 @@ func ScmOperationRecordToJSONPretty(v *ScmOperationRecord) ([]byte, error) {
 		Repo:               v.Repo,
 		TimestampMs:        v.TimestampMs,
 		EventId:            v.EventId,
-		Email:              v.Email,
+		SpiffeId:           v.SpiffeId,
 		Provider:           ScmProviderToString(v.Provider),
 		ApiEndpoint:        v.ApiEndpoint,
 		Operation:          ScmOperationTypeToString(v.Operation),
@@ -2645,7 +2629,7 @@ func ScmOperationRecordFromJSON(data []byte) (*ScmOperationRecord, error) {
 	result.Repo = raw.Repo
 	result.TimestampMs = raw.TimestampMs
 	result.EventId = raw.EventId
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	// Parse enum field: Provider
 	if raw.Provider != "" {
 		if parsed, err := ParseScmProvider(raw.Provider); err == nil {
@@ -2750,7 +2734,7 @@ func ScmEventToEnvVar(v *ScmEvent) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_SCM-SENSOR_SCM_EVENT_EMAIL"] = v.Email
+	result["PROTO_VSERVICES_SCM-SENSOR_SCM_EVENT_SPIFFE_ID"] = v.SpiffeId
 	result["PROTO_VSERVICES_SCM-SENSOR_SCM_EVENT_EVENT_ID"] = v.EventId
 	result["PROTO_VSERVICES_SCM-SENSOR_SCM_EVENT_TIMESTAMP_MS"] = strconv.FormatInt(v.TimestampMs, 10)
 	result["PROTO_VSERVICES_SCM-SENSOR_SCM_EVENT_PROVIDER"] = ScmProviderToString(v.Provider)
@@ -2775,8 +2759,8 @@ func ScmEventToEnvVar(v *ScmEvent) map[string]string {
 // ScmEventFromEnvVar creates ScmEvent from environment variable key-value pairs.
 func ScmEventFromEnvVar(env map[string]string) (*ScmEvent, error) {
 	result := &ScmEvent{}
-	if val, ok := env["PROTO_VSERVICES_SCM-SENSOR_SCM_EVENT_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_VSERVICES_SCM-SENSOR_SCM_EVENT_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
 	if val, ok := env["PROTO_VSERVICES_SCM-SENSOR_SCM_EVENT_EVENT_ID"]; ok && val != "" {
 		result.EventId = val
@@ -2928,8 +2912,6 @@ func ScmEventBusEventStreamSubscribeRecordToEnvVar(v *ScmEventBusEventStreamSubs
 			result[k] = val
 		}
 	}
-	result["PROTO_VSERVICES_SCM-SENSOR_SCM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_SCM-SENSOR_SCM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
@@ -2945,16 +2927,6 @@ func ScmEventBusEventStreamSubscribeRecordFromEnvVar(env map[string]string) (*Sc
 		return nil, err
 	} else if sub != nil {
 		result.Payload = sub
-	}
-	if val, ok := env["PROTO_VSERVICES_SCM-SENSOR_SCM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_TRACE_ID"]; ok && val != "" {
-		result.TraceId = val
-	}
-	if val, ok := env["PROTO_VSERVICES_SCM-SENSOR_SCM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_NOOP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Noop = parsed
 	}
 	return result, nil
 }
@@ -3031,8 +3003,6 @@ func EventBusRecordMetaToEnvVar(v *EventBusRecordMeta) map[string]string {
 	result["PROTO_VSERVICES_SCM-SENSOR_EVENT_BUS_RECORD_META_TOPIC"] = v.Topic
 	result["PROTO_VSERVICES_SCM-SENSOR_EVENT_BUS_RECORD_META_PARTITION"] = strconv.FormatInt(int64(v.Partition), 10)
 	result["PROTO_VSERVICES_SCM-SENSOR_EVENT_BUS_RECORD_META_OFFSET"] = strconv.FormatInt(v.Offset, 10)
-	result["PROTO_VSERVICES_SCM-SENSOR_EVENT_BUS_RECORD_META_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_SCM-SENSOR_EVENT_BUS_RECORD_META_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
@@ -3062,16 +3032,6 @@ func EventBusRecordMetaFromEnvVar(env map[string]string) (*EventBusRecordMeta, e
 			return nil, err
 		}
 		result.Offset = parsed
-	}
-	if val, ok := env["PROTO_VSERVICES_SCM-SENSOR_EVENT_BUS_RECORD_META_TRACE_ID"]; ok && val != "" {
-		result.TraceId = val
-	}
-	if val, ok := env["PROTO_VSERVICES_SCM-SENSOR_EVENT_BUS_RECORD_META_NOOP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Noop = parsed
 	}
 	return result, nil
 }
@@ -3147,7 +3107,7 @@ func ScmOperationNodeToEnvVar(v *ScmOperationNode) map[string]string {
 	result := make(map[string]string)
 	result["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_NODE_EVENT_ID"] = v.EventId
 	result["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_NODE_REPOSITORY"] = v.Repository
-	result["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_NODE_EMAIL"] = v.Email
+	result["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_NODE_SPIFFE_ID"] = v.SpiffeId
 	result["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_NODE_PROVIDER"] = ScmProviderToString(v.Provider)
 	result["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_NODE_OPERATION"] = ScmOperationTypeToString(v.Operation)
 	result["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_NODE_SUCCEEDED"] = strconv.FormatBool(v.Succeeded)
@@ -3167,8 +3127,8 @@ func ScmOperationNodeFromEnvVar(env map[string]string) (*ScmOperationNode, error
 	if val, ok := env["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_NODE_REPOSITORY"]; ok && val != "" {
 		result.Repository = val
 	}
-	if val, ok := env["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_NODE_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_NODE_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
 	if val, ok := env["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_NODE_PROVIDER"]; ok && val != "" {
 		parsed, err := ParseScmProvider(val)
@@ -3228,7 +3188,7 @@ func ScmOperationRecordToEnvVar(v *ScmOperationRecord) map[string]string {
 	result["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_RECORD_REPO"] = v.Repo
 	result["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_RECORD_TIMESTAMP_MS"] = strconv.FormatInt(v.TimestampMs, 10)
 	result["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_RECORD_EVENT_ID"] = v.EventId
-	result["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_RECORD_EMAIL"] = v.Email
+	result["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_RECORD_SPIFFE_ID"] = v.SpiffeId
 	result["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_RECORD_PROVIDER"] = ScmProviderToString(v.Provider)
 	result["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_RECORD_API_ENDPOINT"] = v.ApiEndpoint
 	result["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_RECORD_OPERATION"] = ScmOperationTypeToString(v.Operation)
@@ -3264,8 +3224,8 @@ func ScmOperationRecordFromEnvVar(env map[string]string) (*ScmOperationRecord, e
 	if val, ok := env["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_RECORD_EVENT_ID"]; ok && val != "" {
 		result.EventId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_RECORD_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_RECORD_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
 	if val, ok := env["PROTO_VSERVICES_SCM-SENSOR_SCM_OPERATION_RECORD_PROVIDER"]; ok && val != "" {
 		parsed, err := ParseScmProvider(val)
@@ -3364,9 +3324,9 @@ func ValidateScmEventWithDepth(m *ScmEvent, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Email (assert_max_length: 256)
-	if len(m.Email) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email must be at most 256 characters, got: %d", len(m.Email))
+	// Validate SpiffeId (assert_max_length: 1024)
+	if len(m.SpiffeId) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId must be at most 1024 characters, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate EventId (assert_required)
@@ -3427,9 +3387,9 @@ func ValidateScmEventWithDepth(m *ScmEvent, depth int) error {
 	if m.LatencyMs < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field LatencyMs must be >= 0, got: %v", m.LatencyMs)
 	}
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate EventId (default max size: 32768 bytes)
@@ -3532,11 +3492,6 @@ func ValidateScmEventBusEventStreamSubscribeRecordWithDepth(m *ScmEventBusEventS
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
 	// Validate Meta nested message
 	if m.Meta != nil {
 		if err := ValidateEventBusRecordMetaWithDepth(m.Meta, depth+1); err != nil {
@@ -3628,11 +3583,6 @@ func ValidateEventBusRecordMetaWithDepth(m *EventBusRecordMeta, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field Topic exceeds max size of 32768 bytes, got: %d", len(m.Topic))
 	}
 
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
 	return nil
 }
 
@@ -3716,9 +3666,9 @@ func ValidateScmOperationNodeWithDepth(m *ScmOperationNode, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Repository exceeds max size of 32768 bytes, got: %d", len(m.Repository))
 	}
 
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -3770,9 +3720,9 @@ func ValidateScmOperationRecordWithDepth(m *ScmOperationRecord, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field EventId exceeds max size of 32768 bytes, got: %d", len(m.EventId))
 	}
 
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate ApiEndpoint (default max size: 32768 bytes)
@@ -3812,40 +3762,38 @@ func ValidateScmOperationRecordWithDepth(m *ScmOperationRecord, depth int) error
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizeScmeventEmail                                int = 32768
-	MaxSizeScmeventEventId                              int = 32768
-	MaxSizeScmeventApiEndpoint                          int = 32768
-	MaxSizeScmeventOwner                                int = 32768
-	MaxSizeScmeventRepo                                 int = 32768
-	MaxSizeScmeventRepoKey                              int = 32768
-	MaxSizeScmeventResourceId                           int = 32768
-	MaxSizeScmeventErrorMessage                         int = 32768
-	MaxSizeScmeventTraceId                              int = 32768
-	MaxSizeScmeventbusTraceId                           int = 32768
-	MaxSizeScmeventbuseventstreamsubscriberecordTraceId int = 32768
-	MaxSizeMapemptyTraceId                              int = 32768
-	MaxSizeTopicpublishreceiptTraceId                   int = 32768
-	MaxSizeEventbusrecordmetaKey                        int = 32768
-	MaxSizeEventbusrecordmetaTopic                      int = 32768
-	MaxSizeEventbusrecordmetaTraceId                    int = 32768
-	MaxSizeRepositorynodeRepoKey                        int = 32768
-	MaxSizeRepositorynodeOwner                          int = 32768
-	MaxSizeRepositorynodeRepo                           int = 32768
-	MaxSizeRepositorynodeApiEndpoint                    int = 32768
-	MaxSizeRepositorynodeEventId                        int = 32768
-	MaxSizeRepositorynodeTraceId                        int = 32768
-	MaxSizeScmoperationnodeEventId                      int = 32768
-	MaxSizeScmoperationnodeRepository                   int = 32768
-	MaxSizeScmoperationnodeEmail                        int = 32768
-	MaxSizeScmoperationnodeTraceId                      int = 32768
-	MaxSizeScmoperationrecordOwner                      int = 32768
-	MaxSizeScmoperationrecordRepo                       int = 32768
-	MaxSizeScmoperationrecordEventId                    int = 32768
-	MaxSizeScmoperationrecordEmail                      int = 32768
-	MaxSizeScmoperationrecordApiEndpoint                int = 32768
-	MaxSizeScmoperationrecordResourceId                 int = 32768
-	MaxSizeScmoperationrecordErrorMessage               int = 32768
-	MaxSizeScmoperationrecordTraceId                    int = 32768
+	MaxSizeScmeventSpiffeId               int = 32768
+	MaxSizeScmeventEventId                int = 32768
+	MaxSizeScmeventApiEndpoint            int = 32768
+	MaxSizeScmeventOwner                  int = 32768
+	MaxSizeScmeventRepo                   int = 32768
+	MaxSizeScmeventRepoKey                int = 32768
+	MaxSizeScmeventResourceId             int = 32768
+	MaxSizeScmeventErrorMessage           int = 32768
+	MaxSizeScmeventTraceId                int = 32768
+	MaxSizeScmeventbusTraceId             int = 32768
+	MaxSizeMapemptyTraceId                int = 32768
+	MaxSizeTopicpublishreceiptTraceId     int = 32768
+	MaxSizeEventbusrecordmetaKey          int = 32768
+	MaxSizeEventbusrecordmetaTopic        int = 32768
+	MaxSizeRepositorynodeRepoKey          int = 32768
+	MaxSizeRepositorynodeOwner            int = 32768
+	MaxSizeRepositorynodeRepo             int = 32768
+	MaxSizeRepositorynodeApiEndpoint      int = 32768
+	MaxSizeRepositorynodeEventId          int = 32768
+	MaxSizeRepositorynodeTraceId          int = 32768
+	MaxSizeScmoperationnodeEventId        int = 32768
+	MaxSizeScmoperationnodeRepository     int = 32768
+	MaxSizeScmoperationnodeSpiffeId       int = 32768
+	MaxSizeScmoperationnodeTraceId        int = 32768
+	MaxSizeScmoperationrecordOwner        int = 32768
+	MaxSizeScmoperationrecordRepo         int = 32768
+	MaxSizeScmoperationrecordEventId      int = 32768
+	MaxSizeScmoperationrecordSpiffeId     int = 32768
+	MaxSizeScmoperationrecordApiEndpoint  int = 32768
+	MaxSizeScmoperationrecordResourceId   int = 32768
+	MaxSizeScmoperationrecordErrorMessage int = 32768
+	MaxSizeScmoperationrecordTraceId      int = 32768
 )
 
 // ============================================================
@@ -4042,8 +3990,8 @@ func ScmOperationRecordUndefaults(v *ScmOperationRecord) {
 // ============================================================
 // MergeScmEvent fills zero-valued fields in dst from src.
 func MergeScmEvent(dst, src *ScmEvent) {
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.EventId == "" {
 		dst.EventId = src.EventId
@@ -4134,12 +4082,6 @@ func MergeScmEventBusEventStreamSubscribeRecord(dst, src *ScmEventBusEventStream
 	} else if src.Payload != nil {
 		MergeScmEvent(dst.Payload, src.Payload)
 	}
-	if dst.TraceId == "" {
-		dst.TraceId = src.TraceId
-	}
-	if !dst.Noop {
-		dst.Noop = src.Noop
-	}
 }
 
 // ============================================================
@@ -4191,12 +4133,6 @@ func MergeEventBusRecordMeta(dst, src *EventBusRecordMeta) {
 	if dst.Timestamp == nil {
 		dst.Timestamp = src.Timestamp
 	}
-	if dst.TraceId == "" {
-		dst.TraceId = src.TraceId
-	}
-	if !dst.Noop {
-		dst.Noop = src.Noop
-	}
 }
 
 // ============================================================
@@ -4244,8 +4180,8 @@ func MergeScmOperationNode(dst, src *ScmOperationNode) {
 	if dst.Repository == "" {
 		dst.Repository = src.Repository
 	}
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.Provider == 0 {
 		dst.Provider = src.Provider
@@ -4287,8 +4223,8 @@ func MergeScmOperationRecord(dst, src *ScmOperationRecord) {
 	if dst.EventId == "" {
 		dst.EventId = src.EventId
 	}
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.Provider == 0 {
 		dst.Provider = src.Provider

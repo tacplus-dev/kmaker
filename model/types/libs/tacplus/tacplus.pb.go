@@ -2579,7 +2579,7 @@ type ServiceInfo struct {
 	// event_tag is the routing label for gateway-exposed event services.
 	EventTag string `protobuf:"bytes,8,opt,name=event_tag,json=eventTag,proto3" json:"event_tag,omitempty"`
 	// smb marks a Service Mesh Blackbox service: its own instances talk over a
-	// black-box peer protocol (e.g. Hazelcast) within a single cluster (SPIFFE
+	// black-box peer protocol within a single cluster (SPIFFE
 	// plan D7). Consumers read this from the registry, not proto text, to drive
 	// the per-SMB CA + member-cert wiring.
 	Smb bool `protobuf:"varint,9,opt,name=smb,proto3" json:"smb,omitempty"`

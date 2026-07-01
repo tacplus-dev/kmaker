@@ -315,16 +315,16 @@ func ValidateOpaPolicyWithDepth(m *OpaPolicy, depth int) error {
 	if m.Created > 8045740800 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Created must be <= 8045740800, got: %v", m.Created)
 	}
-	// Validate Version (assert_max_length: 64)
-	if len(m.Version) > 64 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Version must be at most 64 characters, got: %d", len(m.Version))
-	}
-
 	// Validate Version (assert_semver)
 	if m.Version != "" {
 		if err := utils.ValidateAssertSemver(m.Version); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field Version must be a valid semantic version (e.g., '1.0.0' or 'v2.3.4')")
 		}
+	}
+
+	// Validate Version (assert_max_length: 64)
+	if len(m.Version) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Version must be at most 64 characters, got: %d", len(m.Version))
 	}
 
 	// Validate EntryPoint (default max size: 32768 bytes)

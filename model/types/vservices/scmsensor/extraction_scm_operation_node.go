@@ -29,7 +29,7 @@ func ExtractScmOperationNodeFromScmEvent(event *ScmEvent) *ScmOperationNode {
 	return &ScmOperationNode{
 		EventId:     event.EventId,
 		Repository:  event.RepoKey,
-		Email:       event.Email,
+		SpiffeId:    event.SpiffeId,
 		Provider:    event.Provider,
 		Operation:   event.Operation,
 		Succeeded:   event.Succeeded,

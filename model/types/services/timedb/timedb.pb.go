@@ -3447,7 +3447,7 @@ var File_services_timedb_proto protoreflect.FileDescriptor
 
 const file_services_timedb_proto_rawDesc = "" +
 	"\n" +
-	"\x15services/timedb.proto\x12\x06timedb\x1a\x0flibs/spec.proto\x1a\x0flibs/host.proto\x1a\x17libs/healthreport.proto\x1a\x10libs/trace.proto\"\xdb\x02\n" +
+	"\x15services/timedb.proto\x12\x06timedb\x1a\x0flibs/spec.proto\x1a\x0flibs/host.proto\x1a\x17libs/healthreport.proto\x1a\x10libs/trace.proto\"\x8c\x03\n" +
 	"\x06Config\x12/\n" +
 	"\x0eretention_days\x18\x01 \x01(\x05B\b\xb0\xa7\x1d\x01\x90\xa8\x1dZR\rretentionDays\x12(\n" +
 	"\n" +
@@ -3458,8 +3458,10 @@ const file_services_timedb_proto_rawDesc = "" +
 	"data_count\x18\x05 \x01(\x05B\b\xb0\xa7\x1d\x01\x90\xa8\x1d\x01R\tdataCount\x12*\n" +
 	"\x04mode\x18\x06 \x01(\x0e2\x10.timedb.NodeModeB\x04\x88\xa6\x1d\x01R\x04mode\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\fҨ\x1d\b\n" +
-	"\x06timedb\"\xde\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:=Ҩ\x1d\b\n" +
+	"\x06timedbʪ\x1d-\n" +
+	"&agentsensor.TraceEventBus.trace_events\x12\x03\n" +
+	"\x01*\"\xde\x01\n" +
 	"\n" +
 	"TimeDbNode\x12!\n" +
 	"\anode_id\x18\x01 \x01(\tB\bе\x18\x01\x88\xa6\x1d\x01R\x06nodeId\x12*\n" +
@@ -3468,12 +3470,12 @@ const file_services_timedb_proto_rawDesc = "" +
 	".host.HostB\x04\x88\xa6\x1d\x01R\bendpoint\x12\"\n" +
 	"\rstarted_at_ms\x18\x04 \x01(\x03R\vstartedAtMs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x88\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x82\x01\n" +
 	"\vTimeDbState\x122\n" +
 	"\x05nodes\x18\x01 \x03(\v2\x12.timedb.TimeDbNodeB\bȶ\x18x\xb8\xa8\x1d R\x05nodes\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0e\x9a\xa8\x1d\n" +
-	"\x1a\x06kernel \x01J\x04\b\x02\x10\x03\"\xe5\x05\n" +
+	"\x1a\x06kernel \x01\"\xe5\x05\n" +
 	"\fTimeDbHealth\x127\n" +
 	"\x04base\x18\x01 \x01(\v2#.healthreport.ServiceInstanceHealthR\x04base\x12!\n" +
 	"\ftimestamp_ms\x18\x02 \x01(\x03R\vtimestampMs\x12\x17\n" +
@@ -3627,12 +3629,12 @@ const file_services_timedb_proto_rawDesc = "" +
 	"totalParts\x12,\n" +
 	"\x12total_active_parts\x18\v \x01(\x03R\x10totalActiveParts\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9d\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9b\x01\n" +
 	"\x11TimedbConfigState\x120\n" +
 	"\x06config\x18\x01 \x01(\v2\x0e.timedb.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:%\x9a\xa8\x1d\x1d\n" +
-	"\x11TimedbConfigState\x1a\beventbus\xa0\xa8\x1d\x02\"\xd0\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:#\x9a\xa8\x1d\x1b\n" +
+	"\x11TimedbConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\"\xd0\x01\n" +
 	"\n" +
 	"QueryValue\x12#\n" +
 	"\fstring_value\x18\x01 \x01(\tH\x00R\vstringValue\x12\x1d\n" +

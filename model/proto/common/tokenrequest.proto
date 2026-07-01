@@ -30,6 +30,7 @@ package tokenrequest;
 option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/common/tokenrequest";
 
 import "libs/cloudidentity.proto";
+import "libs/key.proto";
 import "libs/token.proto";
 import "libs/x509.proto";
 import "google/protobuf/struct.proto";
@@ -74,19 +75,34 @@ message TokenMintRequest {
 // ============================================================================
 
 // MintServiceTokenRequest is the input for MintServiceToken (S2S).
-// Handles service bootstrap (cred_pair JWT or cloud proof), token refresh
+// Handles service bootstrap (Kubernetes token or cloud proof), token refresh
 // (kernel-signed refresh → access), and audience-scoped service tokens
 // (access → service token). Never triggers OPA evaluation.
 message MintServiceTokenRequest {
-  // --- Credentials (one of) ---
-
-  // input_token is a JWT to validate: either a delegate cred_pair JWT
-  // (bootstrap) or a kernel-signed refresh/access token (exchange).
+  // --- Credential proof (exactly one) ---
+  //
+  // The credential proof is the thing that authenticates the caller. Exactly
+  // one member must be set. These fields intentionally remain flat rather than
+  // a proto oneof: existing Rust/Go service identity-manager templates construct
+  // MintServiceTokenRequest with flat field names, and their protobuf codegen
+  // exposes oneof members through wrapper/enum shapes instead. The kernel
+  // rejects >1 / 0 credential proofs at runtime.
+  //
+  // input_token is a kernel-signed refresh/access token used for exchange.
+  // Service bootstrap uses kubernetes_token or cloud_proof instead.
   string input_token = 1;
 
   // cloud_proof is a cloud-native identity proof (AWS STS, GCP, Azure).
   // Used instead of input_token for cloud-native service bootstrap.
   cloudidentity.CloudIdentityProof cloud_proof = 2;
+
+  // kubernetes_token is a projected Kubernetes service-account JWT carrying
+  // the configured kernel/Cavalier workload audience (it must NOT be the
+  // "kmaker" audience). The kernel validates it via a KubernetesTokenVerifier
+  // (TokenReview or local SA-issuer JWKS), then maps the verified
+  // (namespace, service account) to a Delegate via
+  // Delegate.kubernetes_service_accounts.
+  string kubernetes_token = 8;
 
   // continuity_token is a non-expired refresh token proving instance
   // continuity across restarts. Kernel reuses the instance_id from this
@@ -147,13 +163,13 @@ message MintUserTokenRequest {
 //
 //   cluster cred_pair  — issued by `operator init`, public key in
 //                        kernel.Config.root_cred_pairs. Resolves to SPIFFE
-//                        spiffe://<spiffe_prefix>/cluster-admin.
+//                        spiffe://<trust-domain>/system/<location>/users/cluster-admin.
 //
 //   tenant  cred_pair  — registered via kernel.TenantAdmin.SetTenantConfig
 //                        (public key only) in the tenant's KernelTenantConfig.
 //                        Resolves to
 //                        SPIFFE
-//                        spiffe://<spiffe_prefix>/<tenant_name>/users/cred-pair:<id>.
+//                        spiffe://<trust-domain>/tenants/<tenant_name>/users/cred-pair:<id>.
 //
 // The input_token is a short-lived JWT signed by the client's private key,
 // carrying the cred_pair_id in a header / claim. Kernel looks up the
@@ -238,6 +254,11 @@ message ExternalTokenMintRequest {
   // Passed verbatim to the OPA policy, which uses it to determine the
   // destination URL and evaluate permit/deny.
   string metadata = 2;
+
+  // requested_signing_key_type selects the kernel signing key family for the
+  // external JWT. Empty/undefined preserves the default internal family:
+  // OKP / Ed25519 / EdDSA. Use EC for vendors that require P-256 / ES256.
+  key.KeyType requested_signing_key_type = 3;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -287,8 +308,6 @@ message WorkloadMintRequest {
   // e.g., parent is spiffe://cavalier/cluster-prod/mud-controller, workload_name = "agent-42"
   // → child SPIFFE ID = spiffe://cavalier/cluster-prod/mud-controller/agent-42
   string workload_name = 1;
-
-  reserved 2;  // was: scope — removed (authorization is receiver-side, not token-carried)
 
   // terminal marks the child as unable to mint further children.
   bool terminal = 3;

@@ -30,7 +30,7 @@ func ExtractLlmCallRecordFromLlmEvent(event *LlmEvent) *LlmCallRecord {
 		ModelKey:                 event.ModelKey,
 		TimestampMs:              event.TimestampMs,
 		EventId:                  event.EventId,
-		Email:                    event.Email,
+		SpiffeId:                 event.SpiffeId,
 		Provider:                 event.Provider,
 		ApiEndpoint:              event.ApiEndpoint,
 		Model:                    event.Model,

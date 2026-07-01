@@ -57,13 +57,13 @@ type DashboardClient interface {
 	GetClusterInfo(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*hazelcast.AdminClusterInfo, error)
 	GetClusterHealth(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*hazelcast.AdminClusterHealth, error)
 	// Per-node collections
-	ListNodeMetrics(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*NodeMetricsResponse, error)
-	ListGrpcStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*GrpcStatsResponse, error)
-	ListPersistenceStatus(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*PersistenceStatusResponse, error)
-	ListNetworkStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*NetworkStatsResponse, error)
-	ListThreadInfo(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*ThreadInfoResponse, error)
-	ListTokenCacheStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*TokenCacheStatsResponse, error)
-	ListMapStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*MapStatsResponse, error)
+	ListNodeMetrics(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*NodeMetricsResponse, error)
+	ListGrpcStats(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*GrpcStatsResponse, error)
+	ListPersistenceStatus(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*PersistenceStatusResponse, error)
+	ListNetworkStats(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*NetworkStatsResponse, error)
+	ListThreadInfo(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*ThreadInfoResponse, error)
+	ListTokenCacheStats(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*TokenCacheStatsResponse, error)
+	ListMapStats(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*MapStatsResponse, error)
 	// Full snapshot (all data in one call)
 	GetDashboard(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*DashboardResponse, error)
 	// Server-streaming dashboard: pushes updates at a regular interval.
@@ -98,7 +98,7 @@ func (c *dashboardClient) GetClusterHealth(ctx context.Context, in *trace.TraceR
 	return out, nil
 }
 
-func (c *dashboardClient) ListNodeMetrics(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*NodeMetricsResponse, error) {
+func (c *dashboardClient) ListNodeMetrics(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*NodeMetricsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(NodeMetricsResponse)
 	err := c.cc.Invoke(ctx, Dashboard_ListNodeMetrics_FullMethodName, in, out, cOpts...)
@@ -108,7 +108,7 @@ func (c *dashboardClient) ListNodeMetrics(ctx context.Context, in *trace.TraceRe
 	return out, nil
 }
 
-func (c *dashboardClient) ListGrpcStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*GrpcStatsResponse, error) {
+func (c *dashboardClient) ListGrpcStats(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*GrpcStatsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GrpcStatsResponse)
 	err := c.cc.Invoke(ctx, Dashboard_ListGrpcStats_FullMethodName, in, out, cOpts...)
@@ -118,7 +118,7 @@ func (c *dashboardClient) ListGrpcStats(ctx context.Context, in *trace.TraceRequ
 	return out, nil
 }
 
-func (c *dashboardClient) ListPersistenceStatus(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*PersistenceStatusResponse, error) {
+func (c *dashboardClient) ListPersistenceStatus(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*PersistenceStatusResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PersistenceStatusResponse)
 	err := c.cc.Invoke(ctx, Dashboard_ListPersistenceStatus_FullMethodName, in, out, cOpts...)
@@ -128,7 +128,7 @@ func (c *dashboardClient) ListPersistenceStatus(ctx context.Context, in *trace.T
 	return out, nil
 }
 
-func (c *dashboardClient) ListNetworkStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*NetworkStatsResponse, error) {
+func (c *dashboardClient) ListNetworkStats(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*NetworkStatsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(NetworkStatsResponse)
 	err := c.cc.Invoke(ctx, Dashboard_ListNetworkStats_FullMethodName, in, out, cOpts...)
@@ -138,7 +138,7 @@ func (c *dashboardClient) ListNetworkStats(ctx context.Context, in *trace.TraceR
 	return out, nil
 }
 
-func (c *dashboardClient) ListThreadInfo(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*ThreadInfoResponse, error) {
+func (c *dashboardClient) ListThreadInfo(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*ThreadInfoResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ThreadInfoResponse)
 	err := c.cc.Invoke(ctx, Dashboard_ListThreadInfo_FullMethodName, in, out, cOpts...)
@@ -148,7 +148,7 @@ func (c *dashboardClient) ListThreadInfo(ctx context.Context, in *trace.TraceReq
 	return out, nil
 }
 
-func (c *dashboardClient) ListTokenCacheStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*TokenCacheStatsResponse, error) {
+func (c *dashboardClient) ListTokenCacheStats(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*TokenCacheStatsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TokenCacheStatsResponse)
 	err := c.cc.Invoke(ctx, Dashboard_ListTokenCacheStats_FullMethodName, in, out, cOpts...)
@@ -158,7 +158,7 @@ func (c *dashboardClient) ListTokenCacheStats(ctx context.Context, in *trace.Tra
 	return out, nil
 }
 
-func (c *dashboardClient) ListMapStats(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*MapStatsResponse, error) {
+func (c *dashboardClient) ListMapStats(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*MapStatsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MapStatsResponse)
 	err := c.cc.Invoke(ctx, Dashboard_ListMapStats_FullMethodName, in, out, cOpts...)
@@ -205,13 +205,13 @@ type DashboardServer interface {
 	GetClusterInfo(context.Context, *trace.TraceRequest) (*hazelcast.AdminClusterInfo, error)
 	GetClusterHealth(context.Context, *trace.TraceRequest) (*hazelcast.AdminClusterHealth, error)
 	// Per-node collections
-	ListNodeMetrics(context.Context, *trace.TraceRequest) (*NodeMetricsResponse, error)
-	ListGrpcStats(context.Context, *trace.TraceRequest) (*GrpcStatsResponse, error)
-	ListPersistenceStatus(context.Context, *trace.TraceRequest) (*PersistenceStatusResponse, error)
-	ListNetworkStats(context.Context, *trace.TraceRequest) (*NetworkStatsResponse, error)
-	ListThreadInfo(context.Context, *trace.TraceRequest) (*ThreadInfoResponse, error)
-	ListTokenCacheStats(context.Context, *trace.TraceRequest) (*TokenCacheStatsResponse, error)
-	ListMapStats(context.Context, *trace.TraceRequest) (*MapStatsResponse, error)
+	ListNodeMetrics(context.Context, *DashboardPageRequest) (*NodeMetricsResponse, error)
+	ListGrpcStats(context.Context, *DashboardPageRequest) (*GrpcStatsResponse, error)
+	ListPersistenceStatus(context.Context, *DashboardPageRequest) (*PersistenceStatusResponse, error)
+	ListNetworkStats(context.Context, *DashboardPageRequest) (*NetworkStatsResponse, error)
+	ListThreadInfo(context.Context, *DashboardPageRequest) (*ThreadInfoResponse, error)
+	ListTokenCacheStats(context.Context, *DashboardPageRequest) (*TokenCacheStatsResponse, error)
+	ListMapStats(context.Context, *DashboardPageRequest) (*MapStatsResponse, error)
 	// Full snapshot (all data in one call)
 	GetDashboard(context.Context, *trace.TraceRequest) (*DashboardResponse, error)
 	// Server-streaming dashboard: pushes updates at a regular interval.
@@ -232,25 +232,25 @@ func (UnimplementedDashboardServer) GetClusterInfo(context.Context, *trace.Trace
 func (UnimplementedDashboardServer) GetClusterHealth(context.Context, *trace.TraceRequest) (*hazelcast.AdminClusterHealth, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetClusterHealth not implemented")
 }
-func (UnimplementedDashboardServer) ListNodeMetrics(context.Context, *trace.TraceRequest) (*NodeMetricsResponse, error) {
+func (UnimplementedDashboardServer) ListNodeMetrics(context.Context, *DashboardPageRequest) (*NodeMetricsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListNodeMetrics not implemented")
 }
-func (UnimplementedDashboardServer) ListGrpcStats(context.Context, *trace.TraceRequest) (*GrpcStatsResponse, error) {
+func (UnimplementedDashboardServer) ListGrpcStats(context.Context, *DashboardPageRequest) (*GrpcStatsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListGrpcStats not implemented")
 }
-func (UnimplementedDashboardServer) ListPersistenceStatus(context.Context, *trace.TraceRequest) (*PersistenceStatusResponse, error) {
+func (UnimplementedDashboardServer) ListPersistenceStatus(context.Context, *DashboardPageRequest) (*PersistenceStatusResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListPersistenceStatus not implemented")
 }
-func (UnimplementedDashboardServer) ListNetworkStats(context.Context, *trace.TraceRequest) (*NetworkStatsResponse, error) {
+func (UnimplementedDashboardServer) ListNetworkStats(context.Context, *DashboardPageRequest) (*NetworkStatsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListNetworkStats not implemented")
 }
-func (UnimplementedDashboardServer) ListThreadInfo(context.Context, *trace.TraceRequest) (*ThreadInfoResponse, error) {
+func (UnimplementedDashboardServer) ListThreadInfo(context.Context, *DashboardPageRequest) (*ThreadInfoResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListThreadInfo not implemented")
 }
-func (UnimplementedDashboardServer) ListTokenCacheStats(context.Context, *trace.TraceRequest) (*TokenCacheStatsResponse, error) {
+func (UnimplementedDashboardServer) ListTokenCacheStats(context.Context, *DashboardPageRequest) (*TokenCacheStatsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListTokenCacheStats not implemented")
 }
-func (UnimplementedDashboardServer) ListMapStats(context.Context, *trace.TraceRequest) (*MapStatsResponse, error) {
+func (UnimplementedDashboardServer) ListMapStats(context.Context, *DashboardPageRequest) (*MapStatsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMapStats not implemented")
 }
 func (UnimplementedDashboardServer) GetDashboard(context.Context, *trace.TraceRequest) (*DashboardResponse, error) {
@@ -317,7 +317,7 @@ func _Dashboard_GetClusterHealth_Handler(srv interface{}, ctx context.Context, d
 }
 
 func _Dashboard_ListNodeMetrics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(trace.TraceRequest)
+	in := new(DashboardPageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -329,13 +329,13 @@ func _Dashboard_ListNodeMetrics_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: Dashboard_ListNodeMetrics_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardServer).ListNodeMetrics(ctx, req.(*trace.TraceRequest))
+		return srv.(DashboardServer).ListNodeMetrics(ctx, req.(*DashboardPageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Dashboard_ListGrpcStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(trace.TraceRequest)
+	in := new(DashboardPageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -347,13 +347,13 @@ func _Dashboard_ListGrpcStats_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: Dashboard_ListGrpcStats_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardServer).ListGrpcStats(ctx, req.(*trace.TraceRequest))
+		return srv.(DashboardServer).ListGrpcStats(ctx, req.(*DashboardPageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Dashboard_ListPersistenceStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(trace.TraceRequest)
+	in := new(DashboardPageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -365,13 +365,13 @@ func _Dashboard_ListPersistenceStatus_Handler(srv interface{}, ctx context.Conte
 		FullMethod: Dashboard_ListPersistenceStatus_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardServer).ListPersistenceStatus(ctx, req.(*trace.TraceRequest))
+		return srv.(DashboardServer).ListPersistenceStatus(ctx, req.(*DashboardPageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Dashboard_ListNetworkStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(trace.TraceRequest)
+	in := new(DashboardPageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -383,13 +383,13 @@ func _Dashboard_ListNetworkStats_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: Dashboard_ListNetworkStats_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardServer).ListNetworkStats(ctx, req.(*trace.TraceRequest))
+		return srv.(DashboardServer).ListNetworkStats(ctx, req.(*DashboardPageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Dashboard_ListThreadInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(trace.TraceRequest)
+	in := new(DashboardPageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -401,13 +401,13 @@ func _Dashboard_ListThreadInfo_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: Dashboard_ListThreadInfo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardServer).ListThreadInfo(ctx, req.(*trace.TraceRequest))
+		return srv.(DashboardServer).ListThreadInfo(ctx, req.(*DashboardPageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Dashboard_ListTokenCacheStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(trace.TraceRequest)
+	in := new(DashboardPageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -419,13 +419,13 @@ func _Dashboard_ListTokenCacheStats_Handler(srv interface{}, ctx context.Context
 		FullMethod: Dashboard_ListTokenCacheStats_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardServer).ListTokenCacheStats(ctx, req.(*trace.TraceRequest))
+		return srv.(DashboardServer).ListTokenCacheStats(ctx, req.(*DashboardPageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Dashboard_ListMapStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(trace.TraceRequest)
+	in := new(DashboardPageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -437,7 +437,7 @@ func _Dashboard_ListMapStats_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: Dashboard_ListMapStats_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardServer).ListMapStats(ctx, req.(*trace.TraceRequest))
+		return srv.(DashboardServer).ListMapStats(ctx, req.(*DashboardPageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

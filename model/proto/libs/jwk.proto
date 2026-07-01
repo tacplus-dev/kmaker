@@ -50,7 +50,7 @@ message Jwk {
   string y = 9;
   // Exp is the expiration in epoch seconds. This is not part of the JWK spec as the spec does
   // not specify how to handle public key expiration.
-  // When stored in a collection with epoch_expiration, Hazelcast computes TTL = exp - now
+  // When stored in a collection with epoch_expiration, the state store computes TTL = exp - now
   // and auto-evicts the entry on expiry.
   int64 exp = 10;
   // Created is the Unix epoch timestamp (seconds) when the key was created (optional).

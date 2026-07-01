@@ -869,14 +869,14 @@ func ValidateTraceEventWithDepth(m *TraceEvent, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate TraceId (assert_required)
-	if m.TraceId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId is required")
-	}
-
 	// Validate TraceId (assert_max_length: 64)
 	if len(m.TraceId) > 64 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId must be at most 64 characters, got: %d", len(m.TraceId))
+	}
+
+	// Validate TraceId (assert_required)
+	if m.TraceId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId is required")
 	}
 
 	// Validate Round (assert_required)

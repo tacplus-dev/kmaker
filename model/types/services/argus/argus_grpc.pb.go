@@ -24,7 +24,7 @@ package argus
 import (
 	context "context"
 	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/trace"
-	claudesensor "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/vservices/claudesensor"
+	agentsensor "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/vservices/agentsensor"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -59,8 +59,8 @@ const (
 	Argus_GetUserTokenStats_FullMethodName          = "/argus.Argus/GetUserTokenStats"
 	Argus_SubscribeUserProfile_FullMethodName       = "/argus.Argus/SubscribeUserProfile"
 	Argus_ListUserCommitActivity_FullMethodName     = "/argus.Argus/ListUserCommitActivity"
-	Argus_GetFileActivity_FullMethodName            = "/argus.Argus/GetFileActivity"
-	Argus_GetSessionTimeline_FullMethodName         = "/argus.Argus/GetSessionTimeline"
+	Argus_ListFileActivity_FullMethodName           = "/argus.Argus/ListFileActivity"
+	Argus_ListSessionTimeline_FullMethodName        = "/argus.Argus/ListSessionTimeline"
 	Argus_GetAgentTree_FullMethodName               = "/argus.Argus/GetAgentTree"
 	Argus_GetSystemStats_FullMethodName             = "/argus.Argus/GetSystemStats"
 	Argus_ListToolLeaderboard_FullMethodName        = "/argus.Argus/ListToolLeaderboard"
@@ -87,7 +87,7 @@ type ArgusClient interface {
 	// ListSessionSearchResults searches sessions by keyword or SQL fragment.
 	ListSessionSearchResults(ctx context.Context, in *SearchSessionsRequest, opts ...grpc.CallOption) (*SearchSessionsResponse, error)
 	// SubscribeLiveSessions streams real-time session lifecycle events.
-	SubscribeLiveSessions(ctx context.Context, in *claudesensor.WatchLiveSessionsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[claudesensor.WatchLiveSessionsEvent], error)
+	SubscribeLiveSessions(ctx context.Context, in *agentsensor.WatchLiveSessionsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[agentsensor.WatchLiveSessionsEvent], error)
 	// GetScratchpad retrieves a persistent note by key.
 	GetScratchpad(ctx context.Context, in *ScratchpadReadRequest, opts ...grpc.CallOption) (*ScratchpadReadResponse, error)
 	// UpdateScratchpad stores or overwrites a persistent note.
@@ -123,10 +123,10 @@ type ArgusClient interface {
 	SubscribeUserProfile(ctx context.Context, in *WatchUserProfileRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetUserProfileResponse], error)
 	// ListUserCommitActivity returns git commit events extracted from the user's Bash tool uses.
 	ListUserCommitActivity(ctx context.Context, in *GetUserCommitActivityRequest, opts ...grpc.CallOption) (*GetUserCommitActivityResponse, error)
-	// GetFileActivity returns file create/modify/delete records across sessions.
-	GetFileActivity(ctx context.Context, in *GetFileActivityRequest, opts ...grpc.CallOption) (*GetFileActivityResponse, error)
-	// GetSessionTimeline returns the full paginated event stream for one session.
-	GetSessionTimeline(ctx context.Context, in *GetSessionTimelineRequest, opts ...grpc.CallOption) (*GetSessionTimelineResponse, error)
+	// ListFileActivity returns file create/modify/delete records across sessions.
+	ListFileActivity(ctx context.Context, in *GetFileActivityRequest, opts ...grpc.CallOption) (*GetFileActivityResponse, error)
+	// ListSessionTimeline returns the full paginated event stream for one session.
+	ListSessionTimeline(ctx context.Context, in *GetSessionTimelineRequest, opts ...grpc.CallOption) (*GetSessionTimelineResponse, error)
 	// GetAgentTree returns the subagent hierarchy for a session as a recursive tree.
 	GetAgentTree(ctx context.Context, in *GetAgentTreeRequest, opts ...grpc.CallOption) (*GetAgentTreeResponse, error)
 	// GetSystemStats returns fleet-wide aggregates (users, sessions, events, tool stats).
@@ -205,13 +205,13 @@ func (c *argusClient) ListSessionSearchResults(ctx context.Context, in *SearchSe
 	return out, nil
 }
 
-func (c *argusClient) SubscribeLiveSessions(ctx context.Context, in *claudesensor.WatchLiveSessionsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[claudesensor.WatchLiveSessionsEvent], error) {
+func (c *argusClient) SubscribeLiveSessions(ctx context.Context, in *agentsensor.WatchLiveSessionsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[agentsensor.WatchLiveSessionsEvent], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	stream, err := c.cc.NewStream(ctx, &Argus_ServiceDesc.Streams[0], Argus_SubscribeLiveSessions_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[claudesensor.WatchLiveSessionsRequest, claudesensor.WatchLiveSessionsEvent]{ClientStream: stream}
+	x := &grpc.GenericClientStream[agentsensor.WatchLiveSessionsRequest, agentsensor.WatchLiveSessionsEvent]{ClientStream: stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -222,7 +222,7 @@ func (c *argusClient) SubscribeLiveSessions(ctx context.Context, in *claudesenso
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_SubscribeLiveSessionsClient = grpc.ServerStreamingClient[claudesensor.WatchLiveSessionsEvent]
+type Argus_SubscribeLiveSessionsClient = grpc.ServerStreamingClient[agentsensor.WatchLiveSessionsEvent]
 
 func (c *argusClient) GetScratchpad(ctx context.Context, in *ScratchpadReadRequest, opts ...grpc.CallOption) (*ScratchpadReadResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -457,20 +457,20 @@ func (c *argusClient) ListUserCommitActivity(ctx context.Context, in *GetUserCom
 	return out, nil
 }
 
-func (c *argusClient) GetFileActivity(ctx context.Context, in *GetFileActivityRequest, opts ...grpc.CallOption) (*GetFileActivityResponse, error) {
+func (c *argusClient) ListFileActivity(ctx context.Context, in *GetFileActivityRequest, opts ...grpc.CallOption) (*GetFileActivityResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetFileActivityResponse)
-	err := c.cc.Invoke(ctx, Argus_GetFileActivity_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Argus_ListFileActivity_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *argusClient) GetSessionTimeline(ctx context.Context, in *GetSessionTimelineRequest, opts ...grpc.CallOption) (*GetSessionTimelineResponse, error) {
+func (c *argusClient) ListSessionTimeline(ctx context.Context, in *GetSessionTimelineRequest, opts ...grpc.CallOption) (*GetSessionTimelineResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetSessionTimelineResponse)
-	err := c.cc.Invoke(ctx, Argus_GetSessionTimeline_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Argus_ListSessionTimeline_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -600,7 +600,7 @@ type ArgusServer interface {
 	// ListSessionSearchResults searches sessions by keyword or SQL fragment.
 	ListSessionSearchResults(context.Context, *SearchSessionsRequest) (*SearchSessionsResponse, error)
 	// SubscribeLiveSessions streams real-time session lifecycle events.
-	SubscribeLiveSessions(*claudesensor.WatchLiveSessionsRequest, grpc.ServerStreamingServer[claudesensor.WatchLiveSessionsEvent]) error
+	SubscribeLiveSessions(*agentsensor.WatchLiveSessionsRequest, grpc.ServerStreamingServer[agentsensor.WatchLiveSessionsEvent]) error
 	// GetScratchpad retrieves a persistent note by key.
 	GetScratchpad(context.Context, *ScratchpadReadRequest) (*ScratchpadReadResponse, error)
 	// UpdateScratchpad stores or overwrites a persistent note.
@@ -636,10 +636,10 @@ type ArgusServer interface {
 	SubscribeUserProfile(*WatchUserProfileRequest, grpc.ServerStreamingServer[GetUserProfileResponse]) error
 	// ListUserCommitActivity returns git commit events extracted from the user's Bash tool uses.
 	ListUserCommitActivity(context.Context, *GetUserCommitActivityRequest) (*GetUserCommitActivityResponse, error)
-	// GetFileActivity returns file create/modify/delete records across sessions.
-	GetFileActivity(context.Context, *GetFileActivityRequest) (*GetFileActivityResponse, error)
-	// GetSessionTimeline returns the full paginated event stream for one session.
-	GetSessionTimeline(context.Context, *GetSessionTimelineRequest) (*GetSessionTimelineResponse, error)
+	// ListFileActivity returns file create/modify/delete records across sessions.
+	ListFileActivity(context.Context, *GetFileActivityRequest) (*GetFileActivityResponse, error)
+	// ListSessionTimeline returns the full paginated event stream for one session.
+	ListSessionTimeline(context.Context, *GetSessionTimelineRequest) (*GetSessionTimelineResponse, error)
 	// GetAgentTree returns the subagent hierarchy for a session as a recursive tree.
 	GetAgentTree(context.Context, *GetAgentTreeRequest) (*GetAgentTreeResponse, error)
 	// GetSystemStats returns fleet-wide aggregates (users, sessions, events, tool stats).
@@ -683,7 +683,7 @@ func (UnimplementedArgusServer) GetUserActivity(context.Context, *GetUserActivit
 func (UnimplementedArgusServer) ListSessionSearchResults(context.Context, *SearchSessionsRequest) (*SearchSessionsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSessionSearchResults not implemented")
 }
-func (UnimplementedArgusServer) SubscribeLiveSessions(*claudesensor.WatchLiveSessionsRequest, grpc.ServerStreamingServer[claudesensor.WatchLiveSessionsEvent]) error {
+func (UnimplementedArgusServer) SubscribeLiveSessions(*agentsensor.WatchLiveSessionsRequest, grpc.ServerStreamingServer[agentsensor.WatchLiveSessionsEvent]) error {
 	return status.Error(codes.Unimplemented, "method SubscribeLiveSessions not implemented")
 }
 func (UnimplementedArgusServer) GetScratchpad(context.Context, *ScratchpadReadRequest) (*ScratchpadReadResponse, error) {
@@ -737,11 +737,11 @@ func (UnimplementedArgusServer) SubscribeUserProfile(*WatchUserProfileRequest, g
 func (UnimplementedArgusServer) ListUserCommitActivity(context.Context, *GetUserCommitActivityRequest) (*GetUserCommitActivityResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListUserCommitActivity not implemented")
 }
-func (UnimplementedArgusServer) GetFileActivity(context.Context, *GetFileActivityRequest) (*GetFileActivityResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetFileActivity not implemented")
+func (UnimplementedArgusServer) ListFileActivity(context.Context, *GetFileActivityRequest) (*GetFileActivityResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListFileActivity not implemented")
 }
-func (UnimplementedArgusServer) GetSessionTimeline(context.Context, *GetSessionTimelineRequest) (*GetSessionTimelineResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetSessionTimeline not implemented")
+func (UnimplementedArgusServer) ListSessionTimeline(context.Context, *GetSessionTimelineRequest) (*GetSessionTimelineResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListSessionTimeline not implemented")
 }
 func (UnimplementedArgusServer) GetAgentTree(context.Context, *GetAgentTreeRequest) (*GetAgentTreeResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAgentTree not implemented")
@@ -882,15 +882,15 @@ func _Argus_ListSessionSearchResults_Handler(srv interface{}, ctx context.Contex
 }
 
 func _Argus_SubscribeLiveSessions_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(claudesensor.WatchLiveSessionsRequest)
+	m := new(agentsensor.WatchLiveSessionsRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ArgusServer).SubscribeLiveSessions(m, &grpc.GenericServerStream[claudesensor.WatchLiveSessionsRequest, claudesensor.WatchLiveSessionsEvent]{ServerStream: stream})
+	return srv.(ArgusServer).SubscribeLiveSessions(m, &grpc.GenericServerStream[agentsensor.WatchLiveSessionsRequest, agentsensor.WatchLiveSessionsEvent]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Argus_SubscribeLiveSessionsServer = grpc.ServerStreamingServer[claudesensor.WatchLiveSessionsEvent]
+type Argus_SubscribeLiveSessionsServer = grpc.ServerStreamingServer[agentsensor.WatchLiveSessionsEvent]
 
 func _Argus_GetScratchpad_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ScratchpadReadRequest)
@@ -1149,38 +1149,38 @@ func _Argus_ListUserCommitActivity_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Argus_GetFileActivity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Argus_ListFileActivity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetFileActivityRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArgusServer).GetFileActivity(ctx, in)
+		return srv.(ArgusServer).ListFileActivity(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Argus_GetFileActivity_FullMethodName,
+		FullMethod: Argus_ListFileActivity_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArgusServer).GetFileActivity(ctx, req.(*GetFileActivityRequest))
+		return srv.(ArgusServer).ListFileActivity(ctx, req.(*GetFileActivityRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Argus_GetSessionTimeline_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Argus_ListSessionTimeline_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetSessionTimelineRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ArgusServer).GetSessionTimeline(ctx, in)
+		return srv.(ArgusServer).ListSessionTimeline(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Argus_GetSessionTimeline_FullMethodName,
+		FullMethod: Argus_ListSessionTimeline_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArgusServer).GetSessionTimeline(ctx, req.(*GetSessionTimelineRequest))
+		return srv.(ArgusServer).ListSessionTimeline(ctx, req.(*GetSessionTimelineRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1401,12 +1401,12 @@ var Argus_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Argus_ListUserCommitActivity_Handler,
 		},
 		{
-			MethodName: "GetFileActivity",
-			Handler:    _Argus_GetFileActivity_Handler,
+			MethodName: "ListFileActivity",
+			Handler:    _Argus_ListFileActivity_Handler,
 		},
 		{
-			MethodName: "GetSessionTimeline",
-			Handler:    _Argus_GetSessionTimeline_Handler,
+			MethodName: "ListSessionTimeline",
+			Handler:    _Argus_ListSessionTimeline_Handler,
 		},
 		{
 			MethodName: "GetAgentTree",

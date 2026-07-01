@@ -2098,36 +2098,36 @@ var File_services_opa_proto protoreflect.FileDescriptor
 
 const file_services_opa_proto_rawDesc = "" +
 	"\n" +
-	"\x12services/opa.proto\x12\x03opa\x1a\x0flibs/spec.proto\x1a\x11libs/opalib.proto\x1a\x10libs/trace.proto\"\xaf\x02\n" +
+	"\x12services/opa.proto\x12\x03opa\x1a\x0flibs/spec.proto\x1a\x11libs/opalib.proto\x1a\x10libs/trace.proto\"\xa9\x02\n" +
 	"\x06Config\x12B\n" +
 	"\x13entitlements_policy\x18\x01 \x01(\v2\x11.opalib.OpaPolicyR\x12entitlementsPolicy\x124\n" +
 	"\fproxy_policy\x18\x03 \x01(\v2\x11.opalib.OpaPolicyR\vproxyPolicy\x12i\n" +
 	"\x1ctenant_entitlements_policies\x18\x04 \x03(\v2 .opa.NamespaceEntitlementsPolicyB\x05\xb8\xa8\x1d\x80 R\x1atenantEntitlementsPolicies\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\tҨ\x1d\x05\n" +
-	"\x03opaJ\x04\b\x02\x10\x03\"\xa5\x01\n" +
+	"\x03opa\"\xa5\x01\n" +
 	"\x1bNamespaceEntitlementsPolicy\x12*\n" +
 	"\tnamespace\x18\x01 \x01(\tB\fе\x18\x01\x88\xa6\x1d\x01\x88\xa7\x1d\x01R\tnamespace\x12)\n" +
 	"\x06policy\x18\x02 \x01(\v2\x11.opalib.OpaPolicyR\x06policy\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb6\x02\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb0\x02\n" +
 	"\bOpaState\x12B\n" +
 	"\x13entitlements_policy\x18\x01 \x01(\v2\x11.opalib.OpaPolicyR\x12entitlementsPolicy\x124\n" +
 	"\fproxy_policy\x18\x03 \x01(\v2\x11.opalib.OpaPolicyR\vproxyPolicy\x12i\n" +
 	"\x1ctenant_entitlements_policies\x18\x04 \x03(\v2 .opa.NamespaceEntitlementsPolicyB\x05\xb8\xa8\x1d\x80 R\x1atenantEntitlementsPolicies\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0e\x9a\xa8\x1d\n" +
-	"\x1a\x06kernel \x01J\x04\b\x02\x10\x03\"\xc9\x01\n" +
+	"\x1a\x06kernel \x01\"\xc9\x01\n" +
 	"\x0fOpaTenantConfig\x12B\n" +
 	"\x13entitlements_policy\x18\x01 \x01(\v2\x11.opalib.OpaPolicyR\x12entitlementsPolicy\x124\n" +
 	"\fproxy_policy\x18\x02 \x01(\v2\x11.opalib.OpaPolicyR\vproxyPolicy\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\vڪ\x1d\a\b\x01\x12\x03opa\"\x94\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\vڪ\x1d\a\b\x01\x12\x03opa\"\x92\x01\n" +
 	"\x0eOpaConfigState\x12-\n" +
 	"\x06config\x18\x01 \x01(\v2\v.opa.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\"\x9a\xa8\x1d\x1a\n" +
-	"\x0eOpaConfigState\x1a\beventbus\xa0\xa8\x1d\x02\"\xd0\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop: \x9a\xa8\x1d\x18\n" +
+	"\x0eOpaConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\"\xd0\x01\n" +
 	"\n" +
 	"QueryValue\x12#\n" +
 	"\fstring_value\x18\x01 \x01(\tH\x00R\vstringValue\x12\x1d\n" +

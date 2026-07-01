@@ -697,10 +697,6 @@ func ValidatePublicKeyWithDepth(m *PublicKey, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Base64 exceeds max size of 8192 bytes, got: %d", len(m.Base64))
 	}
 
-	// Validate Created (assert_le: 8045740800)
-	if m.Created > 8045740800 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Created must be <= 8045740800, got: %v", m.Created)
-	}
 	// Validate Created (assert_required: must be > 0)
 	if m.Created <= 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Created is required and must be greater than zero")
@@ -709,6 +705,10 @@ func ValidatePublicKeyWithDepth(m *PublicKey, depth int) error {
 	// Validate Created (assert_ge: 1735689600)
 	if m.Created < 1735689600 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Created must be >= 1735689600, got: %v", m.Created)
+	}
+	// Validate Created (assert_le: 8045740800)
+	if m.Created > 8045740800 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Created must be <= 8045740800, got: %v", m.Created)
 	}
 	return nil
 }
@@ -744,18 +744,6 @@ func ValidateKeyWithDepth(m *Key, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Id exceeds max size of 256 bytes, got: %d", len(m.Id))
 	}
 
-	// Validate Base64 (assert_required)
-	if m.Base64 == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Base64 is required")
-	}
-
-	// Validate Base64 (assert_base64)
-	if m.Base64 != "" {
-		if err := utils.ValidateAssertBase64(m.Base64); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field Base64 base64 validation failed")
-		}
-	}
-
 	// Validate Base64 (assert_enc_type: ENC_TYPE_KEY_PRIVATE_ANY)
 	if m.Base64 != "" {
 		if err := validateENC_TYPE_KEY_PRIVATE_ANY(normalizePEMData(m.Base64)); err != nil {
@@ -766,6 +754,18 @@ func ValidateKeyWithDepth(m *Key, depth int) error {
 	// Validate Base64 (assert_max_size: 16384 bytes)
 	if len(m.Base64) > 16384 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Base64 exceeds max size of 16384 bytes, got: %d", len(m.Base64))
+	}
+
+	// Validate Base64 (assert_required)
+	if m.Base64 == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Base64 is required")
+	}
+
+	// Validate Base64 (assert_base64)
+	if m.Base64 != "" {
+		if err := utils.ValidateAssertBase64(m.Base64); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Base64 base64 validation failed")
+		}
 	}
 
 	// Validate Created (assert_ge: 1735689600)

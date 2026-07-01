@@ -9946,14 +9946,14 @@ func ValidateWatchedGitLabGroupWithDepth(m *WatchedGitLabGroup, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate GroupPath (assert_required)
-	if m.GroupPath == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field GroupPath is required")
-	}
-
 	// Validate GroupPath (assert_max_length: 512)
 	if len(m.GroupPath) > 512 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field GroupPath must be at most 512 characters, got: %d", len(m.GroupPath))
+	}
+
+	// Validate GroupPath (assert_required)
+	if m.GroupPath == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field GroupPath is required")
 	}
 
 	// Validate WorkspaceNamespace (assert_max_length: 256)

@@ -23,6 +23,7 @@ package eventbus
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"path/filepath"
 	"strconv"
@@ -252,6 +253,399 @@ func KafkaNodeRoleToSpecName(v KafkaNodeRole) string {
 		return "KAFKA_ROLE_BROKER"
 	case KafkaNodeRole_KAFKA_ROLE_CONTROLLER:
 		return "KAFKA_ROLE_CONTROLLER"
+	default:
+		return ""
+	}
+}
+
+// ComparisonOpValues returns all valid ComparisonOp values (excluding UNDEFINED)
+func ComparisonOpValues() []ComparisonOp {
+	return []ComparisonOp{
+		ComparisonOp_COMPARISON_OP_EQ,
+		ComparisonOp_COMPARISON_OP_NE,
+		ComparisonOp_COMPARISON_OP_GT,
+		ComparisonOp_COMPARISON_OP_GE,
+		ComparisonOp_COMPARISON_OP_LT,
+		ComparisonOp_COMPARISON_OP_LE,
+		ComparisonOp_COMPARISON_OP_IN,
+		ComparisonOp_COMPARISON_OP_NOT_IN,
+		ComparisonOp_COMPARISON_OP_LIKE,
+		ComparisonOp_COMPARISON_OP_IS_NULL,
+		ComparisonOp_COMPARISON_OP_IS_NOT_NULL,
+	}
+}
+
+// ComparisonOpStringValues returns all valid ComparisonOp names as strings
+func ComparisonOpStringValues() []string {
+	return []string{"eq", "ne", "gt", "ge", "lt", "le", "in", "not-in", "like", "is-null", "is-not-null"}
+}
+
+// ParseComparisonOp converts a string to a ComparisonOp enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseComparisonOp(s string) (ComparisonOp, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return ComparisonOp_COMPARISON_OP_UNSPECIFIED, nil
+	case "eq", "comparison-op-eq":
+		return ComparisonOp_COMPARISON_OP_EQ, nil
+	case "ne", "comparison-op-ne":
+		return ComparisonOp_COMPARISON_OP_NE, nil
+	case "gt", "comparison-op-gt":
+		return ComparisonOp_COMPARISON_OP_GT, nil
+	case "ge", "comparison-op-ge":
+		return ComparisonOp_COMPARISON_OP_GE, nil
+	case "lt", "comparison-op-lt":
+		return ComparisonOp_COMPARISON_OP_LT, nil
+	case "le", "comparison-op-le":
+		return ComparisonOp_COMPARISON_OP_LE, nil
+	case "in", "comparison-op-in":
+		return ComparisonOp_COMPARISON_OP_IN, nil
+	case "not-in", "comparison-op-not-in":
+		return ComparisonOp_COMPARISON_OP_NOT_IN, nil
+	case "like", "comparison-op-like":
+		return ComparisonOp_COMPARISON_OP_LIKE, nil
+	case "is-null", "comparison-op-is-null":
+		return ComparisonOp_COMPARISON_OP_IS_NULL, nil
+	case "is-not-null", "comparison-op-is-not-null":
+		return ComparisonOp_COMPARISON_OP_IS_NOT_NULL, nil
+	default:
+		return ComparisonOp_COMPARISON_OP_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid comparisonop %s, expecting one of: %v", s, ComparisonOpStringValues())
+	}
+}
+
+// ParseComparisonOps converts a comma-separated string to a slice of ComparisonOp enum values
+// Returns an error if any value is invalid
+func ParseComparisonOps(s string) ([]ComparisonOp, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]ComparisonOp, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseComparisonOp(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// ComparisonOpToString converts a ComparisonOp to its lowercase string representation
+func ComparisonOpToString(v ComparisonOp) string {
+	switch v {
+	case ComparisonOp_COMPARISON_OP_EQ:
+		return "eq"
+	case ComparisonOp_COMPARISON_OP_NE:
+		return "ne"
+	case ComparisonOp_COMPARISON_OP_GT:
+		return "gt"
+	case ComparisonOp_COMPARISON_OP_GE:
+		return "ge"
+	case ComparisonOp_COMPARISON_OP_LT:
+		return "lt"
+	case ComparisonOp_COMPARISON_OP_LE:
+		return "le"
+	case ComparisonOp_COMPARISON_OP_IN:
+		return "in"
+	case ComparisonOp_COMPARISON_OP_NOT_IN:
+		return "not-in"
+	case ComparisonOp_COMPARISON_OP_LIKE:
+		return "like"
+	case ComparisonOp_COMPARISON_OP_IS_NULL:
+		return "is-null"
+	case ComparisonOp_COMPARISON_OP_IS_NOT_NULL:
+		return "is-not-null"
+	default:
+		return ""
+	}
+}
+
+// ParseComparisonOpLiberal parses a ComparisonOp liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseComparisonOpLiberal(s string) ComparisonOp {
+	if s == "" {
+		return ComparisonOp_COMPARISON_OP_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return ComparisonOp(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "eq", "comparison-op-eq":
+		return ComparisonOp_COMPARISON_OP_EQ
+	case "ne", "comparison-op-ne":
+		return ComparisonOp_COMPARISON_OP_NE
+	case "gt", "comparison-op-gt":
+		return ComparisonOp_COMPARISON_OP_GT
+	case "ge", "comparison-op-ge":
+		return ComparisonOp_COMPARISON_OP_GE
+	case "lt", "comparison-op-lt":
+		return ComparisonOp_COMPARISON_OP_LT
+	case "le", "comparison-op-le":
+		return ComparisonOp_COMPARISON_OP_LE
+	case "in", "comparison-op-in":
+		return ComparisonOp_COMPARISON_OP_IN
+	case "not-in", "comparison-op-not-in":
+		return ComparisonOp_COMPARISON_OP_NOT_IN
+	case "like", "comparison-op-like":
+		return ComparisonOp_COMPARISON_OP_LIKE
+	case "is-null", "comparison-op-is-null":
+		return ComparisonOp_COMPARISON_OP_IS_NULL
+	case "is-not-null", "comparison-op-is-not-null":
+		return ComparisonOp_COMPARISON_OP_IS_NOT_NULL
+	default:
+		return ComparisonOp_COMPARISON_OP_UNSPECIFIED
+	}
+}
+
+// ComparisonOpToSpecName converts a ComparisonOp to its canonical protobuf spec name
+func ComparisonOpToSpecName(v ComparisonOp) string {
+	switch v {
+	case ComparisonOp_COMPARISON_OP_UNSPECIFIED:
+		return "COMPARISON_OP_UNSPECIFIED"
+	case ComparisonOp_COMPARISON_OP_EQ:
+		return "COMPARISON_OP_EQ"
+	case ComparisonOp_COMPARISON_OP_NE:
+		return "COMPARISON_OP_NE"
+	case ComparisonOp_COMPARISON_OP_GT:
+		return "COMPARISON_OP_GT"
+	case ComparisonOp_COMPARISON_OP_GE:
+		return "COMPARISON_OP_GE"
+	case ComparisonOp_COMPARISON_OP_LT:
+		return "COMPARISON_OP_LT"
+	case ComparisonOp_COMPARISON_OP_LE:
+		return "COMPARISON_OP_LE"
+	case ComparisonOp_COMPARISON_OP_IN:
+		return "COMPARISON_OP_IN"
+	case ComparisonOp_COMPARISON_OP_NOT_IN:
+		return "COMPARISON_OP_NOT_IN"
+	case ComparisonOp_COMPARISON_OP_LIKE:
+		return "COMPARISON_OP_LIKE"
+	case ComparisonOp_COMPARISON_OP_IS_NULL:
+		return "COMPARISON_OP_IS_NULL"
+	case ComparisonOp_COMPARISON_OP_IS_NOT_NULL:
+		return "COMPARISON_OP_IS_NOT_NULL"
+	default:
+		return ""
+	}
+}
+
+// SortDirectionValues returns all valid SortDirection values (excluding UNDEFINED)
+func SortDirectionValues() []SortDirection {
+	return []SortDirection{
+		SortDirection_SORT_DIRECTION_ASC,
+		SortDirection_SORT_DIRECTION_DESC,
+	}
+}
+
+// SortDirectionStringValues returns all valid SortDirection names as strings
+func SortDirectionStringValues() []string {
+	return []string{"asc", "desc"}
+}
+
+// ParseSortDirection converts a string to a SortDirection enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseSortDirection(s string) (SortDirection, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return SortDirection_SORT_DIRECTION_UNSPECIFIED, nil
+	case "asc", "sort-direction-asc":
+		return SortDirection_SORT_DIRECTION_ASC, nil
+	case "desc", "sort-direction-desc":
+		return SortDirection_SORT_DIRECTION_DESC, nil
+	default:
+		return SortDirection_SORT_DIRECTION_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid sortdirection %s, expecting one of: %v", s, SortDirectionStringValues())
+	}
+}
+
+// ParseSortDirections converts a comma-separated string to a slice of SortDirection enum values
+// Returns an error if any value is invalid
+func ParseSortDirections(s string) ([]SortDirection, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]SortDirection, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseSortDirection(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// SortDirectionToString converts a SortDirection to its lowercase string representation
+func SortDirectionToString(v SortDirection) string {
+	switch v {
+	case SortDirection_SORT_DIRECTION_ASC:
+		return "asc"
+	case SortDirection_SORT_DIRECTION_DESC:
+		return "desc"
+	default:
+		return ""
+	}
+}
+
+// ParseSortDirectionLiberal parses a SortDirection liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseSortDirectionLiberal(s string) SortDirection {
+	if s == "" {
+		return SortDirection_SORT_DIRECTION_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return SortDirection(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "asc", "sort-direction-asc":
+		return SortDirection_SORT_DIRECTION_ASC
+	case "desc", "sort-direction-desc":
+		return SortDirection_SORT_DIRECTION_DESC
+	default:
+		return SortDirection_SORT_DIRECTION_UNSPECIFIED
+	}
+}
+
+// SortDirectionToSpecName converts a SortDirection to its canonical protobuf spec name
+func SortDirectionToSpecName(v SortDirection) string {
+	switch v {
+	case SortDirection_SORT_DIRECTION_UNSPECIFIED:
+		return "SORT_DIRECTION_UNSPECIFIED"
+	case SortDirection_SORT_DIRECTION_ASC:
+		return "SORT_DIRECTION_ASC"
+	case SortDirection_SORT_DIRECTION_DESC:
+		return "SORT_DIRECTION_DESC"
+	default:
+		return ""
+	}
+}
+
+// LogicalOpValues returns all valid LogicalOp values (excluding UNDEFINED)
+func LogicalOpValues() []LogicalOp {
+	return []LogicalOp{
+		LogicalOp_LOGICAL_OP_AND,
+		LogicalOp_LOGICAL_OP_OR,
+	}
+}
+
+// LogicalOpStringValues returns all valid LogicalOp names as strings
+func LogicalOpStringValues() []string {
+	return []string{"and", "or"}
+}
+
+// ParseLogicalOp converts a string to a LogicalOp enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseLogicalOp(s string) (LogicalOp, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return LogicalOp_LOGICAL_OP_UNSPECIFIED, nil
+	case "and", "logical-op-and":
+		return LogicalOp_LOGICAL_OP_AND, nil
+	case "or", "logical-op-or":
+		return LogicalOp_LOGICAL_OP_OR, nil
+	default:
+		return LogicalOp_LOGICAL_OP_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid logicalop %s, expecting one of: %v", s, LogicalOpStringValues())
+	}
+}
+
+// ParseLogicalOps converts a comma-separated string to a slice of LogicalOp enum values
+// Returns an error if any value is invalid
+func ParseLogicalOps(s string) ([]LogicalOp, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]LogicalOp, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseLogicalOp(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// LogicalOpToString converts a LogicalOp to its lowercase string representation
+func LogicalOpToString(v LogicalOp) string {
+	switch v {
+	case LogicalOp_LOGICAL_OP_AND:
+		return "and"
+	case LogicalOp_LOGICAL_OP_OR:
+		return "or"
+	default:
+		return ""
+	}
+}
+
+// ParseLogicalOpLiberal parses a LogicalOp liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseLogicalOpLiberal(s string) LogicalOp {
+	if s == "" {
+		return LogicalOp_LOGICAL_OP_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return LogicalOp(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "and", "logical-op-and":
+		return LogicalOp_LOGICAL_OP_AND
+	case "or", "logical-op-or":
+		return LogicalOp_LOGICAL_OP_OR
+	default:
+		return LogicalOp_LOGICAL_OP_UNSPECIFIED
+	}
+}
+
+// LogicalOpToSpecName converts a LogicalOp to its canonical protobuf spec name
+func LogicalOpToSpecName(v LogicalOp) string {
+	switch v {
+	case LogicalOp_LOGICAL_OP_UNSPECIFIED:
+		return "LOGICAL_OP_UNSPECIFIED"
+	case LogicalOp_LOGICAL_OP_AND:
+		return "LOGICAL_OP_AND"
+	case LogicalOp_LOGICAL_OP_OR:
+		return "LOGICAL_OP_OR"
 	default:
 		return ""
 	}
@@ -626,11 +1020,11 @@ func PublishResponseToTOML(v *PublishResponse) ([]byte, error) {
 // RecordMetaJSON represents RecordMeta in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type recordmetaJSON struct {
-	Key            string            `json:"key,omitempty"`
-	Headers        map[string]string `json:"headers,omitempty"`
-	Partition      int32             `json:"partition,omitempty"`
-	Offset         int64             `json:"offset,omitempty"`
-	EventTimestamp json.RawMessage   `json:"event_timestamp,omitempty"`
+	Key       []byte          `json:"key,omitempty"`
+	Topic     string          `json:"topic,omitempty"`
+	Partition int32           `json:"partition,omitempty"`
+	Offset    int64           `json:"offset,omitempty"`
+	Timestamp json.RawMessage `json:"timestamp,omitempty"`
 }
 
 // RecordMetaToJSON converts RecordMeta to JSON bytes.
@@ -642,14 +1036,14 @@ func RecordMetaToJSON(v *RecordMeta) ([]byte, error) {
 	// Convert to JSON helper struct with string enums
 	helper := recordmetaJSON{
 		Key:       v.Key,
-		Headers:   v.Headers,
+		Topic:     v.Topic,
 		Partition: v.Partition,
 		Offset:    v.Offset,
-		EventTimestamp: func() json.RawMessage {
-			if v.EventTimestamp == nil {
+		Timestamp: func() json.RawMessage {
+			if v.Timestamp == nil {
 				return nil
 			}
-			data, _ := protojson.Marshal(v.EventTimestamp)
+			data, _ := protojson.Marshal(v.Timestamp)
 			return data
 		}(),
 	}
@@ -665,14 +1059,14 @@ func RecordMetaToJSONPretty(v *RecordMeta) ([]byte, error) {
 	// Convert to JSON helper struct with string enums
 	helper := recordmetaJSON{
 		Key:       v.Key,
-		Headers:   v.Headers,
+		Topic:     v.Topic,
 		Partition: v.Partition,
 		Offset:    v.Offset,
-		EventTimestamp: func() json.RawMessage {
-			if v.EventTimestamp == nil {
+		Timestamp: func() json.RawMessage {
+			if v.Timestamp == nil {
 				return nil
 			}
-			data, _ := protojson.Marshal(v.EventTimestamp)
+			data, _ := protojson.Marshal(v.Timestamp)
 			return data
 		}(),
 	}
@@ -740,14 +1134,14 @@ func RecordMetaFromJSON(data []byte) (*RecordMeta, error) {
 	// Build result with parsed enums
 	result := &RecordMeta{}
 	result.Key = raw.Key
-	result.Headers = raw.Headers
+	result.Topic = raw.Topic
 	result.Partition = raw.Partition
 	result.Offset = raw.Offset
-	// Parse well-known type: EventTimestamp
-	if len(raw.EventTimestamp) > 0 {
-		result.EventTimestamp = &timestamppb.Timestamp{}
-		if err := protojson.Unmarshal(raw.EventTimestamp, result.EventTimestamp); err != nil {
-			result.EventTimestamp = nil
+	// Parse well-known type: Timestamp
+	if len(raw.Timestamp) > 0 {
+		result.Timestamp = &timestamppb.Timestamp{}
+		if err := protojson.Unmarshal(raw.Timestamp, result.Timestamp); err != nil {
+			result.Timestamp = nil
 		}
 	}
 	return result, nil
@@ -801,6 +1195,8 @@ type topicinfoJSON struct {
 	RetentionMs     int64           `json:"retention_ms,omitempty"`
 	EarliestOffsets map[int32]int64 `json:"earliest_offsets,omitempty"`
 	LatestOffsets   map[int32]int64 `json:"latest_offsets,omitempty"`
+	TraceId         string          `json:"trace_id,omitempty"`
+	Noop            bool            `json:"noop,omitempty"`
 }
 
 // TopicInfoToJSON converts TopicInfo to JSON bytes.
@@ -816,6 +1212,8 @@ func TopicInfoToJSON(v *TopicInfo) ([]byte, error) {
 		RetentionMs:     v.RetentionMs,
 		EarliestOffsets: v.EarliestOffsets,
 		LatestOffsets:   v.LatestOffsets,
+		TraceId:         v.TraceId,
+		Noop:            v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -833,6 +1231,8 @@ func TopicInfoToJSONPretty(v *TopicInfo) ([]byte, error) {
 		RetentionMs:     v.RetentionMs,
 		EarliestOffsets: v.EarliestOffsets,
 		LatestOffsets:   v.LatestOffsets,
+		TraceId:         v.TraceId,
+		Noop:            v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -902,6 +1302,8 @@ func TopicInfoFromJSON(data []byte) (*TopicInfo, error) {
 	result.RetentionMs = raw.RetentionMs
 	result.EarliestOffsets = raw.EarliestOffsets
 	result.LatestOffsets = raw.LatestOffsets
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
 	return result, nil
 }
 
@@ -948,7 +1350,9 @@ func TopicInfoToTOML(v *TopicInfo) ([]byte, error) {
 // TopicInfoRequestJSON represents TopicInfoRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type topicinforequestJSON struct {
-	Topic string `json:"topic,omitempty"`
+	Topic   string `json:"topic,omitempty"`
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
 }
 
 // TopicInfoRequestToJSON converts TopicInfoRequest to JSON bytes.
@@ -959,7 +1363,9 @@ func TopicInfoRequestToJSON(v *TopicInfoRequest) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := topicinforequestJSON{
-		Topic: v.Topic,
+		Topic:   v.Topic,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -972,7 +1378,9 @@ func TopicInfoRequestToJSONPretty(v *TopicInfoRequest) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := topicinforequestJSON{
-		Topic: v.Topic,
+		Topic:   v.Topic,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1038,6 +1446,8 @@ func TopicInfoRequestFromJSON(data []byte) (*TopicInfoRequest, error) {
 	// Build result with parsed enums
 	result := &TopicInfoRequest{}
 	result.Topic = raw.Topic
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
 	return result, nil
 }
 
@@ -1081,10 +1491,162 @@ func TopicInfoRequestToTOML(v *TopicInfoRequest) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
+// ListTopicsRequestJSON represents ListTopicsRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type listtopicsrequestJSON struct {
+	PageSize  int32  `json:"page_size,omitempty"`
+	PageToken string `json:"page_token,omitempty"`
+	TraceId   string `json:"trace_id,omitempty"`
+	Noop      bool   `json:"noop,omitempty"`
+}
+
+// ListTopicsRequestToJSON converts ListTopicsRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func ListTopicsRequestToJSON(v *ListTopicsRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listtopicsrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := listtopicsrequestJSON{
+		PageSize:  v.PageSize,
+		PageToken: v.PageToken,
+		TraceId:   v.TraceId,
+		Noop:      v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// ListTopicsRequestToJSONPretty converts ListTopicsRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func ListTopicsRequestToJSONPretty(v *ListTopicsRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listtopicsrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := listtopicsrequestJSON{
+		PageSize:  v.PageSize,
+		PageToken: v.PageToken,
+		TraceId:   v.TraceId,
+		Noop:      v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// ListTopicsRequestFromBytes creates ListTopicsRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func ListTopicsRequestFromBytes(data []byte) (*ListTopicsRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := ListTopicsRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := ListTopicsRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := ListTopicsRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &ListTopicsRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse ListTopicsRequest: unsupported format or invalid data")
+}
+
+// ListTopicsRequestFromJSON creates ListTopicsRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func ListTopicsRequestFromJSON(data []byte) (*ListTopicsRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw listtopicsrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &ListTopicsRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &ListTopicsRequest{}
+	result.PageSize = raw.PageSize
+	result.PageToken = raw.PageToken
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// ListTopicsRequestToYAML converts ListTopicsRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func ListTopicsRequestToYAML(v *ListTopicsRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listtopicsrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := ListTopicsRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// ListTopicsRequestToTOML converts ListTopicsRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func ListTopicsRequestToTOML(v *ListTopicsRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listtopicsrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := ListTopicsRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
 // ListTopicsResponseJSON represents ListTopicsResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type listtopicsresponseJSON struct {
-	Topics []json.RawMessage `json:"topics,omitempty"`
+	Topics        []json.RawMessage `json:"topics,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // ListTopicsResponseToJSON converts ListTopicsResponse to JSON bytes.
@@ -1109,6 +1671,10 @@ func ListTopicsResponseToJSON(v *ListTopicsResponse) ([]byte, error) {
 			}
 			return result
 		}(),
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1135,6 +1701,10 @@ func ListTopicsResponseToJSONPretty(v *ListTopicsResponse) ([]byte, error) {
 			}
 			return result
 		}(),
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1211,6 +1781,10 @@ func ListTopicsResponseFromJSON(data []byte) (*ListTopicsResponse, error) {
 			}
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
 	return result, nil
 }
 
@@ -1257,7 +1831,9 @@ func ListTopicsResponseToTOML(v *ListTopicsResponse) ([]byte, error) {
 // DeleteTopicRequestJSON represents DeleteTopicRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type deletetopicrequestJSON struct {
-	Topic string `json:"topic,omitempty"`
+	Topic   string `json:"topic,omitempty"`
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
 }
 
 // DeleteTopicRequestToJSON converts DeleteTopicRequest to JSON bytes.
@@ -1268,7 +1844,9 @@ func DeleteTopicRequestToJSON(v *DeleteTopicRequest) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := deletetopicrequestJSON{
-		Topic: v.Topic,
+		Topic:   v.Topic,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1281,7 +1859,9 @@ func DeleteTopicRequestToJSONPretty(v *DeleteTopicRequest) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := deletetopicrequestJSON{
-		Topic: v.Topic,
+		Topic:   v.Topic,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1347,6 +1927,8 @@ func DeleteTopicRequestFromJSON(data []byte) (*DeleteTopicRequest, error) {
 	// Build result with parsed enums
 	result := &DeleteTopicRequest{}
 	result.Topic = raw.Topic
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
 	return result, nil
 }
 
@@ -1396,6 +1978,8 @@ type updatetopicconfigrequestJSON struct {
 	Topic          string `json:"topic,omitempty"`
 	RetentionMs    int64  `json:"retention_ms,omitempty"`
 	PartitionCount int32  `json:"partition_count,omitempty"`
+	TraceId        string `json:"trace_id,omitempty"`
+	Noop           bool   `json:"noop,omitempty"`
 }
 
 // UpdateTopicConfigRequestToJSON converts UpdateTopicConfigRequest to JSON bytes.
@@ -1409,6 +1993,8 @@ func UpdateTopicConfigRequestToJSON(v *UpdateTopicConfigRequest) ([]byte, error)
 		Topic:          v.Topic,
 		RetentionMs:    v.RetentionMs,
 		PartitionCount: v.PartitionCount,
+		TraceId:        v.TraceId,
+		Noop:           v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1424,6 +2010,8 @@ func UpdateTopicConfigRequestToJSONPretty(v *UpdateTopicConfigRequest) ([]byte, 
 		Topic:          v.Topic,
 		RetentionMs:    v.RetentionMs,
 		PartitionCount: v.PartitionCount,
+		TraceId:        v.TraceId,
+		Noop:           v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1491,6 +2079,8 @@ func UpdateTopicConfigRequestFromJSON(data []byte) (*UpdateTopicConfigRequest, e
 	result.Topic = raw.Topic
 	result.RetentionMs = raw.RetentionMs
 	result.PartitionCount = raw.PartitionCount
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
 	return result, nil
 }
 
@@ -1693,6 +2283,8 @@ type consumergroupinfoJSON struct {
 	State      string            `json:"state,omitempty"`
 	Partitions []json.RawMessage `json:"partitions,omitempty"`
 	TotalLag   int64             `json:"total_lag,omitempty"`
+	TraceId    string            `json:"trace_id,omitempty"`
+	Noop       bool              `json:"noop,omitempty"`
 }
 
 // ConsumerGroupInfoToJSON converts ConsumerGroupInfo to JSON bytes.
@@ -1720,6 +2312,8 @@ func ConsumerGroupInfoToJSON(v *ConsumerGroupInfo) ([]byte, error) {
 			return result
 		}(),
 		TotalLag: v.TotalLag,
+		TraceId:  v.TraceId,
+		Noop:     v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1749,6 +2343,8 @@ func ConsumerGroupInfoToJSONPretty(v *ConsumerGroupInfo) ([]byte, error) {
 			return result
 		}(),
 		TotalLag: v.TotalLag,
+		TraceId:  v.TraceId,
+		Noop:     v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1828,6 +2424,8 @@ func ConsumerGroupInfoFromJSON(data []byte) (*ConsumerGroupInfo, error) {
 		}
 	}
 	result.TotalLag = raw.TotalLag
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
 	return result, nil
 }
 
@@ -1875,6 +2473,8 @@ func ConsumerGroupInfoToTOML(v *ConsumerGroupInfo) ([]byte, error) {
 // MARKER: JSON helper struct generated from serial.go
 type consumergrouprequestJSON struct {
 	GroupId string `json:"group_id,omitempty"`
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
 }
 
 // ConsumerGroupRequestToJSON converts ConsumerGroupRequest to JSON bytes.
@@ -1886,6 +2486,8 @@ func ConsumerGroupRequestToJSON(v *ConsumerGroupRequest) ([]byte, error) {
 	// Convert to JSON helper struct with string enums
 	helper := consumergrouprequestJSON{
 		GroupId: v.GroupId,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1899,6 +2501,8 @@ func ConsumerGroupRequestToJSONPretty(v *ConsumerGroupRequest) ([]byte, error) {
 	// Convert to JSON helper struct with string enums
 	helper := consumergrouprequestJSON{
 		GroupId: v.GroupId,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1964,6 +2568,8 @@ func ConsumerGroupRequestFromJSON(data []byte) (*ConsumerGroupRequest, error) {
 	// Build result with parsed enums
 	result := &ConsumerGroupRequest{}
 	result.GroupId = raw.GroupId
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
 	return result, nil
 }
 
@@ -2007,10 +2613,162 @@ func ConsumerGroupRequestToTOML(v *ConsumerGroupRequest) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
+// ListConsumerGroupsRequestJSON represents ListConsumerGroupsRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type listconsumergroupsrequestJSON struct {
+	PageSize  int32  `json:"page_size,omitempty"`
+	PageToken string `json:"page_token,omitempty"`
+	TraceId   string `json:"trace_id,omitempty"`
+	Noop      bool   `json:"noop,omitempty"`
+}
+
+// ListConsumerGroupsRequestToJSON converts ListConsumerGroupsRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func ListConsumerGroupsRequestToJSON(v *ListConsumerGroupsRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listconsumergroupsrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := listconsumergroupsrequestJSON{
+		PageSize:  v.PageSize,
+		PageToken: v.PageToken,
+		TraceId:   v.TraceId,
+		Noop:      v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// ListConsumerGroupsRequestToJSONPretty converts ListConsumerGroupsRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func ListConsumerGroupsRequestToJSONPretty(v *ListConsumerGroupsRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listconsumergroupsrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := listconsumergroupsrequestJSON{
+		PageSize:  v.PageSize,
+		PageToken: v.PageToken,
+		TraceId:   v.TraceId,
+		Noop:      v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// ListConsumerGroupsRequestFromBytes creates ListConsumerGroupsRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func ListConsumerGroupsRequestFromBytes(data []byte) (*ListConsumerGroupsRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := ListConsumerGroupsRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := ListConsumerGroupsRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := ListConsumerGroupsRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &ListConsumerGroupsRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse ListConsumerGroupsRequest: unsupported format or invalid data")
+}
+
+// ListConsumerGroupsRequestFromJSON creates ListConsumerGroupsRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func ListConsumerGroupsRequestFromJSON(data []byte) (*ListConsumerGroupsRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw listconsumergroupsrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &ListConsumerGroupsRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &ListConsumerGroupsRequest{}
+	result.PageSize = raw.PageSize
+	result.PageToken = raw.PageToken
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// ListConsumerGroupsRequestToYAML converts ListConsumerGroupsRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func ListConsumerGroupsRequestToYAML(v *ListConsumerGroupsRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listconsumergroupsrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := ListConsumerGroupsRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// ListConsumerGroupsRequestToTOML converts ListConsumerGroupsRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func ListConsumerGroupsRequestToTOML(v *ListConsumerGroupsRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listconsumergroupsrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := ListConsumerGroupsRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
 // ListConsumerGroupsResponseJSON represents ListConsumerGroupsResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type listconsumergroupsresponseJSON struct {
-	Groups []json.RawMessage `json:"groups,omitempty"`
+	Groups        []json.RawMessage `json:"groups,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // ListConsumerGroupsResponseToJSON converts ListConsumerGroupsResponse to JSON bytes.
@@ -2035,6 +2793,10 @@ func ListConsumerGroupsResponseToJSON(v *ListConsumerGroupsResponse) ([]byte, er
 			}
 			return result
 		}(),
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -2061,6 +2823,10 @@ func ListConsumerGroupsResponseToJSONPretty(v *ListConsumerGroupsResponse) ([]by
 			}
 			return result
 		}(),
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -2137,6 +2903,10 @@ func ListConsumerGroupsResponseFromJSON(data []byte) (*ListConsumerGroupsRespons
 			}
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
 	return result, nil
 }
 
@@ -2189,6 +2959,8 @@ type resetconsumergroupoffsetsrequestJSON struct {
 	Timestamp  json.RawMessage `json:"timestamp,omitempty"`
 	ToLatest   *bool           `json:"to_latest,omitempty"`
 	ToEarliest *bool           `json:"to_earliest,omitempty"`
+	TraceId    string          `json:"trace_id,omitempty"`
+	Noop       bool            `json:"noop,omitempty"`
 }
 
 // ResetConsumerGroupOffsetsRequestToJSON converts ResetConsumerGroupOffsetsRequest to JSON bytes.
@@ -2220,6 +2992,8 @@ func ResetConsumerGroupOffsetsRequestToJSON(v *ResetConsumerGroupOffsetsRequest)
 			val := v.GetToEarliest()
 			return &val
 		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -2253,6 +3027,8 @@ func ResetConsumerGroupOffsetsRequestToJSONPretty(v *ResetConsumerGroupOffsetsRe
 			val := v.GetToEarliest()
 			return &val
 		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -2338,6 +3114,8 @@ func ResetConsumerGroupOffsetsRequestFromJSON(data []byte) (*ResetConsumerGroupO
 	if raw.ToEarliest != nil {
 		result.ResetTo = &ResetConsumerGroupOffsetsRequest_ToEarliest{ToEarliest: *raw.ToEarliest}
 	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
 	return result, nil
 }
 
@@ -2535,6 +3313,8 @@ type clusterhealthresponseJSON struct {
 	BrokerCount  int32             `json:"broker_count,omitempty"`
 	Brokers      []json.RawMessage `json:"brokers,omitempty"`
 	ControllerId int32             `json:"controller_id,omitempty"`
+	TraceId      string            `json:"trace_id,omitempty"`
+	Noop         bool              `json:"noop,omitempty"`
 }
 
 // ClusterHealthResponseToJSON converts ClusterHealthResponse to JSON bytes.
@@ -2561,6 +3341,8 @@ func ClusterHealthResponseToJSON(v *ClusterHealthResponse) ([]byte, error) {
 			return result
 		}(),
 		ControllerId: v.ControllerId,
+		TraceId:      v.TraceId,
+		Noop:         v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -2589,6 +3371,8 @@ func ClusterHealthResponseToJSONPretty(v *ClusterHealthResponse) ([]byte, error)
 			return result
 		}(),
 		ControllerId: v.ControllerId,
+		TraceId:      v.TraceId,
+		Noop:         v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -2667,6 +3451,8 @@ func ClusterHealthResponseFromJSON(data []byte) (*ClusterHealthResponse, error) 
 		}
 	}
 	result.ControllerId = raw.ControllerId
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
 	return result, nil
 }
 
@@ -2725,6 +3511,8 @@ type configJSON struct {
 	NodeId                      int32  `json:"node_id,omitempty"`
 	ClusterSeed                 string `json:"cluster_seed,omitempty"`
 	StateRefreshIntervalSeconds int32  `json:"state_refresh_interval_seconds,omitempty"`
+	TraceId                     string `json:"trace_id,omitempty"`
+	Noop                        bool   `json:"noop,omitempty"`
 }
 
 // ConfigToJSON converts Config to JSON bytes.
@@ -2747,6 +3535,8 @@ func ConfigToJSON(v *Config) ([]byte, error) {
 		NodeId:                      v.NodeId,
 		ClusterSeed:                 v.ClusterSeed,
 		StateRefreshIntervalSeconds: v.StateRefreshIntervalSeconds,
+		TraceId:                     v.TraceId,
+		Noop:                        v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -2771,6 +3561,8 @@ func ConfigToJSONPretty(v *Config) ([]byte, error) {
 		NodeId:                      v.NodeId,
 		ClusterSeed:                 v.ClusterSeed,
 		StateRefreshIntervalSeconds: v.StateRefreshIntervalSeconds,
+		TraceId:                     v.TraceId,
+		Noop:                        v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -2852,6 +3644,8 @@ func ConfigFromJSON(data []byte) (*Config, error) {
 	result.NodeId = raw.NodeId
 	result.ClusterSeed = raw.ClusterSeed
 	result.StateRefreshIntervalSeconds = raw.StateRefreshIntervalSeconds
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
 	return result, nil
 }
 
@@ -3235,6 +4029,3160 @@ func EventbusStateToTOML(v *EventbusState) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
+// EventbusConfigStateJSON represents EventbusConfigState in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type eventbusconfigstateJSON struct {
+	Config json.RawMessage `json:"config,omitempty"`
+}
+
+// EventbusConfigStateToJSON converts EventbusConfigState to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func EventbusConfigStateToJSON(v *EventbusConfigState) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusconfigstate is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := eventbusconfigstateJSON{
+		Config: func() json.RawMessage {
+			if v.Config == nil {
+				return nil
+			}
+			data, _ := ConfigToJSON(v.Config)
+			return data
+		}(),
+	}
+	return json.Marshal(helper)
+}
+
+// EventbusConfigStateToJSONPretty converts EventbusConfigState to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func EventbusConfigStateToJSONPretty(v *EventbusConfigState) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusconfigstate is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := eventbusconfigstateJSON{
+		Config: func() json.RawMessage {
+			if v.Config == nil {
+				return nil
+			}
+			data, _ := ConfigToJSON(v.Config)
+			return data
+		}(),
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// EventbusConfigStateFromBytes creates EventbusConfigState from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func EventbusConfigStateFromBytes(data []byte) (*EventbusConfigState, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := EventbusConfigStateFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := EventbusConfigStateFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := EventbusConfigStateFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &EventbusConfigState{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse EventbusConfigState: unsupported format or invalid data")
+}
+
+// EventbusConfigStateFromJSON creates EventbusConfigState from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func EventbusConfigStateFromJSON(data []byte) (*EventbusConfigState, error) {
+	// Unmarshal into helper struct with string enums
+	var raw eventbusconfigstateJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &EventbusConfigState{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &EventbusConfigState{}
+	// Parse message field: Config
+	if len(raw.Config) > 0 {
+		parsed, err := ConfigFromJSON(raw.Config)
+		if err == nil {
+			result.Config = parsed
+		}
+	}
+	return result, nil
+}
+
+// EventbusConfigStateToYAML converts EventbusConfigState to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func EventbusConfigStateToYAML(v *EventbusConfigState) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusconfigstate is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := EventbusConfigStateToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// EventbusConfigStateToTOML converts EventbusConfigState to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func EventbusConfigStateToTOML(v *EventbusConfigState) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusconfigstate is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := EventbusConfigStateToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// QueryValueJSON represents QueryValue in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type queryvalueJSON struct {
+	StringValue *string  `json:"string_value,omitempty"`
+	IntValue    *int64   `json:"int_value,omitempty"`
+	DoubleValue *float64 `json:"double_value,omitempty"`
+	BoolValue   *bool    `json:"bool_value,omitempty"`
+	TraceId     string   `json:"trace_id,omitempty"`
+	Noop        bool     `json:"noop,omitempty"`
+}
+
+// QueryValueToJSON converts QueryValue to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func QueryValueToJSON(v *QueryValue) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "queryvalue is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := queryvalueJSON{
+		StringValue: func() *string {
+			val := v.GetStringValue()
+			return &val
+		}(),
+		IntValue: func() *int64 {
+			val := v.GetIntValue()
+			return &val
+		}(),
+		DoubleValue: func() *float64 {
+			val := v.GetDoubleValue()
+			return &val
+		}(),
+		BoolValue: func() *bool {
+			val := v.GetBoolValue()
+			return &val
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// QueryValueToJSONPretty converts QueryValue to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func QueryValueToJSONPretty(v *QueryValue) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "queryvalue is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := queryvalueJSON{
+		StringValue: func() *string {
+			val := v.GetStringValue()
+			return &val
+		}(),
+		IntValue: func() *int64 {
+			val := v.GetIntValue()
+			return &val
+		}(),
+		DoubleValue: func() *float64 {
+			val := v.GetDoubleValue()
+			return &val
+		}(),
+		BoolValue: func() *bool {
+			val := v.GetBoolValue()
+			return &val
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// QueryValueFromBytes creates QueryValue from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func QueryValueFromBytes(data []byte) (*QueryValue, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := QueryValueFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := QueryValueFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := QueryValueFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &QueryValue{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse QueryValue: unsupported format or invalid data")
+}
+
+// QueryValueFromJSON creates QueryValue from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func QueryValueFromJSON(data []byte) (*QueryValue, error) {
+	// Unmarshal into helper struct with string enums
+	var raw queryvalueJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &QueryValue{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &QueryValue{}
+	// Parse oneof scalar field: StringValue
+	if raw.StringValue != nil {
+		result.Value = &QueryValue_StringValue{StringValue: *raw.StringValue}
+	}
+	// Parse oneof scalar field: IntValue
+	if raw.IntValue != nil {
+		result.Value = &QueryValue_IntValue{IntValue: *raw.IntValue}
+	}
+	// Parse oneof scalar field: DoubleValue
+	if raw.DoubleValue != nil {
+		result.Value = &QueryValue_DoubleValue{DoubleValue: *raw.DoubleValue}
+	}
+	// Parse oneof scalar field: BoolValue
+	if raw.BoolValue != nil {
+		result.Value = &QueryValue_BoolValue{BoolValue: *raw.BoolValue}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// QueryValueToYAML converts QueryValue to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func QueryValueToYAML(v *QueryValue) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "queryvalue is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := QueryValueToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// QueryValueToTOML converts QueryValue to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func QueryValueToTOML(v *QueryValue) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "queryvalue is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := QueryValueToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PredicateJSON represents Predicate in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type predicateJSON struct {
+	FieldName string            `json:"field_name,omitempty"`
+	Op        string            `json:"op,omitempty"`
+	Value     json.RawMessage   `json:"value,omitempty"`
+	Values    []json.RawMessage `json:"values,omitempty"`
+	TraceId   string            `json:"trace_id,omitempty"`
+	Noop      bool              `json:"noop,omitempty"`
+}
+
+// PredicateToJSON converts Predicate to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PredicateToJSON(v *Predicate) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "predicate is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := predicateJSON{
+		FieldName: v.FieldName,
+		Op:        ComparisonOpToString(v.Op),
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := QueryValueToJSON(v.Value)
+			return data
+		}(),
+		Values: func() []json.RawMessage {
+			if len(v.Values) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Values))
+			for _, item := range v.Values {
+				if item != nil {
+					if data, err := QueryValueToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PredicateToJSONPretty converts Predicate to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PredicateToJSONPretty(v *Predicate) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "predicate is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := predicateJSON{
+		FieldName: v.FieldName,
+		Op:        ComparisonOpToString(v.Op),
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := QueryValueToJSON(v.Value)
+			return data
+		}(),
+		Values: func() []json.RawMessage {
+			if len(v.Values) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Values))
+			for _, item := range v.Values {
+				if item != nil {
+					if data, err := QueryValueToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PredicateFromBytes creates Predicate from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PredicateFromBytes(data []byte) (*Predicate, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PredicateFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PredicateFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PredicateFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &Predicate{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse Predicate: unsupported format or invalid data")
+}
+
+// PredicateFromJSON creates Predicate from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PredicateFromJSON(data []byte) (*Predicate, error) {
+	// Unmarshal into helper struct with string enums
+	var raw predicateJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &Predicate{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &Predicate{}
+	result.FieldName = raw.FieldName
+	// Parse enum field: Op
+	if raw.Op != "" {
+		if parsed, err := ParseComparisonOp(raw.Op); err == nil {
+			result.Op = parsed
+		}
+	}
+	// Parse message field: Value
+	if len(raw.Value) > 0 {
+		parsed, err := QueryValueFromJSON(raw.Value)
+		if err == nil {
+			result.Value = parsed
+		}
+	}
+	// Parse repeated message field: Values
+	if len(raw.Values) > 0 {
+		result.Values = make([]*QueryValue, 0, len(raw.Values))
+		for _, itemJSON := range raw.Values {
+			if len(itemJSON) > 0 {
+				parsed, err := QueryValueFromJSON(itemJSON)
+				if err == nil {
+					result.Values = append(result.Values, parsed)
+				}
+			}
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PredicateToYAML converts Predicate to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PredicateToYAML(v *Predicate) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "predicate is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PredicateToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PredicateToTOML converts Predicate to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PredicateToTOML(v *Predicate) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "predicate is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PredicateToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PredicateGroupJSON represents PredicateGroup in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type predicategroupJSON struct {
+	Op         string            `json:"op,omitempty"`
+	Predicates []json.RawMessage `json:"predicates,omitempty"`
+	Groups     []json.RawMessage `json:"groups,omitempty"`
+	TraceId    string            `json:"trace_id,omitempty"`
+	Noop       bool              `json:"noop,omitempty"`
+}
+
+// PredicateGroupToJSON converts PredicateGroup to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PredicateGroupToJSON(v *PredicateGroup) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "predicategroup is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := predicategroupJSON{
+		Op: LogicalOpToString(v.Op),
+		Predicates: func() []json.RawMessage {
+			if len(v.Predicates) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Predicates))
+			for _, item := range v.Predicates {
+				if item != nil {
+					if data, err := PredicateToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		Groups: func() []json.RawMessage {
+			if len(v.Groups) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Groups))
+			for _, item := range v.Groups {
+				if item != nil {
+					if data, err := PredicateGroupToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PredicateGroupToJSONPretty converts PredicateGroup to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PredicateGroupToJSONPretty(v *PredicateGroup) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "predicategroup is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := predicategroupJSON{
+		Op: LogicalOpToString(v.Op),
+		Predicates: func() []json.RawMessage {
+			if len(v.Predicates) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Predicates))
+			for _, item := range v.Predicates {
+				if item != nil {
+					if data, err := PredicateToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		Groups: func() []json.RawMessage {
+			if len(v.Groups) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Groups))
+			for _, item := range v.Groups {
+				if item != nil {
+					if data, err := PredicateGroupToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PredicateGroupFromBytes creates PredicateGroup from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PredicateGroupFromBytes(data []byte) (*PredicateGroup, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PredicateGroupFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PredicateGroupFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PredicateGroupFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PredicateGroup{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PredicateGroup: unsupported format or invalid data")
+}
+
+// PredicateGroupFromJSON creates PredicateGroup from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PredicateGroupFromJSON(data []byte) (*PredicateGroup, error) {
+	// Unmarshal into helper struct with string enums
+	var raw predicategroupJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PredicateGroup{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PredicateGroup{}
+	// Parse enum field: Op
+	if raw.Op != "" {
+		if parsed, err := ParseLogicalOp(raw.Op); err == nil {
+			result.Op = parsed
+		}
+	}
+	// Parse repeated message field: Predicates
+	if len(raw.Predicates) > 0 {
+		result.Predicates = make([]*Predicate, 0, len(raw.Predicates))
+		for _, itemJSON := range raw.Predicates {
+			if len(itemJSON) > 0 {
+				parsed, err := PredicateFromJSON(itemJSON)
+				if err == nil {
+					result.Predicates = append(result.Predicates, parsed)
+				}
+			}
+		}
+	}
+	// Parse repeated message field: Groups
+	if len(raw.Groups) > 0 {
+		result.Groups = make([]*PredicateGroup, 0, len(raw.Groups))
+		for _, itemJSON := range raw.Groups {
+			if len(itemJSON) > 0 {
+				parsed, err := PredicateGroupFromJSON(itemJSON)
+				if err == nil {
+					result.Groups = append(result.Groups, parsed)
+				}
+			}
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PredicateGroupToYAML converts PredicateGroup to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PredicateGroupToYAML(v *PredicateGroup) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "predicategroup is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PredicateGroupToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PredicateGroupToTOML converts PredicateGroup to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PredicateGroupToTOML(v *PredicateGroup) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "predicategroup is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PredicateGroupToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// SortFieldJSON represents SortField in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type sortfieldJSON struct {
+	FieldName string `json:"field_name,omitempty"`
+	Direction string `json:"direction,omitempty"`
+	TraceId   string `json:"trace_id,omitempty"`
+	Noop      bool   `json:"noop,omitempty"`
+}
+
+// SortFieldToJSON converts SortField to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func SortFieldToJSON(v *SortField) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "sortfield is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := sortfieldJSON{
+		FieldName: v.FieldName,
+		Direction: SortDirectionToString(v.Direction),
+		TraceId:   v.TraceId,
+		Noop:      v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// SortFieldToJSONPretty converts SortField to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func SortFieldToJSONPretty(v *SortField) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "sortfield is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := sortfieldJSON{
+		FieldName: v.FieldName,
+		Direction: SortDirectionToString(v.Direction),
+		TraceId:   v.TraceId,
+		Noop:      v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// SortFieldFromBytes creates SortField from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func SortFieldFromBytes(data []byte) (*SortField, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := SortFieldFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := SortFieldFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := SortFieldFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &SortField{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse SortField: unsupported format or invalid data")
+}
+
+// SortFieldFromJSON creates SortField from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func SortFieldFromJSON(data []byte) (*SortField, error) {
+	// Unmarshal into helper struct with string enums
+	var raw sortfieldJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &SortField{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &SortField{}
+	result.FieldName = raw.FieldName
+	// Parse enum field: Direction
+	if raw.Direction != "" {
+		if parsed, err := ParseSortDirection(raw.Direction); err == nil {
+			result.Direction = parsed
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// SortFieldToYAML converts SortField to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func SortFieldToYAML(v *SortField) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "sortfield is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := SortFieldToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// SortFieldToTOML converts SortField to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func SortFieldToTOML(v *SortField) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "sortfield is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := SortFieldToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// CollectionQueryJSON represents CollectionQuery in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type collectionqueryJSON struct {
+	Where   json.RawMessage   `json:"where,omitempty"`
+	OrderBy []json.RawMessage `json:"order_by,omitempty"`
+	Limit   int32             `json:"limit,omitempty"`
+	Offset  int32             `json:"offset,omitempty"`
+	TraceId string            `json:"trace_id,omitempty"`
+	Noop    bool              `json:"noop,omitempty"`
+}
+
+// CollectionQueryToJSON converts CollectionQuery to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func CollectionQueryToJSON(v *CollectionQuery) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "collectionquery is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := collectionqueryJSON{
+		Where: func() json.RawMessage {
+			if v.Where == nil {
+				return nil
+			}
+			data, _ := PredicateGroupToJSON(v.Where)
+			return data
+		}(),
+		OrderBy: func() []json.RawMessage {
+			if len(v.OrderBy) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.OrderBy))
+			for _, item := range v.OrderBy {
+				if item != nil {
+					if data, err := SortFieldToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		Limit:   v.Limit,
+		Offset:  v.Offset,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// CollectionQueryToJSONPretty converts CollectionQuery to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func CollectionQueryToJSONPretty(v *CollectionQuery) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "collectionquery is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := collectionqueryJSON{
+		Where: func() json.RawMessage {
+			if v.Where == nil {
+				return nil
+			}
+			data, _ := PredicateGroupToJSON(v.Where)
+			return data
+		}(),
+		OrderBy: func() []json.RawMessage {
+			if len(v.OrderBy) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.OrderBy))
+			for _, item := range v.OrderBy {
+				if item != nil {
+					if data, err := SortFieldToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		Limit:   v.Limit,
+		Offset:  v.Offset,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// CollectionQueryFromBytes creates CollectionQuery from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func CollectionQueryFromBytes(data []byte) (*CollectionQuery, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := CollectionQueryFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := CollectionQueryFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := CollectionQueryFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &CollectionQuery{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse CollectionQuery: unsupported format or invalid data")
+}
+
+// CollectionQueryFromJSON creates CollectionQuery from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func CollectionQueryFromJSON(data []byte) (*CollectionQuery, error) {
+	// Unmarshal into helper struct with string enums
+	var raw collectionqueryJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &CollectionQuery{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &CollectionQuery{}
+	// Parse message field: Where
+	if len(raw.Where) > 0 {
+		parsed, err := PredicateGroupFromJSON(raw.Where)
+		if err == nil {
+			result.Where = parsed
+		}
+	}
+	// Parse repeated message field: OrderBy
+	if len(raw.OrderBy) > 0 {
+		result.OrderBy = make([]*SortField, 0, len(raw.OrderBy))
+		for _, itemJSON := range raw.OrderBy {
+			if len(itemJSON) > 0 {
+				parsed, err := SortFieldFromJSON(itemJSON)
+				if err == nil {
+					result.OrderBy = append(result.OrderBy, parsed)
+				}
+			}
+		}
+	}
+	result.Limit = raw.Limit
+	result.Offset = raw.Offset
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// CollectionQueryToYAML converts CollectionQuery to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func CollectionQueryToYAML(v *CollectionQuery) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "collectionquery is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := CollectionQueryToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// CollectionQueryToTOML converts CollectionQuery to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func CollectionQueryToTOML(v *CollectionQuery) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "collectionquery is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := CollectionQueryToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// NodesGetRequestJSON represents NodesGetRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type nodesgetrequestJSON struct {
+	Key     string `json:"key,omitempty"`
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// NodesGetRequestToJSON converts NodesGetRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesGetRequestToJSON(v *NodesGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesgetrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodesgetrequestJSON{
+		Key:     v.Key,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// NodesGetRequestToJSONPretty converts NodesGetRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesGetRequestToJSONPretty(v *NodesGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesgetrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodesgetrequestJSON{
+		Key:     v.Key,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// NodesGetRequestFromBytes creates NodesGetRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func NodesGetRequestFromBytes(data []byte) (*NodesGetRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := NodesGetRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := NodesGetRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := NodesGetRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &NodesGetRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse NodesGetRequest: unsupported format or invalid data")
+}
+
+// NodesGetRequestFromJSON creates NodesGetRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func NodesGetRequestFromJSON(data []byte) (*NodesGetRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw nodesgetrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &NodesGetRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &NodesGetRequest{}
+	result.Key = raw.Key
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// NodesGetRequestToYAML converts NodesGetRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func NodesGetRequestToYAML(v *NodesGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesgetrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesGetRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// NodesGetRequestToTOML converts NodesGetRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func NodesGetRequestToTOML(v *NodesGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesgetrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesGetRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// NodesPutRequestJSON represents NodesPutRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type nodesputrequestJSON struct {
+	Key         string          `json:"key,omitempty"`
+	Value       json.RawMessage `json:"value,omitempty"`
+	LockCounter int64           `json:"lock_counter,omitempty"`
+	TraceId     string          `json:"trace_id,omitempty"`
+	Noop        bool            `json:"noop,omitempty"`
+}
+
+// NodesPutRequestToJSON converts NodesPutRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesPutRequestToJSON(v *NodesPutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesputrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodesputrequestJSON{
+		Key: v.Key,
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := EventbusNodeToJSON(v.Value)
+			return data
+		}(),
+		LockCounter: v.LockCounter,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// NodesPutRequestToJSONPretty converts NodesPutRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesPutRequestToJSONPretty(v *NodesPutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesputrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodesputrequestJSON{
+		Key: v.Key,
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := EventbusNodeToJSON(v.Value)
+			return data
+		}(),
+		LockCounter: v.LockCounter,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// NodesPutRequestFromBytes creates NodesPutRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func NodesPutRequestFromBytes(data []byte) (*NodesPutRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := NodesPutRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := NodesPutRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := NodesPutRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &NodesPutRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse NodesPutRequest: unsupported format or invalid data")
+}
+
+// NodesPutRequestFromJSON creates NodesPutRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func NodesPutRequestFromJSON(data []byte) (*NodesPutRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw nodesputrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &NodesPutRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &NodesPutRequest{}
+	result.Key = raw.Key
+	// Parse message field: Value
+	if len(raw.Value) > 0 {
+		parsed, err := EventbusNodeFromJSON(raw.Value)
+		if err == nil {
+			result.Value = parsed
+		}
+	}
+	result.LockCounter = raw.LockCounter
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// NodesPutRequestToYAML converts NodesPutRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func NodesPutRequestToYAML(v *NodesPutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesputrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesPutRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// NodesPutRequestToTOML converts NodesPutRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func NodesPutRequestToTOML(v *NodesPutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesputrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesPutRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// NodesGetAllRequestJSON represents NodesGetAllRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type nodesgetallrequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// NodesGetAllRequestToJSON converts NodesGetAllRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesGetAllRequestToJSON(v *NodesGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesgetallrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodesgetallrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// NodesGetAllRequestToJSONPretty converts NodesGetAllRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesGetAllRequestToJSONPretty(v *NodesGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesgetallrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodesgetallrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// NodesGetAllRequestFromBytes creates NodesGetAllRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func NodesGetAllRequestFromBytes(data []byte) (*NodesGetAllRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := NodesGetAllRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := NodesGetAllRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := NodesGetAllRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &NodesGetAllRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse NodesGetAllRequest: unsupported format or invalid data")
+}
+
+// NodesGetAllRequestFromJSON creates NodesGetAllRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func NodesGetAllRequestFromJSON(data []byte) (*NodesGetAllRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw nodesgetallrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &NodesGetAllRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &NodesGetAllRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// NodesGetAllRequestToYAML converts NodesGetAllRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func NodesGetAllRequestToYAML(v *NodesGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesgetallrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesGetAllRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// NodesGetAllRequestToTOML converts NodesGetAllRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func NodesGetAllRequestToTOML(v *NodesGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesgetallrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesGetAllRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// NodesKeysRequestJSON represents NodesKeysRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type nodeskeysrequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// NodesKeysRequestToJSON converts NodesKeysRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesKeysRequestToJSON(v *NodesKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodeskeysrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodeskeysrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// NodesKeysRequestToJSONPretty converts NodesKeysRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesKeysRequestToJSONPretty(v *NodesKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodeskeysrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodeskeysrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// NodesKeysRequestFromBytes creates NodesKeysRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func NodesKeysRequestFromBytes(data []byte) (*NodesKeysRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := NodesKeysRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := NodesKeysRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := NodesKeysRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &NodesKeysRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse NodesKeysRequest: unsupported format or invalid data")
+}
+
+// NodesKeysRequestFromJSON creates NodesKeysRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func NodesKeysRequestFromJSON(data []byte) (*NodesKeysRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw nodeskeysrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &NodesKeysRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &NodesKeysRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// NodesKeysRequestToYAML converts NodesKeysRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func NodesKeysRequestToYAML(v *NodesKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodeskeysrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesKeysRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// NodesKeysRequestToTOML converts NodesKeysRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func NodesKeysRequestToTOML(v *NodesKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodeskeysrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesKeysRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// NodesSizeRequestJSON represents NodesSizeRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type nodessizerequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// NodesSizeRequestToJSON converts NodesSizeRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesSizeRequestToJSON(v *NodesSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodessizerequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodessizerequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// NodesSizeRequestToJSONPretty converts NodesSizeRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesSizeRequestToJSONPretty(v *NodesSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodessizerequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodessizerequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// NodesSizeRequestFromBytes creates NodesSizeRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func NodesSizeRequestFromBytes(data []byte) (*NodesSizeRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := NodesSizeRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := NodesSizeRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := NodesSizeRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &NodesSizeRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse NodesSizeRequest: unsupported format or invalid data")
+}
+
+// NodesSizeRequestFromJSON creates NodesSizeRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func NodesSizeRequestFromJSON(data []byte) (*NodesSizeRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw nodessizerequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &NodesSizeRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &NodesSizeRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// NodesSizeRequestToYAML converts NodesSizeRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func NodesSizeRequestToYAML(v *NodesSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodessizerequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesSizeRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// NodesSizeRequestToTOML converts NodesSizeRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func NodesSizeRequestToTOML(v *NodesSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodessizerequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesSizeRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// NodesClearRequestJSON represents NodesClearRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type nodesclearrequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// NodesClearRequestToJSON converts NodesClearRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesClearRequestToJSON(v *NodesClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesclearrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodesclearrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// NodesClearRequestToJSONPretty converts NodesClearRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesClearRequestToJSONPretty(v *NodesClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesclearrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodesclearrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// NodesClearRequestFromBytes creates NodesClearRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func NodesClearRequestFromBytes(data []byte) (*NodesClearRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := NodesClearRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := NodesClearRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := NodesClearRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &NodesClearRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse NodesClearRequest: unsupported format or invalid data")
+}
+
+// NodesClearRequestFromJSON creates NodesClearRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func NodesClearRequestFromJSON(data []byte) (*NodesClearRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw nodesclearrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &NodesClearRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &NodesClearRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// NodesClearRequestToYAML converts NodesClearRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func NodesClearRequestToYAML(v *NodesClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesclearrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesClearRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// NodesClearRequestToTOML converts NodesClearRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func NodesClearRequestToTOML(v *NodesClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesclearrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesClearRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// NodesValueResponseJSON represents NodesValueResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type nodesvalueresponseJSON struct {
+	Value   json.RawMessage `json:"value,omitempty"`
+	Found   bool            `json:"found,omitempty"`
+	TraceId string          `json:"trace_id,omitempty"`
+	Noop    bool            `json:"noop,omitempty"`
+}
+
+// NodesValueResponseToJSON converts NodesValueResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesValueResponseToJSON(v *NodesValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesvalueresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodesvalueresponseJSON{
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := EventbusNodeToJSON(v.Value)
+			return data
+		}(),
+		Found:   v.Found,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// NodesValueResponseToJSONPretty converts NodesValueResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesValueResponseToJSONPretty(v *NodesValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesvalueresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodesvalueresponseJSON{
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := EventbusNodeToJSON(v.Value)
+			return data
+		}(),
+		Found:   v.Found,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// NodesValueResponseFromBytes creates NodesValueResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func NodesValueResponseFromBytes(data []byte) (*NodesValueResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := NodesValueResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := NodesValueResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := NodesValueResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &NodesValueResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse NodesValueResponse: unsupported format or invalid data")
+}
+
+// NodesValueResponseFromJSON creates NodesValueResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func NodesValueResponseFromJSON(data []byte) (*NodesValueResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw nodesvalueresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &NodesValueResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &NodesValueResponse{}
+	// Parse message field: Value
+	if len(raw.Value) > 0 {
+		parsed, err := EventbusNodeFromJSON(raw.Value)
+		if err == nil {
+			result.Value = parsed
+		}
+	}
+	result.Found = raw.Found
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// NodesValueResponseToYAML converts NodesValueResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func NodesValueResponseToYAML(v *NodesValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesvalueresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesValueResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// NodesValueResponseToTOML converts NodesValueResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func NodesValueResponseToTOML(v *NodesValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesvalueresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesValueResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// NodesEntriesResponseJSON represents NodesEntriesResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type nodesentriesresponseJSON struct {
+	Entries map[string]json.RawMessage `json:"entries,omitempty"`
+	TraceId string                     `json:"trace_id,omitempty"`
+	Noop    bool                       `json:"noop,omitempty"`
+}
+
+// NodesEntriesResponseToJSON converts NodesEntriesResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesEntriesResponseToJSON(v *NodesEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesentriesresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodesentriesresponseJSON{
+		Entries: func() map[string]json.RawMessage {
+			if len(v.Entries) == 0 {
+				return nil
+			}
+			result := make(map[string]json.RawMessage, len(v.Entries))
+			for k, item := range v.Entries {
+				if item != nil {
+					if data, err := EventbusNodeToJSON(item); err == nil {
+						result[k] = data
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// NodesEntriesResponseToJSONPretty converts NodesEntriesResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesEntriesResponseToJSONPretty(v *NodesEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesentriesresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodesentriesresponseJSON{
+		Entries: func() map[string]json.RawMessage {
+			if len(v.Entries) == 0 {
+				return nil
+			}
+			result := make(map[string]json.RawMessage, len(v.Entries))
+			for k, item := range v.Entries {
+				if item != nil {
+					if data, err := EventbusNodeToJSON(item); err == nil {
+						result[k] = data
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// NodesEntriesResponseFromBytes creates NodesEntriesResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func NodesEntriesResponseFromBytes(data []byte) (*NodesEntriesResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := NodesEntriesResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := NodesEntriesResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := NodesEntriesResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &NodesEntriesResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse NodesEntriesResponse: unsupported format or invalid data")
+}
+
+// NodesEntriesResponseFromJSON creates NodesEntriesResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func NodesEntriesResponseFromJSON(data []byte) (*NodesEntriesResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw nodesentriesresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &NodesEntriesResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &NodesEntriesResponse{}
+	// Parse map field: Entries
+	if len(raw.Entries) > 0 {
+		result.Entries = make(map[string]*EventbusNode, len(raw.Entries))
+		for k, v := range raw.Entries {
+			if len(v) > 0 {
+				mapKey := k
+				parsed, err := EventbusNodeFromJSON(v)
+				if err == nil {
+					result.Entries[mapKey] = parsed
+				}
+			}
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// NodesEntriesResponseToYAML converts NodesEntriesResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func NodesEntriesResponseToYAML(v *NodesEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesentriesresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesEntriesResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// NodesEntriesResponseToTOML converts NodesEntriesResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func NodesEntriesResponseToTOML(v *NodesEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesentriesresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesEntriesResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// NodesKeysResponseJSON represents NodesKeysResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type nodeskeysresponseJSON struct {
+	Keys    []string `json:"keys,omitempty"`
+	TraceId string   `json:"trace_id,omitempty"`
+	Noop    bool     `json:"noop,omitempty"`
+}
+
+// NodesKeysResponseToJSON converts NodesKeysResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesKeysResponseToJSON(v *NodesKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodeskeysresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodeskeysresponseJSON{
+		Keys:    v.Keys,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// NodesKeysResponseToJSONPretty converts NodesKeysResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesKeysResponseToJSONPretty(v *NodesKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodeskeysresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodeskeysresponseJSON{
+		Keys:    v.Keys,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// NodesKeysResponseFromBytes creates NodesKeysResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func NodesKeysResponseFromBytes(data []byte) (*NodesKeysResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := NodesKeysResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := NodesKeysResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := NodesKeysResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &NodesKeysResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse NodesKeysResponse: unsupported format or invalid data")
+}
+
+// NodesKeysResponseFromJSON creates NodesKeysResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func NodesKeysResponseFromJSON(data []byte) (*NodesKeysResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw nodeskeysresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &NodesKeysResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &NodesKeysResponse{}
+	result.Keys = raw.Keys
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// NodesKeysResponseToYAML converts NodesKeysResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func NodesKeysResponseToYAML(v *NodesKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodeskeysresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesKeysResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// NodesKeysResponseToTOML converts NodesKeysResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func NodesKeysResponseToTOML(v *NodesKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodeskeysresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesKeysResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// NodesSizeResponseJSON represents NodesSizeResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type nodessizeresponseJSON struct {
+	Size    int32  `json:"size,omitempty"`
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// NodesSizeResponseToJSON converts NodesSizeResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesSizeResponseToJSON(v *NodesSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodessizeresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodessizeresponseJSON{
+		Size:    v.Size,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// NodesSizeResponseToJSONPretty converts NodesSizeResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesSizeResponseToJSONPretty(v *NodesSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodessizeresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodessizeresponseJSON{
+		Size:    v.Size,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// NodesSizeResponseFromBytes creates NodesSizeResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func NodesSizeResponseFromBytes(data []byte) (*NodesSizeResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := NodesSizeResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := NodesSizeResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := NodesSizeResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &NodesSizeResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse NodesSizeResponse: unsupported format or invalid data")
+}
+
+// NodesSizeResponseFromJSON creates NodesSizeResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func NodesSizeResponseFromJSON(data []byte) (*NodesSizeResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw nodessizeresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &NodesSizeResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &NodesSizeResponse{}
+	result.Size = raw.Size
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// NodesSizeResponseToYAML converts NodesSizeResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func NodesSizeResponseToYAML(v *NodesSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodessizeresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesSizeResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// NodesSizeResponseToTOML converts NodesSizeResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func NodesSizeResponseToTOML(v *NodesSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodessizeresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesSizeResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// NodesQueryRequestJSON represents NodesQueryRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type nodesqueryrequestJSON struct {
+	Query   json.RawMessage `json:"query,omitempty"`
+	TraceId string          `json:"trace_id,omitempty"`
+	Noop    bool            `json:"noop,omitempty"`
+}
+
+// NodesQueryRequestToJSON converts NodesQueryRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesQueryRequestToJSON(v *NodesQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesqueryrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodesqueryrequestJSON{
+		Query: func() json.RawMessage {
+			if v.Query == nil {
+				return nil
+			}
+			data, _ := CollectionQueryToJSON(v.Query)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// NodesQueryRequestToJSONPretty converts NodesQueryRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesQueryRequestToJSONPretty(v *NodesQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesqueryrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodesqueryrequestJSON{
+		Query: func() json.RawMessage {
+			if v.Query == nil {
+				return nil
+			}
+			data, _ := CollectionQueryToJSON(v.Query)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// NodesQueryRequestFromBytes creates NodesQueryRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func NodesQueryRequestFromBytes(data []byte) (*NodesQueryRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := NodesQueryRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := NodesQueryRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := NodesQueryRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &NodesQueryRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse NodesQueryRequest: unsupported format or invalid data")
+}
+
+// NodesQueryRequestFromJSON creates NodesQueryRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func NodesQueryRequestFromJSON(data []byte) (*NodesQueryRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw nodesqueryrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &NodesQueryRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &NodesQueryRequest{}
+	// Parse message field: Query
+	if len(raw.Query) > 0 {
+		parsed, err := CollectionQueryFromJSON(raw.Query)
+		if err == nil {
+			result.Query = parsed
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// NodesQueryRequestToYAML converts NodesQueryRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func NodesQueryRequestToYAML(v *NodesQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesqueryrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesQueryRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// NodesQueryRequestToTOML converts NodesQueryRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func NodesQueryRequestToTOML(v *NodesQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesqueryrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesQueryRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// NodesQueryResponseJSON represents NodesQueryResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type nodesqueryresponseJSON struct {
+	Results    []json.RawMessage `json:"results,omitempty"`
+	TotalCount int32             `json:"total_count,omitempty"`
+	TraceId    string            `json:"trace_id,omitempty"`
+	Noop       bool              `json:"noop,omitempty"`
+}
+
+// NodesQueryResponseToJSON converts NodesQueryResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesQueryResponseToJSON(v *NodesQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesqueryresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodesqueryresponseJSON{
+		Results: func() []json.RawMessage {
+			if len(v.Results) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Results))
+			for _, item := range v.Results {
+				if item != nil {
+					if data, err := EventbusNodeToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TotalCount: v.TotalCount,
+		TraceId:    v.TraceId,
+		Noop:       v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// NodesQueryResponseToJSONPretty converts NodesQueryResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func NodesQueryResponseToJSONPretty(v *NodesQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesqueryresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := nodesqueryresponseJSON{
+		Results: func() []json.RawMessage {
+			if len(v.Results) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Results))
+			for _, item := range v.Results {
+				if item != nil {
+					if data, err := EventbusNodeToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TotalCount: v.TotalCount,
+		TraceId:    v.TraceId,
+		Noop:       v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// NodesQueryResponseFromBytes creates NodesQueryResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func NodesQueryResponseFromBytes(data []byte) (*NodesQueryResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := NodesQueryResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := NodesQueryResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := NodesQueryResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &NodesQueryResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse NodesQueryResponse: unsupported format or invalid data")
+}
+
+// NodesQueryResponseFromJSON creates NodesQueryResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func NodesQueryResponseFromJSON(data []byte) (*NodesQueryResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw nodesqueryresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &NodesQueryResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &NodesQueryResponse{}
+	// Parse repeated message field: Results
+	if len(raw.Results) > 0 {
+		result.Results = make([]*EventbusNode, 0, len(raw.Results))
+		for _, itemJSON := range raw.Results {
+			if len(itemJSON) > 0 {
+				parsed, err := EventbusNodeFromJSON(itemJSON)
+				if err == nil {
+					result.Results = append(result.Results, parsed)
+				}
+			}
+		}
+	}
+	result.TotalCount = raw.TotalCount
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// NodesQueryResponseToYAML converts NodesQueryResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func NodesQueryResponseToYAML(v *NodesQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesqueryresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesQueryResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// NodesQueryResponseToTOML converts NodesQueryResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func NodesQueryResponseToTOML(v *NodesQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "nodesqueryresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := NodesQueryResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// MapEmptyJSON represents MapEmpty in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type mapemptyJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// MapEmptyToJSON converts MapEmpty to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func MapEmptyToJSON(v *MapEmpty) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "mapempty is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := mapemptyJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// MapEmptyToJSONPretty converts MapEmpty to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func MapEmptyToJSONPretty(v *MapEmpty) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "mapempty is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := mapemptyJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// MapEmptyFromBytes creates MapEmpty from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func MapEmptyFromBytes(data []byte) (*MapEmpty, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := MapEmptyFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := MapEmptyFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := MapEmptyFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &MapEmpty{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse MapEmpty: unsupported format or invalid data")
+}
+
+// MapEmptyFromJSON creates MapEmpty from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func MapEmptyFromJSON(data []byte) (*MapEmpty, error) {
+	// Unmarshal into helper struct with string enums
+	var raw mapemptyJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &MapEmpty{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &MapEmpty{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// MapEmptyToYAML converts MapEmpty to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func MapEmptyToYAML(v *MapEmpty) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "mapempty is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := MapEmptyToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// MapEmptyToTOML converts MapEmpty to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func MapEmptyToTOML(v *MapEmpty) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "mapempty is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := MapEmptyToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
 // convertJSONNumbers recursively walks a value decoded with json.UseNumber()
 // and converts json.Number back to int64 or float64 so YAML marshals them
 // as plain numbers instead of quoted strings.
@@ -3373,7 +7321,8 @@ func RecordMetaToEnvVar(v *RecordMeta) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_SERVICES_EVENTBUS_RECORD_META_KEY"] = v.Key
+	result["PROTO_SERVICES_EVENTBUS_RECORD_META_KEY"] = base64.StdEncoding.EncodeToString(v.Key)
+	result["PROTO_SERVICES_EVENTBUS_RECORD_META_TOPIC"] = v.Topic
 	result["PROTO_SERVICES_EVENTBUS_RECORD_META_PARTITION"] = strconv.FormatInt(int64(v.Partition), 10)
 	result["PROTO_SERVICES_EVENTBUS_RECORD_META_OFFSET"] = strconv.FormatInt(v.Offset, 10)
 	return result
@@ -3383,7 +7332,14 @@ func RecordMetaToEnvVar(v *RecordMeta) map[string]string {
 func RecordMetaFromEnvVar(env map[string]string) (*RecordMeta, error) {
 	result := &RecordMeta{}
 	if val, ok := env["PROTO_SERVICES_EVENTBUS_RECORD_META_KEY"]; ok && val != "" {
-		result.Key = val
+		parsed, err := base64.StdEncoding.DecodeString(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Key = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_RECORD_META_TOPIC"]; ok && val != "" {
+		result.Topic = val
 	}
 	if val, ok := env["PROTO_SERVICES_EVENTBUS_RECORD_META_PARTITION"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 32)
@@ -3411,6 +7367,8 @@ func TopicInfoToEnvVar(v *TopicInfo) map[string]string {
 	result["PROTO_SERVICES_EVENTBUS_TOPIC_INFO_NAME"] = v.Name
 	result["PROTO_SERVICES_EVENTBUS_TOPIC_INFO_PARTITION_COUNT"] = strconv.FormatInt(int64(v.PartitionCount), 10)
 	result["PROTO_SERVICES_EVENTBUS_TOPIC_INFO_RETENTION_MS"] = strconv.FormatInt(v.RetentionMs, 10)
+	result["PROTO_SERVICES_EVENTBUS_TOPIC_INFO_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_TOPIC_INFO_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
@@ -3434,6 +7392,16 @@ func TopicInfoFromEnvVar(env map[string]string) (*TopicInfo, error) {
 		}
 		result.RetentionMs = parsed
 	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_TOPIC_INFO_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_TOPIC_INFO_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
 	return result, nil
 }
 
@@ -3444,6 +7412,8 @@ func TopicInfoRequestToEnvVar(v *TopicInfoRequest) map[string]string {
 	}
 	result := make(map[string]string)
 	result["PROTO_SERVICES_EVENTBUS_TOPIC_INFO_REQUEST_TOPIC"] = v.Topic
+	result["PROTO_SERVICES_EVENTBUS_TOPIC_INFO_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_TOPIC_INFO_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
@@ -3452,6 +7422,55 @@ func TopicInfoRequestFromEnvVar(env map[string]string) (*TopicInfoRequest, error
 	result := &TopicInfoRequest{}
 	if val, ok := env["PROTO_SERVICES_EVENTBUS_TOPIC_INFO_REQUEST_TOPIC"]; ok && val != "" {
 		result.Topic = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_TOPIC_INFO_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_TOPIC_INFO_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// ListTopicsRequestToEnvVar converts ListTopicsRequest to environment variable key-value pairs.
+func ListTopicsRequestToEnvVar(v *ListTopicsRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_EVENTBUS_LIST_TOPICS_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
+	result["PROTO_SERVICES_EVENTBUS_LIST_TOPICS_REQUEST_PAGE_TOKEN"] = v.PageToken
+	result["PROTO_SERVICES_EVENTBUS_LIST_TOPICS_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_LIST_TOPICS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// ListTopicsRequestFromEnvVar creates ListTopicsRequest from environment variable key-value pairs.
+func ListTopicsRequestFromEnvVar(env map[string]string) (*ListTopicsRequest, error) {
+	result := &ListTopicsRequest{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_LIST_TOPICS_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_LIST_TOPICS_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_LIST_TOPICS_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_LIST_TOPICS_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
 	}
 	return result, nil
 }
@@ -3462,12 +7481,36 @@ func ListTopicsResponseToEnvVar(v *ListTopicsResponse) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_EVENTBUS_LIST_TOPICS_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_EVENTBUS_LIST_TOPICS_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
+	result["PROTO_SERVICES_EVENTBUS_LIST_TOPICS_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_LIST_TOPICS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
 // ListTopicsResponseFromEnvVar creates ListTopicsResponse from environment variable key-value pairs.
 func ListTopicsResponseFromEnvVar(env map[string]string) (*ListTopicsResponse, error) {
 	result := &ListTopicsResponse{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_LIST_TOPICS_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_LIST_TOPICS_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_LIST_TOPICS_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_LIST_TOPICS_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
 	return result, nil
 }
 
@@ -3478,6 +7521,8 @@ func DeleteTopicRequestToEnvVar(v *DeleteTopicRequest) map[string]string {
 	}
 	result := make(map[string]string)
 	result["PROTO_SERVICES_EVENTBUS_DELETE_TOPIC_REQUEST_TOPIC"] = v.Topic
+	result["PROTO_SERVICES_EVENTBUS_DELETE_TOPIC_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_DELETE_TOPIC_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
@@ -3486,6 +7531,16 @@ func DeleteTopicRequestFromEnvVar(env map[string]string) (*DeleteTopicRequest, e
 	result := &DeleteTopicRequest{}
 	if val, ok := env["PROTO_SERVICES_EVENTBUS_DELETE_TOPIC_REQUEST_TOPIC"]; ok && val != "" {
 		result.Topic = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_DELETE_TOPIC_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_DELETE_TOPIC_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
 	}
 	return result, nil
 }
@@ -3499,6 +7554,8 @@ func UpdateTopicConfigRequestToEnvVar(v *UpdateTopicConfigRequest) map[string]st
 	result["PROTO_SERVICES_EVENTBUS_UPDATE_TOPIC_CONFIG_REQUEST_TOPIC"] = v.Topic
 	result["PROTO_SERVICES_EVENTBUS_UPDATE_TOPIC_CONFIG_REQUEST_RETENTION_MS"] = strconv.FormatInt(v.RetentionMs, 10)
 	result["PROTO_SERVICES_EVENTBUS_UPDATE_TOPIC_CONFIG_REQUEST_PARTITION_COUNT"] = strconv.FormatInt(int64(v.PartitionCount), 10)
+	result["PROTO_SERVICES_EVENTBUS_UPDATE_TOPIC_CONFIG_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_UPDATE_TOPIC_CONFIG_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
@@ -3521,6 +7578,16 @@ func UpdateTopicConfigRequestFromEnvVar(env map[string]string) (*UpdateTopicConf
 			return nil, err
 		}
 		result.PartitionCount = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_UPDATE_TOPIC_CONFIG_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_UPDATE_TOPIC_CONFIG_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
 	}
 	return result, nil
 }
@@ -3585,6 +7652,8 @@ func ConsumerGroupInfoToEnvVar(v *ConsumerGroupInfo) map[string]string {
 	result["PROTO_SERVICES_EVENTBUS_CONSUMER_GROUP_INFO_GROUP_ID"] = v.GroupId
 	result["PROTO_SERVICES_EVENTBUS_CONSUMER_GROUP_INFO_STATE"] = v.State
 	result["PROTO_SERVICES_EVENTBUS_CONSUMER_GROUP_INFO_TOTAL_LAG"] = strconv.FormatInt(v.TotalLag, 10)
+	result["PROTO_SERVICES_EVENTBUS_CONSUMER_GROUP_INFO_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_CONSUMER_GROUP_INFO_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
@@ -3604,6 +7673,16 @@ func ConsumerGroupInfoFromEnvVar(env map[string]string) (*ConsumerGroupInfo, err
 		}
 		result.TotalLag = parsed
 	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_CONSUMER_GROUP_INFO_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_CONSUMER_GROUP_INFO_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
 	return result, nil
 }
 
@@ -3614,6 +7693,8 @@ func ConsumerGroupRequestToEnvVar(v *ConsumerGroupRequest) map[string]string {
 	}
 	result := make(map[string]string)
 	result["PROTO_SERVICES_EVENTBUS_CONSUMER_GROUP_REQUEST_GROUP_ID"] = v.GroupId
+	result["PROTO_SERVICES_EVENTBUS_CONSUMER_GROUP_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_CONSUMER_GROUP_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
@@ -3622,6 +7703,55 @@ func ConsumerGroupRequestFromEnvVar(env map[string]string) (*ConsumerGroupReques
 	result := &ConsumerGroupRequest{}
 	if val, ok := env["PROTO_SERVICES_EVENTBUS_CONSUMER_GROUP_REQUEST_GROUP_ID"]; ok && val != "" {
 		result.GroupId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_CONSUMER_GROUP_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_CONSUMER_GROUP_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// ListConsumerGroupsRequestToEnvVar converts ListConsumerGroupsRequest to environment variable key-value pairs.
+func ListConsumerGroupsRequestToEnvVar(v *ListConsumerGroupsRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_EVENTBUS_LIST_CONSUMER_GROUPS_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
+	result["PROTO_SERVICES_EVENTBUS_LIST_CONSUMER_GROUPS_REQUEST_PAGE_TOKEN"] = v.PageToken
+	result["PROTO_SERVICES_EVENTBUS_LIST_CONSUMER_GROUPS_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_LIST_CONSUMER_GROUPS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// ListConsumerGroupsRequestFromEnvVar creates ListConsumerGroupsRequest from environment variable key-value pairs.
+func ListConsumerGroupsRequestFromEnvVar(env map[string]string) (*ListConsumerGroupsRequest, error) {
+	result := &ListConsumerGroupsRequest{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_LIST_CONSUMER_GROUPS_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_LIST_CONSUMER_GROUPS_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_LIST_CONSUMER_GROUPS_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_LIST_CONSUMER_GROUPS_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
 	}
 	return result, nil
 }
@@ -3632,12 +7762,36 @@ func ListConsumerGroupsResponseToEnvVar(v *ListConsumerGroupsResponse) map[strin
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_EVENTBUS_LIST_CONSUMER_GROUPS_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_EVENTBUS_LIST_CONSUMER_GROUPS_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
+	result["PROTO_SERVICES_EVENTBUS_LIST_CONSUMER_GROUPS_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_LIST_CONSUMER_GROUPS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
 // ListConsumerGroupsResponseFromEnvVar creates ListConsumerGroupsResponse from environment variable key-value pairs.
 func ListConsumerGroupsResponseFromEnvVar(env map[string]string) (*ListConsumerGroupsResponse, error) {
 	result := &ListConsumerGroupsResponse{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_LIST_CONSUMER_GROUPS_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_LIST_CONSUMER_GROUPS_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_LIST_CONSUMER_GROUPS_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_LIST_CONSUMER_GROUPS_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
 	return result, nil
 }
 
@@ -3649,6 +7803,8 @@ func ResetConsumerGroupOffsetsRequestToEnvVar(v *ResetConsumerGroupOffsetsReques
 	result := make(map[string]string)
 	result["PROTO_SERVICES_EVENTBUS_RESET_CONSUMER_GROUP_OFFSETS_REQUEST_GROUP_ID"] = v.GroupId
 	result["PROTO_SERVICES_EVENTBUS_RESET_CONSUMER_GROUP_OFFSETS_REQUEST_TOPIC"] = v.Topic
+	result["PROTO_SERVICES_EVENTBUS_RESET_CONSUMER_GROUP_OFFSETS_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_RESET_CONSUMER_GROUP_OFFSETS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
@@ -3660,6 +7816,16 @@ func ResetConsumerGroupOffsetsRequestFromEnvVar(env map[string]string) (*ResetCo
 	}
 	if val, ok := env["PROTO_SERVICES_EVENTBUS_RESET_CONSUMER_GROUP_OFFSETS_REQUEST_TOPIC"]; ok && val != "" {
 		result.Topic = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_RESET_CONSUMER_GROUP_OFFSETS_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_RESET_CONSUMER_GROUP_OFFSETS_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
 	}
 	return result, nil
 }
@@ -3715,6 +7881,8 @@ func ClusterHealthResponseToEnvVar(v *ClusterHealthResponse) map[string]string {
 	result := make(map[string]string)
 	result["PROTO_SERVICES_EVENTBUS_CLUSTER_HEALTH_RESPONSE_BROKER_COUNT"] = strconv.FormatInt(int64(v.BrokerCount), 10)
 	result["PROTO_SERVICES_EVENTBUS_CLUSTER_HEALTH_RESPONSE_CONTROLLER_ID"] = strconv.FormatInt(int64(v.ControllerId), 10)
+	result["PROTO_SERVICES_EVENTBUS_CLUSTER_HEALTH_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_CLUSTER_HEALTH_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
@@ -3734,6 +7902,16 @@ func ClusterHealthResponseFromEnvVar(env map[string]string) (*ClusterHealthRespo
 			return nil, err
 		}
 		result.ControllerId = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_CLUSTER_HEALTH_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_CLUSTER_HEALTH_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
 	}
 	return result, nil
 }
@@ -3756,6 +7934,8 @@ func ConfigToEnvVar(v *Config) map[string]string {
 	result["PROTO_SERVICES_EVENTBUS_CONFIG_NODE_ID"] = strconv.FormatInt(int64(v.NodeId), 10)
 	result["PROTO_SERVICES_EVENTBUS_CONFIG_CLUSTER_SEED"] = v.ClusterSeed
 	result["PROTO_SERVICES_EVENTBUS_CONFIG_STATE_REFRESH_INTERVAL_SECONDS"] = strconv.FormatInt(int64(v.StateRefreshIntervalSeconds), 10)
+	result["PROTO_SERVICES_EVENTBUS_CONFIG_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_CONFIG_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
@@ -3838,6 +8018,16 @@ func ConfigFromEnvVar(env map[string]string) (*Config, error) {
 		}
 		result.StateRefreshIntervalSeconds = int32(parsed)
 	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_CONFIG_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_CONFIG_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
 	return result, nil
 }
 
@@ -3897,6 +8087,661 @@ func EventbusStateFromEnvVar(env map[string]string) (*EventbusState, error) {
 	return result, nil
 }
 
+// EventbusConfigStateToEnvVar converts EventbusConfigState to environment variable key-value pairs.
+func EventbusConfigStateToEnvVar(v *EventbusConfigState) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.Config != nil {
+		for k, val := range ConfigToEnvVar(v.Config) {
+			result[k] = val
+		}
+	}
+	return result
+}
+
+// EventbusConfigStateFromEnvVar creates EventbusConfigState from environment variable key-value pairs.
+func EventbusConfigStateFromEnvVar(env map[string]string) (*EventbusConfigState, error) {
+	result := &EventbusConfigState{}
+	if sub, err := ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Config = sub
+	}
+	return result, nil
+}
+
+// QueryValueToEnvVar converts QueryValue to environment variable key-value pairs.
+func QueryValueToEnvVar(v *QueryValue) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_EVENTBUS_QUERY_VALUE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_QUERY_VALUE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// QueryValueFromEnvVar creates QueryValue from environment variable key-value pairs.
+func QueryValueFromEnvVar(env map[string]string) (*QueryValue, error) {
+	result := &QueryValue{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_QUERY_VALUE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_QUERY_VALUE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PredicateToEnvVar converts Predicate to environment variable key-value pairs.
+func PredicateToEnvVar(v *Predicate) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_EVENTBUS_PREDICATE_FIELD_NAME"] = v.FieldName
+	result["PROTO_SERVICES_EVENTBUS_PREDICATE_OP"] = ComparisonOpToString(v.Op)
+	if v.Value != nil {
+		for k, val := range QueryValueToEnvVar(v.Value) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_EVENTBUS_PREDICATE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_PREDICATE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PredicateFromEnvVar creates Predicate from environment variable key-value pairs.
+func PredicateFromEnvVar(env map[string]string) (*Predicate, error) {
+	result := &Predicate{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_PREDICATE_FIELD_NAME"]; ok && val != "" {
+		result.FieldName = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_PREDICATE_OP"]; ok && val != "" {
+		parsed, err := ParseComparisonOp(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Op = parsed
+	}
+	if sub, err := QueryValueFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Value = sub
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_PREDICATE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_PREDICATE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PredicateGroupToEnvVar converts PredicateGroup to environment variable key-value pairs.
+func PredicateGroupToEnvVar(v *PredicateGroup) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_EVENTBUS_PREDICATE_GROUP_OP"] = LogicalOpToString(v.Op)
+	result["PROTO_SERVICES_EVENTBUS_PREDICATE_GROUP_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_PREDICATE_GROUP_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PredicateGroupFromEnvVar creates PredicateGroup from environment variable key-value pairs.
+func PredicateGroupFromEnvVar(env map[string]string) (*PredicateGroup, error) {
+	result := &PredicateGroup{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_PREDICATE_GROUP_OP"]; ok && val != "" {
+		parsed, err := ParseLogicalOp(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Op = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_PREDICATE_GROUP_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_PREDICATE_GROUP_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// SortFieldToEnvVar converts SortField to environment variable key-value pairs.
+func SortFieldToEnvVar(v *SortField) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_EVENTBUS_SORT_FIELD_FIELD_NAME"] = v.FieldName
+	result["PROTO_SERVICES_EVENTBUS_SORT_FIELD_DIRECTION"] = SortDirectionToString(v.Direction)
+	result["PROTO_SERVICES_EVENTBUS_SORT_FIELD_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_SORT_FIELD_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// SortFieldFromEnvVar creates SortField from environment variable key-value pairs.
+func SortFieldFromEnvVar(env map[string]string) (*SortField, error) {
+	result := &SortField{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_SORT_FIELD_FIELD_NAME"]; ok && val != "" {
+		result.FieldName = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_SORT_FIELD_DIRECTION"]; ok && val != "" {
+		parsed, err := ParseSortDirection(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Direction = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_SORT_FIELD_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_SORT_FIELD_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// CollectionQueryToEnvVar converts CollectionQuery to environment variable key-value pairs.
+func CollectionQueryToEnvVar(v *CollectionQuery) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.Where != nil {
+		for k, val := range PredicateGroupToEnvVar(v.Where) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_EVENTBUS_COLLECTION_QUERY_LIMIT"] = strconv.FormatInt(int64(v.Limit), 10)
+	result["PROTO_SERVICES_EVENTBUS_COLLECTION_QUERY_OFFSET"] = strconv.FormatInt(int64(v.Offset), 10)
+	result["PROTO_SERVICES_EVENTBUS_COLLECTION_QUERY_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_COLLECTION_QUERY_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// CollectionQueryFromEnvVar creates CollectionQuery from environment variable key-value pairs.
+func CollectionQueryFromEnvVar(env map[string]string) (*CollectionQuery, error) {
+	result := &CollectionQuery{}
+	if sub, err := PredicateGroupFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Where = sub
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_COLLECTION_QUERY_LIMIT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.Limit = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_COLLECTION_QUERY_OFFSET"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.Offset = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_COLLECTION_QUERY_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_COLLECTION_QUERY_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// NodesGetRequestToEnvVar converts NodesGetRequest to environment variable key-value pairs.
+func NodesGetRequestToEnvVar(v *NodesGetRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_EVENTBUS_NODES_GET_REQUEST_KEY"] = v.Key
+	result["PROTO_SERVICES_EVENTBUS_NODES_GET_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_NODES_GET_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// NodesGetRequestFromEnvVar creates NodesGetRequest from environment variable key-value pairs.
+func NodesGetRequestFromEnvVar(env map[string]string) (*NodesGetRequest, error) {
+	result := &NodesGetRequest{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_GET_REQUEST_KEY"]; ok && val != "" {
+		result.Key = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_GET_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_GET_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// NodesPutRequestToEnvVar converts NodesPutRequest to environment variable key-value pairs.
+func NodesPutRequestToEnvVar(v *NodesPutRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_EVENTBUS_NODES_PUT_REQUEST_KEY"] = v.Key
+	if v.Value != nil {
+		for k, val := range EventbusNodeToEnvVar(v.Value) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_EVENTBUS_NODES_PUT_REQUEST_LOCK_COUNTER"] = strconv.FormatInt(v.LockCounter, 10)
+	result["PROTO_SERVICES_EVENTBUS_NODES_PUT_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_NODES_PUT_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// NodesPutRequestFromEnvVar creates NodesPutRequest from environment variable key-value pairs.
+func NodesPutRequestFromEnvVar(env map[string]string) (*NodesPutRequest, error) {
+	result := &NodesPutRequest{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_PUT_REQUEST_KEY"]; ok && val != "" {
+		result.Key = val
+	}
+	if sub, err := EventbusNodeFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Value = sub
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_PUT_REQUEST_LOCK_COUNTER"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.LockCounter = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_PUT_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_PUT_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// NodesGetAllRequestToEnvVar converts NodesGetAllRequest to environment variable key-value pairs.
+func NodesGetAllRequestToEnvVar(v *NodesGetAllRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_EVENTBUS_NODES_GET_ALL_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_NODES_GET_ALL_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// NodesGetAllRequestFromEnvVar creates NodesGetAllRequest from environment variable key-value pairs.
+func NodesGetAllRequestFromEnvVar(env map[string]string) (*NodesGetAllRequest, error) {
+	result := &NodesGetAllRequest{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_GET_ALL_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_GET_ALL_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// NodesKeysRequestToEnvVar converts NodesKeysRequest to environment variable key-value pairs.
+func NodesKeysRequestToEnvVar(v *NodesKeysRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_EVENTBUS_NODES_KEYS_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_NODES_KEYS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// NodesKeysRequestFromEnvVar creates NodesKeysRequest from environment variable key-value pairs.
+func NodesKeysRequestFromEnvVar(env map[string]string) (*NodesKeysRequest, error) {
+	result := &NodesKeysRequest{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_KEYS_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_KEYS_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// NodesSizeRequestToEnvVar converts NodesSizeRequest to environment variable key-value pairs.
+func NodesSizeRequestToEnvVar(v *NodesSizeRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_EVENTBUS_NODES_SIZE_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_NODES_SIZE_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// NodesSizeRequestFromEnvVar creates NodesSizeRequest from environment variable key-value pairs.
+func NodesSizeRequestFromEnvVar(env map[string]string) (*NodesSizeRequest, error) {
+	result := &NodesSizeRequest{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_SIZE_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_SIZE_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// NodesClearRequestToEnvVar converts NodesClearRequest to environment variable key-value pairs.
+func NodesClearRequestToEnvVar(v *NodesClearRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_EVENTBUS_NODES_CLEAR_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_NODES_CLEAR_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// NodesClearRequestFromEnvVar creates NodesClearRequest from environment variable key-value pairs.
+func NodesClearRequestFromEnvVar(env map[string]string) (*NodesClearRequest, error) {
+	result := &NodesClearRequest{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_CLEAR_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_CLEAR_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// NodesValueResponseToEnvVar converts NodesValueResponse to environment variable key-value pairs.
+func NodesValueResponseToEnvVar(v *NodesValueResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.Value != nil {
+		for k, val := range EventbusNodeToEnvVar(v.Value) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_EVENTBUS_NODES_VALUE_RESPONSE_FOUND"] = strconv.FormatBool(v.Found)
+	result["PROTO_SERVICES_EVENTBUS_NODES_VALUE_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_NODES_VALUE_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// NodesValueResponseFromEnvVar creates NodesValueResponse from environment variable key-value pairs.
+func NodesValueResponseFromEnvVar(env map[string]string) (*NodesValueResponse, error) {
+	result := &NodesValueResponse{}
+	if sub, err := EventbusNodeFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Value = sub
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_VALUE_RESPONSE_FOUND"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Found = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_VALUE_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_VALUE_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// NodesEntriesResponseToEnvVar converts NodesEntriesResponse to environment variable key-value pairs.
+func NodesEntriesResponseToEnvVar(v *NodesEntriesResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_EVENTBUS_NODES_ENTRIES_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_NODES_ENTRIES_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// NodesEntriesResponseFromEnvVar creates NodesEntriesResponse from environment variable key-value pairs.
+func NodesEntriesResponseFromEnvVar(env map[string]string) (*NodesEntriesResponse, error) {
+	result := &NodesEntriesResponse{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_ENTRIES_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_ENTRIES_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// NodesKeysResponseToEnvVar converts NodesKeysResponse to environment variable key-value pairs.
+func NodesKeysResponseToEnvVar(v *NodesKeysResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if len(v.Keys) > 0 {
+		result["PROTO_SERVICES_EVENTBUS_NODES_KEYS_RESPONSE_KEYS"] = strings.Join(v.Keys, ",")
+	}
+	result["PROTO_SERVICES_EVENTBUS_NODES_KEYS_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_NODES_KEYS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// NodesKeysResponseFromEnvVar creates NodesKeysResponse from environment variable key-value pairs.
+func NodesKeysResponseFromEnvVar(env map[string]string) (*NodesKeysResponse, error) {
+	result := &NodesKeysResponse{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_KEYS_RESPONSE_KEYS"]; ok && val != "" {
+		result.Keys = strings.Split(val, ",")
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_KEYS_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_KEYS_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// NodesSizeResponseToEnvVar converts NodesSizeResponse to environment variable key-value pairs.
+func NodesSizeResponseToEnvVar(v *NodesSizeResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_EVENTBUS_NODES_SIZE_RESPONSE_SIZE"] = strconv.FormatInt(int64(v.Size), 10)
+	result["PROTO_SERVICES_EVENTBUS_NODES_SIZE_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_NODES_SIZE_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// NodesSizeResponseFromEnvVar creates NodesSizeResponse from environment variable key-value pairs.
+func NodesSizeResponseFromEnvVar(env map[string]string) (*NodesSizeResponse, error) {
+	result := &NodesSizeResponse{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_SIZE_RESPONSE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.Size = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_SIZE_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_SIZE_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// NodesQueryRequestToEnvVar converts NodesQueryRequest to environment variable key-value pairs.
+func NodesQueryRequestToEnvVar(v *NodesQueryRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.Query != nil {
+		for k, val := range CollectionQueryToEnvVar(v.Query) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_EVENTBUS_NODES_QUERY_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_NODES_QUERY_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// NodesQueryRequestFromEnvVar creates NodesQueryRequest from environment variable key-value pairs.
+func NodesQueryRequestFromEnvVar(env map[string]string) (*NodesQueryRequest, error) {
+	result := &NodesQueryRequest{}
+	if sub, err := CollectionQueryFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Query = sub
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_QUERY_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_QUERY_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// NodesQueryResponseToEnvVar converts NodesQueryResponse to environment variable key-value pairs.
+func NodesQueryResponseToEnvVar(v *NodesQueryResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_EVENTBUS_NODES_QUERY_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(int64(v.TotalCount), 10)
+	result["PROTO_SERVICES_EVENTBUS_NODES_QUERY_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_NODES_QUERY_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// NodesQueryResponseFromEnvVar creates NodesQueryResponse from environment variable key-value pairs.
+func NodesQueryResponseFromEnvVar(env map[string]string) (*NodesQueryResponse, error) {
+	result := &NodesQueryResponse{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_QUERY_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_QUERY_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_NODES_QUERY_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// MapEmptyToEnvVar converts MapEmpty to environment variable key-value pairs.
+func MapEmptyToEnvVar(v *MapEmpty) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_EVENTBUS_MAP_EMPTY_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_EVENTBUS_MAP_EMPTY_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// MapEmptyFromEnvVar creates MapEmpty from environment variable key-value pairs.
+func MapEmptyFromEnvVar(env map[string]string) (*MapEmpty, error) {
+	result := &MapEmpty{}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_MAP_EMPTY_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_EVENTBUS_MAP_EMPTY_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
 // ============================================================
 // Validation Helpers
 // ============================================================
@@ -3933,13 +8778,13 @@ func ValidateSubscribeRequestWithDepth(m *SubscribeRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Backpressure must be defined")
 	}
 
-	// Validate SampleInterval (assert_ge: 1)
-	if m.SampleInterval < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field SampleInterval must be >= 1, got: %v", m.SampleInterval)
-	}
 	// Validate SampleInterval (assert_le: 10000)
 	if m.SampleInterval > 10000 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SampleInterval must be <= 10000, got: %v", m.SampleInterval)
+	}
+	// Validate SampleInterval (assert_ge: 1)
+	if m.SampleInterval < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SampleInterval must be >= 1, got: %v", m.SampleInterval)
 	}
 	// Validate Partitions (assert_max_size: 256)
 	if len(m.Partitions) > 256 {
@@ -4002,14 +8847,14 @@ func ValidateRecordMetaWithDepth(m *RecordMeta, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Key (assert_max_length: 256)
-	if len(m.Key) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Key must be at most 256 characters, got: %d", len(m.Key))
+	// Validate Topic (assert_required)
+	if m.Topic == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Topic is required")
 	}
 
-	// Validate Headers (assert_max_size: 64)
-	if len(m.Headers) > 64 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Headers exceeds max size of 64, got: %d", len(m.Headers))
+	// Validate Topic (assert_max_length: 256)
+	if len(m.Topic) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Topic must be at most 256 characters, got: %d", len(m.Topic))
 	}
 
 	// Validate Partition (assert_ge: 0)
@@ -4020,23 +8865,14 @@ func ValidateRecordMetaWithDepth(m *RecordMeta, depth int) error {
 	if m.Offset < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Offset must be >= 0, got: %v", m.Offset)
 	}
-	// Validate Headers keys (default max size: 32768 bytes)
-	for key := range m.Headers {
-		if len(key) > 32768 {
-			return protoerrors.NewErrMissingInvalidData(nil, "field Headers key exceeds max size of 32768 bytes, got: %d", len(key))
-		}
-	}
-
-	// Validate Headers values (default max size: 32768 bytes)
-	for key, val := range m.Headers {
-		if len(val) > 32768 {
-			return protoerrors.NewErrMissingInvalidData(nil, "field Headers[%v] exceeds max size of 32768 bytes, got: %d", key, len(val))
-		}
-	}
-
 	// Validate Key (default max size: 32768 bytes)
 	if len(m.Key) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Key exceeds max size of 32768 bytes, got: %d", len(m.Key))
+	}
+
+	// Validate Topic (default max size: 32768 bytes)
+	if len(m.Topic) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Topic exceeds max size of 32768 bytes, got: %d", len(m.Topic))
 	}
 
 	return nil
@@ -4091,6 +8927,11 @@ func ValidateTopicInfoWithDepth(m *TopicInfo, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Name exceeds max size of 32768 bytes, got: %d", len(m.Name))
 	}
 
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
 	return nil
 }
 
@@ -4125,6 +8966,40 @@ func ValidateTopicInfoRequestWithDepth(m *TopicInfoRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Topic exceeds max size of 32768 bytes, got: %d", len(m.Topic))
 	}
 
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateListTopicsRequest validates all fields in ListTopicsRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateListTopicsRequest(m *ListTopicsRequest) error {
+	return ValidateListTopicsRequestWithDepth(m, 0)
+}
+
+// ValidateListTopicsRequestWithDepth validates ListTopicsRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateListTopicsRequestWithDepth(m *ListTopicsRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
 	return nil
 }
 
@@ -4144,9 +9019,19 @@ func ValidateListTopicsResponseWithDepth(m *ListTopicsResponse, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Topics (assert_max_size: 1024)
-	if len(m.Topics) > 1024 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Topics exceeds max size of 1024, got: %d", len(m.Topics))
+	// Validate Topics (assert_max_size: 4096)
+	if len(m.Topics) > 4096 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Topics exceeds max size of 4096, got: %d", len(m.Topics))
+	}
+
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
 	}
 
 	// Validate Topics nested messages
@@ -4190,6 +9075,11 @@ func ValidateDeleteTopicRequestWithDepth(m *DeleteTopicRequest, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field Topic exceeds max size of 32768 bytes, got: %d", len(m.Topic))
 	}
 
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
 	return nil
 }
 
@@ -4209,14 +9099,14 @@ func ValidateUpdateTopicConfigRequestWithDepth(m *UpdateTopicConfigRequest, dept
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Topic (assert_required)
-	if m.Topic == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Topic is required")
-	}
-
 	// Validate Topic (assert_max_length: 256)
 	if len(m.Topic) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Topic must be at most 256 characters, got: %d", len(m.Topic))
+	}
+
+	// Validate Topic (assert_required)
+	if m.Topic == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Topic is required")
 	}
 
 	// Validate RetentionMs (assert_ge: -1)
@@ -4234,6 +9124,11 @@ func ValidateUpdateTopicConfigRequestWithDepth(m *UpdateTopicConfigRequest, dept
 	// Validate Topic (default max size: 32768 bytes)
 	if len(m.Topic) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Topic exceeds max size of 32768 bytes, got: %d", len(m.Topic))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
 	}
 
 	return nil
@@ -4339,6 +9234,11 @@ func ValidateConsumerGroupInfoWithDepth(m *ConsumerGroupInfo, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field State exceeds max size of 32768 bytes, got: %d", len(m.State))
 	}
 
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
 	// Validate Partitions nested messages
 	for i, val := range m.Partitions {
 		if err := ValidatePartitionLagWithDepth(val, depth+1); err != nil {
@@ -4380,6 +9280,40 @@ func ValidateConsumerGroupRequestWithDepth(m *ConsumerGroupRequest, depth int) e
 		return protoerrors.NewErrMissingInvalidData(nil, "field GroupId exceeds max size of 32768 bytes, got: %d", len(m.GroupId))
 	}
 
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateListConsumerGroupsRequest validates all fields in ListConsumerGroupsRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateListConsumerGroupsRequest(m *ListConsumerGroupsRequest) error {
+	return ValidateListConsumerGroupsRequestWithDepth(m, 0)
+}
+
+// ValidateListConsumerGroupsRequestWithDepth validates ListConsumerGroupsRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateListConsumerGroupsRequestWithDepth(m *ListConsumerGroupsRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
 	return nil
 }
 
@@ -4399,9 +9333,19 @@ func ValidateListConsumerGroupsResponseWithDepth(m *ListConsumerGroupsResponse, 
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Groups (assert_max_size: 1024)
-	if len(m.Groups) > 1024 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Groups exceeds max size of 1024, got: %d", len(m.Groups))
+	// Validate Groups (assert_max_size: 4096)
+	if len(m.Groups) > 4096 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Groups exceeds max size of 4096, got: %d", len(m.Groups))
+	}
+
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
 	}
 
 	// Validate Groups nested messages
@@ -4440,14 +9384,14 @@ func ValidateResetConsumerGroupOffsetsRequestWithDepth(m *ResetConsumerGroupOffs
 		return protoerrors.NewErrMissingInvalidData(nil, "field GroupId must be at most 256 characters, got: %d", len(m.GroupId))
 	}
 
-	// Validate Topic (assert_required)
-	if m.Topic == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Topic is required")
-	}
-
 	// Validate Topic (assert_max_length: 256)
 	if len(m.Topic) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Topic must be at most 256 characters, got: %d", len(m.Topic))
+	}
+
+	// Validate Topic (assert_required)
+	if m.Topic == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Topic is required")
 	}
 
 	// Validate GroupId (default max size: 32768 bytes)
@@ -4458,6 +9402,11 @@ func ValidateResetConsumerGroupOffsetsRequestWithDepth(m *ResetConsumerGroupOffs
 	// Validate Topic (default max size: 32768 bytes)
 	if len(m.Topic) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Topic exceeds max size of 32768 bytes, got: %d", len(m.Topic))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
 	}
 
 	return nil
@@ -4483,14 +9432,14 @@ func ValidateBrokerInfoWithDepth(m *BrokerInfo, depth int) error {
 	if m.Id < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Id must be >= 0, got: %v", m.Id)
 	}
-	// Validate Host (assert_max_length: 256)
-	if len(m.Host) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Host must be at most 256 characters, got: %d", len(m.Host))
-	}
-
 	// Validate Host (assert_required)
 	if m.Host == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Host is required")
+	}
+
+	// Validate Host (assert_max_length: 256)
+	if len(m.Host) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Host must be at most 256 characters, got: %d", len(m.Host))
 	}
 
 	// Validate Port (assert_ge: 1)
@@ -4538,6 +9487,11 @@ func ValidateClusterHealthResponseWithDepth(m *ClusterHealthResponse, depth int)
 	if m.ControllerId < -1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ControllerId must be >= -1, got: %v", m.ControllerId)
 	}
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
 	// Validate Brokers nested messages
 	for i, val := range m.Brokers {
 		if err := ValidateBrokerInfoWithDepth(val, depth+1); err != nil {
@@ -4648,6 +9602,11 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ClusterSeed exceeds max size of 32768 bytes, got: %d", len(m.ClusterSeed))
 	}
 
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
 	// Validate NodeRole enum value is known
 	if _, ok := KafkaNodeRole_name[int32(m.NodeRole)]; !ok {
 		return protoerrors.NewErrMissingInvalidData(nil, "field NodeRole has unknown enum value %d", int32(m.NodeRole))
@@ -4727,6 +9686,630 @@ func ValidateEventbusStateWithDepth(m *EventbusState, depth int) error {
 	return nil
 }
 
+// ValidateEventbusConfigState validates all fields in EventbusConfigState according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateEventbusConfigState(m *EventbusConfigState) error {
+	return ValidateEventbusConfigStateWithDepth(m, 0)
+}
+
+// ValidateEventbusConfigStateWithDepth validates EventbusConfigState and carries nested-message depth across
+// generated package boundaries.
+func ValidateEventbusConfigStateWithDepth(m *EventbusConfigState, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Config nested message
+	if m.Config != nil {
+		if err := ValidateConfigWithDepth(m.Config, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Config validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidateQueryValue validates all fields in QueryValue according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateQueryValue(m *QueryValue) error {
+	return ValidateQueryValueWithDepth(m, 0)
+}
+
+// ValidateQueryValueWithDepth validates QueryValue and carries nested-message depth across
+// generated package boundaries.
+func ValidateQueryValueWithDepth(m *QueryValue, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate StringValue (default max size: 32768 bytes)
+	if len(m.GetStringValue()) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field StringValue exceeds max size of 32768 bytes, got: %d", len(m.GetStringValue()))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePredicate validates all fields in Predicate according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePredicate(m *Predicate) error {
+	return ValidatePredicateWithDepth(m, 0)
+}
+
+// ValidatePredicateWithDepth validates Predicate and carries nested-message depth across
+// generated package boundaries.
+func ValidatePredicateWithDepth(m *Predicate, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Values (default max size: 1024 elements)
+	if len(m.Values) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Values exceeds max size of 1024 elements, got: %d", len(m.Values))
+	}
+
+	// Validate FieldName (default max size: 32768 bytes)
+	if len(m.FieldName) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field FieldName exceeds max size of 32768 bytes, got: %d", len(m.FieldName))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Op enum value is known
+	if _, ok := ComparisonOp_name[int32(m.Op)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Op has unknown enum value %d", int32(m.Op))
+	}
+
+	// Validate Value nested message
+	if m.Value != nil {
+		if err := ValidateQueryValueWithDepth(m.Value, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Value validation failed")
+		}
+	}
+
+	// Validate Values nested messages
+	for i, val := range m.Values {
+		if err := ValidateQueryValueWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Values[%d] validation failed", i)
+		}
+	}
+
+	return nil
+}
+
+// ValidatePredicateGroup validates all fields in PredicateGroup according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePredicateGroup(m *PredicateGroup) error {
+	return ValidatePredicateGroupWithDepth(m, 0)
+}
+
+// ValidatePredicateGroupWithDepth validates PredicateGroup and carries nested-message depth across
+// generated package boundaries.
+func ValidatePredicateGroupWithDepth(m *PredicateGroup, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Predicates (default max size: 1024 elements)
+	if len(m.Predicates) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Predicates exceeds max size of 1024 elements, got: %d", len(m.Predicates))
+	}
+
+	// Validate Groups (default max size: 1024 elements)
+	if len(m.Groups) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Groups exceeds max size of 1024 elements, got: %d", len(m.Groups))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Op enum value is known
+	if _, ok := LogicalOp_name[int32(m.Op)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Op has unknown enum value %d", int32(m.Op))
+	}
+
+	// Validate Predicates nested messages
+	for i, val := range m.Predicates {
+		if err := ValidatePredicateWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Predicates[%d] validation failed", i)
+		}
+	}
+
+	// Validate Groups nested messages
+	for i, val := range m.Groups {
+		if err := ValidatePredicateGroupWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Groups[%d] validation failed", i)
+		}
+	}
+
+	return nil
+}
+
+// ValidateSortField validates all fields in SortField according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateSortField(m *SortField) error {
+	return ValidateSortFieldWithDepth(m, 0)
+}
+
+// ValidateSortFieldWithDepth validates SortField and carries nested-message depth across
+// generated package boundaries.
+func ValidateSortFieldWithDepth(m *SortField, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate FieldName (default max size: 32768 bytes)
+	if len(m.FieldName) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field FieldName exceeds max size of 32768 bytes, got: %d", len(m.FieldName))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Direction enum value is known
+	if _, ok := SortDirection_name[int32(m.Direction)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Direction has unknown enum value %d", int32(m.Direction))
+	}
+
+	return nil
+}
+
+// ValidateCollectionQuery validates all fields in CollectionQuery according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateCollectionQuery(m *CollectionQuery) error {
+	return ValidateCollectionQueryWithDepth(m, 0)
+}
+
+// ValidateCollectionQueryWithDepth validates CollectionQuery and carries nested-message depth across
+// generated package boundaries.
+func ValidateCollectionQueryWithDepth(m *CollectionQuery, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate OrderBy (default max size: 1024 elements)
+	if len(m.OrderBy) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field OrderBy exceeds max size of 1024 elements, got: %d", len(m.OrderBy))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Where nested message
+	if m.Where != nil {
+		if err := ValidatePredicateGroupWithDepth(m.Where, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Where validation failed")
+		}
+	}
+
+	// Validate OrderBy nested messages
+	for i, val := range m.OrderBy {
+		if err := ValidateSortFieldWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field OrderBy[%d] validation failed", i)
+		}
+	}
+
+	return nil
+}
+
+// ValidateNodesGetRequest validates all fields in NodesGetRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateNodesGetRequest(m *NodesGetRequest) error {
+	return ValidateNodesGetRequestWithDepth(m, 0)
+}
+
+// ValidateNodesGetRequestWithDepth validates NodesGetRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateNodesGetRequestWithDepth(m *NodesGetRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Key (default max size: 32768 bytes)
+	if len(m.Key) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key exceeds max size of 32768 bytes, got: %d", len(m.Key))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateNodesPutRequest validates all fields in NodesPutRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateNodesPutRequest(m *NodesPutRequest) error {
+	return ValidateNodesPutRequestWithDepth(m, 0)
+}
+
+// ValidateNodesPutRequestWithDepth validates NodesPutRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateNodesPutRequestWithDepth(m *NodesPutRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Key (default max size: 32768 bytes)
+	if len(m.Key) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key exceeds max size of 32768 bytes, got: %d", len(m.Key))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Value nested message
+	if m.Value != nil {
+		if err := ValidateEventbusNodeWithDepth(m.Value, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Value validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidateNodesGetAllRequest validates all fields in NodesGetAllRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateNodesGetAllRequest(m *NodesGetAllRequest) error {
+	return ValidateNodesGetAllRequestWithDepth(m, 0)
+}
+
+// ValidateNodesGetAllRequestWithDepth validates NodesGetAllRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateNodesGetAllRequestWithDepth(m *NodesGetAllRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateNodesKeysRequest validates all fields in NodesKeysRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateNodesKeysRequest(m *NodesKeysRequest) error {
+	return ValidateNodesKeysRequestWithDepth(m, 0)
+}
+
+// ValidateNodesKeysRequestWithDepth validates NodesKeysRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateNodesKeysRequestWithDepth(m *NodesKeysRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateNodesSizeRequest validates all fields in NodesSizeRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateNodesSizeRequest(m *NodesSizeRequest) error {
+	return ValidateNodesSizeRequestWithDepth(m, 0)
+}
+
+// ValidateNodesSizeRequestWithDepth validates NodesSizeRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateNodesSizeRequestWithDepth(m *NodesSizeRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateNodesClearRequest validates all fields in NodesClearRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateNodesClearRequest(m *NodesClearRequest) error {
+	return ValidateNodesClearRequestWithDepth(m, 0)
+}
+
+// ValidateNodesClearRequestWithDepth validates NodesClearRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateNodesClearRequestWithDepth(m *NodesClearRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateNodesValueResponse validates all fields in NodesValueResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateNodesValueResponse(m *NodesValueResponse) error {
+	return ValidateNodesValueResponseWithDepth(m, 0)
+}
+
+// ValidateNodesValueResponseWithDepth validates NodesValueResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateNodesValueResponseWithDepth(m *NodesValueResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Value nested message
+	if m.Value != nil {
+		if err := ValidateEventbusNodeWithDepth(m.Value, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Value validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidateNodesEntriesResponse validates all fields in NodesEntriesResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateNodesEntriesResponse(m *NodesEntriesResponse) error {
+	return ValidateNodesEntriesResponseWithDepth(m, 0)
+}
+
+// ValidateNodesEntriesResponseWithDepth validates NodesEntriesResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateNodesEntriesResponseWithDepth(m *NodesEntriesResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Entries (default max size: 1024 elements)
+	if len(m.Entries) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Entries exceeds max size of 1024 elements, got: %d", len(m.Entries))
+	}
+
+	// Validate Entries keys (default max size: 32768 bytes)
+	for key := range m.Entries {
+		if len(key) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field Entries key exceeds max size of 32768 bytes, got: %d", len(key))
+		}
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Entries message values
+	for key, val := range m.Entries {
+		if err := ValidateEventbusNodeWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Entries[%v] validation failed", key)
+		}
+	}
+
+	return nil
+}
+
+// ValidateNodesKeysResponse validates all fields in NodesKeysResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateNodesKeysResponse(m *NodesKeysResponse) error {
+	return ValidateNodesKeysResponseWithDepth(m, 0)
+}
+
+// ValidateNodesKeysResponseWithDepth validates NodesKeysResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateNodesKeysResponseWithDepth(m *NodesKeysResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Keys (default max size: 1024 elements)
+	if len(m.Keys) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Keys exceeds max size of 1024 elements, got: %d", len(m.Keys))
+	}
+
+	// Validate Keys elements (default max size: 32768 bytes)
+	for i, val := range m.Keys {
+		if len(val) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field Keys[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
+		}
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateNodesSizeResponse validates all fields in NodesSizeResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateNodesSizeResponse(m *NodesSizeResponse) error {
+	return ValidateNodesSizeResponseWithDepth(m, 0)
+}
+
+// ValidateNodesSizeResponseWithDepth validates NodesSizeResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateNodesSizeResponseWithDepth(m *NodesSizeResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateNodesQueryRequest validates all fields in NodesQueryRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateNodesQueryRequest(m *NodesQueryRequest) error {
+	return ValidateNodesQueryRequestWithDepth(m, 0)
+}
+
+// ValidateNodesQueryRequestWithDepth validates NodesQueryRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateNodesQueryRequestWithDepth(m *NodesQueryRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Query nested message
+	if m.Query != nil {
+		if err := ValidateCollectionQueryWithDepth(m.Query, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Query validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidateNodesQueryResponse validates all fields in NodesQueryResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateNodesQueryResponse(m *NodesQueryResponse) error {
+	return ValidateNodesQueryResponseWithDepth(m, 0)
+}
+
+// ValidateNodesQueryResponseWithDepth validates NodesQueryResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateNodesQueryResponseWithDepth(m *NodesQueryResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Results (default max size: 1024 elements)
+	if len(m.Results) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Results exceeds max size of 1024 elements, got: %d", len(m.Results))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Results nested messages
+	for i, val := range m.Results {
+		if err := ValidateEventbusNodeWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Results[%d] validation failed", i)
+		}
+	}
+
+	return nil
+}
+
+// ValidateMapEmpty validates all fields in MapEmpty according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateMapEmpty(m *MapEmpty) error {
+	return ValidateMapEmptyWithDepth(m, 0)
+}
+
+// ValidateMapEmptyWithDepth validates MapEmpty and carries nested-message depth across
+// generated package boundaries.
+func ValidateMapEmptyWithDepth(m *MapEmpty, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
 // File path validation helpers
 func validateFilePathPATH_ABSOLUTE(path string) error {
 	if !filepath.IsAbs(path) {
@@ -4781,27 +10364,74 @@ const (
 	MaxSizeSubscriberequestConsumerGroup           int = 32768
 	MaxSizeSubscriberequestPartitions              int = 256
 	MaxSizeRecordmetaKey                           int = 32768
-	MaxSizeRecordmetaHeaders                       int = 64
+	MaxSizeRecordmetaTopic                         int = 32768
 	MaxSizeTopicinfoName                           int = 32768
 	MaxSizeTopicinfoEarliestOffsets                int = 256
 	MaxSizeTopicinfoLatestOffsets                  int = 256
+	MaxSizeTopicinfoTraceId                        int = 32768
 	MaxSizeTopicinforequestTopic                   int = 32768
-	MaxSizeListtopicsresponseTopics                int = 1024
+	MaxSizeTopicinforequestTraceId                 int = 32768
+	MaxSizeListtopicsrequestPageToken              int = 32768
+	MaxSizeListtopicsrequestTraceId                int = 32768
+	MaxSizeListtopicsresponseTopics                int = 4096
+	MaxSizeListtopicsresponseNextPageToken         int = 32768
+	MaxSizeListtopicsresponseTraceId               int = 32768
 	MaxSizeDeletetopicrequestTopic                 int = 32768
+	MaxSizeDeletetopicrequestTraceId               int = 32768
 	MaxSizeUpdatetopicconfigrequestTopic           int = 32768
+	MaxSizeUpdatetopicconfigrequestTraceId         int = 32768
 	MaxSizePartitionlagTopic                       int = 32768
 	MaxSizeConsumergroupinfoGroupId                int = 32768
 	MaxSizeConsumergroupinfoState                  int = 32768
 	MaxSizeConsumergroupinfoPartitions             int = 1024
+	MaxSizeConsumergroupinfoTraceId                int = 32768
 	MaxSizeConsumergrouprequestGroupId             int = 32768
-	MaxSizeListconsumergroupsresponseGroups        int = 1024
+	MaxSizeConsumergrouprequestTraceId             int = 32768
+	MaxSizeListconsumergroupsrequestPageToken      int = 32768
+	MaxSizeListconsumergroupsrequestTraceId        int = 32768
+	MaxSizeListconsumergroupsresponseGroups        int = 4096
+	MaxSizeListconsumergroupsresponseNextPageToken int = 32768
+	MaxSizeListconsumergroupsresponseTraceId       int = 32768
 	MaxSizeResetconsumergroupoffsetsrequestGroupId int = 32768
 	MaxSizeResetconsumergroupoffsetsrequestTopic   int = 32768
+	MaxSizeResetconsumergroupoffsetsrequestTraceId int = 32768
 	MaxSizeBrokerinfoHost                          int = 32768
 	MaxSizeClusterhealthresponseBrokers            int = 64
+	MaxSizeClusterhealthresponseTraceId            int = 32768
 	MaxSizeConfigDataDir                           int = 32768
 	MaxSizeConfigClusterSeed                       int = 32768
+	MaxSizeConfigTraceId                           int = 32768
 	MaxSizeEventbusstateNodes                      int = 32
+	MaxSizeQueryvalueStringValue                   int = 32768
+	MaxSizeQueryvalueTraceId                       int = 32768
+	MaxSizePredicateFieldName                      int = 32768
+	MaxSizePredicateValues                         int = 1024
+	MaxSizePredicateTraceId                        int = 32768
+	MaxSizePredicategroupPredicates                int = 1024
+	MaxSizePredicategroupGroups                    int = 1024
+	MaxSizePredicategroupTraceId                   int = 32768
+	MaxSizeSortfieldFieldName                      int = 32768
+	MaxSizeSortfieldTraceId                        int = 32768
+	MaxSizeCollectionqueryOrderBy                  int = 1024
+	MaxSizeCollectionqueryTraceId                  int = 32768
+	MaxSizeNodesgetrequestKey                      int = 32768
+	MaxSizeNodesgetrequestTraceId                  int = 32768
+	MaxSizeNodesputrequestKey                      int = 32768
+	MaxSizeNodesputrequestTraceId                  int = 32768
+	MaxSizeNodesgetallrequestTraceId               int = 32768
+	MaxSizeNodeskeysrequestTraceId                 int = 32768
+	MaxSizeNodessizerequestTraceId                 int = 32768
+	MaxSizeNodesclearrequestTraceId                int = 32768
+	MaxSizeNodesvalueresponseTraceId               int = 32768
+	MaxSizeNodesentriesresponseEntries             int = 1024
+	MaxSizeNodesentriesresponseTraceId             int = 32768
+	MaxSizeNodeskeysresponseKeys                   int = 1024
+	MaxSizeNodeskeysresponseTraceId                int = 32768
+	MaxSizeNodessizeresponseTraceId                int = 32768
+	MaxSizeNodesqueryrequestTraceId                int = 32768
+	MaxSizeNodesqueryresponseResults               int = 1024
+	MaxSizeNodesqueryresponseTraceId               int = 32768
+	MaxSizeMapemptyTraceId                         int = 32768
 )
 
 // ============================================================
@@ -4852,6 +10482,16 @@ func TopicInfoDefaults(v *TopicInfo) {
 // ============================================================
 // TopicInfoRequestDefaults applies field-level default values to zero-valued fields.
 func TopicInfoRequestDefaults(v *TopicInfoRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: ListTopicsRequest
+// ============================================================
+// ListTopicsRequestDefaults applies field-level default values to zero-valued fields.
+func ListTopicsRequestDefaults(v *ListTopicsRequest) {
 	if v == nil {
 		return
 	}
@@ -4912,6 +10552,16 @@ func ConsumerGroupInfoDefaults(v *ConsumerGroupInfo) {
 // ============================================================
 // ConsumerGroupRequestDefaults applies field-level default values to zero-valued fields.
 func ConsumerGroupRequestDefaults(v *ConsumerGroupRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: ListConsumerGroupsRequest
+// ============================================================
+// ListConsumerGroupsRequestDefaults applies field-level default values to zero-valued fields.
+func ListConsumerGroupsRequestDefaults(v *ListConsumerGroupsRequest) {
 	if v == nil {
 		return
 	}
@@ -5015,6 +10665,199 @@ func EventbusStateDefaults(v *EventbusState) {
 }
 
 // ============================================================
+// TypeDefaults: EventbusConfigState
+// ============================================================
+// EventbusConfigStateDefaults applies field-level default values to zero-valued fields.
+func EventbusConfigStateDefaults(v *EventbusConfigState) {
+	if v == nil {
+		return
+	}
+	if v.Config != nil {
+		ConfigDefaults(v.Config)
+	}
+}
+
+// ============================================================
+// TypeDefaults: QueryValue
+// ============================================================
+// QueryValueDefaults applies field-level default values to zero-valued fields.
+func QueryValueDefaults(v *QueryValue) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: Predicate
+// ============================================================
+// PredicateDefaults applies field-level default values to zero-valued fields.
+func PredicateDefaults(v *Predicate) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PredicateGroup
+// ============================================================
+// PredicateGroupDefaults applies field-level default values to zero-valued fields.
+func PredicateGroupDefaults(v *PredicateGroup) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: SortField
+// ============================================================
+// SortFieldDefaults applies field-level default values to zero-valued fields.
+func SortFieldDefaults(v *SortField) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: CollectionQuery
+// ============================================================
+// CollectionQueryDefaults applies field-level default values to zero-valued fields.
+func CollectionQueryDefaults(v *CollectionQuery) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: NodesGetRequest
+// ============================================================
+// NodesGetRequestDefaults applies field-level default values to zero-valued fields.
+func NodesGetRequestDefaults(v *NodesGetRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: NodesPutRequest
+// ============================================================
+// NodesPutRequestDefaults applies field-level default values to zero-valued fields.
+func NodesPutRequestDefaults(v *NodesPutRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: NodesGetAllRequest
+// ============================================================
+// NodesGetAllRequestDefaults applies field-level default values to zero-valued fields.
+func NodesGetAllRequestDefaults(v *NodesGetAllRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: NodesKeysRequest
+// ============================================================
+// NodesKeysRequestDefaults applies field-level default values to zero-valued fields.
+func NodesKeysRequestDefaults(v *NodesKeysRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: NodesSizeRequest
+// ============================================================
+// NodesSizeRequestDefaults applies field-level default values to zero-valued fields.
+func NodesSizeRequestDefaults(v *NodesSizeRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: NodesClearRequest
+// ============================================================
+// NodesClearRequestDefaults applies field-level default values to zero-valued fields.
+func NodesClearRequestDefaults(v *NodesClearRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: NodesValueResponse
+// ============================================================
+// NodesValueResponseDefaults applies field-level default values to zero-valued fields.
+func NodesValueResponseDefaults(v *NodesValueResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: NodesEntriesResponse
+// ============================================================
+// NodesEntriesResponseDefaults applies field-level default values to zero-valued fields.
+func NodesEntriesResponseDefaults(v *NodesEntriesResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: NodesKeysResponse
+// ============================================================
+// NodesKeysResponseDefaults applies field-level default values to zero-valued fields.
+func NodesKeysResponseDefaults(v *NodesKeysResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: NodesSizeResponse
+// ============================================================
+// NodesSizeResponseDefaults applies field-level default values to zero-valued fields.
+func NodesSizeResponseDefaults(v *NodesSizeResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: NodesQueryRequest
+// ============================================================
+// NodesQueryRequestDefaults applies field-level default values to zero-valued fields.
+func NodesQueryRequestDefaults(v *NodesQueryRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: NodesQueryResponse
+// ============================================================
+// NodesQueryResponseDefaults applies field-level default values to zero-valued fields.
+func NodesQueryResponseDefaults(v *NodesQueryResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: MapEmpty
+// ============================================================
+// MapEmptyDefaults applies field-level default values to zero-valued fields.
+func MapEmptyDefaults(v *MapEmpty) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
 // TypeUndefaults: SubscribeRequest
 // ============================================================
 // SubscribeRequestUndefaults resets fields that match their default values back to zero.
@@ -5067,6 +10910,17 @@ func TopicInfoUndefaults(v *TopicInfo) {
 // TopicInfoRequestUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
 func TopicInfoRequestUndefaults(v *TopicInfoRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: ListTopicsRequest
+// ============================================================
+// ListTopicsRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func ListTopicsRequestUndefaults(v *ListTopicsRequest) {
 	if v == nil {
 		return
 	}
@@ -5133,6 +10987,17 @@ func ConsumerGroupInfoUndefaults(v *ConsumerGroupInfo) {
 // ConsumerGroupRequestUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
 func ConsumerGroupRequestUndefaults(v *ConsumerGroupRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: ListConsumerGroupsRequest
+// ============================================================
+// ListConsumerGroupsRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func ListConsumerGroupsRequestUndefaults(v *ListConsumerGroupsRequest) {
 	if v == nil {
 		return
 	}
@@ -5243,6 +11108,218 @@ func EventbusStateUndefaults(v *EventbusState) {
 }
 
 // ============================================================
+// TypeUndefaults: EventbusConfigState
+// ============================================================
+// EventbusConfigStateUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func EventbusConfigStateUndefaults(v *EventbusConfigState) {
+	if v == nil {
+		return
+	}
+	if v.Config != nil {
+		ConfigUndefaults(v.Config)
+	}
+}
+
+// ============================================================
+// TypeUndefaults: QueryValue
+// ============================================================
+// QueryValueUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func QueryValueUndefaults(v *QueryValue) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: Predicate
+// ============================================================
+// PredicateUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PredicateUndefaults(v *Predicate) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PredicateGroup
+// ============================================================
+// PredicateGroupUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PredicateGroupUndefaults(v *PredicateGroup) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: SortField
+// ============================================================
+// SortFieldUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func SortFieldUndefaults(v *SortField) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: CollectionQuery
+// ============================================================
+// CollectionQueryUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func CollectionQueryUndefaults(v *CollectionQuery) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: NodesGetRequest
+// ============================================================
+// NodesGetRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func NodesGetRequestUndefaults(v *NodesGetRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: NodesPutRequest
+// ============================================================
+// NodesPutRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func NodesPutRequestUndefaults(v *NodesPutRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: NodesGetAllRequest
+// ============================================================
+// NodesGetAllRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func NodesGetAllRequestUndefaults(v *NodesGetAllRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: NodesKeysRequest
+// ============================================================
+// NodesKeysRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func NodesKeysRequestUndefaults(v *NodesKeysRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: NodesSizeRequest
+// ============================================================
+// NodesSizeRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func NodesSizeRequestUndefaults(v *NodesSizeRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: NodesClearRequest
+// ============================================================
+// NodesClearRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func NodesClearRequestUndefaults(v *NodesClearRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: NodesValueResponse
+// ============================================================
+// NodesValueResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func NodesValueResponseUndefaults(v *NodesValueResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: NodesEntriesResponse
+// ============================================================
+// NodesEntriesResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func NodesEntriesResponseUndefaults(v *NodesEntriesResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: NodesKeysResponse
+// ============================================================
+// NodesKeysResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func NodesKeysResponseUndefaults(v *NodesKeysResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: NodesSizeResponse
+// ============================================================
+// NodesSizeResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func NodesSizeResponseUndefaults(v *NodesSizeResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: NodesQueryRequest
+// ============================================================
+// NodesQueryRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func NodesQueryRequestUndefaults(v *NodesQueryRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: NodesQueryResponse
+// ============================================================
+// NodesQueryResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func NodesQueryResponseUndefaults(v *NodesQueryResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: MapEmpty
+// ============================================================
+// MapEmptyUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func MapEmptyUndefaults(v *MapEmpty) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
 // Merge: SubscribeRequest
 // ============================================================
 // MergeSubscribeRequest fills zero-valued fields in dst from src.
@@ -5288,11 +11365,11 @@ func MergePublishResponse(dst, src *PublishResponse) {
 // ============================================================
 // MergeRecordMeta fills zero-valued fields in dst from src.
 func MergeRecordMeta(dst, src *RecordMeta) {
-	if dst.Key == "" {
+	if len(dst.Key) == 0 {
 		dst.Key = src.Key
 	}
-	if len(dst.Headers) == 0 {
-		dst.Headers = src.Headers
+	if dst.Topic == "" {
+		dst.Topic = src.Topic
 	}
 	if dst.Partition == 0 {
 		dst.Partition = src.Partition
@@ -5300,8 +11377,8 @@ func MergeRecordMeta(dst, src *RecordMeta) {
 	if dst.Offset == 0 {
 		dst.Offset = src.Offset
 	}
-	if dst.EventTimestamp == nil {
-		dst.EventTimestamp = src.EventTimestamp
+	if dst.Timestamp == nil {
+		dst.Timestamp = src.Timestamp
 	}
 }
 
@@ -5325,6 +11402,12 @@ func MergeTopicInfo(dst, src *TopicInfo) {
 	if len(dst.LatestOffsets) == 0 {
 		dst.LatestOffsets = src.LatestOffsets
 	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
 }
 
 // ============================================================
@@ -5334,6 +11417,31 @@ func MergeTopicInfo(dst, src *TopicInfo) {
 func MergeTopicInfoRequest(dst, src *TopicInfoRequest) {
 	if dst.Topic == "" {
 		dst.Topic = src.Topic
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: ListTopicsRequest
+// ============================================================
+// MergeListTopicsRequest fills zero-valued fields in dst from src.
+func MergeListTopicsRequest(dst, src *ListTopicsRequest) {
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
+	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
 	}
 }
 
@@ -5345,6 +11453,18 @@ func MergeListTopicsResponse(dst, src *ListTopicsResponse) {
 	if len(dst.Topics) == 0 {
 		dst.Topics = src.Topics
 	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
 }
 
 // ============================================================
@@ -5354,6 +11474,12 @@ func MergeListTopicsResponse(dst, src *ListTopicsResponse) {
 func MergeDeleteTopicRequest(dst, src *DeleteTopicRequest) {
 	if dst.Topic == "" {
 		dst.Topic = src.Topic
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
 	}
 }
 
@@ -5370,6 +11496,12 @@ func MergeUpdateTopicConfigRequest(dst, src *UpdateTopicConfigRequest) {
 	}
 	if dst.PartitionCount == 0 {
 		dst.PartitionCount = src.PartitionCount
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
 	}
 }
 
@@ -5412,6 +11544,12 @@ func MergeConsumerGroupInfo(dst, src *ConsumerGroupInfo) {
 	if dst.TotalLag == 0 {
 		dst.TotalLag = src.TotalLag
 	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
 }
 
 // ============================================================
@@ -5422,6 +11560,31 @@ func MergeConsumerGroupRequest(dst, src *ConsumerGroupRequest) {
 	if dst.GroupId == "" {
 		dst.GroupId = src.GroupId
 	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: ListConsumerGroupsRequest
+// ============================================================
+// MergeListConsumerGroupsRequest fills zero-valued fields in dst from src.
+func MergeListConsumerGroupsRequest(dst, src *ListConsumerGroupsRequest) {
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
+	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
 }
 
 // ============================================================
@@ -5431,6 +11594,18 @@ func MergeConsumerGroupRequest(dst, src *ConsumerGroupRequest) {
 func MergeListConsumerGroupsResponse(dst, src *ListConsumerGroupsResponse) {
 	if len(dst.Groups) == 0 {
 		dst.Groups = src.Groups
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
 	}
 }
 
@@ -5444,6 +11619,12 @@ func MergeResetConsumerGroupOffsetsRequest(dst, src *ResetConsumerGroupOffsetsRe
 	}
 	if dst.Topic == "" {
 		dst.Topic = src.Topic
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
 	}
 	if dst.ResetTo == nil {
 		dst.ResetTo = src.ResetTo
@@ -5482,6 +11663,12 @@ func MergeClusterHealthResponse(dst, src *ClusterHealthResponse) {
 	}
 	if dst.ControllerId == 0 {
 		dst.ControllerId = src.ControllerId
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
 	}
 }
 
@@ -5526,6 +11713,12 @@ func MergeConfig(dst, src *Config) {
 	if dst.StateRefreshIntervalSeconds == 0 {
 		dst.StateRefreshIntervalSeconds = src.StateRefreshIntervalSeconds
 	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
 }
 
 // ============================================================
@@ -5551,5 +11744,347 @@ func MergeEventbusNode(dst, src *EventbusNode) {
 func MergeEventbusState(dst, src *EventbusState) {
 	if len(dst.Nodes) == 0 {
 		dst.Nodes = src.Nodes
+	}
+}
+
+// ============================================================
+// Merge: EventbusConfigState
+// ============================================================
+// MergeEventbusConfigState fills zero-valued fields in dst from src.
+func MergeEventbusConfigState(dst, src *EventbusConfigState) {
+	if dst.Config == nil {
+		dst.Config = src.Config
+	} else if src.Config != nil {
+		MergeConfig(dst.Config, src.Config)
+	}
+}
+
+// ============================================================
+// Merge: QueryValue
+// ============================================================
+// MergeQueryValue fills zero-valued fields in dst from src.
+func MergeQueryValue(dst, src *QueryValue) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+	if dst.Value == nil {
+		dst.Value = src.Value
+	}
+}
+
+// ============================================================
+// Merge: Predicate
+// ============================================================
+// MergePredicate fills zero-valued fields in dst from src.
+func MergePredicate(dst, src *Predicate) {
+	if dst.FieldName == "" {
+		dst.FieldName = src.FieldName
+	}
+	if dst.Op == 0 {
+		dst.Op = src.Op
+	}
+	if dst.Value == nil {
+		dst.Value = src.Value
+	} else if src.Value != nil {
+		MergeQueryValue(dst.Value, src.Value)
+	}
+	if len(dst.Values) == 0 {
+		dst.Values = src.Values
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PredicateGroup
+// ============================================================
+// MergePredicateGroup fills zero-valued fields in dst from src.
+func MergePredicateGroup(dst, src *PredicateGroup) {
+	if dst.Op == 0 {
+		dst.Op = src.Op
+	}
+	if len(dst.Predicates) == 0 {
+		dst.Predicates = src.Predicates
+	}
+	if len(dst.Groups) == 0 {
+		dst.Groups = src.Groups
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: SortField
+// ============================================================
+// MergeSortField fills zero-valued fields in dst from src.
+func MergeSortField(dst, src *SortField) {
+	if dst.FieldName == "" {
+		dst.FieldName = src.FieldName
+	}
+	if dst.Direction == 0 {
+		dst.Direction = src.Direction
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: CollectionQuery
+// ============================================================
+// MergeCollectionQuery fills zero-valued fields in dst from src.
+func MergeCollectionQuery(dst, src *CollectionQuery) {
+	if dst.Where == nil {
+		dst.Where = src.Where
+	} else if src.Where != nil {
+		MergePredicateGroup(dst.Where, src.Where)
+	}
+	if len(dst.OrderBy) == 0 {
+		dst.OrderBy = src.OrderBy
+	}
+	if dst.Limit == 0 {
+		dst.Limit = src.Limit
+	}
+	if dst.Offset == 0 {
+		dst.Offset = src.Offset
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: NodesGetRequest
+// ============================================================
+// MergeNodesGetRequest fills zero-valued fields in dst from src.
+func MergeNodesGetRequest(dst, src *NodesGetRequest) {
+	if dst.Key == "" {
+		dst.Key = src.Key
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: NodesPutRequest
+// ============================================================
+// MergeNodesPutRequest fills zero-valued fields in dst from src.
+func MergeNodesPutRequest(dst, src *NodesPutRequest) {
+	if dst.Key == "" {
+		dst.Key = src.Key
+	}
+	if dst.Value == nil {
+		dst.Value = src.Value
+	} else if src.Value != nil {
+		MergeEventbusNode(dst.Value, src.Value)
+	}
+	if dst.LockCounter == 0 {
+		dst.LockCounter = src.LockCounter
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: NodesGetAllRequest
+// ============================================================
+// MergeNodesGetAllRequest fills zero-valued fields in dst from src.
+func MergeNodesGetAllRequest(dst, src *NodesGetAllRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: NodesKeysRequest
+// ============================================================
+// MergeNodesKeysRequest fills zero-valued fields in dst from src.
+func MergeNodesKeysRequest(dst, src *NodesKeysRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: NodesSizeRequest
+// ============================================================
+// MergeNodesSizeRequest fills zero-valued fields in dst from src.
+func MergeNodesSizeRequest(dst, src *NodesSizeRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: NodesClearRequest
+// ============================================================
+// MergeNodesClearRequest fills zero-valued fields in dst from src.
+func MergeNodesClearRequest(dst, src *NodesClearRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: NodesValueResponse
+// ============================================================
+// MergeNodesValueResponse fills zero-valued fields in dst from src.
+func MergeNodesValueResponse(dst, src *NodesValueResponse) {
+	if dst.Value == nil {
+		dst.Value = src.Value
+	} else if src.Value != nil {
+		MergeEventbusNode(dst.Value, src.Value)
+	}
+	if !dst.Found {
+		dst.Found = src.Found
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: NodesEntriesResponse
+// ============================================================
+// MergeNodesEntriesResponse fills zero-valued fields in dst from src.
+func MergeNodesEntriesResponse(dst, src *NodesEntriesResponse) {
+	if len(dst.Entries) == 0 {
+		dst.Entries = src.Entries
+	} else {
+		for k, srcVal := range src.Entries {
+			if dstVal, ok := dst.Entries[k]; ok {
+				MergeEventbusNode(dstVal, srcVal)
+			} else {
+				dst.Entries[k] = srcVal
+			}
+		}
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: NodesKeysResponse
+// ============================================================
+// MergeNodesKeysResponse fills zero-valued fields in dst from src.
+func MergeNodesKeysResponse(dst, src *NodesKeysResponse) {
+	if len(dst.Keys) == 0 {
+		dst.Keys = src.Keys
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: NodesSizeResponse
+// ============================================================
+// MergeNodesSizeResponse fills zero-valued fields in dst from src.
+func MergeNodesSizeResponse(dst, src *NodesSizeResponse) {
+	if dst.Size == 0 {
+		dst.Size = src.Size
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: NodesQueryRequest
+// ============================================================
+// MergeNodesQueryRequest fills zero-valued fields in dst from src.
+func MergeNodesQueryRequest(dst, src *NodesQueryRequest) {
+	if dst.Query == nil {
+		dst.Query = src.Query
+	} else if src.Query != nil {
+		MergeCollectionQuery(dst.Query, src.Query)
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: NodesQueryResponse
+// ============================================================
+// MergeNodesQueryResponse fills zero-valued fields in dst from src.
+func MergeNodesQueryResponse(dst, src *NodesQueryResponse) {
+	if len(dst.Results) == 0 {
+		dst.Results = src.Results
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: MapEmpty
+// ============================================================
+// MergeMapEmpty fills zero-valued fields in dst from src.
+func MergeMapEmpty(dst, src *MapEmpty) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
 	}
 }

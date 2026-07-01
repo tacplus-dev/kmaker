@@ -6423,14 +6423,14 @@ func ValidateListenerWithDepth(m *Listener, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Kind (assert_max_length: 64)
-	if len(m.Kind) > 64 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Kind must be at most 64 characters, got: %d", len(m.Kind))
-	}
-
 	// Validate Kind (assert_required)
 	if m.Kind == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Kind is required")
+	}
+
+	// Validate Kind (assert_max_length: 64)
+	if len(m.Kind) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Kind must be at most 64 characters, got: %d", len(m.Kind))
 	}
 
 	// Validate Port (assert_gt: 1024)
@@ -6504,21 +6504,21 @@ func ValidateProxyConfigWithDepth(m *ProxyConfig, depth int) error {
 	if m.GitlabPort > 65535 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field GitlabPort must be <= 65535, got: %v", m.GitlabPort)
 	}
-	// Validate GithubPort (assert_le: 65535)
-	if m.GithubPort > 65535 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field GithubPort must be <= 65535, got: %v", m.GithubPort)
-	}
 	// Validate GithubPort (assert_gt: 1024)
 	if m.GithubPort <= 1024 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field GithubPort must be > 1024, got: %v", m.GithubPort)
 	}
-	// Validate OpenaiPort (assert_gt: 1024)
-	if m.OpenaiPort <= 1024 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field OpenaiPort must be > 1024, got: %v", m.OpenaiPort)
+	// Validate GithubPort (assert_le: 65535)
+	if m.GithubPort > 65535 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field GithubPort must be <= 65535, got: %v", m.GithubPort)
 	}
 	// Validate OpenaiPort (assert_le: 65535)
 	if m.OpenaiPort > 65535 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field OpenaiPort must be <= 65535, got: %v", m.OpenaiPort)
+	}
+	// Validate OpenaiPort (assert_gt: 1024)
+	if m.OpenaiPort <= 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field OpenaiPort must be > 1024, got: %v", m.OpenaiPort)
 	}
 	// Validate Listeners (assert_max_size: 16)
 	if len(m.Listeners) > 16 {
@@ -6994,13 +6994,13 @@ func ValidateDaemonProxyStatsWithDepth(m *DaemonProxyStats, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ListenAddress must be at most 256 characters, got: %d", len(m.ListenAddress))
 	}
 
-	// Validate Port (assert_le: 65535)
-	if m.Port > 65535 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Port must be <= 65535, got: %v", m.Port)
-	}
 	// Validate Port (assert_ge: 0)
 	if m.Port < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Port must be >= 0, got: %v", m.Port)
+	}
+	// Validate Port (assert_le: 65535)
+	if m.Port > 65535 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Port must be <= 65535, got: %v", m.Port)
 	}
 	// Validate Message (assert_max_length: 512)
 	if len(m.Message) > 512 {
@@ -7229,14 +7229,14 @@ func ValidateGetTokenRequestWithDepth(m *GetTokenRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Audience (assert_required)
-	if m.Audience == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Audience is required")
-	}
-
 	// Validate Audience (assert_max_length: 128)
 	if len(m.Audience) > 128 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Audience must be at most 128 characters, got: %d", len(m.Audience))
+	}
+
+	// Validate Audience (assert_required)
+	if m.Audience == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Audience is required")
 	}
 
 	// Validate Audience (default max size: 32768 bytes)

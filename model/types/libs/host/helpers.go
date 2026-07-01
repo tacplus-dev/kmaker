@@ -373,11 +373,6 @@ func ValidateHostWithDepth(m *Host, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Host (assert_required)
-	if m.Host == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Host is required")
-	}
-
 	// Validate Host (assert_host: IP address or FQDN)
 	if m.Host != "" {
 		if ip := net.ParseIP(m.Host); ip == nil {
@@ -385,6 +380,11 @@ func ValidateHostWithDepth(m *Host, depth int) error {
 				return protoerrors.NewErrMissingInvalidData(nil, "field Host must be a valid IP address or FQDN, got: %s", m.Host)
 			}
 		}
+	}
+
+	// Validate Host (assert_required)
+	if m.Host == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Host is required")
 	}
 
 	// Validate Port (assert_net_port)

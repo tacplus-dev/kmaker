@@ -23,6 +23,7 @@ package tokenrequest
 
 import (
 	cloudidentity "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/cloudidentity"
+	key "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/key"
 	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/spec"
 	token "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/token"
 	x509 "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/x509"
@@ -207,17 +208,33 @@ func (x *TokenMintRequest) GetNoop() bool {
 }
 
 // MintServiceTokenRequest is the input for MintServiceToken (S2S).
-// Handles service bootstrap (cred_pair JWT or cloud proof), token refresh
+// Handles service bootstrap (Kubernetes token or cloud proof), token refresh
 // (kernel-signed refresh → access), and audience-scoped service tokens
 // (access → service token). Never triggers OPA evaluation.
 type MintServiceTokenRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// input_token is a JWT to validate: either a delegate cred_pair JWT
-	// (bootstrap) or a kernel-signed refresh/access token (exchange).
+	// --- Credential proof (exactly one) ---
+	//
+	// The credential proof is the thing that authenticates the caller. Exactly
+	// one member must be set. These fields intentionally remain flat rather than
+	// a proto oneof: existing Rust/Go service identity-manager templates construct
+	// MintServiceTokenRequest with flat field names, and their protobuf codegen
+	// exposes oneof members through wrapper/enum shapes instead. The kernel
+	// rejects >1 / 0 credential proofs at runtime.
+	//
+	// input_token is a kernel-signed refresh/access token used for exchange.
+	// Service bootstrap uses kubernetes_token or cloud_proof instead.
 	InputToken string `protobuf:"bytes,1,opt,name=input_token,json=inputToken,proto3" json:"input_token,omitempty"`
 	// cloud_proof is a cloud-native identity proof (AWS STS, GCP, Azure).
 	// Used instead of input_token for cloud-native service bootstrap.
 	CloudProof *cloudidentity.CloudIdentityProof `protobuf:"bytes,2,opt,name=cloud_proof,json=cloudProof,proto3" json:"cloud_proof,omitempty"`
+	// kubernetes_token is a projected Kubernetes service-account JWT carrying
+	// the configured kernel/Cavalier workload audience (it must NOT be the
+	// "kmaker" audience). The kernel validates it via a KubernetesTokenVerifier
+	// (TokenReview or local SA-issuer JWKS), then maps the verified
+	// (namespace, service account) to a Delegate via
+	// Delegate.kubernetes_service_accounts.
+	KubernetesToken string `protobuf:"bytes,8,opt,name=kubernetes_token,json=kubernetesToken,proto3" json:"kubernetes_token,omitempty"`
 	// continuity_token is a non-expired refresh token proving instance
 	// continuity across restarts. Kernel reuses the instance_id from this
 	// token instead of generating a new one.
@@ -280,6 +297,13 @@ func (x *MintServiceTokenRequest) GetCloudProof() *cloudidentity.CloudIdentityPr
 		return x.CloudProof
 	}
 	return nil
+}
+
+func (x *MintServiceTokenRequest) GetKubernetesToken() string {
+	if x != nil {
+		return x.KubernetesToken
+	}
+	return ""
 }
 
 func (x *MintServiceTokenRequest) GetContinuityToken() string {
@@ -436,13 +460,13 @@ func (x *MintUserTokenRequest) GetNoop() bool {
 //
 //	cluster cred_pair  — issued by `operator init`, public key in
 //	                     kernel.Config.root_cred_pairs. Resolves to SPIFFE
-//	                     spiffe://<spiffe_prefix>/cluster-admin.
+//	                     spiffe://<trust-domain>/system/<location>/users/cluster-admin.
 //
 //	tenant  cred_pair  — registered via kernel.TenantAdmin.SetTenantConfig
 //	                     (public key only) in the tenant's KernelTenantConfig.
 //	                     Resolves to
 //	                     SPIFFE
-//	                     spiffe://<spiffe_prefix>/<tenant_name>/users/cred-pair:<id>.
+//	                     spiffe://<trust-domain>/tenants/<tenant_name>/users/cred-pair:<id>.
 //
 // The input_token is a short-lived JWT signed by the client's private key,
 // carrying the cred_pair_id in a header / claim. Kernel looks up the
@@ -720,11 +744,15 @@ type ExternalTokenMintRequest struct {
 	// metadata is an opaque string from the cavalierctl listener config.
 	// Passed verbatim to the OPA policy, which uses it to determine the
 	// destination URL and evaluate permit/deny.
-	Metadata      string `protobuf:"bytes,2,opt,name=metadata,proto3" json:"metadata,omitempty"`
-	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Metadata string `protobuf:"bytes,2,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	// requested_signing_key_type selects the kernel signing key family for the
+	// external JWT. Empty/undefined preserves the default internal family:
+	// OKP / Ed25519 / EdDSA. Use EC for vendors that require P-256 / ES256.
+	RequestedSigningKeyType key.KeyType `protobuf:"varint,3,opt,name=requested_signing_key_type,json=requestedSigningKeyType,proto3,enum=key.KeyType" json:"requested_signing_key_type,omitempty"`
+	TraceId                 string      `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop                    bool        `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields           protoimpl.UnknownFields
+	sizeCache               protoimpl.SizeCache
 }
 
 func (x *ExternalTokenMintRequest) Reset() {
@@ -769,6 +797,13 @@ func (x *ExternalTokenMintRequest) GetMetadata() string {
 		return x.Metadata
 	}
 	return ""
+}
+
+func (x *ExternalTokenMintRequest) GetRequestedSigningKeyType() key.KeyType {
+	if x != nil {
+		return x.RequestedSigningKeyType
+	}
+	return key.KeyType(0)
 }
 
 func (x *ExternalTokenMintRequest) GetTraceId() string {
@@ -1044,7 +1079,7 @@ var File_common_tokenrequest_proto protoreflect.FileDescriptor
 
 const file_common_tokenrequest_proto_rawDesc = "" +
 	"\n" +
-	"\x19common/tokenrequest.proto\x12\ftokenrequest\x1a\x0flibs/spec.proto\x1a\x18libs/cloudidentity.proto\x1a\x10libs/token.proto\x1a\x0flibs/x509.proto\x1a\x1cgoogle/protobuf/struct.proto\"\xca\x04\n" +
+	"\x19common/tokenrequest.proto\x12\ftokenrequest\x1a\x0flibs/spec.proto\x1a\x18libs/cloudidentity.proto\x1a\x0elibs/key.proto\x1a\x10libs/token.proto\x1a\x0flibs/x509.proto\x1a\x1cgoogle/protobuf/struct.proto\"\xca\x04\n" +
 	"\x10TokenMintRequest\x12'\n" +
 	"\vinput_token\x18\x01 \x01(\tB\x06\xb8\xa8\x1d\x80\x80\x04R\n" +
 	"inputToken\x12B\n" +
@@ -1062,12 +1097,13 @@ const file_common_tokenrequest_proto_rawDesc = "" +
 	"\aproject\x18\v \x01(\tB\x05\x90\xa7\x1d\x80\x02R\aproject\x12,\n" +
 	"\fservice_auds\x18\f \x03(\tB\t\x90\xa7\x1d\x80\x02\xb8\xa8\x1d R\vserviceAuds\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x89\x03\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xbc\x03\n" +
 	"\x17MintServiceTokenRequest\x12'\n" +
 	"\vinput_token\x18\x01 \x01(\tB\x06\xb8\xa8\x1d\x80\x80\x04R\n" +
 	"inputToken\x12B\n" +
 	"\vcloud_proof\x18\x02 \x01(\v2!.cloudidentity.CloudIdentityProofR\n" +
 	"cloudProof\x121\n" +
+	"\x10kubernetes_token\x18\b \x01(\tB\x06\xb8\xa8\x1d\x80\x80\x04R\x0fkubernetesToken\x121\n" +
 	"\x10continuity_token\x18\x03 \x01(\tB\x06\xb8\xa8\x1d\x80\x80\x04R\x0fcontinuityToken\x12\x17\n" +
 	"\x03aud\x18\x04 \x01(\tB\x05\x90\xa7\x1d\x80\x02R\x03aud\x12\x16\n" +
 	"\x03exp\x18\x05 \x01(\x03B\x04\xb0\xa7\x1d\x00R\x03exp\x12>\n" +
@@ -1102,12 +1138,13 @@ const file_common_tokenrequest_proto_rawDesc = "" +
 	"\vinput_token\x18\x03 \x01(\tB\x06\xb8\xa8\x1d\x80\x80\x04R\n" +
 	"inputToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x99\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe4\x01\n" +
 	"\x18ExternalTokenMintRequest\x12)\n" +
 	"\n" +
 	"user_token\x18\x01 \x01(\tB\n" +
 	"\x88\xa6\x1d\x01\xb8\xa8\x1d\x80\x80\x04R\tuserToken\x12!\n" +
-	"\bmetadata\x18\x02 \x01(\tB\x05\x90\xa7\x1d\x80\x10R\bmetadata\x12\x1a\n" +
+	"\bmetadata\x18\x02 \x01(\tB\x05\x90\xa7\x1d\x80\x10R\bmetadata\x12I\n" +
+	"\x1arequested_signing_key_type\x18\x03 \x01(\x0e2\f.key.KeyTypeR\x17requestedSigningKeyType\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xee\x01\n" +
 	"\x19ExternalTokenMintResponse\x12\"\n" +
@@ -1116,13 +1153,13 @@ const file_common_tokenrequest_proto_rawDesc = "" +
 	"\tauth_type\x18\x03 \x01(\x0e2\x10.token.TokenTypeR\bauthType\x12-\n" +
 	"\x0esaml_assertion\x18\x04 \x01(\tB\x06\xb8\xa8\x1d\x80\x80\x04R\rsamlAssertion\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb0\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xaa\x01\n" +
 	"\x13WorkloadMintRequest\x12.\n" +
 	"\rworkload_name\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x01R\fworkloadName\x12\x1a\n" +
 	"\bterminal\x18\x03 \x01(\bR\bterminal\x12\x16\n" +
 	"\x03exp\x18\x04 \x01(\x03B\x04\xb0\xa7\x1d\x00R\x03exp\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopJ\x04\b\x02\x10\x03\"~\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"~\n" +
 	"\x14WorkloadMintResponse\x125\n" +
 	"\x0fbootstrap_token\x18\x01 \x01(\v2\f.token.TokenR\x0ebootstrapToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
@@ -1157,7 +1194,8 @@ var file_common_tokenrequest_proto_goTypes = []any{
 	(*structpb.Struct)(nil),                  // 12: google.protobuf.Struct
 	(*token.Token)(nil),                      // 13: token.Token
 	(*x509.X509CertRequest)(nil),             // 14: x509.X509CertRequest
-	(token.TokenType)(0),                     // 15: token.TokenType
+	(key.KeyType)(0),                         // 15: key.KeyType
+	(token.TokenType)(0),                     // 16: token.TokenType
 }
 var file_common_tokenrequest_proto_depIdxs = []int32{
 	10, // 0: tokenrequest.TokenMintRequest.cloud_proof:type_name -> cloudidentity.CloudIdentityProof
@@ -1171,14 +1209,15 @@ var file_common_tokenrequest_proto_depIdxs = []int32{
 	13, // 8: tokenrequest.TokenMintResponse.refresh_token:type_name -> token.Token
 	13, // 9: tokenrequest.TokenMintResponse.service_tokens:type_name -> token.Token
 	14, // 10: tokenrequest.X509MintRequest.cert_request:type_name -> x509.X509CertRequest
-	13, // 11: tokenrequest.ExternalTokenMintResponse.token:type_name -> token.Token
-	15, // 12: tokenrequest.ExternalTokenMintResponse.auth_type:type_name -> token.TokenType
-	13, // 13: tokenrequest.WorkloadMintResponse.bootstrap_token:type_name -> token.Token
-	14, // [14:14] is the sub-list for method output_type
-	14, // [14:14] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	15, // 11: tokenrequest.ExternalTokenMintRequest.requested_signing_key_type:type_name -> key.KeyType
+	13, // 12: tokenrequest.ExternalTokenMintResponse.token:type_name -> token.Token
+	16, // 13: tokenrequest.ExternalTokenMintResponse.auth_type:type_name -> token.TokenType
+	13, // 14: tokenrequest.WorkloadMintResponse.bootstrap_token:type_name -> token.Token
+	15, // [15:15] is the sub-list for method output_type
+	15, // [15:15] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_common_tokenrequest_proto_init() }

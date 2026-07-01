@@ -160,6 +160,181 @@ func (KafkaNodeRole) EnumDescriptor() ([]byte, []int) {
 	return file_services_eventbus_proto_rawDescGZIP(), []int{1}
 }
 
+// Collection query types (auto-injected)
+type ComparisonOp int32
+
+const (
+	ComparisonOp_COMPARISON_OP_UNSPECIFIED ComparisonOp = 0
+	ComparisonOp_COMPARISON_OP_EQ          ComparisonOp = 1
+	ComparisonOp_COMPARISON_OP_NE          ComparisonOp = 2
+	ComparisonOp_COMPARISON_OP_GT          ComparisonOp = 3
+	ComparisonOp_COMPARISON_OP_GE          ComparisonOp = 4
+	ComparisonOp_COMPARISON_OP_LT          ComparisonOp = 5
+	ComparisonOp_COMPARISON_OP_LE          ComparisonOp = 6
+	ComparisonOp_COMPARISON_OP_IN          ComparisonOp = 7
+	ComparisonOp_COMPARISON_OP_NOT_IN      ComparisonOp = 8
+	ComparisonOp_COMPARISON_OP_LIKE        ComparisonOp = 9
+	ComparisonOp_COMPARISON_OP_IS_NULL     ComparisonOp = 10
+	ComparisonOp_COMPARISON_OP_IS_NOT_NULL ComparisonOp = 11
+)
+
+// Enum value maps for ComparisonOp.
+var (
+	ComparisonOp_name = map[int32]string{
+		0:  "COMPARISON_OP_UNSPECIFIED",
+		1:  "COMPARISON_OP_EQ",
+		2:  "COMPARISON_OP_NE",
+		3:  "COMPARISON_OP_GT",
+		4:  "COMPARISON_OP_GE",
+		5:  "COMPARISON_OP_LT",
+		6:  "COMPARISON_OP_LE",
+		7:  "COMPARISON_OP_IN",
+		8:  "COMPARISON_OP_NOT_IN",
+		9:  "COMPARISON_OP_LIKE",
+		10: "COMPARISON_OP_IS_NULL",
+		11: "COMPARISON_OP_IS_NOT_NULL",
+	}
+	ComparisonOp_value = map[string]int32{
+		"COMPARISON_OP_UNSPECIFIED": 0,
+		"COMPARISON_OP_EQ":          1,
+		"COMPARISON_OP_NE":          2,
+		"COMPARISON_OP_GT":          3,
+		"COMPARISON_OP_GE":          4,
+		"COMPARISON_OP_LT":          5,
+		"COMPARISON_OP_LE":          6,
+		"COMPARISON_OP_IN":          7,
+		"COMPARISON_OP_NOT_IN":      8,
+		"COMPARISON_OP_LIKE":        9,
+		"COMPARISON_OP_IS_NULL":     10,
+		"COMPARISON_OP_IS_NOT_NULL": 11,
+	}
+)
+
+func (x ComparisonOp) Enum() *ComparisonOp {
+	p := new(ComparisonOp)
+	*p = x
+	return p
+}
+
+func (x ComparisonOp) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ComparisonOp) Descriptor() protoreflect.EnumDescriptor {
+	return file_services_eventbus_proto_enumTypes[2].Descriptor()
+}
+
+func (ComparisonOp) Type() protoreflect.EnumType {
+	return &file_services_eventbus_proto_enumTypes[2]
+}
+
+func (x ComparisonOp) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ComparisonOp.Descriptor instead.
+func (ComparisonOp) EnumDescriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{2}
+}
+
+type SortDirection int32
+
+const (
+	SortDirection_SORT_DIRECTION_UNSPECIFIED SortDirection = 0
+	SortDirection_SORT_DIRECTION_ASC         SortDirection = 1
+	SortDirection_SORT_DIRECTION_DESC        SortDirection = 2
+)
+
+// Enum value maps for SortDirection.
+var (
+	SortDirection_name = map[int32]string{
+		0: "SORT_DIRECTION_UNSPECIFIED",
+		1: "SORT_DIRECTION_ASC",
+		2: "SORT_DIRECTION_DESC",
+	}
+	SortDirection_value = map[string]int32{
+		"SORT_DIRECTION_UNSPECIFIED": 0,
+		"SORT_DIRECTION_ASC":         1,
+		"SORT_DIRECTION_DESC":        2,
+	}
+)
+
+func (x SortDirection) Enum() *SortDirection {
+	p := new(SortDirection)
+	*p = x
+	return p
+}
+
+func (x SortDirection) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (SortDirection) Descriptor() protoreflect.EnumDescriptor {
+	return file_services_eventbus_proto_enumTypes[3].Descriptor()
+}
+
+func (SortDirection) Type() protoreflect.EnumType {
+	return &file_services_eventbus_proto_enumTypes[3]
+}
+
+func (x SortDirection) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use SortDirection.Descriptor instead.
+func (SortDirection) EnumDescriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{3}
+}
+
+type LogicalOp int32
+
+const (
+	LogicalOp_LOGICAL_OP_UNSPECIFIED LogicalOp = 0
+	LogicalOp_LOGICAL_OP_AND         LogicalOp = 1
+	LogicalOp_LOGICAL_OP_OR          LogicalOp = 2
+)
+
+// Enum value maps for LogicalOp.
+var (
+	LogicalOp_name = map[int32]string{
+		0: "LOGICAL_OP_UNSPECIFIED",
+		1: "LOGICAL_OP_AND",
+		2: "LOGICAL_OP_OR",
+	}
+	LogicalOp_value = map[string]int32{
+		"LOGICAL_OP_UNSPECIFIED": 0,
+		"LOGICAL_OP_AND":         1,
+		"LOGICAL_OP_OR":          2,
+	}
+)
+
+func (x LogicalOp) Enum() *LogicalOp {
+	p := new(LogicalOp)
+	*p = x
+	return p
+}
+
+func (x LogicalOp) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (LogicalOp) Descriptor() protoreflect.EnumDescriptor {
+	return file_services_eventbus_proto_enumTypes[4].Descriptor()
+}
+
+func (LogicalOp) Type() protoreflect.EnumType {
+	return &file_services_eventbus_proto_enumTypes[4]
+}
+
+func (x LogicalOp) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use LogicalOp.Descriptor instead.
+func (LogicalOp) EnumDescriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{4}
+}
+
 // SubscribeRequest is sent on the bidi stream to control replay.
 // The first message establishes the session; subsequent messages adjust
 // position, speed, pause state, or backpressure without closing the stream.
@@ -401,29 +576,17 @@ func (x *PublishResponse) GetOffset() int64 {
 }
 
 // RecordMeta carries Kafka record metadata alongside typed payloads.
-// Used by generated Subscribe response wrappers:
-//
-//	message Subscribe{State}{Field}Record {
-//	  RecordMeta meta = 1;
-//	  {FieldType} payload = 2;
-//	}
-//
-// Generated Publish request wrappers use key + headers directly:
-//
-//	message Publish{State}{Field}Record {
-//	  string key = 1;
-//	  map<string, string> headers = 2;
-//	  {FieldType} payload = 3;
-//	}
+// This shape is the wire contract for generated typed Subscribe envelopes and
+// must stay aligned with tacplus's EventBus support proto and broker emission.
 type RecordMeta struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	Key            string                 `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
-	Headers        map[string]string      `protobuf:"bytes,2,rep,name=headers,proto3" json:"headers,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	Partition      int32                  `protobuf:"varint,3,opt,name=partition,proto3" json:"partition,omitempty"`
-	Offset         int64                  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`
-	EventTimestamp *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=event_timestamp,json=eventTimestamp,proto3" json:"event_timestamp,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Key           []byte                 `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	Topic         string                 `protobuf:"bytes,2,opt,name=topic,proto3" json:"topic,omitempty"`
+	Partition     int32                  `protobuf:"varint,3,opt,name=partition,proto3" json:"partition,omitempty"`
+	Offset        int64                  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`
+	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *RecordMeta) Reset() {
@@ -456,18 +619,18 @@ func (*RecordMeta) Descriptor() ([]byte, []int) {
 	return file_services_eventbus_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *RecordMeta) GetKey() string {
+func (x *RecordMeta) GetKey() []byte {
 	if x != nil {
 		return x.Key
 	}
-	return ""
+	return nil
 }
 
-func (x *RecordMeta) GetHeaders() map[string]string {
+func (x *RecordMeta) GetTopic() string {
 	if x != nil {
-		return x.Headers
+		return x.Topic
 	}
-	return nil
+	return ""
 }
 
 func (x *RecordMeta) GetPartition() int32 {
@@ -484,9 +647,9 @@ func (x *RecordMeta) GetOffset() int64 {
 	return 0
 }
 
-func (x *RecordMeta) GetEventTimestamp() *timestamppb.Timestamp {
+func (x *RecordMeta) GetTimestamp() *timestamppb.Timestamp {
 	if x != nil {
-		return x.EventTimestamp
+		return x.Timestamp
 	}
 	return nil
 }
@@ -499,6 +662,8 @@ type TopicInfo struct {
 	RetentionMs     int64                  `protobuf:"varint,3,opt,name=retention_ms,json=retentionMs,proto3" json:"retention_ms,omitempty"`
 	EarliestOffsets map[int32]int64        `protobuf:"bytes,4,rep,name=earliest_offsets,json=earliestOffsets,proto3" json:"earliest_offsets,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
 	LatestOffsets   map[int32]int64        `protobuf:"bytes,5,rep,name=latest_offsets,json=latestOffsets,proto3" json:"latest_offsets,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	TraceId         string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop            bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -568,9 +733,25 @@ func (x *TopicInfo) GetLatestOffsets() map[int32]int64 {
 	return nil
 }
 
+func (x *TopicInfo) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *TopicInfo) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
 type TopicInfoRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Topic         string                 `protobuf:"bytes,1,opt,name=topic,proto3" json:"topic,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -612,16 +793,103 @@ func (x *TopicInfoRequest) GetTopic() string {
 	return ""
 }
 
+func (x *TopicInfoRequest) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *TopicInfoRequest) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type ListTopicsRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// page_size 0 uses the method_collection default.
+	PageSize      int32  `protobuf:"varint,1,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string `protobuf:"bytes,2,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListTopicsRequest) Reset() {
+	*x = ListTopicsRequest{}
+	mi := &file_services_eventbus_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListTopicsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListTopicsRequest) ProtoMessage() {}
+
+func (x *ListTopicsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListTopicsRequest.ProtoReflect.Descriptor instead.
+func (*ListTopicsRequest) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *ListTopicsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListTopicsRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
+func (x *ListTopicsRequest) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *ListTopicsRequest) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
 type ListTopicsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Topics        []*TopicInfo           `protobuf:"bytes,1,rep,name=topics,proto3" json:"topics,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                  `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ListTopicsResponse) Reset() {
 	*x = ListTopicsResponse{}
-	mi := &file_services_eventbus_proto_msgTypes[5]
+	mi := &file_services_eventbus_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -633,7 +901,7 @@ func (x *ListTopicsResponse) String() string {
 func (*ListTopicsResponse) ProtoMessage() {}
 
 func (x *ListTopicsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[5]
+	mi := &file_services_eventbus_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -646,7 +914,7 @@ func (x *ListTopicsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTopicsResponse.ProtoReflect.Descriptor instead.
 func (*ListTopicsResponse) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{5}
+	return file_services_eventbus_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ListTopicsResponse) GetTopics() []*TopicInfo {
@@ -656,16 +924,46 @@ func (x *ListTopicsResponse) GetTopics() []*TopicInfo {
 	return nil
 }
 
+func (x *ListTopicsResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *ListTopicsResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
+}
+
+func (x *ListTopicsResponse) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *ListTopicsResponse) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
 type DeleteTopicRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Topic         string                 `protobuf:"bytes,1,opt,name=topic,proto3" json:"topic,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *DeleteTopicRequest) Reset() {
 	*x = DeleteTopicRequest{}
-	mi := &file_services_eventbus_proto_msgTypes[6]
+	mi := &file_services_eventbus_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -677,7 +975,7 @@ func (x *DeleteTopicRequest) String() string {
 func (*DeleteTopicRequest) ProtoMessage() {}
 
 func (x *DeleteTopicRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[6]
+	mi := &file_services_eventbus_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -690,7 +988,7 @@ func (x *DeleteTopicRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteTopicRequest.ProtoReflect.Descriptor instead.
 func (*DeleteTopicRequest) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{6}
+	return file_services_eventbus_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *DeleteTopicRequest) GetTopic() string {
@@ -700,6 +998,20 @@ func (x *DeleteTopicRequest) GetTopic() string {
 	return ""
 }
 
+func (x *DeleteTopicRequest) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *DeleteTopicRequest) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
 type UpdateTopicConfigRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Topic string                 `protobuf:"bytes,1,opt,name=topic,proto3" json:"topic,omitempty"`
@@ -707,14 +1019,16 @@ type UpdateTopicConfigRequest struct {
 	RetentionMs int64 `protobuf:"varint,2,opt,name=retention_ms,json=retentionMs,proto3" json:"retention_ms,omitempty"`
 	// partition_count: new total partition count. Must be >= current count.
 	// Kafka does not support decreasing partitions. 0 = no change.
-	PartitionCount int32 `protobuf:"varint,3,opt,name=partition_count,json=partitionCount,proto3" json:"partition_count,omitempty"`
+	PartitionCount int32  `protobuf:"varint,3,opt,name=partition_count,json=partitionCount,proto3" json:"partition_count,omitempty"`
+	TraceId        string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop           bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
 
 func (x *UpdateTopicConfigRequest) Reset() {
 	*x = UpdateTopicConfigRequest{}
-	mi := &file_services_eventbus_proto_msgTypes[7]
+	mi := &file_services_eventbus_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -726,7 +1040,7 @@ func (x *UpdateTopicConfigRequest) String() string {
 func (*UpdateTopicConfigRequest) ProtoMessage() {}
 
 func (x *UpdateTopicConfigRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[7]
+	mi := &file_services_eventbus_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -739,7 +1053,7 @@ func (x *UpdateTopicConfigRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateTopicConfigRequest.ProtoReflect.Descriptor instead.
 func (*UpdateTopicConfigRequest) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{7}
+	return file_services_eventbus_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *UpdateTopicConfigRequest) GetTopic() string {
@@ -763,6 +1077,20 @@ func (x *UpdateTopicConfigRequest) GetPartitionCount() int32 {
 	return 0
 }
 
+func (x *UpdateTopicConfigRequest) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *UpdateTopicConfigRequest) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
 type PartitionLag struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	Topic           string                 `protobuf:"bytes,1,opt,name=topic,proto3" json:"topic,omitempty"`
@@ -776,7 +1104,7 @@ type PartitionLag struct {
 
 func (x *PartitionLag) Reset() {
 	*x = PartitionLag{}
-	mi := &file_services_eventbus_proto_msgTypes[8]
+	mi := &file_services_eventbus_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -788,7 +1116,7 @@ func (x *PartitionLag) String() string {
 func (*PartitionLag) ProtoMessage() {}
 
 func (x *PartitionLag) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[8]
+	mi := &file_services_eventbus_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -801,7 +1129,7 @@ func (x *PartitionLag) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PartitionLag.ProtoReflect.Descriptor instead.
 func (*PartitionLag) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{8}
+	return file_services_eventbus_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *PartitionLag) GetTopic() string {
@@ -846,13 +1174,15 @@ type ConsumerGroupInfo struct {
 	State         string          `protobuf:"bytes,2,opt,name=state,proto3" json:"state,omitempty"`
 	Partitions    []*PartitionLag `protobuf:"bytes,3,rep,name=partitions,proto3" json:"partitions,omitempty"`
 	TotalLag      int64           `protobuf:"varint,4,opt,name=total_lag,json=totalLag,proto3" json:"total_lag,omitempty"`
+	TraceId       string          `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool            `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ConsumerGroupInfo) Reset() {
 	*x = ConsumerGroupInfo{}
-	mi := &file_services_eventbus_proto_msgTypes[9]
+	mi := &file_services_eventbus_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -864,7 +1194,7 @@ func (x *ConsumerGroupInfo) String() string {
 func (*ConsumerGroupInfo) ProtoMessage() {}
 
 func (x *ConsumerGroupInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[9]
+	mi := &file_services_eventbus_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -877,7 +1207,7 @@ func (x *ConsumerGroupInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConsumerGroupInfo.ProtoReflect.Descriptor instead.
 func (*ConsumerGroupInfo) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{9}
+	return file_services_eventbus_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ConsumerGroupInfo) GetGroupId() string {
@@ -908,16 +1238,32 @@ func (x *ConsumerGroupInfo) GetTotalLag() int64 {
 	return 0
 }
 
+func (x *ConsumerGroupInfo) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *ConsumerGroupInfo) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
 type ConsumerGroupRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	GroupId       string                 `protobuf:"bytes,1,opt,name=group_id,json=groupId,proto3" json:"group_id,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ConsumerGroupRequest) Reset() {
 	*x = ConsumerGroupRequest{}
-	mi := &file_services_eventbus_proto_msgTypes[10]
+	mi := &file_services_eventbus_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -929,7 +1275,7 @@ func (x *ConsumerGroupRequest) String() string {
 func (*ConsumerGroupRequest) ProtoMessage() {}
 
 func (x *ConsumerGroupRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[10]
+	mi := &file_services_eventbus_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -942,7 +1288,7 @@ func (x *ConsumerGroupRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConsumerGroupRequest.ProtoReflect.Descriptor instead.
 func (*ConsumerGroupRequest) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{10}
+	return file_services_eventbus_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *ConsumerGroupRequest) GetGroupId() string {
@@ -952,16 +1298,103 @@ func (x *ConsumerGroupRequest) GetGroupId() string {
 	return ""
 }
 
+func (x *ConsumerGroupRequest) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *ConsumerGroupRequest) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type ListConsumerGroupsRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// page_size 0 uses the method_collection default.
+	PageSize      int32  `protobuf:"varint,1,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string `protobuf:"bytes,2,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListConsumerGroupsRequest) Reset() {
+	*x = ListConsumerGroupsRequest{}
+	mi := &file_services_eventbus_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListConsumerGroupsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListConsumerGroupsRequest) ProtoMessage() {}
+
+func (x *ListConsumerGroupsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListConsumerGroupsRequest.ProtoReflect.Descriptor instead.
+func (*ListConsumerGroupsRequest) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *ListConsumerGroupsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListConsumerGroupsRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
+func (x *ListConsumerGroupsRequest) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *ListConsumerGroupsRequest) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
 type ListConsumerGroupsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Groups        []*ConsumerGroupInfo   `protobuf:"bytes,1,rep,name=groups,proto3" json:"groups,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                  `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ListConsumerGroupsResponse) Reset() {
 	*x = ListConsumerGroupsResponse{}
-	mi := &file_services_eventbus_proto_msgTypes[11]
+	mi := &file_services_eventbus_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -973,7 +1406,7 @@ func (x *ListConsumerGroupsResponse) String() string {
 func (*ListConsumerGroupsResponse) ProtoMessage() {}
 
 func (x *ListConsumerGroupsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[11]
+	mi := &file_services_eventbus_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -986,7 +1419,7 @@ func (x *ListConsumerGroupsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListConsumerGroupsResponse.ProtoReflect.Descriptor instead.
 func (*ListConsumerGroupsResponse) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{11}
+	return file_services_eventbus_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *ListConsumerGroupsResponse) GetGroups() []*ConsumerGroupInfo {
@@ -994,6 +1427,34 @@ func (x *ListConsumerGroupsResponse) GetGroups() []*ConsumerGroupInfo {
 		return x.Groups
 	}
 	return nil
+}
+
+func (x *ListConsumerGroupsResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *ListConsumerGroupsResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
+}
+
+func (x *ListConsumerGroupsResponse) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *ListConsumerGroupsResponse) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
 }
 
 type ResetConsumerGroupOffsetsRequest struct {
@@ -1007,13 +1468,15 @@ type ResetConsumerGroupOffsetsRequest struct {
 	//	*ResetConsumerGroupOffsetsRequest_ToLatest
 	//	*ResetConsumerGroupOffsetsRequest_ToEarliest
 	ResetTo       isResetConsumerGroupOffsetsRequest_ResetTo `protobuf_oneof:"reset_to"`
+	TraceId       string                                     `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                                       `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ResetConsumerGroupOffsetsRequest) Reset() {
 	*x = ResetConsumerGroupOffsetsRequest{}
-	mi := &file_services_eventbus_proto_msgTypes[12]
+	mi := &file_services_eventbus_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1025,7 +1488,7 @@ func (x *ResetConsumerGroupOffsetsRequest) String() string {
 func (*ResetConsumerGroupOffsetsRequest) ProtoMessage() {}
 
 func (x *ResetConsumerGroupOffsetsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[12]
+	mi := &file_services_eventbus_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1038,7 +1501,7 @@ func (x *ResetConsumerGroupOffsetsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResetConsumerGroupOffsetsRequest.ProtoReflect.Descriptor instead.
 func (*ResetConsumerGroupOffsetsRequest) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{12}
+	return file_services_eventbus_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *ResetConsumerGroupOffsetsRequest) GetGroupId() string {
@@ -1098,6 +1561,20 @@ func (x *ResetConsumerGroupOffsetsRequest) GetToEarliest() bool {
 	return false
 }
 
+func (x *ResetConsumerGroupOffsetsRequest) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *ResetConsumerGroupOffsetsRequest) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
 type isResetConsumerGroupOffsetsRequest_ResetTo interface {
 	isResetConsumerGroupOffsetsRequest_ResetTo()
 }
@@ -1138,7 +1615,7 @@ type BrokerInfo struct {
 
 func (x *BrokerInfo) Reset() {
 	*x = BrokerInfo{}
-	mi := &file_services_eventbus_proto_msgTypes[13]
+	mi := &file_services_eventbus_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1150,7 +1627,7 @@ func (x *BrokerInfo) String() string {
 func (*BrokerInfo) ProtoMessage() {}
 
 func (x *BrokerInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[13]
+	mi := &file_services_eventbus_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1163,7 +1640,7 @@ func (x *BrokerInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BrokerInfo.ProtoReflect.Descriptor instead.
 func (*BrokerInfo) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{13}
+	return file_services_eventbus_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *BrokerInfo) GetId() int32 {
@@ -1199,13 +1676,15 @@ type ClusterHealthResponse struct {
 	BrokerCount   int32                  `protobuf:"varint,1,opt,name=broker_count,json=brokerCount,proto3" json:"broker_count,omitempty"`
 	Brokers       []*BrokerInfo          `protobuf:"bytes,2,rep,name=brokers,proto3" json:"brokers,omitempty"`
 	ControllerId  int32                  `protobuf:"varint,3,opt,name=controller_id,json=controllerId,proto3" json:"controller_id,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ClusterHealthResponse) Reset() {
 	*x = ClusterHealthResponse{}
-	mi := &file_services_eventbus_proto_msgTypes[14]
+	mi := &file_services_eventbus_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1217,7 +1696,7 @@ func (x *ClusterHealthResponse) String() string {
 func (*ClusterHealthResponse) ProtoMessage() {}
 
 func (x *ClusterHealthResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[14]
+	mi := &file_services_eventbus_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1230,7 +1709,7 @@ func (x *ClusterHealthResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClusterHealthResponse.ProtoReflect.Descriptor instead.
 func (*ClusterHealthResponse) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{14}
+	return file_services_eventbus_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *ClusterHealthResponse) GetBrokerCount() int32 {
@@ -1252,6 +1731,20 @@ func (x *ClusterHealthResponse) GetControllerId() int32 {
 		return x.ControllerId
 	}
 	return 0
+}
+
+func (x *ClusterHealthResponse) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *ClusterHealthResponse) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
 }
 
 // Config for the event-bus service. Stored in kernel via grpc_config.
@@ -1282,14 +1775,16 @@ type Config struct {
 	// cluster_seed is a stable string used to deterministically derive the KRaft cluster UUID.
 	ClusterSeed string `protobuf:"bytes,11,opt,name=cluster_seed,json=clusterSeed,proto3" json:"cluster_seed,omitempty"`
 	// state_refresh_interval_seconds controls how often this node re-registers in EventbusState.
-	StateRefreshIntervalSeconds int32 `protobuf:"varint,12,opt,name=state_refresh_interval_seconds,json=stateRefreshIntervalSeconds,proto3" json:"state_refresh_interval_seconds,omitempty"`
+	StateRefreshIntervalSeconds int32  `protobuf:"varint,12,opt,name=state_refresh_interval_seconds,json=stateRefreshIntervalSeconds,proto3" json:"state_refresh_interval_seconds,omitempty"`
+	TraceId                     string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop                        bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields               protoimpl.UnknownFields
 	sizeCache                   protoimpl.SizeCache
 }
 
 func (x *Config) Reset() {
 	*x = Config{}
-	mi := &file_services_eventbus_proto_msgTypes[15]
+	mi := &file_services_eventbus_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1301,7 +1796,7 @@ func (x *Config) String() string {
 func (*Config) ProtoMessage() {}
 
 func (x *Config) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[15]
+	mi := &file_services_eventbus_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1314,7 +1809,7 @@ func (x *Config) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Config.ProtoReflect.Descriptor instead.
 func (*Config) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{15}
+	return file_services_eventbus_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *Config) GetNodeRole() KafkaNodeRole {
@@ -1401,6 +1896,20 @@ func (x *Config) GetStateRefreshIntervalSeconds() int32 {
 	return 0
 }
 
+func (x *Config) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *Config) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
 // EventbusNode represents a single eventbus (Kafka) instance registered in shared state.
 // Each node publishes its own entry on startup and refreshes it periodically.
 type EventbusNode struct {
@@ -1417,7 +1926,7 @@ type EventbusNode struct {
 
 func (x *EventbusNode) Reset() {
 	*x = EventbusNode{}
-	mi := &file_services_eventbus_proto_msgTypes[16]
+	mi := &file_services_eventbus_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1429,7 +1938,7 @@ func (x *EventbusNode) String() string {
 func (*EventbusNode) ProtoMessage() {}
 
 func (x *EventbusNode) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[16]
+	mi := &file_services_eventbus_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1442,7 +1951,7 @@ func (x *EventbusNode) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EventbusNode.ProtoReflect.Descriptor instead.
 func (*EventbusNode) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{16}
+	return file_services_eventbus_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *EventbusNode) GetNodeId() int32 {
@@ -1480,7 +1989,7 @@ type EventbusState struct {
 
 func (x *EventbusState) Reset() {
 	*x = EventbusState{}
-	mi := &file_services_eventbus_proto_msgTypes[17]
+	mi := &file_services_eventbus_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1492,7 +2001,7 @@ func (x *EventbusState) String() string {
 func (*EventbusState) ProtoMessage() {}
 
 func (x *EventbusState) ProtoReflect() protoreflect.Message {
-	mi := &file_services_eventbus_proto_msgTypes[17]
+	mi := &file_services_eventbus_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1505,7 +2014,7 @@ func (x *EventbusState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EventbusState.ProtoReflect.Descriptor instead.
 func (*EventbusState) Descriptor() ([]byte, []int) {
-	return file_services_eventbus_proto_rawDescGZIP(), []int{17}
+	return file_services_eventbus_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *EventbusState) GetNodes() []*EventbusNode {
@@ -1513,6 +2022,1266 @@ func (x *EventbusState) GetNodes() []*EventbusNode {
 		return x.Nodes
 	}
 	return nil
+}
+
+// EventbusConfigState is the state boundary for eventbus service configuration.
+// Auto-injected by tacplus from (spec.grpc_config) annotation.
+type EventbusConfigState struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Config        *Config                `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EventbusConfigState) Reset() {
+	*x = EventbusConfigState{}
+	mi := &file_services_eventbus_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EventbusConfigState) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EventbusConfigState) ProtoMessage() {}
+
+func (x *EventbusConfigState) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EventbusConfigState.ProtoReflect.Descriptor instead.
+func (*EventbusConfigState) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *EventbusConfigState) GetConfig() *Config {
+	if x != nil {
+		return x.Config
+	}
+	return nil
+}
+
+type QueryValue struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Value:
+	//
+	//	*QueryValue_StringValue
+	//	*QueryValue_IntValue
+	//	*QueryValue_DoubleValue
+	//	*QueryValue_BoolValue
+	Value         isQueryValue_Value `protobuf_oneof:"value"`
+	TraceId       string             `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool               `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *QueryValue) Reset() {
+	*x = QueryValue{}
+	mi := &file_services_eventbus_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *QueryValue) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*QueryValue) ProtoMessage() {}
+
+func (x *QueryValue) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use QueryValue.ProtoReflect.Descriptor instead.
+func (*QueryValue) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *QueryValue) GetValue() isQueryValue_Value {
+	if x != nil {
+		return x.Value
+	}
+	return nil
+}
+
+func (x *QueryValue) GetStringValue() string {
+	if x != nil {
+		if x, ok := x.Value.(*QueryValue_StringValue); ok {
+			return x.StringValue
+		}
+	}
+	return ""
+}
+
+func (x *QueryValue) GetIntValue() int64 {
+	if x != nil {
+		if x, ok := x.Value.(*QueryValue_IntValue); ok {
+			return x.IntValue
+		}
+	}
+	return 0
+}
+
+func (x *QueryValue) GetDoubleValue() float64 {
+	if x != nil {
+		if x, ok := x.Value.(*QueryValue_DoubleValue); ok {
+			return x.DoubleValue
+		}
+	}
+	return 0
+}
+
+func (x *QueryValue) GetBoolValue() bool {
+	if x != nil {
+		if x, ok := x.Value.(*QueryValue_BoolValue); ok {
+			return x.BoolValue
+		}
+	}
+	return false
+}
+
+func (x *QueryValue) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *QueryValue) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type isQueryValue_Value interface {
+	isQueryValue_Value()
+}
+
+type QueryValue_StringValue struct {
+	StringValue string `protobuf:"bytes,1,opt,name=string_value,json=stringValue,proto3,oneof"`
+}
+
+type QueryValue_IntValue struct {
+	IntValue int64 `protobuf:"varint,2,opt,name=int_value,json=intValue,proto3,oneof"`
+}
+
+type QueryValue_DoubleValue struct {
+	DoubleValue float64 `protobuf:"fixed64,3,opt,name=double_value,json=doubleValue,proto3,oneof"`
+}
+
+type QueryValue_BoolValue struct {
+	BoolValue bool `protobuf:"varint,4,opt,name=bool_value,json=boolValue,proto3,oneof"`
+}
+
+func (*QueryValue_StringValue) isQueryValue_Value() {}
+
+func (*QueryValue_IntValue) isQueryValue_Value() {}
+
+func (*QueryValue_DoubleValue) isQueryValue_Value() {}
+
+func (*QueryValue_BoolValue) isQueryValue_Value() {}
+
+type Predicate struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	FieldName     string                 `protobuf:"bytes,1,opt,name=field_name,json=fieldName,proto3" json:"field_name,omitempty"`
+	Op            ComparisonOp           `protobuf:"varint,2,opt,name=op,proto3,enum=eventbus.ComparisonOp" json:"op,omitempty"`
+	Value         *QueryValue            `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`
+	Values        []*QueryValue          `protobuf:"bytes,4,rep,name=values,proto3" json:"values,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Predicate) Reset() {
+	*x = Predicate{}
+	mi := &file_services_eventbus_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Predicate) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Predicate) ProtoMessage() {}
+
+func (x *Predicate) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Predicate.ProtoReflect.Descriptor instead.
+func (*Predicate) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *Predicate) GetFieldName() string {
+	if x != nil {
+		return x.FieldName
+	}
+	return ""
+}
+
+func (x *Predicate) GetOp() ComparisonOp {
+	if x != nil {
+		return x.Op
+	}
+	return ComparisonOp_COMPARISON_OP_UNSPECIFIED
+}
+
+func (x *Predicate) GetValue() *QueryValue {
+	if x != nil {
+		return x.Value
+	}
+	return nil
+}
+
+func (x *Predicate) GetValues() []*QueryValue {
+	if x != nil {
+		return x.Values
+	}
+	return nil
+}
+
+func (x *Predicate) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *Predicate) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type PredicateGroup struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Op            LogicalOp              `protobuf:"varint,1,opt,name=op,proto3,enum=eventbus.LogicalOp" json:"op,omitempty"`
+	Predicates    []*Predicate           `protobuf:"bytes,2,rep,name=predicates,proto3" json:"predicates,omitempty"`
+	Groups        []*PredicateGroup      `protobuf:"bytes,3,rep,name=groups,proto3" json:"groups,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PredicateGroup) Reset() {
+	*x = PredicateGroup{}
+	mi := &file_services_eventbus_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PredicateGroup) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PredicateGroup) ProtoMessage() {}
+
+func (x *PredicateGroup) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PredicateGroup.ProtoReflect.Descriptor instead.
+func (*PredicateGroup) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *PredicateGroup) GetOp() LogicalOp {
+	if x != nil {
+		return x.Op
+	}
+	return LogicalOp_LOGICAL_OP_UNSPECIFIED
+}
+
+func (x *PredicateGroup) GetPredicates() []*Predicate {
+	if x != nil {
+		return x.Predicates
+	}
+	return nil
+}
+
+func (x *PredicateGroup) GetGroups() []*PredicateGroup {
+	if x != nil {
+		return x.Groups
+	}
+	return nil
+}
+
+func (x *PredicateGroup) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *PredicateGroup) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type SortField struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	FieldName     string                 `protobuf:"bytes,1,opt,name=field_name,json=fieldName,proto3" json:"field_name,omitempty"`
+	Direction     SortDirection          `protobuf:"varint,2,opt,name=direction,proto3,enum=eventbus.SortDirection" json:"direction,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SortField) Reset() {
+	*x = SortField{}
+	mi := &file_services_eventbus_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SortField) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SortField) ProtoMessage() {}
+
+func (x *SortField) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SortField.ProtoReflect.Descriptor instead.
+func (*SortField) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *SortField) GetFieldName() string {
+	if x != nil {
+		return x.FieldName
+	}
+	return ""
+}
+
+func (x *SortField) GetDirection() SortDirection {
+	if x != nil {
+		return x.Direction
+	}
+	return SortDirection_SORT_DIRECTION_UNSPECIFIED
+}
+
+func (x *SortField) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *SortField) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type CollectionQuery struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Where         *PredicateGroup        `protobuf:"bytes,1,opt,name=where,proto3" json:"where,omitempty"`
+	OrderBy       []*SortField           `protobuf:"bytes,2,rep,name=order_by,json=orderBy,proto3" json:"order_by,omitempty"`
+	Limit         int32                  `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`
+	Offset        int32                  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CollectionQuery) Reset() {
+	*x = CollectionQuery{}
+	mi := &file_services_eventbus_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CollectionQuery) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CollectionQuery) ProtoMessage() {}
+
+func (x *CollectionQuery) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CollectionQuery.ProtoReflect.Descriptor instead.
+func (*CollectionQuery) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *CollectionQuery) GetWhere() *PredicateGroup {
+	if x != nil {
+		return x.Where
+	}
+	return nil
+}
+
+func (x *CollectionQuery) GetOrderBy() []*SortField {
+	if x != nil {
+		return x.OrderBy
+	}
+	return nil
+}
+
+func (x *CollectionQuery) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *CollectionQuery) GetOffset() int32 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
+}
+
+func (x *CollectionQuery) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *CollectionQuery) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type NodesGetRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Key           string                 `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NodesGetRequest) Reset() {
+	*x = NodesGetRequest{}
+	mi := &file_services_eventbus_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NodesGetRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NodesGetRequest) ProtoMessage() {}
+
+func (x *NodesGetRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NodesGetRequest.ProtoReflect.Descriptor instead.
+func (*NodesGetRequest) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *NodesGetRequest) GetKey() string {
+	if x != nil {
+		return x.Key
+	}
+	return ""
+}
+
+func (x *NodesGetRequest) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *NodesGetRequest) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type NodesPutRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Key           string                 `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	Value         *EventbusNode          `protobuf:"bytes,2,opt,name=value,proto3" json:"value,omitempty"`
+	LockCounter   int64                  `protobuf:"varint,3,opt,name=lock_counter,json=lockCounter,proto3" json:"lock_counter,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NodesPutRequest) Reset() {
+	*x = NodesPutRequest{}
+	mi := &file_services_eventbus_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NodesPutRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NodesPutRequest) ProtoMessage() {}
+
+func (x *NodesPutRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NodesPutRequest.ProtoReflect.Descriptor instead.
+func (*NodesPutRequest) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *NodesPutRequest) GetKey() string {
+	if x != nil {
+		return x.Key
+	}
+	return ""
+}
+
+func (x *NodesPutRequest) GetValue() *EventbusNode {
+	if x != nil {
+		return x.Value
+	}
+	return nil
+}
+
+func (x *NodesPutRequest) GetLockCounter() int64 {
+	if x != nil {
+		return x.LockCounter
+	}
+	return 0
+}
+
+func (x *NodesPutRequest) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *NodesPutRequest) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type NodesGetAllRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NodesGetAllRequest) Reset() {
+	*x = NodesGetAllRequest{}
+	mi := &file_services_eventbus_proto_msgTypes[28]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NodesGetAllRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NodesGetAllRequest) ProtoMessage() {}
+
+func (x *NodesGetAllRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[28]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NodesGetAllRequest.ProtoReflect.Descriptor instead.
+func (*NodesGetAllRequest) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{28}
+}
+
+func (x *NodesGetAllRequest) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *NodesGetAllRequest) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type NodesKeysRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NodesKeysRequest) Reset() {
+	*x = NodesKeysRequest{}
+	mi := &file_services_eventbus_proto_msgTypes[29]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NodesKeysRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NodesKeysRequest) ProtoMessage() {}
+
+func (x *NodesKeysRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[29]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NodesKeysRequest.ProtoReflect.Descriptor instead.
+func (*NodesKeysRequest) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{29}
+}
+
+func (x *NodesKeysRequest) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *NodesKeysRequest) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type NodesSizeRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NodesSizeRequest) Reset() {
+	*x = NodesSizeRequest{}
+	mi := &file_services_eventbus_proto_msgTypes[30]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NodesSizeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NodesSizeRequest) ProtoMessage() {}
+
+func (x *NodesSizeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[30]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NodesSizeRequest.ProtoReflect.Descriptor instead.
+func (*NodesSizeRequest) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{30}
+}
+
+func (x *NodesSizeRequest) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *NodesSizeRequest) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type NodesClearRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NodesClearRequest) Reset() {
+	*x = NodesClearRequest{}
+	mi := &file_services_eventbus_proto_msgTypes[31]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NodesClearRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NodesClearRequest) ProtoMessage() {}
+
+func (x *NodesClearRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[31]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NodesClearRequest.ProtoReflect.Descriptor instead.
+func (*NodesClearRequest) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{31}
+}
+
+func (x *NodesClearRequest) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *NodesClearRequest) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type NodesValueResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Value         *EventbusNode          `protobuf:"bytes,1,opt,name=value,proto3" json:"value,omitempty"`
+	Found         bool                   `protobuf:"varint,2,opt,name=found,proto3" json:"found,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NodesValueResponse) Reset() {
+	*x = NodesValueResponse{}
+	mi := &file_services_eventbus_proto_msgTypes[32]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NodesValueResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NodesValueResponse) ProtoMessage() {}
+
+func (x *NodesValueResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[32]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NodesValueResponse.ProtoReflect.Descriptor instead.
+func (*NodesValueResponse) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{32}
+}
+
+func (x *NodesValueResponse) GetValue() *EventbusNode {
+	if x != nil {
+		return x.Value
+	}
+	return nil
+}
+
+func (x *NodesValueResponse) GetFound() bool {
+	if x != nil {
+		return x.Found
+	}
+	return false
+}
+
+func (x *NodesValueResponse) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *NodesValueResponse) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type NodesEntriesResponse struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Entries       map[string]*EventbusNode `protobuf:"bytes,1,rep,name=entries,proto3" json:"entries,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	TraceId       string                   `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                     `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NodesEntriesResponse) Reset() {
+	*x = NodesEntriesResponse{}
+	mi := &file_services_eventbus_proto_msgTypes[33]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NodesEntriesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NodesEntriesResponse) ProtoMessage() {}
+
+func (x *NodesEntriesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[33]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NodesEntriesResponse.ProtoReflect.Descriptor instead.
+func (*NodesEntriesResponse) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{33}
+}
+
+func (x *NodesEntriesResponse) GetEntries() map[string]*EventbusNode {
+	if x != nil {
+		return x.Entries
+	}
+	return nil
+}
+
+func (x *NodesEntriesResponse) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *NodesEntriesResponse) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type NodesKeysResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Keys          []string               `protobuf:"bytes,1,rep,name=keys,proto3" json:"keys,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NodesKeysResponse) Reset() {
+	*x = NodesKeysResponse{}
+	mi := &file_services_eventbus_proto_msgTypes[34]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NodesKeysResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NodesKeysResponse) ProtoMessage() {}
+
+func (x *NodesKeysResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[34]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NodesKeysResponse.ProtoReflect.Descriptor instead.
+func (*NodesKeysResponse) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{34}
+}
+
+func (x *NodesKeysResponse) GetKeys() []string {
+	if x != nil {
+		return x.Keys
+	}
+	return nil
+}
+
+func (x *NodesKeysResponse) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *NodesKeysResponse) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type NodesSizeResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Size          int32                  `protobuf:"varint,1,opt,name=size,proto3" json:"size,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NodesSizeResponse) Reset() {
+	*x = NodesSizeResponse{}
+	mi := &file_services_eventbus_proto_msgTypes[35]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NodesSizeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NodesSizeResponse) ProtoMessage() {}
+
+func (x *NodesSizeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[35]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NodesSizeResponse.ProtoReflect.Descriptor instead.
+func (*NodesSizeResponse) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{35}
+}
+
+func (x *NodesSizeResponse) GetSize() int32 {
+	if x != nil {
+		return x.Size
+	}
+	return 0
+}
+
+func (x *NodesSizeResponse) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *NodesSizeResponse) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type NodesQueryRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Query         *CollectionQuery       `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NodesQueryRequest) Reset() {
+	*x = NodesQueryRequest{}
+	mi := &file_services_eventbus_proto_msgTypes[36]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NodesQueryRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NodesQueryRequest) ProtoMessage() {}
+
+func (x *NodesQueryRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[36]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NodesQueryRequest.ProtoReflect.Descriptor instead.
+func (*NodesQueryRequest) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{36}
+}
+
+func (x *NodesQueryRequest) GetQuery() *CollectionQuery {
+	if x != nil {
+		return x.Query
+	}
+	return nil
+}
+
+func (x *NodesQueryRequest) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *NodesQueryRequest) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type NodesQueryResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Results       []*EventbusNode        `protobuf:"bytes,1,rep,name=results,proto3" json:"results,omitempty"`
+	TotalCount    int32                  `protobuf:"varint,2,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NodesQueryResponse) Reset() {
+	*x = NodesQueryResponse{}
+	mi := &file_services_eventbus_proto_msgTypes[37]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NodesQueryResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NodesQueryResponse) ProtoMessage() {}
+
+func (x *NodesQueryResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[37]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NodesQueryResponse.ProtoReflect.Descriptor instead.
+func (*NodesQueryResponse) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{37}
+}
+
+func (x *NodesQueryResponse) GetResults() []*EventbusNode {
+	if x != nil {
+		return x.Results
+	}
+	return nil
+}
+
+func (x *NodesQueryResponse) GetTotalCount() int32 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
+}
+
+func (x *NodesQueryResponse) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *NodesQueryResponse) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type MapEmpty struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MapEmpty) Reset() {
+	*x = MapEmpty{}
+	mi := &file_services_eventbus_proto_msgTypes[38]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MapEmpty) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MapEmpty) ProtoMessage() {}
+
+func (x *MapEmpty) ProtoReflect() protoreflect.Message {
+	mi := &file_services_eventbus_proto_msgTypes[38]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MapEmpty.ProtoReflect.Descriptor instead.
+func (*MapEmpty) Descriptor() ([]byte, []int) {
+	return file_services_eventbus_proto_rawDescGZIP(), []int{38}
+}
+
+func (x *MapEmpty) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *MapEmpty) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
 }
 
 var File_services_eventbus_proto protoreflect.FileDescriptor
@@ -1538,57 +3307,88 @@ const file_services_eventbus_proto_rawDesc = "" +
 	"start_from\"S\n" +
 	"\x0fPublishResponse\x12\"\n" +
 	"\tpartition\x18\x01 \x01(\x05B\x04\xb0\xa7\x1d\x00R\tpartition\x12\x1c\n" +
-	"\x06offset\x18\x02 \x01(\x03B\x04\xb0\xa7\x1d\x00R\x06offset\"\xab\x02\n" +
+	"\x06offset\x18\x02 \x01(\x03B\x04\xb0\xa7\x1d\x00R\x06offset\"\xbb\x01\n" +
 	"\n" +
-	"RecordMeta\x12\x17\n" +
-	"\x03key\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x02R\x03key\x12A\n" +
-	"\aheaders\x18\x02 \x03(\v2!.eventbus.RecordMeta.HeadersEntryB\x04\xb8\xa8\x1d@R\aheaders\x12\"\n" +
+	"RecordMeta\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\fR\x03key\x12\x1f\n" +
+	"\x05topic\x18\x02 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x05topic\x12\"\n" +
 	"\tpartition\x18\x03 \x01(\x05B\x04\xb0\xa7\x1d\x00R\tpartition\x12\x1c\n" +
-	"\x06offset\x18\x04 \x01(\x03B\x04\xb0\xa7\x1d\x00R\x06offset\x12C\n" +
-	"\x0fevent_timestamp\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\x0eeventTimestamp\x1a:\n" +
-	"\fHeadersEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xc3\x03\n" +
+	"\x06offset\x18\x04 \x01(\x03B\x04\xb0\xa7\x1d\x00R\x06offset\x128\n" +
+	"\ttimestamp\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\"\xf4\x03\n" +
 	"\tTopicInfo\x12\x1d\n" +
 	"\x04name\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x04name\x12-\n" +
 	"\x0fpartition_count\x18\x02 \x01(\x05B\x04\xb0\xa7\x1d\x01R\x0epartitionCount\x120\n" +
 	"\fretention_ms\x18\x03 \x01(\x03B\r\xb0\xa7\x1d\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01R\vretentionMs\x12Z\n" +
 	"\x10earliest_offsets\x18\x04 \x03(\v2(.eventbus.TopicInfo.EarliestOffsetsEntryB\x05\xb8\xa8\x1d\x80\x02R\x0fearliestOffsets\x12T\n" +
-	"\x0elatest_offsets\x18\x05 \x03(\v2&.eventbus.TopicInfo.LatestOffsetsEntryB\x05\xb8\xa8\x1d\x80\x02R\rlatestOffsets\x1aB\n" +
+	"\x0elatest_offsets\x18\x05 \x03(\v2&.eventbus.TopicInfo.LatestOffsetsEntryB\x05\xb8\xa8\x1d\x80\x02R\rlatestOffsets\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\x1aB\n" +
 	"\x14EarliestOffsetsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\x03R\x05value:\x028\x01\x1a@\n" +
 	"\x12LatestOffsetsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x03R\x05value:\x028\x01\"3\n" +
+	"\x05value\x18\x02 \x01(\x03R\x05value:\x028\x01\"d\n" +
 	"\x10TopicInfoRequest\x12\x1f\n" +
-	"\x05topic\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x05topic\"H\n" +
+	"\x05topic\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x05topic\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x80\x01\n" +
+	"\x11ListTopicsRequest\x12\x1b\n" +
+	"\tpage_size\x18\x01 \x01(\x05R\bpageSize\x12\x1d\n" +
+	"\n" +
+	"page_token\x18\x02 \x01(\tR\tpageToken\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc2\x01\n" +
 	"\x12ListTopicsResponse\x122\n" +
-	"\x06topics\x18\x01 \x03(\v2\x13.eventbus.TopicInfoB\x05\xb8\xa8\x1d\x80\bR\x06topics\"5\n" +
+	"\x06topics\x18\x01 \x03(\v2\x13.eventbus.TopicInfoB\x05\xb8\xa8\x1d\x80 R\x06topics\x12&\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1f\n" +
+	"\vtotal_count\x18\x03 \x01(\x03R\n" +
+	"totalCount\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"f\n" +
 	"\x12DeleteTopicRequest\x12\x1f\n" +
-	"\x05topic\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x05topic\"\xa1\x01\n" +
+	"\x05topic\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x05topic\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd2\x01\n" +
 	"\x18UpdateTopicConfigRequest\x12\x1f\n" +
 	"\x05topic\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x05topic\x120\n" +
 	"\fretention_ms\x18\x02 \x01(\x03B\r\xb0\xa7\x1d\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01R\vretentionMs\x122\n" +
-	"\x0fpartition_count\x18\x03 \x01(\x05B\t\xb0\xa7\x1d\x00\xc0\xa7\x1d\x80\x02R\x0epartitionCount\"\xca\x01\n" +
+	"\x0fpartition_count\x18\x03 \x01(\x05B\t\xb0\xa7\x1d\x00\xc0\xa7\x1d\x80\x02R\x0epartitionCount\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xca\x01\n" +
 	"\fPartitionLag\x12\x1f\n" +
 	"\x05topic\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x05topic\x12\"\n" +
 	"\tpartition\x18\x02 \x01(\x05B\x04\xb0\xa7\x1d\x00R\tpartition\x128\n" +
 	"\x10committed_offset\x18\x03 \x01(\x03B\r\xb0\xa7\x1d\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01R\x0fcommittedOffset\x12#\n" +
 	"\n" +
 	"end_offset\x18\x04 \x01(\x03B\x04\xb0\xa7\x1d\x00R\tendOffset\x12\x16\n" +
-	"\x03lag\x18\x05 \x01(\x03B\x04\xb0\xa7\x1d\x00R\x03lag\"\xb7\x01\n" +
+	"\x03lag\x18\x05 \x01(\x03B\x04\xb0\xa7\x1d\x00R\x03lag\"\xe8\x01\n" +
 	"\x11ConsumerGroupInfo\x12$\n" +
 	"\bgroup_id\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\agroupId\x12\x1a\n" +
 	"\x05state\x18\x02 \x01(\tB\x04\x90\xa7\x1d@R\x05state\x12=\n" +
 	"\n" +
 	"partitions\x18\x03 \x03(\v2\x16.eventbus.PartitionLagB\x05\xb8\xa8\x1d\x80\bR\n" +
 	"partitions\x12!\n" +
-	"\ttotal_lag\x18\x04 \x01(\x03B\x04\xb0\xa7\x1d\x00R\btotalLag\"<\n" +
+	"\ttotal_lag\x18\x04 \x01(\x03B\x04\xb0\xa7\x1d\x00R\btotalLag\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"m\n" +
 	"\x14ConsumerGroupRequest\x12$\n" +
-	"\bgroup_id\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\agroupId\"X\n" +
+	"\bgroup_id\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\agroupId\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x88\x01\n" +
+	"\x19ListConsumerGroupsRequest\x12\x1b\n" +
+	"\tpage_size\x18\x01 \x01(\x05R\bpageSize\x12\x1d\n" +
+	"\n" +
+	"page_token\x18\x02 \x01(\tR\tpageToken\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd2\x01\n" +
 	"\x1aListConsumerGroupsResponse\x12:\n" +
-	"\x06groups\x18\x01 \x03(\v2\x1b.eventbus.ConsumerGroupInfoB\x05\xb8\xa8\x1d\x80\bR\x06groups\"\x93\x02\n" +
+	"\x06groups\x18\x01 \x03(\v2\x1b.eventbus.ConsumerGroupInfoB\x05\xb8\xa8\x1d\x80 R\x06groups\x12&\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1f\n" +
+	"\vtotal_count\x18\x03 \x01(\x03R\n" +
+	"totalCount\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc4\x02\n" +
 	" ResetConsumerGroupOffsetsRequest\x12$\n" +
 	"\bgroup_id\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\agroupId\x12\x1f\n" +
 	"\x05topic\x18\x02 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x05topic\x12\x1e\n" +
@@ -1596,7 +3396,9 @@ const file_services_eventbus_proto_rawDesc = "" +
 	"\ttimestamp\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\ttimestamp\x12\x1d\n" +
 	"\tto_latest\x18\x05 \x01(\bH\x00R\btoLatest\x12!\n" +
 	"\vto_earliest\x18\x06 \x01(\bH\x00R\n" +
-	"toEarliestB\n" +
+	"toEarliest\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopB\n" +
 	"\n" +
 	"\breset_to\"\x86\x01\n" +
 	"\n" +
@@ -1605,11 +3407,13 @@ const file_services_eventbus_proto_rawDesc = "" +
 	"\x04host\x18\x02 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x04host\x12\x1e\n" +
 	"\x04port\x18\x03 \x01(\x05B\n" +
 	"\xb0\xa7\x1d\x01\xc0\xa7\x1d\xff\xff\x03R\x04port\x12#\n" +
-	"\ris_controller\x18\x04 \x01(\bR\fisController\"\xaa\x01\n" +
+	"\ris_controller\x18\x04 \x01(\bR\fisController\"\xdb\x01\n" +
 	"\x15ClusterHealthResponse\x12'\n" +
 	"\fbroker_count\x18\x01 \x01(\x05B\x04\xb0\xa7\x1d\x00R\vbrokerCount\x124\n" +
 	"\abrokers\x18\x02 \x03(\v2\x14.eventbus.BrokerInfoB\x04\xb8\xa8\x1d@R\abrokers\x122\n" +
-	"\rcontroller_id\x18\x03 \x01(\x05B\r\xb0\xa7\x1d\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01R\fcontrollerId\"\xc6\x05\n" +
+	"\rcontroller_id\x18\x03 \x01(\x05B\r\xb0\xa7\x1d\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01R\fcontrollerId\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xf7\x05\n" +
 	"\x06Config\x12:\n" +
 	"\tnode_role\x18\x01 \x01(\x0e2\x17.eventbus.KafkaNodeRoleB\x04\x98\xa7\x1d\x01R\bnodeRole\x129\n" +
 	"\bdata_dir\x18\x02 \x01(\tB\x1e\xa0\xa7\x1d\x04\x8a\xa8\x1d\x16/var/lib/eventbus/dataR\adataDir\x12A\n" +
@@ -1625,7 +3429,9 @@ const file_services_eventbus_proto_rawDesc = "" +
 	"\anode_id\x18\n" +
 	" \x01(\x05B\x04\xb0\xa7\x1d\x00R\x06nodeId\x12,\n" +
 	"\fcluster_seed\x18\v \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\vclusterSeed\x12M\n" +
-	"\x1estate_refresh_interval_seconds\x18\f \x01(\x05B\b\xb0\xa7\x1d\x05\x90\xa8\x1d<R\x1bstateRefreshIntervalSeconds:\x0eҨ\x1d\n" +
+	"\x1estate_refresh_interval_seconds\x18\f \x01(\x05B\b\xb0\xa7\x1d\x05\x90\xa8\x1d<R\x1bstateRefreshIntervalSeconds\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0eҨ\x1d\n" +
 	"\n" +
 	"\beventbus\"\x92\x01\n" +
 	"\fEventbusNode\x12!\n" +
@@ -1635,7 +3441,104 @@ const file_services_eventbus_proto_rawDesc = "" +
 	".host.HostB\x04\x88\xa6\x1d\x01R\bendpoint\"W\n" +
 	"\rEventbusState\x126\n" +
 	"\x05nodes\x18\x01 \x03(\v2\x16.eventbus.EventbusNodeB\bȶ\x18x\xb8\xa8\x1d R\x05nodes:\x0e\x9a\xa8\x1d\n" +
-	"\x1a\x06kernel \x02*a\n" +
+	"\x1a\x06kernel \x02\"p\n" +
+	"\x13EventbusConfigState\x122\n" +
+	"\x06config\x18\x01 \x01(\v2\x10.eventbus.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config:%\x9a\xa8\x1d\x1d\n" +
+	"\x13EventbusConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\"\xd0\x01\n" +
+	"\n" +
+	"QueryValue\x12#\n" +
+	"\fstring_value\x18\x01 \x01(\tH\x00R\vstringValue\x12\x1d\n" +
+	"\tint_value\x18\x02 \x01(\x03H\x00R\bintValue\x12#\n" +
+	"\fdouble_value\x18\x03 \x01(\x01H\x00R\vdoubleValue\x12\x1f\n" +
+	"\n" +
+	"bool_value\x18\x04 \x01(\bH\x00R\tboolValue\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopB\a\n" +
+	"\x05value\"\xdd\x01\n" +
+	"\tPredicate\x12\x1d\n" +
+	"\n" +
+	"field_name\x18\x01 \x01(\tR\tfieldName\x12&\n" +
+	"\x02op\x18\x02 \x01(\x0e2\x16.eventbus.ComparisonOpR\x02op\x12*\n" +
+	"\x05value\x18\x03 \x01(\v2\x14.eventbus.QueryValueR\x05value\x12,\n" +
+	"\x06values\x18\x04 \x03(\v2\x14.eventbus.QueryValueR\x06values\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xcd\x01\n" +
+	"\x0ePredicateGroup\x12#\n" +
+	"\x02op\x18\x01 \x01(\x0e2\x13.eventbus.LogicalOpR\x02op\x123\n" +
+	"\n" +
+	"predicates\x18\x02 \x03(\v2\x13.eventbus.PredicateR\n" +
+	"predicates\x120\n" +
+	"\x06groups\x18\x03 \x03(\v2\x18.eventbus.PredicateGroupR\x06groups\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x92\x01\n" +
+	"\tSortField\x12\x1d\n" +
+	"\n" +
+	"field_name\x18\x01 \x01(\tR\tfieldName\x125\n" +
+	"\tdirection\x18\x02 \x01(\x0e2\x17.eventbus.SortDirectionR\tdirection\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd0\x01\n" +
+	"\x0fCollectionQuery\x12.\n" +
+	"\x05where\x18\x01 \x01(\v2\x18.eventbus.PredicateGroupR\x05where\x12.\n" +
+	"\border_by\x18\x02 \x03(\v2\x13.eventbus.SortFieldR\aorderBy\x12\x14\n" +
+	"\x05limit\x18\x03 \x01(\x05R\x05limit\x12\x16\n" +
+	"\x06offset\x18\x04 \x01(\x05R\x06offset\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"T\n" +
+	"\x0fNodesGetRequest\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa5\x01\n" +
+	"\x0fNodesPutRequest\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12,\n" +
+	"\x05value\x18\x02 \x01(\v2\x16.eventbus.EventbusNodeR\x05value\x12!\n" +
+	"\flock_counter\x18\x03 \x01(\x03R\vlockCounter\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"E\n" +
+	"\x12NodesGetAllRequest\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"C\n" +
+	"\x10NodesKeysRequest\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"C\n" +
+	"\x10NodesSizeRequest\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"D\n" +
+	"\x11NodesClearRequest\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x89\x01\n" +
+	"\x12NodesValueResponse\x12,\n" +
+	"\x05value\x18\x01 \x01(\v2\x16.eventbus.EventbusNodeR\x05value\x12\x14\n" +
+	"\x05found\x18\x02 \x01(\bR\x05found\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe2\x01\n" +
+	"\x14NodesEntriesResponse\x12E\n" +
+	"\aentries\x18\x01 \x03(\v2+.eventbus.NodesEntriesResponse.EntriesEntryR\aentries\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\x1aR\n" +
+	"\fEntriesEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12,\n" +
+	"\x05value\x18\x02 \x01(\v2\x16.eventbus.EventbusNodeR\x05value:\x028\x01\"X\n" +
+	"\x11NodesKeysResponse\x12\x12\n" +
+	"\x04keys\x18\x01 \x03(\tR\x04keys\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"X\n" +
+	"\x11NodesSizeResponse\x12\x12\n" +
+	"\x04size\x18\x01 \x01(\x05R\x04size\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"u\n" +
+	"\x11NodesQueryRequest\x12/\n" +
+	"\x05query\x18\x01 \x01(\v2\x19.eventbus.CollectionQueryR\x05query\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x98\x01\n" +
+	"\x12NodesQueryResponse\x120\n" +
+	"\aresults\x18\x01 \x03(\v2\x16.eventbus.EventbusNodeR\aresults\x12\x1f\n" +
+	"\vtotal_count\x18\x02 \x01(\x05R\n" +
+	"totalCount\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\";\n" +
+	"\bMapEmpty\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*a\n" +
 	"\x12BackpressurePolicy\x12\x17\n" +
 	"\x13BACKPRESSURE_BUFFER\x10\x00\x12\x19\n" +
 	"\x15BACKPRESSURE_DROP_OLD\x10\x01\x12\x17\n" +
@@ -1644,21 +3547,66 @@ const file_services_eventbus_proto_rawDesc = "" +
 	"\x14KAFKA_ROLE_UNDEFINED\x10\x00\x12\x17\n" +
 	"\x13KAFKA_ROLE_COMBINED\x10\x01\x12\x15\n" +
 	"\x11KAFKA_ROLE_BROKER\x10\x02\x12\x19\n" +
-	"\x15KAFKA_ROLE_CONTROLLER\x10\x032\xf3\x05\n" +
-	"\x05Admin\x12S\n" +
+	"\x15KAFKA_ROLE_CONTROLLER\x10\x03*\xb3\x02\n" +
+	"\fComparisonOp\x12\x1d\n" +
+	"\x19COMPARISON_OP_UNSPECIFIED\x10\x00\x12\x14\n" +
+	"\x10COMPARISON_OP_EQ\x10\x01\x12\x14\n" +
+	"\x10COMPARISON_OP_NE\x10\x02\x12\x14\n" +
+	"\x10COMPARISON_OP_GT\x10\x03\x12\x14\n" +
+	"\x10COMPARISON_OP_GE\x10\x04\x12\x14\n" +
+	"\x10COMPARISON_OP_LT\x10\x05\x12\x14\n" +
+	"\x10COMPARISON_OP_LE\x10\x06\x12\x14\n" +
+	"\x10COMPARISON_OP_IN\x10\a\x12\x18\n" +
+	"\x14COMPARISON_OP_NOT_IN\x10\b\x12\x16\n" +
+	"\x12COMPARISON_OP_LIKE\x10\t\x12\x19\n" +
+	"\x15COMPARISON_OP_IS_NULL\x10\n" +
+	"\x12\x1d\n" +
+	"\x19COMPARISON_OP_IS_NOT_NULL\x10\v*`\n" +
+	"\rSortDirection\x12\x1e\n" +
+	"\x1aSORT_DIRECTION_UNSPECIFIED\x10\x00\x12\x16\n" +
+	"\x12SORT_DIRECTION_ASC\x10\x01\x12\x17\n" +
+	"\x13SORT_DIRECTION_DESC\x10\x02*N\n" +
+	"\tLogicalOp\x12\x1a\n" +
+	"\x16LOGICAL_OP_UNSPECIFIED\x10\x00\x12\x12\n" +
+	"\x0eLOGICAL_OP_AND\x10\x01\x12\x11\n" +
+	"\rLOGICAL_OP_OR\x10\x022\x83\x06\n" +
+	"\x05Admin\x12W\n" +
 	"\n" +
-	"ListTopics\x12\x16.google.protobuf.Empty\x1a\x1c.eventbus.ListTopicsResponse\"\x0f\xf2\x88'\v\b\x01\x12\x04name\x18\x80\b\x12?\n" +
+	"ListTopics\x12\x1b.eventbus.ListTopicsRequest\x1a\x1c.eventbus.ListTopicsResponse\"\x0e\xf2\x88'\n" +
+	"\b\x03\x12\x04name(d\x12?\n" +
 	"\fGetTopicInfo\x12\x1a.eventbus.TopicInfoRequest\x1a\x13.eventbus.TopicInfo\x12C\n" +
 	"\vDeleteTopic\x12\x1c.eventbus.DeleteTopicRequest\x1a\x16.google.protobuf.Empty\x12L\n" +
 	"\x11UpdateTopicConfig\x12\".eventbus.UpdateTopicConfigRequest\x1a\x13.eventbus.TopicInfo\x12R\n" +
-	"\x13GetConsumerGroupLag\x12\x1e.eventbus.ConsumerGroupRequest\x1a\x1b.eventbus.ConsumerGroupInfo\x12g\n" +
-	"\x12ListConsumerGroups\x12\x16.google.protobuf.Empty\x1a$.eventbus.ListConsumerGroupsResponse\"\x13\xf2\x88'\x0f\b\x01\x12\bgroup_id\x18\x80\b\x12_\n" +
+	"\x13GetConsumerGroupLag\x12\x1e.eventbus.ConsumerGroupRequest\x1a\x1b.eventbus.ConsumerGroupInfo\x12s\n" +
+	"\x12ListConsumerGroups\x12#.eventbus.ListConsumerGroupsRequest\x1a$.eventbus.ListConsumerGroupsResponse\"\x12\xf2\x88'\x0e\b\x03\x12\bgroup_id(d\x12_\n" +
 	"\x19ResetConsumerGroupOffsets\x12*.eventbus.ResetConsumerGroupOffsetsRequest\x1a\x16.google.protobuf.Empty\x12M\n" +
 	"\x13DeleteConsumerGroup\x12\x1e.eventbus.ConsumerGroupRequest\x1a\x16.google.protobuf.Empty\x12K\n" +
 	"\x10GetClusterHealth\x12\x16.google.protobuf.Empty\x1a\x1f.eventbus.ClusterHealthResponse\x1a\a\xea\x97\"\x03\n" +
 	"\x01*2X\n" +
 	"\fTraceSession\x12B\n" +
-	"\x0eSubscribeTrace\x12\x13.trace.TraceRequest\x1a\x11.trace.TraceEvent\"\x06\xea\x88'\x02\b\x010\x01\x1a\x04\xf2\x97\"\x00Buڵ\x18\x02\x18\x01\x92\xb6\x18\r\n" +
+	"\x0eSubscribeTrace\x12\x13.trace.TraceRequest\x1a\x11.trace.TraceEvent\"\x06\xea\x88'\x02\b\x010\x01\x1a\x04\xf2\x97\"\x002\xf9\a\n" +
+	"\x14EventbusStateService\x12C\n" +
+	"\bGetNodes\x12\x19.eventbus.NodesGetRequest\x1a\x1c.eventbus.NodesValueResponse\x12C\n" +
+	"\bPutNodes\x12\x19.eventbus.NodesPutRequest\x1a\x1c.eventbus.NodesValueResponse\x129\n" +
+	"\bSetNodes\x12\x19.eventbus.NodesPutRequest\x1a\x12.eventbus.MapEmpty\x12F\n" +
+	"\vRemoveNodes\x12\x19.eventbus.NodesGetRequest\x1a\x1c.eventbus.NodesValueResponse\x12<\n" +
+	"\vDeleteNodes\x12\x19.eventbus.NodesGetRequest\x1a\x12.eventbus.MapEmpty\x12K\n" +
+	"\x10ContainsKeyNodes\x12\x19.eventbus.NodesGetRequest\x1a\x1c.eventbus.NodesValueResponse\x12K\n" +
+	"\vGetAllNodes\x12\x1c.eventbus.NodesGetAllRequest\x1a\x1e.eventbus.NodesEntriesResponse\x12F\n" +
+	"\vKeySetNodes\x12\x1a.eventbus.NodesKeysRequest\x1a\x1b.eventbus.NodesKeysResponse\x12D\n" +
+	"\tSizeNodes\x12\x1a.eventbus.NodesSizeRequest\x1a\x1b.eventbus.NodesSizeResponse\x12=\n" +
+	"\n" +
+	"ClearNodes\x12\x1b.eventbus.NodesClearRequest\x1a\x12.eventbus.MapEmpty\x12K\n" +
+	"\x10PutIfAbsentNodes\x12\x19.eventbus.NodesPutRequest\x1a\x1c.eventbus.NodesValueResponse\x12C\n" +
+	"\n" +
+	"WatchNodes\x12\x13.trace.TraceRequest\x1a\x1e.eventbus.NodesEntriesResponse0\x01\x12G\n" +
+	"\n" +
+	"QueryNodes\x12\x1b.eventbus.NodesQueryRequest\x1a\x1c.eventbus.NodesQueryResponse\x12N\n" +
+	"\x0fWatchQueryNodes\x12\x1b.eventbus.NodesQueryRequest\x1a\x1c.eventbus.NodesQueryResponse0\x01\x1a\x04\xea\x97\"\x002\xbf\x01\n" +
+	"\x1aEventbusConfigStateService\x122\n" +
+	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x10.eventbus.Config\x12/\n" +
+	"\tSetConfig\x12\x10.eventbus.Config\x1a\x10.eventbus.Config\x126\n" +
+	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x10.eventbus.Config0\x01\x1a\x04\xea\x97\"\x00Buڵ\x18\x02\x18\x01\x92\xb6\x18\r\n" +
 	"\vkernel.MintZ\\gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/eventbusb\x06proto3"
 
 var (
@@ -1673,79 +3621,152 @@ func file_services_eventbus_proto_rawDescGZIP() []byte {
 	return file_services_eventbus_proto_rawDescData
 }
 
-var file_services_eventbus_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_services_eventbus_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_services_eventbus_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
+var file_services_eventbus_proto_msgTypes = make([]protoimpl.MessageInfo, 42)
 var file_services_eventbus_proto_goTypes = []any{
 	(BackpressurePolicy)(0),                  // 0: eventbus.BackpressurePolicy
 	(KafkaNodeRole)(0),                       // 1: eventbus.KafkaNodeRole
-	(*SubscribeRequest)(nil),                 // 2: eventbus.SubscribeRequest
-	(*PublishResponse)(nil),                  // 3: eventbus.PublishResponse
-	(*RecordMeta)(nil),                       // 4: eventbus.RecordMeta
-	(*TopicInfo)(nil),                        // 5: eventbus.TopicInfo
-	(*TopicInfoRequest)(nil),                 // 6: eventbus.TopicInfoRequest
-	(*ListTopicsResponse)(nil),               // 7: eventbus.ListTopicsResponse
-	(*DeleteTopicRequest)(nil),               // 8: eventbus.DeleteTopicRequest
-	(*UpdateTopicConfigRequest)(nil),         // 9: eventbus.UpdateTopicConfigRequest
-	(*PartitionLag)(nil),                     // 10: eventbus.PartitionLag
-	(*ConsumerGroupInfo)(nil),                // 11: eventbus.ConsumerGroupInfo
-	(*ConsumerGroupRequest)(nil),             // 12: eventbus.ConsumerGroupRequest
-	(*ListConsumerGroupsResponse)(nil),       // 13: eventbus.ListConsumerGroupsResponse
-	(*ResetConsumerGroupOffsetsRequest)(nil), // 14: eventbus.ResetConsumerGroupOffsetsRequest
-	(*BrokerInfo)(nil),                       // 15: eventbus.BrokerInfo
-	(*ClusterHealthResponse)(nil),            // 16: eventbus.ClusterHealthResponse
-	(*Config)(nil),                           // 17: eventbus.Config
-	(*EventbusNode)(nil),                     // 18: eventbus.EventbusNode
-	(*EventbusState)(nil),                    // 19: eventbus.EventbusState
-	nil,                                      // 20: eventbus.RecordMeta.HeadersEntry
-	nil,                                      // 21: eventbus.TopicInfo.EarliestOffsetsEntry
-	nil,                                      // 22: eventbus.TopicInfo.LatestOffsetsEntry
-	(*timestamppb.Timestamp)(nil),            // 23: google.protobuf.Timestamp
-	(*host.Host)(nil),                        // 24: host.Host
-	(*emptypb.Empty)(nil),                    // 25: google.protobuf.Empty
-	(*trace.TraceRequest)(nil),               // 26: trace.TraceRequest
-	(*trace.TraceEvent)(nil),                 // 27: trace.TraceEvent
+	(ComparisonOp)(0),                        // 2: eventbus.ComparisonOp
+	(SortDirection)(0),                       // 3: eventbus.SortDirection
+	(LogicalOp)(0),                           // 4: eventbus.LogicalOp
+	(*SubscribeRequest)(nil),                 // 5: eventbus.SubscribeRequest
+	(*PublishResponse)(nil),                  // 6: eventbus.PublishResponse
+	(*RecordMeta)(nil),                       // 7: eventbus.RecordMeta
+	(*TopicInfo)(nil),                        // 8: eventbus.TopicInfo
+	(*TopicInfoRequest)(nil),                 // 9: eventbus.TopicInfoRequest
+	(*ListTopicsRequest)(nil),                // 10: eventbus.ListTopicsRequest
+	(*ListTopicsResponse)(nil),               // 11: eventbus.ListTopicsResponse
+	(*DeleteTopicRequest)(nil),               // 12: eventbus.DeleteTopicRequest
+	(*UpdateTopicConfigRequest)(nil),         // 13: eventbus.UpdateTopicConfigRequest
+	(*PartitionLag)(nil),                     // 14: eventbus.PartitionLag
+	(*ConsumerGroupInfo)(nil),                // 15: eventbus.ConsumerGroupInfo
+	(*ConsumerGroupRequest)(nil),             // 16: eventbus.ConsumerGroupRequest
+	(*ListConsumerGroupsRequest)(nil),        // 17: eventbus.ListConsumerGroupsRequest
+	(*ListConsumerGroupsResponse)(nil),       // 18: eventbus.ListConsumerGroupsResponse
+	(*ResetConsumerGroupOffsetsRequest)(nil), // 19: eventbus.ResetConsumerGroupOffsetsRequest
+	(*BrokerInfo)(nil),                       // 20: eventbus.BrokerInfo
+	(*ClusterHealthResponse)(nil),            // 21: eventbus.ClusterHealthResponse
+	(*Config)(nil),                           // 22: eventbus.Config
+	(*EventbusNode)(nil),                     // 23: eventbus.EventbusNode
+	(*EventbusState)(nil),                    // 24: eventbus.EventbusState
+	(*EventbusConfigState)(nil),              // 25: eventbus.EventbusConfigState
+	(*QueryValue)(nil),                       // 26: eventbus.QueryValue
+	(*Predicate)(nil),                        // 27: eventbus.Predicate
+	(*PredicateGroup)(nil),                   // 28: eventbus.PredicateGroup
+	(*SortField)(nil),                        // 29: eventbus.SortField
+	(*CollectionQuery)(nil),                  // 30: eventbus.CollectionQuery
+	(*NodesGetRequest)(nil),                  // 31: eventbus.NodesGetRequest
+	(*NodesPutRequest)(nil),                  // 32: eventbus.NodesPutRequest
+	(*NodesGetAllRequest)(nil),               // 33: eventbus.NodesGetAllRequest
+	(*NodesKeysRequest)(nil),                 // 34: eventbus.NodesKeysRequest
+	(*NodesSizeRequest)(nil),                 // 35: eventbus.NodesSizeRequest
+	(*NodesClearRequest)(nil),                // 36: eventbus.NodesClearRequest
+	(*NodesValueResponse)(nil),               // 37: eventbus.NodesValueResponse
+	(*NodesEntriesResponse)(nil),             // 38: eventbus.NodesEntriesResponse
+	(*NodesKeysResponse)(nil),                // 39: eventbus.NodesKeysResponse
+	(*NodesSizeResponse)(nil),                // 40: eventbus.NodesSizeResponse
+	(*NodesQueryRequest)(nil),                // 41: eventbus.NodesQueryRequest
+	(*NodesQueryResponse)(nil),               // 42: eventbus.NodesQueryResponse
+	(*MapEmpty)(nil),                         // 43: eventbus.MapEmpty
+	nil,                                      // 44: eventbus.TopicInfo.EarliestOffsetsEntry
+	nil,                                      // 45: eventbus.TopicInfo.LatestOffsetsEntry
+	nil,                                      // 46: eventbus.NodesEntriesResponse.EntriesEntry
+	(*timestamppb.Timestamp)(nil),            // 47: google.protobuf.Timestamp
+	(*host.Host)(nil),                        // 48: host.Host
+	(*emptypb.Empty)(nil),                    // 49: google.protobuf.Empty
+	(*trace.TraceRequest)(nil),               // 50: trace.TraceRequest
+	(*trace.TraceEvent)(nil),                 // 51: trace.TraceEvent
 }
 var file_services_eventbus_proto_depIdxs = []int32{
-	23, // 0: eventbus.SubscribeRequest.timestamp:type_name -> google.protobuf.Timestamp
+	47, // 0: eventbus.SubscribeRequest.timestamp:type_name -> google.protobuf.Timestamp
 	0,  // 1: eventbus.SubscribeRequest.backpressure:type_name -> eventbus.BackpressurePolicy
-	20, // 2: eventbus.RecordMeta.headers:type_name -> eventbus.RecordMeta.HeadersEntry
-	23, // 3: eventbus.RecordMeta.event_timestamp:type_name -> google.protobuf.Timestamp
-	21, // 4: eventbus.TopicInfo.earliest_offsets:type_name -> eventbus.TopicInfo.EarliestOffsetsEntry
-	22, // 5: eventbus.TopicInfo.latest_offsets:type_name -> eventbus.TopicInfo.LatestOffsetsEntry
-	5,  // 6: eventbus.ListTopicsResponse.topics:type_name -> eventbus.TopicInfo
-	10, // 7: eventbus.ConsumerGroupInfo.partitions:type_name -> eventbus.PartitionLag
-	11, // 8: eventbus.ListConsumerGroupsResponse.groups:type_name -> eventbus.ConsumerGroupInfo
-	23, // 9: eventbus.ResetConsumerGroupOffsetsRequest.timestamp:type_name -> google.protobuf.Timestamp
-	15, // 10: eventbus.ClusterHealthResponse.brokers:type_name -> eventbus.BrokerInfo
-	1,  // 11: eventbus.Config.node_role:type_name -> eventbus.KafkaNodeRole
-	1,  // 12: eventbus.EventbusNode.role:type_name -> eventbus.KafkaNodeRole
-	24, // 13: eventbus.EventbusNode.endpoint:type_name -> host.Host
-	18, // 14: eventbus.EventbusState.nodes:type_name -> eventbus.EventbusNode
-	25, // 15: eventbus.Admin.ListTopics:input_type -> google.protobuf.Empty
-	6,  // 16: eventbus.Admin.GetTopicInfo:input_type -> eventbus.TopicInfoRequest
-	8,  // 17: eventbus.Admin.DeleteTopic:input_type -> eventbus.DeleteTopicRequest
-	9,  // 18: eventbus.Admin.UpdateTopicConfig:input_type -> eventbus.UpdateTopicConfigRequest
-	12, // 19: eventbus.Admin.GetConsumerGroupLag:input_type -> eventbus.ConsumerGroupRequest
-	25, // 20: eventbus.Admin.ListConsumerGroups:input_type -> google.protobuf.Empty
-	14, // 21: eventbus.Admin.ResetConsumerGroupOffsets:input_type -> eventbus.ResetConsumerGroupOffsetsRequest
-	12, // 22: eventbus.Admin.DeleteConsumerGroup:input_type -> eventbus.ConsumerGroupRequest
-	25, // 23: eventbus.Admin.GetClusterHealth:input_type -> google.protobuf.Empty
-	26, // 24: eventbus.TraceSession.SubscribeTrace:input_type -> trace.TraceRequest
-	7,  // 25: eventbus.Admin.ListTopics:output_type -> eventbus.ListTopicsResponse
-	5,  // 26: eventbus.Admin.GetTopicInfo:output_type -> eventbus.TopicInfo
-	25, // 27: eventbus.Admin.DeleteTopic:output_type -> google.protobuf.Empty
-	5,  // 28: eventbus.Admin.UpdateTopicConfig:output_type -> eventbus.TopicInfo
-	11, // 29: eventbus.Admin.GetConsumerGroupLag:output_type -> eventbus.ConsumerGroupInfo
-	13, // 30: eventbus.Admin.ListConsumerGroups:output_type -> eventbus.ListConsumerGroupsResponse
-	25, // 31: eventbus.Admin.ResetConsumerGroupOffsets:output_type -> google.protobuf.Empty
-	25, // 32: eventbus.Admin.DeleteConsumerGroup:output_type -> google.protobuf.Empty
-	16, // 33: eventbus.Admin.GetClusterHealth:output_type -> eventbus.ClusterHealthResponse
-	27, // 34: eventbus.TraceSession.SubscribeTrace:output_type -> trace.TraceEvent
-	25, // [25:35] is the sub-list for method output_type
-	15, // [15:25] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	47, // 2: eventbus.RecordMeta.timestamp:type_name -> google.protobuf.Timestamp
+	44, // 3: eventbus.TopicInfo.earliest_offsets:type_name -> eventbus.TopicInfo.EarliestOffsetsEntry
+	45, // 4: eventbus.TopicInfo.latest_offsets:type_name -> eventbus.TopicInfo.LatestOffsetsEntry
+	8,  // 5: eventbus.ListTopicsResponse.topics:type_name -> eventbus.TopicInfo
+	14, // 6: eventbus.ConsumerGroupInfo.partitions:type_name -> eventbus.PartitionLag
+	15, // 7: eventbus.ListConsumerGroupsResponse.groups:type_name -> eventbus.ConsumerGroupInfo
+	47, // 8: eventbus.ResetConsumerGroupOffsetsRequest.timestamp:type_name -> google.protobuf.Timestamp
+	20, // 9: eventbus.ClusterHealthResponse.brokers:type_name -> eventbus.BrokerInfo
+	1,  // 10: eventbus.Config.node_role:type_name -> eventbus.KafkaNodeRole
+	1,  // 11: eventbus.EventbusNode.role:type_name -> eventbus.KafkaNodeRole
+	48, // 12: eventbus.EventbusNode.endpoint:type_name -> host.Host
+	23, // 13: eventbus.EventbusState.nodes:type_name -> eventbus.EventbusNode
+	22, // 14: eventbus.EventbusConfigState.config:type_name -> eventbus.Config
+	2,  // 15: eventbus.Predicate.op:type_name -> eventbus.ComparisonOp
+	26, // 16: eventbus.Predicate.value:type_name -> eventbus.QueryValue
+	26, // 17: eventbus.Predicate.values:type_name -> eventbus.QueryValue
+	4,  // 18: eventbus.PredicateGroup.op:type_name -> eventbus.LogicalOp
+	27, // 19: eventbus.PredicateGroup.predicates:type_name -> eventbus.Predicate
+	28, // 20: eventbus.PredicateGroup.groups:type_name -> eventbus.PredicateGroup
+	3,  // 21: eventbus.SortField.direction:type_name -> eventbus.SortDirection
+	28, // 22: eventbus.CollectionQuery.where:type_name -> eventbus.PredicateGroup
+	29, // 23: eventbus.CollectionQuery.order_by:type_name -> eventbus.SortField
+	23, // 24: eventbus.NodesPutRequest.value:type_name -> eventbus.EventbusNode
+	23, // 25: eventbus.NodesValueResponse.value:type_name -> eventbus.EventbusNode
+	46, // 26: eventbus.NodesEntriesResponse.entries:type_name -> eventbus.NodesEntriesResponse.EntriesEntry
+	30, // 27: eventbus.NodesQueryRequest.query:type_name -> eventbus.CollectionQuery
+	23, // 28: eventbus.NodesQueryResponse.results:type_name -> eventbus.EventbusNode
+	23, // 29: eventbus.NodesEntriesResponse.EntriesEntry.value:type_name -> eventbus.EventbusNode
+	10, // 30: eventbus.Admin.ListTopics:input_type -> eventbus.ListTopicsRequest
+	9,  // 31: eventbus.Admin.GetTopicInfo:input_type -> eventbus.TopicInfoRequest
+	12, // 32: eventbus.Admin.DeleteTopic:input_type -> eventbus.DeleteTopicRequest
+	13, // 33: eventbus.Admin.UpdateTopicConfig:input_type -> eventbus.UpdateTopicConfigRequest
+	16, // 34: eventbus.Admin.GetConsumerGroupLag:input_type -> eventbus.ConsumerGroupRequest
+	17, // 35: eventbus.Admin.ListConsumerGroups:input_type -> eventbus.ListConsumerGroupsRequest
+	19, // 36: eventbus.Admin.ResetConsumerGroupOffsets:input_type -> eventbus.ResetConsumerGroupOffsetsRequest
+	16, // 37: eventbus.Admin.DeleteConsumerGroup:input_type -> eventbus.ConsumerGroupRequest
+	49, // 38: eventbus.Admin.GetClusterHealth:input_type -> google.protobuf.Empty
+	50, // 39: eventbus.TraceSession.SubscribeTrace:input_type -> trace.TraceRequest
+	31, // 40: eventbus.EventbusStateService.GetNodes:input_type -> eventbus.NodesGetRequest
+	32, // 41: eventbus.EventbusStateService.PutNodes:input_type -> eventbus.NodesPutRequest
+	32, // 42: eventbus.EventbusStateService.SetNodes:input_type -> eventbus.NodesPutRequest
+	31, // 43: eventbus.EventbusStateService.RemoveNodes:input_type -> eventbus.NodesGetRequest
+	31, // 44: eventbus.EventbusStateService.DeleteNodes:input_type -> eventbus.NodesGetRequest
+	31, // 45: eventbus.EventbusStateService.ContainsKeyNodes:input_type -> eventbus.NodesGetRequest
+	33, // 46: eventbus.EventbusStateService.GetAllNodes:input_type -> eventbus.NodesGetAllRequest
+	34, // 47: eventbus.EventbusStateService.KeySetNodes:input_type -> eventbus.NodesKeysRequest
+	35, // 48: eventbus.EventbusStateService.SizeNodes:input_type -> eventbus.NodesSizeRequest
+	36, // 49: eventbus.EventbusStateService.ClearNodes:input_type -> eventbus.NodesClearRequest
+	32, // 50: eventbus.EventbusStateService.PutIfAbsentNodes:input_type -> eventbus.NodesPutRequest
+	50, // 51: eventbus.EventbusStateService.WatchNodes:input_type -> trace.TraceRequest
+	41, // 52: eventbus.EventbusStateService.QueryNodes:input_type -> eventbus.NodesQueryRequest
+	41, // 53: eventbus.EventbusStateService.WatchQueryNodes:input_type -> eventbus.NodesQueryRequest
+	50, // 54: eventbus.EventbusConfigStateService.GetConfig:input_type -> trace.TraceRequest
+	22, // 55: eventbus.EventbusConfigStateService.SetConfig:input_type -> eventbus.Config
+	50, // 56: eventbus.EventbusConfigStateService.WatchConfig:input_type -> trace.TraceRequest
+	11, // 57: eventbus.Admin.ListTopics:output_type -> eventbus.ListTopicsResponse
+	8,  // 58: eventbus.Admin.GetTopicInfo:output_type -> eventbus.TopicInfo
+	49, // 59: eventbus.Admin.DeleteTopic:output_type -> google.protobuf.Empty
+	8,  // 60: eventbus.Admin.UpdateTopicConfig:output_type -> eventbus.TopicInfo
+	15, // 61: eventbus.Admin.GetConsumerGroupLag:output_type -> eventbus.ConsumerGroupInfo
+	18, // 62: eventbus.Admin.ListConsumerGroups:output_type -> eventbus.ListConsumerGroupsResponse
+	49, // 63: eventbus.Admin.ResetConsumerGroupOffsets:output_type -> google.protobuf.Empty
+	49, // 64: eventbus.Admin.DeleteConsumerGroup:output_type -> google.protobuf.Empty
+	21, // 65: eventbus.Admin.GetClusterHealth:output_type -> eventbus.ClusterHealthResponse
+	51, // 66: eventbus.TraceSession.SubscribeTrace:output_type -> trace.TraceEvent
+	37, // 67: eventbus.EventbusStateService.GetNodes:output_type -> eventbus.NodesValueResponse
+	37, // 68: eventbus.EventbusStateService.PutNodes:output_type -> eventbus.NodesValueResponse
+	43, // 69: eventbus.EventbusStateService.SetNodes:output_type -> eventbus.MapEmpty
+	37, // 70: eventbus.EventbusStateService.RemoveNodes:output_type -> eventbus.NodesValueResponse
+	43, // 71: eventbus.EventbusStateService.DeleteNodes:output_type -> eventbus.MapEmpty
+	37, // 72: eventbus.EventbusStateService.ContainsKeyNodes:output_type -> eventbus.NodesValueResponse
+	38, // 73: eventbus.EventbusStateService.GetAllNodes:output_type -> eventbus.NodesEntriesResponse
+	39, // 74: eventbus.EventbusStateService.KeySetNodes:output_type -> eventbus.NodesKeysResponse
+	40, // 75: eventbus.EventbusStateService.SizeNodes:output_type -> eventbus.NodesSizeResponse
+	43, // 76: eventbus.EventbusStateService.ClearNodes:output_type -> eventbus.MapEmpty
+	37, // 77: eventbus.EventbusStateService.PutIfAbsentNodes:output_type -> eventbus.NodesValueResponse
+	38, // 78: eventbus.EventbusStateService.WatchNodes:output_type -> eventbus.NodesEntriesResponse
+	42, // 79: eventbus.EventbusStateService.QueryNodes:output_type -> eventbus.NodesQueryResponse
+	42, // 80: eventbus.EventbusStateService.WatchQueryNodes:output_type -> eventbus.NodesQueryResponse
+	22, // 81: eventbus.EventbusConfigStateService.GetConfig:output_type -> eventbus.Config
+	22, // 82: eventbus.EventbusConfigStateService.SetConfig:output_type -> eventbus.Config
+	22, // 83: eventbus.EventbusConfigStateService.WatchConfig:output_type -> eventbus.Config
+	57, // [57:84] is the sub-list for method output_type
+	30, // [30:57] is the sub-list for method input_type
+	30, // [30:30] is the sub-list for extension type_name
+	30, // [30:30] is the sub-list for extension extendee
+	0,  // [0:30] is the sub-list for field type_name
 }
 
 func init() { file_services_eventbus_proto_init() }
@@ -1759,21 +3780,27 @@ func file_services_eventbus_proto_init() {
 		(*SubscribeRequest_Latest)(nil),
 		(*SubscribeRequest_Earliest)(nil),
 	}
-	file_services_eventbus_proto_msgTypes[12].OneofWrappers = []any{
+	file_services_eventbus_proto_msgTypes[14].OneofWrappers = []any{
 		(*ResetConsumerGroupOffsetsRequest_Offset)(nil),
 		(*ResetConsumerGroupOffsetsRequest_Timestamp)(nil),
 		(*ResetConsumerGroupOffsetsRequest_ToLatest)(nil),
 		(*ResetConsumerGroupOffsetsRequest_ToEarliest)(nil),
+	}
+	file_services_eventbus_proto_msgTypes[21].OneofWrappers = []any{
+		(*QueryValue_StringValue)(nil),
+		(*QueryValue_IntValue)(nil),
+		(*QueryValue_DoubleValue)(nil),
+		(*QueryValue_BoolValue)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_services_eventbus_proto_rawDesc), len(file_services_eventbus_proto_rawDesc)),
-			NumEnums:      2,
-			NumMessages:   21,
+			NumEnums:      5,
+			NumMessages:   42,
 			NumExtensions: 0,
-			NumServices:   2,
+			NumServices:   4,
 		},
 		GoTypes:           file_services_eventbus_proto_goTypes,
 		DependencyIndexes: file_services_eventbus_proto_depIdxs,

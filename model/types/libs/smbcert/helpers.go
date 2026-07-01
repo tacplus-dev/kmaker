@@ -1225,24 +1225,24 @@ func ValidateSmbCertInitWithDepth(m *SmbCertInit, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate SmbService (assert_min_length: 1)
-	if len(m.SmbService) < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field SmbService must be at least 1 characters, got: %d", len(m.SmbService))
-	}
-
 	// Validate SmbService (assert_required)
 	if m.SmbService == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SmbService is required")
 	}
 
-	// Validate InstanceId (assert_required)
-	if m.InstanceId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field InstanceId is required")
+	// Validate SmbService (assert_min_length: 1)
+	if len(m.SmbService) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SmbService must be at least 1 characters, got: %d", len(m.SmbService))
 	}
 
 	// Validate InstanceId (assert_min_length: 1)
 	if len(m.InstanceId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field InstanceId must be at least 1 characters, got: %d", len(m.InstanceId))
+	}
+
+	// Validate InstanceId (assert_required)
+	if m.InstanceId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field InstanceId is required")
 	}
 
 	// Validate SmbService (default max size: 32768 bytes)

@@ -245,6 +245,12 @@ message SessionRequest {
     // Must be a cryptographically random identifier (min 32 bytes, hex-encoded).
     string session_id = 1;
   }
+
+  // offline_access requests an Offline Token (OT) for CLI/daemon sessions.
+  // The OT is delivered in SessionResponse.token and can be persisted by the
+  // local daemon; access and service tokens remain derived, short-lived, and
+  // memory-only.
+  bool offline_access = 2;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -485,7 +491,8 @@ service OauthConfigStateService {
 	rpc WatchConfig(trace.TraceRequest) returns (stream Config);
 }
 
-message MapEmpty {  string trace_id = 200;
+message MapEmpty {
+  string trace_id = 200;
   bool noop = 201;
 }
 

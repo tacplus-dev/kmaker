@@ -754,9 +754,14 @@ type SessionRequest struct {
 	// Types that are valid to be assigned to Msg:
 	//
 	//	*SessionRequest_SessionId
-	Msg           isSessionRequest_Msg `protobuf_oneof:"msg"`
-	TraceId       string               `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                 `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	Msg isSessionRequest_Msg `protobuf_oneof:"msg"`
+	// offline_access requests an Offline Token (OT) for CLI/daemon sessions.
+	// The OT is delivered in SessionResponse.token and can be persisted by the
+	// local daemon; access and service tokens remain derived, short-lived, and
+	// memory-only.
+	OfflineAccess bool   `protobuf:"varint,2,opt,name=offline_access,json=offlineAccess,proto3" json:"offline_access,omitempty"`
+	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -805,6 +810,13 @@ func (x *SessionRequest) GetSessionId() string {
 		}
 	}
 	return ""
+}
+
+func (x *SessionRequest) GetOfflineAccess() bool {
+	if x != nil {
+		return x.OfflineAccess
+	}
+	return false
 }
 
 func (x *SessionRequest) GetTraceId() string {
@@ -2130,10 +2142,11 @@ const file_services_oauth_proto_rawDesc = "" +
 	"\x17CompleteCliAuthResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"t\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9b\x01\n" +
 	"\x0eSessionRequest\x12*\n" +
 	"\n" +
-	"session_id\x18\x01 \x01(\tB\t\x88\xa7\x1d@\x90\xa7\x1d\x80\x01H\x00R\tsessionId\x12\x1a\n" +
+	"session_id\x18\x01 \x01(\tB\t\x88\xa7\x1d@\x90\xa7\x1d\x80\x01H\x00R\tsessionId\x12%\n" +
+	"\x0eoffline_access\x18\x02 \x01(\bR\rofflineAccess\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopB\x05\n" +
 	"\x03msg\"\x8f\x01\n" +
@@ -2223,12 +2236,12 @@ const file_services_oauth_proto_rawDesc = "" +
 	"\tproviders\x18\x01 \x03(\v2\x14.oauth.OAuthProviderB\x04\xb8\xa8\x1d\x10R\tproviders\x12@\n" +
 	"\x0eclaim_matchers\x18\x02 \x03(\v2\x13.oauth.ClaimMatcherB\x04\xb8\xa8\x1d R\rclaimMatchers\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\rڪ\x1d\t\b\x01\x12\x05oauth\"\x9a\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\rڪ\x1d\t\b\x01\x12\x05oauth\"\x98\x01\n" +
 	"\x10OauthConfigState\x12/\n" +
 	"\x06config\x18\x01 \x01(\v2\r.oauth.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:$\x9a\xa8\x1d\x1c\n" +
-	"\x10OauthConfigState\x1a\beventbus\xa0\xa8\x1d\x02\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\"\x9a\xa8\x1d\x1a\n" +
+	"\x10OauthConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\xaa\x05\n" +

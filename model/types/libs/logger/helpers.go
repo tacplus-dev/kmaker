@@ -618,11 +618,6 @@ func ValidateLoggerConfigWithDepth(m *LoggerConfig, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field OutputPaths exceeds max size of 8, got: %d", len(m.OutputPaths))
 	}
 
-	// Validate ErrorOutputPaths (assert_max_size: 8)
-	if len(m.ErrorOutputPaths) > 8 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ErrorOutputPaths exceeds max size of 8, got: %d", len(m.ErrorOutputPaths))
-	}
-
 	// Validate ErrorOutputPaths (assert_file_path: PATH_ANY)
 	for i, path := range m.ErrorOutputPaths {
 		if path != "" {
@@ -630,6 +625,11 @@ func ValidateLoggerConfigWithDepth(m *LoggerConfig, depth int) error {
 				return protoerrors.NewErrMissingInvalidData(err, "field ErrorOutputPaths[%d] file path validation failed", i)
 			}
 		}
+	}
+
+	// Validate ErrorOutputPaths (assert_max_size: 8)
+	if len(m.ErrorOutputPaths) > 8 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ErrorOutputPaths exceeds max size of 8, got: %d", len(m.ErrorOutputPaths))
 	}
 
 	// Validate InitialFields (assert_max_size: 32)

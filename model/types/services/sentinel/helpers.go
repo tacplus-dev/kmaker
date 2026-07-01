@@ -44,6 +44,7 @@ func TypeIDValues() []TypeID {
 		TypeID_TYPE_ID_CONFIG,
 		TypeID_TYPE_ID_SENTINEL_STATE,
 		TypeID_TYPE_ID_WATCH_DASHBOARD_REQUEST,
+		TypeID_TYPE_ID_DASHBOARD_PAGE_REQUEST,
 		TypeID_TYPE_ID_NODE_METRICS_RESPONSE,
 		TypeID_TYPE_ID_GRPC_STATS_RESPONSE,
 		TypeID_TYPE_ID_PERSISTENCE_STATUS_RESPONSE,
@@ -59,7 +60,7 @@ func TypeIDValues() []TypeID {
 
 // TypeIDStringValues returns all valid TypeID names as strings
 func TypeIDStringValues() []string {
-	return []string{"config", "sentinel-state", "watch-dashboard-request", "node-metrics-response", "grpc-stats-response", "persistence-status-response", "network-stats-response", "thread-info-response", "token-cache-stats-response", "map-stats-response", "dashboard-response", "sentinel-config-state", "map-empty"}
+	return []string{"config", "sentinel-state", "watch-dashboard-request", "dashboard-page-request", "node-metrics-response", "grpc-stats-response", "persistence-status-response", "network-stats-response", "thread-info-response", "token-cache-stats-response", "map-stats-response", "dashboard-response", "sentinel-config-state", "map-empty"}
 }
 
 // ParseTypeID converts a string to a TypeID enum value
@@ -76,6 +77,8 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_SENTINEL_STATE, nil
 	case "watch-dashboard-request", "type-id-watch-dashboard-request":
 		return TypeID_TYPE_ID_WATCH_DASHBOARD_REQUEST, nil
+	case "dashboard-page-request", "type-id-dashboard-page-request":
+		return TypeID_TYPE_ID_DASHBOARD_PAGE_REQUEST, nil
 	case "node-metrics-response", "type-id-node-metrics-response":
 		return TypeID_TYPE_ID_NODE_METRICS_RESPONSE, nil
 	case "grpc-stats-response", "type-id-grpc-stats-response":
@@ -132,6 +135,8 @@ func TypeIDToString(v TypeID) string {
 		return "sentinel-state"
 	case TypeID_TYPE_ID_WATCH_DASHBOARD_REQUEST:
 		return "watch-dashboard-request"
+	case TypeID_TYPE_ID_DASHBOARD_PAGE_REQUEST:
+		return "dashboard-page-request"
 	case TypeID_TYPE_ID_NODE_METRICS_RESPONSE:
 		return "node-metrics-response"
 	case TypeID_TYPE_ID_GRPC_STATS_RESPONSE:
@@ -180,6 +185,8 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_SENTINEL_STATE
 	case "watch-dashboard-request", "type-id-watch-dashboard-request":
 		return TypeID_TYPE_ID_WATCH_DASHBOARD_REQUEST
+	case "dashboard-page-request", "type-id-dashboard-page-request":
+		return TypeID_TYPE_ID_DASHBOARD_PAGE_REQUEST
 	case "node-metrics-response", "type-id-node-metrics-response":
 		return TypeID_TYPE_ID_NODE_METRICS_RESPONSE
 	case "grpc-stats-response", "type-id-grpc-stats-response":
@@ -216,6 +223,8 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_SENTINEL_STATE"
 	case TypeID_TYPE_ID_WATCH_DASHBOARD_REQUEST:
 		return "TYPE_ID_WATCH_DASHBOARD_REQUEST"
+	case TypeID_TYPE_ID_DASHBOARD_PAGE_REQUEST:
+		return "TYPE_ID_DASHBOARD_PAGE_REQUEST"
 	case TypeID_TYPE_ID_NODE_METRICS_RESPONSE:
 		return "TYPE_ID_NODE_METRICS_RESPONSE"
 	case TypeID_TYPE_ID_GRPC_STATS_RESPONSE:
@@ -1021,12 +1030,162 @@ func WatchDashboardRequestToTOML(v *WatchDashboardRequest) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
+// DashboardPageRequestJSON represents DashboardPageRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type dashboardpagerequestJSON struct {
+	PageSize  int32  `json:"page_size,omitempty"`
+	PageToken string `json:"page_token,omitempty"`
+	TraceId   string `json:"trace_id,omitempty"`
+	Noop      bool   `json:"noop,omitempty"`
+}
+
+// DashboardPageRequestToJSON converts DashboardPageRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func DashboardPageRequestToJSON(v *DashboardPageRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "dashboardpagerequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := dashboardpagerequestJSON{
+		PageSize:  v.PageSize,
+		PageToken: v.PageToken,
+		TraceId:   v.TraceId,
+		Noop:      v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// DashboardPageRequestToJSONPretty converts DashboardPageRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func DashboardPageRequestToJSONPretty(v *DashboardPageRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "dashboardpagerequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := dashboardpagerequestJSON{
+		PageSize:  v.PageSize,
+		PageToken: v.PageToken,
+		TraceId:   v.TraceId,
+		Noop:      v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// DashboardPageRequestFromBytes creates DashboardPageRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func DashboardPageRequestFromBytes(data []byte) (*DashboardPageRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := DashboardPageRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := DashboardPageRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := DashboardPageRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &DashboardPageRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse DashboardPageRequest: unsupported format or invalid data")
+}
+
+// DashboardPageRequestFromJSON creates DashboardPageRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func DashboardPageRequestFromJSON(data []byte) (*DashboardPageRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw dashboardpagerequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &DashboardPageRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &DashboardPageRequest{}
+	result.PageSize = raw.PageSize
+	result.PageToken = raw.PageToken
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// DashboardPageRequestToYAML converts DashboardPageRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func DashboardPageRequestToYAML(v *DashboardPageRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "dashboardpagerequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := DashboardPageRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// DashboardPageRequestToTOML converts DashboardPageRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func DashboardPageRequestToTOML(v *DashboardPageRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "dashboardpagerequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := DashboardPageRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
 // NodeMetricsResponseJSON represents NodeMetricsResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type nodemetricsresponseJSON struct {
-	Items   []json.RawMessage `json:"items,omitempty"`
-	TraceId string            `json:"trace_id,omitempty"`
-	Noop    bool              `json:"noop,omitempty"`
+	Items         []json.RawMessage `json:"items,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // NodeMetricsResponseToJSON converts NodeMetricsResponse to JSON bytes.
@@ -1051,8 +1210,10 @@ func NodeMetricsResponseToJSON(v *NodeMetricsResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1079,8 +1240,10 @@ func NodeMetricsResponseToJSONPretty(v *NodeMetricsResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1157,6 +1320,8 @@ func NodeMetricsResponseFromJSON(data []byte) (*NodeMetricsResponse, error) {
 			}
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -1205,9 +1370,11 @@ func NodeMetricsResponseToTOML(v *NodeMetricsResponse) ([]byte, error) {
 // GrpcStatsResponseJSON represents GrpcStatsResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type grpcstatsresponseJSON struct {
-	Items   []json.RawMessage `json:"items,omitempty"`
-	TraceId string            `json:"trace_id,omitempty"`
-	Noop    bool              `json:"noop,omitempty"`
+	Items         []json.RawMessage `json:"items,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // GrpcStatsResponseToJSON converts GrpcStatsResponse to JSON bytes.
@@ -1232,8 +1399,10 @@ func GrpcStatsResponseToJSON(v *GrpcStatsResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1260,8 +1429,10 @@ func GrpcStatsResponseToJSONPretty(v *GrpcStatsResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1338,6 +1509,8 @@ func GrpcStatsResponseFromJSON(data []byte) (*GrpcStatsResponse, error) {
 			}
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -1386,9 +1559,11 @@ func GrpcStatsResponseToTOML(v *GrpcStatsResponse) ([]byte, error) {
 // PersistenceStatusResponseJSON represents PersistenceStatusResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type persistencestatusresponseJSON struct {
-	Items   []json.RawMessage `json:"items,omitempty"`
-	TraceId string            `json:"trace_id,omitempty"`
-	Noop    bool              `json:"noop,omitempty"`
+	Items         []json.RawMessage `json:"items,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // PersistenceStatusResponseToJSON converts PersistenceStatusResponse to JSON bytes.
@@ -1413,8 +1588,10 @@ func PersistenceStatusResponseToJSON(v *PersistenceStatusResponse) ([]byte, erro
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1441,8 +1618,10 @@ func PersistenceStatusResponseToJSONPretty(v *PersistenceStatusResponse) ([]byte
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1519,6 +1698,8 @@ func PersistenceStatusResponseFromJSON(data []byte) (*PersistenceStatusResponse,
 			}
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -1567,9 +1748,11 @@ func PersistenceStatusResponseToTOML(v *PersistenceStatusResponse) ([]byte, erro
 // NetworkStatsResponseJSON represents NetworkStatsResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type networkstatsresponseJSON struct {
-	Items   []json.RawMessage `json:"items,omitempty"`
-	TraceId string            `json:"trace_id,omitempty"`
-	Noop    bool              `json:"noop,omitempty"`
+	Items         []json.RawMessage `json:"items,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // NetworkStatsResponseToJSON converts NetworkStatsResponse to JSON bytes.
@@ -1594,8 +1777,10 @@ func NetworkStatsResponseToJSON(v *NetworkStatsResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1622,8 +1807,10 @@ func NetworkStatsResponseToJSONPretty(v *NetworkStatsResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1700,6 +1887,8 @@ func NetworkStatsResponseFromJSON(data []byte) (*NetworkStatsResponse, error) {
 			}
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -1748,9 +1937,11 @@ func NetworkStatsResponseToTOML(v *NetworkStatsResponse) ([]byte, error) {
 // ThreadInfoResponseJSON represents ThreadInfoResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type threadinforesponseJSON struct {
-	Items   []json.RawMessage `json:"items,omitempty"`
-	TraceId string            `json:"trace_id,omitempty"`
-	Noop    bool              `json:"noop,omitempty"`
+	Items         []json.RawMessage `json:"items,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // ThreadInfoResponseToJSON converts ThreadInfoResponse to JSON bytes.
@@ -1775,8 +1966,10 @@ func ThreadInfoResponseToJSON(v *ThreadInfoResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1803,8 +1996,10 @@ func ThreadInfoResponseToJSONPretty(v *ThreadInfoResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1881,6 +2076,8 @@ func ThreadInfoResponseFromJSON(data []byte) (*ThreadInfoResponse, error) {
 			}
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -1929,9 +2126,11 @@ func ThreadInfoResponseToTOML(v *ThreadInfoResponse) ([]byte, error) {
 // TokenCacheStatsResponseJSON represents TokenCacheStatsResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type tokencachestatsresponseJSON struct {
-	Items   []json.RawMessage `json:"items,omitempty"`
-	TraceId string            `json:"trace_id,omitempty"`
-	Noop    bool              `json:"noop,omitempty"`
+	Items         []json.RawMessage `json:"items,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // TokenCacheStatsResponseToJSON converts TokenCacheStatsResponse to JSON bytes.
@@ -1956,8 +2155,10 @@ func TokenCacheStatsResponseToJSON(v *TokenCacheStatsResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1984,8 +2185,10 @@ func TokenCacheStatsResponseToJSONPretty(v *TokenCacheStatsResponse) ([]byte, er
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -2062,6 +2265,8 @@ func TokenCacheStatsResponseFromJSON(data []byte) (*TokenCacheStatsResponse, err
 			}
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -2110,9 +2315,11 @@ func TokenCacheStatsResponseToTOML(v *TokenCacheStatsResponse) ([]byte, error) {
 // MapStatsResponseJSON represents MapStatsResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type mapstatsresponseJSON struct {
-	Items   []json.RawMessage `json:"items,omitempty"`
-	TraceId string            `json:"trace_id,omitempty"`
-	Noop    bool              `json:"noop,omitempty"`
+	Items         []json.RawMessage `json:"items,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // MapStatsResponseToJSON converts MapStatsResponse to JSON bytes.
@@ -2137,8 +2344,10 @@ func MapStatsResponseToJSON(v *MapStatsResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -2165,8 +2374,10 @@ func MapStatsResponseToJSONPretty(v *MapStatsResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -2243,6 +2454,8 @@ func MapStatsResponseFromJSON(data []byte) (*MapStatsResponse, error) {
 			}
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -3182,12 +3395,53 @@ func WatchDashboardRequestFromEnvVar(env map[string]string) (*WatchDashboardRequ
 	return result, nil
 }
 
+// DashboardPageRequestToEnvVar converts DashboardPageRequest to environment variable key-value pairs.
+func DashboardPageRequestToEnvVar(v *DashboardPageRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_SENTINEL_DASHBOARD_PAGE_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
+	result["PROTO_SERVICES_SENTINEL_DASHBOARD_PAGE_REQUEST_PAGE_TOKEN"] = v.PageToken
+	result["PROTO_SERVICES_SENTINEL_DASHBOARD_PAGE_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_SENTINEL_DASHBOARD_PAGE_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// DashboardPageRequestFromEnvVar creates DashboardPageRequest from environment variable key-value pairs.
+func DashboardPageRequestFromEnvVar(env map[string]string) (*DashboardPageRequest, error) {
+	result := &DashboardPageRequest{}
+	if val, ok := env["PROTO_SERVICES_SENTINEL_DASHBOARD_PAGE_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_SENTINEL_DASHBOARD_PAGE_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_SENTINEL_DASHBOARD_PAGE_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_SENTINEL_DASHBOARD_PAGE_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
 // NodeMetricsResponseToEnvVar converts NodeMetricsResponse to environment variable key-value pairs.
 func NodeMetricsResponseToEnvVar(v *NodeMetricsResponse) map[string]string {
 	if v == nil {
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_SENTINEL_NODE_METRICS_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_SENTINEL_NODE_METRICS_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_SENTINEL_NODE_METRICS_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_SENTINEL_NODE_METRICS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -3196,6 +3450,16 @@ func NodeMetricsResponseToEnvVar(v *NodeMetricsResponse) map[string]string {
 // NodeMetricsResponseFromEnvVar creates NodeMetricsResponse from environment variable key-value pairs.
 func NodeMetricsResponseFromEnvVar(env map[string]string) (*NodeMetricsResponse, error) {
 	result := &NodeMetricsResponse{}
+	if val, ok := env["PROTO_SERVICES_SENTINEL_NODE_METRICS_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_SENTINEL_NODE_METRICS_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
+	}
 	if val, ok := env["PROTO_SERVICES_SENTINEL_NODE_METRICS_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -3215,6 +3479,8 @@ func GrpcStatsResponseToEnvVar(v *GrpcStatsResponse) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_SENTINEL_GRPC_STATS_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_SENTINEL_GRPC_STATS_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_SENTINEL_GRPC_STATS_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_SENTINEL_GRPC_STATS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -3223,6 +3489,16 @@ func GrpcStatsResponseToEnvVar(v *GrpcStatsResponse) map[string]string {
 // GrpcStatsResponseFromEnvVar creates GrpcStatsResponse from environment variable key-value pairs.
 func GrpcStatsResponseFromEnvVar(env map[string]string) (*GrpcStatsResponse, error) {
 	result := &GrpcStatsResponse{}
+	if val, ok := env["PROTO_SERVICES_SENTINEL_GRPC_STATS_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_SENTINEL_GRPC_STATS_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
+	}
 	if val, ok := env["PROTO_SERVICES_SENTINEL_GRPC_STATS_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -3242,6 +3518,8 @@ func PersistenceStatusResponseToEnvVar(v *PersistenceStatusResponse) map[string]
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_SENTINEL_PERSISTENCE_STATUS_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_SENTINEL_PERSISTENCE_STATUS_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_SENTINEL_PERSISTENCE_STATUS_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_SENTINEL_PERSISTENCE_STATUS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -3250,6 +3528,16 @@ func PersistenceStatusResponseToEnvVar(v *PersistenceStatusResponse) map[string]
 // PersistenceStatusResponseFromEnvVar creates PersistenceStatusResponse from environment variable key-value pairs.
 func PersistenceStatusResponseFromEnvVar(env map[string]string) (*PersistenceStatusResponse, error) {
 	result := &PersistenceStatusResponse{}
+	if val, ok := env["PROTO_SERVICES_SENTINEL_PERSISTENCE_STATUS_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_SENTINEL_PERSISTENCE_STATUS_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
+	}
 	if val, ok := env["PROTO_SERVICES_SENTINEL_PERSISTENCE_STATUS_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -3269,6 +3557,8 @@ func NetworkStatsResponseToEnvVar(v *NetworkStatsResponse) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_SENTINEL_NETWORK_STATS_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_SENTINEL_NETWORK_STATS_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_SENTINEL_NETWORK_STATS_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_SENTINEL_NETWORK_STATS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -3277,6 +3567,16 @@ func NetworkStatsResponseToEnvVar(v *NetworkStatsResponse) map[string]string {
 // NetworkStatsResponseFromEnvVar creates NetworkStatsResponse from environment variable key-value pairs.
 func NetworkStatsResponseFromEnvVar(env map[string]string) (*NetworkStatsResponse, error) {
 	result := &NetworkStatsResponse{}
+	if val, ok := env["PROTO_SERVICES_SENTINEL_NETWORK_STATS_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_SENTINEL_NETWORK_STATS_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
+	}
 	if val, ok := env["PROTO_SERVICES_SENTINEL_NETWORK_STATS_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -3296,6 +3596,8 @@ func ThreadInfoResponseToEnvVar(v *ThreadInfoResponse) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_SENTINEL_THREAD_INFO_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_SENTINEL_THREAD_INFO_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_SENTINEL_THREAD_INFO_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_SENTINEL_THREAD_INFO_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -3304,6 +3606,16 @@ func ThreadInfoResponseToEnvVar(v *ThreadInfoResponse) map[string]string {
 // ThreadInfoResponseFromEnvVar creates ThreadInfoResponse from environment variable key-value pairs.
 func ThreadInfoResponseFromEnvVar(env map[string]string) (*ThreadInfoResponse, error) {
 	result := &ThreadInfoResponse{}
+	if val, ok := env["PROTO_SERVICES_SENTINEL_THREAD_INFO_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_SENTINEL_THREAD_INFO_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
+	}
 	if val, ok := env["PROTO_SERVICES_SENTINEL_THREAD_INFO_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -3323,6 +3635,8 @@ func TokenCacheStatsResponseToEnvVar(v *TokenCacheStatsResponse) map[string]stri
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_SENTINEL_TOKEN_CACHE_STATS_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_SENTINEL_TOKEN_CACHE_STATS_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_SENTINEL_TOKEN_CACHE_STATS_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_SENTINEL_TOKEN_CACHE_STATS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -3331,6 +3645,16 @@ func TokenCacheStatsResponseToEnvVar(v *TokenCacheStatsResponse) map[string]stri
 // TokenCacheStatsResponseFromEnvVar creates TokenCacheStatsResponse from environment variable key-value pairs.
 func TokenCacheStatsResponseFromEnvVar(env map[string]string) (*TokenCacheStatsResponse, error) {
 	result := &TokenCacheStatsResponse{}
+	if val, ok := env["PROTO_SERVICES_SENTINEL_TOKEN_CACHE_STATS_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_SENTINEL_TOKEN_CACHE_STATS_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
+	}
 	if val, ok := env["PROTO_SERVICES_SENTINEL_TOKEN_CACHE_STATS_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -3350,6 +3674,8 @@ func MapStatsResponseToEnvVar(v *MapStatsResponse) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_SENTINEL_MAP_STATS_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_SENTINEL_MAP_STATS_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_SENTINEL_MAP_STATS_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_SENTINEL_MAP_STATS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -3358,6 +3684,16 @@ func MapStatsResponseToEnvVar(v *MapStatsResponse) map[string]string {
 // MapStatsResponseFromEnvVar creates MapStatsResponse from environment variable key-value pairs.
 func MapStatsResponseFromEnvVar(env map[string]string) (*MapStatsResponse, error) {
 	result := &MapStatsResponse{}
+	if val, ok := env["PROTO_SERVICES_SENTINEL_MAP_STATS_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_SENTINEL_MAP_STATS_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
+	}
 	if val, ok := env["PROTO_SERVICES_SENTINEL_MAP_STATS_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -3557,6 +3893,48 @@ func ValidateWatchDashboardRequestWithDepth(m *WatchDashboardRequest, depth int)
 	return nil
 }
 
+// ValidateDashboardPageRequest validates all fields in DashboardPageRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateDashboardPageRequest(m *DashboardPageRequest) error {
+	return ValidateDashboardPageRequestWithDepth(m, 0)
+}
+
+// ValidateDashboardPageRequestWithDepth validates DashboardPageRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateDashboardPageRequestWithDepth(m *DashboardPageRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate PageSize (assert_ge: 0)
+	if m.PageSize < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 0, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_le: 100)
+	if m.PageSize > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 100, got: %v", m.PageSize)
+	}
+	// Validate PageToken (assert_max_length: 512)
+	if len(m.PageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken must be at most 512 characters, got: %d", len(m.PageToken))
+	}
+
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
 // ValidateNodeMetricsResponse validates all fields in NodeMetricsResponse according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateNodeMetricsResponse(m *NodeMetricsResponse) error {
@@ -3576,6 +3954,20 @@ func ValidateNodeMetricsResponseWithDepth(m *NodeMetricsResponse, depth int) err
 	// Validate Items (assert_max_size: 32)
 	if len(m.Items) > 32 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Items exceeds max size of 32, got: %d", len(m.Items))
+	}
+
+	// Validate NextPageToken (assert_max_length: 512)
+	if len(m.NextPageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken must be at most 512 characters, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TotalCount (assert_ge: 0)
+	if m.TotalCount < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TotalCount must be >= 0, got: %v", m.TotalCount)
+	}
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -3614,6 +4006,20 @@ func ValidateGrpcStatsResponseWithDepth(m *GrpcStatsResponse, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Items exceeds max size of 32, got: %d", len(m.Items))
 	}
 
+	// Validate NextPageToken (assert_max_length: 512)
+	if len(m.NextPageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken must be at most 512 characters, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TotalCount (assert_ge: 0)
+	if m.TotalCount < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TotalCount must be >= 0, got: %v", m.TotalCount)
+	}
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
+	}
+
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
@@ -3648,6 +4054,20 @@ func ValidatePersistenceStatusResponseWithDepth(m *PersistenceStatusResponse, de
 	// Validate Items (assert_max_size: 32)
 	if len(m.Items) > 32 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Items exceeds max size of 32, got: %d", len(m.Items))
+	}
+
+	// Validate NextPageToken (assert_max_length: 512)
+	if len(m.NextPageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken must be at most 512 characters, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TotalCount (assert_ge: 0)
+	if m.TotalCount < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TotalCount must be >= 0, got: %v", m.TotalCount)
+	}
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -3686,6 +4106,20 @@ func ValidateNetworkStatsResponseWithDepth(m *NetworkStatsResponse, depth int) e
 		return protoerrors.NewErrMissingInvalidData(nil, "field Items exceeds max size of 32, got: %d", len(m.Items))
 	}
 
+	// Validate NextPageToken (assert_max_length: 512)
+	if len(m.NextPageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken must be at most 512 characters, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TotalCount (assert_ge: 0)
+	if m.TotalCount < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TotalCount must be >= 0, got: %v", m.TotalCount)
+	}
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
+	}
+
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
@@ -3720,6 +4154,20 @@ func ValidateThreadInfoResponseWithDepth(m *ThreadInfoResponse, depth int) error
 	// Validate Items (assert_max_size: 32)
 	if len(m.Items) > 32 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Items exceeds max size of 32, got: %d", len(m.Items))
+	}
+
+	// Validate NextPageToken (assert_max_length: 512)
+	if len(m.NextPageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken must be at most 512 characters, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TotalCount (assert_ge: 0)
+	if m.TotalCount < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TotalCount must be >= 0, got: %v", m.TotalCount)
+	}
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -3758,6 +4206,20 @@ func ValidateTokenCacheStatsResponseWithDepth(m *TokenCacheStatsResponse, depth 
 		return protoerrors.NewErrMissingInvalidData(nil, "field Items exceeds max size of 32, got: %d", len(m.Items))
 	}
 
+	// Validate NextPageToken (assert_max_length: 512)
+	if len(m.NextPageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken must be at most 512 characters, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TotalCount (assert_ge: 0)
+	if m.TotalCount < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TotalCount must be >= 0, got: %v", m.TotalCount)
+	}
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
+	}
+
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
@@ -3789,9 +4251,23 @@ func ValidateMapStatsResponseWithDepth(m *MapStatsResponse, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Items (assert_max_size: 1024)
-	if len(m.Items) > 1024 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Items exceeds max size of 1024, got: %d", len(m.Items))
+	// Validate Items (assert_max_size: 100)
+	if len(m.Items) > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Items exceeds max size of 100, got: %d", len(m.Items))
+	}
+
+	// Validate NextPageToken (assert_max_length: 512)
+	if len(m.NextPageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken must be at most 512 characters, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TotalCount (assert_ge: 0)
+	if m.TotalCount < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TotalCount must be >= 0, got: %v", m.TotalCount)
+	}
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -4007,33 +4483,42 @@ const (
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizeConfigTraceId                      int = 32768
-	MaxSizeSentinelstateTraceId               int = 32768
-	MaxSizeWatchdashboardrequestTraceId       int = 32768
-	MaxSizeNodemetricsresponseItems           int = 32
-	MaxSizeNodemetricsresponseTraceId         int = 32768
-	MaxSizeGrpcstatsresponseItems             int = 32
-	MaxSizeGrpcstatsresponseTraceId           int = 32768
-	MaxSizePersistencestatusresponseItems     int = 32
-	MaxSizePersistencestatusresponseTraceId   int = 32768
-	MaxSizeNetworkstatsresponseItems          int = 32
-	MaxSizeNetworkstatsresponseTraceId        int = 32768
-	MaxSizeThreadinforesponseItems            int = 32
-	MaxSizeThreadinforesponseTraceId          int = 32768
-	MaxSizeTokencachestatsresponseItems       int = 32
-	MaxSizeTokencachestatsresponseTraceId     int = 32768
-	MaxSizeMapstatsresponseItems              int = 1024
-	MaxSizeMapstatsresponseTraceId            int = 32768
-	MaxSizeDashboardresponseNodeMetrics       int = 32
-	MaxSizeDashboardresponseGrpcStats         int = 32
-	MaxSizeDashboardresponsePersistenceStatus int = 32
-	MaxSizeDashboardresponseNetworkStats      int = 32
-	MaxSizeDashboardresponseThreadInfo        int = 32
-	MaxSizeDashboardresponseTokenCacheStats   int = 32
-	MaxSizeDashboardresponseMapStats          int = 1024
-	MaxSizeDashboardresponseTraceId           int = 32768
-	MaxSizeSentinelconfigstateTraceId         int = 32768
-	MaxSizeMapemptyTraceId                    int = 32768
+	MaxSizeConfigTraceId                          int = 32768
+	MaxSizeSentinelstateTraceId                   int = 32768
+	MaxSizeWatchdashboardrequestTraceId           int = 32768
+	MaxSizeDashboardpagerequestPageToken          int = 32768
+	MaxSizeDashboardpagerequestTraceId            int = 32768
+	MaxSizeNodemetricsresponseItems               int = 32
+	MaxSizeNodemetricsresponseNextPageToken       int = 32768
+	MaxSizeNodemetricsresponseTraceId             int = 32768
+	MaxSizeGrpcstatsresponseItems                 int = 32
+	MaxSizeGrpcstatsresponseNextPageToken         int = 32768
+	MaxSizeGrpcstatsresponseTraceId               int = 32768
+	MaxSizePersistencestatusresponseItems         int = 32
+	MaxSizePersistencestatusresponseNextPageToken int = 32768
+	MaxSizePersistencestatusresponseTraceId       int = 32768
+	MaxSizeNetworkstatsresponseItems              int = 32
+	MaxSizeNetworkstatsresponseNextPageToken      int = 32768
+	MaxSizeNetworkstatsresponseTraceId            int = 32768
+	MaxSizeThreadinforesponseItems                int = 32
+	MaxSizeThreadinforesponseNextPageToken        int = 32768
+	MaxSizeThreadinforesponseTraceId              int = 32768
+	MaxSizeTokencachestatsresponseItems           int = 32
+	MaxSizeTokencachestatsresponseNextPageToken   int = 32768
+	MaxSizeTokencachestatsresponseTraceId         int = 32768
+	MaxSizeMapstatsresponseItems                  int = 100
+	MaxSizeMapstatsresponseNextPageToken          int = 32768
+	MaxSizeMapstatsresponseTraceId                int = 32768
+	MaxSizeDashboardresponseNodeMetrics           int = 32
+	MaxSizeDashboardresponseGrpcStats             int = 32
+	MaxSizeDashboardresponsePersistenceStatus     int = 32
+	MaxSizeDashboardresponseNetworkStats          int = 32
+	MaxSizeDashboardresponseThreadInfo            int = 32
+	MaxSizeDashboardresponseTokenCacheStats       int = 32
+	MaxSizeDashboardresponseMapStats              int = 1024
+	MaxSizeDashboardresponseTraceId               int = 32768
+	MaxSizeSentinelconfigstateTraceId             int = 32768
+	MaxSizeMapemptyTraceId                        int = 32768
 )
 
 // ============================================================
@@ -4061,6 +4546,16 @@ func SentinelStateDefaults(v *SentinelState) {
 // ============================================================
 // WatchDashboardRequestDefaults applies field-level default values to zero-valued fields.
 func WatchDashboardRequestDefaults(v *WatchDashboardRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: DashboardPageRequest
+// ============================================================
+// DashboardPageRequestDefaults applies field-level default values to zero-valued fields.
+func DashboardPageRequestDefaults(v *DashboardPageRequest) {
 	if v == nil {
 		return
 	}
@@ -4194,6 +4689,17 @@ func SentinelStateUndefaults(v *SentinelState) {
 // WatchDashboardRequestUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
 func WatchDashboardRequestUndefaults(v *WatchDashboardRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: DashboardPageRequest
+// ============================================================
+// DashboardPageRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func DashboardPageRequestUndefaults(v *DashboardPageRequest) {
 	if v == nil {
 		return
 	}
@@ -4352,12 +4858,37 @@ func MergeWatchDashboardRequest(dst, src *WatchDashboardRequest) {
 }
 
 // ============================================================
+// Merge: DashboardPageRequest
+// ============================================================
+// MergeDashboardPageRequest fills zero-valued fields in dst from src.
+func MergeDashboardPageRequest(dst, src *DashboardPageRequest) {
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
+	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
 // Merge: NodeMetricsResponse
 // ============================================================
 // MergeNodeMetricsResponse fills zero-valued fields in dst from src.
 func MergeNodeMetricsResponse(dst, src *NodeMetricsResponse) {
 	if len(dst.Items) == 0 {
 		dst.Items = src.Items
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -4375,6 +4906,12 @@ func MergeGrpcStatsResponse(dst, src *GrpcStatsResponse) {
 	if len(dst.Items) == 0 {
 		dst.Items = src.Items
 	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -4390,6 +4927,12 @@ func MergeGrpcStatsResponse(dst, src *GrpcStatsResponse) {
 func MergePersistenceStatusResponse(dst, src *PersistenceStatusResponse) {
 	if len(dst.Items) == 0 {
 		dst.Items = src.Items
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -4407,6 +4950,12 @@ func MergeNetworkStatsResponse(dst, src *NetworkStatsResponse) {
 	if len(dst.Items) == 0 {
 		dst.Items = src.Items
 	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -4422,6 +4971,12 @@ func MergeNetworkStatsResponse(dst, src *NetworkStatsResponse) {
 func MergeThreadInfoResponse(dst, src *ThreadInfoResponse) {
 	if len(dst.Items) == 0 {
 		dst.Items = src.Items
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -4439,6 +4994,12 @@ func MergeTokenCacheStatsResponse(dst, src *TokenCacheStatsResponse) {
 	if len(dst.Items) == 0 {
 		dst.Items = src.Items
 	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -4454,6 +5015,12 @@ func MergeTokenCacheStatsResponse(dst, src *TokenCacheStatsResponse) {
 func MergeMapStatsResponse(dst, src *MapStatsResponse) {
 	if len(dst.Items) == 0 {
 		dst.Items = src.Items
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

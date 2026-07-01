@@ -29,7 +29,7 @@ func ExtractLlmCallNodeFromLlmEvent(event *LlmEvent) *LlmCallNode {
 	return &LlmCallNode{
 		EventId:      event.EventId,
 		Model:        event.ModelKey,
-		Email:        event.Email,
+		SpiffeId:     event.SpiffeId,
 		Provider:     event.Provider,
 		Operation:    event.Operation,
 		Succeeded:    event.Succeeded,

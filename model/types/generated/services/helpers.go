@@ -1858,8 +1858,8 @@ func ArgusRPCsValues() []ArgusRPCs {
 		ArgusRPCs_ARGUS_RPCS_GET_USER_TOKEN_STATS,
 		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_PROFILE,
 		ArgusRPCs_ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY,
-		ArgusRPCs_ARGUS_RPCS_GET_FILE_ACTIVITY,
-		ArgusRPCs_ARGUS_RPCS_GET_SESSION_TIMELINE,
+		ArgusRPCs_ARGUS_RPCS_LIST_FILE_ACTIVITY,
+		ArgusRPCs_ARGUS_RPCS_LIST_SESSION_TIMELINE,
 		ArgusRPCs_ARGUS_RPCS_GET_AGENT_TREE,
 		ArgusRPCs_ARGUS_RPCS_GET_SYSTEM_STATS,
 		ArgusRPCs_ARGUS_RPCS_LIST_TOOL_LEADERBOARD,
@@ -1875,7 +1875,7 @@ func ArgusRPCsValues() []ArgusRPCs {
 
 // ArgusRPCsStringValues returns all valid ArgusRPCs names as strings
 func ArgusRPCsStringValues() []string {
-	return []string{"argus-rpcs-get-dashboard", "argus-rpcs-list-active-sessions", "argus-rpcs-get-session-detail", "argus-rpcs-get-user-activity", "argus-rpcs-list-session-search-results", "argus-rpcs-subscribe-live-sessions", "argus-rpcs-get-scratchpad", "argus-rpcs-update-scratchpad", "argus-rpcs-delete-scratchpad", "argus-rpcs-list-scratchpads", "argus-rpcs-delete-scratchpads", "argus-rpcs-get-supervisor-context", "argus-rpcs-subscribe-dashboard", "argus-rpcs-subscribe-session-detail", "argus-rpcs-subscribe-user-activity", "argus-rpcs-subscribe-supervisor-context", "argus-rpcs-subscribe-scratchpad-list", "argus-rpcs-subscribe-scratchpad-read", "argus-rpcs-list-users", "argus-rpcs-get-user-profile", "argus-rpcs-get-user-token-stats", "argus-rpcs-subscribe-user-profile", "argus-rpcs-list-user-commit-activity", "argus-rpcs-get-file-activity", "argus-rpcs-get-session-timeline", "argus-rpcs-get-agent-tree", "argus-rpcs-get-system-stats", "argus-rpcs-list-tool-leaderboard", "argus-rpcs-list-model-usage", "argus-rpcs-list-activity-timeseries", "argus-rpcs-subscribe-system-stats", "argus-rpcs-subscribe-tool-leaderboard", "argus-rpcs-list-event-search-results", "argus-rpcs-list-file-path-matches", "argus-rpcs-any"}
+	return []string{"argus-rpcs-get-dashboard", "argus-rpcs-list-active-sessions", "argus-rpcs-get-session-detail", "argus-rpcs-get-user-activity", "argus-rpcs-list-session-search-results", "argus-rpcs-subscribe-live-sessions", "argus-rpcs-get-scratchpad", "argus-rpcs-update-scratchpad", "argus-rpcs-delete-scratchpad", "argus-rpcs-list-scratchpads", "argus-rpcs-delete-scratchpads", "argus-rpcs-get-supervisor-context", "argus-rpcs-subscribe-dashboard", "argus-rpcs-subscribe-session-detail", "argus-rpcs-subscribe-user-activity", "argus-rpcs-subscribe-supervisor-context", "argus-rpcs-subscribe-scratchpad-list", "argus-rpcs-subscribe-scratchpad-read", "argus-rpcs-list-users", "argus-rpcs-get-user-profile", "argus-rpcs-get-user-token-stats", "argus-rpcs-subscribe-user-profile", "argus-rpcs-list-user-commit-activity", "argus-rpcs-list-file-activity", "argus-rpcs-list-session-timeline", "argus-rpcs-get-agent-tree", "argus-rpcs-get-system-stats", "argus-rpcs-list-tool-leaderboard", "argus-rpcs-list-model-usage", "argus-rpcs-list-activity-timeseries", "argus-rpcs-subscribe-system-stats", "argus-rpcs-subscribe-tool-leaderboard", "argus-rpcs-list-event-search-results", "argus-rpcs-list-file-path-matches", "argus-rpcs-any"}
 }
 
 // ParseArgusRPCs converts a string to a ArgusRPCs enum value
@@ -1932,10 +1932,10 @@ func ParseArgusRPCs(s string) (ArgusRPCs, error) {
 		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_PROFILE, nil
 	case "argus-rpcs-list-user-commit-activity":
 		return ArgusRPCs_ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY, nil
-	case "argus-rpcs-get-file-activity":
-		return ArgusRPCs_ARGUS_RPCS_GET_FILE_ACTIVITY, nil
-	case "argus-rpcs-get-session-timeline":
-		return ArgusRPCs_ARGUS_RPCS_GET_SESSION_TIMELINE, nil
+	case "argus-rpcs-list-file-activity":
+		return ArgusRPCs_ARGUS_RPCS_LIST_FILE_ACTIVITY, nil
+	case "argus-rpcs-list-session-timeline":
+		return ArgusRPCs_ARGUS_RPCS_LIST_SESSION_TIMELINE, nil
 	case "argus-rpcs-get-agent-tree":
 		return ArgusRPCs_ARGUS_RPCS_GET_AGENT_TREE, nil
 	case "argus-rpcs-get-system-stats":
@@ -2032,10 +2032,10 @@ func ArgusRPCsToString(v ArgusRPCs) string {
 		return "argus-rpcs-subscribe-user-profile"
 	case ArgusRPCs_ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY:
 		return "argus-rpcs-list-user-commit-activity"
-	case ArgusRPCs_ARGUS_RPCS_GET_FILE_ACTIVITY:
-		return "argus-rpcs-get-file-activity"
-	case ArgusRPCs_ARGUS_RPCS_GET_SESSION_TIMELINE:
-		return "argus-rpcs-get-session-timeline"
+	case ArgusRPCs_ARGUS_RPCS_LIST_FILE_ACTIVITY:
+		return "argus-rpcs-list-file-activity"
+	case ArgusRPCs_ARGUS_RPCS_LIST_SESSION_TIMELINE:
+		return "argus-rpcs-list-session-timeline"
 	case ArgusRPCs_ARGUS_RPCS_GET_AGENT_TREE:
 		return "argus-rpcs-get-agent-tree"
 	case ArgusRPCs_ARGUS_RPCS_GET_SYSTEM_STATS:
@@ -2124,10 +2124,10 @@ func ParseArgusRPCsLiberal(s string) ArgusRPCs {
 		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_PROFILE
 	case "argus-rpcs-list-user-commit-activity":
 		return ArgusRPCs_ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY
-	case "argus-rpcs-get-file-activity":
-		return ArgusRPCs_ARGUS_RPCS_GET_FILE_ACTIVITY
-	case "argus-rpcs-get-session-timeline":
-		return ArgusRPCs_ARGUS_RPCS_GET_SESSION_TIMELINE
+	case "argus-rpcs-list-file-activity":
+		return ArgusRPCs_ARGUS_RPCS_LIST_FILE_ACTIVITY
+	case "argus-rpcs-list-session-timeline":
+		return ArgusRPCs_ARGUS_RPCS_LIST_SESSION_TIMELINE
 	case "argus-rpcs-get-agent-tree":
 		return ArgusRPCs_ARGUS_RPCS_GET_AGENT_TREE
 	case "argus-rpcs-get-system-stats":
@@ -2204,10 +2204,10 @@ func ArgusRPCsToSpecName(v ArgusRPCs) string {
 		return "ARGUS_RPCS_SUBSCRIBE_USER_PROFILE"
 	case ArgusRPCs_ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY:
 		return "ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY"
-	case ArgusRPCs_ARGUS_RPCS_GET_FILE_ACTIVITY:
-		return "ARGUS_RPCS_GET_FILE_ACTIVITY"
-	case ArgusRPCs_ARGUS_RPCS_GET_SESSION_TIMELINE:
-		return "ARGUS_RPCS_GET_SESSION_TIMELINE"
+	case ArgusRPCs_ARGUS_RPCS_LIST_FILE_ACTIVITY:
+		return "ARGUS_RPCS_LIST_FILE_ACTIVITY"
+	case ArgusRPCs_ARGUS_RPCS_LIST_SESSION_TIMELINE:
+		return "ARGUS_RPCS_LIST_SESSION_TIMELINE"
 	case ArgusRPCs_ARGUS_RPCS_GET_AGENT_TREE:
 		return "ARGUS_RPCS_GET_AGENT_TREE"
 	case ArgusRPCs_ARGUS_RPCS_GET_SYSTEM_STATS:
@@ -2391,53 +2391,53 @@ func SamlRPCsToSpecName(v SamlRPCs) string {
 	}
 }
 
-// ClaudesensorRPCsValues returns all valid ClaudesensorRPCs values (excluding UNDEFINED)
-func ClaudesensorRPCsValues() []ClaudesensorRPCs {
-	return []ClaudesensorRPCs{
-		ClaudesensorRPCs_CLAUDESENSOR_RPCS_PUBLISH_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM,
-		ClaudesensorRPCs_CLAUDESENSOR_RPCS_SUBSCRIBE_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM,
-		ClaudesensorRPCs_CLAUDESENSOR_RPCS_ANY,
+// AgentsensorRPCsValues returns all valid AgentsensorRPCs values (excluding UNDEFINED)
+func AgentsensorRPCsValues() []AgentsensorRPCs {
+	return []AgentsensorRPCs{
+		AgentsensorRPCs_AGENTSENSOR_RPCS_PUBLISH_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM,
+		AgentsensorRPCs_AGENTSENSOR_RPCS_SUBSCRIBE_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM,
+		AgentsensorRPCs_AGENTSENSOR_RPCS_ANY,
 	}
 }
 
-// ClaudesensorRPCsStringValues returns all valid ClaudesensorRPCs names as strings
-func ClaudesensorRPCsStringValues() []string {
-	return []string{"claudesensor-rpcs-publish-claudesensor-agentic-code-event-bus-event-stream", "claudesensor-rpcs-subscribe-claudesensor-agentic-code-event-bus-event-stream", "claudesensor-rpcs-any"}
+// AgentsensorRPCsStringValues returns all valid AgentsensorRPCs names as strings
+func AgentsensorRPCsStringValues() []string {
+	return []string{"agentsensor-rpcs-publish-agentsensor-agent-event-bus-event-stream", "agentsensor-rpcs-subscribe-agentsensor-agent-event-bus-event-stream", "agentsensor-rpcs-any"}
 }
 
-// ParseClaudesensorRPCs converts a string to a ClaudesensorRPCs enum value
+// ParseAgentsensorRPCs converts a string to a AgentsensorRPCs enum value
 // Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseClaudesensorRPCs(s string) (ClaudesensorRPCs, error) {
+func ParseAgentsensorRPCs(s string) (AgentsensorRPCs, error) {
 	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
 	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
 	switch normalized {
 	case "":
-		return ClaudesensorRPCs_CLAUDESENSOR_RPCS_UNSPECIFIED, nil
-	case "claudesensor-rpcs-publish-claudesensor-agentic-code-event-bus-event-stream":
-		return ClaudesensorRPCs_CLAUDESENSOR_RPCS_PUBLISH_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM, nil
-	case "claudesensor-rpcs-subscribe-claudesensor-agentic-code-event-bus-event-stream":
-		return ClaudesensorRPCs_CLAUDESENSOR_RPCS_SUBSCRIBE_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM, nil
-	case "claudesensor-rpcs-any":
-		return ClaudesensorRPCs_CLAUDESENSOR_RPCS_ANY, nil
+		return AgentsensorRPCs_AGENTSENSOR_RPCS_UNSPECIFIED, nil
+	case "agentsensor-rpcs-publish-agentsensor-agent-event-bus-event-stream":
+		return AgentsensorRPCs_AGENTSENSOR_RPCS_PUBLISH_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM, nil
+	case "agentsensor-rpcs-subscribe-agentsensor-agent-event-bus-event-stream":
+		return AgentsensorRPCs_AGENTSENSOR_RPCS_SUBSCRIBE_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM, nil
+	case "agentsensor-rpcs-any":
+		return AgentsensorRPCs_AGENTSENSOR_RPCS_ANY, nil
 	default:
-		return ClaudesensorRPCs_CLAUDESENSOR_RPCS_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid claudesensorrpcs %s, expecting one of: %v", s, ClaudesensorRPCsStringValues())
+		return AgentsensorRPCs_AGENTSENSOR_RPCS_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid agentsensorrpcs %s, expecting one of: %v", s, AgentsensorRPCsStringValues())
 	}
 }
 
-// ParseClaudesensorRPCss converts a comma-separated string to a slice of ClaudesensorRPCs enum values
+// ParseAgentsensorRPCss converts a comma-separated string to a slice of AgentsensorRPCs enum values
 // Returns an error if any value is invalid
-func ParseClaudesensorRPCss(s string) ([]ClaudesensorRPCs, error) {
+func ParseAgentsensorRPCss(s string) ([]AgentsensorRPCs, error) {
 	if s == "" {
 		return nil, nil
 	}
 	parts := strings.Split(s, ",")
-	result := make([]ClaudesensorRPCs, 0, len(parts))
+	result := make([]AgentsensorRPCs, 0, len(parts))
 	for _, part := range parts {
 		trimmed := strings.TrimSpace(part)
 		if trimmed == "" {
 			continue
 		}
-		val, err := ParseClaudesensorRPCs(trimmed)
+		val, err := ParseAgentsensorRPCs(trimmed)
 		if err != nil {
 			return nil, err
 		}
@@ -2446,59 +2446,59 @@ func ParseClaudesensorRPCss(s string) ([]ClaudesensorRPCs, error) {
 	return result, nil
 }
 
-// ClaudesensorRPCsToString converts a ClaudesensorRPCs to its lowercase string representation
-func ClaudesensorRPCsToString(v ClaudesensorRPCs) string {
+// AgentsensorRPCsToString converts a AgentsensorRPCs to its lowercase string representation
+func AgentsensorRPCsToString(v AgentsensorRPCs) string {
 	switch v {
-	case ClaudesensorRPCs_CLAUDESENSOR_RPCS_PUBLISH_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM:
-		return "claudesensor-rpcs-publish-claudesensor-agentic-code-event-bus-event-stream"
-	case ClaudesensorRPCs_CLAUDESENSOR_RPCS_SUBSCRIBE_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM:
-		return "claudesensor-rpcs-subscribe-claudesensor-agentic-code-event-bus-event-stream"
-	case ClaudesensorRPCs_CLAUDESENSOR_RPCS_ANY:
-		return "claudesensor-rpcs-any"
+	case AgentsensorRPCs_AGENTSENSOR_RPCS_PUBLISH_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM:
+		return "agentsensor-rpcs-publish-agentsensor-agent-event-bus-event-stream"
+	case AgentsensorRPCs_AGENTSENSOR_RPCS_SUBSCRIBE_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM:
+		return "agentsensor-rpcs-subscribe-agentsensor-agent-event-bus-event-stream"
+	case AgentsensorRPCs_AGENTSENSOR_RPCS_ANY:
+		return "agentsensor-rpcs-any"
 	default:
 		return ""
 	}
 }
 
-// ParseClaudesensorRPCsLiberal parses a ClaudesensorRPCs liberally, accepting:
+// ParseAgentsensorRPCsLiberal parses a AgentsensorRPCs liberally, accepting:
 // - Integer values (as string or int)
 // - Enum names in any case
 // - RFC-compliant JSON names
-func ParseClaudesensorRPCsLiberal(s string) ClaudesensorRPCs {
+func ParseAgentsensorRPCsLiberal(s string) AgentsensorRPCs {
 	if s == "" {
-		return ClaudesensorRPCs_CLAUDESENSOR_RPCS_UNSPECIFIED
+		return AgentsensorRPCs_AGENTSENSOR_RPCS_UNSPECIFIED
 	}
 	// Try parsing as integer
 	if num, err := strconv.Atoi(s); err == nil {
-		return ClaudesensorRPCs(num)
+		return AgentsensorRPCs(num)
 	}
 	// Normalize and try parsing
 	normalized := strings.ToLower(strings.TrimSpace(s))
 	normalized = strings.ReplaceAll(normalized, "_", "-")
 	normalized = strings.ReplaceAll(normalized, " ", "-")
 	switch normalized {
-	case "claudesensor-rpcs-publish-claudesensor-agentic-code-event-bus-event-stream":
-		return ClaudesensorRPCs_CLAUDESENSOR_RPCS_PUBLISH_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM
-	case "claudesensor-rpcs-subscribe-claudesensor-agentic-code-event-bus-event-stream":
-		return ClaudesensorRPCs_CLAUDESENSOR_RPCS_SUBSCRIBE_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM
-	case "claudesensor-rpcs-any":
-		return ClaudesensorRPCs_CLAUDESENSOR_RPCS_ANY
+	case "agentsensor-rpcs-publish-agentsensor-agent-event-bus-event-stream":
+		return AgentsensorRPCs_AGENTSENSOR_RPCS_PUBLISH_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM
+	case "agentsensor-rpcs-subscribe-agentsensor-agent-event-bus-event-stream":
+		return AgentsensorRPCs_AGENTSENSOR_RPCS_SUBSCRIBE_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM
+	case "agentsensor-rpcs-any":
+		return AgentsensorRPCs_AGENTSENSOR_RPCS_ANY
 	default:
-		return ClaudesensorRPCs_CLAUDESENSOR_RPCS_UNSPECIFIED
+		return AgentsensorRPCs_AGENTSENSOR_RPCS_UNSPECIFIED
 	}
 }
 
-// ClaudesensorRPCsToSpecName converts a ClaudesensorRPCs to its canonical protobuf spec name
-func ClaudesensorRPCsToSpecName(v ClaudesensorRPCs) string {
+// AgentsensorRPCsToSpecName converts a AgentsensorRPCs to its canonical protobuf spec name
+func AgentsensorRPCsToSpecName(v AgentsensorRPCs) string {
 	switch v {
-	case ClaudesensorRPCs_CLAUDESENSOR_RPCS_UNSPECIFIED:
-		return "CLAUDESENSOR_RPCS_UNSPECIFIED"
-	case ClaudesensorRPCs_CLAUDESENSOR_RPCS_PUBLISH_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM:
-		return "CLAUDESENSOR_RPCS_PUBLISH_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM"
-	case ClaudesensorRPCs_CLAUDESENSOR_RPCS_SUBSCRIBE_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM:
-		return "CLAUDESENSOR_RPCS_SUBSCRIBE_CLAUDESENSOR_AGENTIC_CODE_EVENT_BUS_EVENT_STREAM"
-	case ClaudesensorRPCs_CLAUDESENSOR_RPCS_ANY:
-		return "CLAUDESENSOR_RPCS_ANY"
+	case AgentsensorRPCs_AGENTSENSOR_RPCS_UNSPECIFIED:
+		return "AGENTSENSOR_RPCS_UNSPECIFIED"
+	case AgentsensorRPCs_AGENTSENSOR_RPCS_PUBLISH_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM:
+		return "AGENTSENSOR_RPCS_PUBLISH_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM"
+	case AgentsensorRPCs_AGENTSENSOR_RPCS_SUBSCRIBE_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM:
+		return "AGENTSENSOR_RPCS_SUBSCRIBE_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM"
+	case AgentsensorRPCs_AGENTSENSOR_RPCS_ANY:
+		return "AGENTSENSOR_RPCS_ANY"
 	default:
 		return ""
 	}

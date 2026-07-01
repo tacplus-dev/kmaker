@@ -310,6 +310,12 @@ func (a *authorizer) authorizeByServiceEntitlements(te *entitlementspb.TokenEnti
 	for _, grant := range te.GetGrants() {
 		raw = append(raw, grant)
 	}
+	if unknown := granthelper.UnknownTokens(raw); len(unknown) > 0 {
+		a.logger.Warn("dropping unknown service_entitlements grant(s); token grants remain fail-closed",
+			zap.Strings("unknown_grants", unknown),
+			zap.String("service", serviceName),
+			zap.String("required_grant", required))
+	}
 	for _, token := range granthelper.Normalize(raw) {
 		if token == required {
 			return nil
@@ -325,6 +331,9 @@ func methodGrantToken(fullMethod string) string {
 	method := fullMethod
 	if slash := strings.LastIndex(fullMethod, "/"); slash >= 0 {
 		serviceFQN = strings.TrimPrefix(fullMethod[:slash], "/")
+		if serviceSlash := strings.LastIndex(serviceFQN, "/"); serviceSlash >= 0 {
+			serviceFQN = serviceFQN[serviceSlash+1:]
+		}
 		method = fullMethod[slash+1:]
 	}
 	pkg := serviceName
@@ -340,7 +349,7 @@ func methodGrantToken(fullMethod string) string {
 }
 
 func grantTokenPart(s string) string {
-	s = strings.NewReplacer("-", "_", ".", "_").Replace(s)
+	s = strings.NewReplacer("-", "_", ".", "_", "/", "_").Replace(s)
 	runes := []rune(s)
 	var b strings.Builder
 	for i, r := range runes {

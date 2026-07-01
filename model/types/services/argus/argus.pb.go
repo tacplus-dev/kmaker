@@ -25,7 +25,7 @@ import (
 	healthreport "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/healthreport"
 	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/spec"
 	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/trace"
-	claudesensor "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/vservices/claudesensor"
+	agentsensor "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/vservices/agentsensor"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -394,8 +394,8 @@ const (
 	ArgusRpcId_ARGUS_RPC_ID_GET_USER_TOKEN_STATS         ArgusRpcId = 24
 	ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE       ArgusRpcId = 25
 	ArgusRpcId_ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY    ArgusRpcId = 26
-	ArgusRpcId_ARGUS_RPC_ID_GET_FILE_ACTIVITY            ArgusRpcId = 27
-	ArgusRpcId_ARGUS_RPC_ID_GET_SESSION_TIMELINE         ArgusRpcId = 28
+	ArgusRpcId_ARGUS_RPC_ID_LIST_FILE_ACTIVITY           ArgusRpcId = 27
+	ArgusRpcId_ARGUS_RPC_ID_LIST_SESSION_TIMELINE        ArgusRpcId = 28
 	ArgusRpcId_ARGUS_RPC_ID_GET_AGENT_TREE               ArgusRpcId = 29
 	ArgusRpcId_ARGUS_RPC_ID_GET_SYSTEM_STATS             ArgusRpcId = 30
 	ArgusRpcId_ARGUS_RPC_ID_LIST_TOOL_LEADERBOARD        ArgusRpcId = 31
@@ -437,8 +437,8 @@ var (
 		24: "ARGUS_RPC_ID_GET_USER_TOKEN_STATS",
 		25: "ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE",
 		26: "ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY",
-		27: "ARGUS_RPC_ID_GET_FILE_ACTIVITY",
-		28: "ARGUS_RPC_ID_GET_SESSION_TIMELINE",
+		27: "ARGUS_RPC_ID_LIST_FILE_ACTIVITY",
+		28: "ARGUS_RPC_ID_LIST_SESSION_TIMELINE",
 		29: "ARGUS_RPC_ID_GET_AGENT_TREE",
 		30: "ARGUS_RPC_ID_GET_SYSTEM_STATS",
 		31: "ARGUS_RPC_ID_LIST_TOOL_LEADERBOARD",
@@ -477,8 +477,8 @@ var (
 		"ARGUS_RPC_ID_GET_USER_TOKEN_STATS":         24,
 		"ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE":       25,
 		"ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY":    26,
-		"ARGUS_RPC_ID_GET_FILE_ACTIVITY":            27,
-		"ARGUS_RPC_ID_GET_SESSION_TIMELINE":         28,
+		"ARGUS_RPC_ID_LIST_FILE_ACTIVITY":           27,
+		"ARGUS_RPC_ID_LIST_SESSION_TIMELINE":        28,
 		"ARGUS_RPC_ID_GET_AGENT_TREE":               29,
 		"ARGUS_RPC_ID_GET_SYSTEM_STATS":             30,
 		"ARGUS_RPC_ID_LIST_TOOL_LEADERBOARD":        31,
@@ -830,8 +830,8 @@ type GetDashboardResponse struct {
 	// total_sessions_today is the number of sessions started in the last 24h.
 	TotalSessionsToday int64 `protobuf:"varint,2,opt,name=total_sessions_today,json=totalSessionsToday,proto3" json:"total_sessions_today,omitempty"`
 	// top_active is the most recently active sessions (up to 10).
-	TopActive []*claudesensor.SessionSummary `protobuf:"bytes,3,rep,name=top_active,json=topActive,proto3" json:"top_active,omitempty"`
-	// active_users is the set of user emails with at least one active session.
+	TopActive []*agentsensor.SessionSummary `protobuf:"bytes,3,rep,name=top_active,json=topActive,proto3" json:"top_active,omitempty"`
+	// active_users is the set of user spiffe_ids with at least one active session.
 	ActiveUsers []string `protobuf:"bytes,4,rep,name=active_users,json=activeUsers,proto3" json:"active_users,omitempty"`
 	// events_last_hour is the total SensorEvents ingested in the last 60 minutes.
 	EventsLastHour int64 `protobuf:"varint,5,opt,name=events_last_hour,json=eventsLastHour,proto3" json:"events_last_hour,omitempty"`
@@ -887,7 +887,7 @@ func (x *GetDashboardResponse) GetTotalSessionsToday() int64 {
 	return 0
 }
 
-func (x *GetDashboardResponse) GetTopActive() []*claudesensor.SessionSummary {
+func (x *GetDashboardResponse) GetTopActive() []*agentsensor.SessionSummary {
 	if x != nil {
 		return x.TopActive
 	}
@@ -998,11 +998,11 @@ func (x *ListActiveSessionsRequest) GetNoop() bool {
 }
 
 type ListActiveSessionsResponse struct {
-	state         protoimpl.MessageState         `protogen:"open.v1"`
-	Sessions      []*claudesensor.SessionSummary `protobuf:"bytes,1,rep,name=sessions,proto3" json:"sessions,omitempty"`
-	NextPageToken string                         `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
-	TraceId       string                         `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                           `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	state         protoimpl.MessageState        `protogen:"open.v1"`
+	Sessions      []*agentsensor.SessionSummary `protobuf:"bytes,1,rep,name=sessions,proto3" json:"sessions,omitempty"`
+	NextPageToken string                        `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TraceId       string                        `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                          `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1037,7 +1037,7 @@ func (*ListActiveSessionsResponse) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *ListActiveSessionsResponse) GetSessions() []*claudesensor.SessionSummary {
+func (x *ListActiveSessionsResponse) GetSessions() []*agentsensor.SessionSummary {
 	if x != nil {
 		return x.Sessions
 	}
@@ -1126,12 +1126,12 @@ func (x *GetSessionDetailRequest) GetNoop() bool {
 }
 
 type GetSessionDetailResponse struct {
-	state   protoimpl.MessageState       `protogen:"open.v1"`
-	Summary *claudesensor.SessionSummary `protobuf:"bytes,1,opt,name=summary,proto3" json:"summary,omitempty"`
+	state   protoimpl.MessageState      `protogen:"open.v1"`
+	Summary *agentsensor.SessionSummary `protobuf:"bytes,1,opt,name=summary,proto3" json:"summary,omitempty"`
 	// recent_events contains the most recent SensorEvents for the session (up to 100).
-	RecentEvents  []*claudesensor.SensorEvent `protobuf:"bytes,2,rep,name=recent_events,json=recentEvents,proto3" json:"recent_events,omitempty"`
-	TraceId       string                      `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                        `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	RecentEvents  []*agentsensor.AgentEvent `protobuf:"bytes,2,rep,name=recent_events,json=recentEvents,proto3" json:"recent_events,omitempty"`
+	TraceId       string                    `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                      `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1166,14 +1166,14 @@ func (*GetSessionDetailResponse) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *GetSessionDetailResponse) GetSummary() *claudesensor.SessionSummary {
+func (x *GetSessionDetailResponse) GetSummary() *agentsensor.SessionSummary {
 	if x != nil {
 		return x.Summary
 	}
 	return nil
 }
 
-func (x *GetSessionDetailResponse) GetRecentEvents() []*claudesensor.SensorEvent {
+func (x *GetSessionDetailResponse) GetRecentEvents() []*agentsensor.AgentEvent {
 	if x != nil {
 		return x.RecentEvents
 	}
@@ -1195,8 +1195,8 @@ func (x *GetSessionDetailResponse) GetNoop() bool {
 }
 
 type GetUserActivityRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	Email string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	SpiffeId string                 `protobuf:"bytes,1,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
 	// time_range_hours controls how far back to look. Default: 24h.
 	TimeRangeHours int32  `protobuf:"varint,2,opt,name=time_range_hours,json=timeRangeHours,proto3" json:"time_range_hours,omitempty"`
 	TraceId        string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -1235,9 +1235,9 @@ func (*GetUserActivityRequest) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *GetUserActivityRequest) GetEmail() string {
+func (x *GetUserActivityRequest) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
@@ -1264,13 +1264,13 @@ func (x *GetUserActivityRequest) GetNoop() bool {
 }
 
 type GetUserActivityResponse struct {
-	state          protoimpl.MessageState         `protogen:"open.v1"`
-	Sessions       []*claudesensor.SessionSummary `protobuf:"bytes,1,rep,name=sessions,proto3" json:"sessions,omitempty"`
-	TotalEvents    int64                          `protobuf:"varint,2,opt,name=total_events,json=totalEvents,proto3" json:"total_events,omitempty"`
-	TotalToolUses  int64                          `protobuf:"varint,3,opt,name=total_tool_uses,json=totalToolUses,proto3" json:"total_tool_uses,omitempty"`
-	TotalSubagents int64                          `protobuf:"varint,4,opt,name=total_subagents,json=totalSubagents,proto3" json:"total_subagents,omitempty"`
-	TraceId        string                         `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop           bool                           `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	state          protoimpl.MessageState        `protogen:"open.v1"`
+	Sessions       []*agentsensor.SessionSummary `protobuf:"bytes,1,rep,name=sessions,proto3" json:"sessions,omitempty"`
+	TotalEvents    int64                         `protobuf:"varint,2,opt,name=total_events,json=totalEvents,proto3" json:"total_events,omitempty"`
+	TotalToolUses  int64                         `protobuf:"varint,3,opt,name=total_tool_uses,json=totalToolUses,proto3" json:"total_tool_uses,omitempty"`
+	TotalSubagents int64                         `protobuf:"varint,4,opt,name=total_subagents,json=totalSubagents,proto3" json:"total_subagents,omitempty"`
+	TraceId        string                        `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop           bool                          `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1305,7 +1305,7 @@ func (*GetUserActivityResponse) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *GetUserActivityResponse) GetSessions() []*claudesensor.SessionSummary {
+func (x *GetUserActivityResponse) GetSessions() []*agentsensor.SessionSummary {
 	if x != nil {
 		return x.Sessions
 	}
@@ -1425,11 +1425,11 @@ func (x *SearchSessionsRequest) GetNoop() bool {
 }
 
 type SearchSessionsResponse struct {
-	state         protoimpl.MessageState         `protogen:"open.v1"`
-	Sessions      []*claudesensor.SessionSummary `protobuf:"bytes,1,rep,name=sessions,proto3" json:"sessions,omitempty"`
-	NextPageToken string                         `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
-	TraceId       string                         `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                           `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	state         protoimpl.MessageState        `protogen:"open.v1"`
+	Sessions      []*agentsensor.SessionSummary `protobuf:"bytes,1,rep,name=sessions,proto3" json:"sessions,omitempty"`
+	NextPageToken string                        `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TraceId       string                        `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                          `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1464,7 +1464,7 @@ func (*SearchSessionsResponse) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *SearchSessionsResponse) GetSessions() []*claudesensor.SessionSummary {
+func (x *SearchSessionsResponse) GetSessions() []*agentsensor.SessionSummary {
 	if x != nil {
 		return x.Sessions
 	}
@@ -1931,6 +1931,8 @@ func (x *ScratchpadDeleteResponse) GetNoop() bool {
 
 type ScratchpadListRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	PageToken     string                 `protobuf:"bytes,1,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	PageSize      int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1967,6 +1969,20 @@ func (*ScratchpadListRequest) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{20}
 }
 
+func (x *ScratchpadListRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
+func (x *ScratchpadListRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
 func (x *ScratchpadListRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -1984,6 +2000,7 @@ func (x *ScratchpadListRequest) GetNoop() bool {
 type ScratchpadListResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Entries       []*ScratchpadEntry     `protobuf:"bytes,1,rep,name=entries,proto3" json:"entries,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -2025,6 +2042,13 @@ func (x *ScratchpadListResponse) GetEntries() []*ScratchpadEntry {
 		return x.Entries
 	}
 	return nil
+}
+
+func (x *ScratchpadListResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
 }
 
 func (x *ScratchpadListResponse) GetTraceId() string {
@@ -2371,8 +2395,8 @@ func (x *WatchSessionDetailRequest) GetNoop() bool {
 }
 
 type WatchUserActivityRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	Email string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	SpiffeId string                 `protobuf:"bytes,1,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
 	// time_range_hours mirrors GetUserActivity. Default: 24h.
 	TimeRangeHours int32  `protobuf:"varint,2,opt,name=time_range_hours,json=timeRangeHours,proto3" json:"time_range_hours,omitempty"`
 	TraceId        string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -2411,9 +2435,9 @@ func (*WatchUserActivityRequest) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{28}
 }
 
-func (x *WatchUserActivityRequest) GetEmail() string {
+func (x *WatchUserActivityRequest) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
@@ -2605,7 +2629,7 @@ func (x *WatchScratchpadReadRequest) GetNoop() bool {
 
 type UserSummary struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
-	Email              string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	SpiffeId           string                 `protobuf:"bytes,1,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
 	TotalSessions      int64                  `protobuf:"varint,2,opt,name=total_sessions,json=totalSessions,proto3" json:"total_sessions,omitempty"`
 	TotalEvents        int64                  `protobuf:"varint,3,opt,name=total_events,json=totalEvents,proto3" json:"total_events,omitempty"`
 	FirstSeenMs        int64                  `protobuf:"varint,4,opt,name=first_seen_ms,json=firstSeenMs,proto3" json:"first_seen_ms,omitempty"`
@@ -2648,9 +2672,9 @@ func (*UserSummary) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{32}
 }
 
-func (x *UserSummary) GetEmail() string {
+func (x *UserSummary) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
@@ -2712,12 +2736,12 @@ func (x *UserSummary) GetNoop() bool {
 }
 
 type ListUsersRequest struct {
-	state         protoimpl.MessageState       `protogen:"open.v1"`
-	TimeRange     *claudesensor.EventTimeRange `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	PageToken     string                       `protobuf:"bytes,2,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
-	PageSize      int32                        `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	TraceId       string                       `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                         `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	state         protoimpl.MessageState      `protogen:"open.v1"`
+	TimeRange     *agentsensor.EventTimeRange `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
+	PageToken     string                      `protobuf:"bytes,2,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	PageSize      int32                       `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	TraceId       string                      `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                        `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2752,7 +2776,7 @@ func (*ListUsersRequest) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{33}
 }
 
-func (x *ListUsersRequest) GetTimeRange() *claudesensor.EventTimeRange {
+func (x *ListUsersRequest) GetTimeRange() *agentsensor.EventTimeRange {
 	if x != nil {
 		return x.TimeRange
 	}
@@ -3008,11 +3032,11 @@ func (x *ModelUseStat) GetNoop() bool {
 }
 
 type GetUserProfileRequest struct {
-	state         protoimpl.MessageState       `protogen:"open.v1"`
-	Email         string                       `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	TimeRange     *claudesensor.EventTimeRange `protobuf:"bytes,2,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	TraceId       string                       `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                         `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	state         protoimpl.MessageState      `protogen:"open.v1"`
+	SpiffeId      string                      `protobuf:"bytes,1,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
+	TimeRange     *agentsensor.EventTimeRange `protobuf:"bytes,2,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
+	TraceId       string                      `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                        `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3047,14 +3071,14 @@ func (*GetUserProfileRequest) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{37}
 }
 
-func (x *GetUserProfileRequest) GetEmail() string {
+func (x *GetUserProfileRequest) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
 
-func (x *GetUserProfileRequest) GetTimeRange() *claudesensor.EventTimeRange {
+func (x *GetUserProfileRequest) GetTimeRange() *agentsensor.EventTimeRange {
 	if x != nil {
 		return x.TimeRange
 	}
@@ -3077,7 +3101,7 @@ func (x *GetUserProfileRequest) GetNoop() bool {
 
 type GetUserProfileResponse struct {
 	state                protoimpl.MessageState `protogen:"open.v1"`
-	Email                string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	SpiffeId             string                 `protobuf:"bytes,1,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
 	FirstSeenMs          int64                  `protobuf:"varint,2,opt,name=first_seen_ms,json=firstSeenMs,proto3" json:"first_seen_ms,omitempty"`
 	LastSeenMs           int64                  `protobuf:"varint,3,opt,name=last_seen_ms,json=lastSeenMs,proto3" json:"last_seen_ms,omitempty"`
 	TotalSessions        int64                  `protobuf:"varint,4,opt,name=total_sessions,json=totalSessions,proto3" json:"total_sessions,omitempty"`
@@ -3126,9 +3150,9 @@ func (*GetUserProfileResponse) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{38}
 }
 
-func (x *GetUserProfileResponse) GetEmail() string {
+func (x *GetUserProfileResponse) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
@@ -3232,11 +3256,11 @@ func (x *GetUserProfileResponse) GetNoop() bool {
 }
 
 type WatchUserProfileRequest struct {
-	state         protoimpl.MessageState       `protogen:"open.v1"`
-	Email         string                       `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	TimeRange     *claudesensor.EventTimeRange `protobuf:"bytes,2,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	TraceId       string                       `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                         `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	state         protoimpl.MessageState      `protogen:"open.v1"`
+	SpiffeId      string                      `protobuf:"bytes,1,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
+	TimeRange     *agentsensor.EventTimeRange `protobuf:"bytes,2,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
+	TraceId       string                      `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                        `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3271,14 +3295,14 @@ func (*WatchUserProfileRequest) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{39}
 }
 
-func (x *WatchUserProfileRequest) GetEmail() string {
+func (x *WatchUserProfileRequest) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
 
-func (x *WatchUserProfileRequest) GetTimeRange() *claudesensor.EventTimeRange {
+func (x *WatchUserProfileRequest) GetTimeRange() *agentsensor.EventTimeRange {
 	if x != nil {
 		return x.TimeRange
 	}
@@ -3384,12 +3408,12 @@ func (x *PromptBucket) GetNoop() bool {
 }
 
 type GetUserTokenStatsRequest struct {
-	state         protoimpl.MessageState       `protogen:"open.v1"`
-	Email         string                       `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	TimeRange     *claudesensor.EventTimeRange `protobuf:"bytes,2,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	BucketSeconds int32                        `protobuf:"varint,3,opt,name=bucket_seconds,json=bucketSeconds,proto3" json:"bucket_seconds,omitempty"`
-	TraceId       string                       `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                         `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	state         protoimpl.MessageState      `protogen:"open.v1"`
+	SpiffeId      string                      `protobuf:"bytes,1,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
+	TimeRange     *agentsensor.EventTimeRange `protobuf:"bytes,2,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
+	BucketSeconds int32                       `protobuf:"varint,3,opt,name=bucket_seconds,json=bucketSeconds,proto3" json:"bucket_seconds,omitempty"`
+	TraceId       string                      `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                        `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3424,14 +3448,14 @@ func (*GetUserTokenStatsRequest) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{41}
 }
 
-func (x *GetUserTokenStatsRequest) GetEmail() string {
+func (x *GetUserTokenStatsRequest) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
 
-func (x *GetUserTokenStatsRequest) GetTimeRange() *claudesensor.EventTimeRange {
+func (x *GetUserTokenStatsRequest) GetTimeRange() *agentsensor.EventTimeRange {
 	if x != nil {
 		return x.TimeRange
 	}
@@ -3461,7 +3485,7 @@ func (x *GetUserTokenStatsRequest) GetNoop() bool {
 
 type GetUserTokenStatsResponse struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	Email             string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	SpiffeId          string                 `protobuf:"bytes,1,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
 	TotalPrompts      int64                  `protobuf:"varint,2,opt,name=total_prompts,json=totalPrompts,proto3" json:"total_prompts,omitempty"`
 	TotalPromptLength int64                  `protobuf:"varint,3,opt,name=total_prompt_length,json=totalPromptLength,proto3" json:"total_prompt_length,omitempty"`
 	AvgPromptLength   int64                  `protobuf:"varint,4,opt,name=avg_prompt_length,json=avgPromptLength,proto3" json:"avg_prompt_length,omitempty"`
@@ -3504,9 +3528,9 @@ func (*GetUserTokenStatsResponse) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{42}
 }
 
-func (x *GetUserTokenStatsResponse) GetEmail() string {
+func (x *GetUserTokenStatsResponse) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
@@ -3576,7 +3600,7 @@ type CommitRecord struct {
 	Command          string                 `protobuf:"bytes,5,opt,name=command,proto3" json:"command,omitempty"` // the git commit command
 	Output           string                 `protobuf:"bytes,6,opt,name=output,proto3" json:"output,omitempty"`   // stdout containing commit hash + message
 	Succeeded        bool                   `protobuf:"varint,7,opt,name=succeeded,proto3" json:"succeeded,omitempty"`
-	Email            string                 `protobuf:"bytes,8,opt,name=email,proto3" json:"email,omitempty"`
+	SpiffeId         string                 `protobuf:"bytes,8,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
 	EventId          string                 `protobuf:"bytes,9,opt,name=event_id,json=eventId,proto3" json:"event_id,omitempty"`
 	TraceId          string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop             bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
@@ -3663,9 +3687,9 @@ func (x *CommitRecord) GetSucceeded() bool {
 	return false
 }
 
-func (x *CommitRecord) GetEmail() string {
+func (x *CommitRecord) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
@@ -3692,12 +3716,14 @@ func (x *CommitRecord) GetNoop() bool {
 }
 
 type GetUserCommitActivityRequest struct {
-	state         protoimpl.MessageState       `protogen:"open.v1"`
-	Email         string                       `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	TimeRange     *claudesensor.EventTimeRange `protobuf:"bytes,2,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	Limit         int32                        `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`
-	TraceId       string                       `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                         `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	state         protoimpl.MessageState      `protogen:"open.v1"`
+	SpiffeId      string                      `protobuf:"bytes,1,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
+	TimeRange     *agentsensor.EventTimeRange `protobuf:"bytes,2,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
+	Limit         int32                       `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`
+	PageToken     string                      `protobuf:"bytes,4,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	PageSize      int32                       `protobuf:"varint,5,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	TraceId       string                      `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                        `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3732,14 +3758,14 @@ func (*GetUserCommitActivityRequest) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{44}
 }
 
-func (x *GetUserCommitActivityRequest) GetEmail() string {
+func (x *GetUserCommitActivityRequest) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
 
-func (x *GetUserCommitActivityRequest) GetTimeRange() *claudesensor.EventTimeRange {
+func (x *GetUserCommitActivityRequest) GetTimeRange() *agentsensor.EventTimeRange {
 	if x != nil {
 		return x.TimeRange
 	}
@@ -3749,6 +3775,20 @@ func (x *GetUserCommitActivityRequest) GetTimeRange() *claudesensor.EventTimeRan
 func (x *GetUserCommitActivityRequest) GetLimit() int32 {
 	if x != nil {
 		return x.Limit
+	}
+	return 0
+}
+
+func (x *GetUserCommitActivityRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
+func (x *GetUserCommitActivityRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
 	}
 	return 0
 }
@@ -3770,6 +3810,7 @@ func (x *GetUserCommitActivityRequest) GetNoop() bool {
 type GetUserCommitActivityResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Commits       []*CommitRecord        `protobuf:"bytes,1,rep,name=commits,proto3" json:"commits,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -3813,6 +3854,13 @@ func (x *GetUserCommitActivityResponse) GetCommits() []*CommitRecord {
 	return nil
 }
 
+func (x *GetUserCommitActivityResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
 func (x *GetUserCommitActivityResponse) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -3828,18 +3876,18 @@ func (x *GetUserCommitActivityResponse) GetNoop() bool {
 }
 
 type FileActivityRecord struct {
-	state         protoimpl.MessageState     `protogen:"open.v1"`
-	FilePath      string                     `protobuf:"bytes,1,opt,name=file_path,json=filePath,proto3" json:"file_path,omitempty"`
-	Operation     claudesensor.FileOperation `protobuf:"varint,2,opt,name=operation,proto3,enum=claudesensor.FileOperation" json:"operation,omitempty"`
-	Email         string                     `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
-	SessionId     string                     `protobuf:"bytes,4,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
-	AgentId       string                     `protobuf:"bytes,5,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
-	Language      string                     `protobuf:"bytes,6,opt,name=language,proto3" json:"language,omitempty"`
-	LinesChanged  int32                      `protobuf:"varint,7,opt,name=lines_changed,json=linesChanged,proto3" json:"lines_changed,omitempty"`
-	IsNewFile     bool                       `protobuf:"varint,8,opt,name=is_new_file,json=isNewFile,proto3" json:"is_new_file,omitempty"`
-	TimestampMs   int64                      `protobuf:"varint,9,opt,name=timestamp_ms,json=timestampMs,proto3" json:"timestamp_ms,omitempty"`
-	TraceId       string                     `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                       `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	state         protoimpl.MessageState    `protogen:"open.v1"`
+	FilePath      string                    `protobuf:"bytes,1,opt,name=file_path,json=filePath,proto3" json:"file_path,omitempty"`
+	Operation     agentsensor.FileOperation `protobuf:"varint,2,opt,name=operation,proto3,enum=agentsensor.FileOperation" json:"operation,omitempty"`
+	SpiffeId      string                    `protobuf:"bytes,3,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
+	SessionId     string                    `protobuf:"bytes,4,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	AgentId       string                    `protobuf:"bytes,5,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
+	Language      string                    `protobuf:"bytes,6,opt,name=language,proto3" json:"language,omitempty"`
+	LinesChanged  int32                     `protobuf:"varint,7,opt,name=lines_changed,json=linesChanged,proto3" json:"lines_changed,omitempty"`
+	IsNewFile     bool                      `protobuf:"varint,8,opt,name=is_new_file,json=isNewFile,proto3" json:"is_new_file,omitempty"`
+	TimestampMs   int64                     `protobuf:"varint,9,opt,name=timestamp_ms,json=timestampMs,proto3" json:"timestamp_ms,omitempty"`
+	TraceId       string                    `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                      `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3881,16 +3929,16 @@ func (x *FileActivityRecord) GetFilePath() string {
 	return ""
 }
 
-func (x *FileActivityRecord) GetOperation() claudesensor.FileOperation {
+func (x *FileActivityRecord) GetOperation() agentsensor.FileOperation {
 	if x != nil {
 		return x.Operation
 	}
-	return claudesensor.FileOperation(0)
+	return agentsensor.FileOperation(0)
 }
 
-func (x *FileActivityRecord) GetEmail() string {
+func (x *FileActivityRecord) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
@@ -3953,15 +4001,15 @@ func (x *FileActivityRecord) GetNoop() bool {
 
 type GetFileActivityRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// email_filter restricts to one user. Empty = all users.
-	EmailFilter string `protobuf:"bytes,1,opt,name=email_filter,json=emailFilter,proto3" json:"email_filter,omitempty"`
+	// spiffe_id_filter restricts to one user. Empty = all users.
+	SpiffeIdFilter string `protobuf:"bytes,1,opt,name=spiffe_id_filter,json=spiffeIdFilter,proto3" json:"spiffe_id_filter,omitempty"`
 	// path_prefix restricts to files under this path. Empty = all files.
-	PathPrefix    string                       `protobuf:"bytes,2,opt,name=path_prefix,json=pathPrefix,proto3" json:"path_prefix,omitempty"`
-	TimeRange     *claudesensor.EventTimeRange `protobuf:"bytes,3,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	PageToken     string                       `protobuf:"bytes,4,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
-	PageSize      int32                        `protobuf:"varint,5,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	TraceId       string                       `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                         `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	PathPrefix    string                      `protobuf:"bytes,2,opt,name=path_prefix,json=pathPrefix,proto3" json:"path_prefix,omitempty"`
+	TimeRange     *agentsensor.EventTimeRange `protobuf:"bytes,3,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
+	PageToken     string                      `protobuf:"bytes,4,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	PageSize      int32                       `protobuf:"varint,5,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	TraceId       string                      `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                        `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3996,9 +4044,9 @@ func (*GetFileActivityRequest) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{47}
 }
 
-func (x *GetFileActivityRequest) GetEmailFilter() string {
+func (x *GetFileActivityRequest) GetSpiffeIdFilter() string {
 	if x != nil {
-		return x.EmailFilter
+		return x.SpiffeIdFilter
 	}
 	return ""
 }
@@ -4010,7 +4058,7 @@ func (x *GetFileActivityRequest) GetPathPrefix() string {
 	return ""
 }
 
-func (x *GetFileActivityRequest) GetTimeRange() *claudesensor.EventTimeRange {
+func (x *GetFileActivityRequest) GetTimeRange() *agentsensor.EventTimeRange {
 	if x != nil {
 		return x.TimeRange
 	}
@@ -4114,13 +4162,13 @@ func (x *GetFileActivityResponse) GetNoop() bool {
 }
 
 type GetSessionTimelineRequest struct {
-	state         protoimpl.MessageState       `protogen:"open.v1"`
-	SessionId     string                       `protobuf:"bytes,1,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
-	TimeRange     *claudesensor.EventTimeRange `protobuf:"bytes,2,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	PageToken     string                       `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
-	PageSize      int32                        `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	TraceId       string                       `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                         `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	state         protoimpl.MessageState      `protogen:"open.v1"`
+	SessionId     string                      `protobuf:"bytes,1,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	TimeRange     *agentsensor.EventTimeRange `protobuf:"bytes,2,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
+	PageToken     string                      `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	PageSize      int32                       `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	TraceId       string                      `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                        `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4162,7 +4210,7 @@ func (x *GetSessionTimelineRequest) GetSessionId() string {
 	return ""
 }
 
-func (x *GetSessionTimelineRequest) GetTimeRange() *claudesensor.EventTimeRange {
+func (x *GetSessionTimelineRequest) GetTimeRange() *agentsensor.EventTimeRange {
 	if x != nil {
 		return x.TimeRange
 	}
@@ -4198,9 +4246,9 @@ func (x *GetSessionTimelineRequest) GetNoop() bool {
 }
 
 type GetSessionTimelineResponse struct {
-	state         protoimpl.MessageState      `protogen:"open.v1"`
-	Events        []*claudesensor.SensorEvent `protobuf:"bytes,1,rep,name=events,proto3" json:"events,omitempty"`
-	NextPageToken string                      `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	state         protoimpl.MessageState    `protogen:"open.v1"`
+	Events        []*agentsensor.AgentEvent `protobuf:"bytes,1,rep,name=events,proto3" json:"events,omitempty"`
+	NextPageToken string                    `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	// total_event_count is the total events in the session, across all pages.
 	TotalEventCount int64  `protobuf:"varint,3,opt,name=total_event_count,json=totalEventCount,proto3" json:"total_event_count,omitempty"`
 	TraceId         string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -4239,7 +4287,7 @@ func (*GetSessionTimelineResponse) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{50}
 }
 
-func (x *GetSessionTimelineResponse) GetEvents() []*claudesensor.SensorEvent {
+func (x *GetSessionTimelineResponse) GetEvents() []*agentsensor.AgentEvent {
 	if x != nil {
 		return x.Events
 	}
@@ -4535,10 +4583,10 @@ func (x *GetAgentTreeResponse) GetNoop() bool {
 }
 
 type GetSystemStatsRequest struct {
-	state         protoimpl.MessageState       `protogen:"open.v1"`
-	TimeRange     *claudesensor.EventTimeRange `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	TraceId       string                       `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                         `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	state         protoimpl.MessageState      `protogen:"open.v1"`
+	TimeRange     *agentsensor.EventTimeRange `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
+	TraceId       string                      `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                        `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4573,7 +4621,7 @@ func (*GetSystemStatsRequest) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{54}
 }
 
-func (x *GetSystemStatsRequest) GetTimeRange() *claudesensor.EventTimeRange {
+func (x *GetSystemStatsRequest) GetTimeRange() *agentsensor.EventTimeRange {
 	if x != nil {
 		return x.TimeRange
 	}
@@ -4735,10 +4783,10 @@ func (x *GetSystemStatsResponse) GetNoop() bool {
 }
 
 type WatchSystemStatsRequest struct {
-	state         protoimpl.MessageState       `protogen:"open.v1"`
-	TimeRange     *claudesensor.EventTimeRange `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	TraceId       string                       `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                         `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	state         protoimpl.MessageState      `protogen:"open.v1"`
+	TimeRange     *agentsensor.EventTimeRange `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
+	TraceId       string                      `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                        `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4773,7 +4821,7 @@ func (*WatchSystemStatsRequest) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{56}
 }
 
-func (x *WatchSystemStatsRequest) GetTimeRange() *claudesensor.EventTimeRange {
+func (x *WatchSystemStatsRequest) GetTimeRange() *agentsensor.EventTimeRange {
 	if x != nil {
 		return x.TimeRange
 	}
@@ -4895,15 +4943,17 @@ func (x *ToolStat) GetNoop() bool {
 }
 
 type GetToolLeaderboardRequest struct {
-	state     protoimpl.MessageState       `protogen:"open.v1"`
-	TimeRange *claudesensor.EventTimeRange `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	// email_filter restricts to one user. Empty = fleet-wide.
-	EmailFilter   string `protobuf:"bytes,2,opt,name=email_filter,json=emailFilter,proto3" json:"email_filter,omitempty"`
-	Limit         int32  `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`
-	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state     protoimpl.MessageState      `protogen:"open.v1"`
+	TimeRange *agentsensor.EventTimeRange `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
+	// spiffe_id_filter restricts to one user. Empty = fleet-wide.
+	SpiffeIdFilter string `protobuf:"bytes,2,opt,name=spiffe_id_filter,json=spiffeIdFilter,proto3" json:"spiffe_id_filter,omitempty"`
+	Limit          int32  `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`
+	PageToken      string `protobuf:"bytes,4,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	PageSize       int32  `protobuf:"varint,5,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	TraceId        string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop           bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *GetToolLeaderboardRequest) Reset() {
@@ -4936,16 +4986,16 @@ func (*GetToolLeaderboardRequest) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{58}
 }
 
-func (x *GetToolLeaderboardRequest) GetTimeRange() *claudesensor.EventTimeRange {
+func (x *GetToolLeaderboardRequest) GetTimeRange() *agentsensor.EventTimeRange {
 	if x != nil {
 		return x.TimeRange
 	}
 	return nil
 }
 
-func (x *GetToolLeaderboardRequest) GetEmailFilter() string {
+func (x *GetToolLeaderboardRequest) GetSpiffeIdFilter() string {
 	if x != nil {
-		return x.EmailFilter
+		return x.SpiffeIdFilter
 	}
 	return ""
 }
@@ -4953,6 +5003,20 @@ func (x *GetToolLeaderboardRequest) GetEmailFilter() string {
 func (x *GetToolLeaderboardRequest) GetLimit() int32 {
 	if x != nil {
 		return x.Limit
+	}
+	return 0
+}
+
+func (x *GetToolLeaderboardRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
+func (x *GetToolLeaderboardRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
 	}
 	return 0
 }
@@ -4974,6 +5038,7 @@ func (x *GetToolLeaderboardRequest) GetNoop() bool {
 type GetToolLeaderboardResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Tools         []*ToolStat            `protobuf:"bytes,1,rep,name=tools,proto3" json:"tools,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -5017,6 +5082,13 @@ func (x *GetToolLeaderboardResponse) GetTools() []*ToolStat {
 	return nil
 }
 
+func (x *GetToolLeaderboardResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
 func (x *GetToolLeaderboardResponse) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -5032,14 +5104,14 @@ func (x *GetToolLeaderboardResponse) GetNoop() bool {
 }
 
 type WatchToolLeaderboardRequest struct {
-	state         protoimpl.MessageState       `protogen:"open.v1"`
-	TimeRange     *claudesensor.EventTimeRange `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	EmailFilter   string                       `protobuf:"bytes,2,opt,name=email_filter,json=emailFilter,proto3" json:"email_filter,omitempty"`
-	Limit         int32                        `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`
-	TraceId       string                       `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                         `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState      `protogen:"open.v1"`
+	TimeRange      *agentsensor.EventTimeRange `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
+	SpiffeIdFilter string                      `protobuf:"bytes,2,opt,name=spiffe_id_filter,json=spiffeIdFilter,proto3" json:"spiffe_id_filter,omitempty"`
+	Limit          int32                       `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`
+	TraceId        string                      `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop           bool                        `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *WatchToolLeaderboardRequest) Reset() {
@@ -5072,16 +5144,16 @@ func (*WatchToolLeaderboardRequest) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{60}
 }
 
-func (x *WatchToolLeaderboardRequest) GetTimeRange() *claudesensor.EventTimeRange {
+func (x *WatchToolLeaderboardRequest) GetTimeRange() *agentsensor.EventTimeRange {
 	if x != nil {
 		return x.TimeRange
 	}
 	return nil
 }
 
-func (x *WatchToolLeaderboardRequest) GetEmailFilter() string {
+func (x *WatchToolLeaderboardRequest) GetSpiffeIdFilter() string {
 	if x != nil {
-		return x.EmailFilter
+		return x.SpiffeIdFilter
 	}
 	return ""
 }
@@ -5192,10 +5264,12 @@ func (x *ModelStat) GetNoop() bool {
 }
 
 type GetModelUsageRequest struct {
-	state         protoimpl.MessageState       `protogen:"open.v1"`
-	TimeRange     *claudesensor.EventTimeRange `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	TraceId       string                       `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                         `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	state         protoimpl.MessageState      `protogen:"open.v1"`
+	TimeRange     *agentsensor.EventTimeRange `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
+	PageToken     string                      `protobuf:"bytes,2,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	PageSize      int32                       `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	TraceId       string                      `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                        `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5230,11 +5304,25 @@ func (*GetModelUsageRequest) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{62}
 }
 
-func (x *GetModelUsageRequest) GetTimeRange() *claudesensor.EventTimeRange {
+func (x *GetModelUsageRequest) GetTimeRange() *agentsensor.EventTimeRange {
 	if x != nil {
 		return x.TimeRange
 	}
 	return nil
+}
+
+func (x *GetModelUsageRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
+func (x *GetModelUsageRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
 }
 
 func (x *GetModelUsageRequest) GetTraceId() string {
@@ -5254,6 +5342,7 @@ func (x *GetModelUsageRequest) GetNoop() bool {
 type GetModelUsageResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Models        []*ModelStat           `protobuf:"bytes,1,rep,name=models,proto3" json:"models,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -5297,6 +5386,13 @@ func (x *GetModelUsageResponse) GetModels() []*ModelStat {
 	return nil
 }
 
+func (x *GetModelUsageResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
 func (x *GetModelUsageResponse) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -5317,7 +5413,7 @@ type ActivityBucket struct {
 	EventCount    int64                  `protobuf:"varint,2,opt,name=event_count,json=eventCount,proto3" json:"event_count,omitempty"`
 	SessionCount  int64                  `protobuf:"varint,3,opt,name=session_count,json=sessionCount,proto3" json:"session_count,omitempty"`
 	ActiveUsers   int64                  `protobuf:"varint,4,opt,name=active_users,json=activeUsers,proto3" json:"active_users,omitempty"`
-	// group_key is set when group_by != ALL (email or sensor_type value).
+	// group_key is set when group_by != ALL (spiffe_id or sensor_type value).
 	GroupKey      string `protobuf:"bytes,5,opt,name=group_key,json=groupKey,proto3" json:"group_key,omitempty"`
 	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
@@ -5405,12 +5501,14 @@ func (x *ActivityBucket) GetNoop() bool {
 }
 
 type GetActivityTimeseriesRequest struct {
-	state         protoimpl.MessageState       `protogen:"open.v1"`
-	TimeRange     *claudesensor.EventTimeRange `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	BucketSeconds int32                        `protobuf:"varint,2,opt,name=bucket_seconds,json=bucketSeconds,proto3" json:"bucket_seconds,omitempty"`
-	GroupBy       ActivityGroupBy              `protobuf:"varint,3,opt,name=group_by,json=groupBy,proto3,enum=argus.ActivityGroupBy" json:"group_by,omitempty"`
-	TraceId       string                       `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                         `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	state         protoimpl.MessageState      `protogen:"open.v1"`
+	TimeRange     *agentsensor.EventTimeRange `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
+	BucketSeconds int32                       `protobuf:"varint,2,opt,name=bucket_seconds,json=bucketSeconds,proto3" json:"bucket_seconds,omitempty"`
+	GroupBy       ActivityGroupBy             `protobuf:"varint,3,opt,name=group_by,json=groupBy,proto3,enum=argus.ActivityGroupBy" json:"group_by,omitempty"`
+	PageToken     string                      `protobuf:"bytes,4,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	PageSize      int32                       `protobuf:"varint,5,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	TraceId       string                      `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                        `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5445,7 +5543,7 @@ func (*GetActivityTimeseriesRequest) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{65}
 }
 
-func (x *GetActivityTimeseriesRequest) GetTimeRange() *claudesensor.EventTimeRange {
+func (x *GetActivityTimeseriesRequest) GetTimeRange() *agentsensor.EventTimeRange {
 	if x != nil {
 		return x.TimeRange
 	}
@@ -5466,6 +5564,20 @@ func (x *GetActivityTimeseriesRequest) GetGroupBy() ActivityGroupBy {
 	return ActivityGroupBy_ACTIVITY_GROUP_BY_UNSPECIFIED
 }
 
+func (x *GetActivityTimeseriesRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
+func (x *GetActivityTimeseriesRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
 func (x *GetActivityTimeseriesRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -5483,6 +5595,7 @@ func (x *GetActivityTimeseriesRequest) GetNoop() bool {
 type GetActivityTimeseriesResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Buckets       []*ActivityBucket      `protobuf:"bytes,1,rep,name=buckets,proto3" json:"buckets,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -5526,6 +5639,13 @@ func (x *GetActivityTimeseriesResponse) GetBuckets() []*ActivityBucket {
 	return nil
 }
 
+func (x *GetActivityTimeseriesResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
 func (x *GetActivityTimeseriesResponse) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -5541,13 +5661,13 @@ func (x *GetActivityTimeseriesResponse) GetNoop() bool {
 }
 
 type SearchEventsFilter struct {
-	state     protoimpl.MessageState       `protogen:"open.v1"`
-	Email     string                       `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	SessionId string                       `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
-	AgentId   string                       `protobuf:"bytes,3,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
-	EventType claudesensor.SensorEventType `protobuf:"varint,4,opt,name=event_type,json=eventType,proto3,enum=claudesensor.SensorEventType" json:"event_type,omitempty"`
-	ToolName  string                       `protobuf:"bytes,5,opt,name=tool_name,json=toolName,proto3" json:"tool_name,omitempty"`
-	TimeRange *claudesensor.EventTimeRange `protobuf:"bytes,6,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
+	state     protoimpl.MessageState      `protogen:"open.v1"`
+	SpiffeId  string                      `protobuf:"bytes,1,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
+	SessionId string                      `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	AgentId   string                      `protobuf:"bytes,3,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
+	EventType agentsensor.SensorEventType `protobuf:"varint,4,opt,name=event_type,json=eventType,proto3,enum=agentsensor.SensorEventType" json:"event_type,omitempty"`
+	ToolName  string                      `protobuf:"bytes,5,opt,name=tool_name,json=toolName,proto3" json:"tool_name,omitempty"`
+	TimeRange *agentsensor.EventTimeRange `protobuf:"bytes,6,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
 	// succeeded_filter: 0 = any, 1 = succeeded only, 2 = failed only.
 	SucceededFilter int32  `protobuf:"varint,7,opt,name=succeeded_filter,json=succeededFilter,proto3" json:"succeeded_filter,omitempty"`
 	TraceId         string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -5586,9 +5706,9 @@ func (*SearchEventsFilter) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{67}
 }
 
-func (x *SearchEventsFilter) GetEmail() string {
+func (x *SearchEventsFilter) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
@@ -5607,11 +5727,11 @@ func (x *SearchEventsFilter) GetAgentId() string {
 	return ""
 }
 
-func (x *SearchEventsFilter) GetEventType() claudesensor.SensorEventType {
+func (x *SearchEventsFilter) GetEventType() agentsensor.SensorEventType {
 	if x != nil {
 		return x.EventType
 	}
-	return claudesensor.SensorEventType(0)
+	return agentsensor.SensorEventType(0)
 }
 
 func (x *SearchEventsFilter) GetToolName() string {
@@ -5621,7 +5741,7 @@ func (x *SearchEventsFilter) GetToolName() string {
 	return ""
 }
 
-func (x *SearchEventsFilter) GetTimeRange() *claudesensor.EventTimeRange {
+func (x *SearchEventsFilter) GetTimeRange() *agentsensor.EventTimeRange {
 	if x != nil {
 		return x.TimeRange
 	}
@@ -5726,11 +5846,11 @@ func (x *SearchEventsRequest) GetNoop() bool {
 }
 
 type SearchEventsResponse struct {
-	state         protoimpl.MessageState      `protogen:"open.v1"`
-	Events        []*claudesensor.SensorEvent `protobuf:"bytes,1,rep,name=events,proto3" json:"events,omitempty"`
-	NextPageToken string                      `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
-	TraceId       string                      `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                        `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	state         protoimpl.MessageState    `protogen:"open.v1"`
+	Events        []*agentsensor.AgentEvent `protobuf:"bytes,1,rep,name=events,proto3" json:"events,omitempty"`
+	NextPageToken string                    `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TraceId       string                    `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                      `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5765,7 +5885,7 @@ func (*SearchEventsResponse) Descriptor() ([]byte, []int) {
 	return file_services_argus_proto_rawDescGZIP(), []int{69}
 }
 
-func (x *SearchEventsResponse) GetEvents() []*claudesensor.SensorEvent {
+func (x *SearchEventsResponse) GetEvents() []*agentsensor.AgentEvent {
 	if x != nil {
 		return x.Events
 	}
@@ -5794,15 +5914,15 @@ func (x *SearchEventsResponse) GetNoop() bool {
 }
 
 type FilePathMatch struct {
-	state         protoimpl.MessageState     `protogen:"open.v1"`
-	FilePath      string                     `protobuf:"bytes,1,opt,name=file_path,json=filePath,proto3" json:"file_path,omitempty"`
-	SessionId     string                     `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
-	AgentId       string                     `protobuf:"bytes,3,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
-	Email         string                     `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
-	Operation     claudesensor.FileOperation `protobuf:"varint,5,opt,name=operation,proto3,enum=claudesensor.FileOperation" json:"operation,omitempty"`
-	TimestampMs   int64                      `protobuf:"varint,6,opt,name=timestamp_ms,json=timestampMs,proto3" json:"timestamp_ms,omitempty"`
-	TraceId       string                     `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                       `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	state         protoimpl.MessageState    `protogen:"open.v1"`
+	FilePath      string                    `protobuf:"bytes,1,opt,name=file_path,json=filePath,proto3" json:"file_path,omitempty"`
+	SessionId     string                    `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	AgentId       string                    `protobuf:"bytes,3,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
+	SpiffeId      string                    `protobuf:"bytes,4,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
+	Operation     agentsensor.FileOperation `protobuf:"varint,5,opt,name=operation,proto3,enum=agentsensor.FileOperation" json:"operation,omitempty"`
+	TimestampMs   int64                     `protobuf:"varint,6,opt,name=timestamp_ms,json=timestampMs,proto3" json:"timestamp_ms,omitempty"`
+	TraceId       string                    `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                      `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5858,18 +5978,18 @@ func (x *FilePathMatch) GetAgentId() string {
 	return ""
 }
 
-func (x *FilePathMatch) GetEmail() string {
+func (x *FilePathMatch) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
 
-func (x *FilePathMatch) GetOperation() claudesensor.FileOperation {
+func (x *FilePathMatch) GetOperation() agentsensor.FileOperation {
 	if x != nil {
 		return x.Operation
 	}
-	return claudesensor.FileOperation(0)
+	return agentsensor.FileOperation(0)
 }
 
 func (x *FilePathMatch) GetTimestampMs() int64 {
@@ -5894,16 +6014,16 @@ func (x *FilePathMatch) GetNoop() bool {
 }
 
 type SearchByFilePathRequest struct {
-	state         protoimpl.MessageState       `protogen:"open.v1"`
-	PathPattern   string                       `protobuf:"bytes,1,opt,name=path_pattern,json=pathPattern,proto3" json:"path_pattern,omitempty"`
-	EmailFilter   string                       `protobuf:"bytes,2,opt,name=email_filter,json=emailFilter,proto3" json:"email_filter,omitempty"`
-	TimeRange     *claudesensor.EventTimeRange `protobuf:"bytes,3,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	PageToken     string                       `protobuf:"bytes,4,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
-	PageSize      int32                        `protobuf:"varint,5,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	TraceId       string                       `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                         `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState      `protogen:"open.v1"`
+	PathPattern    string                      `protobuf:"bytes,1,opt,name=path_pattern,json=pathPattern,proto3" json:"path_pattern,omitempty"`
+	SpiffeIdFilter string                      `protobuf:"bytes,2,opt,name=spiffe_id_filter,json=spiffeIdFilter,proto3" json:"spiffe_id_filter,omitempty"`
+	TimeRange      *agentsensor.EventTimeRange `protobuf:"bytes,3,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
+	PageToken      string                      `protobuf:"bytes,4,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	PageSize       int32                       `protobuf:"varint,5,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	TraceId        string                      `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop           bool                        `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *SearchByFilePathRequest) Reset() {
@@ -5943,14 +6063,14 @@ func (x *SearchByFilePathRequest) GetPathPattern() string {
 	return ""
 }
 
-func (x *SearchByFilePathRequest) GetEmailFilter() string {
+func (x *SearchByFilePathRequest) GetSpiffeIdFilter() string {
 	if x != nil {
-		return x.EmailFilter
+		return x.SpiffeIdFilter
 	}
 	return ""
 }
 
-func (x *SearchByFilePathRequest) GetTimeRange() *claudesensor.EventTimeRange {
+func (x *SearchByFilePathRequest) GetTimeRange() *agentsensor.EventTimeRange {
 	if x != nil {
 		return x.TimeRange
 	}
@@ -6171,7 +6291,7 @@ var File_services_argus_proto protoreflect.FileDescriptor
 
 const file_services_argus_proto_rawDesc = "" +
 	"\n" +
-	"\x14services/argus.proto\x12\x05argus\x1a\x0flibs/spec.proto\x1a\x17libs/healthreport.proto\x1a\x1dvservices/claude-sensor.proto\x1a\x10libs/trace.proto\"\x86\x01\n" +
+	"\x14services/argus.proto\x12\x05argus\x1a\x0flibs/spec.proto\x1a\x17libs/healthreport.proto\x1a\x1cvservices/agent-sensor.proto\x1a\x10libs/trace.proto\"\x86\x01\n" +
 	"\x06Config\x12>\n" +
 	"\x16scratchpad_ttl_seconds\x18\x01 \x01(\x03B\b\xb0\xa7\x1d\x00\x90\xa8\x1d\x00R\x14scratchpadTtlSeconds\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
@@ -6190,12 +6310,12 @@ const file_services_argus_proto_rawDesc = "" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x04\x82\xaa\x1d\x00\"F\n" +
 	"\x13GetDashboardRequest\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe3\x02\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe2\x02\n" +
 	"\x14GetDashboardResponse\x120\n" +
 	"\x14active_session_count\x18\x01 \x01(\x03R\x12activeSessionCount\x120\n" +
-	"\x14total_sessions_today\x18\x02 \x01(\x03R\x12totalSessionsToday\x12A\n" +
+	"\x14total_sessions_today\x18\x02 \x01(\x03R\x12totalSessionsToday\x12@\n" +
 	"\n" +
-	"top_active\x18\x03 \x03(\v2\x1c.claudesensor.SessionSummaryB\x04\xb8\xa8\x1d\n" +
+	"top_active\x18\x03 \x03(\v2\x1b.agentsensor.SessionSummaryB\x04\xb8\xa8\x1d\n" +
 	"R\ttopActive\x12(\n" +
 	"\factive_users\x18\x04 \x03(\tB\x05\xb8\xa8\x1d\xc8\x01R\vactiveUsers\x12(\n" +
 	"\x10events_last_hour\x18\x05 \x01(\x03R\x0eeventsLastHour\x12\x1f\n" +
@@ -6208,9 +6328,9 @@ const file_services_argus_proto_rawDesc = "" +
 	"page_token\x18\x01 \x01(\tR\tpageToken\x12*\n" +
 	"\tpage_size\x18\x02 \x01(\x05B\r\xb0\xa7\x1d\x01\xc0\xa7\x1d\xf4\x03\x90\xa8\x1d2R\bpageSize\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb6\x01\n" +
-	"\x1aListActiveSessionsResponse\x12?\n" +
-	"\bsessions\x18\x01 \x03(\v2\x1c.claudesensor.SessionSummaryB\x05\xb8\xa8\x1d\x90NR\bsessions\x12&\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb5\x01\n" +
+	"\x1aListActiveSessionsResponse\x12>\n" +
+	"\bsessions\x18\x01 \x03(\v2\x1b.agentsensor.SessionSummaryB\x05\xb8\xa8\x1d\x90NR\bsessions\x12&\n" +
 	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"o\n" +
@@ -6218,19 +6338,19 @@ const file_services_argus_proto_rawDesc = "" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\tsessionId\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc9\x01\n" +
-	"\x18GetSessionDetailResponse\x126\n" +
-	"\asummary\x18\x01 \x01(\v2\x1c.claudesensor.SessionSummaryR\asummary\x12D\n" +
-	"\rrecent_events\x18\x02 \x03(\v2\x19.claudesensor.SensorEventB\x04\xb8\xa8\x1ddR\frecentEvents\x12\x1a\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc6\x01\n" +
+	"\x18GetSessionDetailResponse\x125\n" +
+	"\asummary\x18\x01 \x01(\v2\x1b.agentsensor.SessionSummaryR\asummary\x12B\n" +
+	"\rrecent_events\x18\x02 \x03(\v2\x17.agentsensor.AgentEventB\x04\xb8\xa8\x1ddR\frecentEvents\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa2\x01\n" +
-	"\x16GetUserActivityRequest\x12\x1e\n" +
-	"\x05email\x18\x01 \x01(\tB\b\x88\xa6\x1d\x01\xb0\xa6\x1d\x01R\x05email\x127\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa5\x01\n" +
+	"\x16GetUserActivityRequest\x12!\n" +
+	"\tspiffe_id\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\bspiffeId\x127\n" +
 	"\x10time_range_hours\x18\x02 \x01(\x05B\r\xb0\xa7\x1d\x01\xc0\xa7\x1d\xd0\x05\x90\xa8\x1d\x18R\x0etimeRangeHours\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xff\x01\n" +
-	"\x17GetUserActivityResponse\x12?\n" +
-	"\bsessions\x18\x01 \x03(\v2\x1c.claudesensor.SessionSummaryB\x05\xb8\xa8\x1d\x90NR\bsessions\x12!\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xfe\x01\n" +
+	"\x17GetUserActivityResponse\x12>\n" +
+	"\bsessions\x18\x01 \x03(\v2\x1b.agentsensor.SessionSummaryB\x05\xb8\xa8\x1d\x90NR\bsessions\x12!\n" +
 	"\ftotal_events\x18\x02 \x01(\x03R\vtotalEvents\x12&\n" +
 	"\x0ftotal_tool_uses\x18\x03 \x01(\x03R\rtotalToolUses\x12'\n" +
 	"\x0ftotal_subagents\x18\x04 \x01(\x03R\x0etotalSubagents\x12\x1a\n" +
@@ -6242,9 +6362,9 @@ const file_services_argus_proto_rawDesc = "" +
 	"page_token\x18\x02 \x01(\tR\tpageToken\x12*\n" +
 	"\tpage_size\x18\x03 \x01(\x05B\r\xb0\xa7\x1d\x01\xc0\xa7\x1d\xf4\x03\x90\xa8\x1d2R\bpageSize\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb2\x01\n" +
-	"\x16SearchSessionsResponse\x12?\n" +
-	"\bsessions\x18\x01 \x03(\v2\x1c.claudesensor.SessionSummaryB\x05\xb8\xa8\x1d\x90NR\bsessions\x12&\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb1\x01\n" +
+	"\x16SearchSessionsResponse\x12>\n" +
+	"\bsessions\x18\x01 \x03(\v2\x1b.agentsensor.SessionSummaryB\x05\xb8\xa8\x1d\x90NR\bsessions\x12&\n" +
 	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9b\x01\n" +
@@ -6278,12 +6398,16 @@ const file_services_argus_proto_rawDesc = "" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"K\n" +
 	"\x18ScratchpadDeleteResponse\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"H\n" +
-	"\x15ScratchpadListRequest\x12\x1a\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x93\x01\n" +
+	"\x15ScratchpadListRequest\x12\x1d\n" +
+	"\n" +
+	"page_token\x18\x01 \x01(\tR\tpageToken\x12*\n" +
+	"\tpage_size\x18\x02 \x01(\x05B\r\xb0\xa7\x1d\x01\xc0\xa7\x1d\xe8\a\x90\xa8\x1ddR\bpageSize\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x82\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xaa\x01\n" +
 	"\x16ScratchpadListResponse\x127\n" +
-	"\aentries\x18\x01 \x03(\v2\x16.argus.ScratchpadEntryB\x05\xb8\xa8\x1d\xe8\aR\aentries\x12\x1a\n" +
+	"\aentries\x18\x01 \x03(\v2\x16.argus.ScratchpadEntryB\x05\xb8\xa8\x1d\xe8\aR\aentries\x12&\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"I\n" +
 	"\x16ScratchpadClearRequest\x12\x1a\n" +
@@ -6306,9 +6430,9 @@ const file_services_argus_proto_rawDesc = "" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\tsessionId\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa4\x01\n" +
-	"\x18WatchUserActivityRequest\x12\x1e\n" +
-	"\x05email\x18\x01 \x01(\tB\b\x88\xa6\x1d\x01\xb0\xa6\x1d\x01R\x05email\x127\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa7\x01\n" +
+	"\x18WatchUserActivityRequest\x12!\n" +
+	"\tspiffe_id\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\bspiffeId\x127\n" +
 	"\x10time_range_hours\x18\x02 \x01(\x05B\r\xb0\xa7\x1d\x01\xc0\xa7\x1d\xd0\x05\x90\xa8\x1d\x18R\x0etimeRangeHours\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"P\n" +
@@ -6321,9 +6445,9 @@ const file_services_argus_proto_rawDesc = "" +
 	"\x1aWatchScratchpadReadRequest\x12\x1b\n" +
 	"\x03key\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x02R\x03key\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb3\x02\n" +
-	"\vUserSummary\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\x12%\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xba\x02\n" +
+	"\vUserSummary\x12\x1b\n" +
+	"\tspiffe_id\x18\x01 \x01(\tR\bspiffeId\x12%\n" +
 	"\x0etotal_sessions\x18\x02 \x01(\x03R\rtotalSessions\x12!\n" +
 	"\ftotal_events\x18\x03 \x01(\x03R\vtotalEvents\x12\"\n" +
 	"\rfirst_seen_ms\x18\x04 \x01(\x03R\vfirstSeenMs\x12 \n" +
@@ -6332,10 +6456,10 @@ const file_services_argus_proto_rawDesc = "" +
 	"\tis_active\x18\x06 \x01(\bR\bisActive\x120\n" +
 	"\x14active_session_count\x18\a \x01(\x03R\x12activeSessionCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xcc\x01\n" +
-	"\x10ListUsersRequest\x12;\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xcb\x01\n" +
+	"\x10ListUsersRequest\x12:\n" +
 	"\n" +
-	"time_range\x18\x01 \x01(\v2\x1c.claudesensor.EventTimeRangeR\ttimeRange\x12\x1d\n" +
+	"time_range\x18\x01 \x01(\v2\x1b.agentsensor.EventTimeRangeR\ttimeRange\x12\x1d\n" +
 	"\n" +
 	"page_token\x18\x02 \x01(\tR\tpageToken\x12+\n" +
 	"\tpage_size\x18\x03 \x01(\x05B\x0e\xb0\xa7\x1d\x01\xc0\xa7\x1d\xe8\a\x90\xa8\x1d\xc8\x01R\bpageSize\x12\x1a\n" +
@@ -6357,15 +6481,15 @@ const file_services_argus_proto_rawDesc = "" +
 	"\x05model\x18\x01 \x01(\tR\x05model\x12#\n" +
 	"\rsession_count\x18\x02 \x01(\x03R\fsessionCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa5\x01\n" +
-	"\x15GetUserProfileRequest\x12\x1e\n" +
-	"\x05email\x18\x01 \x01(\tB\b\x88\xa6\x1d\x01\xb0\xa6\x1d\x01R\x05email\x12;\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa7\x01\n" +
+	"\x15GetUserProfileRequest\x12!\n" +
+	"\tspiffe_id\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\bspiffeId\x12:\n" +
 	"\n" +
-	"time_range\x18\x02 \x01(\v2\x1c.claudesensor.EventTimeRangeR\ttimeRange\x12\x1a\n" +
+	"time_range\x18\x02 \x01(\v2\x1b.agentsensor.EventTimeRangeR\ttimeRange\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xee\x04\n" +
-	"\x16GetUserProfileResponse\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\x12\"\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xf5\x04\n" +
+	"\x16GetUserProfileResponse\x12\x1b\n" +
+	"\tspiffe_id\x18\x01 \x01(\tR\bspiffeId\x12\"\n" +
 	"\rfirst_seen_ms\x18\x02 \x01(\x03R\vfirstSeenMs\x12 \n" +
 	"\flast_seen_ms\x18\x03 \x01(\x03R\n" +
 	"lastSeenMs\x12%\n" +
@@ -6383,11 +6507,11 @@ const file_services_argus_proto_rawDesc = "" +
 	"R\x0fpermissionModes\x125\n" +
 	"\x13working_directories\x18\r \x03(\tB\x04\xb8\xa8\x1d2R\x12workingDirectories\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa7\x01\n" +
-	"\x17WatchUserProfileRequest\x12\x1e\n" +
-	"\x05email\x18\x01 \x01(\tB\b\x88\xa6\x1d\x01\xb0\xa6\x1d\x01R\x05email\x12;\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa9\x01\n" +
+	"\x17WatchUserProfileRequest\x12!\n" +
+	"\tspiffe_id\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\bspiffeId\x12:\n" +
 	"\n" +
-	"time_range\x18\x02 \x01(\v2\x1c.claudesensor.EventTimeRangeR\ttimeRange\x12\x1a\n" +
+	"time_range\x18\x02 \x01(\v2\x1b.agentsensor.EventTimeRangeR\ttimeRange\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe6\x01\n" +
 	"\fPromptBucket\x12&\n" +
@@ -6396,16 +6520,16 @@ const file_services_argus_proto_rawDesc = "" +
 	"\x13total_prompt_length\x18\x03 \x01(\x03R\x11totalPromptLength\x12*\n" +
 	"\x11avg_prompt_length\x18\x04 \x01(\x03R\x0favgPromptLength\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe0\x01\n" +
-	"\x18GetUserTokenStatsRequest\x12\x1e\n" +
-	"\x05email\x18\x01 \x01(\tB\b\x88\xa6\x1d\x01\xb0\xa6\x1d\x01R\x05email\x12A\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe2\x01\n" +
+	"\x18GetUserTokenStatsRequest\x12!\n" +
+	"\tspiffe_id\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\bspiffeId\x12@\n" +
 	"\n" +
-	"time_range\x18\x02 \x01(\v2\x1c.claudesensor.EventTimeRangeB\x04\x88\xa6\x1d\x01R\ttimeRange\x120\n" +
+	"time_range\x18\x02 \x01(\v2\x1b.agentsensor.EventTimeRangeB\x04\x88\xa6\x1d\x01R\ttimeRange\x120\n" +
 	"\x0ebucket_seconds\x18\x03 \x01(\x05B\t\xb0\xa7\x1d<\x90\xa8\x1d\x90\x1cR\rbucketSeconds\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xf3\x02\n" +
-	"\x19GetUserTokenStatsResponse\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\x12#\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xfa\x02\n" +
+	"\x19GetUserTokenStatsResponse\x12\x1b\n" +
+	"\tspiffe_id\x18\x01 \x01(\tR\bspiffeId\x12#\n" +
 	"\rtotal_prompts\x18\x02 \x01(\x03R\ftotalPrompts\x12.\n" +
 	"\x13total_prompt_length\x18\x03 \x01(\x03R\x11totalPromptLength\x12*\n" +
 	"\x11avg_prompt_length\x18\x04 \x01(\x03R\x0favgPromptLength\x12*\n" +
@@ -6413,7 +6537,7 @@ const file_services_argus_proto_rawDesc = "" +
 	"\x12image_prompt_count\x18\x06 \x01(\x03R\x10imagePromptCount\x124\n" +
 	"\abuckets\x18\a \x03(\v2\x13.argus.PromptBucketB\x05\xb8\xa8\x1d\xe8\aR\abuckets\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xca\x02\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd1\x02\n" +
 	"\fCommitRecord\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tR\tsessionId\x12\x19\n" +
@@ -6422,26 +6546,30 @@ const file_services_argus_proto_rawDesc = "" +
 	"\x11working_directory\x18\x04 \x01(\tR\x10workingDirectory\x12\x18\n" +
 	"\acommand\x18\x05 \x01(\tR\acommand\x12\x16\n" +
 	"\x06output\x18\x06 \x01(\tR\x06output\x12\x1c\n" +
-	"\tsucceeded\x18\a \x01(\bR\tsucceeded\x12\x14\n" +
-	"\x05email\x18\b \x01(\tR\x05email\x12\x19\n" +
+	"\tsucceeded\x18\a \x01(\bR\tsucceeded\x12\x1b\n" +
+	"\tspiffe_id\x18\b \x01(\tR\bspiffeId\x12\x19\n" +
 	"\bevent_id\x18\t \x01(\tR\aeventId\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd2\x01\n" +
-	"\x1cGetUserCommitActivityRequest\x12\x1e\n" +
-	"\x05email\x18\x01 \x01(\tB\b\x88\xa6\x1d\x01\xb0\xa6\x1d\x01R\x05email\x12;\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa0\x02\n" +
+	"\x1cGetUserCommitActivityRequest\x12!\n" +
+	"\tspiffe_id\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\bspiffeId\x12:\n" +
 	"\n" +
-	"time_range\x18\x02 \x01(\v2\x1c.claudesensor.EventTimeRangeR\ttimeRange\x12$\n" +
-	"\x05limit\x18\x03 \x01(\x05B\x0e\xb0\xa7\x1d\x01\xc0\xa7\x1d\xf4\x03\x90\xa8\x1d\xc8\x01R\x05limit\x12\x1a\n" +
+	"time_range\x18\x02 \x01(\v2\x1b.agentsensor.EventTimeRangeR\ttimeRange\x12$\n" +
+	"\x05limit\x18\x03 \x01(\x05B\x0e\xb0\xa7\x1d\x01\xc0\xa7\x1d\xf4\x03\x90\xa8\x1d\xc8\x01R\x05limit\x12\x1d\n" +
+	"\n" +
+	"page_token\x18\x04 \x01(\tR\tpageToken\x12+\n" +
+	"\tpage_size\x18\x05 \x01(\x05B\x0e\xb0\xa7\x1d\x01\xc0\xa7\x1d\xf4\x03\x90\xa8\x1d\xc8\x01R\bpageSize\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x86\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xae\x01\n" +
 	"\x1dGetUserCommitActivityResponse\x124\n" +
-	"\acommits\x18\x01 \x03(\v2\x13.argus.CommitRecordB\x05\xb8\xa8\x1d\xf4\x03R\acommits\x12\x1a\n" +
+	"\acommits\x18\x01 \x03(\v2\x13.argus.CommitRecordB\x05\xb8\xa8\x1d\xf4\x03R\acommits\x12&\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xf1\x02\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xf7\x02\n" +
 	"\x12FileActivityRecord\x12\x1b\n" +
-	"\tfile_path\x18\x01 \x01(\tR\bfilePath\x129\n" +
-	"\toperation\x18\x02 \x01(\x0e2\x1b.claudesensor.FileOperationR\toperation\x12\x14\n" +
-	"\x05email\x18\x03 \x01(\tR\x05email\x12\x1d\n" +
+	"\tfile_path\x18\x01 \x01(\tR\bfilePath\x128\n" +
+	"\toperation\x18\x02 \x01(\x0e2\x1a.agentsensor.FileOperationR\toperation\x12\x1b\n" +
+	"\tspiffe_id\x18\x03 \x01(\tR\bspiffeId\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x04 \x01(\tR\tsessionId\x12\x19\n" +
 	"\bagent_id\x18\x05 \x01(\tR\aagentId\x12\x1a\n" +
@@ -6450,13 +6578,13 @@ const file_services_argus_proto_rawDesc = "" +
 	"\vis_new_file\x18\b \x01(\bR\tisNewFile\x12!\n" +
 	"\ftimestamp_ms\x18\t \x01(\x03R\vtimestampMs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9c\x02\n" +
-	"\x16GetFileActivityRequest\x12!\n" +
-	"\femail_filter\x18\x01 \x01(\tR\vemailFilter\x12&\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa2\x02\n" +
+	"\x16GetFileActivityRequest\x12(\n" +
+	"\x10spiffe_id_filter\x18\x01 \x01(\tR\x0espiffeIdFilter\x12&\n" +
 	"\vpath_prefix\x18\x02 \x01(\tB\x05\x90\xa7\x1d\x80 R\n" +
-	"pathPrefix\x12;\n" +
+	"pathPrefix\x12:\n" +
 	"\n" +
-	"time_range\x18\x03 \x01(\v2\x1c.claudesensor.EventTimeRangeR\ttimeRange\x12\x1d\n" +
+	"time_range\x18\x03 \x01(\v2\x1b.agentsensor.EventTimeRangeR\ttimeRange\x12\x1d\n" +
 	"\n" +
 	"page_token\x18\x04 \x01(\tR\tpageToken\x12*\n" +
 	"\tpage_size\x18\x05 \x01(\x05B\r\xb0\xa7\x1d\x01\xc0\xa7\x1d\xe8\a\x90\xa8\x1ddR\bpageSize\x12\x1a\n" +
@@ -6466,19 +6594,19 @@ const file_services_argus_proto_rawDesc = "" +
 	"\arecords\x18\x01 \x03(\v2\x19.argus.FileActivityRecordB\x05\xb8\xa8\x1d\x90NR\arecords\x12&\n" +
 	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xf9\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xf8\x01\n" +
 	"\x19GetSessionTimelineRequest\x12#\n" +
 	"\n" +
-	"session_id\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\tsessionId\x12;\n" +
+	"session_id\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\tsessionId\x12:\n" +
 	"\n" +
-	"time_range\x18\x02 \x01(\v2\x1c.claudesensor.EventTimeRangeR\ttimeRange\x12\x1d\n" +
+	"time_range\x18\x02 \x01(\v2\x1b.agentsensor.EventTimeRangeR\ttimeRange\x12\x1d\n" +
 	"\n" +
 	"page_token\x18\x03 \x01(\tR\tpageToken\x12*\n" +
 	"\tpage_size\x18\x04 \x01(\x05B\r\xb0\xa7\x1d\x01\xc0\xa7\x1d\xe8\a\x90\xa8\x1ddR\bpageSize\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xdb\x01\n" +
-	"\x1aGetSessionTimelineResponse\x128\n" +
-	"\x06events\x18\x01 \x03(\v2\x19.claudesensor.SensorEventB\x05\xb8\xa8\x1d\x90NR\x06events\x12&\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd9\x01\n" +
+	"\x1aGetSessionTimelineResponse\x126\n" +
+	"\x06events\x18\x01 \x03(\v2\x17.agentsensor.AgentEventB\x05\xb8\xa8\x1d\x90NR\x06events\x12&\n" +
 	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12*\n" +
 	"\x11total_event_count\x18\x03 \x01(\x03R\x0ftotalEventCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
@@ -6509,10 +6637,10 @@ const file_services_argus_proto_rawDesc = "" +
 	"totalDepth\x12!\n" +
 	"\ftotal_agents\x18\x03 \x01(\x05R\vtotalAgents\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x85\x01\n" +
-	"\x15GetSystemStatsRequest\x12;\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x84\x01\n" +
+	"\x15GetSystemStatsRequest\x12:\n" +
 	"\n" +
-	"time_range\x18\x01 \x01(\v2\x1c.claudesensor.EventTimeRangeR\ttimeRange\x12\x1a\n" +
+	"time_range\x18\x01 \x01(\v2\x1b.agentsensor.EventTimeRangeR\ttimeRange\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa6\x04\n" +
 	"\x16GetSystemStatsResponse\x12%\n" +
@@ -6530,10 +6658,10 @@ const file_services_argus_proto_rawDesc = "" +
 	"\vsnapshot_ms\x18\v \x01(\x03R\n" +
 	"snapshotMs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x87\x01\n" +
-	"\x17WatchSystemStatsRequest\x12;\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x86\x01\n" +
+	"\x17WatchSystemStatsRequest\x12:\n" +
 	"\n" +
-	"time_range\x18\x01 \x01(\v2\x1c.claudesensor.EventTimeRangeR\ttimeRange\x12\x1a\n" +
+	"time_range\x18\x01 \x01(\v2\x1b.agentsensor.EventTimeRangeR\ttimeRange\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x8d\x02\n" +
 	"\bToolStat\x12\x1b\n" +
@@ -6544,22 +6672,26 @@ const file_services_argus_proto_rawDesc = "" +
 	"\x0favg_duration_ms\x18\x05 \x01(\x03R\ravgDurationMs\x12&\n" +
 	"\x0fp95_duration_ms\x18\x06 \x01(\x03R\rp95DurationMs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd6\x01\n" +
-	"\x19GetToolLeaderboardRequest\x12A\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa6\x02\n" +
+	"\x19GetToolLeaderboardRequest\x12@\n" +
 	"\n" +
-	"time_range\x18\x01 \x01(\v2\x1c.claudesensor.EventTimeRangeB\x04\x88\xa6\x1d\x01R\ttimeRange\x12!\n" +
-	"\femail_filter\x18\x02 \x01(\tR\vemailFilter\x12\"\n" +
-	"\x05limit\x18\x03 \x01(\x05B\f\xb0\xa7\x1d\x01\xc0\xa7\x1dd\x90\xa8\x1d\x14R\x05limit\x12\x1a\n" +
+	"time_range\x18\x01 \x01(\v2\x1b.agentsensor.EventTimeRangeB\x04\x88\xa6\x1d\x01R\ttimeRange\x12(\n" +
+	"\x10spiffe_id_filter\x18\x02 \x01(\tR\x0espiffeIdFilter\x12\"\n" +
+	"\x05limit\x18\x03 \x01(\x05B\f\xb0\xa7\x1d\x01\xc0\xa7\x1dd\x90\xa8\x1d\x14R\x05limit\x12\x1d\n" +
+	"\n" +
+	"page_token\x18\x04 \x01(\tR\tpageToken\x12)\n" +
+	"\tpage_size\x18\x05 \x01(\x05B\f\xb0\xa7\x1d\x01\xc0\xa7\x1dd\x90\xa8\x1d\x14R\bpageSize\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"{\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa3\x01\n" +
 	"\x1aGetToolLeaderboardResponse\x12,\n" +
-	"\x05tools\x18\x01 \x03(\v2\x0f.argus.ToolStatB\x05\xb8\xa8\x1d\xe8\aR\x05tools\x12\x1a\n" +
+	"\x05tools\x18\x01 \x03(\v2\x0f.argus.ToolStatB\x05\xb8\xa8\x1d\xe8\aR\x05tools\x12&\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd8\x01\n" +
-	"\x1bWatchToolLeaderboardRequest\x12A\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xde\x01\n" +
+	"\x1bWatchToolLeaderboardRequest\x12@\n" +
 	"\n" +
-	"time_range\x18\x01 \x01(\v2\x1c.claudesensor.EventTimeRangeB\x04\x88\xa6\x1d\x01R\ttimeRange\x12!\n" +
-	"\femail_filter\x18\x02 \x01(\tR\vemailFilter\x12\"\n" +
+	"time_range\x18\x01 \x01(\v2\x1b.agentsensor.EventTimeRangeB\x04\x88\xa6\x1d\x01R\ttimeRange\x12(\n" +
+	"\x10spiffe_id_filter\x18\x02 \x01(\tR\x0espiffeIdFilter\x12\"\n" +
 	"\x05limit\x18\x03 \x01(\x05B\f\xb0\xa7\x1d\x01\xc0\xa7\x1dd\x90\xa8\x1d\x14R\x05limit\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xbb\x01\n" +
@@ -6570,14 +6702,18 @@ const file_services_argus_proto_rawDesc = "" +
 	"eventCount\x12!\n" +
 	"\ttop_users\x18\x04 \x03(\tB\x04\xb8\xa8\x1d\x05R\btopUsers\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x8a\x01\n" +
-	"\x14GetModelUsageRequest\x12A\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd4\x01\n" +
+	"\x14GetModelUsageRequest\x12@\n" +
 	"\n" +
-	"time_range\x18\x01 \x01(\v2\x1c.claudesensor.EventTimeRangeB\x04\x88\xa6\x1d\x01R\ttimeRange\x12\x1a\n" +
+	"time_range\x18\x01 \x01(\v2\x1b.agentsensor.EventTimeRangeB\x04\x88\xa6\x1d\x01R\ttimeRange\x12\x1d\n" +
+	"\n" +
+	"page_token\x18\x02 \x01(\tR\tpageToken\x12*\n" +
+	"\tpage_size\x18\x03 \x01(\x05B\r\xb0\xa7\x1d\x01\xc0\xa7\x1d\xe8\a\x90\xa8\x1ddR\bpageSize\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"y\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa1\x01\n" +
 	"\x15GetModelUsageResponse\x12/\n" +
-	"\x06models\x18\x01 \x03(\v2\x10.argus.ModelStatB\x05\xb8\xa8\x1d\xe8\aR\x06models\x12\x1a\n" +
+	"\x06models\x18\x01 \x03(\v2\x10.argus.ModelStatB\x05\xb8\xa8\x1d\xe8\aR\x06models\x12&\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xef\x01\n" +
 	"\x0eActivityBucket\x12&\n" +
@@ -6588,28 +6724,32 @@ const file_services_argus_proto_rawDesc = "" +
 	"\factive_users\x18\x04 \x01(\x03R\vactiveUsers\x12\x1b\n" +
 	"\tgroup_key\x18\x05 \x01(\tR\bgroupKey\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xf7\x01\n" +
-	"\x1cGetActivityTimeseriesRequest\x12A\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc1\x02\n" +
+	"\x1cGetActivityTimeseriesRequest\x12@\n" +
 	"\n" +
-	"time_range\x18\x01 \x01(\v2\x1c.claudesensor.EventTimeRangeB\x04\x88\xa6\x1d\x01R\ttimeRange\x120\n" +
+	"time_range\x18\x01 \x01(\v2\x1b.agentsensor.EventTimeRangeB\x04\x88\xa6\x1d\x01R\ttimeRange\x120\n" +
 	"\x0ebucket_seconds\x18\x02 \x01(\x05B\t\xb0\xa7\x1d<\x90\xa8\x1d\x90\x1cR\rbucketSeconds\x121\n" +
-	"\bgroup_by\x18\x03 \x01(\x0e2\x16.argus.ActivityGroupByR\agroupBy\x12\x1a\n" +
+	"\bgroup_by\x18\x03 \x01(\x0e2\x16.argus.ActivityGroupByR\agroupBy\x12\x1d\n" +
+	"\n" +
+	"page_token\x18\x04 \x01(\tR\tpageToken\x12*\n" +
+	"\tpage_size\x18\x05 \x01(\x05B\r\xb0\xa7\x1d\x01\xc0\xa7\x1d\xe8\a\x90\xa8\x1ddR\bpageSize\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x88\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb0\x01\n" +
 	"\x1dGetActivityTimeseriesResponse\x126\n" +
-	"\abuckets\x18\x01 \x03(\v2\x15.argus.ActivityBucketB\x05\xb8\xa8\x1d\xe8\aR\abuckets\x12\x1a\n" +
+	"\abuckets\x18\x01 \x03(\v2\x15.argus.ActivityBucketB\x05\xb8\xa8\x1d\xe8\aR\abuckets\x12&\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd8\x02\n" +
-	"\x12SearchEventsFilter\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\x12\x1d\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xdd\x02\n" +
+	"\x12SearchEventsFilter\x12\x1b\n" +
+	"\tspiffe_id\x18\x01 \x01(\tR\bspiffeId\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\tR\tsessionId\x12\x19\n" +
-	"\bagent_id\x18\x03 \x01(\tR\aagentId\x12<\n" +
+	"\bagent_id\x18\x03 \x01(\tR\aagentId\x12;\n" +
 	"\n" +
-	"event_type\x18\x04 \x01(\x0e2\x1d.claudesensor.SensorEventTypeR\teventType\x12\x1b\n" +
-	"\ttool_name\x18\x05 \x01(\tR\btoolName\x12;\n" +
+	"event_type\x18\x04 \x01(\x0e2\x1c.agentsensor.SensorEventTypeR\teventType\x12\x1b\n" +
+	"\ttool_name\x18\x05 \x01(\tR\btoolName\x12:\n" +
 	"\n" +
-	"time_range\x18\x06 \x01(\v2\x1c.claudesensor.EventTimeRangeR\ttimeRange\x12)\n" +
+	"time_range\x18\x06 \x01(\v2\x1b.agentsensor.EventTimeRangeR\ttimeRange\x12)\n" +
 	"\x10succeeded_filter\x18\a \x01(\x05R\x0fsucceededFilter\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xca\x01\n" +
@@ -6619,27 +6759,27 @@ const file_services_argus_proto_rawDesc = "" +
 	"page_token\x18\x02 \x01(\tR\tpageToken\x12*\n" +
 	"\tpage_size\x18\x03 \x01(\x05B\r\xb0\xa7\x1d\x01\xc0\xa7\x1d\xf4\x03\x90\xa8\x1d2R\bpageSize\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa9\x01\n" +
-	"\x14SearchEventsResponse\x128\n" +
-	"\x06events\x18\x01 \x03(\v2\x19.claudesensor.SensorEventB\x05\xb8\xa8\x1d\x90NR\x06events\x12&\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa7\x01\n" +
+	"\x14SearchEventsResponse\x126\n" +
+	"\x06events\x18\x01 \x03(\v2\x17.agentsensor.AgentEventB\x05\xb8\xa8\x1d\x90NR\x06events\x12&\n" +
 	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x8b\x02\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x91\x02\n" +
 	"\rFilePathMatch\x12\x1b\n" +
 	"\tfile_path\x18\x01 \x01(\tR\bfilePath\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\tR\tsessionId\x12\x19\n" +
-	"\bagent_id\x18\x03 \x01(\tR\aagentId\x12\x14\n" +
-	"\x05email\x18\x04 \x01(\tR\x05email\x129\n" +
-	"\toperation\x18\x05 \x01(\x0e2\x1b.claudesensor.FileOperationR\toperation\x12!\n" +
+	"\bagent_id\x18\x03 \x01(\tR\aagentId\x12\x1b\n" +
+	"\tspiffe_id\x18\x04 \x01(\tR\bspiffeId\x128\n" +
+	"\toperation\x18\x05 \x01(\x0e2\x1a.agentsensor.FileOperationR\toperation\x12!\n" +
 	"\ftimestamp_ms\x18\x06 \x01(\x03R\vtimestampMs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa3\x02\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa9\x02\n" +
 	"\x17SearchByFilePathRequest\x12,\n" +
-	"\fpath_pattern\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80 R\vpathPattern\x12!\n" +
-	"\femail_filter\x18\x02 \x01(\tR\vemailFilter\x12;\n" +
+	"\fpath_pattern\x18\x01 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80 R\vpathPattern\x12(\n" +
+	"\x10spiffe_id_filter\x18\x02 \x01(\tR\x0espiffeIdFilter\x12:\n" +
 	"\n" +
-	"time_range\x18\x03 \x01(\v2\x1c.claudesensor.EventTimeRangeR\ttimeRange\x12\x1d\n" +
+	"time_range\x18\x03 \x01(\v2\x1b.agentsensor.EventTimeRangeR\ttimeRange\x12\x1d\n" +
 	"\n" +
 	"page_token\x18\x04 \x01(\tR\tpageToken\x12*\n" +
 	"\tpage_size\x18\x05 \x01(\x05B\r\xb0\xa7\x1d\x01\xc0\xa7\x1d\xf4\x03\x90\xa8\x1d2R\bpageSize\x12\x1a\n" +
@@ -6649,12 +6789,12 @@ const file_services_argus_proto_rawDesc = "" +
 	"\amatches\x18\x01 \x03(\v2\x14.argus.FilePathMatchB\x05\xb8\xa8\x1d\x90NR\amatches\x12&\n" +
 	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9a\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x98\x01\n" +
 	"\x10ArgusConfigState\x12/\n" +
 	"\x06config\x18\x01 \x01(\v2\r.argus.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:$\x9a\xa8\x1d\x1c\n" +
-	"\x10ArgusConfigState\x1a\beventbus\xa0\xa8\x1d\x02\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\"\x9a\xa8\x1d\x1a\n" +
+	"\x10ArgusConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\x8f\x01\n" +
@@ -6740,7 +6880,7 @@ const file_services_argus_proto_rawDesc = "" +
 	"#TYPE_ID_SEARCH_BY_FILE_PATH_REQUEST\x10H\x12(\n" +
 	"$TYPE_ID_SEARCH_BY_FILE_PATH_RESPONSE\x10I\x12\x1e\n" +
 	"\x1aTYPE_ID_ARGUS_CONFIG_STATE\x10J\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10K*\xb9\v\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x10K*\xbb\v\n" +
 	"\n" +
 	"ArgusRpcId\x12\x1c\n" +
 	"\x18ARGUS_RPC_ID_UNSPECIFIED\x10\x00\x12\x1e\n" +
@@ -6770,9 +6910,9 @@ const file_services_argus_proto_rawDesc = "" +
 	"\x1dARGUS_RPC_ID_GET_USER_PROFILE\x10\x17\x12%\n" +
 	"!ARGUS_RPC_ID_GET_USER_TOKEN_STATS\x10\x18\x12'\n" +
 	"#ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE\x10\x19\x12*\n" +
-	"&ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY\x10\x1a\x12\"\n" +
-	"\x1eARGUS_RPC_ID_GET_FILE_ACTIVITY\x10\x1b\x12%\n" +
-	"!ARGUS_RPC_ID_GET_SESSION_TIMELINE\x10\x1c\x12\x1f\n" +
+	"&ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY\x10\x1a\x12#\n" +
+	"\x1fARGUS_RPC_ID_LIST_FILE_ACTIVITY\x10\x1b\x12&\n" +
+	"\"ARGUS_RPC_ID_LIST_SESSION_TIMELINE\x10\x1c\x12\x1f\n" +
 	"\x1bARGUS_RPC_ID_GET_AGENT_TREE\x10\x1d\x12!\n" +
 	"\x1dARGUS_RPC_ID_GET_SYSTEM_STATS\x10\x1e\x12&\n" +
 	"\"ARGUS_RPC_ID_LIST_TOOL_LEADERBOARD\x10\x1f\x12!\n" +
@@ -6789,21 +6929,20 @@ const file_services_argus_proto_rawDesc = "" +
 	"/ARGUS_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x120\n" +
 	",ARGUS_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x120\n" +
 	",ARGUS_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x122\n" +
-	".ARGUS_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xe1\x19\n" +
+	".ARGUS_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xa2\x1a\n" +
 	"\x05Argus\x12G\n" +
-	"\fGetDashboard\x12\x1a.argus.GetDashboardRequest\x1a\x1b.argus.GetDashboardResponse\x12~\n" +
-	"\x12ListActiveSessions\x12 .argus.ListActiveSessionsRequest\x1a!.argus.ListActiveSessionsResponse\"#\xf2\x88'\x1f\b\x01\x12\flast_seen_ms\x12\n" +
-	"session_id\x18\x90N\x12S\n" +
+	"\fGetDashboard\x12\x1a.argus.GetDashboardRequest\x1a\x1b.argus.GetDashboardResponse\x12}\n" +
+	"\x12ListActiveSessions\x12 .argus.ListActiveSessionsRequest\x1a!.argus.ListActiveSessionsResponse\"\"\xf2\x88'\x1e\b\x03\x12\flast_seen_ms\x12\n" +
+	"session_id(2\x12S\n" +
 	"\x10GetSessionDetail\x12\x1e.argus.GetSessionDetailRequest\x1a\x1f.argus.GetSessionDetailResponse\x12P\n" +
-	"\x0fGetUserActivity\x12\x1d.argus.GetUserActivityRequest\x1a\x1e.argus.GetUserActivityResponse\x12|\n" +
-	"\x18ListSessionSearchResults\x12\x1c.argus.SearchSessionsRequest\x1a\x1d.argus.SearchSessionsResponse\"#\xf2\x88'\x1f\b\x01\x12\flast_seen_ms\x12\n" +
-	"session_id\x18\x90N\x12g\n" +
-	"\x15SubscribeLiveSessions\x12&.claudesensor.WatchLiveSessionsRequest\x1a$.claudesensor.WatchLiveSessionsEvent0\x01\x12L\n" +
+	"\x0fGetUserActivity\x12\x1d.argus.GetUserActivityRequest\x1a\x1e.argus.GetUserActivityResponse\x12{\n" +
+	"\x18ListSessionSearchResults\x12\x1c.argus.SearchSessionsRequest\x1a\x1d.argus.SearchSessionsResponse\"\"\xf2\x88'\x1e\b\x03\x12\flast_seen_ms\x12\n" +
+	"session_id(2\x12e\n" +
+	"\x15SubscribeLiveSessions\x12%.agentsensor.WatchLiveSessionsRequest\x1a#.agentsensor.WatchLiveSessionsEvent0\x01\x12L\n" +
 	"\rGetScratchpad\x12\x1c.argus.ScratchpadReadRequest\x1a\x1d.argus.ScratchpadReadResponse\x12Q\n" +
 	"\x10UpdateScratchpad\x12\x1d.argus.ScratchpadWriteRequest\x1a\x1e.argus.ScratchpadWriteResponse\x12S\n" +
-	"\x10DeleteScratchpad\x12\x1e.argus.ScratchpadDeleteRequest\x1a\x1f.argus.ScratchpadDeleteResponse\x12^\n" +
-	"\x0fListScratchpads\x12\x1c.argus.ScratchpadListRequest\x1a\x1d.argus.ScratchpadListResponse\"\x0e\xf2\x88'\n" +
-	"\b\x01\x12\x03key\x18\xe8\a\x12R\n" +
+	"\x10DeleteScratchpad\x12\x1e.argus.ScratchpadDeleteRequest\x1a\x1f.argus.ScratchpadDeleteResponse\x12]\n" +
+	"\x0fListScratchpads\x12\x1c.argus.ScratchpadListRequest\x1a\x1d.argus.ScratchpadListResponse\"\r\xf2\x88'\t\b\x03\x12\x03key(d\x12R\n" +
 	"\x11DeleteScratchpads\x12\x1d.argus.ScratchpadClearRequest\x1a\x1e.argus.ScratchpadClearResponse\x12_\n" +
 	"\x14GetSupervisorContext\x12\".argus.GetSupervisorContextRequest\x1a#.argus.GetSupervisorContextResponse\x12Q\n" +
 	"\x12SubscribeDashboard\x12\x1c.argus.WatchDashboardRequest\x1a\x1b.argus.GetDashboardResponse0\x01\x12]\n" +
@@ -6811,32 +6950,32 @@ const file_services_argus_proto_rawDesc = "" +
 	"\x15SubscribeUserActivity\x12\x1f.argus.WatchUserActivityRequest\x1a\x1e.argus.GetUserActivityResponse0\x01\x12i\n" +
 	"\x1aSubscribeSupervisorContext\x12$.argus.WatchSupervisorContextRequest\x1a#.argus.GetSupervisorContextResponse0\x01\x12]\n" +
 	"\x17SubscribeScratchpadList\x12!.argus.WatchScratchpadListRequest\x1a\x1d.argus.ScratchpadListResponse0\x01\x12]\n" +
-	"\x17SubscribeScratchpadRead\x12!.argus.WatchScratchpadReadRequest\x1a\x1d.argus.ScratchpadReadResponse0\x01\x12P\n" +
-	"\tListUsers\x12\x17.argus.ListUsersRequest\x1a\x18.argus.ListUsersResponse\"\x10\xf2\x88'\f\b\x01\x12\x05email\x18\xe8\a\x12M\n" +
+	"\x17SubscribeScratchpadRead\x12!.argus.WatchScratchpadReadRequest\x1a\x1d.argus.ScratchpadReadResponse0\x01\x12T\n" +
+	"\tListUsers\x12\x17.argus.ListUsersRequest\x1a\x18.argus.ListUsersResponse\"\x14\xf2\x88'\x10\b\x03\x12\tspiffe_id(\xc8\x01\x12M\n" +
 	"\x0eGetUserProfile\x12\x1c.argus.GetUserProfileRequest\x1a\x1d.argus.GetUserProfileResponse\x12V\n" +
 	"\x11GetUserTokenStats\x12\x1f.argus.GetUserTokenStatsRequest\x1a .argus.GetUserTokenStatsResponse\x12W\n" +
 	"\x14SubscribeUserProfile\x12\x1e.argus.WatchUserProfileRequest\x1a\x1d.argus.GetUserProfileResponse0\x01\x12\x86\x01\n" +
-	"\x16ListUserCommitActivity\x12#.argus.GetUserCommitActivityRequest\x1a$.argus.GetUserCommitActivityResponse\"!\xf2\x88'\x1d\b\x01\x12\ftimestamp_ms\x12\bevent_id\x18\xf4\x03\x12P\n" +
-	"\x0fGetFileActivity\x12\x1d.argus.GetFileActivityRequest\x1a\x1e.argus.GetFileActivityResponse\x12Y\n" +
-	"\x12GetSessionTimeline\x12 .argus.GetSessionTimelineRequest\x1a!.argus.GetSessionTimelineResponse\x12G\n" +
+	"\x16ListUserCommitActivity\x12#.argus.GetUserCommitActivityRequest\x1a$.argus.GetUserCommitActivityResponse\"!\xf2\x88'\x1d\b\x03\x12\ftimestamp_ms\x12\bevent_id(\xc8\x01\x12t\n" +
+	"\x10ListFileActivity\x12\x1d.argus.GetFileActivityRequest\x1a\x1e.argus.GetFileActivityResponse\"!\xf2\x88'\x1d\b\x03\x12\ftimestamp_ms\x12\tfile_path(d\x12|\n" +
+	"\x13ListSessionTimeline\x12 .argus.GetSessionTimelineRequest\x1a!.argus.GetSessionTimelineResponse\" \xf2\x88'\x1c\b\x03\x12\ftimestamp_ms\x12\bevent_id(d\x12G\n" +
 	"\fGetAgentTree\x12\x1a.argus.GetAgentTreeRequest\x1a\x1b.argus.GetAgentTreeResponse\x12M\n" +
-	"\x0eGetSystemStats\x12\x1c.argus.GetSystemStatsRequest\x1a\x1d.argus.GetSystemStatsResponse\x12{\n" +
-	"\x13ListToolLeaderboard\x12 .argus.GetToolLeaderboardRequest\x1a!.argus.GetToolLeaderboardResponse\"\x1f\xf2\x88'\x1b\b\x01\x12\tuse_count\x12\ttool_name\x18\xe8\a\x12]\n" +
-	"\x0eListModelUsage\x12\x1b.argus.GetModelUsageRequest\x1a\x1c.argus.GetModelUsageResponse\"\x10\xf2\x88'\f\b\x01\x12\x05model\x18\xe8\a\x12\x8a\x01\n" +
-	"\x16ListActivityTimeseries\x12#.argus.GetActivityTimeseriesRequest\x1a$.argus.GetActivityTimeseriesResponse\"%\xf2\x88'!\b\x01\x12\x0fbucket_start_ms\x12\tgroup_key\x18\xe8\a\x12W\n" +
+	"\x0eGetSystemStats\x12\x1c.argus.GetSystemStatsRequest\x1a\x1d.argus.GetSystemStatsResponse\x12z\n" +
+	"\x13ListToolLeaderboard\x12 .argus.GetToolLeaderboardRequest\x1a!.argus.GetToolLeaderboardResponse\"\x1e\xf2\x88'\x1a\b\x03\x12\tuse_count\x12\ttool_name(\x14\x12\\\n" +
+	"\x0eListModelUsage\x12\x1b.argus.GetModelUsageRequest\x1a\x1c.argus.GetModelUsageResponse\"\x0f\xf2\x88'\v\b\x03\x12\x05model(d\x12\x89\x01\n" +
+	"\x16ListActivityTimeseries\x12#.argus.GetActivityTimeseriesRequest\x1a$.argus.GetActivityTimeseriesResponse\"$\xf2\x88' \b\x03\x12\x0fbucket_start_ms\x12\tgroup_key(d\x12W\n" +
 	"\x14SubscribeSystemStats\x12\x1e.argus.WatchSystemStatsRequest\x1a\x1d.argus.GetSystemStatsResponse0\x01\x12c\n" +
-	"\x18SubscribeToolLeaderboard\x12\".argus.WatchToolLeaderboardRequest\x1a!.argus.GetToolLeaderboardResponse0\x01\x12t\n" +
-	"\x16ListEventSearchResults\x12\x1a.argus.SearchEventsRequest\x1a\x1b.argus.SearchEventsResponse\"!\xf2\x88'\x1d\b\x01\x12\ftimestamp_ms\x12\bevent_id\x18\x90N\x12z\n" +
-	"\x13ListFilePathMatches\x12\x1e.argus.SearchByFilePathRequest\x1a\x1f.argus.SearchByFilePathResponse\"\"\xf2\x88'\x1e\b\x01\x12\ftimestamp_ms\x12\tfile_path\x18\x90N\x1a\x06\xf2\x97\"\x02\x18\x012\x19\n" +
+	"\x18SubscribeToolLeaderboard\x12\".argus.WatchToolLeaderboardRequest\x1a!.argus.GetToolLeaderboardResponse0\x01\x12s\n" +
+	"\x16ListEventSearchResults\x12\x1a.argus.SearchEventsRequest\x1a\x1b.argus.SearchEventsResponse\" \xf2\x88'\x1c\b\x03\x12\ftimestamp_ms\x12\bevent_id(2\x12y\n" +
+	"\x13ListFilePathMatches\x12\x1e.argus.SearchByFilePathRequest\x1a\x1f.argus.SearchByFilePathResponse\"!\xf2\x88'\x1d\b\x03\x12\ftimestamp_ms\x12\tfile_path(2\x1a\x06\xf2\x97\"\x02\x18\x012\x19\n" +
 	"\x11ArgusStateService\x1a\x04\xea\x97\"\x002\xb0\x01\n" +
 	"\x17ArgusConfigStateService\x12/\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\r.argus.Config\x12)\n" +
 	"\tSetConfig\x12\r.argus.Config\x1a\r.argus.Config\x123\n" +
-	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\r.argus.Config0\x01\x1a\x04\xea\x97\"\x00B\xd0\x01\x92\xb5\x18\x11\n" +
-	"\fDEFAULT_PORT\x10\xfbAڵ\x18\x00\x92\xb6\x18\x1b\n" +
-	"\x19claudesensor.StratumQuery\x92\xb6\x18\x1a\n" +
-	"\x18claudesensor.TimedbQuery\x92\xb6\x18\x1b\n" +
-	"\x19claudesensor.GraphdbQueryZYgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/argusb\x06proto3"
+	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\r.argus.Config0\x01\x1a\x04\xea\x97\"\x00B\xcd\x01\x92\xb5\x18\x11\n" +
+	"\fDEFAULT_PORT\x10\xfbAڵ\x18\x00\x92\xb6\x18\x1a\n" +
+	"\x18agentsensor.StratumQuery\x92\xb6\x18\x19\n" +
+	"\x17agentsensor.TimedbQuery\x92\xb6\x18\x1a\n" +
+	"\x18agentsensor.GraphdbQueryZYgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/argusb\x06proto3"
 
 var (
 	file_services_argus_proto_rawDescOnce sync.Once
@@ -6853,137 +6992,137 @@ func file_services_argus_proto_rawDescGZIP() []byte {
 var file_services_argus_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
 var file_services_argus_proto_msgTypes = make([]protoimpl.MessageInfo, 75)
 var file_services_argus_proto_goTypes = []any{
-	(ActivityGroupBy)(0),                          // 0: argus.ActivityGroupBy
-	(TypeID)(0),                                   // 1: argus.TypeID
-	(ArgusRpcId)(0),                               // 2: argus.ArgusRpcId
-	(ArgusConfigStateServiceRpcId)(0),             // 3: argus.ArgusConfigStateServiceRpcId
-	(*Config)(nil),                                // 4: argus.Config
-	(*ArgusState)(nil),                            // 5: argus.ArgusState
-	(*ArgusServiceHealth)(nil),                    // 6: argus.ArgusServiceHealth
-	(*GetDashboardRequest)(nil),                   // 7: argus.GetDashboardRequest
-	(*GetDashboardResponse)(nil),                  // 8: argus.GetDashboardResponse
-	(*ListActiveSessionsRequest)(nil),             // 9: argus.ListActiveSessionsRequest
-	(*ListActiveSessionsResponse)(nil),            // 10: argus.ListActiveSessionsResponse
-	(*GetSessionDetailRequest)(nil),               // 11: argus.GetSessionDetailRequest
-	(*GetSessionDetailResponse)(nil),              // 12: argus.GetSessionDetailResponse
-	(*GetUserActivityRequest)(nil),                // 13: argus.GetUserActivityRequest
-	(*GetUserActivityResponse)(nil),               // 14: argus.GetUserActivityResponse
-	(*SearchSessionsRequest)(nil),                 // 15: argus.SearchSessionsRequest
-	(*SearchSessionsResponse)(nil),                // 16: argus.SearchSessionsResponse
-	(*ScratchpadEntry)(nil),                       // 17: argus.ScratchpadEntry
-	(*ScratchpadReadRequest)(nil),                 // 18: argus.ScratchpadReadRequest
-	(*ScratchpadReadResponse)(nil),                // 19: argus.ScratchpadReadResponse
-	(*ScratchpadWriteRequest)(nil),                // 20: argus.ScratchpadWriteRequest
-	(*ScratchpadWriteResponse)(nil),               // 21: argus.ScratchpadWriteResponse
-	(*ScratchpadDeleteRequest)(nil),               // 22: argus.ScratchpadDeleteRequest
-	(*ScratchpadDeleteResponse)(nil),              // 23: argus.ScratchpadDeleteResponse
-	(*ScratchpadListRequest)(nil),                 // 24: argus.ScratchpadListRequest
-	(*ScratchpadListResponse)(nil),                // 25: argus.ScratchpadListResponse
-	(*ScratchpadClearRequest)(nil),                // 26: argus.ScratchpadClearRequest
-	(*ScratchpadClearResponse)(nil),               // 27: argus.ScratchpadClearResponse
-	(*GetSupervisorContextRequest)(nil),           // 28: argus.GetSupervisorContextRequest
-	(*GetSupervisorContextResponse)(nil),          // 29: argus.GetSupervisorContextResponse
-	(*WatchDashboardRequest)(nil),                 // 30: argus.WatchDashboardRequest
-	(*WatchSessionDetailRequest)(nil),             // 31: argus.WatchSessionDetailRequest
-	(*WatchUserActivityRequest)(nil),              // 32: argus.WatchUserActivityRequest
-	(*WatchSupervisorContextRequest)(nil),         // 33: argus.WatchSupervisorContextRequest
-	(*WatchScratchpadListRequest)(nil),            // 34: argus.WatchScratchpadListRequest
-	(*WatchScratchpadReadRequest)(nil),            // 35: argus.WatchScratchpadReadRequest
-	(*UserSummary)(nil),                           // 36: argus.UserSummary
-	(*ListUsersRequest)(nil),                      // 37: argus.ListUsersRequest
-	(*ListUsersResponse)(nil),                     // 38: argus.ListUsersResponse
-	(*ToolUseStat)(nil),                           // 39: argus.ToolUseStat
-	(*ModelUseStat)(nil),                          // 40: argus.ModelUseStat
-	(*GetUserProfileRequest)(nil),                 // 41: argus.GetUserProfileRequest
-	(*GetUserProfileResponse)(nil),                // 42: argus.GetUserProfileResponse
-	(*WatchUserProfileRequest)(nil),               // 43: argus.WatchUserProfileRequest
-	(*PromptBucket)(nil),                          // 44: argus.PromptBucket
-	(*GetUserTokenStatsRequest)(nil),              // 45: argus.GetUserTokenStatsRequest
-	(*GetUserTokenStatsResponse)(nil),             // 46: argus.GetUserTokenStatsResponse
-	(*CommitRecord)(nil),                          // 47: argus.CommitRecord
-	(*GetUserCommitActivityRequest)(nil),          // 48: argus.GetUserCommitActivityRequest
-	(*GetUserCommitActivityResponse)(nil),         // 49: argus.GetUserCommitActivityResponse
-	(*FileActivityRecord)(nil),                    // 50: argus.FileActivityRecord
-	(*GetFileActivityRequest)(nil),                // 51: argus.GetFileActivityRequest
-	(*GetFileActivityResponse)(nil),               // 52: argus.GetFileActivityResponse
-	(*GetSessionTimelineRequest)(nil),             // 53: argus.GetSessionTimelineRequest
-	(*GetSessionTimelineResponse)(nil),            // 54: argus.GetSessionTimelineResponse
-	(*AgentNode)(nil),                             // 55: argus.AgentNode
-	(*GetAgentTreeRequest)(nil),                   // 56: argus.GetAgentTreeRequest
-	(*GetAgentTreeResponse)(nil),                  // 57: argus.GetAgentTreeResponse
-	(*GetSystemStatsRequest)(nil),                 // 58: argus.GetSystemStatsRequest
-	(*GetSystemStatsResponse)(nil),                // 59: argus.GetSystemStatsResponse
-	(*WatchSystemStatsRequest)(nil),               // 60: argus.WatchSystemStatsRequest
-	(*ToolStat)(nil),                              // 61: argus.ToolStat
-	(*GetToolLeaderboardRequest)(nil),             // 62: argus.GetToolLeaderboardRequest
-	(*GetToolLeaderboardResponse)(nil),            // 63: argus.GetToolLeaderboardResponse
-	(*WatchToolLeaderboardRequest)(nil),           // 64: argus.WatchToolLeaderboardRequest
-	(*ModelStat)(nil),                             // 65: argus.ModelStat
-	(*GetModelUsageRequest)(nil),                  // 66: argus.GetModelUsageRequest
-	(*GetModelUsageResponse)(nil),                 // 67: argus.GetModelUsageResponse
-	(*ActivityBucket)(nil),                        // 68: argus.ActivityBucket
-	(*GetActivityTimeseriesRequest)(nil),          // 69: argus.GetActivityTimeseriesRequest
-	(*GetActivityTimeseriesResponse)(nil),         // 70: argus.GetActivityTimeseriesResponse
-	(*SearchEventsFilter)(nil),                    // 71: argus.SearchEventsFilter
-	(*SearchEventsRequest)(nil),                   // 72: argus.SearchEventsRequest
-	(*SearchEventsResponse)(nil),                  // 73: argus.SearchEventsResponse
-	(*FilePathMatch)(nil),                         // 74: argus.FilePathMatch
-	(*SearchByFilePathRequest)(nil),               // 75: argus.SearchByFilePathRequest
-	(*SearchByFilePathResponse)(nil),              // 76: argus.SearchByFilePathResponse
-	(*ArgusConfigState)(nil),                      // 77: argus.ArgusConfigState
-	(*MapEmpty)(nil),                              // 78: argus.MapEmpty
-	(*healthreport.ServiceInstanceHealth)(nil),    // 79: healthreport.ServiceInstanceHealth
-	(*claudesensor.SessionSummary)(nil),           // 80: claudesensor.SessionSummary
-	(*claudesensor.SensorEvent)(nil),              // 81: claudesensor.SensorEvent
-	(*claudesensor.EventTimeRange)(nil),           // 82: claudesensor.EventTimeRange
-	(claudesensor.FileOperation)(0),               // 83: claudesensor.FileOperation
-	(claudesensor.SensorEventType)(0),             // 84: claudesensor.SensorEventType
-	(*claudesensor.WatchLiveSessionsRequest)(nil), // 85: claudesensor.WatchLiveSessionsRequest
-	(*trace.TraceRequest)(nil),                    // 86: trace.TraceRequest
-	(*claudesensor.WatchLiveSessionsEvent)(nil),   // 87: claudesensor.WatchLiveSessionsEvent
+	(ActivityGroupBy)(0),                         // 0: argus.ActivityGroupBy
+	(TypeID)(0),                                  // 1: argus.TypeID
+	(ArgusRpcId)(0),                              // 2: argus.ArgusRpcId
+	(ArgusConfigStateServiceRpcId)(0),            // 3: argus.ArgusConfigStateServiceRpcId
+	(*Config)(nil),                               // 4: argus.Config
+	(*ArgusState)(nil),                           // 5: argus.ArgusState
+	(*ArgusServiceHealth)(nil),                   // 6: argus.ArgusServiceHealth
+	(*GetDashboardRequest)(nil),                  // 7: argus.GetDashboardRequest
+	(*GetDashboardResponse)(nil),                 // 8: argus.GetDashboardResponse
+	(*ListActiveSessionsRequest)(nil),            // 9: argus.ListActiveSessionsRequest
+	(*ListActiveSessionsResponse)(nil),           // 10: argus.ListActiveSessionsResponse
+	(*GetSessionDetailRequest)(nil),              // 11: argus.GetSessionDetailRequest
+	(*GetSessionDetailResponse)(nil),             // 12: argus.GetSessionDetailResponse
+	(*GetUserActivityRequest)(nil),               // 13: argus.GetUserActivityRequest
+	(*GetUserActivityResponse)(nil),              // 14: argus.GetUserActivityResponse
+	(*SearchSessionsRequest)(nil),                // 15: argus.SearchSessionsRequest
+	(*SearchSessionsResponse)(nil),               // 16: argus.SearchSessionsResponse
+	(*ScratchpadEntry)(nil),                      // 17: argus.ScratchpadEntry
+	(*ScratchpadReadRequest)(nil),                // 18: argus.ScratchpadReadRequest
+	(*ScratchpadReadResponse)(nil),               // 19: argus.ScratchpadReadResponse
+	(*ScratchpadWriteRequest)(nil),               // 20: argus.ScratchpadWriteRequest
+	(*ScratchpadWriteResponse)(nil),              // 21: argus.ScratchpadWriteResponse
+	(*ScratchpadDeleteRequest)(nil),              // 22: argus.ScratchpadDeleteRequest
+	(*ScratchpadDeleteResponse)(nil),             // 23: argus.ScratchpadDeleteResponse
+	(*ScratchpadListRequest)(nil),                // 24: argus.ScratchpadListRequest
+	(*ScratchpadListResponse)(nil),               // 25: argus.ScratchpadListResponse
+	(*ScratchpadClearRequest)(nil),               // 26: argus.ScratchpadClearRequest
+	(*ScratchpadClearResponse)(nil),              // 27: argus.ScratchpadClearResponse
+	(*GetSupervisorContextRequest)(nil),          // 28: argus.GetSupervisorContextRequest
+	(*GetSupervisorContextResponse)(nil),         // 29: argus.GetSupervisorContextResponse
+	(*WatchDashboardRequest)(nil),                // 30: argus.WatchDashboardRequest
+	(*WatchSessionDetailRequest)(nil),            // 31: argus.WatchSessionDetailRequest
+	(*WatchUserActivityRequest)(nil),             // 32: argus.WatchUserActivityRequest
+	(*WatchSupervisorContextRequest)(nil),        // 33: argus.WatchSupervisorContextRequest
+	(*WatchScratchpadListRequest)(nil),           // 34: argus.WatchScratchpadListRequest
+	(*WatchScratchpadReadRequest)(nil),           // 35: argus.WatchScratchpadReadRequest
+	(*UserSummary)(nil),                          // 36: argus.UserSummary
+	(*ListUsersRequest)(nil),                     // 37: argus.ListUsersRequest
+	(*ListUsersResponse)(nil),                    // 38: argus.ListUsersResponse
+	(*ToolUseStat)(nil),                          // 39: argus.ToolUseStat
+	(*ModelUseStat)(nil),                         // 40: argus.ModelUseStat
+	(*GetUserProfileRequest)(nil),                // 41: argus.GetUserProfileRequest
+	(*GetUserProfileResponse)(nil),               // 42: argus.GetUserProfileResponse
+	(*WatchUserProfileRequest)(nil),              // 43: argus.WatchUserProfileRequest
+	(*PromptBucket)(nil),                         // 44: argus.PromptBucket
+	(*GetUserTokenStatsRequest)(nil),             // 45: argus.GetUserTokenStatsRequest
+	(*GetUserTokenStatsResponse)(nil),            // 46: argus.GetUserTokenStatsResponse
+	(*CommitRecord)(nil),                         // 47: argus.CommitRecord
+	(*GetUserCommitActivityRequest)(nil),         // 48: argus.GetUserCommitActivityRequest
+	(*GetUserCommitActivityResponse)(nil),        // 49: argus.GetUserCommitActivityResponse
+	(*FileActivityRecord)(nil),                   // 50: argus.FileActivityRecord
+	(*GetFileActivityRequest)(nil),               // 51: argus.GetFileActivityRequest
+	(*GetFileActivityResponse)(nil),              // 52: argus.GetFileActivityResponse
+	(*GetSessionTimelineRequest)(nil),            // 53: argus.GetSessionTimelineRequest
+	(*GetSessionTimelineResponse)(nil),           // 54: argus.GetSessionTimelineResponse
+	(*AgentNode)(nil),                            // 55: argus.AgentNode
+	(*GetAgentTreeRequest)(nil),                  // 56: argus.GetAgentTreeRequest
+	(*GetAgentTreeResponse)(nil),                 // 57: argus.GetAgentTreeResponse
+	(*GetSystemStatsRequest)(nil),                // 58: argus.GetSystemStatsRequest
+	(*GetSystemStatsResponse)(nil),               // 59: argus.GetSystemStatsResponse
+	(*WatchSystemStatsRequest)(nil),              // 60: argus.WatchSystemStatsRequest
+	(*ToolStat)(nil),                             // 61: argus.ToolStat
+	(*GetToolLeaderboardRequest)(nil),            // 62: argus.GetToolLeaderboardRequest
+	(*GetToolLeaderboardResponse)(nil),           // 63: argus.GetToolLeaderboardResponse
+	(*WatchToolLeaderboardRequest)(nil),          // 64: argus.WatchToolLeaderboardRequest
+	(*ModelStat)(nil),                            // 65: argus.ModelStat
+	(*GetModelUsageRequest)(nil),                 // 66: argus.GetModelUsageRequest
+	(*GetModelUsageResponse)(nil),                // 67: argus.GetModelUsageResponse
+	(*ActivityBucket)(nil),                       // 68: argus.ActivityBucket
+	(*GetActivityTimeseriesRequest)(nil),         // 69: argus.GetActivityTimeseriesRequest
+	(*GetActivityTimeseriesResponse)(nil),        // 70: argus.GetActivityTimeseriesResponse
+	(*SearchEventsFilter)(nil),                   // 71: argus.SearchEventsFilter
+	(*SearchEventsRequest)(nil),                  // 72: argus.SearchEventsRequest
+	(*SearchEventsResponse)(nil),                 // 73: argus.SearchEventsResponse
+	(*FilePathMatch)(nil),                        // 74: argus.FilePathMatch
+	(*SearchByFilePathRequest)(nil),              // 75: argus.SearchByFilePathRequest
+	(*SearchByFilePathResponse)(nil),             // 76: argus.SearchByFilePathResponse
+	(*ArgusConfigState)(nil),                     // 77: argus.ArgusConfigState
+	(*MapEmpty)(nil),                             // 78: argus.MapEmpty
+	(*healthreport.ServiceInstanceHealth)(nil),   // 79: healthreport.ServiceInstanceHealth
+	(*agentsensor.SessionSummary)(nil),           // 80: agentsensor.SessionSummary
+	(*agentsensor.AgentEvent)(nil),               // 81: agentsensor.AgentEvent
+	(*agentsensor.EventTimeRange)(nil),           // 82: agentsensor.EventTimeRange
+	(agentsensor.FileOperation)(0),               // 83: agentsensor.FileOperation
+	(agentsensor.SensorEventType)(0),             // 84: agentsensor.SensorEventType
+	(*agentsensor.WatchLiveSessionsRequest)(nil), // 85: agentsensor.WatchLiveSessionsRequest
+	(*trace.TraceRequest)(nil),                   // 86: trace.TraceRequest
+	(*agentsensor.WatchLiveSessionsEvent)(nil),   // 87: agentsensor.WatchLiveSessionsEvent
 }
 var file_services_argus_proto_depIdxs = []int32{
 	79, // 0: argus.ArgusServiceHealth.base:type_name -> healthreport.ServiceInstanceHealth
-	80, // 1: argus.GetDashboardResponse.top_active:type_name -> claudesensor.SessionSummary
-	80, // 2: argus.ListActiveSessionsResponse.sessions:type_name -> claudesensor.SessionSummary
-	80, // 3: argus.GetSessionDetailResponse.summary:type_name -> claudesensor.SessionSummary
-	81, // 4: argus.GetSessionDetailResponse.recent_events:type_name -> claudesensor.SensorEvent
-	80, // 5: argus.GetUserActivityResponse.sessions:type_name -> claudesensor.SessionSummary
-	80, // 6: argus.SearchSessionsResponse.sessions:type_name -> claudesensor.SessionSummary
+	80, // 1: argus.GetDashboardResponse.top_active:type_name -> agentsensor.SessionSummary
+	80, // 2: argus.ListActiveSessionsResponse.sessions:type_name -> agentsensor.SessionSummary
+	80, // 3: argus.GetSessionDetailResponse.summary:type_name -> agentsensor.SessionSummary
+	81, // 4: argus.GetSessionDetailResponse.recent_events:type_name -> agentsensor.AgentEvent
+	80, // 5: argus.GetUserActivityResponse.sessions:type_name -> agentsensor.SessionSummary
+	80, // 6: argus.SearchSessionsResponse.sessions:type_name -> agentsensor.SessionSummary
 	17, // 7: argus.ScratchpadListResponse.entries:type_name -> argus.ScratchpadEntry
-	82, // 8: argus.ListUsersRequest.time_range:type_name -> claudesensor.EventTimeRange
+	82, // 8: argus.ListUsersRequest.time_range:type_name -> agentsensor.EventTimeRange
 	36, // 9: argus.ListUsersResponse.users:type_name -> argus.UserSummary
-	82, // 10: argus.GetUserProfileRequest.time_range:type_name -> claudesensor.EventTimeRange
+	82, // 10: argus.GetUserProfileRequest.time_range:type_name -> agentsensor.EventTimeRange
 	39, // 11: argus.GetUserProfileResponse.top_tools:type_name -> argus.ToolUseStat
 	40, // 12: argus.GetUserProfileResponse.models:type_name -> argus.ModelUseStat
-	82, // 13: argus.WatchUserProfileRequest.time_range:type_name -> claudesensor.EventTimeRange
-	82, // 14: argus.GetUserTokenStatsRequest.time_range:type_name -> claudesensor.EventTimeRange
+	82, // 13: argus.WatchUserProfileRequest.time_range:type_name -> agentsensor.EventTimeRange
+	82, // 14: argus.GetUserTokenStatsRequest.time_range:type_name -> agentsensor.EventTimeRange
 	44, // 15: argus.GetUserTokenStatsResponse.buckets:type_name -> argus.PromptBucket
-	82, // 16: argus.GetUserCommitActivityRequest.time_range:type_name -> claudesensor.EventTimeRange
+	82, // 16: argus.GetUserCommitActivityRequest.time_range:type_name -> agentsensor.EventTimeRange
 	47, // 17: argus.GetUserCommitActivityResponse.commits:type_name -> argus.CommitRecord
-	83, // 18: argus.FileActivityRecord.operation:type_name -> claudesensor.FileOperation
-	82, // 19: argus.GetFileActivityRequest.time_range:type_name -> claudesensor.EventTimeRange
+	83, // 18: argus.FileActivityRecord.operation:type_name -> agentsensor.FileOperation
+	82, // 19: argus.GetFileActivityRequest.time_range:type_name -> agentsensor.EventTimeRange
 	50, // 20: argus.GetFileActivityResponse.records:type_name -> argus.FileActivityRecord
-	82, // 21: argus.GetSessionTimelineRequest.time_range:type_name -> claudesensor.EventTimeRange
-	81, // 22: argus.GetSessionTimelineResponse.events:type_name -> claudesensor.SensorEvent
+	82, // 21: argus.GetSessionTimelineRequest.time_range:type_name -> agentsensor.EventTimeRange
+	81, // 22: argus.GetSessionTimelineResponse.events:type_name -> agentsensor.AgentEvent
 	55, // 23: argus.AgentNode.children:type_name -> argus.AgentNode
 	55, // 24: argus.GetAgentTreeResponse.root:type_name -> argus.AgentNode
-	82, // 25: argus.GetSystemStatsRequest.time_range:type_name -> claudesensor.EventTimeRange
-	82, // 26: argus.WatchSystemStatsRequest.time_range:type_name -> claudesensor.EventTimeRange
-	82, // 27: argus.GetToolLeaderboardRequest.time_range:type_name -> claudesensor.EventTimeRange
+	82, // 25: argus.GetSystemStatsRequest.time_range:type_name -> agentsensor.EventTimeRange
+	82, // 26: argus.WatchSystemStatsRequest.time_range:type_name -> agentsensor.EventTimeRange
+	82, // 27: argus.GetToolLeaderboardRequest.time_range:type_name -> agentsensor.EventTimeRange
 	61, // 28: argus.GetToolLeaderboardResponse.tools:type_name -> argus.ToolStat
-	82, // 29: argus.WatchToolLeaderboardRequest.time_range:type_name -> claudesensor.EventTimeRange
-	82, // 30: argus.GetModelUsageRequest.time_range:type_name -> claudesensor.EventTimeRange
+	82, // 29: argus.WatchToolLeaderboardRequest.time_range:type_name -> agentsensor.EventTimeRange
+	82, // 30: argus.GetModelUsageRequest.time_range:type_name -> agentsensor.EventTimeRange
 	65, // 31: argus.GetModelUsageResponse.models:type_name -> argus.ModelStat
-	82, // 32: argus.GetActivityTimeseriesRequest.time_range:type_name -> claudesensor.EventTimeRange
+	82, // 32: argus.GetActivityTimeseriesRequest.time_range:type_name -> agentsensor.EventTimeRange
 	0,  // 33: argus.GetActivityTimeseriesRequest.group_by:type_name -> argus.ActivityGroupBy
 	68, // 34: argus.GetActivityTimeseriesResponse.buckets:type_name -> argus.ActivityBucket
-	84, // 35: argus.SearchEventsFilter.event_type:type_name -> claudesensor.SensorEventType
-	82, // 36: argus.SearchEventsFilter.time_range:type_name -> claudesensor.EventTimeRange
+	84, // 35: argus.SearchEventsFilter.event_type:type_name -> agentsensor.SensorEventType
+	82, // 36: argus.SearchEventsFilter.time_range:type_name -> agentsensor.EventTimeRange
 	71, // 37: argus.SearchEventsRequest.filter:type_name -> argus.SearchEventsFilter
-	81, // 38: argus.SearchEventsResponse.events:type_name -> claudesensor.SensorEvent
-	83, // 39: argus.FilePathMatch.operation:type_name -> claudesensor.FileOperation
-	82, // 40: argus.SearchByFilePathRequest.time_range:type_name -> claudesensor.EventTimeRange
+	81, // 38: argus.SearchEventsResponse.events:type_name -> agentsensor.AgentEvent
+	83, // 39: argus.FilePathMatch.operation:type_name -> agentsensor.FileOperation
+	82, // 40: argus.SearchByFilePathRequest.time_range:type_name -> agentsensor.EventTimeRange
 	74, // 41: argus.SearchByFilePathResponse.matches:type_name -> argus.FilePathMatch
 	4,  // 42: argus.ArgusConfigState.config:type_name -> argus.Config
 	7,  // 43: argus.Argus.GetDashboard:input_type -> argus.GetDashboardRequest
@@ -6991,7 +7130,7 @@ var file_services_argus_proto_depIdxs = []int32{
 	11, // 45: argus.Argus.GetSessionDetail:input_type -> argus.GetSessionDetailRequest
 	13, // 46: argus.Argus.GetUserActivity:input_type -> argus.GetUserActivityRequest
 	15, // 47: argus.Argus.ListSessionSearchResults:input_type -> argus.SearchSessionsRequest
-	85, // 48: argus.Argus.SubscribeLiveSessions:input_type -> claudesensor.WatchLiveSessionsRequest
+	85, // 48: argus.Argus.SubscribeLiveSessions:input_type -> agentsensor.WatchLiveSessionsRequest
 	18, // 49: argus.Argus.GetScratchpad:input_type -> argus.ScratchpadReadRequest
 	20, // 50: argus.Argus.UpdateScratchpad:input_type -> argus.ScratchpadWriteRequest
 	22, // 51: argus.Argus.DeleteScratchpad:input_type -> argus.ScratchpadDeleteRequest
@@ -7009,8 +7148,8 @@ var file_services_argus_proto_depIdxs = []int32{
 	45, // 63: argus.Argus.GetUserTokenStats:input_type -> argus.GetUserTokenStatsRequest
 	43, // 64: argus.Argus.SubscribeUserProfile:input_type -> argus.WatchUserProfileRequest
 	48, // 65: argus.Argus.ListUserCommitActivity:input_type -> argus.GetUserCommitActivityRequest
-	51, // 66: argus.Argus.GetFileActivity:input_type -> argus.GetFileActivityRequest
-	53, // 67: argus.Argus.GetSessionTimeline:input_type -> argus.GetSessionTimelineRequest
+	51, // 66: argus.Argus.ListFileActivity:input_type -> argus.GetFileActivityRequest
+	53, // 67: argus.Argus.ListSessionTimeline:input_type -> argus.GetSessionTimelineRequest
 	56, // 68: argus.Argus.GetAgentTree:input_type -> argus.GetAgentTreeRequest
 	58, // 69: argus.Argus.GetSystemStats:input_type -> argus.GetSystemStatsRequest
 	62, // 70: argus.Argus.ListToolLeaderboard:input_type -> argus.GetToolLeaderboardRequest
@@ -7028,7 +7167,7 @@ var file_services_argus_proto_depIdxs = []int32{
 	12, // 82: argus.Argus.GetSessionDetail:output_type -> argus.GetSessionDetailResponse
 	14, // 83: argus.Argus.GetUserActivity:output_type -> argus.GetUserActivityResponse
 	16, // 84: argus.Argus.ListSessionSearchResults:output_type -> argus.SearchSessionsResponse
-	87, // 85: argus.Argus.SubscribeLiveSessions:output_type -> claudesensor.WatchLiveSessionsEvent
+	87, // 85: argus.Argus.SubscribeLiveSessions:output_type -> agentsensor.WatchLiveSessionsEvent
 	19, // 86: argus.Argus.GetScratchpad:output_type -> argus.ScratchpadReadResponse
 	21, // 87: argus.Argus.UpdateScratchpad:output_type -> argus.ScratchpadWriteResponse
 	23, // 88: argus.Argus.DeleteScratchpad:output_type -> argus.ScratchpadDeleteResponse
@@ -7046,8 +7185,8 @@ var file_services_argus_proto_depIdxs = []int32{
 	46, // 100: argus.Argus.GetUserTokenStats:output_type -> argus.GetUserTokenStatsResponse
 	42, // 101: argus.Argus.SubscribeUserProfile:output_type -> argus.GetUserProfileResponse
 	49, // 102: argus.Argus.ListUserCommitActivity:output_type -> argus.GetUserCommitActivityResponse
-	52, // 103: argus.Argus.GetFileActivity:output_type -> argus.GetFileActivityResponse
-	54, // 104: argus.Argus.GetSessionTimeline:output_type -> argus.GetSessionTimelineResponse
+	52, // 103: argus.Argus.ListFileActivity:output_type -> argus.GetFileActivityResponse
+	54, // 104: argus.Argus.ListSessionTimeline:output_type -> argus.GetSessionTimelineResponse
 	57, // 105: argus.Argus.GetAgentTree:output_type -> argus.GetAgentTreeResponse
 	59, // 106: argus.Argus.GetSystemStats:output_type -> argus.GetSystemStatsResponse
 	63, // 107: argus.Argus.ListToolLeaderboard:output_type -> argus.GetToolLeaderboardResponse

@@ -836,14 +836,14 @@ func ValidateHttpHeaderWithDepth(m *HttpHeader, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Name (assert_max_length: 256)
-	if len(m.Name) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Name must be at most 256 characters, got: %d", len(m.Name))
-	}
-
 	// Validate Name (assert_required)
 	if m.Name == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Name is required")
+	}
+
+	// Validate Name (assert_max_length: 256)
+	if len(m.Name) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Name must be at most 256 characters, got: %d", len(m.Name))
 	}
 
 	// Validate Value (assert_max_length: 8192)
@@ -890,11 +890,6 @@ func ValidateRawProxyRequestWithDepth(m *RawProxyRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Method must be defined")
 	}
 
-	// Validate Path (assert_max_length: 4096)
-	if len(m.Path) > 4096 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Path must be at most 4096 characters, got: %d", len(m.Path))
-	}
-
 	// Validate Path (assert_required)
 	if m.Path == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Path is required")
@@ -903,6 +898,11 @@ func ValidateRawProxyRequestWithDepth(m *RawProxyRequest, depth int) error {
 	// Validate Path (assert_min_length: 1)
 	if len(m.Path) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Path must be at least 1 characters, got: %d", len(m.Path))
+	}
+
+	// Validate Path (assert_max_length: 4096)
+	if len(m.Path) > 4096 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Path must be at most 4096 characters, got: %d", len(m.Path))
 	}
 
 	// Validate Headers (assert_max_size: 64)

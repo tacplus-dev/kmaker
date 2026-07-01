@@ -4407,16 +4407,16 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate EntityId (assert_required)
-	if m.EntityId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field EntityId is required")
-	}
-
 	// Validate EntityId (assert_url: URL_SCHEME_HTTPS)
 	if m.EntityId != "" {
 		if err := utils.ValidateAssertURL_URL_SCHEME_HTTPS(m.EntityId); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field EntityId URL validation failed")
 		}
+	}
+
+	// Validate EntityId (assert_required)
+	if m.EntityId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field EntityId is required")
 	}
 
 	// Validate BaseUrl (assert_required)
@@ -4514,14 +4514,14 @@ func ValidateIdpConfigWithDepth(m *IdpConfig, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Name must be at least 1 characters, got: %d", len(m.Name))
 	}
 
-	// Validate EntityId (assert_required)
-	if m.EntityId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field EntityId is required")
-	}
-
 	// Validate EntityId (assert_min_length: 1)
 	if len(m.EntityId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field EntityId must be at least 1 characters, got: %d", len(m.EntityId))
+	}
+
+	// Validate EntityId (assert_required)
+	if m.EntityId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field EntityId is required")
 	}
 
 	// Validate MetadataUrl (assert_url: URL_SCHEME_HTTPS)
@@ -5087,6 +5087,11 @@ func ValidateSpInfoWithDepth(m *SpInfo, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Name must be at most 128 characters, got: %d", len(m.Name))
 	}
 
+	// Validate EntityId (assert_max_length: 2048)
+	if len(m.EntityId) > 2048 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field EntityId must be at most 2048 characters, got: %d", len(m.EntityId))
+	}
+
 	// Validate EntityId (assert_required)
 	if m.EntityId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field EntityId is required")
@@ -5095,11 +5100,6 @@ func ValidateSpInfoWithDepth(m *SpInfo, depth int) error {
 	// Validate EntityId (assert_min_length: 1)
 	if len(m.EntityId) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field EntityId must be at least 1 characters, got: %d", len(m.EntityId))
-	}
-
-	// Validate EntityId (assert_max_length: 2048)
-	if len(m.EntityId) > 2048 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field EntityId must be at most 2048 characters, got: %d", len(m.EntityId))
 	}
 
 	// Validate SpIndex (assert_ge: 0)
@@ -5164,14 +5164,14 @@ func ValidateMetadataResponseWithDepth(m *MetadataResponse, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Xml (assert_min_length: 1)
-	if len(m.Xml) < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Xml must be at least 1 characters, got: %d", len(m.Xml))
-	}
-
 	// Validate Xml (assert_required)
 	if m.Xml == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Xml is required")
+	}
+
+	// Validate Xml (assert_min_length: 1)
+	if len(m.Xml) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Xml must be at least 1 characters, got: %d", len(m.Xml))
 	}
 
 	// Validate Xml (default max size: 32768 bytes)

@@ -823,7 +823,7 @@ func TimeseriesMutationRpcIdToSpecName(v TimeseriesMutationRpcId) string {
 // LlmEventJSON represents LlmEvent in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type llmeventJSON struct {
-	Email                    string `json:"email,omitempty"`
+	SpiffeId                 string `json:"spiffe_id,omitempty"`
 	EventId                  string `json:"event_id,omitempty"`
 	TimestampMs              int64  `json:"timestamp_ms,omitempty"`
 	Provider                 string `json:"provider,omitempty"`
@@ -854,7 +854,7 @@ func LlmEventToJSON(v *LlmEvent) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := llmeventJSON{
-		Email:                    v.Email,
+		SpiffeId:                 v.SpiffeId,
 		EventId:                  v.EventId,
 		TimestampMs:              v.TimestampMs,
 		Provider:                 LlmProviderToString(v.Provider),
@@ -887,7 +887,7 @@ func LlmEventToJSONPretty(v *LlmEvent) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := llmeventJSON{
-		Email:                    v.Email,
+		SpiffeId:                 v.SpiffeId,
 		EventId:                  v.EventId,
 		TimestampMs:              v.TimestampMs,
 		Provider:                 LlmProviderToString(v.Provider),
@@ -972,7 +972,7 @@ func LlmEventFromJSON(data []byte) (*LlmEvent, error) {
 	}
 	// Build result with parsed enums
 	result := &LlmEvent{}
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	result.EventId = raw.EventId
 	result.TimestampMs = raw.TimestampMs
 	// Parse enum field: Provider
@@ -1213,8 +1213,6 @@ func LlmEventBusToTOML(v *LlmEventBus) ([]byte, error) {
 type llmeventbuseventstreamsubscriberecordJSON struct {
 	Meta    json.RawMessage `json:"meta,omitempty"`
 	Payload json.RawMessage `json:"payload,omitempty"`
-	TraceId string          `json:"trace_id,omitempty"`
-	Noop    bool            `json:"noop,omitempty"`
 }
 
 // LlmEventBusEventStreamSubscribeRecordToJSON converts LlmEventBusEventStreamSubscribeRecord to JSON bytes.
@@ -1239,8 +1237,6 @@ func LlmEventBusEventStreamSubscribeRecordToJSON(v *LlmEventBusEventStreamSubscr
 			data, _ := LlmEventToJSON(v.Payload)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1267,8 +1263,6 @@ func LlmEventBusEventStreamSubscribeRecordToJSONPretty(v *LlmEventBusEventStream
 			data, _ := LlmEventToJSON(v.Payload)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1347,8 +1341,6 @@ func LlmEventBusEventStreamSubscribeRecordFromJSON(data []byte) (*LlmEventBusEve
 			result.Payload = parsed
 		}
 	}
-	result.TraceId = raw.TraceId
-	result.Noop = raw.Noop
 	return result, nil
 }
 
@@ -1684,8 +1676,6 @@ type eventbusrecordmetaJSON struct {
 	Partition int32           `json:"partition,omitempty"`
 	Offset    int64           `json:"offset,omitempty"`
 	Timestamp json.RawMessage `json:"timestamp,omitempty"`
-	TraceId   string          `json:"trace_id,omitempty"`
-	Noop      bool            `json:"noop,omitempty"`
 }
 
 // EventBusRecordMetaToJSON converts EventBusRecordMeta to JSON bytes.
@@ -1707,8 +1697,6 @@ func EventBusRecordMetaToJSON(v *EventBusRecordMeta) ([]byte, error) {
 			data, _ := protojson.Marshal(v.Timestamp)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1732,8 +1720,6 @@ func EventBusRecordMetaToJSONPretty(v *EventBusRecordMeta) ([]byte, error) {
 			data, _ := protojson.Marshal(v.Timestamp)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1809,8 +1795,6 @@ func EventBusRecordMetaFromJSON(data []byte) (*EventBusRecordMeta, error) {
 			result.Timestamp = nil
 		}
 	}
-	result.TraceId = raw.TraceId
-	result.Noop = raw.Noop
 	return result, nil
 }
 
@@ -2028,7 +2012,7 @@ func LlmModelNodeToTOML(v *LlmModelNode) ([]byte, error) {
 type llmcallnodeJSON struct {
 	EventId      string `json:"event_id,omitempty"`
 	Model        string `json:"model,omitempty"`
-	Email        string `json:"email,omitempty"`
+	SpiffeId     string `json:"spiffe_id,omitempty"`
 	Provider     string `json:"provider,omitempty"`
 	Operation    string `json:"operation,omitempty"`
 	Succeeded    bool   `json:"succeeded,omitempty"`
@@ -2050,7 +2034,7 @@ func LlmCallNodeToJSON(v *LlmCallNode) ([]byte, error) {
 	helper := llmcallnodeJSON{
 		EventId:      v.EventId,
 		Model:        v.Model,
-		Email:        v.Email,
+		SpiffeId:     v.SpiffeId,
 		Provider:     LlmProviderToString(v.Provider),
 		Operation:    LlmOperationTypeToString(v.Operation),
 		Succeeded:    v.Succeeded,
@@ -2074,7 +2058,7 @@ func LlmCallNodeToJSONPretty(v *LlmCallNode) ([]byte, error) {
 	helper := llmcallnodeJSON{
 		EventId:      v.EventId,
 		Model:        v.Model,
-		Email:        v.Email,
+		SpiffeId:     v.SpiffeId,
 		Provider:     LlmProviderToString(v.Provider),
 		Operation:    LlmOperationTypeToString(v.Operation),
 		Succeeded:    v.Succeeded,
@@ -2150,7 +2134,7 @@ func LlmCallNodeFromJSON(data []byte) (*LlmCallNode, error) {
 	result := &LlmCallNode{}
 	result.EventId = raw.EventId
 	result.Model = raw.Model
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	// Parse enum field: Provider
 	if raw.Provider != "" {
 		if parsed, err := ParseLlmProvider(raw.Provider); err == nil {
@@ -2219,7 +2203,7 @@ type llmcallrecordJSON struct {
 	ModelKey                 string `json:"model_key,omitempty"`
 	TimestampMs              int64  `json:"timestamp_ms,omitempty"`
 	EventId                  string `json:"event_id,omitempty"`
-	Email                    string `json:"email,omitempty"`
+	SpiffeId                 string `json:"spiffe_id,omitempty"`
 	Provider                 string `json:"provider,omitempty"`
 	ApiEndpoint              string `json:"api_endpoint,omitempty"`
 	Model                    string `json:"model,omitempty"`
@@ -2250,7 +2234,7 @@ func LlmCallRecordToJSON(v *LlmCallRecord) ([]byte, error) {
 		ModelKey:                 v.ModelKey,
 		TimestampMs:              v.TimestampMs,
 		EventId:                  v.EventId,
-		Email:                    v.Email,
+		SpiffeId:                 v.SpiffeId,
 		Provider:                 LlmProviderToString(v.Provider),
 		ApiEndpoint:              v.ApiEndpoint,
 		Model:                    v.Model,
@@ -2283,7 +2267,7 @@ func LlmCallRecordToJSONPretty(v *LlmCallRecord) ([]byte, error) {
 		ModelKey:                 v.ModelKey,
 		TimestampMs:              v.TimestampMs,
 		EventId:                  v.EventId,
-		Email:                    v.Email,
+		SpiffeId:                 v.SpiffeId,
 		Provider:                 LlmProviderToString(v.Provider),
 		ApiEndpoint:              v.ApiEndpoint,
 		Model:                    v.Model,
@@ -2368,7 +2352,7 @@ func LlmCallRecordFromJSON(data []byte) (*LlmCallRecord, error) {
 	result.ModelKey = raw.ModelKey
 	result.TimestampMs = raw.TimestampMs
 	result.EventId = raw.EventId
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	// Parse enum field: Provider
 	if raw.Provider != "" {
 		if parsed, err := ParseLlmProvider(raw.Provider); err == nil {
@@ -2477,7 +2461,7 @@ func LlmEventToEnvVar(v *LlmEvent) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_VSERVICES_LLM-SENSOR_LLM_EVENT_EMAIL"] = v.Email
+	result["PROTO_VSERVICES_LLM-SENSOR_LLM_EVENT_SPIFFE_ID"] = v.SpiffeId
 	result["PROTO_VSERVICES_LLM-SENSOR_LLM_EVENT_EVENT_ID"] = v.EventId
 	result["PROTO_VSERVICES_LLM-SENSOR_LLM_EVENT_TIMESTAMP_MS"] = strconv.FormatInt(v.TimestampMs, 10)
 	result["PROTO_VSERVICES_LLM-SENSOR_LLM_EVENT_PROVIDER"] = LlmProviderToString(v.Provider)
@@ -2504,8 +2488,8 @@ func LlmEventToEnvVar(v *LlmEvent) map[string]string {
 // LlmEventFromEnvVar creates LlmEvent from environment variable key-value pairs.
 func LlmEventFromEnvVar(env map[string]string) (*LlmEvent, error) {
 	result := &LlmEvent{}
-	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_LLM_EVENT_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_LLM_EVENT_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
 	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_LLM_EVENT_EVENT_ID"]; ok && val != "" {
 		result.EventId = val
@@ -2679,8 +2663,6 @@ func LlmEventBusEventStreamSubscribeRecordToEnvVar(v *LlmEventBusEventStreamSubs
 			result[k] = val
 		}
 	}
-	result["PROTO_VSERVICES_LLM-SENSOR_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_LLM-SENSOR_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
@@ -2696,16 +2678,6 @@ func LlmEventBusEventStreamSubscribeRecordFromEnvVar(env map[string]string) (*Ll
 		return nil, err
 	} else if sub != nil {
 		result.Payload = sub
-	}
-	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_TRACE_ID"]; ok && val != "" {
-		result.TraceId = val
-	}
-	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_LLM_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_NOOP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Noop = parsed
 	}
 	return result, nil
 }
@@ -2782,8 +2754,6 @@ func EventBusRecordMetaToEnvVar(v *EventBusRecordMeta) map[string]string {
 	result["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_TOPIC"] = v.Topic
 	result["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_PARTITION"] = strconv.FormatInt(int64(v.Partition), 10)
 	result["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_OFFSET"] = strconv.FormatInt(v.Offset, 10)
-	result["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
@@ -2813,16 +2783,6 @@ func EventBusRecordMetaFromEnvVar(env map[string]string) (*EventBusRecordMeta, e
 			return nil, err
 		}
 		result.Offset = parsed
-	}
-	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_TRACE_ID"]; ok && val != "" {
-		result.TraceId = val
-	}
-	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_EVENT_BUS_RECORD_META_NOOP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Noop = parsed
 	}
 	return result, nil
 }
@@ -2894,7 +2854,7 @@ func LlmCallNodeToEnvVar(v *LlmCallNode) map[string]string {
 	result := make(map[string]string)
 	result["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_NODE_EVENT_ID"] = v.EventId
 	result["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_NODE_MODEL"] = v.Model
-	result["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_NODE_EMAIL"] = v.Email
+	result["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_NODE_SPIFFE_ID"] = v.SpiffeId
 	result["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_NODE_PROVIDER"] = LlmProviderToString(v.Provider)
 	result["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_NODE_OPERATION"] = LlmOperationTypeToString(v.Operation)
 	result["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_NODE_SUCCEEDED"] = strconv.FormatBool(v.Succeeded)
@@ -2916,8 +2876,8 @@ func LlmCallNodeFromEnvVar(env map[string]string) (*LlmCallNode, error) {
 	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_NODE_MODEL"]; ok && val != "" {
 		result.Model = val
 	}
-	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_NODE_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_NODE_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
 	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_NODE_PROVIDER"]; ok && val != "" {
 		parsed, err := ParseLlmProvider(val)
@@ -2990,7 +2950,7 @@ func LlmCallRecordToEnvVar(v *LlmCallRecord) map[string]string {
 	result["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_RECORD_MODEL_KEY"] = v.ModelKey
 	result["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_RECORD_TIMESTAMP_MS"] = strconv.FormatInt(v.TimestampMs, 10)
 	result["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_RECORD_EVENT_ID"] = v.EventId
-	result["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_RECORD_EMAIL"] = v.Email
+	result["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_RECORD_SPIFFE_ID"] = v.SpiffeId
 	result["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_RECORD_PROVIDER"] = LlmProviderToString(v.Provider)
 	result["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_RECORD_API_ENDPOINT"] = v.ApiEndpoint
 	result["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_RECORD_MODEL"] = v.Model
@@ -3027,8 +2987,8 @@ func LlmCallRecordFromEnvVar(env map[string]string) (*LlmCallRecord, error) {
 	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_RECORD_EVENT_ID"]; ok && val != "" {
 		result.EventId = val
 	}
-	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_RECORD_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_RECORD_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
 	if val, ok := env["PROTO_VSERVICES_LLM-SENSOR_LLM_CALL_RECORD_PROVIDER"]; ok && val != "" {
 		parsed, err := ParseLlmProvider(val)
@@ -3155,19 +3115,19 @@ func ValidateLlmEventWithDepth(m *LlmEvent, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Email (assert_max_length: 256)
-	if len(m.Email) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email must be at most 256 characters, got: %d", len(m.Email))
-	}
-
-	// Validate EventId (assert_max_length: 512)
-	if len(m.EventId) > 512 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field EventId must be at most 512 characters, got: %d", len(m.EventId))
+	// Validate SpiffeId (assert_max_length: 1024)
+	if len(m.SpiffeId) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId must be at most 1024 characters, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate EventId (assert_required)
 	if m.EventId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field EventId is required")
+	}
+
+	// Validate EventId (assert_max_length: 512)
+	if len(m.EventId) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field EventId must be at most 512 characters, got: %d", len(m.EventId))
 	}
 
 	// Validate TimestampMs (assert_gt: 0)
@@ -3232,9 +3192,9 @@ func ValidateLlmEventWithDepth(m *LlmEvent, depth int) error {
 	if m.ReasoningTokens < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ReasoningTokens must be >= 0, got: %v", m.ReasoningTokens)
 	}
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate EventId (default max size: 32768 bytes)
@@ -3325,11 +3285,6 @@ func ValidateLlmEventBusEventStreamSubscribeRecordWithDepth(m *LlmEventBusEventS
 	}
 	if depth > 24 {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
-	}
-
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
 	}
 
 	// Validate Meta nested message
@@ -3423,11 +3378,6 @@ func ValidateEventBusRecordMetaWithDepth(m *EventBusRecordMeta, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field Topic exceeds max size of 32768 bytes, got: %d", len(m.Topic))
 	}
 
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
 	return nil
 }
 
@@ -3506,9 +3456,9 @@ func ValidateLlmCallNodeWithDepth(m *LlmCallNode, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Model exceeds max size of 32768 bytes, got: %d", len(m.Model))
 	}
 
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -3555,9 +3505,9 @@ func ValidateLlmCallRecordWithDepth(m *LlmCallRecord, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field EventId exceeds max size of 32768 bytes, got: %d", len(m.EventId))
 	}
 
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate ApiEndpoint (default max size: 32768 bytes)
@@ -3597,36 +3547,34 @@ func ValidateLlmCallRecordWithDepth(m *LlmCallRecord, depth int) error {
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizeLlmeventEmail                                int = 32768
-	MaxSizeLlmeventEventId                              int = 32768
-	MaxSizeLlmeventApiEndpoint                          int = 32768
-	MaxSizeLlmeventModel                                int = 32768
-	MaxSizeLlmeventModelKey                             int = 32768
-	MaxSizeLlmeventErrorMessage                         int = 32768
-	MaxSizeLlmeventTraceId                              int = 32768
-	MaxSizeLlmeventbusTraceId                           int = 32768
-	MaxSizeLlmeventbuseventstreamsubscriberecordTraceId int = 32768
-	MaxSizeMapemptyTraceId                              int = 32768
-	MaxSizeTopicpublishreceiptTraceId                   int = 32768
-	MaxSizeEventbusrecordmetaKey                        int = 32768
-	MaxSizeEventbusrecordmetaTopic                      int = 32768
-	MaxSizeEventbusrecordmetaTraceId                    int = 32768
-	MaxSizeLlmmodelnodeModelKey                         int = 32768
-	MaxSizeLlmmodelnodeModel                            int = 32768
-	MaxSizeLlmmodelnodeApiEndpoint                      int = 32768
-	MaxSizeLlmmodelnodeEventId                          int = 32768
-	MaxSizeLlmmodelnodeTraceId                          int = 32768
-	MaxSizeLlmcallnodeEventId                           int = 32768
-	MaxSizeLlmcallnodeModel                             int = 32768
-	MaxSizeLlmcallnodeEmail                             int = 32768
-	MaxSizeLlmcallnodeTraceId                           int = 32768
-	MaxSizeLlmcallrecordModelKey                        int = 32768
-	MaxSizeLlmcallrecordEventId                         int = 32768
-	MaxSizeLlmcallrecordEmail                           int = 32768
-	MaxSizeLlmcallrecordApiEndpoint                     int = 32768
-	MaxSizeLlmcallrecordModel                           int = 32768
-	MaxSizeLlmcallrecordErrorMessage                    int = 32768
-	MaxSizeLlmcallrecordTraceId                         int = 32768
+	MaxSizeLlmeventSpiffeId           int = 32768
+	MaxSizeLlmeventEventId            int = 32768
+	MaxSizeLlmeventApiEndpoint        int = 32768
+	MaxSizeLlmeventModel              int = 32768
+	MaxSizeLlmeventModelKey           int = 32768
+	MaxSizeLlmeventErrorMessage       int = 32768
+	MaxSizeLlmeventTraceId            int = 32768
+	MaxSizeLlmeventbusTraceId         int = 32768
+	MaxSizeMapemptyTraceId            int = 32768
+	MaxSizeTopicpublishreceiptTraceId int = 32768
+	MaxSizeEventbusrecordmetaKey      int = 32768
+	MaxSizeEventbusrecordmetaTopic    int = 32768
+	MaxSizeLlmmodelnodeModelKey       int = 32768
+	MaxSizeLlmmodelnodeModel          int = 32768
+	MaxSizeLlmmodelnodeApiEndpoint    int = 32768
+	MaxSizeLlmmodelnodeEventId        int = 32768
+	MaxSizeLlmmodelnodeTraceId        int = 32768
+	MaxSizeLlmcallnodeEventId         int = 32768
+	MaxSizeLlmcallnodeModel           int = 32768
+	MaxSizeLlmcallnodeSpiffeId        int = 32768
+	MaxSizeLlmcallnodeTraceId         int = 32768
+	MaxSizeLlmcallrecordModelKey      int = 32768
+	MaxSizeLlmcallrecordEventId       int = 32768
+	MaxSizeLlmcallrecordSpiffeId      int = 32768
+	MaxSizeLlmcallrecordApiEndpoint   int = 32768
+	MaxSizeLlmcallrecordModel         int = 32768
+	MaxSizeLlmcallrecordErrorMessage  int = 32768
+	MaxSizeLlmcallrecordTraceId       int = 32768
 )
 
 // ============================================================
@@ -3823,8 +3771,8 @@ func LlmCallRecordUndefaults(v *LlmCallRecord) {
 // ============================================================
 // MergeLlmEvent fills zero-valued fields in dst from src.
 func MergeLlmEvent(dst, src *LlmEvent) {
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.EventId == "" {
 		dst.EventId = src.EventId
@@ -3921,12 +3869,6 @@ func MergeLlmEventBusEventStreamSubscribeRecord(dst, src *LlmEventBusEventStream
 	} else if src.Payload != nil {
 		MergeLlmEvent(dst.Payload, src.Payload)
 	}
-	if dst.TraceId == "" {
-		dst.TraceId = src.TraceId
-	}
-	if !dst.Noop {
-		dst.Noop = src.Noop
-	}
 }
 
 // ============================================================
@@ -3978,12 +3920,6 @@ func MergeEventBusRecordMeta(dst, src *EventBusRecordMeta) {
 	if dst.Timestamp == nil {
 		dst.Timestamp = src.Timestamp
 	}
-	if dst.TraceId == "" {
-		dst.TraceId = src.TraceId
-	}
-	if !dst.Noop {
-		dst.Noop = src.Noop
-	}
 }
 
 // ============================================================
@@ -4028,8 +3964,8 @@ func MergeLlmCallNode(dst, src *LlmCallNode) {
 	if dst.Model == "" {
 		dst.Model = src.Model
 	}
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.Provider == 0 {
 		dst.Provider = src.Provider
@@ -4074,8 +4010,8 @@ func MergeLlmCallRecord(dst, src *LlmCallRecord) {
 	if dst.EventId == "" {
 		dst.EventId = src.EventId
 	}
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.Provider == 0 {
 		dst.Provider = src.Provider

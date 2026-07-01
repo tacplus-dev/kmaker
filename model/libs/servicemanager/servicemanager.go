@@ -48,7 +48,7 @@ import (
 )
 
 // serviceAudience is the audience used for TLS cert requests.
-const serviceAudience = "kernel"
+const serviceAudience = "kmaker"
 
 // exchangeTimeout is the maximum time for a single RPC (e.g. X509Mint).
 const exchangeTimeout = 10 * time.Second
@@ -359,17 +359,8 @@ func NewServiceManager(ctx context.Context, cfg *grpcconfig_pb.Config, identity 
 		}
 	}
 
-	// Auto-obtain TLS certificate via X509Mint (requires auth).
-	// Failure is fatal — we never serve plaintext.
-	if identity != nil && identity.HasAuth() {
-		if err := bc.obtainTLSCert(); err != nil {
-			bcCancel()
-			return nil, fmt.Errorf("failed to obtain TLS cert via X509Mint: %w", err)
-		}
-		go bc.tlsRenewalLoop()
-	}
-
-	// Initial ping to measure latency and select active connection
+	// Initial ping to measure latency and select an active connection before
+	// startup RPCs that depend on ActiveConn, such as X509Mint.
 	for _, ec := range bc.endpoints {
 		if ec.getConn() != nil {
 			pingCtx, pingCancel := context.WithTimeout(bcCtx, 5*time.Second)
@@ -382,6 +373,16 @@ func NewServiceManager(ctx context.Context, cfg *grpcconfig_pb.Config, identity 
 		}
 	}
 	bc.selectActive()
+
+	// Auto-obtain TLS certificate via X509Mint (requires auth).
+	// Failure is fatal — we never serve plaintext.
+	if identity != nil && identity.HasAuth() {
+		if err := bc.obtainTLSCert(); err != nil {
+			bcCancel()
+			return nil, fmt.Errorf("failed to obtain TLS cert via X509Mint: %w", err)
+		}
+		go bc.tlsRenewalLoop()
+	}
 
 	// Start background goroutines
 	pingInterval := defaultPingInterval

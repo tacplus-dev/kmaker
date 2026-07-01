@@ -620,7 +620,7 @@ var File_services_gateway_proto protoreflect.FileDescriptor
 
 const file_services_gateway_proto_rawDesc = "" +
 	"\n" +
-	"\x16services/gateway.proto\x12\agateway\x1a\x0flibs/spec.proto\x1a\x0flibs/host.proto\x1a\x0elibs/jwk.proto\x1a\x0flibs/x509.proto\x1a\x19common/tokenrequest.proto\x1a\x10libs/trace.proto\"\xbc\x05\n" +
+	"\x16services/gateway.proto\x12\agateway\x1a\x0flibs/spec.proto\x1a\x0flibs/host.proto\x1a\x0elibs/jwk.proto\x1a\x0flibs/x509.proto\x1a\x19common/tokenrequest.proto\x1a\x10libs/trace.proto\"\xbb\x05\n" +
 	"\x06Config\x12E\n" +
 	"\x1chealth_poll_interval_seconds\x18\x01 \x01(\x03B\x04\x90\xa8\x1d\x05R\x19healthPollIntervalSeconds\x12%\n" +
 	"\venable_http\x18\x02 \x01(\bB\x04\xa0\xa8\x1d\x01R\n" +
@@ -641,19 +641,19 @@ const file_services_gateway_proto_rawDesc = "" +
 	" \x01(\tR\x0eexternalKeyPem\x12-\n" +
 	"\aroot_ca\x18\v \x03(\v2\x0e.x509.X509CertB\x04\xb8\xa8\x1d\x04R\x06rootCa\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:?Ҩ\x1d\t\n" +
-	"\agatewayʪ\x1d.\n" +
-	"'claudesensor.TraceEventBus.trace_events\x12\x03\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:>Ҩ\x1d\t\n" +
+	"\agatewayʪ\x1d-\n" +
+	"&agentsensor.TraceEventBus.trace_events\x12\x03\n" +
 	"\x01*\"o\n" +
 	"\x10PublicCaResponse\x12*\n" +
 	"\x05certs\x18\x01 \x03(\v2\x0e.x509.X509CertB\x04\xb8\xa8\x1d\x10R\x05certs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa0\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9e\x01\n" +
 	"\x12GatewayConfigState\x121\n" +
 	"\x06config\x18\x01 \x01(\v2\x0f.gateway.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:&\x9a\xa8\x1d\x1e\n" +
-	"\x12GatewayConfigState\x1a\beventbus\xa0\xa8\x1d\x02\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:$\x9a\xa8\x1d\x1c\n" +
+	"\x12GatewayConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*y\n" +

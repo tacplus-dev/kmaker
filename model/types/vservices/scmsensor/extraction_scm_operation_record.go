@@ -31,7 +31,7 @@ func ExtractScmOperationRecordFromScmEvent(event *ScmEvent) *ScmOperationRecord 
 		Repo:               event.Repo,
 		TimestampMs:        event.TimestampMs,
 		EventId:            event.EventId,
-		Email:              event.Email,
+		SpiffeId:           event.SpiffeId,
 		Provider:           event.Provider,
 		ApiEndpoint:        event.ApiEndpoint,
 		Operation:          event.Operation,

@@ -8406,14 +8406,14 @@ func ValidateFunctionCallWithDepth(m *FunctionCall, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Name (assert_required)
-	if m.Name == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Name is required")
-	}
-
 	// Validate Name (assert_max_length: 256)
 	if len(m.Name) > 256 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Name must be at most 256 characters, got: %d", len(m.Name))
+	}
+
+	// Validate Name (assert_required)
+	if m.Name == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Name is required")
 	}
 
 	// Validate Arguments (assert_required)
@@ -8854,13 +8854,13 @@ func ValidateCreateChatCompletionRequestWithDepth(m *CreateChatCompletionRequest
 	if m.PresencePenalty > 2 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PresencePenalty must be <= 2, got: %v", m.PresencePenalty)
 	}
-	// Validate N (assert_ge: 1)
-	if m.N < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field N must be >= 1, got: %v", m.N)
-	}
 	// Validate N (assert_le: 128)
 	if m.N > 128 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field N must be <= 128, got: %v", m.N)
+	}
+	// Validate N (assert_ge: 1)
+	if m.N < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field N must be >= 1, got: %v", m.N)
 	}
 	// Validate Stop (assert_max_length: 256)
 	if len(m.Stop) > 256 {
@@ -9628,24 +9628,24 @@ func ValidateErrorDetailWithDepth(m *ErrorDetail, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Message (assert_required)
-	if m.Message == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Message is required")
-	}
-
 	// Validate Message (assert_max_length: 4096)
 	if len(m.Message) > 4096 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Message must be at most 4096 characters, got: %d", len(m.Message))
 	}
 
-	// Validate Kind (assert_max_length: 64)
-	if len(m.Kind) > 64 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Kind must be at most 64 characters, got: %d", len(m.Kind))
+	// Validate Message (assert_required)
+	if m.Message == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Message is required")
 	}
 
 	// Validate Kind (assert_required)
 	if m.Kind == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Kind is required")
+	}
+
+	// Validate Kind (assert_max_length: 64)
+	if len(m.Kind) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Kind must be at most 64 characters, got: %d", len(m.Kind))
 	}
 
 	// Validate Param (assert_max_length: 256)

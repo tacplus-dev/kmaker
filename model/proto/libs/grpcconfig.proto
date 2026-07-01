@@ -138,12 +138,6 @@ message Config {
   // Bootstrap — SPIFFE Identity
   // ============================================================================
 
-  // Retired: spiffe_prefix (the multi-segment deployment prefix). SPIFFE IDs
-  // are now self-describing — the trust domain is the URI authority and
-  // topology lives in the path under /system — so no out-of-band prefix exists.
-  reserved 12;
-  reserved "spiffe_prefix";
-
   // spiffe_trust_domain is the SPIFFE URI authority: a globally unique instance
   // name for this autonomous-system instance (need not be a DNS domain).
   // It must not contain '/', a scheme, query, or fragment, and carries no path.
@@ -264,4 +258,7 @@ service ServiceConfigStateService {
 	rpc WatchConfig(trace.TraceRequest) returns (stream Config);
 }
 
-message MapEmpty {}
+message MapEmpty {
+  string trace_id = 200;
+  bool noop = 201;
+}

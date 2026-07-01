@@ -50,16 +50,17 @@ const (
 	TypeID_TYPE_ID_CONFIG                      TypeID = 1
 	TypeID_TYPE_ID_SENTINEL_STATE              TypeID = 2
 	TypeID_TYPE_ID_WATCH_DASHBOARD_REQUEST     TypeID = 3
-	TypeID_TYPE_ID_NODE_METRICS_RESPONSE       TypeID = 4
-	TypeID_TYPE_ID_GRPC_STATS_RESPONSE         TypeID = 5
-	TypeID_TYPE_ID_PERSISTENCE_STATUS_RESPONSE TypeID = 6
-	TypeID_TYPE_ID_NETWORK_STATS_RESPONSE      TypeID = 7
-	TypeID_TYPE_ID_THREAD_INFO_RESPONSE        TypeID = 8
-	TypeID_TYPE_ID_TOKEN_CACHE_STATS_RESPONSE  TypeID = 9
-	TypeID_TYPE_ID_MAP_STATS_RESPONSE          TypeID = 10
-	TypeID_TYPE_ID_DASHBOARD_RESPONSE          TypeID = 11
-	TypeID_TYPE_ID_SENTINEL_CONFIG_STATE       TypeID = 12
-	TypeID_TYPE_ID_MAP_EMPTY                   TypeID = 13
+	TypeID_TYPE_ID_DASHBOARD_PAGE_REQUEST      TypeID = 4
+	TypeID_TYPE_ID_NODE_METRICS_RESPONSE       TypeID = 5
+	TypeID_TYPE_ID_GRPC_STATS_RESPONSE         TypeID = 6
+	TypeID_TYPE_ID_PERSISTENCE_STATUS_RESPONSE TypeID = 7
+	TypeID_TYPE_ID_NETWORK_STATS_RESPONSE      TypeID = 8
+	TypeID_TYPE_ID_THREAD_INFO_RESPONSE        TypeID = 9
+	TypeID_TYPE_ID_TOKEN_CACHE_STATS_RESPONSE  TypeID = 10
+	TypeID_TYPE_ID_MAP_STATS_RESPONSE          TypeID = 11
+	TypeID_TYPE_ID_DASHBOARD_RESPONSE          TypeID = 12
+	TypeID_TYPE_ID_SENTINEL_CONFIG_STATE       TypeID = 13
+	TypeID_TYPE_ID_MAP_EMPTY                   TypeID = 14
 )
 
 // Enum value maps for TypeID.
@@ -69,32 +70,34 @@ var (
 		1:  "TYPE_ID_CONFIG",
 		2:  "TYPE_ID_SENTINEL_STATE",
 		3:  "TYPE_ID_WATCH_DASHBOARD_REQUEST",
-		4:  "TYPE_ID_NODE_METRICS_RESPONSE",
-		5:  "TYPE_ID_GRPC_STATS_RESPONSE",
-		6:  "TYPE_ID_PERSISTENCE_STATUS_RESPONSE",
-		7:  "TYPE_ID_NETWORK_STATS_RESPONSE",
-		8:  "TYPE_ID_THREAD_INFO_RESPONSE",
-		9:  "TYPE_ID_TOKEN_CACHE_STATS_RESPONSE",
-		10: "TYPE_ID_MAP_STATS_RESPONSE",
-		11: "TYPE_ID_DASHBOARD_RESPONSE",
-		12: "TYPE_ID_SENTINEL_CONFIG_STATE",
-		13: "TYPE_ID_MAP_EMPTY",
+		4:  "TYPE_ID_DASHBOARD_PAGE_REQUEST",
+		5:  "TYPE_ID_NODE_METRICS_RESPONSE",
+		6:  "TYPE_ID_GRPC_STATS_RESPONSE",
+		7:  "TYPE_ID_PERSISTENCE_STATUS_RESPONSE",
+		8:  "TYPE_ID_NETWORK_STATS_RESPONSE",
+		9:  "TYPE_ID_THREAD_INFO_RESPONSE",
+		10: "TYPE_ID_TOKEN_CACHE_STATS_RESPONSE",
+		11: "TYPE_ID_MAP_STATS_RESPONSE",
+		12: "TYPE_ID_DASHBOARD_RESPONSE",
+		13: "TYPE_ID_SENTINEL_CONFIG_STATE",
+		14: "TYPE_ID_MAP_EMPTY",
 	}
 	TypeID_value = map[string]int32{
 		"TYPE_ID_UNSPECIFIED":                 0,
 		"TYPE_ID_CONFIG":                      1,
 		"TYPE_ID_SENTINEL_STATE":              2,
 		"TYPE_ID_WATCH_DASHBOARD_REQUEST":     3,
-		"TYPE_ID_NODE_METRICS_RESPONSE":       4,
-		"TYPE_ID_GRPC_STATS_RESPONSE":         5,
-		"TYPE_ID_PERSISTENCE_STATUS_RESPONSE": 6,
-		"TYPE_ID_NETWORK_STATS_RESPONSE":      7,
-		"TYPE_ID_THREAD_INFO_RESPONSE":        8,
-		"TYPE_ID_TOKEN_CACHE_STATS_RESPONSE":  9,
-		"TYPE_ID_MAP_STATS_RESPONSE":          10,
-		"TYPE_ID_DASHBOARD_RESPONSE":          11,
-		"TYPE_ID_SENTINEL_CONFIG_STATE":       12,
-		"TYPE_ID_MAP_EMPTY":                   13,
+		"TYPE_ID_DASHBOARD_PAGE_REQUEST":      4,
+		"TYPE_ID_NODE_METRICS_RESPONSE":       5,
+		"TYPE_ID_GRPC_STATS_RESPONSE":         6,
+		"TYPE_ID_PERSISTENCE_STATUS_RESPONSE": 7,
+		"TYPE_ID_NETWORK_STATS_RESPONSE":      8,
+		"TYPE_ID_THREAD_INFO_RESPONSE":        9,
+		"TYPE_ID_TOKEN_CACHE_STATS_RESPONSE":  10,
+		"TYPE_ID_MAP_STATS_RESPONSE":          11,
+		"TYPE_ID_DASHBOARD_RESPONSE":          12,
+		"TYPE_ID_SENTINEL_CONFIG_STATE":       13,
+		"TYPE_ID_MAP_EMPTY":                   14,
 	}
 )
 
@@ -438,10 +441,80 @@ func (x *WatchDashboardRequest) GetNoop() bool {
 	return false
 }
 
+type DashboardPageRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PageSize      int32                  `protobuf:"varint,1,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string                 `protobuf:"bytes,2,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DashboardPageRequest) Reset() {
+	*x = DashboardPageRequest{}
+	mi := &file_services_sentinel_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DashboardPageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DashboardPageRequest) ProtoMessage() {}
+
+func (x *DashboardPageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_services_sentinel_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DashboardPageRequest.ProtoReflect.Descriptor instead.
+func (*DashboardPageRequest) Descriptor() ([]byte, []int) {
+	return file_services_sentinel_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *DashboardPageRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *DashboardPageRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
+func (x *DashboardPageRequest) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *DashboardPageRequest) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
 // Wrapper responses for per-node collections
 type NodeMetricsResponse struct {
 	state         protoimpl.MessageState        `protogen:"open.v1"`
 	Items         []*hazelcast.AdminNodeMetrics `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	NextPageToken string                        `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                         `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	TraceId       string                        `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                          `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -450,7 +523,7 @@ type NodeMetricsResponse struct {
 
 func (x *NodeMetricsResponse) Reset() {
 	*x = NodeMetricsResponse{}
-	mi := &file_services_sentinel_proto_msgTypes[3]
+	mi := &file_services_sentinel_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -462,7 +535,7 @@ func (x *NodeMetricsResponse) String() string {
 func (*NodeMetricsResponse) ProtoMessage() {}
 
 func (x *NodeMetricsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_sentinel_proto_msgTypes[3]
+	mi := &file_services_sentinel_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -475,7 +548,7 @@ func (x *NodeMetricsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NodeMetricsResponse.ProtoReflect.Descriptor instead.
 func (*NodeMetricsResponse) Descriptor() ([]byte, []int) {
-	return file_services_sentinel_proto_rawDescGZIP(), []int{3}
+	return file_services_sentinel_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *NodeMetricsResponse) GetItems() []*hazelcast.AdminNodeMetrics {
@@ -483,6 +556,20 @@ func (x *NodeMetricsResponse) GetItems() []*hazelcast.AdminNodeMetrics {
 		return x.Items
 	}
 	return nil
+}
+
+func (x *NodeMetricsResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *NodeMetricsResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
 }
 
 func (x *NodeMetricsResponse) GetTraceId() string {
@@ -502,6 +589,8 @@ func (x *NodeMetricsResponse) GetNoop() bool {
 type GrpcStatsResponse struct {
 	state         protoimpl.MessageState      `protogen:"open.v1"`
 	Items         []*hazelcast.AdminGrpcStats `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	NextPageToken string                      `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                       `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	TraceId       string                      `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                        `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -510,7 +599,7 @@ type GrpcStatsResponse struct {
 
 func (x *GrpcStatsResponse) Reset() {
 	*x = GrpcStatsResponse{}
-	mi := &file_services_sentinel_proto_msgTypes[4]
+	mi := &file_services_sentinel_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -522,7 +611,7 @@ func (x *GrpcStatsResponse) String() string {
 func (*GrpcStatsResponse) ProtoMessage() {}
 
 func (x *GrpcStatsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_sentinel_proto_msgTypes[4]
+	mi := &file_services_sentinel_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -535,7 +624,7 @@ func (x *GrpcStatsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GrpcStatsResponse.ProtoReflect.Descriptor instead.
 func (*GrpcStatsResponse) Descriptor() ([]byte, []int) {
-	return file_services_sentinel_proto_rawDescGZIP(), []int{4}
+	return file_services_sentinel_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GrpcStatsResponse) GetItems() []*hazelcast.AdminGrpcStats {
@@ -543,6 +632,20 @@ func (x *GrpcStatsResponse) GetItems() []*hazelcast.AdminGrpcStats {
 		return x.Items
 	}
 	return nil
+}
+
+func (x *GrpcStatsResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *GrpcStatsResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
 }
 
 func (x *GrpcStatsResponse) GetTraceId() string {
@@ -562,6 +665,8 @@ func (x *GrpcStatsResponse) GetNoop() bool {
 type PersistenceStatusResponse struct {
 	state         protoimpl.MessageState              `protogen:"open.v1"`
 	Items         []*hazelcast.AdminPersistenceStatus `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	NextPageToken string                              `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                               `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	TraceId       string                              `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                                `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -570,7 +675,7 @@ type PersistenceStatusResponse struct {
 
 func (x *PersistenceStatusResponse) Reset() {
 	*x = PersistenceStatusResponse{}
-	mi := &file_services_sentinel_proto_msgTypes[5]
+	mi := &file_services_sentinel_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -582,7 +687,7 @@ func (x *PersistenceStatusResponse) String() string {
 func (*PersistenceStatusResponse) ProtoMessage() {}
 
 func (x *PersistenceStatusResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_sentinel_proto_msgTypes[5]
+	mi := &file_services_sentinel_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -595,7 +700,7 @@ func (x *PersistenceStatusResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PersistenceStatusResponse.ProtoReflect.Descriptor instead.
 func (*PersistenceStatusResponse) Descriptor() ([]byte, []int) {
-	return file_services_sentinel_proto_rawDescGZIP(), []int{5}
+	return file_services_sentinel_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *PersistenceStatusResponse) GetItems() []*hazelcast.AdminPersistenceStatus {
@@ -603,6 +708,20 @@ func (x *PersistenceStatusResponse) GetItems() []*hazelcast.AdminPersistenceStat
 		return x.Items
 	}
 	return nil
+}
+
+func (x *PersistenceStatusResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *PersistenceStatusResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
 }
 
 func (x *PersistenceStatusResponse) GetTraceId() string {
@@ -622,6 +741,8 @@ func (x *PersistenceStatusResponse) GetNoop() bool {
 type NetworkStatsResponse struct {
 	state         protoimpl.MessageState         `protogen:"open.v1"`
 	Items         []*hazelcast.AdminNetworkStats `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	NextPageToken string                         `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                          `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	TraceId       string                         `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                           `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -630,7 +751,7 @@ type NetworkStatsResponse struct {
 
 func (x *NetworkStatsResponse) Reset() {
 	*x = NetworkStatsResponse{}
-	mi := &file_services_sentinel_proto_msgTypes[6]
+	mi := &file_services_sentinel_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -642,7 +763,7 @@ func (x *NetworkStatsResponse) String() string {
 func (*NetworkStatsResponse) ProtoMessage() {}
 
 func (x *NetworkStatsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_sentinel_proto_msgTypes[6]
+	mi := &file_services_sentinel_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -655,7 +776,7 @@ func (x *NetworkStatsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NetworkStatsResponse.ProtoReflect.Descriptor instead.
 func (*NetworkStatsResponse) Descriptor() ([]byte, []int) {
-	return file_services_sentinel_proto_rawDescGZIP(), []int{6}
+	return file_services_sentinel_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *NetworkStatsResponse) GetItems() []*hazelcast.AdminNetworkStats {
@@ -663,6 +784,20 @@ func (x *NetworkStatsResponse) GetItems() []*hazelcast.AdminNetworkStats {
 		return x.Items
 	}
 	return nil
+}
+
+func (x *NetworkStatsResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *NetworkStatsResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
 }
 
 func (x *NetworkStatsResponse) GetTraceId() string {
@@ -682,6 +817,8 @@ func (x *NetworkStatsResponse) GetNoop() bool {
 type ThreadInfoResponse struct {
 	state         protoimpl.MessageState       `protogen:"open.v1"`
 	Items         []*hazelcast.AdminThreadInfo `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	NextPageToken string                       `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                        `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	TraceId       string                       `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                         `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -690,7 +827,7 @@ type ThreadInfoResponse struct {
 
 func (x *ThreadInfoResponse) Reset() {
 	*x = ThreadInfoResponse{}
-	mi := &file_services_sentinel_proto_msgTypes[7]
+	mi := &file_services_sentinel_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -702,7 +839,7 @@ func (x *ThreadInfoResponse) String() string {
 func (*ThreadInfoResponse) ProtoMessage() {}
 
 func (x *ThreadInfoResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_sentinel_proto_msgTypes[7]
+	mi := &file_services_sentinel_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -715,7 +852,7 @@ func (x *ThreadInfoResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ThreadInfoResponse.ProtoReflect.Descriptor instead.
 func (*ThreadInfoResponse) Descriptor() ([]byte, []int) {
-	return file_services_sentinel_proto_rawDescGZIP(), []int{7}
+	return file_services_sentinel_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ThreadInfoResponse) GetItems() []*hazelcast.AdminThreadInfo {
@@ -723,6 +860,20 @@ func (x *ThreadInfoResponse) GetItems() []*hazelcast.AdminThreadInfo {
 		return x.Items
 	}
 	return nil
+}
+
+func (x *ThreadInfoResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *ThreadInfoResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
 }
 
 func (x *ThreadInfoResponse) GetTraceId() string {
@@ -742,6 +893,8 @@ func (x *ThreadInfoResponse) GetNoop() bool {
 type TokenCacheStatsResponse struct {
 	state         protoimpl.MessageState            `protogen:"open.v1"`
 	Items         []*hazelcast.AdminTokenCacheStats `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	NextPageToken string                            `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                             `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	TraceId       string                            `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                              `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -750,7 +903,7 @@ type TokenCacheStatsResponse struct {
 
 func (x *TokenCacheStatsResponse) Reset() {
 	*x = TokenCacheStatsResponse{}
-	mi := &file_services_sentinel_proto_msgTypes[8]
+	mi := &file_services_sentinel_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -762,7 +915,7 @@ func (x *TokenCacheStatsResponse) String() string {
 func (*TokenCacheStatsResponse) ProtoMessage() {}
 
 func (x *TokenCacheStatsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_sentinel_proto_msgTypes[8]
+	mi := &file_services_sentinel_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -775,7 +928,7 @@ func (x *TokenCacheStatsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TokenCacheStatsResponse.ProtoReflect.Descriptor instead.
 func (*TokenCacheStatsResponse) Descriptor() ([]byte, []int) {
-	return file_services_sentinel_proto_rawDescGZIP(), []int{8}
+	return file_services_sentinel_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *TokenCacheStatsResponse) GetItems() []*hazelcast.AdminTokenCacheStats {
@@ -783,6 +936,20 @@ func (x *TokenCacheStatsResponse) GetItems() []*hazelcast.AdminTokenCacheStats {
 		return x.Items
 	}
 	return nil
+}
+
+func (x *TokenCacheStatsResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *TokenCacheStatsResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
 }
 
 func (x *TokenCacheStatsResponse) GetTraceId() string {
@@ -802,6 +969,8 @@ func (x *TokenCacheStatsResponse) GetNoop() bool {
 type MapStatsResponse struct {
 	state         protoimpl.MessageState     `protogen:"open.v1"`
 	Items         []*hazelcast.AdminMapStats `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	NextPageToken string                     `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                      `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	TraceId       string                     `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                       `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -810,7 +979,7 @@ type MapStatsResponse struct {
 
 func (x *MapStatsResponse) Reset() {
 	*x = MapStatsResponse{}
-	mi := &file_services_sentinel_proto_msgTypes[9]
+	mi := &file_services_sentinel_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -822,7 +991,7 @@ func (x *MapStatsResponse) String() string {
 func (*MapStatsResponse) ProtoMessage() {}
 
 func (x *MapStatsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_sentinel_proto_msgTypes[9]
+	mi := &file_services_sentinel_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -835,7 +1004,7 @@ func (x *MapStatsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MapStatsResponse.ProtoReflect.Descriptor instead.
 func (*MapStatsResponse) Descriptor() ([]byte, []int) {
-	return file_services_sentinel_proto_rawDescGZIP(), []int{9}
+	return file_services_sentinel_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *MapStatsResponse) GetItems() []*hazelcast.AdminMapStats {
@@ -843,6 +1012,20 @@ func (x *MapStatsResponse) GetItems() []*hazelcast.AdminMapStats {
 		return x.Items
 	}
 	return nil
+}
+
+func (x *MapStatsResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *MapStatsResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
 }
 
 func (x *MapStatsResponse) GetTraceId() string {
@@ -878,7 +1061,7 @@ type DashboardResponse struct {
 
 func (x *DashboardResponse) Reset() {
 	*x = DashboardResponse{}
-	mi := &file_services_sentinel_proto_msgTypes[10]
+	mi := &file_services_sentinel_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -890,7 +1073,7 @@ func (x *DashboardResponse) String() string {
 func (*DashboardResponse) ProtoMessage() {}
 
 func (x *DashboardResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_sentinel_proto_msgTypes[10]
+	mi := &file_services_sentinel_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -903,7 +1086,7 @@ func (x *DashboardResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DashboardResponse.ProtoReflect.Descriptor instead.
 func (*DashboardResponse) Descriptor() ([]byte, []int) {
-	return file_services_sentinel_proto_rawDescGZIP(), []int{10}
+	return file_services_sentinel_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *DashboardResponse) GetClusterInfo() *hazelcast.AdminClusterInfo {
@@ -996,7 +1179,7 @@ type SentinelConfigState struct {
 
 func (x *SentinelConfigState) Reset() {
 	*x = SentinelConfigState{}
-	mi := &file_services_sentinel_proto_msgTypes[11]
+	mi := &file_services_sentinel_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1008,7 +1191,7 @@ func (x *SentinelConfigState) String() string {
 func (*SentinelConfigState) ProtoMessage() {}
 
 func (x *SentinelConfigState) ProtoReflect() protoreflect.Message {
-	mi := &file_services_sentinel_proto_msgTypes[11]
+	mi := &file_services_sentinel_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1021,7 +1204,7 @@ func (x *SentinelConfigState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SentinelConfigState.ProtoReflect.Descriptor instead.
 func (*SentinelConfigState) Descriptor() ([]byte, []int) {
-	return file_services_sentinel_proto_rawDescGZIP(), []int{11}
+	return file_services_sentinel_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *SentinelConfigState) GetConfig() *Config {
@@ -1055,7 +1238,7 @@ type MapEmpty struct {
 
 func (x *MapEmpty) Reset() {
 	*x = MapEmpty{}
-	mi := &file_services_sentinel_proto_msgTypes[12]
+	mi := &file_services_sentinel_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1067,7 +1250,7 @@ func (x *MapEmpty) String() string {
 func (*MapEmpty) ProtoMessage() {}
 
 func (x *MapEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_services_sentinel_proto_msgTypes[12]
+	mi := &file_services_sentinel_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1080,7 +1263,7 @@ func (x *MapEmpty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MapEmpty.ProtoReflect.Descriptor instead.
 func (*MapEmpty) Descriptor() ([]byte, []int) {
-	return file_services_sentinel_proto_rawDescGZIP(), []int{12}
+	return file_services_sentinel_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *MapEmpty) GetTraceId() string {
@@ -1113,33 +1296,60 @@ const file_services_sentinel_proto_rawDesc = "" +
 	"\x15WatchDashboardRequest\x12)\n" +
 	"\x10interval_seconds\x18\x01 \x01(\x05R\x0fintervalSeconds\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x7f\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x94\x01\n" +
+	"\x14DashboardPageRequest\x12%\n" +
+	"\tpage_size\x18\x01 \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\bpageSize\x12$\n" +
+	"\n" +
+	"page_token\x18\x02 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\tpageToken\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd5\x01\n" +
 	"\x13NodeMetricsResponse\x127\n" +
-	"\x05items\x18\x01 \x03(\v2\x1b.hazelcast.AdminNodeMetricsB\x04\xb8\xa8\x1d R\x05items\x12\x1a\n" +
+	"\x05items\x18\x01 \x03(\v2\x1b.hazelcast.AdminNodeMetricsB\x04\xb8\xa8\x1d R\x05items\x12-\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12%\n" +
+	"\vtotal_count\x18\x03 \x01(\x03B\x04\xb0\xa7\x1d\x00R\n" +
+	"totalCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"{\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd1\x01\n" +
 	"\x11GrpcStatsResponse\x125\n" +
-	"\x05items\x18\x01 \x03(\v2\x19.hazelcast.AdminGrpcStatsB\x04\xb8\xa8\x1d R\x05items\x12\x1a\n" +
+	"\x05items\x18\x01 \x03(\v2\x19.hazelcast.AdminGrpcStatsB\x04\xb8\xa8\x1d R\x05items\x12-\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12%\n" +
+	"\vtotal_count\x18\x03 \x01(\x03B\x04\xb0\xa7\x1d\x00R\n" +
+	"totalCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x8b\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe1\x01\n" +
 	"\x19PersistenceStatusResponse\x12=\n" +
-	"\x05items\x18\x01 \x03(\v2!.hazelcast.AdminPersistenceStatusB\x04\xb8\xa8\x1d R\x05items\x12\x1a\n" +
+	"\x05items\x18\x01 \x03(\v2!.hazelcast.AdminPersistenceStatusB\x04\xb8\xa8\x1d R\x05items\x12-\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12%\n" +
+	"\vtotal_count\x18\x03 \x01(\x03B\x04\xb0\xa7\x1d\x00R\n" +
+	"totalCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x81\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd7\x01\n" +
 	"\x14NetworkStatsResponse\x128\n" +
-	"\x05items\x18\x01 \x03(\v2\x1c.hazelcast.AdminNetworkStatsB\x04\xb8\xa8\x1d R\x05items\x12\x1a\n" +
+	"\x05items\x18\x01 \x03(\v2\x1c.hazelcast.AdminNetworkStatsB\x04\xb8\xa8\x1d R\x05items\x12-\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12%\n" +
+	"\vtotal_count\x18\x03 \x01(\x03B\x04\xb0\xa7\x1d\x00R\n" +
+	"totalCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"}\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd3\x01\n" +
 	"\x12ThreadInfoResponse\x126\n" +
-	"\x05items\x18\x01 \x03(\v2\x1a.hazelcast.AdminThreadInfoB\x04\xb8\xa8\x1d R\x05items\x12\x1a\n" +
+	"\x05items\x18\x01 \x03(\v2\x1a.hazelcast.AdminThreadInfoB\x04\xb8\xa8\x1d R\x05items\x12-\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12%\n" +
+	"\vtotal_count\x18\x03 \x01(\x03B\x04\xb0\xa7\x1d\x00R\n" +
+	"totalCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x87\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xdd\x01\n" +
 	"\x17TokenCacheStatsResponse\x12;\n" +
-	"\x05items\x18\x01 \x03(\v2\x1f.hazelcast.AdminTokenCacheStatsB\x04\xb8\xa8\x1d R\x05items\x12\x1a\n" +
+	"\x05items\x18\x01 \x03(\v2\x1f.hazelcast.AdminTokenCacheStatsB\x04\xb8\xa8\x1d R\x05items\x12-\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12%\n" +
+	"\vtotal_count\x18\x03 \x01(\x03B\x04\xb0\xa7\x1d\x00R\n" +
+	"totalCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"z\n" +
-	"\x10MapStatsResponse\x125\n" +
-	"\x05items\x18\x01 \x03(\v2\x18.hazelcast.AdminMapStatsB\x05\xb8\xa8\x1d\x80\bR\x05items\x12\x1a\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xcf\x01\n" +
+	"\x10MapStatsResponse\x124\n" +
+	"\x05items\x18\x01 \x03(\v2\x18.hazelcast.AdminMapStatsB\x04\xb8\xa8\x1ddR\x05items\x12-\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12%\n" +
+	"\vtotal_count\x18\x03 \x01(\x03B\x04\xb0\xa7\x1d\x00R\n" +
+	"totalCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd1\x05\n" +
 	"\x11DashboardResponse\x12D\n" +
@@ -1155,31 +1365,32 @@ const file_services_sentinel_proto_rawDesc = "" +
 	"\x11token_cache_stats\x18\b \x03(\v2\x1f.hazelcast.AdminTokenCacheStatsB\x04\xb8\xa8\x1d R\x0ftokenCacheStats\x12<\n" +
 	"\tmap_stats\x18\t \x03(\v2\x18.hazelcast.AdminMapStatsB\x05\xb8\xa8\x1d\x80\bR\bmapStats\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa3\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa1\x01\n" +
 	"\x13SentinelConfigState\x122\n" +
 	"\x06config\x18\x01 \x01(\v2\x10.sentinel.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:'\x9a\xa8\x1d\x1f\n" +
-	"\x13SentinelConfigState\x1a\beventbus\xa0\xa8\x1d\x02\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:%\x9a\xa8\x1d\x1d\n" +
+	"\x13SentinelConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\xcb\x03\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\xef\x03\n" +
 	"\x06TypeID\x12\x17\n" +
 	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eTYPE_ID_CONFIG\x10\x01\x12\x1a\n" +
 	"\x16TYPE_ID_SENTINEL_STATE\x10\x02\x12#\n" +
-	"\x1fTYPE_ID_WATCH_DASHBOARD_REQUEST\x10\x03\x12!\n" +
-	"\x1dTYPE_ID_NODE_METRICS_RESPONSE\x10\x04\x12\x1f\n" +
-	"\x1bTYPE_ID_GRPC_STATS_RESPONSE\x10\x05\x12'\n" +
-	"#TYPE_ID_PERSISTENCE_STATUS_RESPONSE\x10\x06\x12\"\n" +
-	"\x1eTYPE_ID_NETWORK_STATS_RESPONSE\x10\a\x12 \n" +
-	"\x1cTYPE_ID_THREAD_INFO_RESPONSE\x10\b\x12&\n" +
-	"\"TYPE_ID_TOKEN_CACHE_STATS_RESPONSE\x10\t\x12\x1e\n" +
-	"\x1aTYPE_ID_MAP_STATS_RESPONSE\x10\n" +
+	"\x1fTYPE_ID_WATCH_DASHBOARD_REQUEST\x10\x03\x12\"\n" +
+	"\x1eTYPE_ID_DASHBOARD_PAGE_REQUEST\x10\x04\x12!\n" +
+	"\x1dTYPE_ID_NODE_METRICS_RESPONSE\x10\x05\x12\x1f\n" +
+	"\x1bTYPE_ID_GRPC_STATS_RESPONSE\x10\x06\x12'\n" +
+	"#TYPE_ID_PERSISTENCE_STATUS_RESPONSE\x10\a\x12\"\n" +
+	"\x1eTYPE_ID_NETWORK_STATS_RESPONSE\x10\b\x12 \n" +
+	"\x1cTYPE_ID_THREAD_INFO_RESPONSE\x10\t\x12&\n" +
+	"\"TYPE_ID_TOKEN_CACHE_STATS_RESPONSE\x10\n" +
 	"\x12\x1e\n" +
-	"\x1aTYPE_ID_DASHBOARD_RESPONSE\x10\v\x12!\n" +
-	"\x1dTYPE_ID_SENTINEL_CONFIG_STATE\x10\f\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10\r*\xd9\x04\n" +
+	"\x1aTYPE_ID_MAP_STATS_RESPONSE\x10\v\x12\x1e\n" +
+	"\x1aTYPE_ID_DASHBOARD_RESPONSE\x10\f\x12!\n" +
+	"\x1dTYPE_ID_SENTINEL_CONFIG_STATE\x10\r\x12\x15\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x10\x0e*\xd9\x04\n" +
 	"\x0eDashboardRpcId\x12 \n" +
 	"\x1cDASHBOARD_RPC_ID_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1eDASHBOARD_RPC_ID_ALL_ACCESSORS\x10\x01\x12!\n" +
@@ -1204,17 +1415,17 @@ const file_services_sentinel_proto_rawDesc = "" +
 	"2SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x123\n" +
 	"/SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x123\n" +
 	"/SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x125\n" +
-	"1SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xc1\a\n" +
+	"1SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\x8d\b\n" +
 	"\tDashboard\x12D\n" +
 	"\x0eGetClusterInfo\x12\x13.trace.TraceRequest\x1a\x1b.hazelcast.AdminClusterInfo\"\x00\x12H\n" +
-	"\x10GetClusterHealth\x12\x13.trace.TraceRequest\x1a\x1d.hazelcast.AdminClusterHealth\"\x00\x12X\n" +
-	"\x0fListNodeMetrics\x12\x13.trace.TraceRequest\x1a\x1d.sentinel.NodeMetricsResponse\"\x11\xf2\x88'\r\b\x01\x12\anode_id\x18 \x12T\n" +
-	"\rListGrpcStats\x12\x13.trace.TraceRequest\x1a\x1b.sentinel.GrpcStatsResponse\"\x11\xf2\x88'\r\b\x01\x12\anode_id\x18 \x12d\n" +
-	"\x15ListPersistenceStatus\x12\x13.trace.TraceRequest\x1a#.sentinel.PersistenceStatusResponse\"\x11\xf2\x88'\r\b\x01\x12\anode_id\x18 \x12Z\n" +
-	"\x10ListNetworkStats\x12\x13.trace.TraceRequest\x1a\x1e.sentinel.NetworkStatsResponse\"\x11\xf2\x88'\r\b\x01\x12\anode_id\x18 \x12V\n" +
-	"\x0eListThreadInfo\x12\x13.trace.TraceRequest\x1a\x1c.sentinel.ThreadInfoResponse\"\x11\xf2\x88'\r\b\x01\x12\anode_id\x18 \x12`\n" +
-	"\x13ListTokenCacheStats\x12\x13.trace.TraceRequest\x1a!.sentinel.TokenCacheStatsResponse\"\x11\xf2\x88'\r\b\x01\x12\anode_id\x18 \x12T\n" +
-	"\fListMapStats\x12\x13.trace.TraceRequest\x1a\x1a.sentinel.MapStatsResponse\"\x13\xf2\x88'\x0f\b\x01\x12\bmap_name\x18\x80\b\x12B\n" +
+	"\x10GetClusterHealth\x12\x13.trace.TraceRequest\x1a\x1d.hazelcast.AdminClusterHealth\"\x00\x12c\n" +
+	"\x0fListNodeMetrics\x12\x1e.sentinel.DashboardPageRequest\x1a\x1d.sentinel.NodeMetricsResponse\"\x11\xf2\x88'\r\b\x03\x12\anode_id( \x12_\n" +
+	"\rListGrpcStats\x12\x1e.sentinel.DashboardPageRequest\x1a\x1b.sentinel.GrpcStatsResponse\"\x11\xf2\x88'\r\b\x03\x12\anode_id( \x12o\n" +
+	"\x15ListPersistenceStatus\x12\x1e.sentinel.DashboardPageRequest\x1a#.sentinel.PersistenceStatusResponse\"\x11\xf2\x88'\r\b\x03\x12\anode_id( \x12e\n" +
+	"\x10ListNetworkStats\x12\x1e.sentinel.DashboardPageRequest\x1a\x1e.sentinel.NetworkStatsResponse\"\x11\xf2\x88'\r\b\x03\x12\anode_id( \x12a\n" +
+	"\x0eListThreadInfo\x12\x1e.sentinel.DashboardPageRequest\x1a\x1c.sentinel.ThreadInfoResponse\"\x11\xf2\x88'\r\b\x03\x12\anode_id( \x12k\n" +
+	"\x13ListTokenCacheStats\x12\x1e.sentinel.DashboardPageRequest\x1a!.sentinel.TokenCacheStatsResponse\"\x11\xf2\x88'\r\b\x03\x12\anode_id( \x12^\n" +
+	"\fListMapStats\x12\x1e.sentinel.DashboardPageRequest\x1a\x1a.sentinel.MapStatsResponse\"\x12\xf2\x88'\x0e\b\x03\x12\bmap_name(d\x12B\n" +
 	"\fGetDashboard\x12\x13.trace.TraceRequest\x1a\x1b.sentinel.DashboardResponse\"\x00\x12V\n" +
 	"\x12SubscribeDashboard\x12\x1f.sentinel.WatchDashboardRequest\x1a\x1b.sentinel.DashboardResponse\"\x000\x01\x1a\x06\xf2\x97\"\x02\x18\x012\x1c\n" +
 	"\x14SentinelStateService\x1a\x04\xea\x97\"\x002\xbf\x01\n" +
@@ -1238,7 +1449,7 @@ func file_services_sentinel_proto_rawDescGZIP() []byte {
 }
 
 var file_services_sentinel_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_services_sentinel_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_services_sentinel_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_services_sentinel_proto_goTypes = []any{
 	(TypeID)(0),                              // 0: sentinel.TypeID
 	(DashboardRpcId)(0),                      // 1: sentinel.DashboardRpcId
@@ -1246,70 +1457,71 @@ var file_services_sentinel_proto_goTypes = []any{
 	(*Config)(nil),                           // 3: sentinel.Config
 	(*SentinelState)(nil),                    // 4: sentinel.SentinelState
 	(*WatchDashboardRequest)(nil),            // 5: sentinel.WatchDashboardRequest
-	(*NodeMetricsResponse)(nil),              // 6: sentinel.NodeMetricsResponse
-	(*GrpcStatsResponse)(nil),                // 7: sentinel.GrpcStatsResponse
-	(*PersistenceStatusResponse)(nil),        // 8: sentinel.PersistenceStatusResponse
-	(*NetworkStatsResponse)(nil),             // 9: sentinel.NetworkStatsResponse
-	(*ThreadInfoResponse)(nil),               // 10: sentinel.ThreadInfoResponse
-	(*TokenCacheStatsResponse)(nil),          // 11: sentinel.TokenCacheStatsResponse
-	(*MapStatsResponse)(nil),                 // 12: sentinel.MapStatsResponse
-	(*DashboardResponse)(nil),                // 13: sentinel.DashboardResponse
-	(*SentinelConfigState)(nil),              // 14: sentinel.SentinelConfigState
-	(*MapEmpty)(nil),                         // 15: sentinel.MapEmpty
-	(*hazelcast.AdminNodeMetrics)(nil),       // 16: hazelcast.AdminNodeMetrics
-	(*hazelcast.AdminGrpcStats)(nil),         // 17: hazelcast.AdminGrpcStats
-	(*hazelcast.AdminPersistenceStatus)(nil), // 18: hazelcast.AdminPersistenceStatus
-	(*hazelcast.AdminNetworkStats)(nil),      // 19: hazelcast.AdminNetworkStats
-	(*hazelcast.AdminThreadInfo)(nil),        // 20: hazelcast.AdminThreadInfo
-	(*hazelcast.AdminTokenCacheStats)(nil),   // 21: hazelcast.AdminTokenCacheStats
-	(*hazelcast.AdminMapStats)(nil),          // 22: hazelcast.AdminMapStats
-	(*hazelcast.AdminClusterInfo)(nil),       // 23: hazelcast.AdminClusterInfo
-	(*hazelcast.AdminClusterHealth)(nil),     // 24: hazelcast.AdminClusterHealth
-	(*trace.TraceRequest)(nil),               // 25: trace.TraceRequest
+	(*DashboardPageRequest)(nil),             // 6: sentinel.DashboardPageRequest
+	(*NodeMetricsResponse)(nil),              // 7: sentinel.NodeMetricsResponse
+	(*GrpcStatsResponse)(nil),                // 8: sentinel.GrpcStatsResponse
+	(*PersistenceStatusResponse)(nil),        // 9: sentinel.PersistenceStatusResponse
+	(*NetworkStatsResponse)(nil),             // 10: sentinel.NetworkStatsResponse
+	(*ThreadInfoResponse)(nil),               // 11: sentinel.ThreadInfoResponse
+	(*TokenCacheStatsResponse)(nil),          // 12: sentinel.TokenCacheStatsResponse
+	(*MapStatsResponse)(nil),                 // 13: sentinel.MapStatsResponse
+	(*DashboardResponse)(nil),                // 14: sentinel.DashboardResponse
+	(*SentinelConfigState)(nil),              // 15: sentinel.SentinelConfigState
+	(*MapEmpty)(nil),                         // 16: sentinel.MapEmpty
+	(*hazelcast.AdminNodeMetrics)(nil),       // 17: hazelcast.AdminNodeMetrics
+	(*hazelcast.AdminGrpcStats)(nil),         // 18: hazelcast.AdminGrpcStats
+	(*hazelcast.AdminPersistenceStatus)(nil), // 19: hazelcast.AdminPersistenceStatus
+	(*hazelcast.AdminNetworkStats)(nil),      // 20: hazelcast.AdminNetworkStats
+	(*hazelcast.AdminThreadInfo)(nil),        // 21: hazelcast.AdminThreadInfo
+	(*hazelcast.AdminTokenCacheStats)(nil),   // 22: hazelcast.AdminTokenCacheStats
+	(*hazelcast.AdminMapStats)(nil),          // 23: hazelcast.AdminMapStats
+	(*hazelcast.AdminClusterInfo)(nil),       // 24: hazelcast.AdminClusterInfo
+	(*hazelcast.AdminClusterHealth)(nil),     // 25: hazelcast.AdminClusterHealth
+	(*trace.TraceRequest)(nil),               // 26: trace.TraceRequest
 }
 var file_services_sentinel_proto_depIdxs = []int32{
-	16, // 0: sentinel.NodeMetricsResponse.items:type_name -> hazelcast.AdminNodeMetrics
-	17, // 1: sentinel.GrpcStatsResponse.items:type_name -> hazelcast.AdminGrpcStats
-	18, // 2: sentinel.PersistenceStatusResponse.items:type_name -> hazelcast.AdminPersistenceStatus
-	19, // 3: sentinel.NetworkStatsResponse.items:type_name -> hazelcast.AdminNetworkStats
-	20, // 4: sentinel.ThreadInfoResponse.items:type_name -> hazelcast.AdminThreadInfo
-	21, // 5: sentinel.TokenCacheStatsResponse.items:type_name -> hazelcast.AdminTokenCacheStats
-	22, // 6: sentinel.MapStatsResponse.items:type_name -> hazelcast.AdminMapStats
-	23, // 7: sentinel.DashboardResponse.cluster_info:type_name -> hazelcast.AdminClusterInfo
-	24, // 8: sentinel.DashboardResponse.cluster_health:type_name -> hazelcast.AdminClusterHealth
-	16, // 9: sentinel.DashboardResponse.node_metrics:type_name -> hazelcast.AdminNodeMetrics
-	17, // 10: sentinel.DashboardResponse.grpc_stats:type_name -> hazelcast.AdminGrpcStats
-	18, // 11: sentinel.DashboardResponse.persistence_status:type_name -> hazelcast.AdminPersistenceStatus
-	19, // 12: sentinel.DashboardResponse.network_stats:type_name -> hazelcast.AdminNetworkStats
-	20, // 13: sentinel.DashboardResponse.thread_info:type_name -> hazelcast.AdminThreadInfo
-	21, // 14: sentinel.DashboardResponse.token_cache_stats:type_name -> hazelcast.AdminTokenCacheStats
-	22, // 15: sentinel.DashboardResponse.map_stats:type_name -> hazelcast.AdminMapStats
+	17, // 0: sentinel.NodeMetricsResponse.items:type_name -> hazelcast.AdminNodeMetrics
+	18, // 1: sentinel.GrpcStatsResponse.items:type_name -> hazelcast.AdminGrpcStats
+	19, // 2: sentinel.PersistenceStatusResponse.items:type_name -> hazelcast.AdminPersistenceStatus
+	20, // 3: sentinel.NetworkStatsResponse.items:type_name -> hazelcast.AdminNetworkStats
+	21, // 4: sentinel.ThreadInfoResponse.items:type_name -> hazelcast.AdminThreadInfo
+	22, // 5: sentinel.TokenCacheStatsResponse.items:type_name -> hazelcast.AdminTokenCacheStats
+	23, // 6: sentinel.MapStatsResponse.items:type_name -> hazelcast.AdminMapStats
+	24, // 7: sentinel.DashboardResponse.cluster_info:type_name -> hazelcast.AdminClusterInfo
+	25, // 8: sentinel.DashboardResponse.cluster_health:type_name -> hazelcast.AdminClusterHealth
+	17, // 9: sentinel.DashboardResponse.node_metrics:type_name -> hazelcast.AdminNodeMetrics
+	18, // 10: sentinel.DashboardResponse.grpc_stats:type_name -> hazelcast.AdminGrpcStats
+	19, // 11: sentinel.DashboardResponse.persistence_status:type_name -> hazelcast.AdminPersistenceStatus
+	20, // 12: sentinel.DashboardResponse.network_stats:type_name -> hazelcast.AdminNetworkStats
+	21, // 13: sentinel.DashboardResponse.thread_info:type_name -> hazelcast.AdminThreadInfo
+	22, // 14: sentinel.DashboardResponse.token_cache_stats:type_name -> hazelcast.AdminTokenCacheStats
+	23, // 15: sentinel.DashboardResponse.map_stats:type_name -> hazelcast.AdminMapStats
 	3,  // 16: sentinel.SentinelConfigState.config:type_name -> sentinel.Config
-	25, // 17: sentinel.Dashboard.GetClusterInfo:input_type -> trace.TraceRequest
-	25, // 18: sentinel.Dashboard.GetClusterHealth:input_type -> trace.TraceRequest
-	25, // 19: sentinel.Dashboard.ListNodeMetrics:input_type -> trace.TraceRequest
-	25, // 20: sentinel.Dashboard.ListGrpcStats:input_type -> trace.TraceRequest
-	25, // 21: sentinel.Dashboard.ListPersistenceStatus:input_type -> trace.TraceRequest
-	25, // 22: sentinel.Dashboard.ListNetworkStats:input_type -> trace.TraceRequest
-	25, // 23: sentinel.Dashboard.ListThreadInfo:input_type -> trace.TraceRequest
-	25, // 24: sentinel.Dashboard.ListTokenCacheStats:input_type -> trace.TraceRequest
-	25, // 25: sentinel.Dashboard.ListMapStats:input_type -> trace.TraceRequest
-	25, // 26: sentinel.Dashboard.GetDashboard:input_type -> trace.TraceRequest
+	26, // 17: sentinel.Dashboard.GetClusterInfo:input_type -> trace.TraceRequest
+	26, // 18: sentinel.Dashboard.GetClusterHealth:input_type -> trace.TraceRequest
+	6,  // 19: sentinel.Dashboard.ListNodeMetrics:input_type -> sentinel.DashboardPageRequest
+	6,  // 20: sentinel.Dashboard.ListGrpcStats:input_type -> sentinel.DashboardPageRequest
+	6,  // 21: sentinel.Dashboard.ListPersistenceStatus:input_type -> sentinel.DashboardPageRequest
+	6,  // 22: sentinel.Dashboard.ListNetworkStats:input_type -> sentinel.DashboardPageRequest
+	6,  // 23: sentinel.Dashboard.ListThreadInfo:input_type -> sentinel.DashboardPageRequest
+	6,  // 24: sentinel.Dashboard.ListTokenCacheStats:input_type -> sentinel.DashboardPageRequest
+	6,  // 25: sentinel.Dashboard.ListMapStats:input_type -> sentinel.DashboardPageRequest
+	26, // 26: sentinel.Dashboard.GetDashboard:input_type -> trace.TraceRequest
 	5,  // 27: sentinel.Dashboard.SubscribeDashboard:input_type -> sentinel.WatchDashboardRequest
-	25, // 28: sentinel.SentinelConfigStateService.GetConfig:input_type -> trace.TraceRequest
+	26, // 28: sentinel.SentinelConfigStateService.GetConfig:input_type -> trace.TraceRequest
 	3,  // 29: sentinel.SentinelConfigStateService.SetConfig:input_type -> sentinel.Config
-	25, // 30: sentinel.SentinelConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	23, // 31: sentinel.Dashboard.GetClusterInfo:output_type -> hazelcast.AdminClusterInfo
-	24, // 32: sentinel.Dashboard.GetClusterHealth:output_type -> hazelcast.AdminClusterHealth
-	6,  // 33: sentinel.Dashboard.ListNodeMetrics:output_type -> sentinel.NodeMetricsResponse
-	7,  // 34: sentinel.Dashboard.ListGrpcStats:output_type -> sentinel.GrpcStatsResponse
-	8,  // 35: sentinel.Dashboard.ListPersistenceStatus:output_type -> sentinel.PersistenceStatusResponse
-	9,  // 36: sentinel.Dashboard.ListNetworkStats:output_type -> sentinel.NetworkStatsResponse
-	10, // 37: sentinel.Dashboard.ListThreadInfo:output_type -> sentinel.ThreadInfoResponse
-	11, // 38: sentinel.Dashboard.ListTokenCacheStats:output_type -> sentinel.TokenCacheStatsResponse
-	12, // 39: sentinel.Dashboard.ListMapStats:output_type -> sentinel.MapStatsResponse
-	13, // 40: sentinel.Dashboard.GetDashboard:output_type -> sentinel.DashboardResponse
-	13, // 41: sentinel.Dashboard.SubscribeDashboard:output_type -> sentinel.DashboardResponse
+	26, // 30: sentinel.SentinelConfigStateService.WatchConfig:input_type -> trace.TraceRequest
+	24, // 31: sentinel.Dashboard.GetClusterInfo:output_type -> hazelcast.AdminClusterInfo
+	25, // 32: sentinel.Dashboard.GetClusterHealth:output_type -> hazelcast.AdminClusterHealth
+	7,  // 33: sentinel.Dashboard.ListNodeMetrics:output_type -> sentinel.NodeMetricsResponse
+	8,  // 34: sentinel.Dashboard.ListGrpcStats:output_type -> sentinel.GrpcStatsResponse
+	9,  // 35: sentinel.Dashboard.ListPersistenceStatus:output_type -> sentinel.PersistenceStatusResponse
+	10, // 36: sentinel.Dashboard.ListNetworkStats:output_type -> sentinel.NetworkStatsResponse
+	11, // 37: sentinel.Dashboard.ListThreadInfo:output_type -> sentinel.ThreadInfoResponse
+	12, // 38: sentinel.Dashboard.ListTokenCacheStats:output_type -> sentinel.TokenCacheStatsResponse
+	13, // 39: sentinel.Dashboard.ListMapStats:output_type -> sentinel.MapStatsResponse
+	14, // 40: sentinel.Dashboard.GetDashboard:output_type -> sentinel.DashboardResponse
+	14, // 41: sentinel.Dashboard.SubscribeDashboard:output_type -> sentinel.DashboardResponse
 	3,  // 42: sentinel.SentinelConfigStateService.GetConfig:output_type -> sentinel.Config
 	3,  // 43: sentinel.SentinelConfigStateService.SetConfig:output_type -> sentinel.Config
 	3,  // 44: sentinel.SentinelConfigStateService.WatchConfig:output_type -> sentinel.Config
@@ -1331,7 +1543,7 @@ func file_services_sentinel_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_services_sentinel_proto_rawDesc), len(file_services_sentinel_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   13,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   3,
 		},

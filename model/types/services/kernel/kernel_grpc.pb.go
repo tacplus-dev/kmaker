@@ -70,12 +70,12 @@ const (
 // Tokens are signed Ed25519 (internal) except MintExternalToken, which signs
 // ES256 for WIF assertion verification (Anthropic WIF rejects EdDSA).
 type MintClient interface {
-	// MintServiceToken — self-mint. An internal service exchanges its cred_pair
-	// JWT / cloud proof (bootstrap) or a kernel-signed refresh/access token for a
+	// MintServiceToken — self-mint. An internal service exchanges its Kubernetes
+	// token / cloud proof (bootstrap) or a kernel-signed refresh/access token for a
 	// token bearing its OWN identity (sub = caller SPIFFE). Never calls OPA;
 	// S2S tokens are identity-only. Signs Ed25519.
 	// auth_disabled: the caller authenticates via credentials in the request body
-	// (cred_pair JWT in input_token / cloud_proof), not a bearer header.
+	// (kubernetes_token / cloud_proof / kernel-signed input_token), not a bearer header.
 	MintServiceToken(ctx context.Context, in *tokenrequest.MintServiceTokenRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error)
 	// MintUserToken — on-behalf-of (AZP). A broker (oauth/saml) presents the
 	// user's already-IDP-validated claims; kernel runs OPA EvalEntitlement on
@@ -240,12 +240,12 @@ func (c *mintClient) RevokeWorkload(ctx context.Context, in *WorkloadRevokeReque
 // Tokens are signed Ed25519 (internal) except MintExternalToken, which signs
 // ES256 for WIF assertion verification (Anthropic WIF rejects EdDSA).
 type MintServer interface {
-	// MintServiceToken — self-mint. An internal service exchanges its cred_pair
-	// JWT / cloud proof (bootstrap) or a kernel-signed refresh/access token for a
+	// MintServiceToken — self-mint. An internal service exchanges its Kubernetes
+	// token / cloud proof (bootstrap) or a kernel-signed refresh/access token for a
 	// token bearing its OWN identity (sub = caller SPIFFE). Never calls OPA;
 	// S2S tokens are identity-only. Signs Ed25519.
 	// auth_disabled: the caller authenticates via credentials in the request body
-	// (cred_pair JWT in input_token / cloud_proof), not a bearer header.
+	// (kubernetes_token / cloud_proof / kernel-signed input_token), not a bearer header.
 	MintServiceToken(context.Context, *tokenrequest.MintServiceTokenRequest) (*tokenrequest.TokenMintResponse, error)
 	// MintUserToken — on-behalf-of (AZP). A broker (oauth/saml) presents the
 	// user's already-IDP-validated claims; kernel runs OPA EvalEntitlement on
@@ -703,7 +703,7 @@ type TenantAdminClient interface {
 	// DeleteTenant removes the tenant named by tenant_namespace and all its state.
 	DeleteTenant(ctx context.Context, in *DeleteTenantRequest, opts ...grpc.CallOption) (*DeleteTenantResponse, error)
 	// ListTenants returns the immediate child tenants of parent_namespace
-	// (ROOT "/" lists top-level tenants).
+	// (ROOT "/" lists top-level tenants), one bounded page at a time.
 	ListTenants(ctx context.Context, in *ListTenantsRequest, opts ...grpc.CallOption) (*ListTenantsResponse, error)
 	// GetTenantConfig returns the TenantConfig for tenant_namespace (its cred_pairs
 	// + oauth IDP + opa policy slices). Caller must be at-or-above the target.
@@ -725,7 +725,8 @@ type TenantAdminClient interface {
 	// (currently empty — used to create a project by establishing its existence).
 	// "/tenant/default" is auto-created empty at tenant creation.
 	UpdateProjectConfig(ctx context.Context, in *SetProjectConfigRequest, opts ...grpc.CallOption) (*ProjectConfig, error)
-	// ListProjects returns the immediate project children of tenant_namespace.
+	// ListProjects returns the immediate project children of tenant_namespace,
+	// one bounded page at a time.
 	ListProjects(ctx context.Context, in *ListProjectsRequest, opts ...grpc.CallOption) (*ListProjectsResponse, error)
 	// DeleteProject removes the project named by project_namespace and its state.
 	DeleteProject(ctx context.Context, in *DeleteProjectRequest, opts ...grpc.CallOption) (*DeleteProjectResponse, error)
@@ -852,7 +853,7 @@ type TenantAdminServer interface {
 	// DeleteTenant removes the tenant named by tenant_namespace and all its state.
 	DeleteTenant(context.Context, *DeleteTenantRequest) (*DeleteTenantResponse, error)
 	// ListTenants returns the immediate child tenants of parent_namespace
-	// (ROOT "/" lists top-level tenants).
+	// (ROOT "/" lists top-level tenants), one bounded page at a time.
 	ListTenants(context.Context, *ListTenantsRequest) (*ListTenantsResponse, error)
 	// GetTenantConfig returns the TenantConfig for tenant_namespace (its cred_pairs
 	// + oauth IDP + opa policy slices). Caller must be at-or-above the target.
@@ -874,7 +875,8 @@ type TenantAdminServer interface {
 	// (currently empty — used to create a project by establishing its existence).
 	// "/tenant/default" is auto-created empty at tenant creation.
 	UpdateProjectConfig(context.Context, *SetProjectConfigRequest) (*ProjectConfig, error)
-	// ListProjects returns the immediate project children of tenant_namespace.
+	// ListProjects returns the immediate project children of tenant_namespace,
+	// one bounded page at a time.
 	ListProjects(context.Context, *ListProjectsRequest) (*ListProjectsResponse, error)
 	// DeleteProject removes the project named by project_namespace and its state.
 	DeleteProject(context.Context, *DeleteProjectRequest) (*DeleteProjectResponse, error)

@@ -496,7 +496,7 @@ func (TimeseriesMutationRpcId) EnumDescriptor() ([]byte, []int) {
 // Each event represents one authenticated proxy RPC, regardless of outcome.
 type ScmEvent struct {
 	state       protoimpl.MessageState `protogen:"open.v1"`
-	Email       string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	SpiffeId    string                 `protobuf:"bytes,1,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
 	EventId     string                 `protobuf:"bytes,2,opt,name=event_id,json=eventId,proto3" json:"event_id,omitempty"`
 	TimestampMs int64                  `protobuf:"varint,3,opt,name=timestamp_ms,json=timestampMs,proto3" json:"timestamp_ms,omitempty"`
 	Provider    ScmProvider            `protobuf:"varint,4,opt,name=provider,proto3,enum=scmsensor.ScmProvider" json:"provider,omitempty"`
@@ -555,9 +555,9 @@ func (*ScmEvent) Descriptor() ([]byte, []int) {
 	return file_vservices_scm_sensor_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ScmEvent) GetEmail() string {
+func (x *ScmEvent) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
@@ -753,8 +753,6 @@ type ScmEventBusEventStreamSubscribeRecord struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Meta          *EventBusRecordMeta    `protobuf:"bytes,1,opt,name=meta,proto3" json:"meta,omitempty"`
 	Payload       *ScmEvent              `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -801,20 +799,6 @@ func (x *ScmEventBusEventStreamSubscribeRecord) GetPayload() *ScmEvent {
 		return x.Payload
 	}
 	return nil
-}
-
-func (x *ScmEventBusEventStreamSubscribeRecord) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *ScmEventBusEventStreamSubscribeRecord) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
 }
 
 type MapEmpty struct {
@@ -936,8 +920,6 @@ type EventBusRecordMeta struct {
 	Partition     int32                  `protobuf:"varint,3,opt,name=partition,proto3" json:"partition,omitempty"`
 	Offset        int64                  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`
 	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1005,20 +987,6 @@ func (x *EventBusRecordMeta) GetTimestamp() *timestamppb.Timestamp {
 		return x.Timestamp
 	}
 	return nil
-}
-
-func (x *EventBusRecordMeta) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *EventBusRecordMeta) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
 }
 
 // RepositoryNode — auto-generated graph projection of scmsensor.ScmEvent.
@@ -1135,7 +1103,7 @@ type ScmOperationNode struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	EventId       string                 `protobuf:"bytes,1,opt,name=event_id,json=eventId,proto3" json:"event_id,omitempty"`
 	Repository    string                 `protobuf:"bytes,2,opt,name=repository,proto3" json:"repository,omitempty"`
-	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	SpiffeId      string                 `protobuf:"bytes,3,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
 	Provider      ScmProvider            `protobuf:"varint,4,opt,name=provider,proto3,enum=scmsensor.ScmProvider" json:"provider,omitempty"`
 	Operation     ScmOperationType       `protobuf:"varint,5,opt,name=operation,proto3,enum=scmsensor.ScmOperationType" json:"operation,omitempty"`
 	Succeeded     bool                   `protobuf:"varint,6,opt,name=succeeded,proto3" json:"succeeded,omitempty"`
@@ -1191,9 +1159,9 @@ func (x *ScmOperationNode) GetRepository() string {
 	return ""
 }
 
-func (x *ScmOperationNode) GetEmail() string {
+func (x *ScmOperationNode) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
@@ -1254,7 +1222,7 @@ type ScmOperationRecord struct {
 	Repo               string                 `protobuf:"bytes,2,opt,name=repo,proto3" json:"repo,omitempty"`
 	TimestampMs        int64                  `protobuf:"varint,3,opt,name=timestamp_ms,json=timestampMs,proto3" json:"timestamp_ms,omitempty"`
 	EventId            string                 `protobuf:"bytes,4,opt,name=event_id,json=eventId,proto3" json:"event_id,omitempty"`
-	Email              string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
+	SpiffeId           string                 `protobuf:"bytes,5,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
 	Provider           ScmProvider            `protobuf:"varint,6,opt,name=provider,proto3,enum=scmsensor.ScmProvider" json:"provider,omitempty"`
 	ApiEndpoint        string                 `protobuf:"bytes,7,opt,name=api_endpoint,json=apiEndpoint,proto3" json:"api_endpoint,omitempty"`
 	Operation          ScmOperationType       `protobuf:"varint,8,opt,name=operation,proto3,enum=scmsensor.ScmOperationType" json:"operation,omitempty"`
@@ -1330,9 +1298,9 @@ func (x *ScmOperationRecord) GetEventId() string {
 	return ""
 }
 
-func (x *ScmOperationRecord) GetEmail() string {
+func (x *ScmOperationRecord) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
@@ -1432,9 +1400,9 @@ var File_vservices_scm_sensor_proto protoreflect.FileDescriptor
 
 const file_vservices_scm_sensor_proto_rawDesc = "" +
 	"\n" +
-	"\x1avservices/scm-sensor.proto\x12\tscmsensor\x1a\x0flibs/spec.proto\x1a\x10libs/trace.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xf5\v\n" +
-	"\bScmEvent\x12\x1b\n" +
-	"\x05email\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x02R\x05email\x12$\n" +
+	"\x1avservices/scm-sensor.proto\x12\tscmsensor\x1a\x0flibs/spec.proto\x1a\x10libs/trace.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"\x8c\f\n" +
+	"\bScmEvent\x12&\n" +
+	"\tspiffe_id\x18\x01 \x01(\tB\t\x90\xa7\x1d\x80\b\xe8\xaa\x1d\x01R\bspiffeId\x12$\n" +
 	"\bevent_id\x18\x02 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x04R\aeventId\x12'\n" +
 	"\ftimestamp_ms\x18\x03 \x01(\x03B\x04\xa8\xa7\x1d\x00R\vtimestampMs\x128\n" +
 	"\bprovider\x18\x04 \x01(\x0e2\x16.scmsensor.ScmProviderB\x04\x98\xa7\x1d\x01R\bprovider\x12(\n" +
@@ -1456,8 +1424,8 @@ const file_vservices_scm_sensor_proto_rawDesc = "" +
 	"\x10rate_limit_limit\x18\x10 \x01(\x05R\x0erateLimitLimit\x12-\n" +
 	"\x13rate_limit_reset_at\x18\x11 \x01(\x03R\x10rateLimitResetAt\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x89\x06\x8a\xaa\x1d\x11\n" +
-	"\bevent_id\x12\x05email\x92\xaa\x1d\xae\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x95\x06\x8a\xaa\x1d\x15\n" +
+	"\bevent_id\x12\tspiffe_id\x92\xaa\x1d\xae\x01\n" +
 	"\n" +
 	"Repository\x12\brepo_key\x1a\x13\n" +
 	"\brepo_key\x1a\x05exact0\x01\x1a\x11\n" +
@@ -1466,25 +1434,25 @@ const file_vservices_scm_sensor_proto_rawDesc = "" +
 	"\x04repo\x1a\x05exact\x1a\x15\n" +
 	"\fapi_endpoint\x1a\x05exact\x1a%\n" +
 	"\ftimestamp_ms\x12\x10last_accessed_ms\x1a\x03int\x1a\x11\n" +
-	"\bevent_id\x1a\x05exact\x92\xaa\x1d\xc1\x01\n" +
+	"\bevent_id\x1a\x05exact\x92\xaa\x1d\xc5\x01\n" +
 	"\fScmOperation\x12\bevent_id\x1a\x11\n" +
 	"\bevent_id\x1a\x05exact\x1a\"\n" +
 	"\brepo_key\x12\n" +
 	"repository\"\n" +
-	"Repository\x1a\x0e\n" +
-	"\x05email\x1a\x05exact\x1a\x11\n" +
+	"Repository\x1a\x12\n" +
+	"\tspiffe_id\x1a\x05exact\x1a\x11\n" +
 	"\bprovider\x1a\x05exact\x1a\x12\n" +
 	"\toperation\x1a\x05exact\x1a\x11\n" +
 	"\tsucceeded\x1a\x04bool\x1a\x11\n" +
 	"\n" +
 	"latency_ms\x1a\x03int\x1a\x13\n" +
-	"\ftimestamp_ms\x1a\x03int\x9a\xaa\x1d\xf6\x02\n" +
+	"\ftimestamp_ms\x1a\x03int\x9a\xaa\x1d\xfa\x02\n" +
 	"\x12ScmOperationRecord\x12 ReplacingMergeTree(timestamp_ms)\x1aDtoDateTime(fromUnixTimestamp64Milli(timestamp_ms)) + INTERVAL 90 DAY*\t\n" +
 	"\x05owner\x18\x01*\b\n" +
 	"\x04repo\x18\x02*\x12\n" +
 	"\ftimestamp_ms\x18\x03 \x01*\f\n" +
-	"\bevent_id\x18\x04*\a\n" +
-	"\x05email*\f\n" +
+	"\bevent_id\x18\x04*\v\n" +
+	"\tspiffe_id*\f\n" +
 	"\bprovider(\x01*\x0e\n" +
 	"\fapi_endpoint*\r\n" +
 	"\toperation(\x01*\r\n" +
@@ -1501,27 +1469,23 @@ const file_vservices_scm_sensor_proto_rawDesc = "" +
 	"\fevent_stream\x18\x01 \x01(\v2\x13.scmsensor.ScmEventB\x04\x88\xb6\x18\x01R\veventStream\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x10\xe2\xa9\x1d\f\n" +
-	"\beventbus\x18\x01\"\xba\x01\n" +
+	"\beventbus\x18\x01\"\x89\x01\n" +
 	"%ScmEventBusEventStreamSubscribeRecord\x121\n" +
 	"\x04meta\x18\x01 \x01(\v2\x1d.scmsensor.EventBusRecordMetaR\x04meta\x12-\n" +
-	"\apayload\x18\x02 \x01(\v2\x13.scmsensor.ScmEventR\apayload\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\";\n" +
+	"\apayload\x18\x02 \x01(\v2\x13.scmsensor.ScmEventR\apayload\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"d\n" +
 	"\x13TopicPublishReceipt\x12\x1c\n" +
 	"\tpublished\x18\x01 \x01(\bR\tpublished\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xdd\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xac\x01\n" +
 	"\x12EventBusRecordMeta\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\fR\x03key\x12\x14\n" +
 	"\x05topic\x18\x02 \x01(\tR\x05topic\x12\x1c\n" +
 	"\tpartition\x18\x03 \x01(\x05R\tpartition\x12\x16\n" +
 	"\x06offset\x18\x04 \x01(\x03R\x06offset\x128\n" +
-	"\ttimestamp\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xcd\x04\n" +
+	"\ttimestamp\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\"\xcd\x04\n" +
 	"\x0eRepositoryNode\x12?\n" +
 	"\brepo_key\x18\x01 \x01(\tB$\x92\xa9\x1d\x05exact\xfa\xa9\x1d\brepo_key\x8a\xaa\x1d\v\b\x02\x12\x05exact\x18\x01R\arepoKey\x12V\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x16.scmsensor.ScmProviderB\"\x92\xa9\x1d\x05exact\xfa\xa9\x1d\bprovider\x8a\xaa\x1d\t\b\x02\x12\x05exactR\bprovider\x125\n" +
@@ -1533,14 +1497,14 @@ const file_vservices_scm_sensor_proto_rawDesc = "" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:.\xf2\xa8\x1d*\n" +
 	"\n" +
-	"Repository\x12\brepo_key\x1a\x12scmsensor.ScmEvent\"\xa8\x05\n" +
+	"Repository\x12\brepo_key\x1a\x12scmsensor.ScmEvent\"\xb3\x05\n" +
 	"\x10ScmOperationNode\x12=\n" +
 	"\bevent_id\x18\x01 \x01(\tB\"\x92\xa9\x1d\x05exact\xfa\xa9\x1d\bevent_id\x8a\xaa\x1d\t\b\x02\x12\x05exactR\aeventId\x12:\n" +
 	"\n" +
 	"repository\x18\x02 \x01(\tB\x1a\xfa\xa9\x1d\brepo_key\x82\xaa\x1d\n" +
 	"RepositoryR\n" +
-	"repository\x125\n" +
-	"\x05email\x18\x03 \x01(\tB\x1f\x92\xa9\x1d\x05exact\xfa\xa9\x1d\x05email\x8a\xaa\x1d\t\b\x02\x12\x05exactR\x05email\x12V\n" +
+	"repository\x12@\n" +
+	"\tspiffe_id\x18\x03 \x01(\tB#\x92\xa9\x1d\x05exact\xfa\xa9\x1d\tspiffe_id\x8a\xaa\x1d\t\b\x02\x12\x05exactR\bspiffeId\x12V\n" +
 	"\bprovider\x18\x04 \x01(\x0e2\x16.scmsensor.ScmProviderB\"\x92\xa9\x1d\x05exact\xfa\xa9\x1d\bprovider\x8a\xaa\x1d\t\b\x02\x12\x05exactR\bprovider\x12^\n" +
 	"\toperation\x18\x05 \x01(\x0e2\x1b.scmsensor.ScmOperationTypeB#\x92\xa9\x1d\x05exact\xfa\xa9\x1d\toperation\x8a\xaa\x1d\t\b\x02\x12\x05exactR\toperation\x12?\n" +
 	"\tsucceeded\x18\x06 \x01(\bB!\x92\xa9\x1d\x04bool\xfa\xa9\x1d\tsucceeded\x8a\xaa\x1d\b\b\x02\x12\x04boolR\tsucceeded\x12?\n" +
@@ -1550,13 +1514,13 @@ const file_vservices_scm_sensor_proto_rawDesc = "" +
 	"\ftimestamp_ms\x18\b \x01(\x03B\"\x92\xa9\x1d\x03int\xfa\xa9\x1d\ftimestamp_ms\x8a\xaa\x1d\a\b\x02\x12\x03intR\vtimestampMs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:0\xf2\xa8\x1d,\n" +
-	"\fScmOperation\x12\bevent_id\x1a\x12scmsensor.ScmEvent\"\xe1\b\n" +
+	"\fScmOperation\x12\bevent_id\x1a\x12scmsensor.ScmEvent\"\xec\b\n" +
 	"\x12ScmOperationRecord\x12%\n" +
 	"\x05owner\x18\x01 \x01(\tB\x0f\xfa\xa9\x1d\x05owner\x92\xaa\x1d\x02\x18\x01R\x05owner\x12\"\n" +
 	"\x04repo\x18\x02 \x01(\tB\x0e\xfa\xa9\x1d\x04repo\x92\xaa\x1d\x02\x18\x02R\x04repo\x12;\n" +
 	"\ftimestamp_ms\x18\x03 \x01(\x03B\x18\xfa\xa9\x1d\ftimestamp_ms\x92\xaa\x1d\x04\x18\x03 \x01R\vtimestampMs\x12-\n" +
-	"\bevent_id\x18\x04 \x01(\tB\x12\xfa\xa9\x1d\bevent_id\x92\xaa\x1d\x02\x18\x04R\aeventId\x12#\n" +
-	"\x05email\x18\x05 \x01(\tB\r\xfa\xa9\x1d\x05email\x92\xaa\x1d\x00R\x05email\x12F\n" +
+	"\bevent_id\x18\x04 \x01(\tB\x12\xfa\xa9\x1d\bevent_id\x92\xaa\x1d\x02\x18\x04R\aeventId\x12.\n" +
+	"\tspiffe_id\x18\x05 \x01(\tB\x11\xfa\xa9\x1d\tspiffe_id\x92\xaa\x1d\x00R\bspiffeId\x12F\n" +
 	"\bprovider\x18\x06 \x01(\x0e2\x16.scmsensor.ScmProviderB\x12\xfa\xa9\x1d\bprovider\x92\xaa\x1d\x020\x01R\bprovider\x127\n" +
 	"\fapi_endpoint\x18\a \x01(\tB\x14\xfa\xa9\x1d\fapi_endpoint\x92\xaa\x1d\x00R\vapiEndpoint\x12N\n" +
 	"\toperation\x18\b \x01(\x0e2\x1b.scmsensor.ScmOperationTypeB\x13\xfa\xa9\x1d\toperation\x92\xaa\x1d\x020\x01R\toperation\x124\n" +

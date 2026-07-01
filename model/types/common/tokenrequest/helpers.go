@@ -30,6 +30,7 @@ import (
 	"github.com/pelletier/go-toml/v2"
 	cloudidentity "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/cloudidentity"
 	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/errors"
+	key "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/key"
 	token "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/token"
 	x509 "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/x509"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -276,6 +277,7 @@ func TokenMintRequestToTOML(v *TokenMintRequest) ([]byte, error) {
 type mintservicetokenrequestJSON struct {
 	InputToken      string          `json:"input_token,omitempty"`
 	CloudProof      json.RawMessage `json:"cloud_proof,omitempty"`
+	KubernetesToken string          `json:"kubernetes_token,omitempty"`
 	ContinuityToken string          `json:"continuity_token,omitempty"`
 	Aud             string          `json:"aud,omitempty"`
 	Exp             int64           `json:"exp,omitempty"`
@@ -301,6 +303,7 @@ func MintServiceTokenRequestToJSON(v *MintServiceTokenRequest) ([]byte, error) {
 			data, _ := cloudidentity.CloudIdentityProofToJSON(v.CloudProof)
 			return data
 		}(),
+		KubernetesToken: v.KubernetesToken,
 		ContinuityToken: v.ContinuityToken,
 		Aud:             v.Aud,
 		Exp:             v.Exp,
@@ -328,6 +331,7 @@ func MintServiceTokenRequestToJSONPretty(v *MintServiceTokenRequest) ([]byte, er
 			data, _ := cloudidentity.CloudIdentityProofToJSON(v.CloudProof)
 			return data
 		}(),
+		KubernetesToken: v.KubernetesToken,
 		ContinuityToken: v.ContinuityToken,
 		Aud:             v.Aud,
 		Exp:             v.Exp,
@@ -407,6 +411,7 @@ func MintServiceTokenRequestFromJSON(data []byte) (*MintServiceTokenRequest, err
 			result.CloudProof = parsed
 		}
 	}
+	result.KubernetesToken = raw.KubernetesToken
 	result.ContinuityToken = raw.ContinuityToken
 	result.Aud = raw.Aud
 	result.Exp = raw.Exp
@@ -1191,10 +1196,11 @@ func X509MintRequestToTOML(v *X509MintRequest) ([]byte, error) {
 // ExternalTokenMintRequestJSON represents ExternalTokenMintRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type externaltokenmintrequestJSON struct {
-	UserToken string `json:"user_token,omitempty"`
-	Metadata  string `json:"metadata,omitempty"`
-	TraceId   string `json:"trace_id,omitempty"`
-	Noop      bool   `json:"noop,omitempty"`
+	UserToken               string `json:"user_token,omitempty"`
+	Metadata                string `json:"metadata,omitempty"`
+	RequestedSigningKeyType string `json:"requested_signing_key_type,omitempty"`
+	TraceId                 string `json:"trace_id,omitempty"`
+	Noop                    bool   `json:"noop,omitempty"`
 }
 
 // ExternalTokenMintRequestToJSON converts ExternalTokenMintRequest to JSON bytes.
@@ -1205,10 +1211,11 @@ func ExternalTokenMintRequestToJSON(v *ExternalTokenMintRequest) ([]byte, error)
 	}
 	// Convert to JSON helper struct with string enums
 	helper := externaltokenmintrequestJSON{
-		UserToken: v.UserToken,
-		Metadata:  v.Metadata,
-		TraceId:   v.TraceId,
-		Noop:      v.Noop,
+		UserToken:               v.UserToken,
+		Metadata:                v.Metadata,
+		RequestedSigningKeyType: key.KeyTypeToString(v.RequestedSigningKeyType),
+		TraceId:                 v.TraceId,
+		Noop:                    v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1221,10 +1228,11 @@ func ExternalTokenMintRequestToJSONPretty(v *ExternalTokenMintRequest) ([]byte, 
 	}
 	// Convert to JSON helper struct with string enums
 	helper := externaltokenmintrequestJSON{
-		UserToken: v.UserToken,
-		Metadata:  v.Metadata,
-		TraceId:   v.TraceId,
-		Noop:      v.Noop,
+		UserToken:               v.UserToken,
+		Metadata:                v.Metadata,
+		RequestedSigningKeyType: key.KeyTypeToString(v.RequestedSigningKeyType),
+		TraceId:                 v.TraceId,
+		Noop:                    v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1291,6 +1299,12 @@ func ExternalTokenMintRequestFromJSON(data []byte) (*ExternalTokenMintRequest, e
 	result := &ExternalTokenMintRequest{}
 	result.UserToken = raw.UserToken
 	result.Metadata = raw.Metadata
+	// Parse enum field: RequestedSigningKeyType
+	if raw.RequestedSigningKeyType != "" {
+		if parsed, err := key.ParseKeyType(raw.RequestedSigningKeyType); err == nil {
+			result.RequestedSigningKeyType = parsed
+		}
+	}
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -1964,6 +1978,7 @@ func MintServiceTokenRequestToEnvVar(v *MintServiceTokenRequest) map[string]stri
 			result[k] = val
 		}
 	}
+	result["PROTO_COMMON_TOKENREQUEST_MINT_SERVICE_TOKEN_REQUEST_KUBERNETES_TOKEN"] = v.KubernetesToken
 	result["PROTO_COMMON_TOKENREQUEST_MINT_SERVICE_TOKEN_REQUEST_CONTINUITY_TOKEN"] = v.ContinuityToken
 	result["PROTO_COMMON_TOKENREQUEST_MINT_SERVICE_TOKEN_REQUEST_AUD"] = v.Aud
 	result["PROTO_COMMON_TOKENREQUEST_MINT_SERVICE_TOKEN_REQUEST_EXP"] = strconv.FormatInt(v.Exp, 10)
@@ -1984,6 +1999,9 @@ func MintServiceTokenRequestFromEnvVar(env map[string]string) (*MintServiceToken
 		return nil, err
 	} else if sub != nil {
 		result.CloudProof = sub
+	}
+	if val, ok := env["PROTO_COMMON_TOKENREQUEST_MINT_SERVICE_TOKEN_REQUEST_KUBERNETES_TOKEN"]; ok && val != "" {
+		result.KubernetesToken = val
 	}
 	if val, ok := env["PROTO_COMMON_TOKENREQUEST_MINT_SERVICE_TOKEN_REQUEST_CONTINUITY_TOKEN"]; ok && val != "" {
 		result.ContinuityToken = val
@@ -2215,6 +2233,7 @@ func ExternalTokenMintRequestToEnvVar(v *ExternalTokenMintRequest) map[string]st
 	result := make(map[string]string)
 	result["PROTO_COMMON_TOKENREQUEST_EXTERNAL_TOKEN_MINT_REQUEST_USER_TOKEN"] = v.UserToken
 	result["PROTO_COMMON_TOKENREQUEST_EXTERNAL_TOKEN_MINT_REQUEST_METADATA"] = v.Metadata
+	result["PROTO_COMMON_TOKENREQUEST_EXTERNAL_TOKEN_MINT_REQUEST_REQUESTED_SIGNING_KEY_TYPE"] = key.KeyTypeToString(v.RequestedSigningKeyType)
 	result["PROTO_COMMON_TOKENREQUEST_EXTERNAL_TOKEN_MINT_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_COMMON_TOKENREQUEST_EXTERNAL_TOKEN_MINT_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -2228,6 +2247,13 @@ func ExternalTokenMintRequestFromEnvVar(env map[string]string) (*ExternalTokenMi
 	}
 	if val, ok := env["PROTO_COMMON_TOKENREQUEST_EXTERNAL_TOKEN_MINT_REQUEST_METADATA"]; ok && val != "" {
 		result.Metadata = val
+	}
+	if val, ok := env["PROTO_COMMON_TOKENREQUEST_EXTERNAL_TOKEN_MINT_REQUEST_REQUESTED_SIGNING_KEY_TYPE"]; ok && val != "" {
+		parsed, err := key.ParseKeyType(val)
+		if err != nil {
+			return nil, err
+		}
+		result.RequestedSigningKeyType = parsed
 	}
 	if val, ok := env["PROTO_COMMON_TOKENREQUEST_EXTERNAL_TOKEN_MINT_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -2515,6 +2541,11 @@ func ValidateMintServiceTokenRequestWithDepth(m *MintServiceTokenRequest, depth 
 		return protoerrors.NewErrMissingInvalidData(nil, "field InputToken exceeds max size of 65536 bytes, got: %d", len(m.InputToken))
 	}
 
+	// Validate KubernetesToken (assert_max_size: 65536 bytes)
+	if len(m.KubernetesToken) > 65536 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field KubernetesToken exceeds max size of 65536 bytes, got: %d", len(m.KubernetesToken))
+	}
+
 	// Validate ContinuityToken (assert_max_size: 65536 bytes)
 	if len(m.ContinuityToken) > 65536 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ContinuityToken exceeds max size of 65536 bytes, got: %d", len(m.ContinuityToken))
@@ -2628,14 +2659,14 @@ func ValidateMintClientTokenRequestWithDepth(m *MintClientTokenRequest, depth in
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate InputToken (assert_max_size: 65536 bytes)
-	if len(m.InputToken) > 65536 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field InputToken exceeds max size of 65536 bytes, got: %d", len(m.InputToken))
-	}
-
 	// Validate InputToken (assert_required)
 	if m.InputToken == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field InputToken is required")
+	}
+
+	// Validate InputToken (assert_max_size: 65536 bytes)
+	if len(m.InputToken) > 65536 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field InputToken exceeds max size of 65536 bytes, got: %d", len(m.InputToken))
 	}
 
 	// Validate Exp (assert_ge: 0)
@@ -2782,14 +2813,14 @@ func ValidateExternalTokenMintRequestWithDepth(m *ExternalTokenMintRequest, dept
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate UserToken (assert_required)
-	if m.UserToken == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field UserToken is required")
-	}
-
 	// Validate UserToken (assert_max_size: 65536 bytes)
 	if len(m.UserToken) > 65536 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field UserToken exceeds max size of 65536 bytes, got: %d", len(m.UserToken))
+	}
+
+	// Validate UserToken (assert_required)
+	if m.UserToken == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field UserToken is required")
 	}
 
 	// Validate Metadata (assert_max_length: 2048)
@@ -2805,6 +2836,11 @@ func ValidateExternalTokenMintRequestWithDepth(m *ExternalTokenMintRequest, dept
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate RequestedSigningKeyType enum value is known
+	if _, ok := key.KeyType_name[int32(m.RequestedSigningKeyType)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RequestedSigningKeyType has unknown enum value %d", int32(m.RequestedSigningKeyType))
 	}
 
 	return nil
@@ -2948,6 +2984,7 @@ const (
 	MaxSizeTokenmintrequestServiceAuds            int = 32
 	MaxSizeTokenmintrequestTraceId                int = 32768
 	MaxSizeMintservicetokenrequestInputToken      int = 65536
+	MaxSizeMintservicetokenrequestKubernetesToken int = 65536
 	MaxSizeMintservicetokenrequestContinuityToken int = 65536
 	MaxSizeMintservicetokenrequestAud             int = 32768
 	MaxSizeMintservicetokenrequestLocalityToken   int = 32768
@@ -3242,6 +3279,9 @@ func MergeMintServiceTokenRequest(dst, src *MintServiceTokenRequest) {
 	if dst.CloudProof == nil {
 		dst.CloudProof = src.CloudProof
 	}
+	if dst.KubernetesToken == "" {
+		dst.KubernetesToken = src.KubernetesToken
+	}
 	if dst.ContinuityToken == "" {
 		dst.ContinuityToken = src.ContinuityToken
 	}
@@ -3366,6 +3406,9 @@ func MergeExternalTokenMintRequest(dst, src *ExternalTokenMintRequest) {
 	}
 	if dst.Metadata == "" {
 		dst.Metadata = src.Metadata
+	}
+	if dst.RequestedSigningKeyType == 0 {
+		dst.RequestedSigningKeyType = src.RequestedSigningKeyType
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

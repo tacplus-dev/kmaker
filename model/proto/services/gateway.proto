@@ -152,7 +152,8 @@ service GatewayConfigStateService {
 	rpc WatchConfig(trace.TraceRequest) returns (stream Config);
 }
 
-message MapEmpty {  string trace_id = 200;
+message MapEmpty {
+  string trace_id = 200;
   bool noop = 201;
 }
 

@@ -42,8 +42,8 @@ func ScmOperationNodeToGraph(msg *ScmOperationNode) (map[string]interface{}, err
 	// repository: scalar predicate
 	m["ScmOperationNode.repository"] = msg.Repository
 
-	// email: scalar predicate
-	m["ScmOperationNode.email"] = msg.Email
+	// spiffe_id: scalar predicate
+	m["ScmOperationNode.spiffe_id"] = msg.SpiffeId
 
 	// provider: enum stored as string name
 	if msg.Provider != 0 {
@@ -96,10 +96,10 @@ func ScmOperationNodeFromGraph(m map[string]interface{}) (*ScmOperationNode, err
 		}
 	}
 
-	// email: scalar predicate
-	if v, ok := m["ScmOperationNode.email"]; ok {
+	// spiffe_id: scalar predicate
+	if v, ok := m["ScmOperationNode.spiffe_id"]; ok {
 		if s, ok := v.(string); ok {
-			msg.Email = s
+			msg.SpiffeId = s
 		}
 	}
 

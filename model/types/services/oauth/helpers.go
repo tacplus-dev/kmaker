@@ -1421,9 +1421,10 @@ func CompleteCliAuthResponseToTOML(v *CompleteCliAuthResponse) ([]byte, error) {
 // SessionRequestJSON represents SessionRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type sessionrequestJSON struct {
-	SessionId *string `json:"session_id,omitempty"`
-	TraceId   string  `json:"trace_id,omitempty"`
-	Noop      bool    `json:"noop,omitempty"`
+	SessionId     *string `json:"session_id,omitempty"`
+	OfflineAccess bool    `json:"offline_access,omitempty"`
+	TraceId       string  `json:"trace_id,omitempty"`
+	Noop          bool    `json:"noop,omitempty"`
 }
 
 // SessionRequestToJSON converts SessionRequest to JSON bytes.
@@ -1438,8 +1439,9 @@ func SessionRequestToJSON(v *SessionRequest) ([]byte, error) {
 			val := v.GetSessionId()
 			return &val
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		OfflineAccess: v.OfflineAccess,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1456,8 +1458,9 @@ func SessionRequestToJSONPretty(v *SessionRequest) ([]byte, error) {
 			val := v.GetSessionId()
 			return &val
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		OfflineAccess: v.OfflineAccess,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1526,6 +1529,7 @@ func SessionRequestFromJSON(data []byte) (*SessionRequest, error) {
 	if raw.SessionId != nil {
 		result.Msg = &SessionRequest_SessionId{SessionId: *raw.SessionId}
 	}
+	result.OfflineAccess = raw.OfflineAccess
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -4423,6 +4427,7 @@ func SessionRequestToEnvVar(v *SessionRequest) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_OAUTH_SESSION_REQUEST_OFFLINE_ACCESS"] = strconv.FormatBool(v.OfflineAccess)
 	result["PROTO_SERVICES_OAUTH_SESSION_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_OAUTH_SESSION_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -4431,6 +4436,13 @@ func SessionRequestToEnvVar(v *SessionRequest) map[string]string {
 // SessionRequestFromEnvVar creates SessionRequest from environment variable key-value pairs.
 func SessionRequestFromEnvVar(env map[string]string) (*SessionRequest, error) {
 	result := &SessionRequest{}
+	if val, ok := env["PROTO_SERVICES_OAUTH_SESSION_REQUEST_OFFLINE_ACCESS"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.OfflineAccess = parsed
+	}
 	if val, ok := env["PROTO_SERVICES_OAUTH_SESSION_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -5086,6 +5098,11 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SessionTimeoutSeconds must be positive (> 0), got: %d", m.SessionTimeoutSeconds)
 	}
 
+	// Validate RefreshTokenLifetimeSeconds (assert_duration_max: 2592000)
+	if m.RefreshTokenLifetimeSeconds > 2592000 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RefreshTokenLifetimeSeconds must be <= 2592000, got: %d", m.RefreshTokenLifetimeSeconds)
+	}
+
 	// Validate RefreshTokenLifetimeSeconds (assert_duration: POSITIVE)
 	if m.RefreshTokenLifetimeSeconds <= 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field RefreshTokenLifetimeSeconds must be positive (> 0), got: %d", m.RefreshTokenLifetimeSeconds)
@@ -5094,11 +5111,6 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 	// Validate RefreshTokenLifetimeSeconds (assert_duration_min: 3600)
 	if m.RefreshTokenLifetimeSeconds < 3600 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field RefreshTokenLifetimeSeconds must be >= 3600, got: %d", m.RefreshTokenLifetimeSeconds)
-	}
-
-	// Validate RefreshTokenLifetimeSeconds (assert_duration_max: 2592000)
-	if m.RefreshTokenLifetimeSeconds > 2592000 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field RefreshTokenLifetimeSeconds must be <= 2592000, got: %d", m.RefreshTokenLifetimeSeconds)
 	}
 
 	// Validate AutoRefreshBeforeSeconds (assert_duration: POSITIVE)
@@ -5126,11 +5138,6 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Providers exceeds max size of 16, got: %d", len(m.Providers))
 	}
 
-	// Validate NonceExpireSeconds (assert_duration_min: 1)
-	if m.NonceExpireSeconds < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field NonceExpireSeconds must be >= 1, got: %d", m.NonceExpireSeconds)
-	}
-
 	// Validate NonceExpireSeconds (assert_duration_max: 86400)
 	if m.NonceExpireSeconds > 86400 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field NonceExpireSeconds must be <= 86400, got: %d", m.NonceExpireSeconds)
@@ -5139,6 +5146,11 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 	// Validate NonceExpireSeconds (assert_duration: POSITIVE)
 	if m.NonceExpireSeconds <= 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field NonceExpireSeconds must be positive (> 0), got: %d", m.NonceExpireSeconds)
+	}
+
+	// Validate NonceExpireSeconds (assert_duration_min: 1)
+	if m.NonceExpireSeconds < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NonceExpireSeconds must be >= 1, got: %d", m.NonceExpireSeconds)
 	}
 
 	// Validate JwkRefetchIntervalSeconds (assert_duration: POSITIVE)
@@ -5330,11 +5342,6 @@ func ValidateCompleteCliAuthRequestWithDepth(m *CompleteCliAuthRequest, depth in
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate SessionId (assert_required)
-	if m.SessionId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field SessionId is required")
-	}
-
 	// Validate SessionId (assert_min_length: 64)
 	if len(m.SessionId) < 64 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SessionId must be at least 64 characters, got: %d", len(m.SessionId))
@@ -5343,6 +5350,11 @@ func ValidateCompleteCliAuthRequestWithDepth(m *CompleteCliAuthRequest, depth in
 	// Validate SessionId (assert_max_length: 128)
 	if len(m.SessionId) > 128 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SessionId must be at most 128 characters, got: %d", len(m.SessionId))
+	}
+
+	// Validate SessionId (assert_required)
+	if m.SessionId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SessionId is required")
 	}
 
 	// Validate SessionId (default max size: 32768 bytes)
@@ -5617,16 +5629,16 @@ func ValidateAuthorizeResponseWithDepth(m *AuthorizeResponse, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate RedirectUrl (assert_required)
-	if m.RedirectUrl == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field RedirectUrl is required")
-	}
-
 	// Validate RedirectUrl (assert_url: URL_SCHEME_HTTPS)
 	if m.RedirectUrl != "" {
 		if err := utils.ValidateAssertURL_URL_SCHEME_HTTPS(m.RedirectUrl); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field RedirectUrl URL validation failed")
 		}
+	}
+
+	// Validate RedirectUrl (assert_required)
+	if m.RedirectUrl == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RedirectUrl is required")
 	}
 
 	// Validate RedirectUrl (default max size: 32768 bytes)
@@ -5994,16 +6006,16 @@ func ValidateOAuthProviderWithDepth(m *OAuthProvider, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate IssuerUrl (assert_required)
-	if m.IssuerUrl == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field IssuerUrl is required")
-	}
-
 	// Validate IssuerUrl (assert_url: URL_SCHEME_HTTPS)
 	if m.IssuerUrl != "" {
 		if err := utils.ValidateAssertURL_URL_SCHEME_HTTPS(m.IssuerUrl); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field IssuerUrl URL validation failed")
 		}
+	}
+
+	// Validate IssuerUrl (assert_required)
+	if m.IssuerUrl == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field IssuerUrl is required")
 	}
 
 	// Validate ClientId (assert_required)
@@ -6106,14 +6118,14 @@ func ValidateClaimMatcherWithDepth(m *ClaimMatcher, depth int) error {
 		}
 	}
 
-	// Validate ClaimKey (assert_min_length: 1)
-	if len(m.ClaimKey) < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ClaimKey must be at least 1 characters, got: %d", len(m.ClaimKey))
-	}
-
 	// Validate ClaimKey (assert_required)
 	if m.ClaimKey == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ClaimKey is required")
+	}
+
+	// Validate ClaimKey (assert_min_length: 1)
+	if len(m.ClaimKey) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ClaimKey must be at least 1 characters, got: %d", len(m.ClaimKey))
 	}
 
 	// Validate ClaimValue (assert_required)
@@ -6936,6 +6948,9 @@ func MergeCompleteCliAuthResponse(dst, src *CompleteCliAuthResponse) {
 // ============================================================
 // MergeSessionRequest fills zero-valued fields in dst from src.
 func MergeSessionRequest(dst, src *SessionRequest) {
+	if !dst.OfflineAccess {
+		dst.OfflineAccess = src.OfflineAccess
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}

@@ -36,7 +36,7 @@
 // token cost, and with what result — without relying on provider-side logs.
 //
 // Attribution to agent sessions or other workflows is intentionally left to
-// downstream services (Argus, etc.) that correlate by email + timestamp.
+// downstream services (Argus, etc.) that correlate by spiffe_id + timestamp.
 // The proxy only records facts it can verify directly from the request.
 //
 // ── EVENT FLOW ──
@@ -101,7 +101,7 @@ message LlmEvent {
 
   // ── Store annotations ────────────────────────────────────────────
 
-  // EventDB: persist with event_id as key, email as owner.
+  // EventDB: persist with event_id as key, spiffe_id as owner.
 
   // ── Graph projections ────────────────────────────────────────────
 
@@ -114,10 +114,11 @@ message LlmEvent {
   // One row per LlmEvent in ClickHouse. Token counts enable cost analytics.
 
   // ── Identity ─────────────────────────────────────────────────────
-  // email is stamped server-side by EventBus from the publishing service's
-  // verified JWT. The proxy populates it from the caller's token.
+  // spiffe_id is the caller's SUBJECT SPIFFE ID (spiffe://<root>/tenants/
+  // <tenant_id>/users/<sub>), the durable EventDB owner. Stamped server-side
+  // from the verified token. (Replaces the former email owner.)
 
-  string email        = 1;
+  string spiffe_id    = 1;
   string event_id     = 2;
   int64  timestamp_ms = 3;
 
@@ -187,21 +188,20 @@ service LlmEventBusStateService {
 	rpc SubscribeToEventStream(trace.TraceRequest) returns (stream LlmEventBusEventStreamSubscribeRecord);
 }
 
-message LlmEventBusEventStreamSubscribeRecord { EventBusRecordMeta meta = 1; LlmEvent payload = 2;   string trace_id = 200;
+message LlmEventBusEventStreamSubscribeRecord { EventBusRecordMeta meta = 1; LlmEvent payload = 2; }
+
+message MapEmpty {
+  string trace_id = 200;
   bool noop = 201;
 }
 
-message MapEmpty {  string trace_id = 200;
+message TopicPublishReceipt {
+  bool published = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
 
-message TopicPublishReceipt { bool published = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-
-message EventBusRecordMeta { bytes key = 1; string topic = 2; int32 partition = 3; int64 offset = 4; google.protobuf.Timestamp timestamp = 5;   string trace_id = 200;
-  bool noop = 201;
-}
+message EventBusRecordMeta { bytes key = 1; string topic = 2; int32 partition = 3; int64 offset = 4; google.protobuf.Timestamp timestamp = 5; }
 
 // ============================================================================
 // Auto-generated projection messages from spec.graph_projection and
@@ -226,7 +226,7 @@ message LlmCallNode {
 
   string event_id = 1;
   string model = 2;
-  string email = 3;
+  string spiffe_id = 3;
   llmsensor.LlmProvider provider = 4;
   llmsensor.LlmOperationType operation = 5;
   bool succeeded = 6;
@@ -244,7 +244,7 @@ message LlmCallRecord {
   string model_key = 1;
   int64 timestamp_ms = 2;
   string event_id = 3;
-  string email = 4;
+  string spiffe_id = 4;
   llmsensor.LlmProvider provider = 5;
   string api_endpoint = 6;
   string model = 7;

@@ -7,7 +7,7 @@
 //
 // TLS certificates are provided by the servicemanager (auto-obtained via
 // X509Mint at startup). Config holds network and request settings.
-// REST, GraphQL, and static file serving are handled by a separate gateway.
+// REST and static file serving are handled by a separate gateway.
 
 package grpcserver
 

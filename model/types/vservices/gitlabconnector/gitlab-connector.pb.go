@@ -789,8 +789,10 @@ type GitLabConnectorEvent struct {
 	ProjectPath     string `protobuf:"bytes,9,opt,name=project_path,json=projectPath,proto3" json:"project_path,omitempty"`             // project path within GitLab namespace
 	// project_key = "tenant:{tenant_namespace}:gitlab:{gitlab_url}:{gitlab_namespace}/{project_path}"
 	ProjectKey string `protobuf:"bytes,10,opt,name=project_key,json=projectKey,proto3" json:"project_key,omitempty"`
-	// email is required by C2S event handling and contains the GitLab author
-	// email when resolvable. It is a correlation signal, not the owner.
+	// email contains the GitLab author email when resolvable. It is a
+	// correlation signal, not the owner (owner is owner_spiffe). It is no longer
+	// required by C2S event handling — the exported topic satisfies the SPIFFE
+	// identity rule via owner_spiffe (a resource SPIFFE id).
 	Email          string          `protobuf:"bytes,11,opt,name=email,proto3" json:"email,omitempty"`
 	AuthorEmail    string          `protobuf:"bytes,12,opt,name=author_email,json=authorEmail,proto3" json:"author_email,omitempty"`
 	AuthorUsername string          `protobuf:"bytes,13,opt,name=author_username,json=authorUsername,proto3" json:"author_username,omitempty"`
@@ -1104,8 +1106,6 @@ type GitLabConnectorEventBusEventStreamSubscribeRecord struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Meta          *EventBusRecordMeta    `protobuf:"bytes,1,opt,name=meta,proto3" json:"meta,omitempty"`
 	Payload       *GitLabConnectorEvent  `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1152,20 +1152,6 @@ func (x *GitLabConnectorEventBusEventStreamSubscribeRecord) GetPayload() *GitLab
 		return x.Payload
 	}
 	return nil
-}
-
-func (x *GitLabConnectorEventBusEventStreamSubscribeRecord) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *GitLabConnectorEventBusEventStreamSubscribeRecord) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
 }
 
 type MapEmpty struct {
@@ -1287,8 +1273,6 @@ type EventBusRecordMeta struct {
 	Partition     int32                  `protobuf:"varint,3,opt,name=partition,proto3" json:"partition,omitempty"`
 	Offset        int64                  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`
 	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1356,20 +1340,6 @@ func (x *EventBusRecordMeta) GetTimestamp() *timestamppb.Timestamp {
 		return x.Timestamp
 	}
 	return nil
-}
-
-func (x *EventBusRecordMeta) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *EventBusRecordMeta) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
 }
 
 // GitLabProjectNode — auto-generated graph projection of gitlabconnector.GitLabConnectorEvent.
@@ -1905,27 +1875,23 @@ const file_vservices_gitlab_connector_proto_rawDesc = "" +
 	"\fevent_stream\x18\x01 \x01(\v2%.gitlabconnector.GitLabConnectorEventB\x04\x88\xb6\x18\x01R\veventStream\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x10\xe2\xa9\x1d\f\n" +
-	"\beventbus\x18\x01\"\xde\x01\n" +
+	"\beventbus\x18\x01\"\xad\x01\n" +
 	"1GitLabConnectorEventBusEventStreamSubscribeRecord\x127\n" +
 	"\x04meta\x18\x01 \x01(\v2#.gitlabconnector.EventBusRecordMetaR\x04meta\x12?\n" +
-	"\apayload\x18\x02 \x01(\v2%.gitlabconnector.GitLabConnectorEventR\apayload\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\";\n" +
+	"\apayload\x18\x02 \x01(\v2%.gitlabconnector.GitLabConnectorEventR\apayload\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"d\n" +
 	"\x13TopicPublishReceipt\x12\x1c\n" +
 	"\tpublished\x18\x01 \x01(\bR\tpublished\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xdd\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xac\x01\n" +
 	"\x12EventBusRecordMeta\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\fR\x03key\x12\x14\n" +
 	"\x05topic\x18\x02 \x01(\tR\x05topic\x12\x1c\n" +
 	"\tpartition\x18\x03 \x01(\x05R\tpartition\x12\x16\n" +
 	"\x06offset\x18\x04 \x01(\x03R\x06offset\x128\n" +
-	"\ttimestamp\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa1\x05\n" +
+	"\ttimestamp\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\"\xa1\x05\n" +
 	"\x11GitLabProjectNode\x12H\n" +
 	"\vproject_key\x18\x01 \x01(\tB'\x92\xa9\x1d\x05exact\xfa\xa9\x1d\vproject_key\x8a\xaa\x1d\v\b\x02\x12\x05exact\x18\x01R\n" +
 	"projectKey\x12U\n" +

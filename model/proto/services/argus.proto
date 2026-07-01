@@ -25,7 +25,7 @@
 // operators and the Supervisor LLM a structured window into what every
 // coding agent in the fleet is doing, right now and historically.
 //
-// Argus consumes the claudesensor vservice to reach the data layer:
+// Argus consumes the agentsensor vservice to reach the data layer:
 //   - StratumQuery (stratum) — hot event store, working-set maps
 //   - TimedbQuery (timedb)   — timeseries aggregations
 //   - GraphdbQuery (graphdb) — graph topology queries
@@ -44,10 +44,10 @@ option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/k
 
 import "libs/spec.proto";
 import "libs/healthreport.proto";
-import "vservices/claude-sensor.proto";
+import "vservices/agent-sensor.proto";
 import "libs/trace.proto";
 
-// Argus calls into the data layer via S2S clients on the claudesensor vservice.
+// Argus calls into the data layer via S2S clients on the agentsensor vservice.
 
 // ============================================================================
 // Config
@@ -101,8 +101,8 @@ message GetDashboardResponse {
   // total_sessions_today is the number of sessions started in the last 24h.
   int64                             total_sessions_today  = 2;
   // top_active is the most recently active sessions (up to 10).
-  repeated claudesensor.SessionSummary top_active         = 3;
-  // active_users is the set of user emails with at least one active session.
+  repeated agentsensor.SessionSummary top_active         = 3;
+  // active_users is the set of user spiffe_ids with at least one active session.
   repeated string                   active_users          = 4;
   // events_last_hour is the total SensorEvents ingested in the last 60 minutes.
   int64                             events_last_hour      = 5;
@@ -119,7 +119,7 @@ message ListActiveSessionsRequest {
   bool noop = 201;
 }
 message ListActiveSessionsResponse {
-  repeated claudesensor.SessionSummary sessions        = 1;
+  repeated agentsensor.SessionSummary sessions        = 1;
   string                               next_page_token = 2;
   string trace_id = 200;
   bool noop = 201;
@@ -131,22 +131,22 @@ message GetSessionDetailRequest {
   bool noop = 201;
 }
 message GetSessionDetailResponse {
-  claudesensor.SessionSummary          summary       = 1;
+  agentsensor.SessionSummary          summary       = 1;
   // recent_events contains the most recent SensorEvents for the session (up to 100).
-  repeated claudesensor.SensorEvent    recent_events = 2;
+  repeated agentsensor.AgentEvent    recent_events = 2;
   string trace_id = 200;
   bool noop = 201;
 }
 
 message GetUserActivityRequest {
-  string email            = 1;
+  string spiffe_id            = 1;
   // time_range_hours controls how far back to look. Default: 24h.
   int32  time_range_hours = 2;
   string trace_id = 200;
   bool noop = 201;
 }
 message GetUserActivityResponse {
-  repeated claudesensor.SessionSummary sessions         = 1;
+  repeated agentsensor.SessionSummary sessions         = 1;
   int64                                total_events     = 2;
   int64                                total_tool_uses  = 3;
   int64                                total_subagents  = 4;
@@ -163,7 +163,7 @@ message SearchSessionsRequest {
   bool noop = 201;
 }
 message SearchSessionsResponse {
-  repeated claudesensor.SessionSummary sessions        = 1;
+  repeated agentsensor.SessionSummary sessions        = 1;
   string                               next_page_token = 2;
   string trace_id = 200;
   bool noop = 201;
@@ -213,11 +213,15 @@ message ScratchpadDeleteResponse {  string trace_id = 200;
   bool noop = 201;
 }
 
-message ScratchpadListRequest {  string trace_id = 200;
+message ScratchpadListRequest {
+  string page_token = 1;
+  int32  page_size  = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 message ScratchpadListResponse {
   repeated ScratchpadEntry entries = 1;
+  string                   next_page_token = 2;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -259,7 +263,7 @@ message WatchSessionDetailRequest {
 }
 
 message WatchUserActivityRequest {
-  string email            = 1;
+  string spiffe_id            = 1;
   // time_range_hours mirrors GetUserActivity. Default: 24h.
   int32  time_range_hours = 2;
   string trace_id = 200;
@@ -285,7 +289,7 @@ message WatchScratchpadReadRequest {
 // ============================================================================
 
 message UserSummary {
-  string email               = 1;
+  string spiffe_id               = 1;
   int64  total_sessions      = 2;
   int64  total_events        = 3;
   int64  first_seen_ms       = 4;
@@ -297,7 +301,7 @@ message UserSummary {
 }
 
 message ListUsersRequest {
-  claudesensor.EventTimeRange time_range = 1;
+  agentsensor.EventTimeRange time_range = 1;
   string                      page_token = 2;
   int32                       page_size  = 3;
   string trace_id = 200;
@@ -331,13 +335,13 @@ message ModelUseStat {
 }
 
 message GetUserProfileRequest {
-  string                      email      = 1;
-  claudesensor.EventTimeRange time_range = 2;
+  string                      spiffe_id      = 1;
+  agentsensor.EventTimeRange time_range = 2;
   string trace_id = 200;
   bool noop = 201;
 }
 message GetUserProfileResponse {
-  string                email                   = 1;
+  string                spiffe_id                   = 1;
   int64                 first_seen_ms           = 2;
   int64                 last_seen_ms            = 3;
   int64                 total_sessions          = 4;
@@ -355,8 +359,8 @@ message GetUserProfileResponse {
 }
 
 message WatchUserProfileRequest {
-  string                      email      = 1;
-  claudesensor.EventTimeRange time_range = 2;
+  string                      spiffe_id      = 1;
+  agentsensor.EventTimeRange time_range = 2;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -375,14 +379,14 @@ message PromptBucket {
 }
 
 message GetUserTokenStatsRequest {
-  string                      email          = 1;
-  claudesensor.EventTimeRange time_range     = 2;
+  string                      spiffe_id          = 1;
+  agentsensor.EventTimeRange time_range     = 2;
   int32                       bucket_seconds = 3;
   string trace_id = 200;
   bool noop = 201;
 }
 message GetUserTokenStatsResponse {
-  string                email               = 1;
+  string                spiffe_id               = 1;
   int64                 total_prompts       = 2;
   int64                 total_prompt_length = 3;
   int64                 avg_prompt_length   = 4;
@@ -405,21 +409,24 @@ message CommitRecord {
   string command           = 5;  // the git commit command
   string output            = 6;  // stdout containing commit hash + message
   bool   succeeded         = 7;
-  string email             = 8;
+  string spiffe_id             = 8;
   string event_id          = 9;
   string trace_id = 200;
   bool noop = 201;
 }
 
 message GetUserCommitActivityRequest {
-  string                      email      = 1;
-  claudesensor.EventTimeRange time_range = 2;
+  string                      spiffe_id      = 1;
+  agentsensor.EventTimeRange time_range = 2;
   int32                       limit      = 3;
+  string                      page_token = 4;
+  int32                       page_size  = 5;
   string trace_id = 200;
   bool noop = 201;
 }
 message GetUserCommitActivityResponse {
   repeated CommitRecord commits = 1;
+  string                next_page_token = 2;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -430,8 +437,8 @@ message GetUserCommitActivityResponse {
 
 message FileActivityRecord {
   string                     file_path     = 1;
-  claudesensor.FileOperation operation     = 2;
-  string                     email         = 3;
+  agentsensor.FileOperation operation     = 2;
+  string                     spiffe_id         = 3;
   string                     session_id    = 4;
   string                     agent_id      = 5;
   string                     language      = 6;
@@ -443,11 +450,11 @@ message FileActivityRecord {
 }
 
 message GetFileActivityRequest {
-  // email_filter restricts to one user. Empty = all users.
-  string                      email_filter = 1;
+  // spiffe_id_filter restricts to one user. Empty = all users.
+  string                      spiffe_id_filter = 1;
   // path_prefix restricts to files under this path. Empty = all files.
   string                      path_prefix  = 2;
-  claudesensor.EventTimeRange time_range   = 3;
+  agentsensor.EventTimeRange time_range   = 3;
   string                      page_token   = 4;
   int32                       page_size    = 5;
   string trace_id = 200;
@@ -466,14 +473,14 @@ message GetFileActivityResponse {
 
 message GetSessionTimelineRequest {
   string                      session_id = 1;
-  claudesensor.EventTimeRange time_range = 2;
+  agentsensor.EventTimeRange time_range = 2;
   string                      page_token = 3;
   int32                       page_size  = 4;
   string trace_id = 200;
   bool noop = 201;
 }
 message GetSessionTimelineResponse {
-  repeated claudesensor.SensorEvent events           = 1;
+  repeated agentsensor.AgentEvent events           = 1;
   string                            next_page_token  = 2;
   // total_event_count is the total events in the session, across all pages.
   int64                             total_event_count = 3;
@@ -517,7 +524,7 @@ message GetAgentTreeResponse {
 // ============================================================================
 
 message GetSystemStatsRequest {
-  claudesensor.EventTimeRange time_range = 1;
+  agentsensor.EventTimeRange time_range = 1;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -538,7 +545,7 @@ message GetSystemStatsResponse {
 }
 
 message WatchSystemStatsRequest {
-  claudesensor.EventTimeRange time_range = 1;
+  agentsensor.EventTimeRange time_range = 1;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -559,22 +566,25 @@ message ToolStat {
 }
 
 message GetToolLeaderboardRequest {
-  claudesensor.EventTimeRange time_range   = 1;
-  // email_filter restricts to one user. Empty = fleet-wide.
-  string                      email_filter = 2;
+  agentsensor.EventTimeRange time_range   = 1;
+  // spiffe_id_filter restricts to one user. Empty = fleet-wide.
+  string                      spiffe_id_filter = 2;
   int32                       limit        = 3;
+  string                      page_token   = 4;
+  int32                       page_size    = 5;
   string trace_id = 200;
   bool noop = 201;
 }
 message GetToolLeaderboardResponse {
   repeated ToolStat tools = 1;
+  string            next_page_token = 2;
   string trace_id = 200;
   bool noop = 201;
 }
 
 message WatchToolLeaderboardRequest {
-  claudesensor.EventTimeRange time_range   = 1;
-  string                      email_filter = 2;
+  agentsensor.EventTimeRange time_range   = 1;
+  string                      spiffe_id_filter = 2;
   int32                       limit        = 3;
   string trace_id = 200;
   bool noop = 201;
@@ -594,12 +604,15 @@ message ModelStat {
 }
 
 message GetModelUsageRequest {
-  claudesensor.EventTimeRange time_range = 1;
+  agentsensor.EventTimeRange time_range = 1;
+  string                      page_token = 2;
+  int32                       page_size  = 3;
   string trace_id = 200;
   bool noop = 201;
 }
 message GetModelUsageResponse {
   repeated ModelStat models = 1;
+  string             next_page_token = 2;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -620,21 +633,24 @@ message ActivityBucket {
   int64  event_count     = 2;
   int64  session_count   = 3;
   int64  active_users    = 4;
-  // group_key is set when group_by != ALL (email or sensor_type value).
+  // group_key is set when group_by != ALL (spiffe_id or sensor_type value).
   string group_key       = 5;
   string trace_id = 200;
   bool noop = 201;
 }
 
 message GetActivityTimeseriesRequest {
-  claudesensor.EventTimeRange time_range     = 1;
+  agentsensor.EventTimeRange time_range     = 1;
   int32                       bucket_seconds = 2;
   ActivityGroupBy             group_by       = 3;
+  string                      page_token     = 4;
+  int32                       page_size      = 5;
   string trace_id = 200;
   bool noop = 201;
 }
 message GetActivityTimeseriesResponse {
   repeated ActivityBucket buckets = 1;
+  string                  next_page_token = 2;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -644,12 +660,12 @@ message GetActivityTimeseriesResponse {
 // ============================================================================
 
 message SearchEventsFilter {
-  string                       email            = 1;
+  string                       spiffe_id            = 1;
   string                       session_id       = 2;
   string                       agent_id         = 3;
-  claudesensor.SensorEventType event_type       = 4;
+  agentsensor.SensorEventType event_type       = 4;
   string                       tool_name        = 5;
-  claudesensor.EventTimeRange  time_range       = 6;
+  agentsensor.EventTimeRange  time_range       = 6;
   // succeeded_filter: 0 = any, 1 = succeeded only, 2 = failed only.
   int32                        succeeded_filter = 7;
   string trace_id = 200;
@@ -664,7 +680,7 @@ message SearchEventsRequest {
   bool noop = 201;
 }
 message SearchEventsResponse {
-  repeated claudesensor.SensorEvent events          = 1;
+  repeated agentsensor.AgentEvent events          = 1;
   string                            next_page_token = 2;
   string trace_id = 200;
   bool noop = 201;
@@ -678,8 +694,8 @@ message FilePathMatch {
   string                     file_path    = 1;
   string                     session_id   = 2;
   string                     agent_id     = 3;
-  string                     email        = 4;
-  claudesensor.FileOperation operation    = 5;
+  string                     spiffe_id        = 4;
+  agentsensor.FileOperation operation    = 5;
   int64                      timestamp_ms = 6;
   string trace_id = 200;
   bool noop = 201;
@@ -687,8 +703,8 @@ message FilePathMatch {
 
 message SearchByFilePathRequest {
   string                      path_pattern = 1;
-  string                      email_filter = 2;
-  claudesensor.EventTimeRange time_range   = 3;
+  string                      spiffe_id_filter = 2;
+  agentsensor.EventTimeRange time_range   = 3;
   string                      page_token   = 4;
   int32                       page_size    = 5;
   string trace_id = 200;
@@ -727,7 +743,7 @@ service Argus {
   }
 
   // SubscribeLiveSessions streams real-time session lifecycle events.
-  rpc SubscribeLiveSessions(claudesensor.WatchLiveSessionsRequest) returns (stream claudesensor.WatchLiveSessionsEvent);
+  rpc SubscribeLiveSessions(agentsensor.WatchLiveSessionsRequest) returns (stream agentsensor.WatchLiveSessionsEvent);
 
   // --- Scratchpad ---
 
@@ -794,13 +810,15 @@ service Argus {
   rpc ListUserCommitActivity(GetUserCommitActivityRequest) returns (GetUserCommitActivityResponse) {
   }
 
-  // GetFileActivity returns file create/modify/delete records across sessions.
-  rpc GetFileActivity(GetFileActivityRequest) returns (GetFileActivityResponse);
+  // ListFileActivity returns file create/modify/delete records across sessions.
+  rpc ListFileActivity(GetFileActivityRequest) returns (GetFileActivityResponse) {
+  }
 
   // --- Session and agent topology ---
 
-  // GetSessionTimeline returns the full paginated event stream for one session.
-  rpc GetSessionTimeline(GetSessionTimelineRequest) returns (GetSessionTimelineResponse);
+  // ListSessionTimeline returns the full paginated event stream for one session.
+  rpc ListSessionTimeline(GetSessionTimelineRequest) returns (GetSessionTimelineResponse) {
+  }
 
   // GetAgentTree returns the subagent hierarchy for a session as a recursive tree.
   rpc GetAgentTree(GetAgentTreeRequest) returns (GetAgentTreeResponse);
@@ -866,7 +884,8 @@ service ArgusConfigStateService {
 	rpc WatchConfig(trace.TraceRequest) returns (stream Config);
 }
 
-message MapEmpty {  string trace_id = 200;
+message MapEmpty {
+  string trace_id = 200;
   bool noop = 201;
 }
 
@@ -981,8 +1000,8 @@ enum ArgusRpcId {
   ARGUS_RPC_ID_GET_USER_TOKEN_STATS = 24;
   ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE = 25;
   ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY = 26;
-  ARGUS_RPC_ID_GET_FILE_ACTIVITY = 27;
-  ARGUS_RPC_ID_GET_SESSION_TIMELINE = 28;
+  ARGUS_RPC_ID_LIST_FILE_ACTIVITY = 27;
+  ARGUS_RPC_ID_LIST_SESSION_TIMELINE = 28;
   ARGUS_RPC_ID_GET_AGENT_TREE = 29;
   ARGUS_RPC_ID_GET_SYSTEM_STATS = 30;
   ARGUS_RPC_ID_LIST_TOOL_LEADERBOARD = 31;

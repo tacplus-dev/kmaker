@@ -221,19 +221,38 @@ enum LogicalOp {
   LOGICAL_OP_AND = 1;
   LOGICAL_OP_OR = 2;
 }
-message QueryValue { oneof value { string string_value = 1; int64 int_value = 2; double double_value = 3; bool bool_value = 4; }   string trace_id = 200;
+message QueryValue {
+  oneof value { string string_value = 1; int64 int_value = 2; double double_value = 3; bool bool_value = 4; }
+  string trace_id = 200;
   bool noop = 201;
 }
-message Predicate { string field_name = 1; ComparisonOp op = 2; QueryValue value = 3; repeated QueryValue values = 4;   string trace_id = 200;
+message Predicate {
+  string field_name = 1;
+  ComparisonOp op = 2;
+  QueryValue value = 3;
+  repeated QueryValue values = 4;
+  string trace_id = 200;
   bool noop = 201;
 }
-message PredicateGroup { LogicalOp op = 1; repeated Predicate predicates = 2; repeated PredicateGroup groups = 3;   string trace_id = 200;
+message PredicateGroup {
+  LogicalOp op = 1;
+  repeated Predicate predicates = 2;
+  repeated PredicateGroup groups = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message SortField { string field_name = 1; SortDirection direction = 2;   string trace_id = 200;
+message SortField {
+  string field_name = 1;
+  SortDirection direction = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message CollectionQuery { PredicateGroup where = 1; repeated SortField order_by = 2; int32 limit = 3; int32 offset = 4;   string trace_id = 200;
+message CollectionQuery {
+  PredicateGroup where = 1;
+  repeated SortField order_by = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+  string trace_id = 200;
   bool noop = 201;
 }
 
@@ -274,77 +293,125 @@ service GitLabConnectorStateService {
 	rpc WatchQueryWebhookRegistrations(WebhookRegistrationsQueryRequest) returns (stream WebhookRegistrationsQueryResponse);
 }
 
-message LastPollTimestampsGetRequest { string key = 1;   string trace_id = 200;
+message LastPollTimestampsGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message LastPollTimestampsPutRequest { string key = 1; LastPollTimestamp value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message LastPollTimestampsPutRequest {
+  string key = 1;
+  LastPollTimestamp value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message LastPollTimestampsGetAllRequest {  string trace_id = 200;
+message LastPollTimestampsGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message LastPollTimestampsKeysRequest {  string trace_id = 200;
+message LastPollTimestampsKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message LastPollTimestampsSizeRequest {  string trace_id = 200;
+message LastPollTimestampsSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message LastPollTimestampsClearRequest {  string trace_id = 200;
+message LastPollTimestampsClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message LastPollTimestampsValueResponse { LastPollTimestamp value = 1; bool found = 2;   string trace_id = 200;
+message LastPollTimestampsValueResponse {
+  LastPollTimestamp value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message LastPollTimestampsEntriesResponse { map<string, LastPollTimestamp> entries = 1;   string trace_id = 200;
+message LastPollTimestampsEntriesResponse {
+  map<string, LastPollTimestamp> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message LastPollTimestampsKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message LastPollTimestampsKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message LastPollTimestampsSizeResponse { int32 size = 1;   string trace_id = 200;
+message LastPollTimestampsSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message LastPollTimestampsQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message LastPollTimestampsQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message LastPollTimestampsQueryResponse { repeated LastPollTimestamp results = 1; int32 total_count = 2;   string trace_id = 200;
+message LastPollTimestampsQueryResponse {
+  repeated LastPollTimestamp results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
-message WebhookRegistrationsGetRequest { string key = 1;   string trace_id = 200;
+message WebhookRegistrationsGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message WebhookRegistrationsPutRequest { string key = 1; WebhookRegistration value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message WebhookRegistrationsPutRequest {
+  string key = 1;
+  WebhookRegistration value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message WebhookRegistrationsGetAllRequest {  string trace_id = 200;
+message WebhookRegistrationsGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message WebhookRegistrationsKeysRequest {  string trace_id = 200;
+message WebhookRegistrationsKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message WebhookRegistrationsSizeRequest {  string trace_id = 200;
+message WebhookRegistrationsSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message WebhookRegistrationsClearRequest {  string trace_id = 200;
+message WebhookRegistrationsClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message WebhookRegistrationsValueResponse { WebhookRegistration value = 1; bool found = 2;   string trace_id = 200;
+message WebhookRegistrationsValueResponse {
+  WebhookRegistration value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message WebhookRegistrationsEntriesResponse { map<string, WebhookRegistration> entries = 1;   string trace_id = 200;
+message WebhookRegistrationsEntriesResponse {
+  map<string, WebhookRegistration> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message WebhookRegistrationsKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message WebhookRegistrationsKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message WebhookRegistrationsSizeResponse { int32 size = 1;   string trace_id = 200;
+message WebhookRegistrationsSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message WebhookRegistrationsQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message WebhookRegistrationsQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message WebhookRegistrationsQueryResponse { repeated WebhookRegistration results = 1; int32 total_count = 2;   string trace_id = 200;
+message WebhookRegistrationsQueryResponse {
+  repeated WebhookRegistration results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
@@ -359,7 +426,8 @@ service GitlabconnectorConfigStateService {
 	rpc WatchConfig(trace.TraceRequest) returns (stream Config);
 }
 
-message MapEmpty {  string trace_id = 200;
+message MapEmpty {
+  string trace_id = 200;
   bool noop = 201;
 }
 

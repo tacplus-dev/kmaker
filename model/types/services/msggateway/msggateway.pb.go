@@ -356,38 +356,39 @@ const (
 	TypeID_TYPE_ID_GET_CHANNEL_HISTORY_REQUEST    TypeID = 18
 	TypeID_TYPE_ID_GET_CHANNEL_HISTORY_RESPONSE   TypeID = 19
 	TypeID_TYPE_ID_LIST_CHANNELS_RESPONSE         TypeID = 20
-	TypeID_TYPE_ID_REACTION_REQUEST               TypeID = 21
-	TypeID_TYPE_ID_MSGGATEWAY_CONFIG_STATE        TypeID = 22
-	TypeID_TYPE_ID_QUERY_VALUE                    TypeID = 23
-	TypeID_TYPE_ID_PREDICATE                      TypeID = 24
-	TypeID_TYPE_ID_PREDICATE_GROUP                TypeID = 25
-	TypeID_TYPE_ID_SORT_FIELD                     TypeID = 26
-	TypeID_TYPE_ID_COLLECTION_QUERY               TypeID = 27
-	TypeID_TYPE_ID_VIRTUAL_USERS_GET_REQUEST      TypeID = 28
-	TypeID_TYPE_ID_VIRTUAL_USERS_PUT_REQUEST      TypeID = 29
-	TypeID_TYPE_ID_VIRTUAL_USERS_GET_ALL_REQUEST  TypeID = 30
-	TypeID_TYPE_ID_VIRTUAL_USERS_KEYS_REQUEST     TypeID = 31
-	TypeID_TYPE_ID_VIRTUAL_USERS_SIZE_REQUEST     TypeID = 32
-	TypeID_TYPE_ID_VIRTUAL_USERS_CLEAR_REQUEST    TypeID = 33
-	TypeID_TYPE_ID_VIRTUAL_USERS_VALUE_RESPONSE   TypeID = 34
-	TypeID_TYPE_ID_VIRTUAL_USERS_ENTRIES_RESPONSE TypeID = 35
-	TypeID_TYPE_ID_VIRTUAL_USERS_KEYS_RESPONSE    TypeID = 36
-	TypeID_TYPE_ID_VIRTUAL_USERS_SIZE_RESPONSE    TypeID = 37
-	TypeID_TYPE_ID_VIRTUAL_USERS_QUERY_REQUEST    TypeID = 38
-	TypeID_TYPE_ID_VIRTUAL_USERS_QUERY_RESPONSE   TypeID = 39
-	TypeID_TYPE_ID_SUBSCRIPTIONS_GET_REQUEST      TypeID = 40
-	TypeID_TYPE_ID_SUBSCRIPTIONS_PUT_REQUEST      TypeID = 41
-	TypeID_TYPE_ID_SUBSCRIPTIONS_GET_ALL_REQUEST  TypeID = 42
-	TypeID_TYPE_ID_SUBSCRIPTIONS_KEYS_REQUEST     TypeID = 43
-	TypeID_TYPE_ID_SUBSCRIPTIONS_SIZE_REQUEST     TypeID = 44
-	TypeID_TYPE_ID_SUBSCRIPTIONS_CLEAR_REQUEST    TypeID = 45
-	TypeID_TYPE_ID_SUBSCRIPTIONS_VALUE_RESPONSE   TypeID = 46
-	TypeID_TYPE_ID_SUBSCRIPTIONS_ENTRIES_RESPONSE TypeID = 47
-	TypeID_TYPE_ID_SUBSCRIPTIONS_KEYS_RESPONSE    TypeID = 48
-	TypeID_TYPE_ID_SUBSCRIPTIONS_SIZE_RESPONSE    TypeID = 49
-	TypeID_TYPE_ID_SUBSCRIPTIONS_QUERY_REQUEST    TypeID = 50
-	TypeID_TYPE_ID_SUBSCRIPTIONS_QUERY_RESPONSE   TypeID = 51
-	TypeID_TYPE_ID_MAP_EMPTY                      TypeID = 52
+	TypeID_TYPE_ID_LIST_CHANNELS_REQUEST          TypeID = 21
+	TypeID_TYPE_ID_REACTION_REQUEST               TypeID = 22
+	TypeID_TYPE_ID_MSGGATEWAY_CONFIG_STATE        TypeID = 23
+	TypeID_TYPE_ID_QUERY_VALUE                    TypeID = 24
+	TypeID_TYPE_ID_PREDICATE                      TypeID = 25
+	TypeID_TYPE_ID_PREDICATE_GROUP                TypeID = 26
+	TypeID_TYPE_ID_SORT_FIELD                     TypeID = 27
+	TypeID_TYPE_ID_COLLECTION_QUERY               TypeID = 28
+	TypeID_TYPE_ID_VIRTUAL_USERS_GET_REQUEST      TypeID = 29
+	TypeID_TYPE_ID_VIRTUAL_USERS_PUT_REQUEST      TypeID = 30
+	TypeID_TYPE_ID_VIRTUAL_USERS_GET_ALL_REQUEST  TypeID = 31
+	TypeID_TYPE_ID_VIRTUAL_USERS_KEYS_REQUEST     TypeID = 32
+	TypeID_TYPE_ID_VIRTUAL_USERS_SIZE_REQUEST     TypeID = 33
+	TypeID_TYPE_ID_VIRTUAL_USERS_CLEAR_REQUEST    TypeID = 34
+	TypeID_TYPE_ID_VIRTUAL_USERS_VALUE_RESPONSE   TypeID = 35
+	TypeID_TYPE_ID_VIRTUAL_USERS_ENTRIES_RESPONSE TypeID = 36
+	TypeID_TYPE_ID_VIRTUAL_USERS_KEYS_RESPONSE    TypeID = 37
+	TypeID_TYPE_ID_VIRTUAL_USERS_SIZE_RESPONSE    TypeID = 38
+	TypeID_TYPE_ID_VIRTUAL_USERS_QUERY_REQUEST    TypeID = 39
+	TypeID_TYPE_ID_VIRTUAL_USERS_QUERY_RESPONSE   TypeID = 40
+	TypeID_TYPE_ID_SUBSCRIPTIONS_GET_REQUEST      TypeID = 41
+	TypeID_TYPE_ID_SUBSCRIPTIONS_PUT_REQUEST      TypeID = 42
+	TypeID_TYPE_ID_SUBSCRIPTIONS_GET_ALL_REQUEST  TypeID = 43
+	TypeID_TYPE_ID_SUBSCRIPTIONS_KEYS_REQUEST     TypeID = 44
+	TypeID_TYPE_ID_SUBSCRIPTIONS_SIZE_REQUEST     TypeID = 45
+	TypeID_TYPE_ID_SUBSCRIPTIONS_CLEAR_REQUEST    TypeID = 46
+	TypeID_TYPE_ID_SUBSCRIPTIONS_VALUE_RESPONSE   TypeID = 47
+	TypeID_TYPE_ID_SUBSCRIPTIONS_ENTRIES_RESPONSE TypeID = 48
+	TypeID_TYPE_ID_SUBSCRIPTIONS_KEYS_RESPONSE    TypeID = 49
+	TypeID_TYPE_ID_SUBSCRIPTIONS_SIZE_RESPONSE    TypeID = 50
+	TypeID_TYPE_ID_SUBSCRIPTIONS_QUERY_REQUEST    TypeID = 51
+	TypeID_TYPE_ID_SUBSCRIPTIONS_QUERY_RESPONSE   TypeID = 52
+	TypeID_TYPE_ID_MAP_EMPTY                      TypeID = 53
 )
 
 // Enum value maps for TypeID.
@@ -414,38 +415,39 @@ var (
 		18: "TYPE_ID_GET_CHANNEL_HISTORY_REQUEST",
 		19: "TYPE_ID_GET_CHANNEL_HISTORY_RESPONSE",
 		20: "TYPE_ID_LIST_CHANNELS_RESPONSE",
-		21: "TYPE_ID_REACTION_REQUEST",
-		22: "TYPE_ID_MSGGATEWAY_CONFIG_STATE",
-		23: "TYPE_ID_QUERY_VALUE",
-		24: "TYPE_ID_PREDICATE",
-		25: "TYPE_ID_PREDICATE_GROUP",
-		26: "TYPE_ID_SORT_FIELD",
-		27: "TYPE_ID_COLLECTION_QUERY",
-		28: "TYPE_ID_VIRTUAL_USERS_GET_REQUEST",
-		29: "TYPE_ID_VIRTUAL_USERS_PUT_REQUEST",
-		30: "TYPE_ID_VIRTUAL_USERS_GET_ALL_REQUEST",
-		31: "TYPE_ID_VIRTUAL_USERS_KEYS_REQUEST",
-		32: "TYPE_ID_VIRTUAL_USERS_SIZE_REQUEST",
-		33: "TYPE_ID_VIRTUAL_USERS_CLEAR_REQUEST",
-		34: "TYPE_ID_VIRTUAL_USERS_VALUE_RESPONSE",
-		35: "TYPE_ID_VIRTUAL_USERS_ENTRIES_RESPONSE",
-		36: "TYPE_ID_VIRTUAL_USERS_KEYS_RESPONSE",
-		37: "TYPE_ID_VIRTUAL_USERS_SIZE_RESPONSE",
-		38: "TYPE_ID_VIRTUAL_USERS_QUERY_REQUEST",
-		39: "TYPE_ID_VIRTUAL_USERS_QUERY_RESPONSE",
-		40: "TYPE_ID_SUBSCRIPTIONS_GET_REQUEST",
-		41: "TYPE_ID_SUBSCRIPTIONS_PUT_REQUEST",
-		42: "TYPE_ID_SUBSCRIPTIONS_GET_ALL_REQUEST",
-		43: "TYPE_ID_SUBSCRIPTIONS_KEYS_REQUEST",
-		44: "TYPE_ID_SUBSCRIPTIONS_SIZE_REQUEST",
-		45: "TYPE_ID_SUBSCRIPTIONS_CLEAR_REQUEST",
-		46: "TYPE_ID_SUBSCRIPTIONS_VALUE_RESPONSE",
-		47: "TYPE_ID_SUBSCRIPTIONS_ENTRIES_RESPONSE",
-		48: "TYPE_ID_SUBSCRIPTIONS_KEYS_RESPONSE",
-		49: "TYPE_ID_SUBSCRIPTIONS_SIZE_RESPONSE",
-		50: "TYPE_ID_SUBSCRIPTIONS_QUERY_REQUEST",
-		51: "TYPE_ID_SUBSCRIPTIONS_QUERY_RESPONSE",
-		52: "TYPE_ID_MAP_EMPTY",
+		21: "TYPE_ID_LIST_CHANNELS_REQUEST",
+		22: "TYPE_ID_REACTION_REQUEST",
+		23: "TYPE_ID_MSGGATEWAY_CONFIG_STATE",
+		24: "TYPE_ID_QUERY_VALUE",
+		25: "TYPE_ID_PREDICATE",
+		26: "TYPE_ID_PREDICATE_GROUP",
+		27: "TYPE_ID_SORT_FIELD",
+		28: "TYPE_ID_COLLECTION_QUERY",
+		29: "TYPE_ID_VIRTUAL_USERS_GET_REQUEST",
+		30: "TYPE_ID_VIRTUAL_USERS_PUT_REQUEST",
+		31: "TYPE_ID_VIRTUAL_USERS_GET_ALL_REQUEST",
+		32: "TYPE_ID_VIRTUAL_USERS_KEYS_REQUEST",
+		33: "TYPE_ID_VIRTUAL_USERS_SIZE_REQUEST",
+		34: "TYPE_ID_VIRTUAL_USERS_CLEAR_REQUEST",
+		35: "TYPE_ID_VIRTUAL_USERS_VALUE_RESPONSE",
+		36: "TYPE_ID_VIRTUAL_USERS_ENTRIES_RESPONSE",
+		37: "TYPE_ID_VIRTUAL_USERS_KEYS_RESPONSE",
+		38: "TYPE_ID_VIRTUAL_USERS_SIZE_RESPONSE",
+		39: "TYPE_ID_VIRTUAL_USERS_QUERY_REQUEST",
+		40: "TYPE_ID_VIRTUAL_USERS_QUERY_RESPONSE",
+		41: "TYPE_ID_SUBSCRIPTIONS_GET_REQUEST",
+		42: "TYPE_ID_SUBSCRIPTIONS_PUT_REQUEST",
+		43: "TYPE_ID_SUBSCRIPTIONS_GET_ALL_REQUEST",
+		44: "TYPE_ID_SUBSCRIPTIONS_KEYS_REQUEST",
+		45: "TYPE_ID_SUBSCRIPTIONS_SIZE_REQUEST",
+		46: "TYPE_ID_SUBSCRIPTIONS_CLEAR_REQUEST",
+		47: "TYPE_ID_SUBSCRIPTIONS_VALUE_RESPONSE",
+		48: "TYPE_ID_SUBSCRIPTIONS_ENTRIES_RESPONSE",
+		49: "TYPE_ID_SUBSCRIPTIONS_KEYS_RESPONSE",
+		50: "TYPE_ID_SUBSCRIPTIONS_SIZE_RESPONSE",
+		51: "TYPE_ID_SUBSCRIPTIONS_QUERY_REQUEST",
+		52: "TYPE_ID_SUBSCRIPTIONS_QUERY_RESPONSE",
+		53: "TYPE_ID_MAP_EMPTY",
 	}
 	TypeID_value = map[string]int32{
 		"TYPE_ID_UNSPECIFIED":                    0,
@@ -469,38 +471,39 @@ var (
 		"TYPE_ID_GET_CHANNEL_HISTORY_REQUEST":    18,
 		"TYPE_ID_GET_CHANNEL_HISTORY_RESPONSE":   19,
 		"TYPE_ID_LIST_CHANNELS_RESPONSE":         20,
-		"TYPE_ID_REACTION_REQUEST":               21,
-		"TYPE_ID_MSGGATEWAY_CONFIG_STATE":        22,
-		"TYPE_ID_QUERY_VALUE":                    23,
-		"TYPE_ID_PREDICATE":                      24,
-		"TYPE_ID_PREDICATE_GROUP":                25,
-		"TYPE_ID_SORT_FIELD":                     26,
-		"TYPE_ID_COLLECTION_QUERY":               27,
-		"TYPE_ID_VIRTUAL_USERS_GET_REQUEST":      28,
-		"TYPE_ID_VIRTUAL_USERS_PUT_REQUEST":      29,
-		"TYPE_ID_VIRTUAL_USERS_GET_ALL_REQUEST":  30,
-		"TYPE_ID_VIRTUAL_USERS_KEYS_REQUEST":     31,
-		"TYPE_ID_VIRTUAL_USERS_SIZE_REQUEST":     32,
-		"TYPE_ID_VIRTUAL_USERS_CLEAR_REQUEST":    33,
-		"TYPE_ID_VIRTUAL_USERS_VALUE_RESPONSE":   34,
-		"TYPE_ID_VIRTUAL_USERS_ENTRIES_RESPONSE": 35,
-		"TYPE_ID_VIRTUAL_USERS_KEYS_RESPONSE":    36,
-		"TYPE_ID_VIRTUAL_USERS_SIZE_RESPONSE":    37,
-		"TYPE_ID_VIRTUAL_USERS_QUERY_REQUEST":    38,
-		"TYPE_ID_VIRTUAL_USERS_QUERY_RESPONSE":   39,
-		"TYPE_ID_SUBSCRIPTIONS_GET_REQUEST":      40,
-		"TYPE_ID_SUBSCRIPTIONS_PUT_REQUEST":      41,
-		"TYPE_ID_SUBSCRIPTIONS_GET_ALL_REQUEST":  42,
-		"TYPE_ID_SUBSCRIPTIONS_KEYS_REQUEST":     43,
-		"TYPE_ID_SUBSCRIPTIONS_SIZE_REQUEST":     44,
-		"TYPE_ID_SUBSCRIPTIONS_CLEAR_REQUEST":    45,
-		"TYPE_ID_SUBSCRIPTIONS_VALUE_RESPONSE":   46,
-		"TYPE_ID_SUBSCRIPTIONS_ENTRIES_RESPONSE": 47,
-		"TYPE_ID_SUBSCRIPTIONS_KEYS_RESPONSE":    48,
-		"TYPE_ID_SUBSCRIPTIONS_SIZE_RESPONSE":    49,
-		"TYPE_ID_SUBSCRIPTIONS_QUERY_REQUEST":    50,
-		"TYPE_ID_SUBSCRIPTIONS_QUERY_RESPONSE":   51,
-		"TYPE_ID_MAP_EMPTY":                      52,
+		"TYPE_ID_LIST_CHANNELS_REQUEST":          21,
+		"TYPE_ID_REACTION_REQUEST":               22,
+		"TYPE_ID_MSGGATEWAY_CONFIG_STATE":        23,
+		"TYPE_ID_QUERY_VALUE":                    24,
+		"TYPE_ID_PREDICATE":                      25,
+		"TYPE_ID_PREDICATE_GROUP":                26,
+		"TYPE_ID_SORT_FIELD":                     27,
+		"TYPE_ID_COLLECTION_QUERY":               28,
+		"TYPE_ID_VIRTUAL_USERS_GET_REQUEST":      29,
+		"TYPE_ID_VIRTUAL_USERS_PUT_REQUEST":      30,
+		"TYPE_ID_VIRTUAL_USERS_GET_ALL_REQUEST":  31,
+		"TYPE_ID_VIRTUAL_USERS_KEYS_REQUEST":     32,
+		"TYPE_ID_VIRTUAL_USERS_SIZE_REQUEST":     33,
+		"TYPE_ID_VIRTUAL_USERS_CLEAR_REQUEST":    34,
+		"TYPE_ID_VIRTUAL_USERS_VALUE_RESPONSE":   35,
+		"TYPE_ID_VIRTUAL_USERS_ENTRIES_RESPONSE": 36,
+		"TYPE_ID_VIRTUAL_USERS_KEYS_RESPONSE":    37,
+		"TYPE_ID_VIRTUAL_USERS_SIZE_RESPONSE":    38,
+		"TYPE_ID_VIRTUAL_USERS_QUERY_REQUEST":    39,
+		"TYPE_ID_VIRTUAL_USERS_QUERY_RESPONSE":   40,
+		"TYPE_ID_SUBSCRIPTIONS_GET_REQUEST":      41,
+		"TYPE_ID_SUBSCRIPTIONS_PUT_REQUEST":      42,
+		"TYPE_ID_SUBSCRIPTIONS_GET_ALL_REQUEST":  43,
+		"TYPE_ID_SUBSCRIPTIONS_KEYS_REQUEST":     44,
+		"TYPE_ID_SUBSCRIPTIONS_SIZE_REQUEST":     45,
+		"TYPE_ID_SUBSCRIPTIONS_CLEAR_REQUEST":    46,
+		"TYPE_ID_SUBSCRIPTIONS_VALUE_RESPONSE":   47,
+		"TYPE_ID_SUBSCRIPTIONS_ENTRIES_RESPONSE": 48,
+		"TYPE_ID_SUBSCRIPTIONS_KEYS_RESPONSE":    49,
+		"TYPE_ID_SUBSCRIPTIONS_SIZE_RESPONSE":    50,
+		"TYPE_ID_SUBSCRIPTIONS_QUERY_REQUEST":    51,
+		"TYPE_ID_SUBSCRIPTIONS_QUERY_RESPONSE":   52,
+		"TYPE_ID_MAP_EMPTY":                      53,
 	}
 )
 
@@ -2075,6 +2078,8 @@ type GetThreadRequest struct {
 	ThreadTs string `protobuf:"bytes,2,opt,name=thread_ts,json=threadTs,proto3" json:"thread_ts,omitempty"`
 	// limit is the maximum number of messages to return. Default: 100.
 	Limit         int32  `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`
+	PageSize      int32  `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string `protobuf:"bytes,5,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -2132,6 +2137,20 @@ func (x *GetThreadRequest) GetLimit() int32 {
 	return 0
 }
 
+func (x *GetThreadRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *GetThreadRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 func (x *GetThreadRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -2149,6 +2168,8 @@ func (x *GetThreadRequest) GetNoop() bool {
 type GetThreadResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Messages      []*Message             `protobuf:"bytes,1,rep,name=messages,proto3" json:"messages,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                  `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -2190,6 +2211,20 @@ func (x *GetThreadResponse) GetMessages() []*Message {
 		return x.Messages
 	}
 	return nil
+}
+
+func (x *GetThreadResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *GetThreadResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
 }
 
 func (x *GetThreadResponse) GetTraceId() string {
@@ -2357,6 +2392,8 @@ func (x *GetChannelHistoryResponse) GetNoop() bool {
 type ListChannelsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Channels      []*Channel             `protobuf:"bytes,1,rep,name=channels,proto3" json:"channels,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                  `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -2400,6 +2437,20 @@ func (x *ListChannelsResponse) GetChannels() []*Channel {
 	return nil
 }
 
+func (x *ListChannelsResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *ListChannelsResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
+}
+
 func (x *ListChannelsResponse) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -2408,6 +2459,74 @@ func (x *ListChannelsResponse) GetTraceId() string {
 }
 
 func (x *ListChannelsResponse) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+type ListChannelsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PageSize      int32                  `protobuf:"varint,1,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string                 `protobuf:"bytes,2,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListChannelsRequest) Reset() {
+	*x = ListChannelsRequest{}
+	mi := &file_services_msggateway_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListChannelsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListChannelsRequest) ProtoMessage() {}
+
+func (x *ListChannelsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_services_msggateway_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListChannelsRequest.ProtoReflect.Descriptor instead.
+func (*ListChannelsRequest) Descriptor() ([]byte, []int) {
+	return file_services_msggateway_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *ListChannelsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListChannelsRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
+func (x *ListChannelsRequest) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *ListChannelsRequest) GetNoop() bool {
 	if x != nil {
 		return x.Noop
 	}
@@ -2430,7 +2549,7 @@ type ReactionRequest struct {
 
 func (x *ReactionRequest) Reset() {
 	*x = ReactionRequest{}
-	mi := &file_services_msggateway_proto_msgTypes[20]
+	mi := &file_services_msggateway_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2442,7 +2561,7 @@ func (x *ReactionRequest) String() string {
 func (*ReactionRequest) ProtoMessage() {}
 
 func (x *ReactionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[20]
+	mi := &file_services_msggateway_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2455,7 +2574,7 @@ func (x *ReactionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReactionRequest.ProtoReflect.Descriptor instead.
 func (*ReactionRequest) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{20}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *ReactionRequest) GetChannelId() string {
@@ -2506,7 +2625,7 @@ type MsggatewayConfigState struct {
 
 func (x *MsggatewayConfigState) Reset() {
 	*x = MsggatewayConfigState{}
-	mi := &file_services_msggateway_proto_msgTypes[21]
+	mi := &file_services_msggateway_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2518,7 +2637,7 @@ func (x *MsggatewayConfigState) String() string {
 func (*MsggatewayConfigState) ProtoMessage() {}
 
 func (x *MsggatewayConfigState) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[21]
+	mi := &file_services_msggateway_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2531,7 +2650,7 @@ func (x *MsggatewayConfigState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MsggatewayConfigState.ProtoReflect.Descriptor instead.
 func (*MsggatewayConfigState) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{21}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *MsggatewayConfigState) GetConfig() *Config {
@@ -2572,7 +2691,7 @@ type QueryValue struct {
 
 func (x *QueryValue) Reset() {
 	*x = QueryValue{}
-	mi := &file_services_msggateway_proto_msgTypes[22]
+	mi := &file_services_msggateway_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2584,7 +2703,7 @@ func (x *QueryValue) String() string {
 func (*QueryValue) ProtoMessage() {}
 
 func (x *QueryValue) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[22]
+	mi := &file_services_msggateway_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2597,7 +2716,7 @@ func (x *QueryValue) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use QueryValue.ProtoReflect.Descriptor instead.
 func (*QueryValue) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{22}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *QueryValue) GetValue() isQueryValue_Value {
@@ -2699,7 +2818,7 @@ type Predicate struct {
 
 func (x *Predicate) Reset() {
 	*x = Predicate{}
-	mi := &file_services_msggateway_proto_msgTypes[23]
+	mi := &file_services_msggateway_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2711,7 +2830,7 @@ func (x *Predicate) String() string {
 func (*Predicate) ProtoMessage() {}
 
 func (x *Predicate) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[23]
+	mi := &file_services_msggateway_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2724,7 +2843,7 @@ func (x *Predicate) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Predicate.ProtoReflect.Descriptor instead.
 func (*Predicate) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{23}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *Predicate) GetFieldName() string {
@@ -2782,7 +2901,7 @@ type PredicateGroup struct {
 
 func (x *PredicateGroup) Reset() {
 	*x = PredicateGroup{}
-	mi := &file_services_msggateway_proto_msgTypes[24]
+	mi := &file_services_msggateway_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2794,7 +2913,7 @@ func (x *PredicateGroup) String() string {
 func (*PredicateGroup) ProtoMessage() {}
 
 func (x *PredicateGroup) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[24]
+	mi := &file_services_msggateway_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2807,7 +2926,7 @@ func (x *PredicateGroup) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PredicateGroup.ProtoReflect.Descriptor instead.
 func (*PredicateGroup) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{24}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *PredicateGroup) GetOp() LogicalOp {
@@ -2857,7 +2976,7 @@ type SortField struct {
 
 func (x *SortField) Reset() {
 	*x = SortField{}
-	mi := &file_services_msggateway_proto_msgTypes[25]
+	mi := &file_services_msggateway_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2869,7 +2988,7 @@ func (x *SortField) String() string {
 func (*SortField) ProtoMessage() {}
 
 func (x *SortField) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[25]
+	mi := &file_services_msggateway_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2882,7 +3001,7 @@ func (x *SortField) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SortField.ProtoReflect.Descriptor instead.
 func (*SortField) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{25}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *SortField) GetFieldName() string {
@@ -2927,7 +3046,7 @@ type CollectionQuery struct {
 
 func (x *CollectionQuery) Reset() {
 	*x = CollectionQuery{}
-	mi := &file_services_msggateway_proto_msgTypes[26]
+	mi := &file_services_msggateway_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2939,7 +3058,7 @@ func (x *CollectionQuery) String() string {
 func (*CollectionQuery) ProtoMessage() {}
 
 func (x *CollectionQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[26]
+	mi := &file_services_msggateway_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2952,7 +3071,7 @@ func (x *CollectionQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CollectionQuery.ProtoReflect.Descriptor instead.
 func (*CollectionQuery) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{26}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *CollectionQuery) GetWhere() *PredicateGroup {
@@ -3008,7 +3127,7 @@ type VirtualUsersGetRequest struct {
 
 func (x *VirtualUsersGetRequest) Reset() {
 	*x = VirtualUsersGetRequest{}
-	mi := &file_services_msggateway_proto_msgTypes[27]
+	mi := &file_services_msggateway_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3020,7 +3139,7 @@ func (x *VirtualUsersGetRequest) String() string {
 func (*VirtualUsersGetRequest) ProtoMessage() {}
 
 func (x *VirtualUsersGetRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[27]
+	mi := &file_services_msggateway_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3033,7 +3152,7 @@ func (x *VirtualUsersGetRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VirtualUsersGetRequest.ProtoReflect.Descriptor instead.
 func (*VirtualUsersGetRequest) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{27}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *VirtualUsersGetRequest) GetKey() string {
@@ -3070,7 +3189,7 @@ type VirtualUsersPutRequest struct {
 
 func (x *VirtualUsersPutRequest) Reset() {
 	*x = VirtualUsersPutRequest{}
-	mi := &file_services_msggateway_proto_msgTypes[28]
+	mi := &file_services_msggateway_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3082,7 +3201,7 @@ func (x *VirtualUsersPutRequest) String() string {
 func (*VirtualUsersPutRequest) ProtoMessage() {}
 
 func (x *VirtualUsersPutRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[28]
+	mi := &file_services_msggateway_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3095,7 +3214,7 @@ func (x *VirtualUsersPutRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VirtualUsersPutRequest.ProtoReflect.Descriptor instead.
 func (*VirtualUsersPutRequest) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{28}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *VirtualUsersPutRequest) GetKey() string {
@@ -3143,7 +3262,7 @@ type VirtualUsersGetAllRequest struct {
 
 func (x *VirtualUsersGetAllRequest) Reset() {
 	*x = VirtualUsersGetAllRequest{}
-	mi := &file_services_msggateway_proto_msgTypes[29]
+	mi := &file_services_msggateway_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3155,7 +3274,7 @@ func (x *VirtualUsersGetAllRequest) String() string {
 func (*VirtualUsersGetAllRequest) ProtoMessage() {}
 
 func (x *VirtualUsersGetAllRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[29]
+	mi := &file_services_msggateway_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3168,7 +3287,7 @@ func (x *VirtualUsersGetAllRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VirtualUsersGetAllRequest.ProtoReflect.Descriptor instead.
 func (*VirtualUsersGetAllRequest) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{29}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *VirtualUsersGetAllRequest) GetTraceId() string {
@@ -3195,7 +3314,7 @@ type VirtualUsersKeysRequest struct {
 
 func (x *VirtualUsersKeysRequest) Reset() {
 	*x = VirtualUsersKeysRequest{}
-	mi := &file_services_msggateway_proto_msgTypes[30]
+	mi := &file_services_msggateway_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3207,7 +3326,7 @@ func (x *VirtualUsersKeysRequest) String() string {
 func (*VirtualUsersKeysRequest) ProtoMessage() {}
 
 func (x *VirtualUsersKeysRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[30]
+	mi := &file_services_msggateway_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3220,7 +3339,7 @@ func (x *VirtualUsersKeysRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VirtualUsersKeysRequest.ProtoReflect.Descriptor instead.
 func (*VirtualUsersKeysRequest) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{30}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *VirtualUsersKeysRequest) GetTraceId() string {
@@ -3247,7 +3366,7 @@ type VirtualUsersSizeRequest struct {
 
 func (x *VirtualUsersSizeRequest) Reset() {
 	*x = VirtualUsersSizeRequest{}
-	mi := &file_services_msggateway_proto_msgTypes[31]
+	mi := &file_services_msggateway_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3259,7 +3378,7 @@ func (x *VirtualUsersSizeRequest) String() string {
 func (*VirtualUsersSizeRequest) ProtoMessage() {}
 
 func (x *VirtualUsersSizeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[31]
+	mi := &file_services_msggateway_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3272,7 +3391,7 @@ func (x *VirtualUsersSizeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VirtualUsersSizeRequest.ProtoReflect.Descriptor instead.
 func (*VirtualUsersSizeRequest) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{31}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *VirtualUsersSizeRequest) GetTraceId() string {
@@ -3299,7 +3418,7 @@ type VirtualUsersClearRequest struct {
 
 func (x *VirtualUsersClearRequest) Reset() {
 	*x = VirtualUsersClearRequest{}
-	mi := &file_services_msggateway_proto_msgTypes[32]
+	mi := &file_services_msggateway_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3311,7 +3430,7 @@ func (x *VirtualUsersClearRequest) String() string {
 func (*VirtualUsersClearRequest) ProtoMessage() {}
 
 func (x *VirtualUsersClearRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[32]
+	mi := &file_services_msggateway_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3324,7 +3443,7 @@ func (x *VirtualUsersClearRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VirtualUsersClearRequest.ProtoReflect.Descriptor instead.
 func (*VirtualUsersClearRequest) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{32}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *VirtualUsersClearRequest) GetTraceId() string {
@@ -3353,7 +3472,7 @@ type VirtualUsersValueResponse struct {
 
 func (x *VirtualUsersValueResponse) Reset() {
 	*x = VirtualUsersValueResponse{}
-	mi := &file_services_msggateway_proto_msgTypes[33]
+	mi := &file_services_msggateway_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3365,7 +3484,7 @@ func (x *VirtualUsersValueResponse) String() string {
 func (*VirtualUsersValueResponse) ProtoMessage() {}
 
 func (x *VirtualUsersValueResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[33]
+	mi := &file_services_msggateway_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3378,7 +3497,7 @@ func (x *VirtualUsersValueResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VirtualUsersValueResponse.ProtoReflect.Descriptor instead.
 func (*VirtualUsersValueResponse) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{33}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *VirtualUsersValueResponse) GetValue() *VirtualUser {
@@ -3420,7 +3539,7 @@ type VirtualUsersEntriesResponse struct {
 
 func (x *VirtualUsersEntriesResponse) Reset() {
 	*x = VirtualUsersEntriesResponse{}
-	mi := &file_services_msggateway_proto_msgTypes[34]
+	mi := &file_services_msggateway_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3432,7 +3551,7 @@ func (x *VirtualUsersEntriesResponse) String() string {
 func (*VirtualUsersEntriesResponse) ProtoMessage() {}
 
 func (x *VirtualUsersEntriesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[34]
+	mi := &file_services_msggateway_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3445,7 +3564,7 @@ func (x *VirtualUsersEntriesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VirtualUsersEntriesResponse.ProtoReflect.Descriptor instead.
 func (*VirtualUsersEntriesResponse) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{34}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *VirtualUsersEntriesResponse) GetEntries() map[string]*VirtualUser {
@@ -3480,7 +3599,7 @@ type VirtualUsersKeysResponse struct {
 
 func (x *VirtualUsersKeysResponse) Reset() {
 	*x = VirtualUsersKeysResponse{}
-	mi := &file_services_msggateway_proto_msgTypes[35]
+	mi := &file_services_msggateway_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3492,7 +3611,7 @@ func (x *VirtualUsersKeysResponse) String() string {
 func (*VirtualUsersKeysResponse) ProtoMessage() {}
 
 func (x *VirtualUsersKeysResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[35]
+	mi := &file_services_msggateway_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3505,7 +3624,7 @@ func (x *VirtualUsersKeysResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VirtualUsersKeysResponse.ProtoReflect.Descriptor instead.
 func (*VirtualUsersKeysResponse) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{35}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *VirtualUsersKeysResponse) GetKeys() []string {
@@ -3540,7 +3659,7 @@ type VirtualUsersSizeResponse struct {
 
 func (x *VirtualUsersSizeResponse) Reset() {
 	*x = VirtualUsersSizeResponse{}
-	mi := &file_services_msggateway_proto_msgTypes[36]
+	mi := &file_services_msggateway_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3552,7 +3671,7 @@ func (x *VirtualUsersSizeResponse) String() string {
 func (*VirtualUsersSizeResponse) ProtoMessage() {}
 
 func (x *VirtualUsersSizeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[36]
+	mi := &file_services_msggateway_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3565,7 +3684,7 @@ func (x *VirtualUsersSizeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VirtualUsersSizeResponse.ProtoReflect.Descriptor instead.
 func (*VirtualUsersSizeResponse) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{36}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *VirtualUsersSizeResponse) GetSize() int32 {
@@ -3600,7 +3719,7 @@ type VirtualUsersQueryRequest struct {
 
 func (x *VirtualUsersQueryRequest) Reset() {
 	*x = VirtualUsersQueryRequest{}
-	mi := &file_services_msggateway_proto_msgTypes[37]
+	mi := &file_services_msggateway_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3612,7 +3731,7 @@ func (x *VirtualUsersQueryRequest) String() string {
 func (*VirtualUsersQueryRequest) ProtoMessage() {}
 
 func (x *VirtualUsersQueryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[37]
+	mi := &file_services_msggateway_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3625,7 +3744,7 @@ func (x *VirtualUsersQueryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VirtualUsersQueryRequest.ProtoReflect.Descriptor instead.
 func (*VirtualUsersQueryRequest) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{37}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *VirtualUsersQueryRequest) GetQuery() *CollectionQuery {
@@ -3661,7 +3780,7 @@ type VirtualUsersQueryResponse struct {
 
 func (x *VirtualUsersQueryResponse) Reset() {
 	*x = VirtualUsersQueryResponse{}
-	mi := &file_services_msggateway_proto_msgTypes[38]
+	mi := &file_services_msggateway_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3673,7 +3792,7 @@ func (x *VirtualUsersQueryResponse) String() string {
 func (*VirtualUsersQueryResponse) ProtoMessage() {}
 
 func (x *VirtualUsersQueryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[38]
+	mi := &file_services_msggateway_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3686,7 +3805,7 @@ func (x *VirtualUsersQueryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VirtualUsersQueryResponse.ProtoReflect.Descriptor instead.
 func (*VirtualUsersQueryResponse) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{38}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *VirtualUsersQueryResponse) GetResults() []*VirtualUser {
@@ -3728,7 +3847,7 @@ type SubscriptionsGetRequest struct {
 
 func (x *SubscriptionsGetRequest) Reset() {
 	*x = SubscriptionsGetRequest{}
-	mi := &file_services_msggateway_proto_msgTypes[39]
+	mi := &file_services_msggateway_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3740,7 +3859,7 @@ func (x *SubscriptionsGetRequest) String() string {
 func (*SubscriptionsGetRequest) ProtoMessage() {}
 
 func (x *SubscriptionsGetRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[39]
+	mi := &file_services_msggateway_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3753,7 +3872,7 @@ func (x *SubscriptionsGetRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubscriptionsGetRequest.ProtoReflect.Descriptor instead.
 func (*SubscriptionsGetRequest) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{39}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *SubscriptionsGetRequest) GetKey() string {
@@ -3790,7 +3909,7 @@ type SubscriptionsPutRequest struct {
 
 func (x *SubscriptionsPutRequest) Reset() {
 	*x = SubscriptionsPutRequest{}
-	mi := &file_services_msggateway_proto_msgTypes[40]
+	mi := &file_services_msggateway_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3802,7 +3921,7 @@ func (x *SubscriptionsPutRequest) String() string {
 func (*SubscriptionsPutRequest) ProtoMessage() {}
 
 func (x *SubscriptionsPutRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[40]
+	mi := &file_services_msggateway_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3815,7 +3934,7 @@ func (x *SubscriptionsPutRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubscriptionsPutRequest.ProtoReflect.Descriptor instead.
 func (*SubscriptionsPutRequest) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{40}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *SubscriptionsPutRequest) GetKey() string {
@@ -3863,7 +3982,7 @@ type SubscriptionsGetAllRequest struct {
 
 func (x *SubscriptionsGetAllRequest) Reset() {
 	*x = SubscriptionsGetAllRequest{}
-	mi := &file_services_msggateway_proto_msgTypes[41]
+	mi := &file_services_msggateway_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3875,7 +3994,7 @@ func (x *SubscriptionsGetAllRequest) String() string {
 func (*SubscriptionsGetAllRequest) ProtoMessage() {}
 
 func (x *SubscriptionsGetAllRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[41]
+	mi := &file_services_msggateway_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3888,7 +4007,7 @@ func (x *SubscriptionsGetAllRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubscriptionsGetAllRequest.ProtoReflect.Descriptor instead.
 func (*SubscriptionsGetAllRequest) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{41}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *SubscriptionsGetAllRequest) GetTraceId() string {
@@ -3915,7 +4034,7 @@ type SubscriptionsKeysRequest struct {
 
 func (x *SubscriptionsKeysRequest) Reset() {
 	*x = SubscriptionsKeysRequest{}
-	mi := &file_services_msggateway_proto_msgTypes[42]
+	mi := &file_services_msggateway_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3927,7 +4046,7 @@ func (x *SubscriptionsKeysRequest) String() string {
 func (*SubscriptionsKeysRequest) ProtoMessage() {}
 
 func (x *SubscriptionsKeysRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[42]
+	mi := &file_services_msggateway_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3940,7 +4059,7 @@ func (x *SubscriptionsKeysRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubscriptionsKeysRequest.ProtoReflect.Descriptor instead.
 func (*SubscriptionsKeysRequest) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{42}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *SubscriptionsKeysRequest) GetTraceId() string {
@@ -3967,7 +4086,7 @@ type SubscriptionsSizeRequest struct {
 
 func (x *SubscriptionsSizeRequest) Reset() {
 	*x = SubscriptionsSizeRequest{}
-	mi := &file_services_msggateway_proto_msgTypes[43]
+	mi := &file_services_msggateway_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3979,7 +4098,7 @@ func (x *SubscriptionsSizeRequest) String() string {
 func (*SubscriptionsSizeRequest) ProtoMessage() {}
 
 func (x *SubscriptionsSizeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[43]
+	mi := &file_services_msggateway_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3992,7 +4111,7 @@ func (x *SubscriptionsSizeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubscriptionsSizeRequest.ProtoReflect.Descriptor instead.
 func (*SubscriptionsSizeRequest) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{43}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *SubscriptionsSizeRequest) GetTraceId() string {
@@ -4019,7 +4138,7 @@ type SubscriptionsClearRequest struct {
 
 func (x *SubscriptionsClearRequest) Reset() {
 	*x = SubscriptionsClearRequest{}
-	mi := &file_services_msggateway_proto_msgTypes[44]
+	mi := &file_services_msggateway_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4031,7 +4150,7 @@ func (x *SubscriptionsClearRequest) String() string {
 func (*SubscriptionsClearRequest) ProtoMessage() {}
 
 func (x *SubscriptionsClearRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[44]
+	mi := &file_services_msggateway_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4044,7 +4163,7 @@ func (x *SubscriptionsClearRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubscriptionsClearRequest.ProtoReflect.Descriptor instead.
 func (*SubscriptionsClearRequest) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{44}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *SubscriptionsClearRequest) GetTraceId() string {
@@ -4073,7 +4192,7 @@ type SubscriptionsValueResponse struct {
 
 func (x *SubscriptionsValueResponse) Reset() {
 	*x = SubscriptionsValueResponse{}
-	mi := &file_services_msggateway_proto_msgTypes[45]
+	mi := &file_services_msggateway_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4085,7 +4204,7 @@ func (x *SubscriptionsValueResponse) String() string {
 func (*SubscriptionsValueResponse) ProtoMessage() {}
 
 func (x *SubscriptionsValueResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[45]
+	mi := &file_services_msggateway_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4098,7 +4217,7 @@ func (x *SubscriptionsValueResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubscriptionsValueResponse.ProtoReflect.Descriptor instead.
 func (*SubscriptionsValueResponse) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{45}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *SubscriptionsValueResponse) GetValue() *ChannelSubscription {
@@ -4140,7 +4259,7 @@ type SubscriptionsEntriesResponse struct {
 
 func (x *SubscriptionsEntriesResponse) Reset() {
 	*x = SubscriptionsEntriesResponse{}
-	mi := &file_services_msggateway_proto_msgTypes[46]
+	mi := &file_services_msggateway_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4152,7 +4271,7 @@ func (x *SubscriptionsEntriesResponse) String() string {
 func (*SubscriptionsEntriesResponse) ProtoMessage() {}
 
 func (x *SubscriptionsEntriesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[46]
+	mi := &file_services_msggateway_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4165,7 +4284,7 @@ func (x *SubscriptionsEntriesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubscriptionsEntriesResponse.ProtoReflect.Descriptor instead.
 func (*SubscriptionsEntriesResponse) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{46}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *SubscriptionsEntriesResponse) GetEntries() map[string]*ChannelSubscription {
@@ -4200,7 +4319,7 @@ type SubscriptionsKeysResponse struct {
 
 func (x *SubscriptionsKeysResponse) Reset() {
 	*x = SubscriptionsKeysResponse{}
-	mi := &file_services_msggateway_proto_msgTypes[47]
+	mi := &file_services_msggateway_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4212,7 +4331,7 @@ func (x *SubscriptionsKeysResponse) String() string {
 func (*SubscriptionsKeysResponse) ProtoMessage() {}
 
 func (x *SubscriptionsKeysResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[47]
+	mi := &file_services_msggateway_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4225,7 +4344,7 @@ func (x *SubscriptionsKeysResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubscriptionsKeysResponse.ProtoReflect.Descriptor instead.
 func (*SubscriptionsKeysResponse) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{47}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *SubscriptionsKeysResponse) GetKeys() []string {
@@ -4260,7 +4379,7 @@ type SubscriptionsSizeResponse struct {
 
 func (x *SubscriptionsSizeResponse) Reset() {
 	*x = SubscriptionsSizeResponse{}
-	mi := &file_services_msggateway_proto_msgTypes[48]
+	mi := &file_services_msggateway_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4272,7 +4391,7 @@ func (x *SubscriptionsSizeResponse) String() string {
 func (*SubscriptionsSizeResponse) ProtoMessage() {}
 
 func (x *SubscriptionsSizeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[48]
+	mi := &file_services_msggateway_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4285,7 +4404,7 @@ func (x *SubscriptionsSizeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubscriptionsSizeResponse.ProtoReflect.Descriptor instead.
 func (*SubscriptionsSizeResponse) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{48}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *SubscriptionsSizeResponse) GetSize() int32 {
@@ -4320,7 +4439,7 @@ type SubscriptionsQueryRequest struct {
 
 func (x *SubscriptionsQueryRequest) Reset() {
 	*x = SubscriptionsQueryRequest{}
-	mi := &file_services_msggateway_proto_msgTypes[49]
+	mi := &file_services_msggateway_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4332,7 +4451,7 @@ func (x *SubscriptionsQueryRequest) String() string {
 func (*SubscriptionsQueryRequest) ProtoMessage() {}
 
 func (x *SubscriptionsQueryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[49]
+	mi := &file_services_msggateway_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4345,7 +4464,7 @@ func (x *SubscriptionsQueryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubscriptionsQueryRequest.ProtoReflect.Descriptor instead.
 func (*SubscriptionsQueryRequest) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{49}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *SubscriptionsQueryRequest) GetQuery() *CollectionQuery {
@@ -4381,7 +4500,7 @@ type SubscriptionsQueryResponse struct {
 
 func (x *SubscriptionsQueryResponse) Reset() {
 	*x = SubscriptionsQueryResponse{}
-	mi := &file_services_msggateway_proto_msgTypes[50]
+	mi := &file_services_msggateway_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4393,7 +4512,7 @@ func (x *SubscriptionsQueryResponse) String() string {
 func (*SubscriptionsQueryResponse) ProtoMessage() {}
 
 func (x *SubscriptionsQueryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[50]
+	mi := &file_services_msggateway_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4406,7 +4525,7 @@ func (x *SubscriptionsQueryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubscriptionsQueryResponse.ProtoReflect.Descriptor instead.
 func (*SubscriptionsQueryResponse) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{50}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *SubscriptionsQueryResponse) GetResults() []*ChannelSubscription {
@@ -4447,7 +4566,7 @@ type MapEmpty struct {
 
 func (x *MapEmpty) Reset() {
 	*x = MapEmpty{}
-	mi := &file_services_msggateway_proto_msgTypes[51]
+	mi := &file_services_msggateway_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4459,7 +4578,7 @@ func (x *MapEmpty) String() string {
 func (*MapEmpty) ProtoMessage() {}
 
 func (x *MapEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_services_msggateway_proto_msgTypes[51]
+	mi := &file_services_msggateway_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4472,7 +4591,7 @@ func (x *MapEmpty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MapEmpty.ProtoReflect.Descriptor instead.
 func (*MapEmpty) Descriptor() ([]byte, []int) {
-	return file_services_msggateway_proto_rawDescGZIP(), []int{51}
+	return file_services_msggateway_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *MapEmpty) GetTraceId() string {
@@ -4609,16 +4728,22 @@ const file_services_msggateway_proto_rawDesc = "" +
 	"\n" +
 	"message_ts\x18\x02 \x01(\tB\x04\x90\xa7\x1d@R\tmessageTs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb8\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x85\x02\n" +
 	"\x10GetThreadRequest\x12'\n" +
 	"\n" +
 	"channel_id\x18\x01 \x01(\tB\b\x88\xa6\x1d\x01\x90\xa7\x1d@R\tchannelId\x12%\n" +
 	"\tthread_ts\x18\x02 \x01(\tB\b\x88\xa6\x1d\x01\x90\xa7\x1d@R\bthreadTs\x12#\n" +
-	"\x05limit\x18\x03 \x01(\x05B\r\xb0\xa7\x1d\x01\xc0\xa7\x1d\xe8\a\x90\xa8\x1ddR\x05limit\x12\x1a\n" +
+	"\x05limit\x18\x03 \x01(\x05B\r\xb0\xa7\x1d\x01\xc0\xa7\x1d\xe8\a\x90\xa8\x1ddR\x05limit\x12%\n" +
+	"\tpage_size\x18\x04 \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\bpageSize\x12$\n" +
+	"\n" +
+	"page_token\x18\x05 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\tpageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"|\n" +
-	"\x11GetThreadResponse\x126\n" +
-	"\bmessages\x18\x01 \x03(\v2\x13.msggateway.MessageB\x05\xb8\xa8\x1d\xe8\aR\bmessages\x12\x1a\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd1\x01\n" +
+	"\x11GetThreadResponse\x125\n" +
+	"\bmessages\x18\x01 \x03(\v2\x13.msggateway.MessageB\x04\xb8\xa8\x1ddR\bmessages\x12-\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12%\n" +
+	"\vtotal_count\x18\x03 \x01(\x03B\x04\xb0\xa7\x1d\x00R\n" +
+	"totalCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb7\x01\n" +
 	"\x18GetChannelHistoryRequest\x12'\n" +
@@ -4632,9 +4757,18 @@ const file_services_msggateway_proto_rawDesc = "" +
 	"\bmessages\x18\x01 \x03(\v2\x13.msggateway.MessageB\x05\xb8\xa8\x1d\xe8\aR\bmessages\x12\x19\n" +
 	"\bhas_more\x18\x02 \x01(\bR\ahasMore\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x7f\n" +
-	"\x14ListChannelsResponse\x126\n" +
-	"\bchannels\x18\x01 \x03(\v2\x13.msggateway.ChannelB\x05\xb8\xa8\x1d\x80\bR\bchannels\x12\x1a\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd4\x01\n" +
+	"\x14ListChannelsResponse\x125\n" +
+	"\bchannels\x18\x01 \x03(\v2\x13.msggateway.ChannelB\x04\xb8\xa8\x1ddR\bchannels\x12-\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12%\n" +
+	"\vtotal_count\x18\x03 \x01(\x03B\x04\xb0\xa7\x1d\x00R\n" +
+	"totalCount\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x93\x01\n" +
+	"\x13ListChannelsRequest\x12%\n" +
+	"\tpage_size\x18\x01 \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\bpageSize\x12$\n" +
+	"\n" +
+	"page_token\x18\x02 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\tpageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb4\x01\n" +
 	"\x0fReactionRequest\x12'\n" +
@@ -4644,12 +4778,12 @@ const file_services_msggateway_proto_rawDesc = "" +
 	"message_ts\x18\x02 \x01(\tB\b\x88\xa6\x1d\x01\x90\xa7\x1d@R\tmessageTs\x12\x1e\n" +
 	"\x05emoji\x18\x03 \x01(\tB\b\x88\xa6\x1d\x01\x90\xa7\x1d@R\x05emoji\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa9\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa7\x01\n" +
 	"\x15MsggatewayConfigState\x124\n" +
 	"\x06config\x18\x01 \x01(\v2\x12.msggateway.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:)\x9a\xa8\x1d!\n" +
-	"\x15MsggatewayConfigState\x1a\beventbus\xa0\xa8\x1d\x02\"\xd0\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:'\x9a\xa8\x1d\x1f\n" +
+	"\x15MsggatewayConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\"\xd0\x01\n" +
 	"\n" +
 	"QueryValue\x12#\n" +
 	"\fstring_value\x18\x01 \x01(\tH\x00R\vstringValue\x12\x1d\n" +
@@ -4829,7 +4963,7 @@ const file_services_msggateway_proto_rawDesc = "" +
 	"\tLogicalOp\x12\x1a\n" +
 	"\x16LOGICAL_OP_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eLOGICAL_OP_AND\x10\x01\x12\x11\n" +
-	"\rLOGICAL_OP_OR\x10\x02*\xda\x0e\n" +
+	"\rLOGICAL_OP_OR\x10\x02*\xfd\x0e\n" +
 	"\x06TypeID\x12\x17\n" +
 	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eTYPE_ID_CONFIG\x10\x01\x12\x18\n" +
@@ -4852,39 +4986,40 @@ const file_services_msggateway_proto_rawDesc = "" +
 	"\x1bTYPE_ID_GET_THREAD_RESPONSE\x10\x11\x12'\n" +
 	"#TYPE_ID_GET_CHANNEL_HISTORY_REQUEST\x10\x12\x12(\n" +
 	"$TYPE_ID_GET_CHANNEL_HISTORY_RESPONSE\x10\x13\x12\"\n" +
-	"\x1eTYPE_ID_LIST_CHANNELS_RESPONSE\x10\x14\x12\x1c\n" +
-	"\x18TYPE_ID_REACTION_REQUEST\x10\x15\x12#\n" +
-	"\x1fTYPE_ID_MSGGATEWAY_CONFIG_STATE\x10\x16\x12\x17\n" +
-	"\x13TYPE_ID_QUERY_VALUE\x10\x17\x12\x15\n" +
-	"\x11TYPE_ID_PREDICATE\x10\x18\x12\x1b\n" +
-	"\x17TYPE_ID_PREDICATE_GROUP\x10\x19\x12\x16\n" +
-	"\x12TYPE_ID_SORT_FIELD\x10\x1a\x12\x1c\n" +
-	"\x18TYPE_ID_COLLECTION_QUERY\x10\x1b\x12%\n" +
-	"!TYPE_ID_VIRTUAL_USERS_GET_REQUEST\x10\x1c\x12%\n" +
-	"!TYPE_ID_VIRTUAL_USERS_PUT_REQUEST\x10\x1d\x12)\n" +
-	"%TYPE_ID_VIRTUAL_USERS_GET_ALL_REQUEST\x10\x1e\x12&\n" +
-	"\"TYPE_ID_VIRTUAL_USERS_KEYS_REQUEST\x10\x1f\x12&\n" +
-	"\"TYPE_ID_VIRTUAL_USERS_SIZE_REQUEST\x10 \x12'\n" +
-	"#TYPE_ID_VIRTUAL_USERS_CLEAR_REQUEST\x10!\x12(\n" +
-	"$TYPE_ID_VIRTUAL_USERS_VALUE_RESPONSE\x10\"\x12*\n" +
-	"&TYPE_ID_VIRTUAL_USERS_ENTRIES_RESPONSE\x10#\x12'\n" +
-	"#TYPE_ID_VIRTUAL_USERS_KEYS_RESPONSE\x10$\x12'\n" +
-	"#TYPE_ID_VIRTUAL_USERS_SIZE_RESPONSE\x10%\x12'\n" +
-	"#TYPE_ID_VIRTUAL_USERS_QUERY_REQUEST\x10&\x12(\n" +
-	"$TYPE_ID_VIRTUAL_USERS_QUERY_RESPONSE\x10'\x12%\n" +
-	"!TYPE_ID_SUBSCRIPTIONS_GET_REQUEST\x10(\x12%\n" +
-	"!TYPE_ID_SUBSCRIPTIONS_PUT_REQUEST\x10)\x12)\n" +
-	"%TYPE_ID_SUBSCRIPTIONS_GET_ALL_REQUEST\x10*\x12&\n" +
-	"\"TYPE_ID_SUBSCRIPTIONS_KEYS_REQUEST\x10+\x12&\n" +
-	"\"TYPE_ID_SUBSCRIPTIONS_SIZE_REQUEST\x10,\x12'\n" +
-	"#TYPE_ID_SUBSCRIPTIONS_CLEAR_REQUEST\x10-\x12(\n" +
-	"$TYPE_ID_SUBSCRIPTIONS_VALUE_RESPONSE\x10.\x12*\n" +
-	"&TYPE_ID_SUBSCRIPTIONS_ENTRIES_RESPONSE\x10/\x12'\n" +
-	"#TYPE_ID_SUBSCRIPTIONS_KEYS_RESPONSE\x100\x12'\n" +
-	"#TYPE_ID_SUBSCRIPTIONS_SIZE_RESPONSE\x101\x12'\n" +
-	"#TYPE_ID_SUBSCRIPTIONS_QUERY_REQUEST\x102\x12(\n" +
-	"$TYPE_ID_SUBSCRIPTIONS_QUERY_RESPONSE\x103\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x104*\xf2\x04\n" +
+	"\x1eTYPE_ID_LIST_CHANNELS_RESPONSE\x10\x14\x12!\n" +
+	"\x1dTYPE_ID_LIST_CHANNELS_REQUEST\x10\x15\x12\x1c\n" +
+	"\x18TYPE_ID_REACTION_REQUEST\x10\x16\x12#\n" +
+	"\x1fTYPE_ID_MSGGATEWAY_CONFIG_STATE\x10\x17\x12\x17\n" +
+	"\x13TYPE_ID_QUERY_VALUE\x10\x18\x12\x15\n" +
+	"\x11TYPE_ID_PREDICATE\x10\x19\x12\x1b\n" +
+	"\x17TYPE_ID_PREDICATE_GROUP\x10\x1a\x12\x16\n" +
+	"\x12TYPE_ID_SORT_FIELD\x10\x1b\x12\x1c\n" +
+	"\x18TYPE_ID_COLLECTION_QUERY\x10\x1c\x12%\n" +
+	"!TYPE_ID_VIRTUAL_USERS_GET_REQUEST\x10\x1d\x12%\n" +
+	"!TYPE_ID_VIRTUAL_USERS_PUT_REQUEST\x10\x1e\x12)\n" +
+	"%TYPE_ID_VIRTUAL_USERS_GET_ALL_REQUEST\x10\x1f\x12&\n" +
+	"\"TYPE_ID_VIRTUAL_USERS_KEYS_REQUEST\x10 \x12&\n" +
+	"\"TYPE_ID_VIRTUAL_USERS_SIZE_REQUEST\x10!\x12'\n" +
+	"#TYPE_ID_VIRTUAL_USERS_CLEAR_REQUEST\x10\"\x12(\n" +
+	"$TYPE_ID_VIRTUAL_USERS_VALUE_RESPONSE\x10#\x12*\n" +
+	"&TYPE_ID_VIRTUAL_USERS_ENTRIES_RESPONSE\x10$\x12'\n" +
+	"#TYPE_ID_VIRTUAL_USERS_KEYS_RESPONSE\x10%\x12'\n" +
+	"#TYPE_ID_VIRTUAL_USERS_SIZE_RESPONSE\x10&\x12'\n" +
+	"#TYPE_ID_VIRTUAL_USERS_QUERY_REQUEST\x10'\x12(\n" +
+	"$TYPE_ID_VIRTUAL_USERS_QUERY_RESPONSE\x10(\x12%\n" +
+	"!TYPE_ID_SUBSCRIPTIONS_GET_REQUEST\x10)\x12%\n" +
+	"!TYPE_ID_SUBSCRIPTIONS_PUT_REQUEST\x10*\x12)\n" +
+	"%TYPE_ID_SUBSCRIPTIONS_GET_ALL_REQUEST\x10+\x12&\n" +
+	"\"TYPE_ID_SUBSCRIPTIONS_KEYS_REQUEST\x10,\x12&\n" +
+	"\"TYPE_ID_SUBSCRIPTIONS_SIZE_REQUEST\x10-\x12'\n" +
+	"#TYPE_ID_SUBSCRIPTIONS_CLEAR_REQUEST\x10.\x12(\n" +
+	"$TYPE_ID_SUBSCRIPTIONS_VALUE_RESPONSE\x10/\x12*\n" +
+	"&TYPE_ID_SUBSCRIPTIONS_ENTRIES_RESPONSE\x100\x12'\n" +
+	"#TYPE_ID_SUBSCRIPTIONS_KEYS_RESPONSE\x101\x12'\n" +
+	"#TYPE_ID_SUBSCRIPTIONS_SIZE_RESPONSE\x102\x12'\n" +
+	"#TYPE_ID_SUBSCRIPTIONS_QUERY_REQUEST\x103\x12(\n" +
+	"$TYPE_ID_SUBSCRIPTIONS_QUERY_RESPONSE\x104\x12\x15\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x105*\xf2\x04\n" +
 	"\x0eMessagingRpcId\x12 \n" +
 	"\x1cMESSAGING_RPC_ID_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1eMESSAGING_RPC_ID_ALL_ACCESSORS\x10\x01\x12!\n" +
@@ -4944,7 +5079,7 @@ const file_services_msggateway_proto_rawDesc = "" +
 	"4MSGGATEWAY_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x125\n" +
 	"1MSGGATEWAY_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x125\n" +
 	"1MSGGATEWAY_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x127\n" +
-	"3MSGGATEWAY_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xf8\a\n" +
+	"3MSGGATEWAY_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xf7\a\n" +
 	"\tMessaging\x12Q\n" +
 	"\x11UpdateVirtualUser\x12$.msggateway.UpdateVirtualUserRequest\x1a\x16.google.protobuf.Empty\x12Q\n" +
 	"\x11DeleteVirtualUser\x12$.msggateway.DeleteVirtualUserRequest\x1a\x16.google.protobuf.Empty\x12A\n" +
@@ -4952,11 +5087,11 @@ const file_services_msggateway_proto_rawDesc = "" +
 	"\x12DeleteSubscription\x12%.msggateway.DeleteSubscriptionRequest\x1a\x16.google.protobuf.Empty\x12A\n" +
 	"\x0fSubscribeEvents\x12\x19.msggateway.EventsRequest\x1a\x11.msggateway.Event0\x01\x12N\n" +
 	"\vSendMessage\x12\x1e.msggateway.SendMessageRequest\x1a\x1f.msggateway.SendMessageResponse\x12V\n" +
-	"\x0fSendThreadReply\x12\".msggateway.SendThreadReplyRequest\x1a\x1f.msggateway.SendMessageResponse\x12s\n" +
-	"\x12ListThreadMessages\x12\x1c.msggateway.GetThreadRequest\x1a\x1d.msggateway.GetThreadResponse\" \xf2\x88'\x1c\b\x01\x12\ttimestamp\x12\n" +
-	"message_ts\x18\xe8\a\x12`\n" +
-	"\x11GetChannelHistory\x12$.msggateway.GetChannelHistoryRequest\x1a%.msggateway.GetChannelHistoryResponse\x12T\n" +
-	"\fListChannels\x12\x13.trace.TraceRequest\x1a .msggateway.ListChannelsResponse\"\r\xf2\x88'\t\b\x01\x12\x02id\x18\x80\b\x12E\n" +
+	"\x0fSendThreadReply\x12\".msggateway.SendThreadReplyRequest\x1a\x1f.msggateway.SendMessageResponse\x12g\n" +
+	"\x12ListThreadMessages\x12\x1c.msggateway.GetThreadRequest\x1a\x1d.msggateway.GetThreadResponse\"\x14\xf2\x88'\x10\b\x03\x12\n" +
+	"message_ts(d\x12`\n" +
+	"\x11GetChannelHistory\x12$.msggateway.GetChannelHistoryRequest\x1a%.msggateway.GetChannelHistoryResponse\x12_\n" +
+	"\fListChannels\x12\x1f.msggateway.ListChannelsRequest\x1a .msggateway.ListChannelsResponse\"\f\xf2\x88'\b\b\x03\x12\x02id(d\x12E\n" +
 	"\x0eCreateReaction\x12\x1b.msggateway.ReactionRequest\x1a\x16.google.protobuf.Empty\x12E\n" +
 	"\x0eDeleteReaction\x12\x1b.msggateway.ReactionRequest\x1a\x16.google.protobuf.Empty\x1a\a\xea\x97\"\x03\n" +
 	"\x01*2\xfb\x14\n" +
@@ -5010,7 +5145,7 @@ func file_services_msggateway_proto_rawDescGZIP() []byte {
 }
 
 var file_services_msggateway_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
-var file_services_msggateway_proto_msgTypes = make([]protoimpl.MessageInfo, 54)
+var file_services_msggateway_proto_msgTypes = make([]protoimpl.MessageInfo, 55)
 var file_services_msggateway_proto_goTypes = []any{
 	(Provider)(0),                          // 0: msggateway.Provider
 	(EventType)(0),                         // 1: msggateway.EventType
@@ -5041,51 +5176,52 @@ var file_services_msggateway_proto_goTypes = []any{
 	(*GetChannelHistoryRequest)(nil),       // 26: msggateway.GetChannelHistoryRequest
 	(*GetChannelHistoryResponse)(nil),      // 27: msggateway.GetChannelHistoryResponse
 	(*ListChannelsResponse)(nil),           // 28: msggateway.ListChannelsResponse
-	(*ReactionRequest)(nil),                // 29: msggateway.ReactionRequest
-	(*MsggatewayConfigState)(nil),          // 30: msggateway.MsggatewayConfigState
-	(*QueryValue)(nil),                     // 31: msggateway.QueryValue
-	(*Predicate)(nil),                      // 32: msggateway.Predicate
-	(*PredicateGroup)(nil),                 // 33: msggateway.PredicateGroup
-	(*SortField)(nil),                      // 34: msggateway.SortField
-	(*CollectionQuery)(nil),                // 35: msggateway.CollectionQuery
-	(*VirtualUsersGetRequest)(nil),         // 36: msggateway.VirtualUsersGetRequest
-	(*VirtualUsersPutRequest)(nil),         // 37: msggateway.VirtualUsersPutRequest
-	(*VirtualUsersGetAllRequest)(nil),      // 38: msggateway.VirtualUsersGetAllRequest
-	(*VirtualUsersKeysRequest)(nil),        // 39: msggateway.VirtualUsersKeysRequest
-	(*VirtualUsersSizeRequest)(nil),        // 40: msggateway.VirtualUsersSizeRequest
-	(*VirtualUsersClearRequest)(nil),       // 41: msggateway.VirtualUsersClearRequest
-	(*VirtualUsersValueResponse)(nil),      // 42: msggateway.VirtualUsersValueResponse
-	(*VirtualUsersEntriesResponse)(nil),    // 43: msggateway.VirtualUsersEntriesResponse
-	(*VirtualUsersKeysResponse)(nil),       // 44: msggateway.VirtualUsersKeysResponse
-	(*VirtualUsersSizeResponse)(nil),       // 45: msggateway.VirtualUsersSizeResponse
-	(*VirtualUsersQueryRequest)(nil),       // 46: msggateway.VirtualUsersQueryRequest
-	(*VirtualUsersQueryResponse)(nil),      // 47: msggateway.VirtualUsersQueryResponse
-	(*SubscriptionsGetRequest)(nil),        // 48: msggateway.SubscriptionsGetRequest
-	(*SubscriptionsPutRequest)(nil),        // 49: msggateway.SubscriptionsPutRequest
-	(*SubscriptionsGetAllRequest)(nil),     // 50: msggateway.SubscriptionsGetAllRequest
-	(*SubscriptionsKeysRequest)(nil),       // 51: msggateway.SubscriptionsKeysRequest
-	(*SubscriptionsSizeRequest)(nil),       // 52: msggateway.SubscriptionsSizeRequest
-	(*SubscriptionsClearRequest)(nil),      // 53: msggateway.SubscriptionsClearRequest
-	(*SubscriptionsValueResponse)(nil),     // 54: msggateway.SubscriptionsValueResponse
-	(*SubscriptionsEntriesResponse)(nil),   // 55: msggateway.SubscriptionsEntriesResponse
-	(*SubscriptionsKeysResponse)(nil),      // 56: msggateway.SubscriptionsKeysResponse
-	(*SubscriptionsSizeResponse)(nil),      // 57: msggateway.SubscriptionsSizeResponse
-	(*SubscriptionsQueryRequest)(nil),      // 58: msggateway.SubscriptionsQueryRequest
-	(*SubscriptionsQueryResponse)(nil),     // 59: msggateway.SubscriptionsQueryResponse
-	(*MapEmpty)(nil),                       // 60: msggateway.MapEmpty
-	nil,                                    // 61: msggateway.VirtualUsersEntriesResponse.EntriesEntry
-	nil,                                    // 62: msggateway.SubscriptionsEntriesResponse.EntriesEntry
-	(*host.Host)(nil),                      // 63: host.Host
-	(*timestamppb.Timestamp)(nil),          // 64: google.protobuf.Timestamp
-	(*trace.TraceRequest)(nil),             // 65: trace.TraceRequest
-	(*emptypb.Empty)(nil),                  // 66: google.protobuf.Empty
+	(*ListChannelsRequest)(nil),            // 29: msggateway.ListChannelsRequest
+	(*ReactionRequest)(nil),                // 30: msggateway.ReactionRequest
+	(*MsggatewayConfigState)(nil),          // 31: msggateway.MsggatewayConfigState
+	(*QueryValue)(nil),                     // 32: msggateway.QueryValue
+	(*Predicate)(nil),                      // 33: msggateway.Predicate
+	(*PredicateGroup)(nil),                 // 34: msggateway.PredicateGroup
+	(*SortField)(nil),                      // 35: msggateway.SortField
+	(*CollectionQuery)(nil),                // 36: msggateway.CollectionQuery
+	(*VirtualUsersGetRequest)(nil),         // 37: msggateway.VirtualUsersGetRequest
+	(*VirtualUsersPutRequest)(nil),         // 38: msggateway.VirtualUsersPutRequest
+	(*VirtualUsersGetAllRequest)(nil),      // 39: msggateway.VirtualUsersGetAllRequest
+	(*VirtualUsersKeysRequest)(nil),        // 40: msggateway.VirtualUsersKeysRequest
+	(*VirtualUsersSizeRequest)(nil),        // 41: msggateway.VirtualUsersSizeRequest
+	(*VirtualUsersClearRequest)(nil),       // 42: msggateway.VirtualUsersClearRequest
+	(*VirtualUsersValueResponse)(nil),      // 43: msggateway.VirtualUsersValueResponse
+	(*VirtualUsersEntriesResponse)(nil),    // 44: msggateway.VirtualUsersEntriesResponse
+	(*VirtualUsersKeysResponse)(nil),       // 45: msggateway.VirtualUsersKeysResponse
+	(*VirtualUsersSizeResponse)(nil),       // 46: msggateway.VirtualUsersSizeResponse
+	(*VirtualUsersQueryRequest)(nil),       // 47: msggateway.VirtualUsersQueryRequest
+	(*VirtualUsersQueryResponse)(nil),      // 48: msggateway.VirtualUsersQueryResponse
+	(*SubscriptionsGetRequest)(nil),        // 49: msggateway.SubscriptionsGetRequest
+	(*SubscriptionsPutRequest)(nil),        // 50: msggateway.SubscriptionsPutRequest
+	(*SubscriptionsGetAllRequest)(nil),     // 51: msggateway.SubscriptionsGetAllRequest
+	(*SubscriptionsKeysRequest)(nil),       // 52: msggateway.SubscriptionsKeysRequest
+	(*SubscriptionsSizeRequest)(nil),       // 53: msggateway.SubscriptionsSizeRequest
+	(*SubscriptionsClearRequest)(nil),      // 54: msggateway.SubscriptionsClearRequest
+	(*SubscriptionsValueResponse)(nil),     // 55: msggateway.SubscriptionsValueResponse
+	(*SubscriptionsEntriesResponse)(nil),   // 56: msggateway.SubscriptionsEntriesResponse
+	(*SubscriptionsKeysResponse)(nil),      // 57: msggateway.SubscriptionsKeysResponse
+	(*SubscriptionsSizeResponse)(nil),      // 58: msggateway.SubscriptionsSizeResponse
+	(*SubscriptionsQueryRequest)(nil),      // 59: msggateway.SubscriptionsQueryRequest
+	(*SubscriptionsQueryResponse)(nil),     // 60: msggateway.SubscriptionsQueryResponse
+	(*MapEmpty)(nil),                       // 61: msggateway.MapEmpty
+	nil,                                    // 62: msggateway.VirtualUsersEntriesResponse.EntriesEntry
+	nil,                                    // 63: msggateway.SubscriptionsEntriesResponse.EntriesEntry
+	(*host.Host)(nil),                      // 64: host.Host
+	(*timestamppb.Timestamp)(nil),          // 65: google.protobuf.Timestamp
+	(*trace.TraceRequest)(nil),             // 66: trace.TraceRequest
+	(*emptypb.Empty)(nil),                  // 67: google.protobuf.Empty
 }
 var file_services_msggateway_proto_depIdxs = []int32{
 	0,  // 0: msggateway.Config.provider:type_name -> msggateway.Provider
-	63, // 1: msggateway.Config.api_endpoint:type_name -> host.Host
+	64, // 1: msggateway.Config.api_endpoint:type_name -> host.Host
 	10, // 2: msggateway.GatewayState.virtual_users:type_name -> msggateway.VirtualUser
 	11, // 3: msggateway.GatewayState.subscriptions:type_name -> msggateway.ChannelSubscription
-	64, // 4: msggateway.Message.timestamp:type_name -> google.protobuf.Timestamp
+	65, // 4: msggateway.Message.timestamp:type_name -> google.protobuf.Timestamp
 	1,  // 5: msggateway.Event.event_type:type_name -> msggateway.EventType
 	13, // 6: msggateway.Event.message:type_name -> msggateway.Message
 	10, // 7: msggateway.UpdateVirtualUserRequest.user:type_name -> msggateway.VirtualUser
@@ -5095,23 +5231,23 @@ var file_services_msggateway_proto_depIdxs = []int32{
 	15, // 11: msggateway.ListChannelsResponse.channels:type_name -> msggateway.Channel
 	9,  // 12: msggateway.MsggatewayConfigState.config:type_name -> msggateway.Config
 	2,  // 13: msggateway.Predicate.op:type_name -> msggateway.ComparisonOp
-	31, // 14: msggateway.Predicate.value:type_name -> msggateway.QueryValue
-	31, // 15: msggateway.Predicate.values:type_name -> msggateway.QueryValue
+	32, // 14: msggateway.Predicate.value:type_name -> msggateway.QueryValue
+	32, // 15: msggateway.Predicate.values:type_name -> msggateway.QueryValue
 	4,  // 16: msggateway.PredicateGroup.op:type_name -> msggateway.LogicalOp
-	32, // 17: msggateway.PredicateGroup.predicates:type_name -> msggateway.Predicate
-	33, // 18: msggateway.PredicateGroup.groups:type_name -> msggateway.PredicateGroup
+	33, // 17: msggateway.PredicateGroup.predicates:type_name -> msggateway.Predicate
+	34, // 18: msggateway.PredicateGroup.groups:type_name -> msggateway.PredicateGroup
 	3,  // 19: msggateway.SortField.direction:type_name -> msggateway.SortDirection
-	33, // 20: msggateway.CollectionQuery.where:type_name -> msggateway.PredicateGroup
-	34, // 21: msggateway.CollectionQuery.order_by:type_name -> msggateway.SortField
+	34, // 20: msggateway.CollectionQuery.where:type_name -> msggateway.PredicateGroup
+	35, // 21: msggateway.CollectionQuery.order_by:type_name -> msggateway.SortField
 	10, // 22: msggateway.VirtualUsersPutRequest.value:type_name -> msggateway.VirtualUser
 	10, // 23: msggateway.VirtualUsersValueResponse.value:type_name -> msggateway.VirtualUser
-	61, // 24: msggateway.VirtualUsersEntriesResponse.entries:type_name -> msggateway.VirtualUsersEntriesResponse.EntriesEntry
-	35, // 25: msggateway.VirtualUsersQueryRequest.query:type_name -> msggateway.CollectionQuery
+	62, // 24: msggateway.VirtualUsersEntriesResponse.entries:type_name -> msggateway.VirtualUsersEntriesResponse.EntriesEntry
+	36, // 25: msggateway.VirtualUsersQueryRequest.query:type_name -> msggateway.CollectionQuery
 	10, // 26: msggateway.VirtualUsersQueryResponse.results:type_name -> msggateway.VirtualUser
 	11, // 27: msggateway.SubscriptionsPutRequest.value:type_name -> msggateway.ChannelSubscription
 	11, // 28: msggateway.SubscriptionsValueResponse.value:type_name -> msggateway.ChannelSubscription
-	62, // 29: msggateway.SubscriptionsEntriesResponse.entries:type_name -> msggateway.SubscriptionsEntriesResponse.EntriesEntry
-	35, // 30: msggateway.SubscriptionsQueryRequest.query:type_name -> msggateway.CollectionQuery
+	63, // 29: msggateway.SubscriptionsEntriesResponse.entries:type_name -> msggateway.SubscriptionsEntriesResponse.EntriesEntry
+	36, // 30: msggateway.SubscriptionsQueryRequest.query:type_name -> msggateway.CollectionQuery
 	11, // 31: msggateway.SubscriptionsQueryResponse.results:type_name -> msggateway.ChannelSubscription
 	10, // 32: msggateway.VirtualUsersEntriesResponse.EntriesEntry.value:type_name -> msggateway.VirtualUser
 	11, // 33: msggateway.SubscriptionsEntriesResponse.EntriesEntry.value:type_name -> msggateway.ChannelSubscription
@@ -5124,80 +5260,80 @@ var file_services_msggateway_proto_depIdxs = []int32{
 	22, // 40: msggateway.Messaging.SendThreadReply:input_type -> msggateway.SendThreadReplyRequest
 	24, // 41: msggateway.Messaging.ListThreadMessages:input_type -> msggateway.GetThreadRequest
 	26, // 42: msggateway.Messaging.GetChannelHistory:input_type -> msggateway.GetChannelHistoryRequest
-	65, // 43: msggateway.Messaging.ListChannels:input_type -> trace.TraceRequest
-	29, // 44: msggateway.Messaging.CreateReaction:input_type -> msggateway.ReactionRequest
-	29, // 45: msggateway.Messaging.DeleteReaction:input_type -> msggateway.ReactionRequest
-	36, // 46: msggateway.GatewayStateService.GetVirtualUsers:input_type -> msggateway.VirtualUsersGetRequest
-	37, // 47: msggateway.GatewayStateService.PutVirtualUsers:input_type -> msggateway.VirtualUsersPutRequest
-	37, // 48: msggateway.GatewayStateService.SetVirtualUsers:input_type -> msggateway.VirtualUsersPutRequest
-	36, // 49: msggateway.GatewayStateService.RemoveVirtualUsers:input_type -> msggateway.VirtualUsersGetRequest
-	36, // 50: msggateway.GatewayStateService.DeleteVirtualUsers:input_type -> msggateway.VirtualUsersGetRequest
-	36, // 51: msggateway.GatewayStateService.ContainsKeyVirtualUsers:input_type -> msggateway.VirtualUsersGetRequest
-	38, // 52: msggateway.GatewayStateService.GetAllVirtualUsers:input_type -> msggateway.VirtualUsersGetAllRequest
-	39, // 53: msggateway.GatewayStateService.KeySetVirtualUsers:input_type -> msggateway.VirtualUsersKeysRequest
-	40, // 54: msggateway.GatewayStateService.SizeVirtualUsers:input_type -> msggateway.VirtualUsersSizeRequest
-	41, // 55: msggateway.GatewayStateService.ClearVirtualUsers:input_type -> msggateway.VirtualUsersClearRequest
-	37, // 56: msggateway.GatewayStateService.PutIfAbsentVirtualUsers:input_type -> msggateway.VirtualUsersPutRequest
-	65, // 57: msggateway.GatewayStateService.WatchVirtualUsers:input_type -> trace.TraceRequest
-	46, // 58: msggateway.GatewayStateService.QueryVirtualUsers:input_type -> msggateway.VirtualUsersQueryRequest
-	46, // 59: msggateway.GatewayStateService.WatchQueryVirtualUsers:input_type -> msggateway.VirtualUsersQueryRequest
-	48, // 60: msggateway.GatewayStateService.GetSubscriptions:input_type -> msggateway.SubscriptionsGetRequest
-	49, // 61: msggateway.GatewayStateService.PutSubscriptions:input_type -> msggateway.SubscriptionsPutRequest
-	49, // 62: msggateway.GatewayStateService.SetSubscriptions:input_type -> msggateway.SubscriptionsPutRequest
-	48, // 63: msggateway.GatewayStateService.RemoveSubscriptions:input_type -> msggateway.SubscriptionsGetRequest
-	48, // 64: msggateway.GatewayStateService.DeleteSubscriptions:input_type -> msggateway.SubscriptionsGetRequest
-	48, // 65: msggateway.GatewayStateService.ContainsKeySubscriptions:input_type -> msggateway.SubscriptionsGetRequest
-	50, // 66: msggateway.GatewayStateService.GetAllSubscriptions:input_type -> msggateway.SubscriptionsGetAllRequest
-	51, // 67: msggateway.GatewayStateService.KeySetSubscriptions:input_type -> msggateway.SubscriptionsKeysRequest
-	52, // 68: msggateway.GatewayStateService.SizeSubscriptions:input_type -> msggateway.SubscriptionsSizeRequest
-	53, // 69: msggateway.GatewayStateService.ClearSubscriptions:input_type -> msggateway.SubscriptionsClearRequest
-	49, // 70: msggateway.GatewayStateService.PutIfAbsentSubscriptions:input_type -> msggateway.SubscriptionsPutRequest
-	65, // 71: msggateway.GatewayStateService.WatchSubscriptions:input_type -> trace.TraceRequest
-	58, // 72: msggateway.GatewayStateService.QuerySubscriptions:input_type -> msggateway.SubscriptionsQueryRequest
-	58, // 73: msggateway.GatewayStateService.WatchQuerySubscriptions:input_type -> msggateway.SubscriptionsQueryRequest
-	65, // 74: msggateway.MsggatewayConfigStateService.GetConfig:input_type -> trace.TraceRequest
+	29, // 43: msggateway.Messaging.ListChannels:input_type -> msggateway.ListChannelsRequest
+	30, // 44: msggateway.Messaging.CreateReaction:input_type -> msggateway.ReactionRequest
+	30, // 45: msggateway.Messaging.DeleteReaction:input_type -> msggateway.ReactionRequest
+	37, // 46: msggateway.GatewayStateService.GetVirtualUsers:input_type -> msggateway.VirtualUsersGetRequest
+	38, // 47: msggateway.GatewayStateService.PutVirtualUsers:input_type -> msggateway.VirtualUsersPutRequest
+	38, // 48: msggateway.GatewayStateService.SetVirtualUsers:input_type -> msggateway.VirtualUsersPutRequest
+	37, // 49: msggateway.GatewayStateService.RemoveVirtualUsers:input_type -> msggateway.VirtualUsersGetRequest
+	37, // 50: msggateway.GatewayStateService.DeleteVirtualUsers:input_type -> msggateway.VirtualUsersGetRequest
+	37, // 51: msggateway.GatewayStateService.ContainsKeyVirtualUsers:input_type -> msggateway.VirtualUsersGetRequest
+	39, // 52: msggateway.GatewayStateService.GetAllVirtualUsers:input_type -> msggateway.VirtualUsersGetAllRequest
+	40, // 53: msggateway.GatewayStateService.KeySetVirtualUsers:input_type -> msggateway.VirtualUsersKeysRequest
+	41, // 54: msggateway.GatewayStateService.SizeVirtualUsers:input_type -> msggateway.VirtualUsersSizeRequest
+	42, // 55: msggateway.GatewayStateService.ClearVirtualUsers:input_type -> msggateway.VirtualUsersClearRequest
+	38, // 56: msggateway.GatewayStateService.PutIfAbsentVirtualUsers:input_type -> msggateway.VirtualUsersPutRequest
+	66, // 57: msggateway.GatewayStateService.WatchVirtualUsers:input_type -> trace.TraceRequest
+	47, // 58: msggateway.GatewayStateService.QueryVirtualUsers:input_type -> msggateway.VirtualUsersQueryRequest
+	47, // 59: msggateway.GatewayStateService.WatchQueryVirtualUsers:input_type -> msggateway.VirtualUsersQueryRequest
+	49, // 60: msggateway.GatewayStateService.GetSubscriptions:input_type -> msggateway.SubscriptionsGetRequest
+	50, // 61: msggateway.GatewayStateService.PutSubscriptions:input_type -> msggateway.SubscriptionsPutRequest
+	50, // 62: msggateway.GatewayStateService.SetSubscriptions:input_type -> msggateway.SubscriptionsPutRequest
+	49, // 63: msggateway.GatewayStateService.RemoveSubscriptions:input_type -> msggateway.SubscriptionsGetRequest
+	49, // 64: msggateway.GatewayStateService.DeleteSubscriptions:input_type -> msggateway.SubscriptionsGetRequest
+	49, // 65: msggateway.GatewayStateService.ContainsKeySubscriptions:input_type -> msggateway.SubscriptionsGetRequest
+	51, // 66: msggateway.GatewayStateService.GetAllSubscriptions:input_type -> msggateway.SubscriptionsGetAllRequest
+	52, // 67: msggateway.GatewayStateService.KeySetSubscriptions:input_type -> msggateway.SubscriptionsKeysRequest
+	53, // 68: msggateway.GatewayStateService.SizeSubscriptions:input_type -> msggateway.SubscriptionsSizeRequest
+	54, // 69: msggateway.GatewayStateService.ClearSubscriptions:input_type -> msggateway.SubscriptionsClearRequest
+	50, // 70: msggateway.GatewayStateService.PutIfAbsentSubscriptions:input_type -> msggateway.SubscriptionsPutRequest
+	66, // 71: msggateway.GatewayStateService.WatchSubscriptions:input_type -> trace.TraceRequest
+	59, // 72: msggateway.GatewayStateService.QuerySubscriptions:input_type -> msggateway.SubscriptionsQueryRequest
+	59, // 73: msggateway.GatewayStateService.WatchQuerySubscriptions:input_type -> msggateway.SubscriptionsQueryRequest
+	66, // 74: msggateway.MsggatewayConfigStateService.GetConfig:input_type -> trace.TraceRequest
 	9,  // 75: msggateway.MsggatewayConfigStateService.SetConfig:input_type -> msggateway.Config
-	65, // 76: msggateway.MsggatewayConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	66, // 77: msggateway.Messaging.UpdateVirtualUser:output_type -> google.protobuf.Empty
-	66, // 78: msggateway.Messaging.DeleteVirtualUser:output_type -> google.protobuf.Empty
-	66, // 79: msggateway.Messaging.Subscribe:output_type -> google.protobuf.Empty
-	66, // 80: msggateway.Messaging.DeleteSubscription:output_type -> google.protobuf.Empty
+	66, // 76: msggateway.MsggatewayConfigStateService.WatchConfig:input_type -> trace.TraceRequest
+	67, // 77: msggateway.Messaging.UpdateVirtualUser:output_type -> google.protobuf.Empty
+	67, // 78: msggateway.Messaging.DeleteVirtualUser:output_type -> google.protobuf.Empty
+	67, // 79: msggateway.Messaging.Subscribe:output_type -> google.protobuf.Empty
+	67, // 80: msggateway.Messaging.DeleteSubscription:output_type -> google.protobuf.Empty
 	14, // 81: msggateway.Messaging.SubscribeEvents:output_type -> msggateway.Event
 	23, // 82: msggateway.Messaging.SendMessage:output_type -> msggateway.SendMessageResponse
 	23, // 83: msggateway.Messaging.SendThreadReply:output_type -> msggateway.SendMessageResponse
 	25, // 84: msggateway.Messaging.ListThreadMessages:output_type -> msggateway.GetThreadResponse
 	27, // 85: msggateway.Messaging.GetChannelHistory:output_type -> msggateway.GetChannelHistoryResponse
 	28, // 86: msggateway.Messaging.ListChannels:output_type -> msggateway.ListChannelsResponse
-	66, // 87: msggateway.Messaging.CreateReaction:output_type -> google.protobuf.Empty
-	66, // 88: msggateway.Messaging.DeleteReaction:output_type -> google.protobuf.Empty
-	42, // 89: msggateway.GatewayStateService.GetVirtualUsers:output_type -> msggateway.VirtualUsersValueResponse
-	42, // 90: msggateway.GatewayStateService.PutVirtualUsers:output_type -> msggateway.VirtualUsersValueResponse
-	60, // 91: msggateway.GatewayStateService.SetVirtualUsers:output_type -> msggateway.MapEmpty
-	42, // 92: msggateway.GatewayStateService.RemoveVirtualUsers:output_type -> msggateway.VirtualUsersValueResponse
-	60, // 93: msggateway.GatewayStateService.DeleteVirtualUsers:output_type -> msggateway.MapEmpty
-	42, // 94: msggateway.GatewayStateService.ContainsKeyVirtualUsers:output_type -> msggateway.VirtualUsersValueResponse
-	43, // 95: msggateway.GatewayStateService.GetAllVirtualUsers:output_type -> msggateway.VirtualUsersEntriesResponse
-	44, // 96: msggateway.GatewayStateService.KeySetVirtualUsers:output_type -> msggateway.VirtualUsersKeysResponse
-	45, // 97: msggateway.GatewayStateService.SizeVirtualUsers:output_type -> msggateway.VirtualUsersSizeResponse
-	60, // 98: msggateway.GatewayStateService.ClearVirtualUsers:output_type -> msggateway.MapEmpty
-	42, // 99: msggateway.GatewayStateService.PutIfAbsentVirtualUsers:output_type -> msggateway.VirtualUsersValueResponse
-	43, // 100: msggateway.GatewayStateService.WatchVirtualUsers:output_type -> msggateway.VirtualUsersEntriesResponse
-	47, // 101: msggateway.GatewayStateService.QueryVirtualUsers:output_type -> msggateway.VirtualUsersQueryResponse
-	47, // 102: msggateway.GatewayStateService.WatchQueryVirtualUsers:output_type -> msggateway.VirtualUsersQueryResponse
-	54, // 103: msggateway.GatewayStateService.GetSubscriptions:output_type -> msggateway.SubscriptionsValueResponse
-	54, // 104: msggateway.GatewayStateService.PutSubscriptions:output_type -> msggateway.SubscriptionsValueResponse
-	60, // 105: msggateway.GatewayStateService.SetSubscriptions:output_type -> msggateway.MapEmpty
-	54, // 106: msggateway.GatewayStateService.RemoveSubscriptions:output_type -> msggateway.SubscriptionsValueResponse
-	60, // 107: msggateway.GatewayStateService.DeleteSubscriptions:output_type -> msggateway.MapEmpty
-	54, // 108: msggateway.GatewayStateService.ContainsKeySubscriptions:output_type -> msggateway.SubscriptionsValueResponse
-	55, // 109: msggateway.GatewayStateService.GetAllSubscriptions:output_type -> msggateway.SubscriptionsEntriesResponse
-	56, // 110: msggateway.GatewayStateService.KeySetSubscriptions:output_type -> msggateway.SubscriptionsKeysResponse
-	57, // 111: msggateway.GatewayStateService.SizeSubscriptions:output_type -> msggateway.SubscriptionsSizeResponse
-	60, // 112: msggateway.GatewayStateService.ClearSubscriptions:output_type -> msggateway.MapEmpty
-	54, // 113: msggateway.GatewayStateService.PutIfAbsentSubscriptions:output_type -> msggateway.SubscriptionsValueResponse
-	55, // 114: msggateway.GatewayStateService.WatchSubscriptions:output_type -> msggateway.SubscriptionsEntriesResponse
-	59, // 115: msggateway.GatewayStateService.QuerySubscriptions:output_type -> msggateway.SubscriptionsQueryResponse
-	59, // 116: msggateway.GatewayStateService.WatchQuerySubscriptions:output_type -> msggateway.SubscriptionsQueryResponse
+	67, // 87: msggateway.Messaging.CreateReaction:output_type -> google.protobuf.Empty
+	67, // 88: msggateway.Messaging.DeleteReaction:output_type -> google.protobuf.Empty
+	43, // 89: msggateway.GatewayStateService.GetVirtualUsers:output_type -> msggateway.VirtualUsersValueResponse
+	43, // 90: msggateway.GatewayStateService.PutVirtualUsers:output_type -> msggateway.VirtualUsersValueResponse
+	61, // 91: msggateway.GatewayStateService.SetVirtualUsers:output_type -> msggateway.MapEmpty
+	43, // 92: msggateway.GatewayStateService.RemoveVirtualUsers:output_type -> msggateway.VirtualUsersValueResponse
+	61, // 93: msggateway.GatewayStateService.DeleteVirtualUsers:output_type -> msggateway.MapEmpty
+	43, // 94: msggateway.GatewayStateService.ContainsKeyVirtualUsers:output_type -> msggateway.VirtualUsersValueResponse
+	44, // 95: msggateway.GatewayStateService.GetAllVirtualUsers:output_type -> msggateway.VirtualUsersEntriesResponse
+	45, // 96: msggateway.GatewayStateService.KeySetVirtualUsers:output_type -> msggateway.VirtualUsersKeysResponse
+	46, // 97: msggateway.GatewayStateService.SizeVirtualUsers:output_type -> msggateway.VirtualUsersSizeResponse
+	61, // 98: msggateway.GatewayStateService.ClearVirtualUsers:output_type -> msggateway.MapEmpty
+	43, // 99: msggateway.GatewayStateService.PutIfAbsentVirtualUsers:output_type -> msggateway.VirtualUsersValueResponse
+	44, // 100: msggateway.GatewayStateService.WatchVirtualUsers:output_type -> msggateway.VirtualUsersEntriesResponse
+	48, // 101: msggateway.GatewayStateService.QueryVirtualUsers:output_type -> msggateway.VirtualUsersQueryResponse
+	48, // 102: msggateway.GatewayStateService.WatchQueryVirtualUsers:output_type -> msggateway.VirtualUsersQueryResponse
+	55, // 103: msggateway.GatewayStateService.GetSubscriptions:output_type -> msggateway.SubscriptionsValueResponse
+	55, // 104: msggateway.GatewayStateService.PutSubscriptions:output_type -> msggateway.SubscriptionsValueResponse
+	61, // 105: msggateway.GatewayStateService.SetSubscriptions:output_type -> msggateway.MapEmpty
+	55, // 106: msggateway.GatewayStateService.RemoveSubscriptions:output_type -> msggateway.SubscriptionsValueResponse
+	61, // 107: msggateway.GatewayStateService.DeleteSubscriptions:output_type -> msggateway.MapEmpty
+	55, // 108: msggateway.GatewayStateService.ContainsKeySubscriptions:output_type -> msggateway.SubscriptionsValueResponse
+	56, // 109: msggateway.GatewayStateService.GetAllSubscriptions:output_type -> msggateway.SubscriptionsEntriesResponse
+	57, // 110: msggateway.GatewayStateService.KeySetSubscriptions:output_type -> msggateway.SubscriptionsKeysResponse
+	58, // 111: msggateway.GatewayStateService.SizeSubscriptions:output_type -> msggateway.SubscriptionsSizeResponse
+	61, // 112: msggateway.GatewayStateService.ClearSubscriptions:output_type -> msggateway.MapEmpty
+	55, // 113: msggateway.GatewayStateService.PutIfAbsentSubscriptions:output_type -> msggateway.SubscriptionsValueResponse
+	56, // 114: msggateway.GatewayStateService.WatchSubscriptions:output_type -> msggateway.SubscriptionsEntriesResponse
+	60, // 115: msggateway.GatewayStateService.QuerySubscriptions:output_type -> msggateway.SubscriptionsQueryResponse
+	60, // 116: msggateway.GatewayStateService.WatchQuerySubscriptions:output_type -> msggateway.SubscriptionsQueryResponse
 	9,  // 117: msggateway.MsggatewayConfigStateService.GetConfig:output_type -> msggateway.Config
 	9,  // 118: msggateway.MsggatewayConfigStateService.SetConfig:output_type -> msggateway.Config
 	9,  // 119: msggateway.MsggatewayConfigStateService.WatchConfig:output_type -> msggateway.Config
@@ -5213,7 +5349,7 @@ func file_services_msggateway_proto_init() {
 	if File_services_msggateway_proto != nil {
 		return
 	}
-	file_services_msggateway_proto_msgTypes[22].OneofWrappers = []any{
+	file_services_msggateway_proto_msgTypes[23].OneofWrappers = []any{
 		(*QueryValue_StringValue)(nil),
 		(*QueryValue_IntValue)(nil),
 		(*QueryValue_DoubleValue)(nil),
@@ -5225,7 +5361,7 @@ func file_services_msggateway_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_services_msggateway_proto_rawDesc), len(file_services_msggateway_proto_rawDesc)),
 			NumEnums:      9,
-			NumMessages:   54,
+			NumMessages:   55,
 			NumExtensions: 0,
 			NumServices:   3,
 		},

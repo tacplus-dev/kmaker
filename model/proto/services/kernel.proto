@@ -155,14 +155,6 @@ message Config {
   // Each delegate identifies a service and its authorized target services.
   repeated Delegate delegates = 17;
 
-  // Retired: spiffe_prefix (the multi-segment deployment prefix). SPIFFE IDs
-  // are now self-describing — the trust domain is the URI authority and the
-  // deployment topology lives in the path under /system (location_path below) —
-  // so no out-of-band combined prefix exists. Replaced by spiffe_trust_domain +
-  // location_path, mirroring libs/grpcconfig.Config.
-  reserved 19;
-  reserved "spiffe_prefix";
-
   // fqdn is the fully qualified domain name for this cluster
   // (e.g. "api.example.com"). Published to Identity state for
   // services like letsencrypt. No default — must be set for production.
@@ -204,14 +196,6 @@ message Config {
   // Delegates control their own exp policy within this ceiling.
   // Default: 2592000 (30 days).
   int64 max_token_lifetime_seconds = 28;
-
-  // Field 29 (cluster_cred_pairs, the old ClusterCredPair type) and field 30
-  // (trusted_issuers) are retired. There is no special cluster cred_pair type —
-  // the cluster/root admin is an ordinary C2S CredPair at the root namespace
-  // (see root_cred_pairs). trusted_issuers is gone because kernel makes no
-  // external calls (oauth/saml validate external tokens and call MintUserToken).
-  reserved 29, 30;
-  reserved "cluster_cred_pairs", "trusted_issuers";
 
   // offline_token_lifetime_seconds is the default lifetime for Offline Tokens
   // (OT) — the long-lived, identity-only tokens persisted on disk by the
@@ -332,12 +316,12 @@ service Mint {
   // its own authority (above) and uses them for Hazelcast peer mTLS. Generates
   // the instance-side member-cert seam (Handler.newSmbCert).
 
-  // MintServiceToken — self-mint. An internal service exchanges its cred_pair
-  // JWT / cloud proof (bootstrap) or a kernel-signed refresh/access token for a
+  // MintServiceToken — self-mint. An internal service exchanges its Kubernetes
+  // token / cloud proof (bootstrap) or a kernel-signed refresh/access token for a
   // token bearing its OWN identity (sub = caller SPIFFE). Never calls OPA;
   // S2S tokens are identity-only. Signs Ed25519.
   // auth_disabled: the caller authenticates via credentials in the request body
-  // (cred_pair JWT in input_token / cloud_proof), not a bearer header.
+  // (kubernetes_token / cloud_proof / kernel-signed input_token), not a bearer header.
   rpc MintServiceToken(tokenrequest.MintServiceTokenRequest) returns (tokenrequest.TokenMintResponse) {
   }
 
@@ -471,6 +455,11 @@ message CliTokenBrokerRegister {
 // for authentication on the sending oauth instance.
 message CliTokenBrokerRegisterNonce {
   string nonce = 1;
+  // offline_access requests an Offline Token (OT) for this CLI nonce. The
+  // broker stores this with the nonce so the eventual browser callback can
+  // mint the correct long-lived identity token even when it lands on another
+  // oauth instance.
+  bool offline_access = 2;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -520,10 +509,28 @@ message CloudIdentityMatcher {
   bool noop = 201;
 }
 
-// Delegate holds credentials for a service or machine client that can request tokens.
+// KubernetesServiceAccountMatcher configures which Kubernetes service accounts
+// a delegate accepts. The workload proves identity with a projected
+// service-account token; this config tells kernel which (namespace, service
+// account) pairs map to this delegate. Repeated on Delegate so multiple SAs
+// (multi-namespace / migration) can map to one delegate.
+message KubernetesServiceAccountMatcher {
+  // kubernetes_namespace is the Kubernetes namespace of the service account.
+  // Named explicitly to avoid collision with the Cavalier tenant namespace
+  // concept — this is the K8s namespace, not an authorization namespace.
+  string kubernetes_namespace = 1;
+
+  // kubernetes_service_account is the Kubernetes ServiceAccount name.
+  string kubernetes_service_account = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
+// Delegate holds bootstrap matchers for a service or machine client that can request tokens.
 // Each delegate is identified by name, which becomes the service path segment in
-// the issued token's SPIFFE URI: spiffe://<spiffe_prefix>/<delegate_name>.
-// Authenticates via a signed JWT (verified against cred_pairs) or cloud identity.
+// the issued token's SPIFFE URI:
+// spiffe://<trust-domain>/system/<location>/services/<delegate_name>.
+// Authenticates via a projected Kubernetes service-account token or cloud identity.
 //
 // Two authorization models:
 //   - S2S (identity-only): tokens carry only the SPIFFE URI as sub.
@@ -532,14 +539,17 @@ message CloudIdentityMatcher {
 //   - C2S (entitlement-based): OPA returns TokenEntitlements directly.
 //     Kernel embeds expanded per-service RPC lists in the user token.
 message Delegate {
-  // name is the delegate's identity — becomes the service path in the SPIFFE URI:
-  // sub = spiffe://<spiffe_prefix>/<name>. For workload children: parent/<child>.
+  // name is the delegate's identity — becomes the final service path segment in
+  // the SPIFFE URI. For workload children: parent/<child>.
   string name = 1;
 
-  // Public keys for verifying the delegate's signed JWT.
-  // Repeated to allow rotation (old + new key during transition).
-  repeated jwk.Jwk cred_pairs = 2;
   repeated CloudIdentityMatcher cloud_identities = 3;
+
+  // kubernetes_service_accounts lists the Kubernetes (namespace, service
+  // account) pairs that authenticate as this delegate via a projected SA
+  // token.
+  repeated KubernetesServiceAccountMatcher kubernetes_service_accounts = 5
+;
 
   // authorized_services lists services this delegate can request tokens for.
   // Values are generated ServiceName enum entries matching service declarations.
@@ -692,7 +702,6 @@ message AdminSetLogLevelRequest {
 // Hot-reloadable fields (delegates, entitlements, rate limits, token lifetimes)
 // are applied immediately. Topology and TLS changes require restart.
 message AdminReloadConfigRequest {
-  reserved 1;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -705,7 +714,6 @@ message AdminReloadConfigRequest {
 // Private because the Hazelcast config may contain internal cluster details.
 // Stored as a singleton in Cluster.config_dump.
 message AdminConfigDump {
-  reserved 3;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -849,9 +857,6 @@ message Constraints {
   // ceiling ⊆ this. Replaces the former standalone Tenant.entitlements field.
   entitlements.TokenEntitlements entitlements_ceiling = 1;
 
-  // 2 = reserved for the Phase-2 domain constraint (gated behind the separate
-  // domain-validation subsystem).
-  reserved 2;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -865,7 +870,7 @@ enum TenantStatus {
 
 // Tenant is the core identity record for a tenant in the cluster.
 // `name` is unique, immutable, and becomes the tenant's SPIFFE segment:
-//   spiffe://<spiffe_prefix>/<name>/...
+//   spiffe://<trust-domain>/tenants/<name>/...
 message Tenant {
   string                    name        = 1;
   TenantStatus              status      = 2;
@@ -997,7 +1002,7 @@ service TenantAdmin {
   }
 
   // ListTenants returns the immediate child tenants of parent_namespace
-  // (ROOT "/" lists top-level tenants).
+  // (ROOT "/" lists top-level tenants), one bounded page at a time.
   rpc ListTenants(ListTenantsRequest) returns (ListTenantsResponse) {
   }
 
@@ -1031,7 +1036,8 @@ service TenantAdmin {
   rpc UpdateProjectConfig(SetProjectConfigRequest) returns (ProjectConfig) {
   }
 
-  // ListProjects returns the immediate project children of tenant_namespace.
+  // ListProjects returns the immediate project children of tenant_namespace,
+  // one bounded page at a time.
   rpc ListProjects(ListProjectsRequest) returns (ListProjectsResponse) {
   }
 
@@ -1058,11 +1064,21 @@ message DeleteTenantResponse {  string trace_id = 200;
 }
 
 // ListTenantsRequest lists the immediate child tenants of parent_namespace
-// ("/" for top-level tenants).
-message ListTenantsRequest   { string parent_namespace = 1;   string trace_id = 200;
+// ("/" for top-level tenants). page_token is the opaque cursor returned by the
+// previous response; empty starts at the first page. page_size 0 uses the
+// method_collection default.
+message ListTenantsRequest {
+  string parent_namespace = 1;
+  int32  page_size        = 2;
+  string page_token       = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ListTenantsResponse  { repeated Tenant tenants = 1;   string trace_id = 200;
+message ListTenantsResponse {
+  repeated Tenant tenants        = 1;
+  string          next_page_token = 2;
+  int64           total_count     = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
 
@@ -1088,10 +1104,24 @@ message SetProjectConfigRequest {
   bool noop = 201;
 }
 
-message ListProjectsRequest  { string tenant_namespace = 1;   string trace_id = 200;
+message ProjectNamespace {
+  string project_namespace = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ListProjectsResponse { repeated string project_namespaces = 1;   string trace_id = 200;
+
+message ListProjectsRequest {
+  string tenant_namespace = 1;
+  int32  page_size        = 2;
+  string page_token       = 3;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ListProjectsResponse {
+  repeated ProjectNamespace project_namespaces = 1;
+  string                    next_page_token    = 2;
+  int64                     total_count        = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
 
@@ -1127,19 +1157,38 @@ enum LogicalOp {
   LOGICAL_OP_AND = 1;
   LOGICAL_OP_OR = 2;
 }
-message QueryValue { oneof value { string string_value = 1; int64 int_value = 2; double double_value = 3; bool bool_value = 4; }   string trace_id = 200;
+message QueryValue {
+  oneof value { string string_value = 1; int64 int_value = 2; double double_value = 3; bool bool_value = 4; }
+  string trace_id = 200;
   bool noop = 201;
 }
-message Predicate { string field_name = 1; ComparisonOp op = 2; QueryValue value = 3; repeated QueryValue values = 4;   string trace_id = 200;
+message Predicate {
+  string field_name = 1;
+  ComparisonOp op = 2;
+  QueryValue value = 3;
+  repeated QueryValue values = 4;
+  string trace_id = 200;
   bool noop = 201;
 }
-message PredicateGroup { LogicalOp op = 1; repeated Predicate predicates = 2; repeated PredicateGroup groups = 3;   string trace_id = 200;
+message PredicateGroup {
+  LogicalOp op = 1;
+  repeated Predicate predicates = 2;
+  repeated PredicateGroup groups = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message SortField { string field_name = 1; SortDirection direction = 2;   string trace_id = 200;
+message SortField {
+  string field_name = 1;
+  SortDirection direction = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message CollectionQuery { PredicateGroup where = 1; repeated SortField order_by = 2; int32 limit = 3; int32 offset = 4;   string trace_id = 200;
+message CollectionQuery {
+  PredicateGroup where = 1;
+  repeated SortField order_by = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+  string trace_id = 200;
   bool noop = 201;
 }
 
@@ -1169,40 +1218,64 @@ service IdentityStateService {
 	rpc WatchQueryVerifyingKeys(VerifyingKeysQueryRequest) returns (stream VerifyingKeysQueryResponse);
 }
 
-message VerifyingKeysGetRequest { string key = 1;   string trace_id = 200;
+message VerifyingKeysGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message VerifyingKeysPutRequest { string key = 1; jwk.Jwk value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message VerifyingKeysPutRequest {
+  string key = 1;
+  jwk.Jwk value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message VerifyingKeysGetAllRequest {  string trace_id = 200;
+message VerifyingKeysGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message VerifyingKeysKeysRequest {  string trace_id = 200;
+message VerifyingKeysKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message VerifyingKeysSizeRequest {  string trace_id = 200;
+message VerifyingKeysSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message VerifyingKeysClearRequest {  string trace_id = 200;
+message VerifyingKeysClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message VerifyingKeysValueResponse { jwk.Jwk value = 1; bool found = 2;   string trace_id = 200;
+message VerifyingKeysValueResponse {
+  jwk.Jwk value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message VerifyingKeysEntriesResponse { map<string, jwk.Jwk> entries = 1;   string trace_id = 200;
+message VerifyingKeysEntriesResponse {
+  map<string, jwk.Jwk> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message VerifyingKeysKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message VerifyingKeysKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message VerifyingKeysSizeResponse { int32 size = 1;   string trace_id = 200;
+message VerifyingKeysSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message VerifyingKeysQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message VerifyingKeysQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message VerifyingKeysQueryResponse { repeated jwk.Jwk results = 1; int32 total_count = 2;   string trace_id = 200;
+message VerifyingKeysQueryResponse {
+  repeated jwk.Jwk results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
@@ -1228,40 +1301,64 @@ service TrustedCaStateService {
 	rpc WatchQueryTrustedCas(TrustedCasQueryRequest) returns (stream TrustedCasQueryResponse);
 }
 
-message TrustedCasGetRequest { string key = 1;   string trace_id = 200;
+message TrustedCasGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TrustedCasPutRequest { string key = 1; x509.X509Cert value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message TrustedCasPutRequest {
+  string key = 1;
+  x509.X509Cert value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TrustedCasGetAllRequest {  string trace_id = 200;
+message TrustedCasGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message TrustedCasKeysRequest {  string trace_id = 200;
+message TrustedCasKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message TrustedCasSizeRequest {  string trace_id = 200;
+message TrustedCasSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message TrustedCasClearRequest {  string trace_id = 200;
+message TrustedCasClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message TrustedCasValueResponse { x509.X509Cert value = 1; bool found = 2;   string trace_id = 200;
+message TrustedCasValueResponse {
+  x509.X509Cert value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TrustedCasEntriesResponse { map<string, x509.X509Cert> entries = 1;   string trace_id = 200;
+message TrustedCasEntriesResponse {
+  map<string, x509.X509Cert> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TrustedCasKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message TrustedCasKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TrustedCasSizeResponse { int32 size = 1;   string trace_id = 200;
+message TrustedCasSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TrustedCasQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message TrustedCasQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TrustedCasQueryResponse { repeated x509.X509Cert results = 1; int32 total_count = 2;   string trace_id = 200;
+message TrustedCasQueryResponse {
+  repeated x509.X509Cert results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
@@ -1479,484 +1576,796 @@ service ClusterStateService {
 	rpc ReloadConfig(AdminReloadConfigRequest) returns (google.protobuf.Empty);
 }
 
-message NodeMetricsGetRequest { string key = 1;   string trace_id = 200;
+message NodeMetricsGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message NodeMetricsPutRequest { string key = 1; hazelcast.AdminNodeMetrics value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message NodeMetricsPutRequest {
+  string key = 1;
+  hazelcast.AdminNodeMetrics value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message NodeMetricsGetAllRequest {  string trace_id = 200;
+message NodeMetricsGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message NodeMetricsKeysRequest {  string trace_id = 200;
+message NodeMetricsKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message NodeMetricsSizeRequest {  string trace_id = 200;
+message NodeMetricsSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message NodeMetricsClearRequest {  string trace_id = 200;
+message NodeMetricsClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message NodeMetricsValueResponse { hazelcast.AdminNodeMetrics value = 1; bool found = 2;   string trace_id = 200;
+message NodeMetricsValueResponse {
+  hazelcast.AdminNodeMetrics value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message NodeMetricsEntriesResponse { map<string, hazelcast.AdminNodeMetrics> entries = 1;   string trace_id = 200;
+message NodeMetricsEntriesResponse {
+  map<string, hazelcast.AdminNodeMetrics> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message NodeMetricsKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message NodeMetricsKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message NodeMetricsSizeResponse { int32 size = 1;   string trace_id = 200;
+message NodeMetricsSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message NodeMetricsQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message NodeMetricsQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message NodeMetricsQueryResponse { repeated hazelcast.AdminNodeMetrics results = 1; int32 total_count = 2;   string trace_id = 200;
-  bool noop = 201;
-}
-
-message GrpcStatsGetRequest { string key = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message GrpcStatsPutRequest { string key = 1; hazelcast.AdminGrpcStats value = 2; int64 lock_counter = 3;   string trace_id = 200;
-  bool noop = 201;
-}
-message GrpcStatsGetAllRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message GrpcStatsKeysRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message GrpcStatsSizeRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message GrpcStatsClearRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message GrpcStatsValueResponse { hazelcast.AdminGrpcStats value = 1; bool found = 2;   string trace_id = 200;
-  bool noop = 201;
-}
-message GrpcStatsEntriesResponse { map<string, hazelcast.AdminGrpcStats> entries = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message GrpcStatsKeysResponse { repeated string keys = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message GrpcStatsSizeResponse { int32 size = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message GrpcStatsQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message GrpcStatsQueryResponse { repeated hazelcast.AdminGrpcStats results = 1; int32 total_count = 2;   string trace_id = 200;
+message NodeMetricsQueryResponse {
+  repeated hazelcast.AdminNodeMetrics results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
-message PersistenceStatusGetRequest { string key = 1;   string trace_id = 200;
+message GrpcStatsGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message PersistenceStatusPutRequest { string key = 1; hazelcast.AdminPersistenceStatus value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message GrpcStatsPutRequest {
+  string key = 1;
+  hazelcast.AdminGrpcStats value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message PersistenceStatusGetAllRequest {  string trace_id = 200;
+message GrpcStatsGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message PersistenceStatusKeysRequest {  string trace_id = 200;
+message GrpcStatsKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message PersistenceStatusSizeRequest {  string trace_id = 200;
+message GrpcStatsSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message PersistenceStatusClearRequest {  string trace_id = 200;
+message GrpcStatsClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message PersistenceStatusValueResponse { hazelcast.AdminPersistenceStatus value = 1; bool found = 2;   string trace_id = 200;
+message GrpcStatsValueResponse {
+  hazelcast.AdminGrpcStats value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message PersistenceStatusEntriesResponse { map<string, hazelcast.AdminPersistenceStatus> entries = 1;   string trace_id = 200;
+message GrpcStatsEntriesResponse {
+  map<string, hazelcast.AdminGrpcStats> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message PersistenceStatusKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message GrpcStatsKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message PersistenceStatusSizeResponse { int32 size = 1;   string trace_id = 200;
+message GrpcStatsSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message PersistenceStatusQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message GrpcStatsQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message PersistenceStatusQueryResponse { repeated hazelcast.AdminPersistenceStatus results = 1; int32 total_count = 2;   string trace_id = 200;
-  bool noop = 201;
-}
-
-message NetworkStatsGetRequest { string key = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message NetworkStatsPutRequest { string key = 1; hazelcast.AdminNetworkStats value = 2; int64 lock_counter = 3;   string trace_id = 200;
-  bool noop = 201;
-}
-message NetworkStatsGetAllRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message NetworkStatsKeysRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message NetworkStatsSizeRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message NetworkStatsClearRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message NetworkStatsValueResponse { hazelcast.AdminNetworkStats value = 1; bool found = 2;   string trace_id = 200;
-  bool noop = 201;
-}
-message NetworkStatsEntriesResponse { map<string, hazelcast.AdminNetworkStats> entries = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message NetworkStatsKeysResponse { repeated string keys = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message NetworkStatsSizeResponse { int32 size = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message NetworkStatsQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message NetworkStatsQueryResponse { repeated hazelcast.AdminNetworkStats results = 1; int32 total_count = 2;   string trace_id = 200;
+message GrpcStatsQueryResponse {
+  repeated hazelcast.AdminGrpcStats results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
-message ThreadInfoGetRequest { string key = 1;   string trace_id = 200;
+message PersistenceStatusGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ThreadInfoPutRequest { string key = 1; hazelcast.AdminThreadInfo value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message PersistenceStatusPutRequest {
+  string key = 1;
+  hazelcast.AdminPersistenceStatus value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ThreadInfoGetAllRequest {  string trace_id = 200;
+message PersistenceStatusGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message ThreadInfoKeysRequest {  string trace_id = 200;
+message PersistenceStatusKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message ThreadInfoSizeRequest {  string trace_id = 200;
+message PersistenceStatusSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message ThreadInfoClearRequest {  string trace_id = 200;
+message PersistenceStatusClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message ThreadInfoValueResponse { hazelcast.AdminThreadInfo value = 1; bool found = 2;   string trace_id = 200;
+message PersistenceStatusValueResponse {
+  hazelcast.AdminPersistenceStatus value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ThreadInfoEntriesResponse { map<string, hazelcast.AdminThreadInfo> entries = 1;   string trace_id = 200;
+message PersistenceStatusEntriesResponse {
+  map<string, hazelcast.AdminPersistenceStatus> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ThreadInfoKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message PersistenceStatusKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ThreadInfoSizeResponse { int32 size = 1;   string trace_id = 200;
+message PersistenceStatusSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ThreadInfoQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message PersistenceStatusQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ThreadInfoQueryResponse { repeated hazelcast.AdminThreadInfo results = 1; int32 total_count = 2;   string trace_id = 200;
-  bool noop = 201;
-}
-
-message TokenCacheStatsGetRequest { string key = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message TokenCacheStatsPutRequest { string key = 1; hazelcast.AdminTokenCacheStats value = 2; int64 lock_counter = 3;   string trace_id = 200;
-  bool noop = 201;
-}
-message TokenCacheStatsGetAllRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message TokenCacheStatsKeysRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message TokenCacheStatsSizeRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message TokenCacheStatsClearRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message TokenCacheStatsValueResponse { hazelcast.AdminTokenCacheStats value = 1; bool found = 2;   string trace_id = 200;
-  bool noop = 201;
-}
-message TokenCacheStatsEntriesResponse { map<string, hazelcast.AdminTokenCacheStats> entries = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message TokenCacheStatsKeysResponse { repeated string keys = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message TokenCacheStatsSizeResponse { int32 size = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message TokenCacheStatsQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message TokenCacheStatsQueryResponse { repeated hazelcast.AdminTokenCacheStats results = 1; int32 total_count = 2;   string trace_id = 200;
+message PersistenceStatusQueryResponse {
+  repeated hazelcast.AdminPersistenceStatus results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
-message MapStatsGetRequest { string key = 1;   string trace_id = 200;
+message NetworkStatsGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message MapStatsPutRequest { string key = 1; hazelcast.AdminMapStats value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message NetworkStatsPutRequest {
+  string key = 1;
+  hazelcast.AdminNetworkStats value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message MapStatsGetAllRequest {  string trace_id = 200;
+message NetworkStatsGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message MapStatsKeysRequest {  string trace_id = 200;
+message NetworkStatsKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message MapStatsSizeRequest {  string trace_id = 200;
+message NetworkStatsSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message MapStatsClearRequest {  string trace_id = 200;
+message NetworkStatsClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message MapStatsValueResponse { hazelcast.AdminMapStats value = 1; bool found = 2;   string trace_id = 200;
+message NetworkStatsValueResponse {
+  hazelcast.AdminNetworkStats value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message MapStatsEntriesResponse { map<string, hazelcast.AdminMapStats> entries = 1;   string trace_id = 200;
+message NetworkStatsEntriesResponse {
+  map<string, hazelcast.AdminNetworkStats> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message MapStatsKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message NetworkStatsKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message MapStatsSizeResponse { int32 size = 1;   string trace_id = 200;
+message NetworkStatsSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message MapStatsQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message NetworkStatsQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message MapStatsQueryResponse { repeated hazelcast.AdminMapStats results = 1; int32 total_count = 2;   string trace_id = 200;
-  bool noop = 201;
-}
-
-message GraphRegistryGetRequest { string key = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message GraphRegistryPutRequest { string key = 1; hazelcast.AdminGraphInfo value = 2; int64 lock_counter = 3;   string trace_id = 200;
-  bool noop = 201;
-}
-message GraphRegistryGetAllRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message GraphRegistryKeysRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message GraphRegistrySizeRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message GraphRegistryClearRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message GraphRegistryValueResponse { hazelcast.AdminGraphInfo value = 1; bool found = 2;   string trace_id = 200;
-  bool noop = 201;
-}
-message GraphRegistryEntriesResponse { map<string, hazelcast.AdminGraphInfo> entries = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message GraphRegistryKeysResponse { repeated string keys = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message GraphRegistrySizeResponse { int32 size = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message GraphRegistryQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message GraphRegistryQueryResponse { repeated hazelcast.AdminGraphInfo results = 1; int32 total_count = 2;   string trace_id = 200;
+message NetworkStatsQueryResponse {
+  repeated hazelcast.AdminNetworkStats results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
-message ServiceConnectionsGetRequest { string key = 1;   string trace_id = 200;
+message ThreadInfoGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceConnectionsPutRequest { string key = 1; hazelcast.AdminServiceConnection value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message ThreadInfoPutRequest {
+  string key = 1;
+  hazelcast.AdminThreadInfo value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceConnectionsGetAllRequest {  string trace_id = 200;
+message ThreadInfoGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceConnectionsKeysRequest {  string trace_id = 200;
+message ThreadInfoKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceConnectionsSizeRequest {  string trace_id = 200;
+message ThreadInfoSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceConnectionsClearRequest {  string trace_id = 200;
+message ThreadInfoClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceConnectionsValueResponse { hazelcast.AdminServiceConnection value = 1; bool found = 2;   string trace_id = 200;
+message ThreadInfoValueResponse {
+  hazelcast.AdminThreadInfo value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceConnectionsEntriesResponse { map<string, hazelcast.AdminServiceConnection> entries = 1;   string trace_id = 200;
+message ThreadInfoEntriesResponse {
+  map<string, hazelcast.AdminThreadInfo> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceConnectionsKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message ThreadInfoKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceConnectionsSizeResponse { int32 size = 1;   string trace_id = 200;
+message ThreadInfoSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceConnectionsQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message ThreadInfoQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceConnectionsQueryResponse { repeated hazelcast.AdminServiceConnection results = 1; int32 total_count = 2;   string trace_id = 200;
-  bool noop = 201;
-}
-
-message QueueStatsGetRequest { string key = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message QueueStatsPutRequest { string key = 1; hazelcast.AdminQueueStats value = 2; int64 lock_counter = 3;   string trace_id = 200;
-  bool noop = 201;
-}
-message QueueStatsGetAllRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message QueueStatsKeysRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message QueueStatsSizeRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message QueueStatsClearRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message QueueStatsValueResponse { hazelcast.AdminQueueStats value = 1; bool found = 2;   string trace_id = 200;
-  bool noop = 201;
-}
-message QueueStatsEntriesResponse { map<string, hazelcast.AdminQueueStats> entries = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message QueueStatsKeysResponse { repeated string keys = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message QueueStatsSizeResponse { int32 size = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message QueueStatsQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message QueueStatsQueryResponse { repeated hazelcast.AdminQueueStats results = 1; int32 total_count = 2;   string trace_id = 200;
+message ThreadInfoQueryResponse {
+  repeated hazelcast.AdminThreadInfo results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
-message TopicStatsGetRequest { string key = 1;   string trace_id = 200;
+message TokenCacheStatsGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TopicStatsPutRequest { string key = 1; hazelcast.AdminTopicStats value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message TokenCacheStatsPutRequest {
+  string key = 1;
+  hazelcast.AdminTokenCacheStats value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TopicStatsGetAllRequest {  string trace_id = 200;
+message TokenCacheStatsGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message TopicStatsKeysRequest {  string trace_id = 200;
+message TokenCacheStatsKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message TopicStatsSizeRequest {  string trace_id = 200;
+message TokenCacheStatsSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message TopicStatsClearRequest {  string trace_id = 200;
+message TokenCacheStatsClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message TopicStatsValueResponse { hazelcast.AdminTopicStats value = 1; bool found = 2;   string trace_id = 200;
+message TokenCacheStatsValueResponse {
+  hazelcast.AdminTokenCacheStats value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TopicStatsEntriesResponse { map<string, hazelcast.AdminTopicStats> entries = 1;   string trace_id = 200;
+message TokenCacheStatsEntriesResponse {
+  map<string, hazelcast.AdminTokenCacheStats> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TopicStatsKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message TokenCacheStatsKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TopicStatsSizeResponse { int32 size = 1;   string trace_id = 200;
+message TokenCacheStatsSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TopicStatsQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message TokenCacheStatsQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TopicStatsQueryResponse { repeated hazelcast.AdminTopicStats results = 1; int32 total_count = 2;   string trace_id = 200;
-  bool noop = 201;
-}
-
-message WatchHealthGetRequest { string key = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message WatchHealthPutRequest { string key = 1; hazelcast.AdminWatchHealth value = 2; int64 lock_counter = 3;   string trace_id = 200;
-  bool noop = 201;
-}
-message WatchHealthGetAllRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message WatchHealthKeysRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message WatchHealthSizeRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message WatchHealthClearRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message WatchHealthValueResponse { hazelcast.AdminWatchHealth value = 1; bool found = 2;   string trace_id = 200;
-  bool noop = 201;
-}
-message WatchHealthEntriesResponse { map<string, hazelcast.AdminWatchHealth> entries = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message WatchHealthKeysResponse { repeated string keys = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message WatchHealthSizeResponse { int32 size = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message WatchHealthQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message WatchHealthQueryResponse { repeated hazelcast.AdminWatchHealth results = 1; int32 total_count = 2;   string trace_id = 200;
+message TokenCacheStatsQueryResponse {
+  repeated hazelcast.AdminTokenCacheStats results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
-message MutationRatesGetRequest { string key = 1;   string trace_id = 200;
+message MapStatsGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message MutationRatesPutRequest { string key = 1; hazelcast.AdminMutationRate value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message MapStatsPutRequest {
+  string key = 1;
+  hazelcast.AdminMapStats value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message MutationRatesGetAllRequest {  string trace_id = 200;
+message MapStatsGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message MutationRatesKeysRequest {  string trace_id = 200;
+message MapStatsKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message MutationRatesSizeRequest {  string trace_id = 200;
+message MapStatsSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message MutationRatesClearRequest {  string trace_id = 200;
+message MapStatsClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message MutationRatesValueResponse { hazelcast.AdminMutationRate value = 1; bool found = 2;   string trace_id = 200;
+message MapStatsValueResponse {
+  hazelcast.AdminMapStats value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message MutationRatesEntriesResponse { map<string, hazelcast.AdminMutationRate> entries = 1;   string trace_id = 200;
+message MapStatsEntriesResponse {
+  map<string, hazelcast.AdminMapStats> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message MutationRatesKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message MapStatsKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message MutationRatesSizeResponse { int32 size = 1;   string trace_id = 200;
+message MapStatsSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message MutationRatesQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message MapStatsQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message MutationRatesQueryResponse { repeated hazelcast.AdminMutationRate results = 1; int32 total_count = 2;   string trace_id = 200;
+message MapStatsQueryResponse {
+  repeated hazelcast.AdminMapStats results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
+message GraphRegistryGetRequest {
+  string key = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message GraphRegistryPutRequest {
+  string key = 1;
+  hazelcast.AdminGraphInfo value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message GraphRegistryGetAllRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message GraphRegistryKeysRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message GraphRegistrySizeRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message GraphRegistryClearRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message GraphRegistryValueResponse {
+  hazelcast.AdminGraphInfo value = 1;
+  bool found = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message GraphRegistryEntriesResponse {
+  map<string, hazelcast.AdminGraphInfo> entries = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message GraphRegistryKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message GraphRegistrySizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message GraphRegistryQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message GraphRegistryQueryResponse {
+  repeated hazelcast.AdminGraphInfo results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
+message ServiceConnectionsGetRequest {
+  string key = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ServiceConnectionsPutRequest {
+  string key = 1;
+  hazelcast.AdminServiceConnection value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ServiceConnectionsGetAllRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ServiceConnectionsKeysRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ServiceConnectionsSizeRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ServiceConnectionsClearRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ServiceConnectionsValueResponse {
+  hazelcast.AdminServiceConnection value = 1;
+  bool found = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ServiceConnectionsEntriesResponse {
+  map<string, hazelcast.AdminServiceConnection> entries = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ServiceConnectionsKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ServiceConnectionsSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ServiceConnectionsQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ServiceConnectionsQueryResponse {
+  repeated hazelcast.AdminServiceConnection results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
+message QueueStatsGetRequest {
+  string key = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message QueueStatsPutRequest {
+  string key = 1;
+  hazelcast.AdminQueueStats value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message QueueStatsGetAllRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message QueueStatsKeysRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message QueueStatsSizeRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message QueueStatsClearRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message QueueStatsValueResponse {
+  hazelcast.AdminQueueStats value = 1;
+  bool found = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message QueueStatsEntriesResponse {
+  map<string, hazelcast.AdminQueueStats> entries = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message QueueStatsKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message QueueStatsSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message QueueStatsQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message QueueStatsQueryResponse {
+  repeated hazelcast.AdminQueueStats results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
+message TopicStatsGetRequest {
+  string key = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message TopicStatsPutRequest {
+  string key = 1;
+  hazelcast.AdminTopicStats value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message TopicStatsGetAllRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message TopicStatsKeysRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message TopicStatsSizeRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message TopicStatsClearRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message TopicStatsValueResponse {
+  hazelcast.AdminTopicStats value = 1;
+  bool found = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message TopicStatsEntriesResponse {
+  map<string, hazelcast.AdminTopicStats> entries = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message TopicStatsKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message TopicStatsSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message TopicStatsQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message TopicStatsQueryResponse {
+  repeated hazelcast.AdminTopicStats results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
+message WatchHealthGetRequest {
+  string key = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message WatchHealthPutRequest {
+  string key = 1;
+  hazelcast.AdminWatchHealth value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message WatchHealthGetAllRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message WatchHealthKeysRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message WatchHealthSizeRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message WatchHealthClearRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message WatchHealthValueResponse {
+  hazelcast.AdminWatchHealth value = 1;
+  bool found = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message WatchHealthEntriesResponse {
+  map<string, hazelcast.AdminWatchHealth> entries = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message WatchHealthKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message WatchHealthSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message WatchHealthQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message WatchHealthQueryResponse {
+  repeated hazelcast.AdminWatchHealth results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
+message MutationRatesGetRequest {
+  string key = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message MutationRatesPutRequest {
+  string key = 1;
+  hazelcast.AdminMutationRate value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message MutationRatesGetAllRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message MutationRatesKeysRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message MutationRatesSizeRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message MutationRatesClearRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message MutationRatesValueResponse {
+  hazelcast.AdminMutationRate value = 1;
+  bool found = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message MutationRatesEntriesResponse {
+  map<string, hazelcast.AdminMutationRate> entries = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message MutationRatesKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message MutationRatesSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message MutationRatesQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message MutationRatesQueryResponse {
+  repeated hazelcast.AdminMutationRate results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
@@ -1977,34 +2386,53 @@ service ServiceHealthStateService {
 	rpc WatchQueryInstances(InstancesQueryRequest) returns (stream InstancesQueryResponse);
 }
 
-message InstancesGetRequest { string key = 1;   string trace_id = 200;
+message InstancesGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message InstancesGetAllRequest {  string trace_id = 200;
+message InstancesGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message InstancesKeysRequest {  string trace_id = 200;
+message InstancesKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message InstancesSizeRequest {  string trace_id = 200;
+message InstancesSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message InstancesValueResponse { healthreport.ServiceInstanceHealth value = 1; bool found = 2;   string trace_id = 200;
+message InstancesValueResponse {
+  healthreport.ServiceInstanceHealth value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message InstancesEntriesResponse { map<string, healthreport.ServiceInstanceHealth> entries = 1;   string trace_id = 200;
+message InstancesEntriesResponse {
+  map<string, healthreport.ServiceInstanceHealth> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message InstancesKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message InstancesKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message InstancesSizeResponse { int32 size = 1;   string trace_id = 200;
+message InstancesSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message InstancesQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message InstancesQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message InstancesQueryResponse { repeated healthreport.ServiceInstanceHealth results = 1; int32 total_count = 2;   string trace_id = 200;
+message InstancesQueryResponse {
+  repeated healthreport.ServiceInstanceHealth results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
@@ -2045,77 +2473,125 @@ service WorkloadStateService {
 	rpc WatchQueryRevocations(RevocationsQueryRequest) returns (stream RevocationsQueryResponse);
 }
 
-message LocalitiesGetRequest { string key = 1;   string trace_id = 200;
+message LocalitiesGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message LocalitiesPutRequest { string key = 1; WorkloadLocality value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message LocalitiesPutRequest {
+  string key = 1;
+  WorkloadLocality value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message LocalitiesGetAllRequest {  string trace_id = 200;
+message LocalitiesGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message LocalitiesKeysRequest {  string trace_id = 200;
+message LocalitiesKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message LocalitiesSizeRequest {  string trace_id = 200;
+message LocalitiesSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message LocalitiesClearRequest {  string trace_id = 200;
+message LocalitiesClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message LocalitiesValueResponse { WorkloadLocality value = 1; bool found = 2;   string trace_id = 200;
+message LocalitiesValueResponse {
+  WorkloadLocality value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message LocalitiesEntriesResponse { map<string, WorkloadLocality> entries = 1;   string trace_id = 200;
+message LocalitiesEntriesResponse {
+  map<string, WorkloadLocality> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message LocalitiesKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message LocalitiesKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message LocalitiesSizeResponse { int32 size = 1;   string trace_id = 200;
+message LocalitiesSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message LocalitiesQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message LocalitiesQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message LocalitiesQueryResponse { repeated WorkloadLocality results = 1; int32 total_count = 2;   string trace_id = 200;
+message LocalitiesQueryResponse {
+  repeated WorkloadLocality results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
-message RevocationsGetRequest { string key = 1;   string trace_id = 200;
+message RevocationsGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message RevocationsPutRequest { string key = 1; WorkloadRevocation value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message RevocationsPutRequest {
+  string key = 1;
+  WorkloadRevocation value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message RevocationsGetAllRequest {  string trace_id = 200;
+message RevocationsGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message RevocationsKeysRequest {  string trace_id = 200;
+message RevocationsKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message RevocationsSizeRequest {  string trace_id = 200;
+message RevocationsSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message RevocationsClearRequest {  string trace_id = 200;
+message RevocationsClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message RevocationsValueResponse { WorkloadRevocation value = 1; bool found = 2;   string trace_id = 200;
+message RevocationsValueResponse {
+  WorkloadRevocation value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message RevocationsEntriesResponse { map<string, WorkloadRevocation> entries = 1;   string trace_id = 200;
+message RevocationsEntriesResponse {
+  map<string, WorkloadRevocation> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message RevocationsKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message RevocationsKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message RevocationsSizeResponse { int32 size = 1;   string trace_id = 200;
+message RevocationsSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message RevocationsQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message RevocationsQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message RevocationsQueryResponse { repeated WorkloadRevocation results = 1; int32 total_count = 2;   string trace_id = 200;
+message RevocationsQueryResponse {
+  repeated WorkloadRevocation results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
@@ -2156,77 +2632,125 @@ service CaStateService {
 	rpc WatchQueryServiceCas(ServiceCasQueryRequest) returns (stream ServiceCasQueryResponse);
 }
 
-message CaCertsGetRequest { string key = 1;   string trace_id = 200;
+message CaCertsGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message CaCertsPutRequest { string key = 1; x509.X509Cert value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message CaCertsPutRequest {
+  string key = 1;
+  x509.X509Cert value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message CaCertsGetAllRequest {  string trace_id = 200;
+message CaCertsGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message CaCertsKeysRequest {  string trace_id = 200;
+message CaCertsKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message CaCertsSizeRequest {  string trace_id = 200;
+message CaCertsSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message CaCertsClearRequest {  string trace_id = 200;
+message CaCertsClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message CaCertsValueResponse { x509.X509Cert value = 1; bool found = 2;   string trace_id = 200;
+message CaCertsValueResponse {
+  x509.X509Cert value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message CaCertsEntriesResponse { map<string, x509.X509Cert> entries = 1;   string trace_id = 200;
+message CaCertsEntriesResponse {
+  map<string, x509.X509Cert> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message CaCertsKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message CaCertsKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message CaCertsSizeResponse { int32 size = 1;   string trace_id = 200;
+message CaCertsSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message CaCertsQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message CaCertsQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message CaCertsQueryResponse { repeated x509.X509Cert results = 1; int32 total_count = 2;   string trace_id = 200;
+message CaCertsQueryResponse {
+  repeated x509.X509Cert results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
-message ServiceCasGetRequest { string key = 1;   string trace_id = 200;
+message ServiceCasGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceCasPutRequest { string key = 1; x509.X509CertChain value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message ServiceCasPutRequest {
+  string key = 1;
+  x509.X509CertChain value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceCasGetAllRequest {  string trace_id = 200;
+message ServiceCasGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceCasKeysRequest {  string trace_id = 200;
+message ServiceCasKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceCasSizeRequest {  string trace_id = 200;
+message ServiceCasSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceCasClearRequest {  string trace_id = 200;
+message ServiceCasClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceCasValueResponse { x509.X509CertChain value = 1; bool found = 2;   string trace_id = 200;
+message ServiceCasValueResponse {
+  x509.X509CertChain value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceCasEntriesResponse { map<string, x509.X509CertChain> entries = 1;   string trace_id = 200;
+message ServiceCasEntriesResponse {
+  map<string, x509.X509CertChain> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceCasKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message ServiceCasKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceCasSizeResponse { int32 size = 1;   string trace_id = 200;
+message ServiceCasSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceCasQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message ServiceCasQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ServiceCasQueryResponse { repeated x509.X509CertChain results = 1; int32 total_count = 2;   string trace_id = 200;
+message ServiceCasQueryResponse {
+  repeated x509.X509CertChain results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
@@ -2282,118 +2806,191 @@ service ConfigStateService {
 	rpc WatchQueryProjectConfigs(ProjectConfigsQueryRequest) returns (stream ProjectConfigsQueryResponse);
 }
 
-message TenantsGetRequest { string key = 1;   string trace_id = 200;
+message TenantsGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TenantsPutRequest { string key = 1; Tenant value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message TenantsPutRequest {
+  string key = 1;
+  Tenant value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TenantsGetAllRequest {  string trace_id = 200;
+message TenantsGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message TenantsKeysRequest {  string trace_id = 200;
+message TenantsKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message TenantsSizeRequest {  string trace_id = 200;
+message TenantsSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message TenantsClearRequest {  string trace_id = 200;
+message TenantsClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message TenantsValueResponse { Tenant value = 1; bool found = 2;   string trace_id = 200;
+message TenantsValueResponse {
+  Tenant value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TenantsEntriesResponse { map<string, Tenant> entries = 1;   string trace_id = 200;
+message TenantsEntriesResponse {
+  map<string, Tenant> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TenantsKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message TenantsKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TenantsSizeResponse { int32 size = 1;   string trace_id = 200;
+message TenantsSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TenantsQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message TenantsQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TenantsQueryResponse { repeated Tenant results = 1; int32 total_count = 2;   string trace_id = 200;
-  bool noop = 201;
-}
-
-message TenantConfigsGetRequest { string key = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message TenantConfigsPutRequest { string key = 1; TenantConfigEntry value = 2; int64 lock_counter = 3;   string trace_id = 200;
-  bool noop = 201;
-}
-message TenantConfigsGetAllRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message TenantConfigsKeysRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message TenantConfigsSizeRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message TenantConfigsClearRequest {  string trace_id = 200;
-  bool noop = 201;
-}
-message TenantConfigsValueResponse { TenantConfigEntry value = 1; bool found = 2;   string trace_id = 200;
-  bool noop = 201;
-}
-message TenantConfigsEntriesResponse { map<string, TenantConfigEntry> entries = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message TenantConfigsKeysResponse { repeated string keys = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message TenantConfigsSizeResponse { int32 size = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message TenantConfigsQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-message TenantConfigsQueryResponse { repeated TenantConfigEntry results = 1; int32 total_count = 2;   string trace_id = 200;
+message TenantsQueryResponse {
+  repeated Tenant results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
-message ProjectConfigsGetRequest { string key = 1;   string trace_id = 200;
+message TenantConfigsGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ProjectConfigsPutRequest { string key = 1; ProjectConfigEntry value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message TenantConfigsPutRequest {
+  string key = 1;
+  TenantConfigEntry value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ProjectConfigsGetAllRequest {  string trace_id = 200;
+message TenantConfigsGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message ProjectConfigsKeysRequest {  string trace_id = 200;
+message TenantConfigsKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message ProjectConfigsSizeRequest {  string trace_id = 200;
+message TenantConfigsSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message ProjectConfigsClearRequest {  string trace_id = 200;
+message TenantConfigsClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message ProjectConfigsValueResponse { ProjectConfigEntry value = 1; bool found = 2;   string trace_id = 200;
+message TenantConfigsValueResponse {
+  TenantConfigEntry value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ProjectConfigsEntriesResponse { map<string, ProjectConfigEntry> entries = 1;   string trace_id = 200;
+message TenantConfigsEntriesResponse {
+  map<string, TenantConfigEntry> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ProjectConfigsKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message TenantConfigsKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ProjectConfigsSizeResponse { int32 size = 1;   string trace_id = 200;
+message TenantConfigsSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ProjectConfigsQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message TenantConfigsQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ProjectConfigsQueryResponse { repeated ProjectConfigEntry results = 1; int32 total_count = 2;   string trace_id = 200;
+message TenantConfigsQueryResponse {
+  repeated TenantConfigEntry results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
-message MapEmpty {  string trace_id = 200;
+message ProjectConfigsGetRequest {
+  string key = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ProjectConfigsPutRequest {
+  string key = 1;
+  ProjectConfigEntry value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ProjectConfigsGetAllRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ProjectConfigsKeysRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ProjectConfigsSizeRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ProjectConfigsClearRequest {
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ProjectConfigsValueResponse {
+  ProjectConfigEntry value = 1;
+  bool found = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ProjectConfigsEntriesResponse {
+  map<string, ProjectConfigEntry> entries = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ProjectConfigsKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ProjectConfigsSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ProjectConfigsQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+message ProjectConfigsQueryResponse {
+  repeated ProjectConfigEntry results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
+message MapEmpty {
+  string trace_id = 200;
   bool noop = 201;
 }
 
@@ -2416,317 +3013,319 @@ enum TypeID {
   TYPE_ID_CLI_TOKEN_BROKER_TOKEN_DELIVERY = 11;
   TYPE_ID_CLI_TOKEN_BROKER_ERROR = 12;
   TYPE_ID_CLOUD_IDENTITY_MATCHER = 13;
-  TYPE_ID_DELEGATE = 14;
-  TYPE_ID_CLUSTER = 15;
-  TYPE_ID_ADMIN_SET_LOG_LEVEL_REQUEST = 16;
-  TYPE_ID_ADMIN_RELOAD_CONFIG_REQUEST = 17;
-  TYPE_ID_ADMIN_CONFIG_DUMP = 18;
-  TYPE_ID_SERVICE_HEALTH = 19;
-  TYPE_ID_WORKLOAD_REVOKE_REQUEST = 20;
-  TYPE_ID_WORKLOAD_LOCALITY = 21;
-  TYPE_ID_WORKLOAD_REVOCATION = 22;
-  TYPE_ID_WORKLOAD_STATE = 23;
-  TYPE_ID_CA = 24;
-  TYPE_ID_CONSTRAINTS = 25;
-  TYPE_ID_TENANT = 26;
-  TYPE_ID_TENANT_CONFIG_ENTRY = 27;
-  TYPE_ID_PROJECT_CONFIG = 28;
-  TYPE_ID_PROJECT_CONFIG_ENTRY = 29;
-  TYPE_ID_CONFIG_STATE = 30;
-  TYPE_ID_KERNEL_DISK_STATE = 31;
-  TYPE_ID_CREATE_TENANT_REQUEST = 32;
-  TYPE_ID_DELETE_TENANT_REQUEST = 33;
-  TYPE_ID_DELETE_TENANT_RESPONSE = 34;
-  TYPE_ID_LIST_TENANTS_REQUEST = 35;
-  TYPE_ID_LIST_TENANTS_RESPONSE = 36;
-  TYPE_ID_GET_TENANT_CONFIG_REQUEST = 37;
-  TYPE_ID_SET_TENANT_CONFIG_REQUEST = 38;
-  TYPE_ID_GET_PROJECT_CONFIG_REQUEST = 39;
-  TYPE_ID_SET_PROJECT_CONFIG_REQUEST = 40;
-  TYPE_ID_LIST_PROJECTS_REQUEST = 41;
-  TYPE_ID_LIST_PROJECTS_RESPONSE = 42;
-  TYPE_ID_DELETE_PROJECT_REQUEST = 43;
-  TYPE_ID_DELETE_PROJECT_RESPONSE = 44;
-  TYPE_ID_QUERY_VALUE = 45;
-  TYPE_ID_PREDICATE = 46;
-  TYPE_ID_PREDICATE_GROUP = 47;
-  TYPE_ID_SORT_FIELD = 48;
-  TYPE_ID_COLLECTION_QUERY = 49;
-  TYPE_ID_VERIFYING_KEYS_GET_REQUEST = 50;
-  TYPE_ID_VERIFYING_KEYS_PUT_REQUEST = 51;
-  TYPE_ID_VERIFYING_KEYS_GET_ALL_REQUEST = 52;
-  TYPE_ID_VERIFYING_KEYS_KEYS_REQUEST = 53;
-  TYPE_ID_VERIFYING_KEYS_SIZE_REQUEST = 54;
-  TYPE_ID_VERIFYING_KEYS_CLEAR_REQUEST = 55;
-  TYPE_ID_VERIFYING_KEYS_VALUE_RESPONSE = 56;
-  TYPE_ID_VERIFYING_KEYS_ENTRIES_RESPONSE = 57;
-  TYPE_ID_VERIFYING_KEYS_KEYS_RESPONSE = 58;
-  TYPE_ID_VERIFYING_KEYS_SIZE_RESPONSE = 59;
-  TYPE_ID_VERIFYING_KEYS_QUERY_REQUEST = 60;
-  TYPE_ID_VERIFYING_KEYS_QUERY_RESPONSE = 61;
-  TYPE_ID_TRUSTED_CAS_GET_REQUEST = 62;
-  TYPE_ID_TRUSTED_CAS_PUT_REQUEST = 63;
-  TYPE_ID_TRUSTED_CAS_GET_ALL_REQUEST = 64;
-  TYPE_ID_TRUSTED_CAS_KEYS_REQUEST = 65;
-  TYPE_ID_TRUSTED_CAS_SIZE_REQUEST = 66;
-  TYPE_ID_TRUSTED_CAS_CLEAR_REQUEST = 67;
-  TYPE_ID_TRUSTED_CAS_VALUE_RESPONSE = 68;
-  TYPE_ID_TRUSTED_CAS_ENTRIES_RESPONSE = 69;
-  TYPE_ID_TRUSTED_CAS_KEYS_RESPONSE = 70;
-  TYPE_ID_TRUSTED_CAS_SIZE_RESPONSE = 71;
-  TYPE_ID_TRUSTED_CAS_QUERY_REQUEST = 72;
-  TYPE_ID_TRUSTED_CAS_QUERY_RESPONSE = 73;
-  TYPE_ID_NODE_METRICS_GET_REQUEST = 74;
-  TYPE_ID_NODE_METRICS_PUT_REQUEST = 75;
-  TYPE_ID_NODE_METRICS_GET_ALL_REQUEST = 76;
-  TYPE_ID_NODE_METRICS_KEYS_REQUEST = 77;
-  TYPE_ID_NODE_METRICS_SIZE_REQUEST = 78;
-  TYPE_ID_NODE_METRICS_CLEAR_REQUEST = 79;
-  TYPE_ID_NODE_METRICS_VALUE_RESPONSE = 80;
-  TYPE_ID_NODE_METRICS_ENTRIES_RESPONSE = 81;
-  TYPE_ID_NODE_METRICS_KEYS_RESPONSE = 82;
-  TYPE_ID_NODE_METRICS_SIZE_RESPONSE = 83;
-  TYPE_ID_NODE_METRICS_QUERY_REQUEST = 84;
-  TYPE_ID_NODE_METRICS_QUERY_RESPONSE = 85;
-  TYPE_ID_GRPC_STATS_GET_REQUEST = 86;
-  TYPE_ID_GRPC_STATS_PUT_REQUEST = 87;
-  TYPE_ID_GRPC_STATS_GET_ALL_REQUEST = 88;
-  TYPE_ID_GRPC_STATS_KEYS_REQUEST = 89;
-  TYPE_ID_GRPC_STATS_SIZE_REQUEST = 90;
-  TYPE_ID_GRPC_STATS_CLEAR_REQUEST = 91;
-  TYPE_ID_GRPC_STATS_VALUE_RESPONSE = 92;
-  TYPE_ID_GRPC_STATS_ENTRIES_RESPONSE = 93;
-  TYPE_ID_GRPC_STATS_KEYS_RESPONSE = 94;
-  TYPE_ID_GRPC_STATS_SIZE_RESPONSE = 95;
-  TYPE_ID_GRPC_STATS_QUERY_REQUEST = 96;
-  TYPE_ID_GRPC_STATS_QUERY_RESPONSE = 97;
-  TYPE_ID_PERSISTENCE_STATUS_GET_REQUEST = 98;
-  TYPE_ID_PERSISTENCE_STATUS_PUT_REQUEST = 99;
-  TYPE_ID_PERSISTENCE_STATUS_GET_ALL_REQUEST = 100;
-  TYPE_ID_PERSISTENCE_STATUS_KEYS_REQUEST = 101;
-  TYPE_ID_PERSISTENCE_STATUS_SIZE_REQUEST = 102;
-  TYPE_ID_PERSISTENCE_STATUS_CLEAR_REQUEST = 103;
-  TYPE_ID_PERSISTENCE_STATUS_VALUE_RESPONSE = 104;
-  TYPE_ID_PERSISTENCE_STATUS_ENTRIES_RESPONSE = 105;
-  TYPE_ID_PERSISTENCE_STATUS_KEYS_RESPONSE = 106;
-  TYPE_ID_PERSISTENCE_STATUS_SIZE_RESPONSE = 107;
-  TYPE_ID_PERSISTENCE_STATUS_QUERY_REQUEST = 108;
-  TYPE_ID_PERSISTENCE_STATUS_QUERY_RESPONSE = 109;
-  TYPE_ID_NETWORK_STATS_GET_REQUEST = 110;
-  TYPE_ID_NETWORK_STATS_PUT_REQUEST = 111;
-  TYPE_ID_NETWORK_STATS_GET_ALL_REQUEST = 112;
-  TYPE_ID_NETWORK_STATS_KEYS_REQUEST = 113;
-  TYPE_ID_NETWORK_STATS_SIZE_REQUEST = 114;
-  TYPE_ID_NETWORK_STATS_CLEAR_REQUEST = 115;
-  TYPE_ID_NETWORK_STATS_VALUE_RESPONSE = 116;
-  TYPE_ID_NETWORK_STATS_ENTRIES_RESPONSE = 117;
-  TYPE_ID_NETWORK_STATS_KEYS_RESPONSE = 118;
-  TYPE_ID_NETWORK_STATS_SIZE_RESPONSE = 119;
-  TYPE_ID_NETWORK_STATS_QUERY_REQUEST = 120;
-  TYPE_ID_NETWORK_STATS_QUERY_RESPONSE = 121;
-  TYPE_ID_THREAD_INFO_GET_REQUEST = 122;
-  TYPE_ID_THREAD_INFO_PUT_REQUEST = 123;
-  TYPE_ID_THREAD_INFO_GET_ALL_REQUEST = 124;
-  TYPE_ID_THREAD_INFO_KEYS_REQUEST = 125;
-  TYPE_ID_THREAD_INFO_SIZE_REQUEST = 126;
-  TYPE_ID_THREAD_INFO_CLEAR_REQUEST = 127;
-  TYPE_ID_THREAD_INFO_VALUE_RESPONSE = 128;
-  TYPE_ID_THREAD_INFO_ENTRIES_RESPONSE = 129;
-  TYPE_ID_THREAD_INFO_KEYS_RESPONSE = 130;
-  TYPE_ID_THREAD_INFO_SIZE_RESPONSE = 131;
-  TYPE_ID_THREAD_INFO_QUERY_REQUEST = 132;
-  TYPE_ID_THREAD_INFO_QUERY_RESPONSE = 133;
-  TYPE_ID_TOKEN_CACHE_STATS_GET_REQUEST = 134;
-  TYPE_ID_TOKEN_CACHE_STATS_PUT_REQUEST = 135;
-  TYPE_ID_TOKEN_CACHE_STATS_GET_ALL_REQUEST = 136;
-  TYPE_ID_TOKEN_CACHE_STATS_KEYS_REQUEST = 137;
-  TYPE_ID_TOKEN_CACHE_STATS_SIZE_REQUEST = 138;
-  TYPE_ID_TOKEN_CACHE_STATS_CLEAR_REQUEST = 139;
-  TYPE_ID_TOKEN_CACHE_STATS_VALUE_RESPONSE = 140;
-  TYPE_ID_TOKEN_CACHE_STATS_ENTRIES_RESPONSE = 141;
-  TYPE_ID_TOKEN_CACHE_STATS_KEYS_RESPONSE = 142;
-  TYPE_ID_TOKEN_CACHE_STATS_SIZE_RESPONSE = 143;
-  TYPE_ID_TOKEN_CACHE_STATS_QUERY_REQUEST = 144;
-  TYPE_ID_TOKEN_CACHE_STATS_QUERY_RESPONSE = 145;
-  TYPE_ID_MAP_STATS_GET_REQUEST = 146;
-  TYPE_ID_MAP_STATS_PUT_REQUEST = 147;
-  TYPE_ID_MAP_STATS_GET_ALL_REQUEST = 148;
-  TYPE_ID_MAP_STATS_KEYS_REQUEST = 149;
-  TYPE_ID_MAP_STATS_SIZE_REQUEST = 150;
-  TYPE_ID_MAP_STATS_CLEAR_REQUEST = 151;
-  TYPE_ID_MAP_STATS_VALUE_RESPONSE = 152;
-  TYPE_ID_MAP_STATS_ENTRIES_RESPONSE = 153;
-  TYPE_ID_MAP_STATS_KEYS_RESPONSE = 154;
-  TYPE_ID_MAP_STATS_SIZE_RESPONSE = 155;
-  TYPE_ID_MAP_STATS_QUERY_REQUEST = 156;
-  TYPE_ID_MAP_STATS_QUERY_RESPONSE = 157;
-  TYPE_ID_GRAPH_REGISTRY_GET_REQUEST = 158;
-  TYPE_ID_GRAPH_REGISTRY_PUT_REQUEST = 159;
-  TYPE_ID_GRAPH_REGISTRY_GET_ALL_REQUEST = 160;
-  TYPE_ID_GRAPH_REGISTRY_KEYS_REQUEST = 161;
-  TYPE_ID_GRAPH_REGISTRY_SIZE_REQUEST = 162;
-  TYPE_ID_GRAPH_REGISTRY_CLEAR_REQUEST = 163;
-  TYPE_ID_GRAPH_REGISTRY_VALUE_RESPONSE = 164;
-  TYPE_ID_GRAPH_REGISTRY_ENTRIES_RESPONSE = 165;
-  TYPE_ID_GRAPH_REGISTRY_KEYS_RESPONSE = 166;
-  TYPE_ID_GRAPH_REGISTRY_SIZE_RESPONSE = 167;
-  TYPE_ID_GRAPH_REGISTRY_QUERY_REQUEST = 168;
-  TYPE_ID_GRAPH_REGISTRY_QUERY_RESPONSE = 169;
-  TYPE_ID_SERVICE_CONNECTIONS_GET_REQUEST = 170;
-  TYPE_ID_SERVICE_CONNECTIONS_PUT_REQUEST = 171;
-  TYPE_ID_SERVICE_CONNECTIONS_GET_ALL_REQUEST = 172;
-  TYPE_ID_SERVICE_CONNECTIONS_KEYS_REQUEST = 173;
-  TYPE_ID_SERVICE_CONNECTIONS_SIZE_REQUEST = 174;
-  TYPE_ID_SERVICE_CONNECTIONS_CLEAR_REQUEST = 175;
-  TYPE_ID_SERVICE_CONNECTIONS_VALUE_RESPONSE = 176;
-  TYPE_ID_SERVICE_CONNECTIONS_ENTRIES_RESPONSE = 177;
-  TYPE_ID_SERVICE_CONNECTIONS_KEYS_RESPONSE = 178;
-  TYPE_ID_SERVICE_CONNECTIONS_SIZE_RESPONSE = 179;
-  TYPE_ID_SERVICE_CONNECTIONS_QUERY_REQUEST = 180;
-  TYPE_ID_SERVICE_CONNECTIONS_QUERY_RESPONSE = 181;
-  TYPE_ID_QUEUE_STATS_GET_REQUEST = 182;
-  TYPE_ID_QUEUE_STATS_PUT_REQUEST = 183;
-  TYPE_ID_QUEUE_STATS_GET_ALL_REQUEST = 184;
-  TYPE_ID_QUEUE_STATS_KEYS_REQUEST = 185;
-  TYPE_ID_QUEUE_STATS_SIZE_REQUEST = 186;
-  TYPE_ID_QUEUE_STATS_CLEAR_REQUEST = 187;
-  TYPE_ID_QUEUE_STATS_VALUE_RESPONSE = 188;
-  TYPE_ID_QUEUE_STATS_ENTRIES_RESPONSE = 189;
-  TYPE_ID_QUEUE_STATS_KEYS_RESPONSE = 190;
-  TYPE_ID_QUEUE_STATS_SIZE_RESPONSE = 191;
-  TYPE_ID_QUEUE_STATS_QUERY_REQUEST = 192;
-  TYPE_ID_QUEUE_STATS_QUERY_RESPONSE = 193;
-  TYPE_ID_TOPIC_STATS_GET_REQUEST = 194;
-  TYPE_ID_TOPIC_STATS_PUT_REQUEST = 195;
-  TYPE_ID_TOPIC_STATS_GET_ALL_REQUEST = 196;
-  TYPE_ID_TOPIC_STATS_KEYS_REQUEST = 197;
-  TYPE_ID_TOPIC_STATS_SIZE_REQUEST = 198;
-  TYPE_ID_TOPIC_STATS_CLEAR_REQUEST = 199;
-  TYPE_ID_TOPIC_STATS_VALUE_RESPONSE = 200;
-  TYPE_ID_TOPIC_STATS_ENTRIES_RESPONSE = 201;
-  TYPE_ID_TOPIC_STATS_KEYS_RESPONSE = 202;
-  TYPE_ID_TOPIC_STATS_SIZE_RESPONSE = 203;
-  TYPE_ID_TOPIC_STATS_QUERY_REQUEST = 204;
-  TYPE_ID_TOPIC_STATS_QUERY_RESPONSE = 205;
-  TYPE_ID_WATCH_HEALTH_GET_REQUEST = 206;
-  TYPE_ID_WATCH_HEALTH_PUT_REQUEST = 207;
-  TYPE_ID_WATCH_HEALTH_GET_ALL_REQUEST = 208;
-  TYPE_ID_WATCH_HEALTH_KEYS_REQUEST = 209;
-  TYPE_ID_WATCH_HEALTH_SIZE_REQUEST = 210;
-  TYPE_ID_WATCH_HEALTH_CLEAR_REQUEST = 211;
-  TYPE_ID_WATCH_HEALTH_VALUE_RESPONSE = 212;
-  TYPE_ID_WATCH_HEALTH_ENTRIES_RESPONSE = 213;
-  TYPE_ID_WATCH_HEALTH_KEYS_RESPONSE = 214;
-  TYPE_ID_WATCH_HEALTH_SIZE_RESPONSE = 215;
-  TYPE_ID_WATCH_HEALTH_QUERY_REQUEST = 216;
-  TYPE_ID_WATCH_HEALTH_QUERY_RESPONSE = 217;
-  TYPE_ID_MUTATION_RATES_GET_REQUEST = 218;
-  TYPE_ID_MUTATION_RATES_PUT_REQUEST = 219;
-  TYPE_ID_MUTATION_RATES_GET_ALL_REQUEST = 220;
-  TYPE_ID_MUTATION_RATES_KEYS_REQUEST = 221;
-  TYPE_ID_MUTATION_RATES_SIZE_REQUEST = 222;
-  TYPE_ID_MUTATION_RATES_CLEAR_REQUEST = 223;
-  TYPE_ID_MUTATION_RATES_VALUE_RESPONSE = 224;
-  TYPE_ID_MUTATION_RATES_ENTRIES_RESPONSE = 225;
-  TYPE_ID_MUTATION_RATES_KEYS_RESPONSE = 226;
-  TYPE_ID_MUTATION_RATES_SIZE_RESPONSE = 227;
-  TYPE_ID_MUTATION_RATES_QUERY_REQUEST = 228;
-  TYPE_ID_MUTATION_RATES_QUERY_RESPONSE = 229;
-  TYPE_ID_INSTANCES_GET_REQUEST = 230;
-  TYPE_ID_INSTANCES_GET_ALL_REQUEST = 231;
-  TYPE_ID_INSTANCES_KEYS_REQUEST = 232;
-  TYPE_ID_INSTANCES_SIZE_REQUEST = 233;
-  TYPE_ID_INSTANCES_VALUE_RESPONSE = 234;
-  TYPE_ID_INSTANCES_ENTRIES_RESPONSE = 235;
-  TYPE_ID_INSTANCES_KEYS_RESPONSE = 236;
-  TYPE_ID_INSTANCES_SIZE_RESPONSE = 237;
-  TYPE_ID_INSTANCES_QUERY_REQUEST = 238;
-  TYPE_ID_INSTANCES_QUERY_RESPONSE = 239;
-  TYPE_ID_LOCALITIES_GET_REQUEST = 240;
-  TYPE_ID_LOCALITIES_PUT_REQUEST = 241;
-  TYPE_ID_LOCALITIES_GET_ALL_REQUEST = 242;
-  TYPE_ID_LOCALITIES_KEYS_REQUEST = 243;
-  TYPE_ID_LOCALITIES_SIZE_REQUEST = 244;
-  TYPE_ID_LOCALITIES_CLEAR_REQUEST = 245;
-  TYPE_ID_LOCALITIES_VALUE_RESPONSE = 246;
-  TYPE_ID_LOCALITIES_ENTRIES_RESPONSE = 247;
-  TYPE_ID_LOCALITIES_KEYS_RESPONSE = 248;
-  TYPE_ID_LOCALITIES_SIZE_RESPONSE = 249;
-  TYPE_ID_LOCALITIES_QUERY_REQUEST = 250;
-  TYPE_ID_LOCALITIES_QUERY_RESPONSE = 251;
-  TYPE_ID_REVOCATIONS_GET_REQUEST = 252;
-  TYPE_ID_REVOCATIONS_PUT_REQUEST = 253;
-  TYPE_ID_REVOCATIONS_GET_ALL_REQUEST = 254;
-  TYPE_ID_REVOCATIONS_KEYS_REQUEST = 255;
-  TYPE_ID_REVOCATIONS_SIZE_REQUEST = 256;
-  TYPE_ID_REVOCATIONS_CLEAR_REQUEST = 257;
-  TYPE_ID_REVOCATIONS_VALUE_RESPONSE = 258;
-  TYPE_ID_REVOCATIONS_ENTRIES_RESPONSE = 259;
-  TYPE_ID_REVOCATIONS_KEYS_RESPONSE = 260;
-  TYPE_ID_REVOCATIONS_SIZE_RESPONSE = 261;
-  TYPE_ID_REVOCATIONS_QUERY_REQUEST = 262;
-  TYPE_ID_REVOCATIONS_QUERY_RESPONSE = 263;
-  TYPE_ID_CA_CERTS_GET_REQUEST = 264;
-  TYPE_ID_CA_CERTS_PUT_REQUEST = 265;
-  TYPE_ID_CA_CERTS_GET_ALL_REQUEST = 266;
-  TYPE_ID_CA_CERTS_KEYS_REQUEST = 267;
-  TYPE_ID_CA_CERTS_SIZE_REQUEST = 268;
-  TYPE_ID_CA_CERTS_CLEAR_REQUEST = 269;
-  TYPE_ID_CA_CERTS_VALUE_RESPONSE = 270;
-  TYPE_ID_CA_CERTS_ENTRIES_RESPONSE = 271;
-  TYPE_ID_CA_CERTS_KEYS_RESPONSE = 272;
-  TYPE_ID_CA_CERTS_SIZE_RESPONSE = 273;
-  TYPE_ID_CA_CERTS_QUERY_REQUEST = 274;
-  TYPE_ID_CA_CERTS_QUERY_RESPONSE = 275;
-  TYPE_ID_SERVICE_CAS_GET_REQUEST = 276;
-  TYPE_ID_SERVICE_CAS_PUT_REQUEST = 277;
-  TYPE_ID_SERVICE_CAS_GET_ALL_REQUEST = 278;
-  TYPE_ID_SERVICE_CAS_KEYS_REQUEST = 279;
-  TYPE_ID_SERVICE_CAS_SIZE_REQUEST = 280;
-  TYPE_ID_SERVICE_CAS_CLEAR_REQUEST = 281;
-  TYPE_ID_SERVICE_CAS_VALUE_RESPONSE = 282;
-  TYPE_ID_SERVICE_CAS_ENTRIES_RESPONSE = 283;
-  TYPE_ID_SERVICE_CAS_KEYS_RESPONSE = 284;
-  TYPE_ID_SERVICE_CAS_SIZE_RESPONSE = 285;
-  TYPE_ID_SERVICE_CAS_QUERY_REQUEST = 286;
-  TYPE_ID_SERVICE_CAS_QUERY_RESPONSE = 287;
-  TYPE_ID_TENANTS_GET_REQUEST = 288;
-  TYPE_ID_TENANTS_PUT_REQUEST = 289;
-  TYPE_ID_TENANTS_GET_ALL_REQUEST = 290;
-  TYPE_ID_TENANTS_KEYS_REQUEST = 291;
-  TYPE_ID_TENANTS_SIZE_REQUEST = 292;
-  TYPE_ID_TENANTS_CLEAR_REQUEST = 293;
-  TYPE_ID_TENANTS_VALUE_RESPONSE = 294;
-  TYPE_ID_TENANTS_ENTRIES_RESPONSE = 295;
-  TYPE_ID_TENANTS_KEYS_RESPONSE = 296;
-  TYPE_ID_TENANTS_SIZE_RESPONSE = 297;
-  TYPE_ID_TENANTS_QUERY_REQUEST = 298;
-  TYPE_ID_TENANTS_QUERY_RESPONSE = 299;
-  TYPE_ID_TENANT_CONFIGS_GET_REQUEST = 300;
-  TYPE_ID_TENANT_CONFIGS_PUT_REQUEST = 301;
-  TYPE_ID_TENANT_CONFIGS_GET_ALL_REQUEST = 302;
-  TYPE_ID_TENANT_CONFIGS_KEYS_REQUEST = 303;
-  TYPE_ID_TENANT_CONFIGS_SIZE_REQUEST = 304;
-  TYPE_ID_TENANT_CONFIGS_CLEAR_REQUEST = 305;
-  TYPE_ID_TENANT_CONFIGS_VALUE_RESPONSE = 306;
-  TYPE_ID_TENANT_CONFIGS_ENTRIES_RESPONSE = 307;
-  TYPE_ID_TENANT_CONFIGS_KEYS_RESPONSE = 308;
-  TYPE_ID_TENANT_CONFIGS_SIZE_RESPONSE = 309;
-  TYPE_ID_TENANT_CONFIGS_QUERY_REQUEST = 310;
-  TYPE_ID_TENANT_CONFIGS_QUERY_RESPONSE = 311;
-  TYPE_ID_PROJECT_CONFIGS_GET_REQUEST = 312;
-  TYPE_ID_PROJECT_CONFIGS_PUT_REQUEST = 313;
-  TYPE_ID_PROJECT_CONFIGS_GET_ALL_REQUEST = 314;
-  TYPE_ID_PROJECT_CONFIGS_KEYS_REQUEST = 315;
-  TYPE_ID_PROJECT_CONFIGS_SIZE_REQUEST = 316;
-  TYPE_ID_PROJECT_CONFIGS_CLEAR_REQUEST = 317;
-  TYPE_ID_PROJECT_CONFIGS_VALUE_RESPONSE = 318;
-  TYPE_ID_PROJECT_CONFIGS_ENTRIES_RESPONSE = 319;
-  TYPE_ID_PROJECT_CONFIGS_KEYS_RESPONSE = 320;
-  TYPE_ID_PROJECT_CONFIGS_SIZE_RESPONSE = 321;
-  TYPE_ID_PROJECT_CONFIGS_QUERY_REQUEST = 322;
-  TYPE_ID_PROJECT_CONFIGS_QUERY_RESPONSE = 323;
-  TYPE_ID_MAP_EMPTY = 324;
+  TYPE_ID_KUBERNETES_SERVICE_ACCOUNT_MATCHER = 14;
+  TYPE_ID_DELEGATE = 15;
+  TYPE_ID_CLUSTER = 16;
+  TYPE_ID_ADMIN_SET_LOG_LEVEL_REQUEST = 17;
+  TYPE_ID_ADMIN_RELOAD_CONFIG_REQUEST = 18;
+  TYPE_ID_ADMIN_CONFIG_DUMP = 19;
+  TYPE_ID_SERVICE_HEALTH = 20;
+  TYPE_ID_WORKLOAD_REVOKE_REQUEST = 21;
+  TYPE_ID_WORKLOAD_LOCALITY = 22;
+  TYPE_ID_WORKLOAD_REVOCATION = 23;
+  TYPE_ID_WORKLOAD_STATE = 24;
+  TYPE_ID_CA = 25;
+  TYPE_ID_CONSTRAINTS = 26;
+  TYPE_ID_TENANT = 27;
+  TYPE_ID_TENANT_CONFIG_ENTRY = 28;
+  TYPE_ID_PROJECT_CONFIG = 29;
+  TYPE_ID_PROJECT_CONFIG_ENTRY = 30;
+  TYPE_ID_CONFIG_STATE = 31;
+  TYPE_ID_KERNEL_DISK_STATE = 32;
+  TYPE_ID_CREATE_TENANT_REQUEST = 33;
+  TYPE_ID_DELETE_TENANT_REQUEST = 34;
+  TYPE_ID_DELETE_TENANT_RESPONSE = 35;
+  TYPE_ID_LIST_TENANTS_REQUEST = 36;
+  TYPE_ID_LIST_TENANTS_RESPONSE = 37;
+  TYPE_ID_GET_TENANT_CONFIG_REQUEST = 38;
+  TYPE_ID_SET_TENANT_CONFIG_REQUEST = 39;
+  TYPE_ID_GET_PROJECT_CONFIG_REQUEST = 40;
+  TYPE_ID_SET_PROJECT_CONFIG_REQUEST = 41;
+  TYPE_ID_PROJECT_NAMESPACE = 42;
+  TYPE_ID_LIST_PROJECTS_REQUEST = 43;
+  TYPE_ID_LIST_PROJECTS_RESPONSE = 44;
+  TYPE_ID_DELETE_PROJECT_REQUEST = 45;
+  TYPE_ID_DELETE_PROJECT_RESPONSE = 46;
+  TYPE_ID_QUERY_VALUE = 47;
+  TYPE_ID_PREDICATE = 48;
+  TYPE_ID_PREDICATE_GROUP = 49;
+  TYPE_ID_SORT_FIELD = 50;
+  TYPE_ID_COLLECTION_QUERY = 51;
+  TYPE_ID_VERIFYING_KEYS_GET_REQUEST = 52;
+  TYPE_ID_VERIFYING_KEYS_PUT_REQUEST = 53;
+  TYPE_ID_VERIFYING_KEYS_GET_ALL_REQUEST = 54;
+  TYPE_ID_VERIFYING_KEYS_KEYS_REQUEST = 55;
+  TYPE_ID_VERIFYING_KEYS_SIZE_REQUEST = 56;
+  TYPE_ID_VERIFYING_KEYS_CLEAR_REQUEST = 57;
+  TYPE_ID_VERIFYING_KEYS_VALUE_RESPONSE = 58;
+  TYPE_ID_VERIFYING_KEYS_ENTRIES_RESPONSE = 59;
+  TYPE_ID_VERIFYING_KEYS_KEYS_RESPONSE = 60;
+  TYPE_ID_VERIFYING_KEYS_SIZE_RESPONSE = 61;
+  TYPE_ID_VERIFYING_KEYS_QUERY_REQUEST = 62;
+  TYPE_ID_VERIFYING_KEYS_QUERY_RESPONSE = 63;
+  TYPE_ID_TRUSTED_CAS_GET_REQUEST = 64;
+  TYPE_ID_TRUSTED_CAS_PUT_REQUEST = 65;
+  TYPE_ID_TRUSTED_CAS_GET_ALL_REQUEST = 66;
+  TYPE_ID_TRUSTED_CAS_KEYS_REQUEST = 67;
+  TYPE_ID_TRUSTED_CAS_SIZE_REQUEST = 68;
+  TYPE_ID_TRUSTED_CAS_CLEAR_REQUEST = 69;
+  TYPE_ID_TRUSTED_CAS_VALUE_RESPONSE = 70;
+  TYPE_ID_TRUSTED_CAS_ENTRIES_RESPONSE = 71;
+  TYPE_ID_TRUSTED_CAS_KEYS_RESPONSE = 72;
+  TYPE_ID_TRUSTED_CAS_SIZE_RESPONSE = 73;
+  TYPE_ID_TRUSTED_CAS_QUERY_REQUEST = 74;
+  TYPE_ID_TRUSTED_CAS_QUERY_RESPONSE = 75;
+  TYPE_ID_NODE_METRICS_GET_REQUEST = 76;
+  TYPE_ID_NODE_METRICS_PUT_REQUEST = 77;
+  TYPE_ID_NODE_METRICS_GET_ALL_REQUEST = 78;
+  TYPE_ID_NODE_METRICS_KEYS_REQUEST = 79;
+  TYPE_ID_NODE_METRICS_SIZE_REQUEST = 80;
+  TYPE_ID_NODE_METRICS_CLEAR_REQUEST = 81;
+  TYPE_ID_NODE_METRICS_VALUE_RESPONSE = 82;
+  TYPE_ID_NODE_METRICS_ENTRIES_RESPONSE = 83;
+  TYPE_ID_NODE_METRICS_KEYS_RESPONSE = 84;
+  TYPE_ID_NODE_METRICS_SIZE_RESPONSE = 85;
+  TYPE_ID_NODE_METRICS_QUERY_REQUEST = 86;
+  TYPE_ID_NODE_METRICS_QUERY_RESPONSE = 87;
+  TYPE_ID_GRPC_STATS_GET_REQUEST = 88;
+  TYPE_ID_GRPC_STATS_PUT_REQUEST = 89;
+  TYPE_ID_GRPC_STATS_GET_ALL_REQUEST = 90;
+  TYPE_ID_GRPC_STATS_KEYS_REQUEST = 91;
+  TYPE_ID_GRPC_STATS_SIZE_REQUEST = 92;
+  TYPE_ID_GRPC_STATS_CLEAR_REQUEST = 93;
+  TYPE_ID_GRPC_STATS_VALUE_RESPONSE = 94;
+  TYPE_ID_GRPC_STATS_ENTRIES_RESPONSE = 95;
+  TYPE_ID_GRPC_STATS_KEYS_RESPONSE = 96;
+  TYPE_ID_GRPC_STATS_SIZE_RESPONSE = 97;
+  TYPE_ID_GRPC_STATS_QUERY_REQUEST = 98;
+  TYPE_ID_GRPC_STATS_QUERY_RESPONSE = 99;
+  TYPE_ID_PERSISTENCE_STATUS_GET_REQUEST = 100;
+  TYPE_ID_PERSISTENCE_STATUS_PUT_REQUEST = 101;
+  TYPE_ID_PERSISTENCE_STATUS_GET_ALL_REQUEST = 102;
+  TYPE_ID_PERSISTENCE_STATUS_KEYS_REQUEST = 103;
+  TYPE_ID_PERSISTENCE_STATUS_SIZE_REQUEST = 104;
+  TYPE_ID_PERSISTENCE_STATUS_CLEAR_REQUEST = 105;
+  TYPE_ID_PERSISTENCE_STATUS_VALUE_RESPONSE = 106;
+  TYPE_ID_PERSISTENCE_STATUS_ENTRIES_RESPONSE = 107;
+  TYPE_ID_PERSISTENCE_STATUS_KEYS_RESPONSE = 108;
+  TYPE_ID_PERSISTENCE_STATUS_SIZE_RESPONSE = 109;
+  TYPE_ID_PERSISTENCE_STATUS_QUERY_REQUEST = 110;
+  TYPE_ID_PERSISTENCE_STATUS_QUERY_RESPONSE = 111;
+  TYPE_ID_NETWORK_STATS_GET_REQUEST = 112;
+  TYPE_ID_NETWORK_STATS_PUT_REQUEST = 113;
+  TYPE_ID_NETWORK_STATS_GET_ALL_REQUEST = 114;
+  TYPE_ID_NETWORK_STATS_KEYS_REQUEST = 115;
+  TYPE_ID_NETWORK_STATS_SIZE_REQUEST = 116;
+  TYPE_ID_NETWORK_STATS_CLEAR_REQUEST = 117;
+  TYPE_ID_NETWORK_STATS_VALUE_RESPONSE = 118;
+  TYPE_ID_NETWORK_STATS_ENTRIES_RESPONSE = 119;
+  TYPE_ID_NETWORK_STATS_KEYS_RESPONSE = 120;
+  TYPE_ID_NETWORK_STATS_SIZE_RESPONSE = 121;
+  TYPE_ID_NETWORK_STATS_QUERY_REQUEST = 122;
+  TYPE_ID_NETWORK_STATS_QUERY_RESPONSE = 123;
+  TYPE_ID_THREAD_INFO_GET_REQUEST = 124;
+  TYPE_ID_THREAD_INFO_PUT_REQUEST = 125;
+  TYPE_ID_THREAD_INFO_GET_ALL_REQUEST = 126;
+  TYPE_ID_THREAD_INFO_KEYS_REQUEST = 127;
+  TYPE_ID_THREAD_INFO_SIZE_REQUEST = 128;
+  TYPE_ID_THREAD_INFO_CLEAR_REQUEST = 129;
+  TYPE_ID_THREAD_INFO_VALUE_RESPONSE = 130;
+  TYPE_ID_THREAD_INFO_ENTRIES_RESPONSE = 131;
+  TYPE_ID_THREAD_INFO_KEYS_RESPONSE = 132;
+  TYPE_ID_THREAD_INFO_SIZE_RESPONSE = 133;
+  TYPE_ID_THREAD_INFO_QUERY_REQUEST = 134;
+  TYPE_ID_THREAD_INFO_QUERY_RESPONSE = 135;
+  TYPE_ID_TOKEN_CACHE_STATS_GET_REQUEST = 136;
+  TYPE_ID_TOKEN_CACHE_STATS_PUT_REQUEST = 137;
+  TYPE_ID_TOKEN_CACHE_STATS_GET_ALL_REQUEST = 138;
+  TYPE_ID_TOKEN_CACHE_STATS_KEYS_REQUEST = 139;
+  TYPE_ID_TOKEN_CACHE_STATS_SIZE_REQUEST = 140;
+  TYPE_ID_TOKEN_CACHE_STATS_CLEAR_REQUEST = 141;
+  TYPE_ID_TOKEN_CACHE_STATS_VALUE_RESPONSE = 142;
+  TYPE_ID_TOKEN_CACHE_STATS_ENTRIES_RESPONSE = 143;
+  TYPE_ID_TOKEN_CACHE_STATS_KEYS_RESPONSE = 144;
+  TYPE_ID_TOKEN_CACHE_STATS_SIZE_RESPONSE = 145;
+  TYPE_ID_TOKEN_CACHE_STATS_QUERY_REQUEST = 146;
+  TYPE_ID_TOKEN_CACHE_STATS_QUERY_RESPONSE = 147;
+  TYPE_ID_MAP_STATS_GET_REQUEST = 148;
+  TYPE_ID_MAP_STATS_PUT_REQUEST = 149;
+  TYPE_ID_MAP_STATS_GET_ALL_REQUEST = 150;
+  TYPE_ID_MAP_STATS_KEYS_REQUEST = 151;
+  TYPE_ID_MAP_STATS_SIZE_REQUEST = 152;
+  TYPE_ID_MAP_STATS_CLEAR_REQUEST = 153;
+  TYPE_ID_MAP_STATS_VALUE_RESPONSE = 154;
+  TYPE_ID_MAP_STATS_ENTRIES_RESPONSE = 155;
+  TYPE_ID_MAP_STATS_KEYS_RESPONSE = 156;
+  TYPE_ID_MAP_STATS_SIZE_RESPONSE = 157;
+  TYPE_ID_MAP_STATS_QUERY_REQUEST = 158;
+  TYPE_ID_MAP_STATS_QUERY_RESPONSE = 159;
+  TYPE_ID_GRAPH_REGISTRY_GET_REQUEST = 160;
+  TYPE_ID_GRAPH_REGISTRY_PUT_REQUEST = 161;
+  TYPE_ID_GRAPH_REGISTRY_GET_ALL_REQUEST = 162;
+  TYPE_ID_GRAPH_REGISTRY_KEYS_REQUEST = 163;
+  TYPE_ID_GRAPH_REGISTRY_SIZE_REQUEST = 164;
+  TYPE_ID_GRAPH_REGISTRY_CLEAR_REQUEST = 165;
+  TYPE_ID_GRAPH_REGISTRY_VALUE_RESPONSE = 166;
+  TYPE_ID_GRAPH_REGISTRY_ENTRIES_RESPONSE = 167;
+  TYPE_ID_GRAPH_REGISTRY_KEYS_RESPONSE = 168;
+  TYPE_ID_GRAPH_REGISTRY_SIZE_RESPONSE = 169;
+  TYPE_ID_GRAPH_REGISTRY_QUERY_REQUEST = 170;
+  TYPE_ID_GRAPH_REGISTRY_QUERY_RESPONSE = 171;
+  TYPE_ID_SERVICE_CONNECTIONS_GET_REQUEST = 172;
+  TYPE_ID_SERVICE_CONNECTIONS_PUT_REQUEST = 173;
+  TYPE_ID_SERVICE_CONNECTIONS_GET_ALL_REQUEST = 174;
+  TYPE_ID_SERVICE_CONNECTIONS_KEYS_REQUEST = 175;
+  TYPE_ID_SERVICE_CONNECTIONS_SIZE_REQUEST = 176;
+  TYPE_ID_SERVICE_CONNECTIONS_CLEAR_REQUEST = 177;
+  TYPE_ID_SERVICE_CONNECTIONS_VALUE_RESPONSE = 178;
+  TYPE_ID_SERVICE_CONNECTIONS_ENTRIES_RESPONSE = 179;
+  TYPE_ID_SERVICE_CONNECTIONS_KEYS_RESPONSE = 180;
+  TYPE_ID_SERVICE_CONNECTIONS_SIZE_RESPONSE = 181;
+  TYPE_ID_SERVICE_CONNECTIONS_QUERY_REQUEST = 182;
+  TYPE_ID_SERVICE_CONNECTIONS_QUERY_RESPONSE = 183;
+  TYPE_ID_QUEUE_STATS_GET_REQUEST = 184;
+  TYPE_ID_QUEUE_STATS_PUT_REQUEST = 185;
+  TYPE_ID_QUEUE_STATS_GET_ALL_REQUEST = 186;
+  TYPE_ID_QUEUE_STATS_KEYS_REQUEST = 187;
+  TYPE_ID_QUEUE_STATS_SIZE_REQUEST = 188;
+  TYPE_ID_QUEUE_STATS_CLEAR_REQUEST = 189;
+  TYPE_ID_QUEUE_STATS_VALUE_RESPONSE = 190;
+  TYPE_ID_QUEUE_STATS_ENTRIES_RESPONSE = 191;
+  TYPE_ID_QUEUE_STATS_KEYS_RESPONSE = 192;
+  TYPE_ID_QUEUE_STATS_SIZE_RESPONSE = 193;
+  TYPE_ID_QUEUE_STATS_QUERY_REQUEST = 194;
+  TYPE_ID_QUEUE_STATS_QUERY_RESPONSE = 195;
+  TYPE_ID_TOPIC_STATS_GET_REQUEST = 196;
+  TYPE_ID_TOPIC_STATS_PUT_REQUEST = 197;
+  TYPE_ID_TOPIC_STATS_GET_ALL_REQUEST = 198;
+  TYPE_ID_TOPIC_STATS_KEYS_REQUEST = 199;
+  TYPE_ID_TOPIC_STATS_SIZE_REQUEST = 200;
+  TYPE_ID_TOPIC_STATS_CLEAR_REQUEST = 201;
+  TYPE_ID_TOPIC_STATS_VALUE_RESPONSE = 202;
+  TYPE_ID_TOPIC_STATS_ENTRIES_RESPONSE = 203;
+  TYPE_ID_TOPIC_STATS_KEYS_RESPONSE = 204;
+  TYPE_ID_TOPIC_STATS_SIZE_RESPONSE = 205;
+  TYPE_ID_TOPIC_STATS_QUERY_REQUEST = 206;
+  TYPE_ID_TOPIC_STATS_QUERY_RESPONSE = 207;
+  TYPE_ID_WATCH_HEALTH_GET_REQUEST = 208;
+  TYPE_ID_WATCH_HEALTH_PUT_REQUEST = 209;
+  TYPE_ID_WATCH_HEALTH_GET_ALL_REQUEST = 210;
+  TYPE_ID_WATCH_HEALTH_KEYS_REQUEST = 211;
+  TYPE_ID_WATCH_HEALTH_SIZE_REQUEST = 212;
+  TYPE_ID_WATCH_HEALTH_CLEAR_REQUEST = 213;
+  TYPE_ID_WATCH_HEALTH_VALUE_RESPONSE = 214;
+  TYPE_ID_WATCH_HEALTH_ENTRIES_RESPONSE = 215;
+  TYPE_ID_WATCH_HEALTH_KEYS_RESPONSE = 216;
+  TYPE_ID_WATCH_HEALTH_SIZE_RESPONSE = 217;
+  TYPE_ID_WATCH_HEALTH_QUERY_REQUEST = 218;
+  TYPE_ID_WATCH_HEALTH_QUERY_RESPONSE = 219;
+  TYPE_ID_MUTATION_RATES_GET_REQUEST = 220;
+  TYPE_ID_MUTATION_RATES_PUT_REQUEST = 221;
+  TYPE_ID_MUTATION_RATES_GET_ALL_REQUEST = 222;
+  TYPE_ID_MUTATION_RATES_KEYS_REQUEST = 223;
+  TYPE_ID_MUTATION_RATES_SIZE_REQUEST = 224;
+  TYPE_ID_MUTATION_RATES_CLEAR_REQUEST = 225;
+  TYPE_ID_MUTATION_RATES_VALUE_RESPONSE = 226;
+  TYPE_ID_MUTATION_RATES_ENTRIES_RESPONSE = 227;
+  TYPE_ID_MUTATION_RATES_KEYS_RESPONSE = 228;
+  TYPE_ID_MUTATION_RATES_SIZE_RESPONSE = 229;
+  TYPE_ID_MUTATION_RATES_QUERY_REQUEST = 230;
+  TYPE_ID_MUTATION_RATES_QUERY_RESPONSE = 231;
+  TYPE_ID_INSTANCES_GET_REQUEST = 232;
+  TYPE_ID_INSTANCES_GET_ALL_REQUEST = 233;
+  TYPE_ID_INSTANCES_KEYS_REQUEST = 234;
+  TYPE_ID_INSTANCES_SIZE_REQUEST = 235;
+  TYPE_ID_INSTANCES_VALUE_RESPONSE = 236;
+  TYPE_ID_INSTANCES_ENTRIES_RESPONSE = 237;
+  TYPE_ID_INSTANCES_KEYS_RESPONSE = 238;
+  TYPE_ID_INSTANCES_SIZE_RESPONSE = 239;
+  TYPE_ID_INSTANCES_QUERY_REQUEST = 240;
+  TYPE_ID_INSTANCES_QUERY_RESPONSE = 241;
+  TYPE_ID_LOCALITIES_GET_REQUEST = 242;
+  TYPE_ID_LOCALITIES_PUT_REQUEST = 243;
+  TYPE_ID_LOCALITIES_GET_ALL_REQUEST = 244;
+  TYPE_ID_LOCALITIES_KEYS_REQUEST = 245;
+  TYPE_ID_LOCALITIES_SIZE_REQUEST = 246;
+  TYPE_ID_LOCALITIES_CLEAR_REQUEST = 247;
+  TYPE_ID_LOCALITIES_VALUE_RESPONSE = 248;
+  TYPE_ID_LOCALITIES_ENTRIES_RESPONSE = 249;
+  TYPE_ID_LOCALITIES_KEYS_RESPONSE = 250;
+  TYPE_ID_LOCALITIES_SIZE_RESPONSE = 251;
+  TYPE_ID_LOCALITIES_QUERY_REQUEST = 252;
+  TYPE_ID_LOCALITIES_QUERY_RESPONSE = 253;
+  TYPE_ID_REVOCATIONS_GET_REQUEST = 254;
+  TYPE_ID_REVOCATIONS_PUT_REQUEST = 255;
+  TYPE_ID_REVOCATIONS_GET_ALL_REQUEST = 256;
+  TYPE_ID_REVOCATIONS_KEYS_REQUEST = 257;
+  TYPE_ID_REVOCATIONS_SIZE_REQUEST = 258;
+  TYPE_ID_REVOCATIONS_CLEAR_REQUEST = 259;
+  TYPE_ID_REVOCATIONS_VALUE_RESPONSE = 260;
+  TYPE_ID_REVOCATIONS_ENTRIES_RESPONSE = 261;
+  TYPE_ID_REVOCATIONS_KEYS_RESPONSE = 262;
+  TYPE_ID_REVOCATIONS_SIZE_RESPONSE = 263;
+  TYPE_ID_REVOCATIONS_QUERY_REQUEST = 264;
+  TYPE_ID_REVOCATIONS_QUERY_RESPONSE = 265;
+  TYPE_ID_CA_CERTS_GET_REQUEST = 266;
+  TYPE_ID_CA_CERTS_PUT_REQUEST = 267;
+  TYPE_ID_CA_CERTS_GET_ALL_REQUEST = 268;
+  TYPE_ID_CA_CERTS_KEYS_REQUEST = 269;
+  TYPE_ID_CA_CERTS_SIZE_REQUEST = 270;
+  TYPE_ID_CA_CERTS_CLEAR_REQUEST = 271;
+  TYPE_ID_CA_CERTS_VALUE_RESPONSE = 272;
+  TYPE_ID_CA_CERTS_ENTRIES_RESPONSE = 273;
+  TYPE_ID_CA_CERTS_KEYS_RESPONSE = 274;
+  TYPE_ID_CA_CERTS_SIZE_RESPONSE = 275;
+  TYPE_ID_CA_CERTS_QUERY_REQUEST = 276;
+  TYPE_ID_CA_CERTS_QUERY_RESPONSE = 277;
+  TYPE_ID_SERVICE_CAS_GET_REQUEST = 278;
+  TYPE_ID_SERVICE_CAS_PUT_REQUEST = 279;
+  TYPE_ID_SERVICE_CAS_GET_ALL_REQUEST = 280;
+  TYPE_ID_SERVICE_CAS_KEYS_REQUEST = 281;
+  TYPE_ID_SERVICE_CAS_SIZE_REQUEST = 282;
+  TYPE_ID_SERVICE_CAS_CLEAR_REQUEST = 283;
+  TYPE_ID_SERVICE_CAS_VALUE_RESPONSE = 284;
+  TYPE_ID_SERVICE_CAS_ENTRIES_RESPONSE = 285;
+  TYPE_ID_SERVICE_CAS_KEYS_RESPONSE = 286;
+  TYPE_ID_SERVICE_CAS_SIZE_RESPONSE = 287;
+  TYPE_ID_SERVICE_CAS_QUERY_REQUEST = 288;
+  TYPE_ID_SERVICE_CAS_QUERY_RESPONSE = 289;
+  TYPE_ID_TENANTS_GET_REQUEST = 290;
+  TYPE_ID_TENANTS_PUT_REQUEST = 291;
+  TYPE_ID_TENANTS_GET_ALL_REQUEST = 292;
+  TYPE_ID_TENANTS_KEYS_REQUEST = 293;
+  TYPE_ID_TENANTS_SIZE_REQUEST = 294;
+  TYPE_ID_TENANTS_CLEAR_REQUEST = 295;
+  TYPE_ID_TENANTS_VALUE_RESPONSE = 296;
+  TYPE_ID_TENANTS_ENTRIES_RESPONSE = 297;
+  TYPE_ID_TENANTS_KEYS_RESPONSE = 298;
+  TYPE_ID_TENANTS_SIZE_RESPONSE = 299;
+  TYPE_ID_TENANTS_QUERY_REQUEST = 300;
+  TYPE_ID_TENANTS_QUERY_RESPONSE = 301;
+  TYPE_ID_TENANT_CONFIGS_GET_REQUEST = 302;
+  TYPE_ID_TENANT_CONFIGS_PUT_REQUEST = 303;
+  TYPE_ID_TENANT_CONFIGS_GET_ALL_REQUEST = 304;
+  TYPE_ID_TENANT_CONFIGS_KEYS_REQUEST = 305;
+  TYPE_ID_TENANT_CONFIGS_SIZE_REQUEST = 306;
+  TYPE_ID_TENANT_CONFIGS_CLEAR_REQUEST = 307;
+  TYPE_ID_TENANT_CONFIGS_VALUE_RESPONSE = 308;
+  TYPE_ID_TENANT_CONFIGS_ENTRIES_RESPONSE = 309;
+  TYPE_ID_TENANT_CONFIGS_KEYS_RESPONSE = 310;
+  TYPE_ID_TENANT_CONFIGS_SIZE_RESPONSE = 311;
+  TYPE_ID_TENANT_CONFIGS_QUERY_REQUEST = 312;
+  TYPE_ID_TENANT_CONFIGS_QUERY_RESPONSE = 313;
+  TYPE_ID_PROJECT_CONFIGS_GET_REQUEST = 314;
+  TYPE_ID_PROJECT_CONFIGS_PUT_REQUEST = 315;
+  TYPE_ID_PROJECT_CONFIGS_GET_ALL_REQUEST = 316;
+  TYPE_ID_PROJECT_CONFIGS_KEYS_REQUEST = 317;
+  TYPE_ID_PROJECT_CONFIGS_SIZE_REQUEST = 318;
+  TYPE_ID_PROJECT_CONFIGS_CLEAR_REQUEST = 319;
+  TYPE_ID_PROJECT_CONFIGS_VALUE_RESPONSE = 320;
+  TYPE_ID_PROJECT_CONFIGS_ENTRIES_RESPONSE = 321;
+  TYPE_ID_PROJECT_CONFIGS_KEYS_RESPONSE = 322;
+  TYPE_ID_PROJECT_CONFIGS_SIZE_RESPONSE = 323;
+  TYPE_ID_PROJECT_CONFIGS_QUERY_REQUEST = 324;
+  TYPE_ID_PROJECT_CONFIGS_QUERY_RESPONSE = 325;
+  TYPE_ID_MAP_EMPTY = 326;
 }
 
 enum MintRpcId {

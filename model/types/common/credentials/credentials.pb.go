@@ -349,12 +349,12 @@ const file_common_credentials_proto_rawDesc = "" +
 	"\n" +
 	"expires_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9e\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x92\x01\n" +
 	"\x12KernelTenantConfig\x12;\n" +
 	"\n" +
 	"cred_pairs\x18\x01 \x03(\v2\x15.credentials.CredPairB\x05\xb8\xa8\x1d\x80\x02R\tcredPairs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0e\xa8\xaa\x1d\x01\xb2\xaa\x1d\x06kernelJ\x04\b\x02\x10\x03J\x04\b\x03\x10\x04B_Z]gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/common/credentialsb\x06proto3"
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0e\xa8\xaa\x1d\x01\xb2\xaa\x1d\x06kernelB_Z]gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/common/credentialsb\x06proto3"
 
 var (
 	file_common_credentials_proto_rawDescOnce sync.Once

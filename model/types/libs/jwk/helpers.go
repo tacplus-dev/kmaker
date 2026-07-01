@@ -1178,11 +1178,6 @@ func ValidateJwkWithDepth(m *Jwk, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Alg exceeds max size of 64 bytes, got: %d", len(m.Alg))
 	}
 
-	// Validate Kid (assert_required)
-	if m.Kid == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Kid is required")
-	}
-
 	// Validate Kid (assert_min_length: 1)
 	if len(m.Kid) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Kid must be at least 1 characters, got: %d", len(m.Kid))
@@ -1191,6 +1186,11 @@ func ValidateJwkWithDepth(m *Jwk, depth int) error {
 	// Validate Kid (assert_max_size: 512 bytes)
 	if len(m.Kid) > 512 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Kid exceeds max size of 512 bytes, got: %d", len(m.Kid))
+	}
+
+	// Validate Kid (assert_required)
+	if m.Kid == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Kid is required")
 	}
 
 	// Validate E (assert_base64)
@@ -1205,16 +1205,16 @@ func ValidateJwkWithDepth(m *Jwk, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field E exceeds max size of 64 bytes, got: %d", len(m.E))
 	}
 
-	// Validate N (assert_max_size: 1024 bytes)
-	if len(m.N) > 1024 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field N exceeds max size of 1024 bytes, got: %d", len(m.N))
-	}
-
 	// Validate N (assert_base64)
 	if m.N != "" {
 		if err := utils.ValidateAssertBase64(m.N); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field N base64 validation failed")
 		}
+	}
+
+	// Validate N (assert_max_size: 1024 bytes)
+	if len(m.N) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field N exceeds max size of 1024 bytes, got: %d", len(m.N))
 	}
 
 	// Validate Crv (assert_max_size: 64 bytes)

@@ -28,7 +28,7 @@ func ScmOperationRecordTimeseriesColumns() []string {
 		"repo",
 		"timestamp_ms",
 		"event_id",
-		"email",
+		"spiffe_id",
 		"provider",
 		"api_endpoint",
 		"operation",
@@ -54,7 +54,7 @@ func ScmOperationRecordToTimeseriesRow(msg *ScmOperationRecord) []interface{} {
 		msg.Repo,
 		msg.TimestampMs,
 		msg.EventId,
-		msg.Email,
+		msg.SpiffeId,
 		msg.Provider.String(),
 		msg.ApiEndpoint,
 		msg.Operation.String(),
@@ -79,7 +79,7 @@ func ScmOperationRecordTimeseriesScanDest() ([]interface{}, *ScmOperationRecord)
 	dest[1] = &msg.Repo
 	dest[2] = &msg.TimestampMs
 	dest[3] = &msg.EventId
-	dest[4] = &msg.Email
+	dest[4] = &msg.SpiffeId
 	var _col5 string
 	dest[5] = &_col5
 	dest[6] = &msg.ApiEndpoint
@@ -118,7 +118,7 @@ func ScmOperationRecordTimeseriesDDL() string {
     repo String,
     timestamp_ms Int64,
     event_id String,
-    email String,
+    spiffe_id String,
     provider LowCardinality(String),
     api_endpoint String,
     operation LowCardinality(String),

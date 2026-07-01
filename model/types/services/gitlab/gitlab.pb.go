@@ -3061,6 +3061,8 @@ type ListIssuesRequest struct {
 	UpdatedAfter     string                 `protobuf:"bytes,10,opt,name=updated_after,json=updatedAfter,proto3" json:"updated_after,omitempty"`
 	Page             int32                  `protobuf:"varint,11,opt,name=page,proto3" json:"page,omitempty"`
 	PerPage          int32                  `protobuf:"varint,12,opt,name=per_page,json=perPage,proto3" json:"per_page,omitempty"`
+	PageSize         int32                  `protobuf:"varint,13,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken        string                 `protobuf:"bytes,14,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	TraceId          string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop             bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields    protoimpl.UnknownFields
@@ -3181,6 +3183,20 @@ func (x *ListIssuesRequest) GetPerPage() int32 {
 	return 0
 }
 
+func (x *ListIssuesRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListIssuesRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 func (x *ListIssuesRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -3200,6 +3216,8 @@ type ListIssuesResponse struct {
 	Issues        []*Issue               `protobuf:"bytes,1,rep,name=issues,proto3" json:"issues,omitempty"`
 	Pagination    *PaginationInfo        `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	RateLimit     *RateLimitInfo         `protobuf:"bytes,3,opt,name=rate_limit,json=rateLimit,proto3" json:"rate_limit,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,4,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                  `protobuf:"varint,5,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -3255,6 +3273,20 @@ func (x *ListIssuesResponse) GetRateLimit() *RateLimitInfo {
 		return x.RateLimit
 	}
 	return nil
+}
+
+func (x *ListIssuesResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *ListIssuesResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
 }
 
 func (x *ListIssuesResponse) GetTraceId() string {
@@ -3972,6 +4004,8 @@ type ListMergeRequestsRequest struct {
 	Labels        []string               `protobuf:"bytes,9,rep,name=labels,proto3" json:"labels,omitempty"`
 	Page          int32                  `protobuf:"varint,10,opt,name=page,proto3" json:"page,omitempty"`
 	PerPage       int32                  `protobuf:"varint,11,opt,name=per_page,json=perPage,proto3" json:"per_page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,12,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string                 `protobuf:"bytes,13,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -4085,6 +4119,20 @@ func (x *ListMergeRequestsRequest) GetPerPage() int32 {
 	return 0
 }
 
+func (x *ListMergeRequestsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListMergeRequestsRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 func (x *ListMergeRequestsRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -4104,6 +4152,8 @@ type ListMergeRequestsResponse struct {
 	MergeRequests []*MergeRequest        `protobuf:"bytes,1,rep,name=merge_requests,json=mergeRequests,proto3" json:"merge_requests,omitempty"`
 	Pagination    *PaginationInfo        `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	RateLimit     *RateLimitInfo         `protobuf:"bytes,3,opt,name=rate_limit,json=rateLimit,proto3" json:"rate_limit,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,4,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                  `protobuf:"varint,5,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -4159,6 +4209,20 @@ func (x *ListMergeRequestsResponse) GetRateLimit() *RateLimitInfo {
 		return x.RateLimit
 	}
 	return nil
+}
+
+func (x *ListMergeRequestsResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *ListMergeRequestsResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
 }
 
 func (x *ListMergeRequestsResponse) GetTraceId() string {
@@ -4956,6 +5020,8 @@ type ListMergeRequestChangesRequest struct {
 	Metadata        string                 `protobuf:"bytes,1,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	ProjectId       string                 `protobuf:"bytes,2,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
 	MergeRequestIid int32                  `protobuf:"varint,3,opt,name=merge_request_iid,json=mergeRequestIid,proto3" json:"merge_request_iid,omitempty"`
+	PageSize        int32                  `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken       string                 `protobuf:"bytes,5,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	TraceId         string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop            bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields   protoimpl.UnknownFields
@@ -5013,6 +5079,20 @@ func (x *ListMergeRequestChangesRequest) GetMergeRequestIid() int32 {
 	return 0
 }
 
+func (x *ListMergeRequestChangesRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListMergeRequestChangesRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 func (x *ListMergeRequestChangesRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -5031,6 +5111,8 @@ type ListMergeRequestChangesResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Changes       []*MergeRequestDiff    `protobuf:"bytes,1,rep,name=changes,proto3" json:"changes,omitempty"`
 	RateLimit     *RateLimitInfo         `protobuf:"bytes,2,opt,name=rate_limit,json=rateLimit,proto3" json:"rate_limit,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,3,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                  `protobuf:"varint,4,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -5079,6 +5161,20 @@ func (x *ListMergeRequestChangesResponse) GetRateLimit() *RateLimitInfo {
 		return x.RateLimit
 	}
 	return nil
+}
+
+func (x *ListMergeRequestChangesResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *ListMergeRequestChangesResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
 }
 
 func (x *ListMergeRequestChangesResponse) GetTraceId() string {
@@ -5258,6 +5354,8 @@ type ListPipelinesRequest struct {
 	OrderBy       string                 `protobuf:"bytes,7,opt,name=order_by,json=orderBy,proto3" json:"order_by,omitempty"` // id, status, ref, updated_at, user_id
 	Page          int32                  `protobuf:"varint,8,opt,name=page,proto3" json:"page,omitempty"`
 	PerPage       int32                  `protobuf:"varint,9,opt,name=per_page,json=perPage,proto3" json:"per_page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,10,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string                 `protobuf:"bytes,11,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -5357,6 +5455,20 @@ func (x *ListPipelinesRequest) GetPerPage() int32 {
 	return 0
 }
 
+func (x *ListPipelinesRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListPipelinesRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 func (x *ListPipelinesRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -5376,6 +5488,8 @@ type ListPipelinesResponse struct {
 	Pipelines     []*Pipeline            `protobuf:"bytes,1,rep,name=pipelines,proto3" json:"pipelines,omitempty"`
 	Pagination    *PaginationInfo        `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	RateLimit     *RateLimitInfo         `protobuf:"bytes,3,opt,name=rate_limit,json=rateLimit,proto3" json:"rate_limit,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,4,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                  `protobuf:"varint,5,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -5431,6 +5545,20 @@ func (x *ListPipelinesResponse) GetRateLimit() *RateLimitInfo {
 		return x.RateLimit
 	}
 	return nil
+}
+
+func (x *ListPipelinesResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *ListPipelinesResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
 }
 
 func (x *ListPipelinesResponse) GetTraceId() string {
@@ -6115,6 +6243,8 @@ type ListPipelineJobsRequest struct {
 	Scope         string                 `protobuf:"bytes,4,opt,name=scope,proto3" json:"scope,omitempty"` // created, pending, running, failed, success, canceled, skipped, manual
 	Page          int32                  `protobuf:"varint,5,opt,name=page,proto3" json:"page,omitempty"`
 	PerPage       int32                  `protobuf:"varint,6,opt,name=per_page,json=perPage,proto3" json:"per_page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,7,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string                 `protobuf:"bytes,8,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -6193,6 +6323,20 @@ func (x *ListPipelineJobsRequest) GetPerPage() int32 {
 	return 0
 }
 
+func (x *ListPipelineJobsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListPipelineJobsRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 func (x *ListPipelineJobsRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -6212,6 +6356,8 @@ type ListPipelineJobsResponse struct {
 	Jobs          []*Job                 `protobuf:"bytes,1,rep,name=jobs,proto3" json:"jobs,omitempty"`
 	Pagination    *PaginationInfo        `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	RateLimit     *RateLimitInfo         `protobuf:"bytes,3,opt,name=rate_limit,json=rateLimit,proto3" json:"rate_limit,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,4,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                  `protobuf:"varint,5,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -6267,6 +6413,20 @@ func (x *ListPipelineJobsResponse) GetRateLimit() *RateLimitInfo {
 		return x.RateLimit
 	}
 	return nil
+}
+
+func (x *ListPipelineJobsResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *ListPipelineJobsResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
 }
 
 func (x *ListPipelineJobsResponse) GetTraceId() string {
@@ -6842,6 +7002,8 @@ type ListBranchesRequest struct {
 	Search        string                 `protobuf:"bytes,3,opt,name=search,proto3" json:"search,omitempty"`
 	Page          int32                  `protobuf:"varint,4,opt,name=page,proto3" json:"page,omitempty"`
 	PerPage       int32                  `protobuf:"varint,5,opt,name=per_page,json=perPage,proto3" json:"per_page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,6,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string                 `protobuf:"bytes,7,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -6913,6 +7075,20 @@ func (x *ListBranchesRequest) GetPerPage() int32 {
 	return 0
 }
 
+func (x *ListBranchesRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListBranchesRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 func (x *ListBranchesRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -6932,6 +7108,8 @@ type ListBranchesResponse struct {
 	Branches      []*Branch              `protobuf:"bytes,1,rep,name=branches,proto3" json:"branches,omitempty"`
 	Pagination    *PaginationInfo        `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	RateLimit     *RateLimitInfo         `protobuf:"bytes,3,opt,name=rate_limit,json=rateLimit,proto3" json:"rate_limit,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,4,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                  `protobuf:"varint,5,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -6987,6 +7165,20 @@ func (x *ListBranchesResponse) GetRateLimit() *RateLimitInfo {
 		return x.RateLimit
 	}
 	return nil
+}
+
+func (x *ListBranchesResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *ListBranchesResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
 }
 
 func (x *ListBranchesResponse) GetTraceId() string {
@@ -7165,6 +7357,8 @@ type ListCommitsRequest struct {
 	Until         string                 `protobuf:"bytes,6,opt,name=until,proto3" json:"until,omitempty"`
 	Page          int32                  `protobuf:"varint,7,opt,name=page,proto3" json:"page,omitempty"`
 	PerPage       int32                  `protobuf:"varint,8,opt,name=per_page,json=perPage,proto3" json:"per_page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,9,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string                 `protobuf:"bytes,10,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -7257,6 +7451,20 @@ func (x *ListCommitsRequest) GetPerPage() int32 {
 	return 0
 }
 
+func (x *ListCommitsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListCommitsRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 func (x *ListCommitsRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -7276,6 +7484,8 @@ type ListCommitsResponse struct {
 	Commits       []*BranchCommit        `protobuf:"bytes,1,rep,name=commits,proto3" json:"commits,omitempty"`
 	Pagination    *PaginationInfo        `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	RateLimit     *RateLimitInfo         `protobuf:"bytes,3,opt,name=rate_limit,json=rateLimit,proto3" json:"rate_limit,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,4,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                  `protobuf:"varint,5,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -7333,6 +7543,20 @@ func (x *ListCommitsResponse) GetRateLimit() *RateLimitInfo {
 	return nil
 }
 
+func (x *ListCommitsResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *ListCommitsResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
+}
+
 func (x *ListCommitsResponse) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -7356,6 +7580,8 @@ type SearchBlobsRequest struct {
 	Ref           string                 `protobuf:"bytes,4,opt,name=ref,proto3" json:"ref,omitempty"`
 	Page          int32                  `protobuf:"varint,5,opt,name=page,proto3" json:"page,omitempty"`
 	PerPage       int32                  `protobuf:"varint,6,opt,name=per_page,json=perPage,proto3" json:"per_page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,7,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string                 `protobuf:"bytes,8,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -7434,6 +7660,20 @@ func (x *SearchBlobsRequest) GetPerPage() int32 {
 	return 0
 }
 
+func (x *SearchBlobsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *SearchBlobsRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 func (x *SearchBlobsRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -7453,6 +7693,8 @@ type SearchBlobsResponse struct {
 	Results       []*SearchBlobResult    `protobuf:"bytes,1,rep,name=results,proto3" json:"results,omitempty"`
 	Pagination    *PaginationInfo        `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	RateLimit     *RateLimitInfo         `protobuf:"bytes,3,opt,name=rate_limit,json=rateLimit,proto3" json:"rate_limit,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,4,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	TotalCount    int64                  `protobuf:"varint,5,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -7508,6 +7750,20 @@ func (x *SearchBlobsResponse) GetRateLimit() *RateLimitInfo {
 		return x.RateLimit
 	}
 	return nil
+}
+
+func (x *SearchBlobsResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *SearchBlobsResponse) GetTotalCount() int64 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
 }
 
 func (x *SearchBlobsResponse) GetTraceId() string {
@@ -7794,11 +8050,13 @@ var File_services_gitlab_proto protoreflect.FileDescriptor
 
 const file_services_gitlab_proto_rawDesc = "" +
 	"\n" +
-	"\x15services/gitlab.proto\x12\x06gitlab\x1a\x0flibs/http.proto\x1a\x0flibs/spec.proto\x1a\x10libs/trace.proto\"G\n" +
+	"\x15services/gitlab.proto\x12\x06gitlab\x1a\x0flibs/http.proto\x1a\x0flibs/spec.proto\x1a\x10libs/trace.proto\"t\n" +
 	"\x06Config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\fҨ\x1d\b\n" +
-	"\x06gitlab\"\xef\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:9Ҩ\x1d\b\n" +
+	"\x06gitlabʪ\x1d)\n" +
+	"\"scmsensor.ScmEventBus.event_stream\x12\x03\n" +
+	"\x01*\"\xef\x01\n" +
 	"\rRateLimitInfo\x12\x1a\n" +
 	"\x05limit\x18\x01 \x01(\x05B\x04\xb0\xa7\x1d\x00R\x05limit\x12\"\n" +
 	"\tremaining\x18\x02 \x01(\x05B\x04\xb0\xa7\x1d\x00R\tremaining\x12 \n" +
@@ -8072,7 +8330,7 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"\n" +
 	"rate_limit\x18\x02 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xf7\x03\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc4\x04\n" +
 	"\x11ListIssuesRequest\x12!\n" +
 	"\bmetadata\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x10R\bmetadata\x12,\n" +
 	"\n" +
@@ -8087,16 +8345,22 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"\rupdated_after\x18\n" +
 	" \x01(\tB\x04\x90\xa7\x1d@R\fupdatedAfter\x12\x18\n" +
 	"\x04page\x18\v \x01(\x05B\x04\xb0\xa7\x1d\x00R\x04page\x12#\n" +
-	"\bper_page\x18\f \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12\x1a\n" +
+	"\bper_page\x18\f \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12%\n" +
+	"\tpage_size\x18\r \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\bpageSize\x12$\n" +
+	"\n" +
+	"page_token\x18\x0e \x01(\tB\x05\x90\xa7\x1d\x80\x04R\tpageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe0\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb6\x02\n" +
 	"\x12ListIssuesResponse\x12+\n" +
 	"\x06issues\x18\x01 \x03(\v2\r.gitlab.IssueB\x04\xb8\xa8\x1ddR\x06issues\x126\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x16.gitlab.PaginationInfoR\n" +
 	"pagination\x124\n" +
 	"\n" +
-	"rate_limit\x18\x03 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12\x1a\n" +
+	"rate_limit\x18\x03 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12-\n" +
+	"\x0fnext_page_token\x18\x04 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12%\n" +
+	"\vtotal_count\x18\x05 \x01(\x03B\x04\xb0\xa7\x1d\x00R\n" +
+	"totalCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb6\x01\n" +
 	"\x0fGetIssueRequest\x12!\n" +
@@ -8167,7 +8431,7 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"\n" +
 	"rate_limit\x18\x02 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xcc\x03\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x99\x04\n" +
 	"\x18ListMergeRequestsRequest\x12!\n" +
 	"\bmetadata\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x10R\bmetadata\x12,\n" +
 	"\n" +
@@ -8181,16 +8445,22 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"\x06labels\x18\t \x03(\tB\t\x90\xa7\x1d\x80\x02\xb8\xa8\x1d R\x06labels\x12\x18\n" +
 	"\x04page\x18\n" +
 	" \x01(\x05B\x04\xb0\xa7\x1d\x00R\x04page\x12#\n" +
-	"\bper_page\x18\v \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12\x1a\n" +
+	"\bper_page\x18\v \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12%\n" +
+	"\tpage_size\x18\f \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\bpageSize\x12$\n" +
+	"\n" +
+	"page_token\x18\r \x01(\tB\x05\x90\xa7\x1d\x80\x04R\tpageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xfd\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd3\x02\n" +
 	"\x19ListMergeRequestsResponse\x12A\n" +
 	"\x0emerge_requests\x18\x01 \x03(\v2\x14.gitlab.MergeRequestB\x04\xb8\xa8\x1ddR\rmergeRequests\x126\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x16.gitlab.PaginationInfoR\n" +
 	"pagination\x124\n" +
 	"\n" +
-	"rate_limit\x18\x03 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12\x1a\n" +
+	"rate_limit\x18\x03 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12-\n" +
+	"\x0fnext_page_token\x18\x04 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12%\n" +
+	"\vtotal_count\x18\x05 \x01(\x03B\x04\xb0\xa7\x1d\x00R\n" +
+	"totalCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xcc\x01\n" +
 	"\x16GetMergeRequestRequest\x12!\n" +
@@ -8274,18 +8544,24 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"\n" +
 	"rate_limit\x18\x02 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd4\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa1\x02\n" +
 	"\x1eListMergeRequestChangesRequest\x12!\n" +
 	"\bmetadata\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x10R\bmetadata\x12,\n" +
 	"\n" +
 	"project_id\x18\x02 \x01(\tB\r\x88\xa6\x1d\x01\x88\xa7\x1d\x01\x90\xa7\x1d\x80\x04R\tprojectId\x120\n" +
-	"\x11merge_request_iid\x18\x03 \x01(\x05B\x04\xb0\xa7\x1d\x01R\x0fmergeRequestIid\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc3\x01\n" +
-	"\x1fListMergeRequestChangesResponse\x129\n" +
-	"\achanges\x18\x01 \x03(\v2\x18.gitlab.MergeRequestDiffB\x05\xb8\xa8\x1d\xb8\x17R\achanges\x124\n" +
+	"\x11merge_request_iid\x18\x03 \x01(\x05B\x04\xb0\xa7\x1d\x01R\x0fmergeRequestIid\x12%\n" +
+	"\tpage_size\x18\x04 \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\bpageSize\x12$\n" +
 	"\n" +
-	"rate_limit\x18\x02 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12\x1a\n" +
+	"page_token\x18\x05 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\tpageToken\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x98\x02\n" +
+	"\x1fListMergeRequestChangesResponse\x128\n" +
+	"\achanges\x18\x01 \x03(\v2\x18.gitlab.MergeRequestDiffB\x04\xb8\xa8\x1ddR\achanges\x124\n" +
+	"\n" +
+	"rate_limit\x18\x02 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12-\n" +
+	"\x0fnext_page_token\x18\x03 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12%\n" +
+	"\vtotal_count\x18\x04 \x01(\x03B\x04\xb0\xa7\x1d\x00R\n" +
+	"totalCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xf7\x01\n" +
 	"\x1dCreateMergeRequestNoteRequest\x12!\n" +
@@ -8301,7 +8577,7 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"\n" +
 	"rate_limit\x18\x02 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe7\x02\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb4\x03\n" +
 	"\x14ListPipelinesRequest\x12!\n" +
 	"\bmetadata\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x10R\bmetadata\x12,\n" +
 	"\n" +
@@ -8312,16 +8588,23 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"\x04sort\x18\x06 \x01(\tB\x04\x90\xa7\x1d\bR\x04sort\x12\x1f\n" +
 	"\border_by\x18\a \x01(\tB\x04\x90\xa7\x1d\x10R\aorderBy\x12\x18\n" +
 	"\x04page\x18\b \x01(\x05B\x04\xb0\xa7\x1d\x00R\x04page\x12#\n" +
-	"\bper_page\x18\t \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12\x1a\n" +
+	"\bper_page\x18\t \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12%\n" +
+	"\tpage_size\x18\n" +
+	" \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\bpageSize\x12$\n" +
+	"\n" +
+	"page_token\x18\v \x01(\tB\x05\x90\xa7\x1d\x80\x04R\tpageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xec\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc2\x02\n" +
 	"\x15ListPipelinesResponse\x124\n" +
 	"\tpipelines\x18\x01 \x03(\v2\x10.gitlab.PipelineB\x04\xb8\xa8\x1ddR\tpipelines\x126\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x16.gitlab.PaginationInfoR\n" +
 	"pagination\x124\n" +
 	"\n" +
-	"rate_limit\x18\x03 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12\x1a\n" +
+	"rate_limit\x18\x03 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12-\n" +
+	"\x0fnext_page_token\x18\x04 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12%\n" +
+	"\vtotal_count\x18\x05 \x01(\x03B\x04\xb0\xa7\x1d\x00R\n" +
+	"totalCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xbd\x01\n" +
 	"\x12GetPipelineRequest\x12!\n" +
@@ -8385,7 +8668,7 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"\n" +
 	"rate_limit\x18\x02 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9d\x02\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xea\x02\n" +
 	"\x17ListPipelineJobsRequest\x12!\n" +
 	"\bmetadata\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x10R\bmetadata\x12,\n" +
 	"\n" +
@@ -8394,16 +8677,22 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"pipelineId\x12\x1a\n" +
 	"\x05scope\x18\x04 \x01(\tB\x04\x90\xa7\x1d\x10R\x05scope\x12\x18\n" +
 	"\x04page\x18\x05 \x01(\x05B\x04\xb0\xa7\x1d\x00R\x04page\x12#\n" +
-	"\bper_page\x18\x06 \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12\x1a\n" +
+	"\bper_page\x18\x06 \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12%\n" +
+	"\tpage_size\x18\a \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\bpageSize\x12$\n" +
+	"\n" +
+	"page_token\x18\b \x01(\tB\x05\x90\xa7\x1d\x80\x04R\tpageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe0\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb6\x02\n" +
 	"\x18ListPipelineJobsResponse\x12%\n" +
 	"\x04jobs\x18\x01 \x03(\v2\v.gitlab.JobB\x04\xb8\xa8\x1ddR\x04jobs\x126\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x16.gitlab.PaginationInfoR\n" +
 	"pagination\x124\n" +
 	"\n" +
-	"rate_limit\x18\x03 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12\x1a\n" +
+	"rate_limit\x18\x03 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12-\n" +
+	"\x0fnext_page_token\x18\x04 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12%\n" +
+	"\vtotal_count\x18\x05 \x01(\x03B\x04\xb0\xa7\x1d\x00R\n" +
+	"totalCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe9\x01\n" +
 	"\x18GetRepositoryFileRequest\x12!\n" +
@@ -8463,23 +8752,29 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"\n" +
 	"rate_limit\x18\x02 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xf5\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc2\x02\n" +
 	"\x13ListBranchesRequest\x12!\n" +
 	"\bmetadata\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x10R\bmetadata\x12,\n" +
 	"\n" +
 	"project_id\x18\x02 \x01(\tB\r\x88\xa6\x1d\x01\x88\xa7\x1d\x01\x90\xa7\x1d\x80\x04R\tprojectId\x12\x1d\n" +
 	"\x06search\x18\x03 \x01(\tB\x05\x90\xa7\x1d\x80\x02R\x06search\x12\x18\n" +
 	"\x04page\x18\x04 \x01(\x05B\x04\xb0\xa7\x1d\x00R\x04page\x12#\n" +
-	"\bper_page\x18\x05 \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12\x1a\n" +
+	"\bper_page\x18\x05 \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12%\n" +
+	"\tpage_size\x18\x06 \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\bpageSize\x12$\n" +
+	"\n" +
+	"page_token\x18\a \x01(\tB\x05\x90\xa7\x1d\x80\x04R\tpageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe7\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xbd\x02\n" +
 	"\x14ListBranchesResponse\x120\n" +
 	"\bbranches\x18\x01 \x03(\v2\x0e.gitlab.BranchB\x04\xb8\xa8\x1ddR\bbranches\x126\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x16.gitlab.PaginationInfoR\n" +
 	"pagination\x124\n" +
 	"\n" +
-	"rate_limit\x18\x03 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12\x1a\n" +
+	"rate_limit\x18\x03 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12-\n" +
+	"\x0fnext_page_token\x18\x04 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12%\n" +
+	"\vtotal_count\x18\x05 \x01(\x03B\x04\xb0\xa7\x1d\x00R\n" +
+	"totalCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xdf\x01\n" +
 	"\x13CreateBranchRequest\x12!\n" +
@@ -8495,7 +8790,7 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"\n" +
 	"rate_limit\x18\x02 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xca\x02\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x97\x03\n" +
 	"\x12ListCommitsRequest\x12!\n" +
 	"\bmetadata\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x10R\bmetadata\x12,\n" +
 	"\n" +
@@ -8505,18 +8800,25 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"\x05since\x18\x05 \x01(\tB\x04\x90\xa7\x1d@R\x05since\x12\x1a\n" +
 	"\x05until\x18\x06 \x01(\tB\x04\x90\xa7\x1d@R\x05until\x12\x18\n" +
 	"\x04page\x18\a \x01(\x05B\x04\xb0\xa7\x1d\x00R\x04page\x12#\n" +
-	"\bper_page\x18\b \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12\x1a\n" +
+	"\bper_page\x18\b \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12%\n" +
+	"\tpage_size\x18\t \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\bpageSize\x12$\n" +
+	"\n" +
+	"page_token\x18\n" +
+	" \x01(\tB\x05\x90\xa7\x1d\x80\x04R\tpageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xea\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc0\x02\n" +
 	"\x13ListCommitsResponse\x124\n" +
 	"\acommits\x18\x01 \x03(\v2\x14.gitlab.BranchCommitB\x04\xb8\xa8\x1ddR\acommits\x126\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x16.gitlab.PaginationInfoR\n" +
 	"pagination\x124\n" +
 	"\n" +
-	"rate_limit\x18\x03 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12\x1a\n" +
+	"rate_limit\x18\x03 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12-\n" +
+	"\x0fnext_page_token\x18\x04 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12%\n" +
+	"\vtotal_count\x18\x05 \x01(\x03B\x04\xb0\xa7\x1d\x00R\n" +
+	"totalCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x95\x02\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe2\x02\n" +
 	"\x12SearchBlobsRequest\x12!\n" +
 	"\bmetadata\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x10R\bmetadata\x12,\n" +
 	"\n" +
@@ -8524,16 +8826,22 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"\x06search\x18\x03 \x01(\tB\r\x88\xa6\x1d\x01\x88\xa7\x1d\x01\x90\xa7\x1d\x80 R\x06search\x12\x17\n" +
 	"\x03ref\x18\x04 \x01(\tB\x05\x90\xa7\x1d\x80\x02R\x03ref\x12\x18\n" +
 	"\x04page\x18\x05 \x01(\x05B\x04\xb0\xa7\x1d\x00R\x04page\x12#\n" +
-	"\bper_page\x18\x06 \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12\x1a\n" +
+	"\bper_page\x18\x06 \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12%\n" +
+	"\tpage_size\x18\a \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\bpageSize\x12$\n" +
+	"\n" +
+	"page_token\x18\b \x01(\tB\x05\x90\xa7\x1d\x80\x04R\tpageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xee\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc4\x02\n" +
 	"\x13SearchBlobsResponse\x128\n" +
 	"\aresults\x18\x01 \x03(\v2\x18.gitlab.SearchBlobResultB\x04\xb8\xa8\x1ddR\aresults\x126\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x16.gitlab.PaginationInfoR\n" +
 	"pagination\x124\n" +
 	"\n" +
-	"rate_limit\x18\x03 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12\x1a\n" +
+	"rate_limit\x18\x03 \x01(\v2\x15.gitlab.RateLimitInfoR\trateLimit\x12-\n" +
+	"\x0fnext_page_token\x18\x04 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12%\n" +
+	"\vtotal_count\x18\x05 \x01(\x03B\x04\xb0\xa7\x1d\x00R\n" +
+	"totalCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x87\x04\n" +
 	"\n" +
@@ -8554,12 +8862,12 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"durationMs\x12*\n" +
 	"\bprovider\x18\v \x01(\tB\x0e\x90\xa7\x1d@\x8a\xa8\x1d\x06gitlabR\bprovider\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9d\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9b\x01\n" +
 	"\x11GitlabConfigState\x120\n" +
 	"\x06config\x18\x01 \x01(\v2\x0e.gitlab.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:%\x9a\xa8\x1d\x1d\n" +
-	"\x11GitlabConfigState\x1a\beventbus\xa0\xa8\x1d\x02\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:#\x9a\xa8\x1d\x1b\n" +
+	"\x11GitlabConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\xaa\x14\n" +
@@ -8682,40 +8990,40 @@ const file_services_gitlab_proto_rawDesc = "" +
 	"0GITLAB_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x121\n" +
 	"-GITLAB_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x121\n" +
 	"-GITLAB_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x123\n" +
-	"/GITLAB_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xf2\x12\n" +
+	"/GITLAB_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xec\x12\n" +
 	"\x05Proxy\x126\n" +
 	"\x05Proxy\x12\x15.http.RawProxyRequest\x1a\x16.http.RawProxyResponse\x12C\n" +
 	"\n" +
-	"GetProject\x12\x19.gitlab.GetProjectRequest\x1a\x1a.gitlab.GetProjectResponse\x12^\n" +
+	"GetProject\x12\x19.gitlab.GetProjectRequest\x1a\x1a.gitlab.GetProjectResponse\x12Y\n" +
 	"\n" +
-	"ListIssues\x12\x19.gitlab.ListIssuesRequest\x1a\x1a.gitlab.ListIssuesResponse\"\x19\xf2\x88'\x15\b\x01\x12\n" +
-	"updated_at\x12\x03iid\x18d\x12=\n" +
+	"ListIssues\x12\x19.gitlab.ListIssuesRequest\x1a\x1a.gitlab.ListIssuesResponse\"\x14\xf2\x88'\x10\b\x03\x12\n" +
+	"updated_at(d\x12=\n" +
 	"\bGetIssue\x12\x17.gitlab.GetIssueRequest\x1a\x18.gitlab.GetIssueResponse\x12F\n" +
 	"\vCreateIssue\x12\x1a.gitlab.CreateIssueRequest\x1a\x1b.gitlab.CreateIssueResponse\x12F\n" +
 	"\vUpdateIssue\x12\x1a.gitlab.UpdateIssueRequest\x1a\x1b.gitlab.UpdateIssueResponse\x12R\n" +
 	"\x0fCreateIssueNote\x12\x1e.gitlab.CreateIssueNoteRequest\x1a\x1f.gitlab.CreateIssueNoteResponse\x12s\n" +
-	"\x11ListMergeRequests\x12 .gitlab.ListMergeRequestsRequest\x1a!.gitlab.ListMergeRequestsResponse\"\x19\xf2\x88'\x15\b\x01\x12\n" +
-	"updated_at\x12\x03iid\x18d\x12R\n" +
+	"\x11ListMergeRequests\x12 .gitlab.ListMergeRequestsRequest\x1a!.gitlab.ListMergeRequestsResponse\"\x19\xf2\x88'\x15\b\x03\x12\n" +
+	"updated_at\x12\x03iid(d\x12R\n" +
 	"\x0fGetMergeRequest\x12\x1e.gitlab.GetMergeRequestRequest\x1a\x1f.gitlab.GetMergeRequestResponse\x12[\n" +
 	"\x12CreateMergeRequest\x12!.gitlab.CreateMergeRequestRequest\x1a\".gitlab.CreateMergeRequestResponse\x12[\n" +
 	"\x12UpdateMergeRequest\x12!.gitlab.UpdateMergeRequestRequest\x1a\".gitlab.UpdateMergeRequestResponse\x12X\n" +
-	"\x11MergeMergeRequest\x12 .gitlab.MergeMergeRequestRequest\x1a!.gitlab.MergeMergeRequestResponse\x12\x89\x01\n" +
-	"\x17ListMergeRequestChanges\x12&.gitlab.ListMergeRequestChangesRequest\x1a'.gitlab.ListMergeRequestChangesResponse\"\x1d\xf2\x88'\x19\b\x01\x12\bnew_path\x12\bold_path\x18\xb8\x17\x12g\n" +
+	"\x11MergeMergeRequest\x12 .gitlab.MergeMergeRequestRequest\x1a!.gitlab.MergeMergeRequestResponse\x12\x88\x01\n" +
+	"\x17ListMergeRequestChanges\x12&.gitlab.ListMergeRequestChangesRequest\x1a'.gitlab.ListMergeRequestChangesResponse\"\x1c\xf2\x88'\x18\b\x03\x12\bnew_path\x12\bold_path(d\x12g\n" +
 	"\x16CreateMergeRequestNote\x12%.gitlab.CreateMergeRequestNoteRequest\x1a&.gitlab.CreateMergeRequestNoteResponse\x12Z\n" +
-	"\rListPipelines\x12\x1c.gitlab.ListPipelinesRequest\x1a\x1d.gitlab.ListPipelinesResponse\"\f\xf2\x88'\b\b\x01\x12\x02id\x18d\x12F\n" +
+	"\rListPipelines\x12\x1c.gitlab.ListPipelinesRequest\x1a\x1d.gitlab.ListPipelinesResponse\"\f\xf2\x88'\b\b\x03\x12\x02id(d\x12F\n" +
 	"\vGetPipeline\x12\x1a.gitlab.GetPipelineRequest\x1a\x1b.gitlab.GetPipelineResponse\x12O\n" +
 	"\x0eCreatePipeline\x12\x1d.gitlab.CreatePipelineRequest\x1a\x1e.gitlab.CreatePipelineResponse\x12O\n" +
 	"\x0eCancelPipeline\x12\x1d.gitlab.CancelPipelineRequest\x1a\x1e.gitlab.CancelPipelineResponse\x12L\n" +
 	"\rRetryPipeline\x12\x1c.gitlab.RetryPipelineRequest\x1a\x1d.gitlab.RetryPipelineResponse\x12c\n" +
-	"\x10ListPipelineJobs\x12\x1f.gitlab.ListPipelineJobsRequest\x1a .gitlab.ListPipelineJobsResponse\"\f\xf2\x88'\b\b\x01\x12\x02id\x18d\x12X\n" +
+	"\x10ListPipelineJobs\x12\x1f.gitlab.ListPipelineJobsRequest\x1a .gitlab.ListPipelineJobsResponse\"\f\xf2\x88'\b\b\x03\x12\x02id(d\x12X\n" +
 	"\x11GetRepositoryFile\x12 .gitlab.GetRepositoryFileRequest\x1a!.gitlab.GetRepositoryFileResponse\x12a\n" +
 	"\x14CreateRepositoryFile\x12#.gitlab.CreateRepositoryFileRequest\x1a$.gitlab.CreateRepositoryFileResponse\x12a\n" +
 	"\x14UpdateRepositoryFile\x12#.gitlab.UpdateRepositoryFileRequest\x1a$.gitlab.UpdateRepositoryFileResponse\x12Y\n" +
 	"\fListBranches\x12\x1b.gitlab.ListBranchesRequest\x1a\x1c.gitlab.ListBranchesResponse\"\x0e\xf2\x88'\n" +
-	"\b\x01\x12\x04name\x18d\x12I\n" +
+	"\b\x03\x12\x04name(d\x12I\n" +
 	"\fCreateBranch\x12\x1b.gitlab.CreateBranchRequest\x1a\x1c.gitlab.CreateBranchResponse\x12d\n" +
-	"\vListCommits\x12\x1a.gitlab.ListCommitsRequest\x1a\x1b.gitlab.ListCommitsResponse\"\x1c\xf2\x88'\x18\b\x01\x12\x0ecommitted_date\x12\x02id\x18d\x12j\n" +
-	"\x15ListBlobSearchResults\x12\x1a.gitlab.SearchBlobsRequest\x1a\x1b.gitlab.SearchBlobsResponse\"\x18\xf2\x88'\x14\b\x01\x12\x04path\x12\bfilename\x18d\x1a\x06\xf2\x97\"\x02\x18\x012\xb5\x01\n" +
+	"\vListCommits\x12\x1a.gitlab.ListCommitsRequest\x1a\x1b.gitlab.ListCommitsResponse\"\x1c\xf2\x88'\x18\b\x03\x12\x0ecommitted_date\x12\x02id(d\x12j\n" +
+	"\x15ListBlobSearchResults\x12\x1a.gitlab.SearchBlobsRequest\x1a\x1b.gitlab.SearchBlobsResponse\"\x18\xf2\x88'\x14\b\x03\x12\x04path\x12\bfilename(d\x1a\x06\xf2\x97\"\x02\x18\x012\xb5\x01\n" +
 	"\x18GitlabConfigStateService\x120\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x0e.gitlab.Config\x12+\n" +
 	"\tSetConfig\x12\x0e.gitlab.Config\x1a\x0e.gitlab.Config\x124\n" +

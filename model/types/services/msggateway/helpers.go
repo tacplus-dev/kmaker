@@ -699,6 +699,7 @@ func TypeIDValues() []TypeID {
 		TypeID_TYPE_ID_GET_CHANNEL_HISTORY_REQUEST,
 		TypeID_TYPE_ID_GET_CHANNEL_HISTORY_RESPONSE,
 		TypeID_TYPE_ID_LIST_CHANNELS_RESPONSE,
+		TypeID_TYPE_ID_LIST_CHANNELS_REQUEST,
 		TypeID_TYPE_ID_REACTION_REQUEST,
 		TypeID_TYPE_ID_MSGGATEWAY_CONFIG_STATE,
 		TypeID_TYPE_ID_QUERY_VALUE,
@@ -736,7 +737,7 @@ func TypeIDValues() []TypeID {
 
 // TypeIDStringValues returns all valid TypeID names as strings
 func TypeIDStringValues() []string {
-	return []string{"config", "virtual-user", "channel-subscription", "gateway-state", "message", "event", "channel", "update-virtual-user-request", "delete-virtual-user-request", "subscribe-request", "delete-subscription-request", "events-request", "send-message-request", "send-thread-reply-request", "send-message-response", "get-thread-request", "get-thread-response", "get-channel-history-request", "get-channel-history-response", "list-channels-response", "reaction-request", "msggateway-config-state", "query-value", "predicate", "predicate-group", "sort-field", "collection-query", "virtual-users-get-request", "virtual-users-put-request", "virtual-users-get-all-request", "virtual-users-keys-request", "virtual-users-size-request", "virtual-users-clear-request", "virtual-users-value-response", "virtual-users-entries-response", "virtual-users-keys-response", "virtual-users-size-response", "virtual-users-query-request", "virtual-users-query-response", "subscriptions-get-request", "subscriptions-put-request", "subscriptions-get-all-request", "subscriptions-keys-request", "subscriptions-size-request", "subscriptions-clear-request", "subscriptions-value-response", "subscriptions-entries-response", "subscriptions-keys-response", "subscriptions-size-response", "subscriptions-query-request", "subscriptions-query-response", "map-empty"}
+	return []string{"config", "virtual-user", "channel-subscription", "gateway-state", "message", "event", "channel", "update-virtual-user-request", "delete-virtual-user-request", "subscribe-request", "delete-subscription-request", "events-request", "send-message-request", "send-thread-reply-request", "send-message-response", "get-thread-request", "get-thread-response", "get-channel-history-request", "get-channel-history-response", "list-channels-response", "list-channels-request", "reaction-request", "msggateway-config-state", "query-value", "predicate", "predicate-group", "sort-field", "collection-query", "virtual-users-get-request", "virtual-users-put-request", "virtual-users-get-all-request", "virtual-users-keys-request", "virtual-users-size-request", "virtual-users-clear-request", "virtual-users-value-response", "virtual-users-entries-response", "virtual-users-keys-response", "virtual-users-size-response", "virtual-users-query-request", "virtual-users-query-response", "subscriptions-get-request", "subscriptions-put-request", "subscriptions-get-all-request", "subscriptions-keys-request", "subscriptions-size-request", "subscriptions-clear-request", "subscriptions-value-response", "subscriptions-entries-response", "subscriptions-keys-response", "subscriptions-size-response", "subscriptions-query-request", "subscriptions-query-response", "map-empty"}
 }
 
 // ParseTypeID converts a string to a TypeID enum value
@@ -787,6 +788,8 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_GET_CHANNEL_HISTORY_RESPONSE, nil
 	case "list-channels-response", "type-id-list-channels-response":
 		return TypeID_TYPE_ID_LIST_CHANNELS_RESPONSE, nil
+	case "list-channels-request", "type-id-list-channels-request":
+		return TypeID_TYPE_ID_LIST_CHANNELS_REQUEST, nil
 	case "reaction-request", "type-id-reaction-request":
 		return TypeID_TYPE_ID_REACTION_REQUEST, nil
 	case "msggateway-config-state", "type-id-msggateway-config-state":
@@ -921,6 +924,8 @@ func TypeIDToString(v TypeID) string {
 		return "get-channel-history-response"
 	case TypeID_TYPE_ID_LIST_CHANNELS_RESPONSE:
 		return "list-channels-response"
+	case TypeID_TYPE_ID_LIST_CHANNELS_REQUEST:
+		return "list-channels-request"
 	case TypeID_TYPE_ID_REACTION_REQUEST:
 		return "reaction-request"
 	case TypeID_TYPE_ID_MSGGATEWAY_CONFIG_STATE:
@@ -1047,6 +1052,8 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_GET_CHANNEL_HISTORY_RESPONSE
 	case "list-channels-response", "type-id-list-channels-response":
 		return TypeID_TYPE_ID_LIST_CHANNELS_RESPONSE
+	case "list-channels-request", "type-id-list-channels-request":
+		return TypeID_TYPE_ID_LIST_CHANNELS_REQUEST
 	case "reaction-request", "type-id-reaction-request":
 		return TypeID_TYPE_ID_REACTION_REQUEST
 	case "msggateway-config-state", "type-id-msggateway-config-state":
@@ -1161,6 +1168,8 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_GET_CHANNEL_HISTORY_RESPONSE"
 	case TypeID_TYPE_ID_LIST_CHANNELS_RESPONSE:
 		return "TYPE_ID_LIST_CHANNELS_RESPONSE"
+	case TypeID_TYPE_ID_LIST_CHANNELS_REQUEST:
+		return "TYPE_ID_LIST_CHANNELS_REQUEST"
 	case TypeID_TYPE_ID_REACTION_REQUEST:
 		return "TYPE_ID_REACTION_REQUEST"
 	case TypeID_TYPE_ID_MSGGATEWAY_CONFIG_STATE:
@@ -4457,6 +4466,8 @@ type getthreadrequestJSON struct {
 	ChannelId string `json:"channel_id,omitempty"`
 	ThreadTs  string `json:"thread_ts,omitempty"`
 	Limit     int32  `json:"limit,omitempty"`
+	PageSize  int32  `json:"page_size,omitempty"`
+	PageToken string `json:"page_token,omitempty"`
 	TraceId   string `json:"trace_id,omitempty"`
 	Noop      bool   `json:"noop,omitempty"`
 }
@@ -4472,6 +4483,8 @@ func GetThreadRequestToJSON(v *GetThreadRequest) ([]byte, error) {
 		ChannelId: v.ChannelId,
 		ThreadTs:  v.ThreadTs,
 		Limit:     v.Limit,
+		PageSize:  v.PageSize,
+		PageToken: v.PageToken,
 		TraceId:   v.TraceId,
 		Noop:      v.Noop,
 	}
@@ -4489,6 +4502,8 @@ func GetThreadRequestToJSONPretty(v *GetThreadRequest) ([]byte, error) {
 		ChannelId: v.ChannelId,
 		ThreadTs:  v.ThreadTs,
 		Limit:     v.Limit,
+		PageSize:  v.PageSize,
+		PageToken: v.PageToken,
 		TraceId:   v.TraceId,
 		Noop:      v.Noop,
 	}
@@ -4558,6 +4573,8 @@ func GetThreadRequestFromJSON(data []byte) (*GetThreadRequest, error) {
 	result.ChannelId = raw.ChannelId
 	result.ThreadTs = raw.ThreadTs
 	result.Limit = raw.Limit
+	result.PageSize = raw.PageSize
+	result.PageToken = raw.PageToken
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -4606,9 +4623,11 @@ func GetThreadRequestToTOML(v *GetThreadRequest) ([]byte, error) {
 // GetThreadResponseJSON represents GetThreadResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type getthreadresponseJSON struct {
-	Messages []json.RawMessage `json:"messages,omitempty"`
-	TraceId  string            `json:"trace_id,omitempty"`
-	Noop     bool              `json:"noop,omitempty"`
+	Messages      []json.RawMessage `json:"messages,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // GetThreadResponseToJSON converts GetThreadResponse to JSON bytes.
@@ -4633,8 +4652,10 @@ func GetThreadResponseToJSON(v *GetThreadResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -4661,8 +4682,10 @@ func GetThreadResponseToJSONPretty(v *GetThreadResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -4739,6 +4762,8 @@ func GetThreadResponseFromJSON(data []byte) (*GetThreadResponse, error) {
 			}
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -5124,9 +5149,11 @@ func GetChannelHistoryResponseToTOML(v *GetChannelHistoryResponse) ([]byte, erro
 // ListChannelsResponseJSON represents ListChannelsResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type listchannelsresponseJSON struct {
-	Channels []json.RawMessage `json:"channels,omitempty"`
-	TraceId  string            `json:"trace_id,omitempty"`
-	Noop     bool              `json:"noop,omitempty"`
+	Channels      []json.RawMessage `json:"channels,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // ListChannelsResponseToJSON converts ListChannelsResponse to JSON bytes.
@@ -5151,8 +5178,10 @@ func ListChannelsResponseToJSON(v *ListChannelsResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -5179,8 +5208,10 @@ func ListChannelsResponseToJSONPretty(v *ListChannelsResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -5257,6 +5288,8 @@ func ListChannelsResponseFromJSON(data []byte) (*ListChannelsResponse, error) {
 			}
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -5291,6 +5324,154 @@ func ListChannelsResponseToTOML(v *ListChannelsResponse) ([]byte, error) {
 	}
 	// Convert to JSON first
 	jsonData, err := ListChannelsResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// ListChannelsRequestJSON represents ListChannelsRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type listchannelsrequestJSON struct {
+	PageSize  int32  `json:"page_size,omitempty"`
+	PageToken string `json:"page_token,omitempty"`
+	TraceId   string `json:"trace_id,omitempty"`
+	Noop      bool   `json:"noop,omitempty"`
+}
+
+// ListChannelsRequestToJSON converts ListChannelsRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func ListChannelsRequestToJSON(v *ListChannelsRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listchannelsrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := listchannelsrequestJSON{
+		PageSize:  v.PageSize,
+		PageToken: v.PageToken,
+		TraceId:   v.TraceId,
+		Noop:      v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// ListChannelsRequestToJSONPretty converts ListChannelsRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func ListChannelsRequestToJSONPretty(v *ListChannelsRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listchannelsrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := listchannelsrequestJSON{
+		PageSize:  v.PageSize,
+		PageToken: v.PageToken,
+		TraceId:   v.TraceId,
+		Noop:      v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// ListChannelsRequestFromBytes creates ListChannelsRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func ListChannelsRequestFromBytes(data []byte) (*ListChannelsRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := ListChannelsRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := ListChannelsRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := ListChannelsRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &ListChannelsRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse ListChannelsRequest: unsupported format or invalid data")
+}
+
+// ListChannelsRequestFromJSON creates ListChannelsRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func ListChannelsRequestFromJSON(data []byte) (*ListChannelsRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw listchannelsrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &ListChannelsRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &ListChannelsRequest{}
+	result.PageSize = raw.PageSize
+	result.PageToken = raw.PageToken
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// ListChannelsRequestToYAML converts ListChannelsRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func ListChannelsRequestToYAML(v *ListChannelsRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listchannelsrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := ListChannelsRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// ListChannelsRequestToTOML converts ListChannelsRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func ListChannelsRequestToTOML(v *ListChannelsRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "listchannelsrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := ListChannelsRequestToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -11169,6 +11350,8 @@ func GetThreadRequestToEnvVar(v *GetThreadRequest) map[string]string {
 	result["PROTO_SERVICES_MSGGATEWAY_GET_THREAD_REQUEST_CHANNEL_ID"] = v.ChannelId
 	result["PROTO_SERVICES_MSGGATEWAY_GET_THREAD_REQUEST_THREAD_TS"] = v.ThreadTs
 	result["PROTO_SERVICES_MSGGATEWAY_GET_THREAD_REQUEST_LIMIT"] = strconv.FormatInt(int64(v.Limit), 10)
+	result["PROTO_SERVICES_MSGGATEWAY_GET_THREAD_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
+	result["PROTO_SERVICES_MSGGATEWAY_GET_THREAD_REQUEST_PAGE_TOKEN"] = v.PageToken
 	result["PROTO_SERVICES_MSGGATEWAY_GET_THREAD_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_MSGGATEWAY_GET_THREAD_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -11190,6 +11373,16 @@ func GetThreadRequestFromEnvVar(env map[string]string) (*GetThreadRequest, error
 		}
 		result.Limit = int32(parsed)
 	}
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_GET_THREAD_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_GET_THREAD_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
+	}
 	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_GET_THREAD_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -11209,6 +11402,8 @@ func GetThreadResponseToEnvVar(v *GetThreadResponse) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_MSGGATEWAY_GET_THREAD_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_MSGGATEWAY_GET_THREAD_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_MSGGATEWAY_GET_THREAD_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_MSGGATEWAY_GET_THREAD_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -11217,6 +11412,16 @@ func GetThreadResponseToEnvVar(v *GetThreadResponse) map[string]string {
 // GetThreadResponseFromEnvVar creates GetThreadResponse from environment variable key-value pairs.
 func GetThreadResponseFromEnvVar(env map[string]string) (*GetThreadResponse, error) {
 	result := &GetThreadResponse{}
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_GET_THREAD_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_GET_THREAD_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
+	}
 	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_GET_THREAD_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -11314,6 +11519,8 @@ func ListChannelsResponseToEnvVar(v *ListChannelsResponse) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_MSGGATEWAY_LIST_CHANNELS_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_MSGGATEWAY_LIST_CHANNELS_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_MSGGATEWAY_LIST_CHANNELS_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_MSGGATEWAY_LIST_CHANNELS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -11322,10 +11529,59 @@ func ListChannelsResponseToEnvVar(v *ListChannelsResponse) map[string]string {
 // ListChannelsResponseFromEnvVar creates ListChannelsResponse from environment variable key-value pairs.
 func ListChannelsResponseFromEnvVar(env map[string]string) (*ListChannelsResponse, error) {
 	result := &ListChannelsResponse{}
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_LIST_CHANNELS_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_LIST_CHANNELS_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
+	}
 	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_LIST_CHANNELS_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
 	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_LIST_CHANNELS_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// ListChannelsRequestToEnvVar converts ListChannelsRequest to environment variable key-value pairs.
+func ListChannelsRequestToEnvVar(v *ListChannelsRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_MSGGATEWAY_LIST_CHANNELS_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
+	result["PROTO_SERVICES_MSGGATEWAY_LIST_CHANNELS_REQUEST_PAGE_TOKEN"] = v.PageToken
+	result["PROTO_SERVICES_MSGGATEWAY_LIST_CHANNELS_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_MSGGATEWAY_LIST_CHANNELS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// ListChannelsRequestFromEnvVar creates ListChannelsRequest from environment variable key-value pairs.
+func ListChannelsRequestFromEnvVar(env map[string]string) (*ListChannelsRequest, error) {
+	result := &ListChannelsRequest{}
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_LIST_CHANNELS_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_LIST_CHANNELS_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_LIST_CHANNELS_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_MSGGATEWAY_LIST_CHANNELS_REQUEST_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -12495,13 +12751,13 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field WorkspaceId must be at most 64 characters, got: %d", len(m.WorkspaceId))
 	}
 
-	// Validate ReconnectDelaySeconds (assert_le: 60)
-	if m.ReconnectDelaySeconds > 60 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ReconnectDelaySeconds must be <= 60, got: %v", m.ReconnectDelaySeconds)
-	}
 	// Validate ReconnectDelaySeconds (assert_ge: 1)
 	if m.ReconnectDelaySeconds < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ReconnectDelaySeconds must be >= 1, got: %v", m.ReconnectDelaySeconds)
+	}
+	// Validate ReconnectDelaySeconds (assert_le: 60)
+	if m.ReconnectDelaySeconds > 60 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ReconnectDelaySeconds must be <= 60, got: %v", m.ReconnectDelaySeconds)
 	}
 	// Validate MaxMessageLength (assert_ge: 1)
 	if m.MaxMessageLength < 1 {
@@ -12636,14 +12892,14 @@ func ValidateChannelSubscriptionWithDepth(m *ChannelSubscription, depth int) err
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate ChannelId (assert_required)
-	if m.ChannelId == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId is required")
-	}
-
 	// Validate ChannelId (assert_max_length: 64)
 	if len(m.ChannelId) > 64 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId must be at most 64 characters, got: %d", len(m.ChannelId))
+	}
+
+	// Validate ChannelId (assert_required)
+	if m.ChannelId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId is required")
 	}
 
 	// Validate ChannelName (assert_max_length: 128)
@@ -12915,14 +13171,14 @@ func ValidateChannelWithDepth(m *Channel, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Id (assert_required)
-	if m.Id == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Id is required")
-	}
-
 	// Validate Id (assert_max_length: 64)
 	if len(m.Id) > 64 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Id must be at most 64 characters, got: %d", len(m.Id))
+	}
+
+	// Validate Id (assert_required)
+	if m.Id == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Id is required")
 	}
 
 	// Validate Name (assert_required)
@@ -13227,14 +13483,14 @@ func ValidateSendMessageRequestWithDepth(m *SendMessageRequest, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate SenderId (assert_max_length: 128)
-	if len(m.SenderId) > 128 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field SenderId must be at most 128 characters, got: %d", len(m.SenderId))
-	}
-
 	// Validate SenderId (assert_required)
 	if m.SenderId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SenderId is required")
+	}
+
+	// Validate SenderId (assert_max_length: 128)
+	if len(m.SenderId) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SenderId must be at most 128 characters, got: %d", len(m.SenderId))
 	}
 
 	// Validate ChannelId (assert_required)
@@ -13296,14 +13552,14 @@ func ValidateSendThreadReplyRequestWithDepth(m *SendThreadReplyRequest, depth in
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate SenderId (assert_max_length: 128)
-	if len(m.SenderId) > 128 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field SenderId must be at most 128 characters, got: %d", len(m.SenderId))
-	}
-
 	// Validate SenderId (assert_required)
 	if m.SenderId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SenderId is required")
+	}
+
+	// Validate SenderId (assert_max_length: 128)
+	if len(m.SenderId) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SenderId must be at most 128 characters, got: %d", len(m.SenderId))
 	}
 
 	// Validate ChannelId (assert_required)
@@ -13452,6 +13708,19 @@ func ValidateGetThreadRequestWithDepth(m *GetThreadRequest, depth int) error {
 	if m.Limit > 1000 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Limit must be <= 1000, got: %v", m.Limit)
 	}
+	// Validate PageSize (assert_ge: 0)
+	if m.PageSize < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 0, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_le: 100)
+	if m.PageSize > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 100, got: %v", m.PageSize)
+	}
+	// Validate PageToken (assert_max_length: 512)
+	if len(m.PageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken must be at most 512 characters, got: %d", len(m.PageToken))
+	}
+
 	// Validate ChannelId (default max size: 32768 bytes)
 	if len(m.ChannelId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId exceeds max size of 32768 bytes, got: %d", len(m.ChannelId))
@@ -13460,6 +13729,11 @@ func ValidateGetThreadRequestWithDepth(m *GetThreadRequest, depth int) error {
 	// Validate ThreadTs (default max size: 32768 bytes)
 	if len(m.ThreadTs) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ThreadTs exceeds max size of 32768 bytes, got: %d", len(m.ThreadTs))
+	}
+
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -13486,9 +13760,23 @@ func ValidateGetThreadResponseWithDepth(m *GetThreadResponse, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Messages (assert_max_size: 1000)
-	if len(m.Messages) > 1000 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Messages exceeds max size of 1000, got: %d", len(m.Messages))
+	// Validate Messages (assert_max_size: 100)
+	if len(m.Messages) > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Messages exceeds max size of 100, got: %d", len(m.Messages))
+	}
+
+	// Validate NextPageToken (assert_max_length: 512)
+	if len(m.NextPageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken must be at most 512 characters, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TotalCount (assert_ge: 0)
+	if m.TotalCount < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TotalCount must be >= 0, got: %v", m.TotalCount)
+	}
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -13615,9 +13903,23 @@ func ValidateListChannelsResponseWithDepth(m *ListChannelsResponse, depth int) e
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Channels (assert_max_size: 1024)
-	if len(m.Channels) > 1024 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Channels exceeds max size of 1024, got: %d", len(m.Channels))
+	// Validate Channels (assert_max_size: 100)
+	if len(m.Channels) > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Channels exceeds max size of 100, got: %d", len(m.Channels))
+	}
+
+	// Validate NextPageToken (assert_max_length: 512)
+	if len(m.NextPageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken must be at most 512 characters, got: %d", len(m.NextPageToken))
+	}
+
+	// Validate TotalCount (assert_ge: 0)
+	if m.TotalCount < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TotalCount must be >= 0, got: %v", m.TotalCount)
+	}
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -13630,6 +13932,48 @@ func ValidateListChannelsResponseWithDepth(m *ListChannelsResponse, depth int) e
 		if err := ValidateChannelWithDepth(val, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field Channels[%d] validation failed", i)
 		}
+	}
+
+	return nil
+}
+
+// ValidateListChannelsRequest validates all fields in ListChannelsRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateListChannelsRequest(m *ListChannelsRequest) error {
+	return ValidateListChannelsRequestWithDepth(m, 0)
+}
+
+// ValidateListChannelsRequestWithDepth validates ListChannelsRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateListChannelsRequestWithDepth(m *ListChannelsRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate PageSize (assert_ge: 0)
+	if m.PageSize < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 0, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_le: 100)
+	if m.PageSize > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 100, got: %v", m.PageSize)
+	}
+	// Validate PageToken (assert_max_length: 512)
+	if len(m.PageToken) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken must be at most 512 characters, got: %d", len(m.PageToken))
+	}
+
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
 	}
 
 	return nil
@@ -13651,14 +13995,14 @@ func ValidateReactionRequestWithDepth(m *ReactionRequest, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate ChannelId (assert_max_length: 64)
-	if len(m.ChannelId) > 64 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId must be at most 64 characters, got: %d", len(m.ChannelId))
-	}
-
 	// Validate ChannelId (assert_required)
 	if m.ChannelId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId is required")
+	}
+
+	// Validate ChannelId (assert_max_length: 64)
+	if len(m.ChannelId) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ChannelId must be at most 64 characters, got: %d", len(m.ChannelId))
 	}
 
 	// Validate MessageTs (assert_required)
@@ -14770,16 +15114,21 @@ const (
 	MaxSizeSendmessageresponseTraceId            int = 32768
 	MaxSizeGetthreadrequestChannelId             int = 32768
 	MaxSizeGetthreadrequestThreadTs              int = 32768
+	MaxSizeGetthreadrequestPageToken             int = 32768
 	MaxSizeGetthreadrequestTraceId               int = 32768
-	MaxSizeGetthreadresponseMessages             int = 1000
+	MaxSizeGetthreadresponseMessages             int = 100
+	MaxSizeGetthreadresponseNextPageToken        int = 32768
 	MaxSizeGetthreadresponseTraceId              int = 32768
 	MaxSizeGetchannelhistoryrequestChannelId     int = 32768
 	MaxSizeGetchannelhistoryrequestBefore        int = 32768
 	MaxSizeGetchannelhistoryrequestTraceId       int = 32768
 	MaxSizeGetchannelhistoryresponseMessages     int = 1000
 	MaxSizeGetchannelhistoryresponseTraceId      int = 32768
-	MaxSizeListchannelsresponseChannels          int = 1024
+	MaxSizeListchannelsresponseChannels          int = 100
+	MaxSizeListchannelsresponseNextPageToken     int = 32768
 	MaxSizeListchannelsresponseTraceId           int = 32768
+	MaxSizeListchannelsrequestPageToken          int = 32768
+	MaxSizeListchannelsrequestTraceId            int = 32768
 	MaxSizeReactionrequestChannelId              int = 32768
 	MaxSizeReactionrequestMessageTs              int = 32768
 	MaxSizeReactionrequestEmoji                  int = 32768
@@ -15044,6 +15393,16 @@ func GetChannelHistoryResponseDefaults(v *GetChannelHistoryResponse) {
 // ============================================================
 // ListChannelsResponseDefaults applies field-level default values to zero-valued fields.
 func ListChannelsResponseDefaults(v *ListChannelsResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: ListChannelsRequest
+// ============================================================
+// ListChannelsRequestDefaults applies field-level default values to zero-valued fields.
+func ListChannelsRequestDefaults(v *ListChannelsRequest) {
 	if v == nil {
 		return
 	}
@@ -15599,6 +15958,17 @@ func GetChannelHistoryResponseUndefaults(v *GetChannelHistoryResponse) {
 // ListChannelsResponseUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
 func ListChannelsResponseUndefaults(v *ListChannelsResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: ListChannelsRequest
+// ============================================================
+// ListChannelsRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func ListChannelsRequestUndefaults(v *ListChannelsRequest) {
 	if v == nil {
 		return
 	}
@@ -16325,6 +16695,12 @@ func MergeGetThreadRequest(dst, src *GetThreadRequest) {
 	if dst.Limit == 0 {
 		dst.Limit = src.Limit
 	}
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
+	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -16340,6 +16716,12 @@ func MergeGetThreadRequest(dst, src *GetThreadRequest) {
 func MergeGetThreadResponse(dst, src *GetThreadResponse) {
 	if len(dst.Messages) == 0 {
 		dst.Messages = src.Messages
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -16397,6 +16779,31 @@ func MergeGetChannelHistoryResponse(dst, src *GetChannelHistoryResponse) {
 func MergeListChannelsResponse(dst, src *ListChannelsResponse) {
 	if len(dst.Channels) == 0 {
 		dst.Channels = src.Channels
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: ListChannelsRequest
+// ============================================================
+// MergeListChannelsRequest fills zero-valued fields in dst from src.
+func MergeListChannelsRequest(dst, src *ListChannelsRequest) {
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
+	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

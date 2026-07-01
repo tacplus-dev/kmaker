@@ -27,7 +27,7 @@ func LlmCallRecordTimeseriesColumns() []string {
 		"model_key",
 		"timestamp_ms",
 		"event_id",
-		"email",
+		"spiffe_id",
 		"provider",
 		"api_endpoint",
 		"model",
@@ -56,7 +56,7 @@ func LlmCallRecordToTimeseriesRow(msg *LlmCallRecord) []interface{} {
 		msg.ModelKey,
 		msg.TimestampMs,
 		msg.EventId,
-		msg.Email,
+		msg.SpiffeId,
 		msg.Provider.String(),
 		msg.ApiEndpoint,
 		msg.Model,
@@ -84,7 +84,7 @@ func LlmCallRecordTimeseriesScanDest() ([]interface{}, *LlmCallRecord) {
 	dest[0] = &msg.ModelKey
 	dest[1] = &msg.TimestampMs
 	dest[2] = &msg.EventId
-	dest[3] = &msg.Email
+	dest[3] = &msg.SpiffeId
 	var _col4 string
 	dest[4] = &_col4
 	dest[5] = &msg.ApiEndpoint
@@ -126,7 +126,7 @@ func LlmCallRecordTimeseriesDDL() string {
     model_key String,
     timestamp_ms Int64,
     event_id String,
-    email String,
+    spiffe_id String,
     provider LowCardinality(String),
     api_endpoint String,
     model LowCardinality(String),

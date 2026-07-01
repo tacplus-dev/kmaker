@@ -740,7 +740,7 @@ const (
 	// PAGE: a client-driven, resumable, windowed GET (unary). The caller pages
 	// through a finite set with an opaque keyset page_token over order_by; each
 	// page is bounded by page_size (capped at the trust-tier ceiling). Forbids
-	// max_items/replay_depth. See docs/archive/RPC_PATTERNS_AND_VERBS_PLAN.md §4.
+	// max_items/replay_depth. See archive/RPC_PATTERNS_AND_VERBS_PLAN.md §4.
 	CollectionMode_COLLECTION_MODE_PAGE CollectionMode = 3
 )
 
@@ -790,25 +790,25 @@ func (CollectionMode) EnumDescriptor() ([]byte, []int) {
 // ConsistencyModel defines how a boundary field's state is stored and replicated.
 //
 // Storage model:
-//   - UNSPECIFIED (default): serialized as part of the parent message, not a separate IMap.
-//   - ATOMIC: own Hazelcast IMap with synchronous backups and optimistic locking.
-//     Mutations require a Lock (map name = service+field path, counter must match).
-//   - CONVERGENT: own Hazelcast IMap with asynchronous replication.
+//   - UNSPECIFIED (default): serialized inline with the parent (not stored as a separate boundary).
+//   - ATOMIC: stored independently with synchronous backups and optimistic locking.
+//     Mutations require a Lock (boundary name = service+field path, counter must match).
+//   - CONVERGENT: stored independently with asynchronous replication.
 //     Mutations are lockless (last-writer-wins / append-only).
 //   - INHERITED: inherits the consistency model of the enclosing parent boundary.
 //
 // Rules:
 //   - All direct children of a state root must specify ATOMIC, CONVERGENT, or INHERITED.
-//   - Map name for each boundary = "service_name+field_name+...n" (path through the state tree).
-//   - Non-repeated boundaries are singletons (IMap key = "").
-//   - Repeated boundaries require an (spec.indexed) field as the IMap key
+//   - Boundary name = "service_name+field_name+...n" (path through the state tree).
+//   - Non-repeated boundaries are singletons: a single value, no entry key.
+//   - Repeated boundaries require an (spec.indexed) field as the entry key
 //     (validated at build time).
 type ConsistencyModel int32
 
 const (
-	ConsistencyModel_CONSISTENCY_UNSPECIFIED ConsistencyModel = 0 // Default: serialized with parent, not a separate IMap
-	ConsistencyModel_CONSISTENCY_ATOMIC      ConsistencyModel = 1 // Own IMap, sync backups, optimistic locking (requires Lock)
-	ConsistencyModel_CONSISTENCY_CONVERGENT  ConsistencyModel = 2 // Own IMap, async replication, lockless (LWW/append-only)
+	ConsistencyModel_CONSISTENCY_UNSPECIFIED ConsistencyModel = 0 // Default: serialized inline with the parent (not stored as a separate boundary)
+	ConsistencyModel_CONSISTENCY_ATOMIC      ConsistencyModel = 1 // Stored independently, sync backups, optimistic locking (requires Lock)
+	ConsistencyModel_CONSISTENCY_CONVERGENT  ConsistencyModel = 2 // Stored independently, async replication, lockless (LWW/append-only)
 	ConsistencyModel_CONSISTENCY_INHERITED   ConsistencyModel = 3 // Inherits parent boundary's consistency model
 	ConsistencyModel_CONSISTENCY_REPLICATED  ConsistencyModel = 4 // Full copy on every member, local reads, async writes
 )
@@ -3497,7 +3497,7 @@ func (x *StateAnnotation) GetExport() bool {
 //   - Read-on-demand (no Watch streams, no client-side caching)
 //   - No boundary decomposition (the message IS the value)
 //
-// The store_key field annotation marks which field is the map key.
+// The store_key field annotation marks which field is the entry key.
 // Access is via delegate pattern: services authenticate clients, then
 // write through the backing service. External clients never write directly.
 type ServiceStoreAnnotation struct {
@@ -3703,8 +3703,8 @@ func (*ColdStoreAnnotation) Descriptor() ([]byte, []int) {
 
 // ServiceHealthAnnotation declares a typed health message for a service.
 // The annotated message MUST embed healthreport.ServiceInstanceHealth as field 1
-// ("base"). The state store extracts .base for the generic health map and stores the
-// full typed message in a per-service map (keyed by instance_id).
+// ("base"). The state store extracts .base for the generic health view and stores the
+// full typed message per service (keyed by instance_id).
 // Each node reports its own perspective of cluster health — Sentinel monitors
 // consistency across perspectives and raises alarms on divergence.
 type ServiceHealthAnnotation struct {
@@ -5803,7 +5803,7 @@ var (
 	// optional spec.StateAnnotation service_state = 60035;
 	E_ServiceState = &file_libs_spec_proto_extTypes[21]
 	// state_consistency specifies the consistency model for root-level
-	// primitive fields (stored in a root IMap) on a state root message.
+	// primitive fields (stored independently at the state root) on a state root message.
 	//
 	// optional spec.ConsistencyModel state_consistency = 60036;
 	E_StateConsistency = &file_libs_spec_proto_extTypes[22]
@@ -5938,8 +5938,8 @@ var (
 	E_OpaEval = &file_libs_spec_proto_extTypes[37]
 	// service_health declares a typed health message for a service.
 	// The message MUST embed healthreport.ServiceInstanceHealth as field 1.
-	// The state store keeps the full typed message in a per-service map keyed by
-	// instance_id and extracts .base into the generic health map for gateway.
+	// The state store keeps the full typed message per service, keyed by
+	// instance_id and extracts .base into the generic health view for gateway.
 	// One service_health message per service package.
 	//
 	// optional spec.ServiceHealthAnnotation service_health = 60064;
@@ -6168,7 +6168,7 @@ var (
 	//
 	// optional spec.DefaultHost default_host = 60048;
 	E_DefaultHost = &file_libs_spec_proto_extTypes[85]
-	// Statedb field indexing: marks a field for Hazelcast index creation
+	// Statedb field indexing: marks a field for state-store index creation
 	//
 	// optional bool indexed = 50010;
 	E_Indexed = &file_libs_spec_proto_extTypes[86]
@@ -6177,9 +6177,9 @@ var (
 	// optional string index_type = 50011;
 	E_IndexType = &file_libs_spec_proto_extTypes[87] // "HASH", "SORTED", "BITMAP"
 	// Statedb consistency model for boundary fields within a state root message.
-	// UNSPECIFIED (default): serialized as part of parent message, not a separate IMap.
-	// ATOMIC: own IMap, requires Lock for mutations.
-	// CONVERGENT: own IMap, lockless (LWW/append-only).
+	// UNSPECIFIED (default): serialized inline with the parent (not stored as a separate boundary).
+	// ATOMIC: stored independently, requires a Lock for mutations.
+	// CONVERGENT: stored independently, lockless (LWW/append-only).
 	// INHERITED: inherits the parent's consistency model.
 	// All direct children of a state root must have an explicit consistency annotation.
 	//
@@ -6197,7 +6197,7 @@ var (
 	//
 	// optional string state_import = 50014;
 	E_StateImport = &file_libs_spec_proto_extTypes[90]
-	// queue marks a state root field as a FIFO queue (Hazelcast IQueue).
+	// queue marks a state root field as a FIFO queue.
 	// One consumer receives each item. Operations: offer, poll, peek, size.
 	// Example: TaskItem task_queue = 3 [(spec.queue) = true];
 	//
@@ -6210,7 +6210,7 @@ var (
 	//
 	// optional string priority_queue = 50016;
 	E_PriorityQueue = &file_libs_spec_proto_extTypes[92]
-	// topic marks a state root field as a pub/sub topic (Hazelcast ITopic).
+	// topic marks a state root field as a pub/sub topic.
 	// Every subscriber receives every message. Operations: publish, subscribe.
 	// Example: EventData event_stream = 5 [(spec.topic) = true];
 	//
@@ -6224,14 +6224,14 @@ var (
 	//
 	// optional bool leader = 50018;
 	E_Leader = &file_libs_spec_proto_extTypes[94]
-	// Statedb storage: number of synchronous backups for this boundary's IMap.
+	// Statedb storage: number of synchronous backups for this boundary.
 	// Synchronous backups block writes until complete, providing stronger durability.
 	// Range: 0-6. Default: 1.
 	// Example: TeamRoster roster = 1 [(spec.consistency) = CONSISTENCY_ATOMIC, (spec.sync_backup_count) = 2];
 	//
 	// optional int32 sync_backup_count = 50020;
 	E_SyncBackupCount = &file_libs_spec_proto_extTypes[95]
-	// Statedb storage: number of asynchronous backups for this boundary's IMap.
+	// Statedb storage: number of asynchronous backups for this boundary.
 	// Asynchronous backups do not block writes, providing better throughput
 	// at the cost of potential data loss during node failure. Range: 0-6. Default: 0.
 	//
@@ -6267,7 +6267,7 @@ var (
 	E_EvictionMaxIdleSeconds = &file_libs_spec_proto_extTypes[101]
 	// epoch_expiration marks an int64 field as a Unix epoch expiration timestamp (seconds).
 	// Collections only: 0 = no expiration; > 0 must be future and within 1 year.
-	// Hazelcast TTL = epoch - now at write time; entry auto-removed on expiry.
+	// TTL = epoch - now at write time; the state store auto-removes the entry on expiry.
 	//
 	// optional bool epoch_expiration = 50027;
 	E_EpochExpiration = &file_libs_spec_proto_extTypes[102]
@@ -6355,19 +6355,19 @@ var (
 	// Requirements:
 	//   - The field must be repeated with a (spec.consistency) annotation.
 	//   - All members of the same view must have the same message type.
-	//   - The message type must have an (spec.indexed) field for map keying.
+	//   - The message type must have an (spec.indexed) field for entry keying.
 	//
 	// repeated string view_member = 50035;
 	E_ViewMember = &file_libs_spec_proto_extTypes[109]
 	// instance_keyed: server extracts instance_id from the caller's token
-	// and uses "service_id@instance_id" as the map key. The publisher
+	// and uses "service_id@instance_id" as the entry key. The publisher
 	// sees a singleton Set API (no key param). Consumers see a collection.
 	//
 	// optional bool instance_keyed = 50034;
 	E_InstanceKeyed = &file_libs_spec_proto_extTypes[110]
-	// store_key marks a field as the map key for a service_store message.
+	// store_key marks a field as the entry key for a service_store message.
 	// Exactly one field per service_store message must have this annotation.
-	// The field type must be string. The key is used as the Hazelcast IMap key.
+	// The field type must be string. The key is used as the entry key.
 	//
 	// optional bool store_key = 50037;
 	E_StoreKey = &file_libs_spec_proto_extTypes[111]
@@ -6429,8 +6429,8 @@ var (
 	//
 	// optional string assert_invariant = 60053;
 	E_AssertInvariant = &file_libs_spec_proto_extTypes[117]
-	// cache marks this field for projection into the hot cache (Hazelcast).
-	// When true, this field is included in the HZ map entry.
+	// cache marks this field for projection into the hot cache.
+	// When true, this field is included in the cache entry.
 	// Example: string display_name = 3 [(spec.cache) = true];
 	//
 	// optional bool cache = 60054;
@@ -6555,7 +6555,7 @@ var (
 	// optional spec.TokenMinterAnnotation token_minter = 70016;
 	E_TokenMinter = &file_libs_spec_proto_extTypes[134]
 	// smb (Service Mesh Blackbox) marks a service whose OWN INSTANCES communicate
-	// over a black-box peer protocol (e.g. Hazelcast gossip/replication) within a
+	// over a black-box peer protocol within a
 	// single cluster (SPIFFE plan D7). Each instance obtains a per-SMB CA + its
 	// own member cert from the SMB CA authority (the consumer service designated
 	// by spec.smb_authority). By default that per-SMB CA is isolated from the

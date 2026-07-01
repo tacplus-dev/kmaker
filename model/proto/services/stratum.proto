@@ -26,7 +26,7 @@
 // Hazelcast IMap<event_id, SensorEvent> hot store with Apache Calcite
 // SQL indexes. There is no cold storage — all data is hot.
 //
-// The claudesensor vservice (vservices/claude-sensor.proto) defines the
+// The agentsensor vservice (vservices/sensor-query.proto) defines the
 // S2S gRPC surface that Stratum implements:
 //   - StratumQuery: working-set maps, operator queries, live-session streaming
 //
@@ -135,7 +135,8 @@ service StratumConfigStateService {
 	rpc WatchConfig(trace.TraceRequest) returns (stream Config);
 }
 
-message MapEmpty {  string trace_id = 200;
+message MapEmpty {
+  string trace_id = 200;
   bool noop = 201;
 }
 

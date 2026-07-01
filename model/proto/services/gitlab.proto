@@ -369,6 +369,8 @@ message ListIssuesRequest {
   string updated_after = 10;
   int32 page = 11;
   int32 per_page = 12;
+  int32 page_size = 13;
+  string page_token = 14;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -377,6 +379,8 @@ message ListIssuesResponse {
   repeated Issue issues = 1;
   PaginationInfo pagination = 2;
   RateLimitInfo rate_limit = 3;
+  string next_page_token = 4;
+  int64 total_count = 5;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -471,6 +475,8 @@ message ListMergeRequestsRequest {
   repeated string labels = 9;
   int32 page = 10;
   int32 per_page = 11;
+  int32 page_size = 12;
+  string page_token = 13;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -479,6 +485,8 @@ message ListMergeRequestsResponse {
   repeated MergeRequest merge_requests = 1;
   PaginationInfo pagination = 2;
   RateLimitInfo rate_limit = 3;
+  string next_page_token = 4;
+  int64 total_count = 5;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -572,6 +580,8 @@ message ListMergeRequestChangesRequest {
   string metadata = 1;
   string project_id = 2;
   int32 merge_request_iid = 3;
+  int32 page_size = 4;
+  string page_token = 5;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -579,6 +589,8 @@ message ListMergeRequestChangesRequest {
 message ListMergeRequestChangesResponse {
   repeated MergeRequestDiff changes = 1;
   RateLimitInfo rate_limit = 2;
+  string next_page_token = 3;
+  int64 total_count = 4;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -613,6 +625,8 @@ message ListPipelinesRequest {
   string order_by = 7;   // id, status, ref, updated_at, user_id
   int32 page = 8;
   int32 per_page = 9;
+  int32 page_size = 10;
+  string page_token = 11;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -621,6 +635,8 @@ message ListPipelinesResponse {
   repeated Pipeline pipelines = 1;
   PaginationInfo pagination = 2;
   RateLimitInfo rate_limit = 3;
+  string next_page_token = 4;
+  int64 total_count = 5;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -701,6 +717,8 @@ message ListPipelineJobsRequest {
   string scope = 4;  // created, pending, running, failed, success, canceled, skipped, manual
   int32 page = 5;
   int32 per_page = 6;
+  int32 page_size = 7;
+  string page_token = 8;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -709,6 +727,8 @@ message ListPipelineJobsResponse {
   repeated Job jobs = 1;
   PaginationInfo pagination = 2;
   RateLimitInfo rate_limit = 3;
+  string next_page_token = 4;
+  int64 total_count = 5;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -787,6 +807,8 @@ message ListBranchesRequest {
   string search = 3;
   int32 page = 4;
   int32 per_page = 5;
+  int32 page_size = 6;
+  string page_token = 7;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -795,6 +817,8 @@ message ListBranchesResponse {
   repeated Branch branches = 1;
   PaginationInfo pagination = 2;
   RateLimitInfo rate_limit = 3;
+  string next_page_token = 4;
+  int64 total_count = 5;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -828,6 +852,8 @@ message ListCommitsRequest {
   string until = 6;
   int32 page = 7;
   int32 per_page = 8;
+  int32 page_size = 9;
+  string page_token = 10;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -836,6 +862,8 @@ message ListCommitsResponse {
   repeated BranchCommit commits = 1;
   PaginationInfo pagination = 2;
   RateLimitInfo rate_limit = 3;
+  string next_page_token = 4;
+  int64 total_count = 5;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -852,6 +880,8 @@ message SearchBlobsRequest {
   string ref = 4;
   int32 page = 5;
   int32 per_page = 6;
+  int32 page_size = 7;
+  string page_token = 8;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -860,6 +890,8 @@ message SearchBlobsResponse {
   repeated SearchBlobResult results = 1;
   PaginationInfo pagination = 2;
   RateLimitInfo rate_limit = 3;
+  string next_page_token = 4;
+  int64 total_count = 5;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -985,7 +1017,8 @@ service GitlabConfigStateService {
 	rpc WatchConfig(trace.TraceRequest) returns (stream Config);
 }
 
-message MapEmpty {  string trace_id = 200;
+message MapEmpty {
+  string trace_id = 200;
   bool noop = 201;
 }
 

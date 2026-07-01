@@ -2348,11 +2348,13 @@ var File_services_anthropic_proto protoreflect.FileDescriptor
 
 const file_services_anthropic_proto_rawDesc = "" +
 	"\n" +
-	"\x18services/anthropic.proto\x12\tanthropic\x1a\x0flibs/spec.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10libs/trace.proto\"J\n" +
+	"\x18services/anthropic.proto\x12\tanthropic\x1a\x0flibs/spec.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x10libs/trace.proto\"w\n" +
 	"\x06Config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0fҨ\x1d\v\n" +
-	"\tanthropic\"\xe3\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:<Ҩ\x1d\v\n" +
+	"\tanthropicʪ\x1d)\n" +
+	"\"llmsensor.LlmEventBus.event_stream\x12\x03\n" +
+	"\x01*\"\xe3\x01\n" +
 	"\fProxyRequest\x12!\n" +
 	"\bmetadata\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x10R\bmetadata\x12?\n" +
 	"\arequest\x18\x02 \x01(\v2\x1f.anthropic.CreateMessageRequestB\x04\x88\xa6\x1d\x01R\arequest\x12 \n" +
@@ -2502,12 +2504,12 @@ const file_services_anthropic_proto_rawDesc = "" +
 	"\bprovider\x18\n" +
 	" \x01(\tB\x11\x90\xa7\x1d@\x8a\xa8\x1d\tanthropicR\bprovider\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa6\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa4\x01\n" +
 	"\x14AnthropicConfigState\x123\n" +
 	"\x06config\x18\x01 \x01(\v2\x11.anthropic.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:(\x9a\xa8\x1d \n" +
-	"\x14AnthropicConfigState\x1a\beventbus\xa0\xa8\x1d\x02\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:&\x9a\xa8\x1d\x1e\n" +
+	"\x14AnthropicConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\x99\x02\n" +

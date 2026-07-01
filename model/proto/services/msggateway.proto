@@ -276,7 +276,7 @@ service Messaging {
   rpc GetChannelHistory(GetChannelHistoryRequest) returns (GetChannelHistoryResponse);
 
   // ListChannels lists channels in the workspace.
-  rpc ListChannels(trace.TraceRequest) returns (ListChannelsResponse) {
+  rpc ListChannels(ListChannelsRequest) returns (ListChannelsResponse) {
   }
 
   // --- Reactions ---
@@ -388,12 +388,17 @@ message GetThreadRequest {
 
   // limit is the maximum number of messages to return. Default: 100.
   int32 limit = 3;
+
+  int32 page_size = 4;
+  string page_token = 5;
   string trace_id = 200;
   bool noop = 201;
 }
 
 message GetThreadResponse {
   repeated Message messages = 1;
+  string next_page_token = 2;
+  int64 total_count = 3;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -422,6 +427,15 @@ message GetChannelHistoryResponse {
 
 message ListChannelsResponse {
   repeated Channel channels = 1;
+  string next_page_token = 2;
+  int64 total_count = 3;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
+message ListChannelsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -475,19 +489,38 @@ enum LogicalOp {
   LOGICAL_OP_AND = 1;
   LOGICAL_OP_OR = 2;
 }
-message QueryValue { oneof value { string string_value = 1; int64 int_value = 2; double double_value = 3; bool bool_value = 4; }   string trace_id = 200;
+message QueryValue {
+  oneof value { string string_value = 1; int64 int_value = 2; double double_value = 3; bool bool_value = 4; }
+  string trace_id = 200;
   bool noop = 201;
 }
-message Predicate { string field_name = 1; ComparisonOp op = 2; QueryValue value = 3; repeated QueryValue values = 4;   string trace_id = 200;
+message Predicate {
+  string field_name = 1;
+  ComparisonOp op = 2;
+  QueryValue value = 3;
+  repeated QueryValue values = 4;
+  string trace_id = 200;
   bool noop = 201;
 }
-message PredicateGroup { LogicalOp op = 1; repeated Predicate predicates = 2; repeated PredicateGroup groups = 3;   string trace_id = 200;
+message PredicateGroup {
+  LogicalOp op = 1;
+  repeated Predicate predicates = 2;
+  repeated PredicateGroup groups = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message SortField { string field_name = 1; SortDirection direction = 2;   string trace_id = 200;
+message SortField {
+  string field_name = 1;
+  SortDirection direction = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message CollectionQuery { PredicateGroup where = 1; repeated SortField order_by = 2; int32 limit = 3; int32 offset = 4;   string trace_id = 200;
+message CollectionQuery {
+  PredicateGroup where = 1;
+  repeated SortField order_by = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+  string trace_id = 200;
   bool noop = 201;
 }
 
@@ -528,77 +561,125 @@ service GatewayStateService {
 	rpc WatchQuerySubscriptions(SubscriptionsQueryRequest) returns (stream SubscriptionsQueryResponse);
 }
 
-message VirtualUsersGetRequest { string key = 1;   string trace_id = 200;
+message VirtualUsersGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message VirtualUsersPutRequest { string key = 1; VirtualUser value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message VirtualUsersPutRequest {
+  string key = 1;
+  VirtualUser value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message VirtualUsersGetAllRequest {  string trace_id = 200;
+message VirtualUsersGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message VirtualUsersKeysRequest {  string trace_id = 200;
+message VirtualUsersKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message VirtualUsersSizeRequest {  string trace_id = 200;
+message VirtualUsersSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message VirtualUsersClearRequest {  string trace_id = 200;
+message VirtualUsersClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message VirtualUsersValueResponse { VirtualUser value = 1; bool found = 2;   string trace_id = 200;
+message VirtualUsersValueResponse {
+  VirtualUser value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message VirtualUsersEntriesResponse { map<string, VirtualUser> entries = 1;   string trace_id = 200;
+message VirtualUsersEntriesResponse {
+  map<string, VirtualUser> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message VirtualUsersKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message VirtualUsersKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message VirtualUsersSizeResponse { int32 size = 1;   string trace_id = 200;
+message VirtualUsersSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message VirtualUsersQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message VirtualUsersQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message VirtualUsersQueryResponse { repeated VirtualUser results = 1; int32 total_count = 2;   string trace_id = 200;
+message VirtualUsersQueryResponse {
+  repeated VirtualUser results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
-message SubscriptionsGetRequest { string key = 1;   string trace_id = 200;
+message SubscriptionsGetRequest {
+  string key = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message SubscriptionsPutRequest { string key = 1; ChannelSubscription value = 2; int64 lock_counter = 3;   string trace_id = 200;
+message SubscriptionsPutRequest {
+  string key = 1;
+  ChannelSubscription value = 2;
+  int64 lock_counter = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message SubscriptionsGetAllRequest {  string trace_id = 200;
+message SubscriptionsGetAllRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message SubscriptionsKeysRequest {  string trace_id = 200;
+message SubscriptionsKeysRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message SubscriptionsSizeRequest {  string trace_id = 200;
+message SubscriptionsSizeRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message SubscriptionsClearRequest {  string trace_id = 200;
+message SubscriptionsClearRequest {
+  string trace_id = 200;
   bool noop = 201;
 }
-message SubscriptionsValueResponse { ChannelSubscription value = 1; bool found = 2;   string trace_id = 200;
+message SubscriptionsValueResponse {
+  ChannelSubscription value = 1;
+  bool found = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
-message SubscriptionsEntriesResponse { map<string, ChannelSubscription> entries = 1;   string trace_id = 200;
+message SubscriptionsEntriesResponse {
+  map<string, ChannelSubscription> entries = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message SubscriptionsKeysResponse { repeated string keys = 1;   string trace_id = 200;
+message SubscriptionsKeysResponse {
+  repeated string keys = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message SubscriptionsSizeResponse { int32 size = 1;   string trace_id = 200;
+message SubscriptionsSizeResponse {
+  int32 size = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message SubscriptionsQueryRequest { CollectionQuery query = 1;   string trace_id = 200;
+message SubscriptionsQueryRequest {
+  CollectionQuery query = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
-message SubscriptionsQueryResponse { repeated ChannelSubscription results = 1; int32 total_count = 2;   string trace_id = 200;
+message SubscriptionsQueryResponse {
+  repeated ChannelSubscription results = 1;
+  int32 total_count = 2;
+  string trace_id = 200;
   bool noop = 201;
 }
 
@@ -613,7 +694,8 @@ service MsggatewayConfigStateService {
 	rpc WatchConfig(trace.TraceRequest) returns (stream Config);
 }
 
-message MapEmpty {  string trace_id = 200;
+message MapEmpty {
+  string trace_id = 200;
   bool noop = 201;
 }
 
@@ -643,38 +725,39 @@ enum TypeID {
   TYPE_ID_GET_CHANNEL_HISTORY_REQUEST = 18;
   TYPE_ID_GET_CHANNEL_HISTORY_RESPONSE = 19;
   TYPE_ID_LIST_CHANNELS_RESPONSE = 20;
-  TYPE_ID_REACTION_REQUEST = 21;
-  TYPE_ID_MSGGATEWAY_CONFIG_STATE = 22;
-  TYPE_ID_QUERY_VALUE = 23;
-  TYPE_ID_PREDICATE = 24;
-  TYPE_ID_PREDICATE_GROUP = 25;
-  TYPE_ID_SORT_FIELD = 26;
-  TYPE_ID_COLLECTION_QUERY = 27;
-  TYPE_ID_VIRTUAL_USERS_GET_REQUEST = 28;
-  TYPE_ID_VIRTUAL_USERS_PUT_REQUEST = 29;
-  TYPE_ID_VIRTUAL_USERS_GET_ALL_REQUEST = 30;
-  TYPE_ID_VIRTUAL_USERS_KEYS_REQUEST = 31;
-  TYPE_ID_VIRTUAL_USERS_SIZE_REQUEST = 32;
-  TYPE_ID_VIRTUAL_USERS_CLEAR_REQUEST = 33;
-  TYPE_ID_VIRTUAL_USERS_VALUE_RESPONSE = 34;
-  TYPE_ID_VIRTUAL_USERS_ENTRIES_RESPONSE = 35;
-  TYPE_ID_VIRTUAL_USERS_KEYS_RESPONSE = 36;
-  TYPE_ID_VIRTUAL_USERS_SIZE_RESPONSE = 37;
-  TYPE_ID_VIRTUAL_USERS_QUERY_REQUEST = 38;
-  TYPE_ID_VIRTUAL_USERS_QUERY_RESPONSE = 39;
-  TYPE_ID_SUBSCRIPTIONS_GET_REQUEST = 40;
-  TYPE_ID_SUBSCRIPTIONS_PUT_REQUEST = 41;
-  TYPE_ID_SUBSCRIPTIONS_GET_ALL_REQUEST = 42;
-  TYPE_ID_SUBSCRIPTIONS_KEYS_REQUEST = 43;
-  TYPE_ID_SUBSCRIPTIONS_SIZE_REQUEST = 44;
-  TYPE_ID_SUBSCRIPTIONS_CLEAR_REQUEST = 45;
-  TYPE_ID_SUBSCRIPTIONS_VALUE_RESPONSE = 46;
-  TYPE_ID_SUBSCRIPTIONS_ENTRIES_RESPONSE = 47;
-  TYPE_ID_SUBSCRIPTIONS_KEYS_RESPONSE = 48;
-  TYPE_ID_SUBSCRIPTIONS_SIZE_RESPONSE = 49;
-  TYPE_ID_SUBSCRIPTIONS_QUERY_REQUEST = 50;
-  TYPE_ID_SUBSCRIPTIONS_QUERY_RESPONSE = 51;
-  TYPE_ID_MAP_EMPTY = 52;
+  TYPE_ID_LIST_CHANNELS_REQUEST = 21;
+  TYPE_ID_REACTION_REQUEST = 22;
+  TYPE_ID_MSGGATEWAY_CONFIG_STATE = 23;
+  TYPE_ID_QUERY_VALUE = 24;
+  TYPE_ID_PREDICATE = 25;
+  TYPE_ID_PREDICATE_GROUP = 26;
+  TYPE_ID_SORT_FIELD = 27;
+  TYPE_ID_COLLECTION_QUERY = 28;
+  TYPE_ID_VIRTUAL_USERS_GET_REQUEST = 29;
+  TYPE_ID_VIRTUAL_USERS_PUT_REQUEST = 30;
+  TYPE_ID_VIRTUAL_USERS_GET_ALL_REQUEST = 31;
+  TYPE_ID_VIRTUAL_USERS_KEYS_REQUEST = 32;
+  TYPE_ID_VIRTUAL_USERS_SIZE_REQUEST = 33;
+  TYPE_ID_VIRTUAL_USERS_CLEAR_REQUEST = 34;
+  TYPE_ID_VIRTUAL_USERS_VALUE_RESPONSE = 35;
+  TYPE_ID_VIRTUAL_USERS_ENTRIES_RESPONSE = 36;
+  TYPE_ID_VIRTUAL_USERS_KEYS_RESPONSE = 37;
+  TYPE_ID_VIRTUAL_USERS_SIZE_RESPONSE = 38;
+  TYPE_ID_VIRTUAL_USERS_QUERY_REQUEST = 39;
+  TYPE_ID_VIRTUAL_USERS_QUERY_RESPONSE = 40;
+  TYPE_ID_SUBSCRIPTIONS_GET_REQUEST = 41;
+  TYPE_ID_SUBSCRIPTIONS_PUT_REQUEST = 42;
+  TYPE_ID_SUBSCRIPTIONS_GET_ALL_REQUEST = 43;
+  TYPE_ID_SUBSCRIPTIONS_KEYS_REQUEST = 44;
+  TYPE_ID_SUBSCRIPTIONS_SIZE_REQUEST = 45;
+  TYPE_ID_SUBSCRIPTIONS_CLEAR_REQUEST = 46;
+  TYPE_ID_SUBSCRIPTIONS_VALUE_RESPONSE = 47;
+  TYPE_ID_SUBSCRIPTIONS_ENTRIES_RESPONSE = 48;
+  TYPE_ID_SUBSCRIPTIONS_KEYS_RESPONSE = 49;
+  TYPE_ID_SUBSCRIPTIONS_SIZE_RESPONSE = 50;
+  TYPE_ID_SUBSCRIPTIONS_QUERY_REQUEST = 51;
+  TYPE_ID_SUBSCRIPTIONS_QUERY_RESPONSE = 52;
+  TYPE_ID_MAP_EMPTY = 53;
 }
 
 enum MessagingRpcId {

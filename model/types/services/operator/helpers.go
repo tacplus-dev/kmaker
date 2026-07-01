@@ -966,14 +966,15 @@ func OptionalServicesToTOML(v *OptionalServices) ([]byte, error) {
 // PKIJSON represents PKI in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type pkiJSON struct {
-	RootCa        json.RawMessage   `json:"root_ca,omitempty"`
-	ClusterCa     json.RawMessage   `json:"cluster_ca,omitempty"`
-	NodeTls       []json.RawMessage `json:"node_tls,omitempty"`
-	NodeSigningCa []json.RawMessage `json:"node_signing_ca,omitempty"`
-	EdgeTls       []json.RawMessage `json:"edge_tls,omitempty"`
-	EdgeSigningCa []json.RawMessage `json:"edge_signing_ca,omitempty"`
-	TraceId       string            `json:"trace_id,omitempty"`
-	Noop          bool              `json:"noop,omitempty"`
+	RootCa          json.RawMessage   `json:"root_ca,omitempty"`
+	ClusterCa       json.RawMessage   `json:"cluster_ca,omitempty"`
+	NodeTls         []json.RawMessage `json:"node_tls,omitempty"`
+	NodeSigningCa   []json.RawMessage `json:"node_signing_ca,omitempty"`
+	EdgeTls         []json.RawMessage `json:"edge_tls,omitempty"`
+	EdgeSigningCa   []json.RawMessage `json:"edge_signing_ca,omitempty"`
+	KmakerSigningCa json.RawMessage   `json:"kmaker_signing_ca,omitempty"`
+	TraceId         string            `json:"trace_id,omitempty"`
+	Noop            bool              `json:"noop,omitempty"`
 }
 
 // PKIToJSON converts PKI to JSON bytes.
@@ -1053,6 +1054,13 @@ func PKIToJSON(v *PKI) ([]byte, error) {
 				}
 			}
 			return result
+		}(),
+		KmakerSigningCa: func() json.RawMessage {
+			if v.KmakerSigningCa == nil {
+				return nil
+			}
+			data, _ := x509.X509CertChainToJSON(v.KmakerSigningCa)
+			return data
 		}(),
 		TraceId: v.TraceId,
 		Noop:    v.Noop,
@@ -1137,6 +1145,13 @@ func PKIToJSONPretty(v *PKI) ([]byte, error) {
 				}
 			}
 			return result
+		}(),
+		KmakerSigningCa: func() json.RawMessage {
+			if v.KmakerSigningCa == nil {
+				return nil
+			}
+			data, _ := x509.X509CertChainToJSON(v.KmakerSigningCa)
+			return data
 		}(),
 		TraceId: v.TraceId,
 		Noop:    v.Noop,
@@ -1264,6 +1279,13 @@ func PKIFromJSON(data []byte) (*PKI, error) {
 					result.EdgeSigningCa = append(result.EdgeSigningCa, parsed)
 				}
 			}
+		}
+	}
+	// Parse message field: KmakerSigningCa
+	if len(raw.KmakerSigningCa) > 0 {
+		parsed, err := x509.X509CertChainFromJSON(raw.KmakerSigningCa)
+		if err == nil {
+			result.KmakerSigningCa = parsed
 		}
 	}
 	result.TraceId = raw.TraceId
@@ -2294,6 +2316,11 @@ func PKIToEnvVar(v *PKI) map[string]string {
 			result[k] = val
 		}
 	}
+	if v.KmakerSigningCa != nil {
+		for k, val := range x509.X509CertChainToEnvVar(v.KmakerSigningCa) {
+			result[k] = val
+		}
+	}
 	result["PROTO_SERVICES_OPERATOR_PKI_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_OPERATOR_PKI_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -2311,6 +2338,11 @@ func PKIFromEnvVar(env map[string]string) (*PKI, error) {
 		return nil, err
 	} else if sub != nil {
 		result.ClusterCa = sub
+	}
+	if sub, err := x509.X509CertChainFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.KmakerSigningCa = sub
 	}
 	if val, ok := env["PROTO_SERVICES_OPERATOR_PKI_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -2694,6 +2726,13 @@ func ValidatePKIWithDepth(m *PKI, depth int) error {
 	for i, val := range m.EdgeSigningCa {
 		if err := x509.ValidateX509CertChainWithDepth(val, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field EdgeSigningCa[%d] validation failed", i)
+		}
+	}
+
+	// Validate KmakerSigningCa nested message
+	if m.KmakerSigningCa != nil {
+		if err := x509.ValidateX509CertChainWithDepth(m.KmakerSigningCa, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field KmakerSigningCa validation failed")
 		}
 	}
 
@@ -3315,6 +3354,9 @@ func MergePKI(dst, src *PKI) {
 	}
 	if len(dst.EdgeSigningCa) == 0 {
 		dst.EdgeSigningCa = src.EdgeSigningCa
+	}
+	if dst.KmakerSigningCa == nil {
+		dst.KmakerSigningCa = src.KmakerSigningCa
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

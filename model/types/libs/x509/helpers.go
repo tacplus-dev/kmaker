@@ -1300,11 +1300,6 @@ func ValidateX509CertWithDepth(m *X509Cert, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Id exceeds max size of 256 bytes, got: %d", len(m.Id))
 	}
 
-	// Validate Base64 (assert_max_size: 16384 bytes)
-	if len(m.Base64) > 16384 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Base64 exceeds max size of 16384 bytes, got: %d", len(m.Base64))
-	}
-
 	// Validate Base64 (assert_required)
 	if m.Base64 == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Base64 is required")
@@ -1315,6 +1310,11 @@ func ValidateX509CertWithDepth(m *X509Cert, depth int) error {
 		if err := utils.ValidateAssertBase64(m.Base64); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field Base64 base64 validation failed")
 		}
+	}
+
+	// Validate Base64 (assert_max_size: 16384 bytes)
+	if len(m.Base64) > 16384 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Base64 exceeds max size of 16384 bytes, got: %d", len(m.Base64))
 	}
 
 	return nil

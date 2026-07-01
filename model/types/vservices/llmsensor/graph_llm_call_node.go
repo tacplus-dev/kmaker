@@ -42,8 +42,8 @@ func LlmCallNodeToGraph(msg *LlmCallNode) (map[string]interface{}, error) {
 	// model: scalar predicate
 	m["LlmCallNode.model"] = msg.Model
 
-	// email: scalar predicate
-	m["LlmCallNode.email"] = msg.Email
+	// spiffe_id: scalar predicate
+	m["LlmCallNode.spiffe_id"] = msg.SpiffeId
 
 	// provider: enum stored as string name
 	if msg.Provider != 0 {
@@ -102,10 +102,10 @@ func LlmCallNodeFromGraph(m map[string]interface{}) (*LlmCallNode, error) {
 		}
 	}
 
-	// email: scalar predicate
-	if v, ok := m["LlmCallNode.email"]; ok {
+	// spiffe_id: scalar predicate
+	if v, ok := m["LlmCallNode.spiffe_id"]; ok {
 		if s, ok := v.(string); ok {
-			msg.Email = s
+			msg.SpiffeId = s
 		}
 	}
 

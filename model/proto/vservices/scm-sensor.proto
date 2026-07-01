@@ -35,7 +35,7 @@
 // or on downstream services to reconstruct the picture.
 //
 // Attribution to agent sessions or other workflows is intentionally left to
-// downstream services (Argus, etc.) that correlate by email + timestamp.
+// downstream services (Argus, etc.) that correlate by spiffe_id + timestamp.
 // The proxy only records facts it can verify directly from the request.
 //
 // ── EVENT FLOW ──
@@ -151,7 +151,7 @@ message ScmEvent {
 
   // ── Store annotations ────────────────────────────────────────────
 
-  // EventDB: persist with event_id as key, email as owner.
+  // EventDB: persist with event_id as key, spiffe_id as owner.
 
   // ── Graph projections ────────────────────────────────────────────
 
@@ -164,10 +164,11 @@ message ScmEvent {
   // One row per ScmEvent in ClickHouse.
 
   // ── Identity ─────────────────────────────────────────────────────
-  // email is stamped server-side by EventBus from the publishing service's
-  // verified JWT. The proxy populates it from the caller's token.
+  // spiffe_id is the caller's SUBJECT SPIFFE ID (spiffe://<root>/tenants/
+  // <tenant_id>/users/<sub>), the durable EventDB owner. Stamped server-side
+  // from the verified token. (Replaces the former email owner.)
 
-  string email    = 1;
+  string spiffe_id = 1;
   string event_id = 2;
   int64  timestamp_ms = 3;
 
@@ -230,21 +231,20 @@ service ScmEventBusStateService {
 	rpc SubscribeToEventStream(trace.TraceRequest) returns (stream ScmEventBusEventStreamSubscribeRecord);
 }
 
-message ScmEventBusEventStreamSubscribeRecord { EventBusRecordMeta meta = 1; ScmEvent payload = 2;   string trace_id = 200;
+message ScmEventBusEventStreamSubscribeRecord { EventBusRecordMeta meta = 1; ScmEvent payload = 2; }
+
+message MapEmpty {
+  string trace_id = 200;
   bool noop = 201;
 }
 
-message MapEmpty {  string trace_id = 200;
+message TopicPublishReceipt {
+  bool published = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
 
-message TopicPublishReceipt { bool published = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-
-message EventBusRecordMeta { bytes key = 1; string topic = 2; int32 partition = 3; int64 offset = 4; google.protobuf.Timestamp timestamp = 5;   string trace_id = 200;
-  bool noop = 201;
-}
+message EventBusRecordMeta { bytes key = 1; string topic = 2; int32 partition = 3; int64 offset = 4; google.protobuf.Timestamp timestamp = 5; }
 
 // ============================================================================
 // Auto-generated projection messages from spec.graph_projection and
@@ -270,7 +270,7 @@ message ScmOperationNode {
 
   string event_id = 1;
   string repository = 2;
-  string email = 3;
+  string spiffe_id = 3;
   scmsensor.ScmProvider provider = 4;
   scmsensor.ScmOperationType operation = 5;
   bool succeeded = 6;
@@ -287,7 +287,7 @@ message ScmOperationRecord {
   string repo = 2;
   int64 timestamp_ms = 3;
   string event_id = 4;
-  string email = 5;
+  string spiffe_id = 5;
   scmsensor.ScmProvider provider = 6;
   string api_endpoint = 7;
   scmsensor.ScmOperationType operation = 8;

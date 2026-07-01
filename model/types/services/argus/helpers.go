@@ -30,8 +30,7 @@ import (
 	"github.com/pelletier/go-toml/v2"
 	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/errors"
 	healthreport "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/healthreport"
-	claudesensor "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/vservices/claudesensor"
-	utils "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/utils"
+	agentsensor "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/vservices/agentsensor"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"gopkg.in/yaml.v3"
@@ -943,8 +942,8 @@ func ArgusRpcIdValues() []ArgusRpcId {
 		ArgusRpcId_ARGUS_RPC_ID_GET_USER_TOKEN_STATS,
 		ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE,
 		ArgusRpcId_ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY,
-		ArgusRpcId_ARGUS_RPC_ID_GET_FILE_ACTIVITY,
-		ArgusRpcId_ARGUS_RPC_ID_GET_SESSION_TIMELINE,
+		ArgusRpcId_ARGUS_RPC_ID_LIST_FILE_ACTIVITY,
+		ArgusRpcId_ARGUS_RPC_ID_LIST_SESSION_TIMELINE,
 		ArgusRpcId_ARGUS_RPC_ID_GET_AGENT_TREE,
 		ArgusRpcId_ARGUS_RPC_ID_GET_SYSTEM_STATS,
 		ArgusRpcId_ARGUS_RPC_ID_LIST_TOOL_LEADERBOARD,
@@ -959,7 +958,7 @@ func ArgusRpcIdValues() []ArgusRpcId {
 
 // ArgusRpcIdStringValues returns all valid ArgusRpcId names as strings
 func ArgusRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "get-dashboard", "list-active-sessions", "get-session-detail", "get-user-activity", "list-session-search-results", "subscribe-live-sessions", "get-scratchpad", "update-scratchpad", "delete-scratchpad", "list-scratchpads", "delete-scratchpads", "get-supervisor-context", "subscribe-dashboard", "subscribe-session-detail", "subscribe-user-activity", "subscribe-supervisor-context", "subscribe-scratchpad-list", "subscribe-scratchpad-read", "list-users", "get-user-profile", "get-user-token-stats", "subscribe-user-profile", "list-user-commit-activity", "get-file-activity", "get-session-timeline", "get-agent-tree", "get-system-stats", "list-tool-leaderboard", "list-model-usage", "list-activity-timeseries", "subscribe-system-stats", "subscribe-tool-leaderboard", "list-event-search-results", "list-file-path-matches"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "get-dashboard", "list-active-sessions", "get-session-detail", "get-user-activity", "list-session-search-results", "subscribe-live-sessions", "get-scratchpad", "update-scratchpad", "delete-scratchpad", "list-scratchpads", "delete-scratchpads", "get-supervisor-context", "subscribe-dashboard", "subscribe-session-detail", "subscribe-user-activity", "subscribe-supervisor-context", "subscribe-scratchpad-list", "subscribe-scratchpad-read", "list-users", "get-user-profile", "get-user-token-stats", "subscribe-user-profile", "list-user-commit-activity", "list-file-activity", "list-session-timeline", "get-agent-tree", "get-system-stats", "list-tool-leaderboard", "list-model-usage", "list-activity-timeseries", "subscribe-system-stats", "subscribe-tool-leaderboard", "list-event-search-results", "list-file-path-matches"}
 }
 
 // ParseArgusRpcId converts a string to a ArgusRpcId enum value
@@ -1022,10 +1021,10 @@ func ParseArgusRpcId(s string) (ArgusRpcId, error) {
 		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE, nil
 	case "list-user-commit-activity", "argus-rpc-id-list-user-commit-activity":
 		return ArgusRpcId_ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY, nil
-	case "get-file-activity", "argus-rpc-id-get-file-activity":
-		return ArgusRpcId_ARGUS_RPC_ID_GET_FILE_ACTIVITY, nil
-	case "get-session-timeline", "argus-rpc-id-get-session-timeline":
-		return ArgusRpcId_ARGUS_RPC_ID_GET_SESSION_TIMELINE, nil
+	case "list-file-activity", "argus-rpc-id-list-file-activity":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_FILE_ACTIVITY, nil
+	case "list-session-timeline", "argus-rpc-id-list-session-timeline":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_SESSION_TIMELINE, nil
 	case "get-agent-tree", "argus-rpc-id-get-agent-tree":
 		return ArgusRpcId_ARGUS_RPC_ID_GET_AGENT_TREE, nil
 	case "get-system-stats", "argus-rpc-id-get-system-stats":
@@ -1126,10 +1125,10 @@ func ArgusRpcIdToString(v ArgusRpcId) string {
 		return "subscribe-user-profile"
 	case ArgusRpcId_ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY:
 		return "list-user-commit-activity"
-	case ArgusRpcId_ARGUS_RPC_ID_GET_FILE_ACTIVITY:
-		return "get-file-activity"
-	case ArgusRpcId_ARGUS_RPC_ID_GET_SESSION_TIMELINE:
-		return "get-session-timeline"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_FILE_ACTIVITY:
+		return "list-file-activity"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_SESSION_TIMELINE:
+		return "list-session-timeline"
 	case ArgusRpcId_ARGUS_RPC_ID_GET_AGENT_TREE:
 		return "get-agent-tree"
 	case ArgusRpcId_ARGUS_RPC_ID_GET_SYSTEM_STATS:
@@ -1222,10 +1221,10 @@ func ParseArgusRpcIdLiberal(s string) ArgusRpcId {
 		return ArgusRpcId_ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE
 	case "list-user-commit-activity", "argus-rpc-id-list-user-commit-activity":
 		return ArgusRpcId_ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY
-	case "get-file-activity", "argus-rpc-id-get-file-activity":
-		return ArgusRpcId_ARGUS_RPC_ID_GET_FILE_ACTIVITY
-	case "get-session-timeline", "argus-rpc-id-get-session-timeline":
-		return ArgusRpcId_ARGUS_RPC_ID_GET_SESSION_TIMELINE
+	case "list-file-activity", "argus-rpc-id-list-file-activity":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_FILE_ACTIVITY
+	case "list-session-timeline", "argus-rpc-id-list-session-timeline":
+		return ArgusRpcId_ARGUS_RPC_ID_LIST_SESSION_TIMELINE
 	case "get-agent-tree", "argus-rpc-id-get-agent-tree":
 		return ArgusRpcId_ARGUS_RPC_ID_GET_AGENT_TREE
 	case "get-system-stats", "argus-rpc-id-get-system-stats":
@@ -1306,10 +1305,10 @@ func ArgusRpcIdToSpecName(v ArgusRpcId) string {
 		return "ARGUS_RPC_ID_SUBSCRIBE_USER_PROFILE"
 	case ArgusRpcId_ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY:
 		return "ARGUS_RPC_ID_LIST_USER_COMMIT_ACTIVITY"
-	case ArgusRpcId_ARGUS_RPC_ID_GET_FILE_ACTIVITY:
-		return "ARGUS_RPC_ID_GET_FILE_ACTIVITY"
-	case ArgusRpcId_ARGUS_RPC_ID_GET_SESSION_TIMELINE:
-		return "ARGUS_RPC_ID_GET_SESSION_TIMELINE"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_FILE_ACTIVITY:
+		return "ARGUS_RPC_ID_LIST_FILE_ACTIVITY"
+	case ArgusRpcId_ARGUS_RPC_ID_LIST_SESSION_TIMELINE:
+		return "ARGUS_RPC_ID_LIST_SESSION_TIMELINE"
 	case ArgusRpcId_ARGUS_RPC_ID_GET_AGENT_TREE:
 		return "ARGUS_RPC_ID_GET_AGENT_TREE"
 	case ArgusRpcId_ARGUS_RPC_ID_GET_SYSTEM_STATS:
@@ -2101,7 +2100,7 @@ func GetDashboardResponseToJSON(v *GetDashboardResponse) ([]byte, error) {
 			result := make([]json.RawMessage, 0, len(v.TopActive))
 			for _, item := range v.TopActive {
 				if item != nil {
-					if data, err := claudesensor.SessionSummaryToJSON(item); err == nil {
+					if data, err := agentsensor.SessionSummaryToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -2134,7 +2133,7 @@ func GetDashboardResponseToJSONPretty(v *GetDashboardResponse) ([]byte, error) {
 			result := make([]json.RawMessage, 0, len(v.TopActive))
 			for _, item := range v.TopActive {
 				if item != nil {
-					if data, err := claudesensor.SessionSummaryToJSON(item); err == nil {
+					if data, err := agentsensor.SessionSummaryToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -2214,10 +2213,10 @@ func GetDashboardResponseFromJSON(data []byte) (*GetDashboardResponse, error) {
 	result.TotalSessionsToday = raw.TotalSessionsToday
 	// Parse repeated message field: TopActive
 	if len(raw.TopActive) > 0 {
-		result.TopActive = make([]*claudesensor.SessionSummary, 0, len(raw.TopActive))
+		result.TopActive = make([]*agentsensor.SessionSummary, 0, len(raw.TopActive))
 		for _, itemJSON := range raw.TopActive {
 			if len(itemJSON) > 0 {
-				parsed, err := claudesensor.SessionSummaryFromJSON(itemJSON)
+				parsed, err := agentsensor.SessionSummaryFromJSON(itemJSON)
 				if err == nil {
 					result.TopActive = append(result.TopActive, parsed)
 				}
@@ -2444,7 +2443,7 @@ func ListActiveSessionsResponseToJSON(v *ListActiveSessionsResponse) ([]byte, er
 			result := make([]json.RawMessage, 0, len(v.Sessions))
 			for _, item := range v.Sessions {
 				if item != nil {
-					if data, err := claudesensor.SessionSummaryToJSON(item); err == nil {
+					if data, err := agentsensor.SessionSummaryToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -2473,7 +2472,7 @@ func ListActiveSessionsResponseToJSONPretty(v *ListActiveSessionsResponse) ([]by
 			result := make([]json.RawMessage, 0, len(v.Sessions))
 			for _, item := range v.Sessions {
 				if item != nil {
-					if data, err := claudesensor.SessionSummaryToJSON(item); err == nil {
+					if data, err := agentsensor.SessionSummaryToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -2549,10 +2548,10 @@ func ListActiveSessionsResponseFromJSON(data []byte) (*ListActiveSessionsRespons
 	result := &ListActiveSessionsResponse{}
 	// Parse repeated message field: Sessions
 	if len(raw.Sessions) > 0 {
-		result.Sessions = make([]*claudesensor.SessionSummary, 0, len(raw.Sessions))
+		result.Sessions = make([]*agentsensor.SessionSummary, 0, len(raw.Sessions))
 		for _, itemJSON := range raw.Sessions {
 			if len(itemJSON) > 0 {
-				parsed, err := claudesensor.SessionSummaryFromJSON(itemJSON)
+				parsed, err := agentsensor.SessionSummaryFromJSON(itemJSON)
 				if err == nil {
 					result.Sessions = append(result.Sessions, parsed)
 				}
@@ -2770,7 +2769,7 @@ func GetSessionDetailResponseToJSON(v *GetSessionDetailResponse) ([]byte, error)
 			if v.Summary == nil {
 				return nil
 			}
-			data, _ := claudesensor.SessionSummaryToJSON(v.Summary)
+			data, _ := agentsensor.SessionSummaryToJSON(v.Summary)
 			return data
 		}(),
 		RecentEvents: func() []json.RawMessage {
@@ -2780,7 +2779,7 @@ func GetSessionDetailResponseToJSON(v *GetSessionDetailResponse) ([]byte, error)
 			result := make([]json.RawMessage, 0, len(v.RecentEvents))
 			for _, item := range v.RecentEvents {
 				if item != nil {
-					if data, err := claudesensor.SensorEventToJSON(item); err == nil {
+					if data, err := agentsensor.AgentEventToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -2805,7 +2804,7 @@ func GetSessionDetailResponseToJSONPretty(v *GetSessionDetailResponse) ([]byte, 
 			if v.Summary == nil {
 				return nil
 			}
-			data, _ := claudesensor.SessionSummaryToJSON(v.Summary)
+			data, _ := agentsensor.SessionSummaryToJSON(v.Summary)
 			return data
 		}(),
 		RecentEvents: func() []json.RawMessage {
@@ -2815,7 +2814,7 @@ func GetSessionDetailResponseToJSONPretty(v *GetSessionDetailResponse) ([]byte, 
 			result := make([]json.RawMessage, 0, len(v.RecentEvents))
 			for _, item := range v.RecentEvents {
 				if item != nil {
-					if data, err := claudesensor.SensorEventToJSON(item); err == nil {
+					if data, err := agentsensor.AgentEventToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -2890,17 +2889,17 @@ func GetSessionDetailResponseFromJSON(data []byte) (*GetSessionDetailResponse, e
 	result := &GetSessionDetailResponse{}
 	// Parse message field: Summary
 	if len(raw.Summary) > 0 {
-		parsed, err := claudesensor.SessionSummaryFromJSON(raw.Summary)
+		parsed, err := agentsensor.SessionSummaryFromJSON(raw.Summary)
 		if err == nil {
 			result.Summary = parsed
 		}
 	}
 	// Parse repeated message field: RecentEvents
 	if len(raw.RecentEvents) > 0 {
-		result.RecentEvents = make([]*claudesensor.SensorEvent, 0, len(raw.RecentEvents))
+		result.RecentEvents = make([]*agentsensor.AgentEvent, 0, len(raw.RecentEvents))
 		for _, itemJSON := range raw.RecentEvents {
 			if len(itemJSON) > 0 {
-				parsed, err := claudesensor.SensorEventFromJSON(itemJSON)
+				parsed, err := agentsensor.AgentEventFromJSON(itemJSON)
 				if err == nil {
 					result.RecentEvents = append(result.RecentEvents, parsed)
 				}
@@ -2955,7 +2954,7 @@ func GetSessionDetailResponseToTOML(v *GetSessionDetailResponse) ([]byte, error)
 // GetUserActivityRequestJSON represents GetUserActivityRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type getuseractivityrequestJSON struct {
-	Email          string `json:"email,omitempty"`
+	SpiffeId       string `json:"spiffe_id,omitempty"`
 	TimeRangeHours int32  `json:"time_range_hours,omitempty"`
 	TraceId        string `json:"trace_id,omitempty"`
 	Noop           bool   `json:"noop,omitempty"`
@@ -2969,7 +2968,7 @@ func GetUserActivityRequestToJSON(v *GetUserActivityRequest) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := getuseractivityrequestJSON{
-		Email:          v.Email,
+		SpiffeId:       v.SpiffeId,
 		TimeRangeHours: v.TimeRangeHours,
 		TraceId:        v.TraceId,
 		Noop:           v.Noop,
@@ -2985,7 +2984,7 @@ func GetUserActivityRequestToJSONPretty(v *GetUserActivityRequest) ([]byte, erro
 	}
 	// Convert to JSON helper struct with string enums
 	helper := getuseractivityrequestJSON{
-		Email:          v.Email,
+		SpiffeId:       v.SpiffeId,
 		TimeRangeHours: v.TimeRangeHours,
 		TraceId:        v.TraceId,
 		Noop:           v.Noop,
@@ -3053,7 +3052,7 @@ func GetUserActivityRequestFromJSON(data []byte) (*GetUserActivityRequest, error
 	}
 	// Build result with parsed enums
 	result := &GetUserActivityRequest{}
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	result.TimeRangeHours = raw.TimeRangeHours
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
@@ -3126,7 +3125,7 @@ func GetUserActivityResponseToJSON(v *GetUserActivityResponse) ([]byte, error) {
 			result := make([]json.RawMessage, 0, len(v.Sessions))
 			for _, item := range v.Sessions {
 				if item != nil {
-					if data, err := claudesensor.SessionSummaryToJSON(item); err == nil {
+					if data, err := agentsensor.SessionSummaryToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -3157,7 +3156,7 @@ func GetUserActivityResponseToJSONPretty(v *GetUserActivityResponse) ([]byte, er
 			result := make([]json.RawMessage, 0, len(v.Sessions))
 			for _, item := range v.Sessions {
 				if item != nil {
-					if data, err := claudesensor.SessionSummaryToJSON(item); err == nil {
+					if data, err := agentsensor.SessionSummaryToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -3235,10 +3234,10 @@ func GetUserActivityResponseFromJSON(data []byte) (*GetUserActivityResponse, err
 	result := &GetUserActivityResponse{}
 	// Parse repeated message field: Sessions
 	if len(raw.Sessions) > 0 {
-		result.Sessions = make([]*claudesensor.SessionSummary, 0, len(raw.Sessions))
+		result.Sessions = make([]*agentsensor.SessionSummary, 0, len(raw.Sessions))
 		for _, itemJSON := range raw.Sessions {
 			if len(itemJSON) > 0 {
-				parsed, err := claudesensor.SessionSummaryFromJSON(itemJSON)
+				parsed, err := agentsensor.SessionSummaryFromJSON(itemJSON)
 				if err == nil {
 					result.Sessions = append(result.Sessions, parsed)
 				}
@@ -3469,7 +3468,7 @@ func SearchSessionsResponseToJSON(v *SearchSessionsResponse) ([]byte, error) {
 			result := make([]json.RawMessage, 0, len(v.Sessions))
 			for _, item := range v.Sessions {
 				if item != nil {
-					if data, err := claudesensor.SessionSummaryToJSON(item); err == nil {
+					if data, err := agentsensor.SessionSummaryToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -3498,7 +3497,7 @@ func SearchSessionsResponseToJSONPretty(v *SearchSessionsResponse) ([]byte, erro
 			result := make([]json.RawMessage, 0, len(v.Sessions))
 			for _, item := range v.Sessions {
 				if item != nil {
-					if data, err := claudesensor.SessionSummaryToJSON(item); err == nil {
+					if data, err := agentsensor.SessionSummaryToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -3574,10 +3573,10 @@ func SearchSessionsResponseFromJSON(data []byte) (*SearchSessionsResponse, error
 	result := &SearchSessionsResponse{}
 	// Parse repeated message field: Sessions
 	if len(raw.Sessions) > 0 {
-		result.Sessions = make([]*claudesensor.SessionSummary, 0, len(raw.Sessions))
+		result.Sessions = make([]*agentsensor.SessionSummary, 0, len(raw.Sessions))
 		for _, itemJSON := range raw.Sessions {
 			if len(itemJSON) > 0 {
-				parsed, err := claudesensor.SessionSummaryFromJSON(itemJSON)
+				parsed, err := agentsensor.SessionSummaryFromJSON(itemJSON)
 				if err == nil {
 					result.Sessions = append(result.Sessions, parsed)
 				}
@@ -4649,8 +4648,10 @@ func ScratchpadDeleteResponseToTOML(v *ScratchpadDeleteResponse) ([]byte, error)
 // ScratchpadListRequestJSON represents ScratchpadListRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type scratchpadlistrequestJSON struct {
-	TraceId string `json:"trace_id,omitempty"`
-	Noop    bool   `json:"noop,omitempty"`
+	PageToken string `json:"page_token,omitempty"`
+	PageSize  int32  `json:"page_size,omitempty"`
+	TraceId   string `json:"trace_id,omitempty"`
+	Noop      bool   `json:"noop,omitempty"`
 }
 
 // ScratchpadListRequestToJSON converts ScratchpadListRequest to JSON bytes.
@@ -4661,8 +4662,10 @@ func ScratchpadListRequestToJSON(v *ScratchpadListRequest) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := scratchpadlistrequestJSON{
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		PageToken: v.PageToken,
+		PageSize:  v.PageSize,
+		TraceId:   v.TraceId,
+		Noop:      v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -4675,8 +4678,10 @@ func ScratchpadListRequestToJSONPretty(v *ScratchpadListRequest) ([]byte, error)
 	}
 	// Convert to JSON helper struct with string enums
 	helper := scratchpadlistrequestJSON{
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		PageToken: v.PageToken,
+		PageSize:  v.PageSize,
+		TraceId:   v.TraceId,
+		Noop:      v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -4741,6 +4746,8 @@ func ScratchpadListRequestFromJSON(data []byte) (*ScratchpadListRequest, error) 
 	}
 	// Build result with parsed enums
 	result := &ScratchpadListRequest{}
+	result.PageToken = raw.PageToken
+	result.PageSize = raw.PageSize
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -4789,9 +4796,10 @@ func ScratchpadListRequestToTOML(v *ScratchpadListRequest) ([]byte, error) {
 // ScratchpadListResponseJSON represents ScratchpadListResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type scratchpadlistresponseJSON struct {
-	Entries []json.RawMessage `json:"entries,omitempty"`
-	TraceId string            `json:"trace_id,omitempty"`
-	Noop    bool              `json:"noop,omitempty"`
+	Entries       []json.RawMessage `json:"entries,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // ScratchpadListResponseToJSON converts ScratchpadListResponse to JSON bytes.
@@ -4816,8 +4824,9 @@ func ScratchpadListResponseToJSON(v *ScratchpadListResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -4844,8 +4853,9 @@ func ScratchpadListResponseToJSONPretty(v *ScratchpadListResponse) ([]byte, erro
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -4922,6 +4932,7 @@ func ScratchpadListResponseFromJSON(data []byte) (*ScratchpadListResponse, error
 			}
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -5818,7 +5829,7 @@ func WatchSessionDetailRequestToTOML(v *WatchSessionDetailRequest) ([]byte, erro
 // WatchUserActivityRequestJSON represents WatchUserActivityRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type watchuseractivityrequestJSON struct {
-	Email          string `json:"email,omitempty"`
+	SpiffeId       string `json:"spiffe_id,omitempty"`
 	TimeRangeHours int32  `json:"time_range_hours,omitempty"`
 	TraceId        string `json:"trace_id,omitempty"`
 	Noop           bool   `json:"noop,omitempty"`
@@ -5832,7 +5843,7 @@ func WatchUserActivityRequestToJSON(v *WatchUserActivityRequest) ([]byte, error)
 	}
 	// Convert to JSON helper struct with string enums
 	helper := watchuseractivityrequestJSON{
-		Email:          v.Email,
+		SpiffeId:       v.SpiffeId,
 		TimeRangeHours: v.TimeRangeHours,
 		TraceId:        v.TraceId,
 		Noop:           v.Noop,
@@ -5848,7 +5859,7 @@ func WatchUserActivityRequestToJSONPretty(v *WatchUserActivityRequest) ([]byte, 
 	}
 	// Convert to JSON helper struct with string enums
 	helper := watchuseractivityrequestJSON{
-		Email:          v.Email,
+		SpiffeId:       v.SpiffeId,
 		TimeRangeHours: v.TimeRangeHours,
 		TraceId:        v.TraceId,
 		Noop:           v.Noop,
@@ -5916,7 +5927,7 @@ func WatchUserActivityRequestFromJSON(data []byte) (*WatchUserActivityRequest, e
 	}
 	// Build result with parsed enums
 	result := &WatchUserActivityRequest{}
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	result.TimeRangeHours = raw.TimeRangeHours
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
@@ -6390,7 +6401,7 @@ func WatchScratchpadReadRequestToTOML(v *WatchScratchpadReadRequest) ([]byte, er
 // UserSummaryJSON represents UserSummary in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type usersummaryJSON struct {
-	Email              string `json:"email,omitempty"`
+	SpiffeId           string `json:"spiffe_id,omitempty"`
 	TotalSessions      int64  `json:"total_sessions,omitempty"`
 	TotalEvents        int64  `json:"total_events,omitempty"`
 	FirstSeenMs        int64  `json:"first_seen_ms,omitempty"`
@@ -6409,7 +6420,7 @@ func UserSummaryToJSON(v *UserSummary) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := usersummaryJSON{
-		Email:              v.Email,
+		SpiffeId:           v.SpiffeId,
 		TotalSessions:      v.TotalSessions,
 		TotalEvents:        v.TotalEvents,
 		FirstSeenMs:        v.FirstSeenMs,
@@ -6430,7 +6441,7 @@ func UserSummaryToJSONPretty(v *UserSummary) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := usersummaryJSON{
-		Email:              v.Email,
+		SpiffeId:           v.SpiffeId,
 		TotalSessions:      v.TotalSessions,
 		TotalEvents:        v.TotalEvents,
 		FirstSeenMs:        v.FirstSeenMs,
@@ -6503,7 +6514,7 @@ func UserSummaryFromJSON(data []byte) (*UserSummary, error) {
 	}
 	// Build result with parsed enums
 	result := &UserSummary{}
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	result.TotalSessions = raw.TotalSessions
 	result.TotalEvents = raw.TotalEvents
 	result.FirstSeenMs = raw.FirstSeenMs
@@ -6577,7 +6588,7 @@ func ListUsersRequestToJSON(v *ListUsersRequest) ([]byte, error) {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		PageToken: v.PageToken,
@@ -6600,7 +6611,7 @@ func ListUsersRequestToJSONPretty(v *ListUsersRequest) ([]byte, error) {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		PageToken: v.PageToken,
@@ -6673,7 +6684,7 @@ func ListUsersRequestFromJSON(data []byte) (*ListUsersRequest, error) {
 	result := &ListUsersRequest{}
 	// Parse message field: TimeRange
 	if len(raw.TimeRange) > 0 {
-		parsed, err := claudesensor.EventTimeRangeFromJSON(raw.TimeRange)
+		parsed, err := agentsensor.EventTimeRangeFromJSON(raw.TimeRange)
 		if err == nil {
 			result.TimeRange = parsed
 		}
@@ -7217,7 +7228,7 @@ func ModelUseStatToTOML(v *ModelUseStat) ([]byte, error) {
 // GetUserProfileRequestJSON represents GetUserProfileRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type getuserprofilerequestJSON struct {
-	Email     string          `json:"email,omitempty"`
+	SpiffeId  string          `json:"spiffe_id,omitempty"`
 	TimeRange json.RawMessage `json:"time_range,omitempty"`
 	TraceId   string          `json:"trace_id,omitempty"`
 	Noop      bool            `json:"noop,omitempty"`
@@ -7231,12 +7242,12 @@ func GetUserProfileRequestToJSON(v *GetUserProfileRequest) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := getuserprofilerequestJSON{
-		Email: v.Email,
+		SpiffeId: v.SpiffeId,
 		TimeRange: func() json.RawMessage {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		TraceId: v.TraceId,
@@ -7253,12 +7264,12 @@ func GetUserProfileRequestToJSONPretty(v *GetUserProfileRequest) ([]byte, error)
 	}
 	// Convert to JSON helper struct with string enums
 	helper := getuserprofilerequestJSON{
-		Email: v.Email,
+		SpiffeId: v.SpiffeId,
 		TimeRange: func() json.RawMessage {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		TraceId: v.TraceId,
@@ -7327,10 +7338,10 @@ func GetUserProfileRequestFromJSON(data []byte) (*GetUserProfileRequest, error) 
 	}
 	// Build result with parsed enums
 	result := &GetUserProfileRequest{}
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	// Parse message field: TimeRange
 	if len(raw.TimeRange) > 0 {
-		parsed, err := claudesensor.EventTimeRangeFromJSON(raw.TimeRange)
+		parsed, err := agentsensor.EventTimeRangeFromJSON(raw.TimeRange)
 		if err == nil {
 			result.TimeRange = parsed
 		}
@@ -7383,7 +7394,7 @@ func GetUserProfileRequestToTOML(v *GetUserProfileRequest) ([]byte, error) {
 // GetUserProfileResponseJSON represents GetUserProfileResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type getuserprofileresponseJSON struct {
-	Email                string            `json:"email,omitempty"`
+	SpiffeId             string            `json:"spiffe_id,omitempty"`
 	FirstSeenMs          int64             `json:"first_seen_ms,omitempty"`
 	LastSeenMs           int64             `json:"last_seen_ms,omitempty"`
 	TotalSessions        int64             `json:"total_sessions,omitempty"`
@@ -7408,7 +7419,7 @@ func GetUserProfileResponseToJSON(v *GetUserProfileResponse) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := getuserprofileresponseJSON{
-		Email:                v.Email,
+		SpiffeId:             v.SpiffeId,
 		FirstSeenMs:          v.FirstSeenMs,
 		LastSeenMs:           v.LastSeenMs,
 		TotalSessions:        v.TotalSessions,
@@ -7461,7 +7472,7 @@ func GetUserProfileResponseToJSONPretty(v *GetUserProfileResponse) ([]byte, erro
 	}
 	// Convert to JSON helper struct with string enums
 	helper := getuserprofileresponseJSON{
-		Email:                v.Email,
+		SpiffeId:             v.SpiffeId,
 		FirstSeenMs:          v.FirstSeenMs,
 		LastSeenMs:           v.LastSeenMs,
 		TotalSessions:        v.TotalSessions,
@@ -7566,7 +7577,7 @@ func GetUserProfileResponseFromJSON(data []byte) (*GetUserProfileResponse, error
 	}
 	// Build result with parsed enums
 	result := &GetUserProfileResponse{}
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	result.FirstSeenMs = raw.FirstSeenMs
 	result.LastSeenMs = raw.LastSeenMs
 	result.TotalSessions = raw.TotalSessions
@@ -7649,7 +7660,7 @@ func GetUserProfileResponseToTOML(v *GetUserProfileResponse) ([]byte, error) {
 // WatchUserProfileRequestJSON represents WatchUserProfileRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type watchuserprofilerequestJSON struct {
-	Email     string          `json:"email,omitempty"`
+	SpiffeId  string          `json:"spiffe_id,omitempty"`
 	TimeRange json.RawMessage `json:"time_range,omitempty"`
 	TraceId   string          `json:"trace_id,omitempty"`
 	Noop      bool            `json:"noop,omitempty"`
@@ -7663,12 +7674,12 @@ func WatchUserProfileRequestToJSON(v *WatchUserProfileRequest) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := watchuserprofilerequestJSON{
-		Email: v.Email,
+		SpiffeId: v.SpiffeId,
 		TimeRange: func() json.RawMessage {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		TraceId: v.TraceId,
@@ -7685,12 +7696,12 @@ func WatchUserProfileRequestToJSONPretty(v *WatchUserProfileRequest) ([]byte, er
 	}
 	// Convert to JSON helper struct with string enums
 	helper := watchuserprofilerequestJSON{
-		Email: v.Email,
+		SpiffeId: v.SpiffeId,
 		TimeRange: func() json.RawMessage {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		TraceId: v.TraceId,
@@ -7759,10 +7770,10 @@ func WatchUserProfileRequestFromJSON(data []byte) (*WatchUserProfileRequest, err
 	}
 	// Build result with parsed enums
 	result := &WatchUserProfileRequest{}
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	// Parse message field: TimeRange
 	if len(raw.TimeRange) > 0 {
-		parsed, err := claudesensor.EventTimeRangeFromJSON(raw.TimeRange)
+		parsed, err := agentsensor.EventTimeRangeFromJSON(raw.TimeRange)
 		if err == nil {
 			result.TimeRange = parsed
 		}
@@ -7971,7 +7982,7 @@ func PromptBucketToTOML(v *PromptBucket) ([]byte, error) {
 // GetUserTokenStatsRequestJSON represents GetUserTokenStatsRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type getusertokenstatsrequestJSON struct {
-	Email         string          `json:"email,omitempty"`
+	SpiffeId      string          `json:"spiffe_id,omitempty"`
 	TimeRange     json.RawMessage `json:"time_range,omitempty"`
 	BucketSeconds int32           `json:"bucket_seconds,omitempty"`
 	TraceId       string          `json:"trace_id,omitempty"`
@@ -7986,12 +7997,12 @@ func GetUserTokenStatsRequestToJSON(v *GetUserTokenStatsRequest) ([]byte, error)
 	}
 	// Convert to JSON helper struct with string enums
 	helper := getusertokenstatsrequestJSON{
-		Email: v.Email,
+		SpiffeId: v.SpiffeId,
 		TimeRange: func() json.RawMessage {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		BucketSeconds: v.BucketSeconds,
@@ -8009,12 +8020,12 @@ func GetUserTokenStatsRequestToJSONPretty(v *GetUserTokenStatsRequest) ([]byte, 
 	}
 	// Convert to JSON helper struct with string enums
 	helper := getusertokenstatsrequestJSON{
-		Email: v.Email,
+		SpiffeId: v.SpiffeId,
 		TimeRange: func() json.RawMessage {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		BucketSeconds: v.BucketSeconds,
@@ -8084,10 +8095,10 @@ func GetUserTokenStatsRequestFromJSON(data []byte) (*GetUserTokenStatsRequest, e
 	}
 	// Build result with parsed enums
 	result := &GetUserTokenStatsRequest{}
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	// Parse message field: TimeRange
 	if len(raw.TimeRange) > 0 {
-		parsed, err := claudesensor.EventTimeRangeFromJSON(raw.TimeRange)
+		parsed, err := agentsensor.EventTimeRangeFromJSON(raw.TimeRange)
 		if err == nil {
 			result.TimeRange = parsed
 		}
@@ -8141,7 +8152,7 @@ func GetUserTokenStatsRequestToTOML(v *GetUserTokenStatsRequest) ([]byte, error)
 // GetUserTokenStatsResponseJSON represents GetUserTokenStatsResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type getusertokenstatsresponseJSON struct {
-	Email             string            `json:"email,omitempty"`
+	SpiffeId          string            `json:"spiffe_id,omitempty"`
 	TotalPrompts      int64             `json:"total_prompts,omitempty"`
 	TotalPromptLength int64             `json:"total_prompt_length,omitempty"`
 	AvgPromptLength   int64             `json:"avg_prompt_length,omitempty"`
@@ -8160,7 +8171,7 @@ func GetUserTokenStatsResponseToJSON(v *GetUserTokenStatsResponse) ([]byte, erro
 	}
 	// Convert to JSON helper struct with string enums
 	helper := getusertokenstatsresponseJSON{
-		Email:             v.Email,
+		SpiffeId:          v.SpiffeId,
 		TotalPrompts:      v.TotalPrompts,
 		TotalPromptLength: v.TotalPromptLength,
 		AvgPromptLength:   v.AvgPromptLength,
@@ -8194,7 +8205,7 @@ func GetUserTokenStatsResponseToJSONPretty(v *GetUserTokenStatsResponse) ([]byte
 	}
 	// Convert to JSON helper struct with string enums
 	helper := getusertokenstatsresponseJSON{
-		Email:             v.Email,
+		SpiffeId:          v.SpiffeId,
 		TotalPrompts:      v.TotalPrompts,
 		TotalPromptLength: v.TotalPromptLength,
 		AvgPromptLength:   v.AvgPromptLength,
@@ -8280,7 +8291,7 @@ func GetUserTokenStatsResponseFromJSON(data []byte) (*GetUserTokenStatsResponse,
 	}
 	// Build result with parsed enums
 	result := &GetUserTokenStatsResponse{}
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	result.TotalPrompts = raw.TotalPrompts
 	result.TotalPromptLength = raw.TotalPromptLength
 	result.AvgPromptLength = raw.AvgPromptLength
@@ -8353,7 +8364,7 @@ type commitrecordJSON struct {
 	Command          string `json:"command,omitempty"`
 	Output           string `json:"output,omitempty"`
 	Succeeded        bool   `json:"succeeded,omitempty"`
-	Email            string `json:"email,omitempty"`
+	SpiffeId         string `json:"spiffe_id,omitempty"`
 	EventId          string `json:"event_id,omitempty"`
 	TraceId          string `json:"trace_id,omitempty"`
 	Noop             bool   `json:"noop,omitempty"`
@@ -8374,7 +8385,7 @@ func CommitRecordToJSON(v *CommitRecord) ([]byte, error) {
 		Command:          v.Command,
 		Output:           v.Output,
 		Succeeded:        v.Succeeded,
-		Email:            v.Email,
+		SpiffeId:         v.SpiffeId,
 		EventId:          v.EventId,
 		TraceId:          v.TraceId,
 		Noop:             v.Noop,
@@ -8397,7 +8408,7 @@ func CommitRecordToJSONPretty(v *CommitRecord) ([]byte, error) {
 		Command:          v.Command,
 		Output:           v.Output,
 		Succeeded:        v.Succeeded,
-		Email:            v.Email,
+		SpiffeId:         v.SpiffeId,
 		EventId:          v.EventId,
 		TraceId:          v.TraceId,
 		Noop:             v.Noop,
@@ -8472,7 +8483,7 @@ func CommitRecordFromJSON(data []byte) (*CommitRecord, error) {
 	result.Command = raw.Command
 	result.Output = raw.Output
 	result.Succeeded = raw.Succeeded
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	result.EventId = raw.EventId
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
@@ -8522,9 +8533,11 @@ func CommitRecordToTOML(v *CommitRecord) ([]byte, error) {
 // GetUserCommitActivityRequestJSON represents GetUserCommitActivityRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type getusercommitactivityrequestJSON struct {
-	Email     string          `json:"email,omitempty"`
+	SpiffeId  string          `json:"spiffe_id,omitempty"`
 	TimeRange json.RawMessage `json:"time_range,omitempty"`
 	Limit     int32           `json:"limit,omitempty"`
+	PageToken string          `json:"page_token,omitempty"`
+	PageSize  int32           `json:"page_size,omitempty"`
 	TraceId   string          `json:"trace_id,omitempty"`
 	Noop      bool            `json:"noop,omitempty"`
 }
@@ -8537,17 +8550,19 @@ func GetUserCommitActivityRequestToJSON(v *GetUserCommitActivityRequest) ([]byte
 	}
 	// Convert to JSON helper struct with string enums
 	helper := getusercommitactivityrequestJSON{
-		Email: v.Email,
+		SpiffeId: v.SpiffeId,
 		TimeRange: func() json.RawMessage {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
-		Limit:   v.Limit,
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		Limit:     v.Limit,
+		PageToken: v.PageToken,
+		PageSize:  v.PageSize,
+		TraceId:   v.TraceId,
+		Noop:      v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -8560,17 +8575,19 @@ func GetUserCommitActivityRequestToJSONPretty(v *GetUserCommitActivityRequest) (
 	}
 	// Convert to JSON helper struct with string enums
 	helper := getusercommitactivityrequestJSON{
-		Email: v.Email,
+		SpiffeId: v.SpiffeId,
 		TimeRange: func() json.RawMessage {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
-		Limit:   v.Limit,
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		Limit:     v.Limit,
+		PageToken: v.PageToken,
+		PageSize:  v.PageSize,
+		TraceId:   v.TraceId,
+		Noop:      v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -8635,15 +8652,17 @@ func GetUserCommitActivityRequestFromJSON(data []byte) (*GetUserCommitActivityRe
 	}
 	// Build result with parsed enums
 	result := &GetUserCommitActivityRequest{}
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	// Parse message field: TimeRange
 	if len(raw.TimeRange) > 0 {
-		parsed, err := claudesensor.EventTimeRangeFromJSON(raw.TimeRange)
+		parsed, err := agentsensor.EventTimeRangeFromJSON(raw.TimeRange)
 		if err == nil {
 			result.TimeRange = parsed
 		}
 	}
 	result.Limit = raw.Limit
+	result.PageToken = raw.PageToken
+	result.PageSize = raw.PageSize
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -8692,9 +8711,10 @@ func GetUserCommitActivityRequestToTOML(v *GetUserCommitActivityRequest) ([]byte
 // GetUserCommitActivityResponseJSON represents GetUserCommitActivityResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type getusercommitactivityresponseJSON struct {
-	Commits []json.RawMessage `json:"commits,omitempty"`
-	TraceId string            `json:"trace_id,omitempty"`
-	Noop    bool              `json:"noop,omitempty"`
+	Commits       []json.RawMessage `json:"commits,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // GetUserCommitActivityResponseToJSON converts GetUserCommitActivityResponse to JSON bytes.
@@ -8719,8 +8739,9 @@ func GetUserCommitActivityResponseToJSON(v *GetUserCommitActivityResponse) ([]by
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -8747,8 +8768,9 @@ func GetUserCommitActivityResponseToJSONPretty(v *GetUserCommitActivityResponse)
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -8825,6 +8847,7 @@ func GetUserCommitActivityResponseFromJSON(data []byte) (*GetUserCommitActivityR
 			}
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -8875,7 +8898,7 @@ func GetUserCommitActivityResponseToTOML(v *GetUserCommitActivityResponse) ([]by
 type fileactivityrecordJSON struct {
 	FilePath     string `json:"file_path,omitempty"`
 	Operation    string `json:"operation,omitempty"`
-	Email        string `json:"email,omitempty"`
+	SpiffeId     string `json:"spiffe_id,omitempty"`
 	SessionId    string `json:"session_id,omitempty"`
 	AgentId      string `json:"agent_id,omitempty"`
 	Language     string `json:"language,omitempty"`
@@ -8895,8 +8918,8 @@ func FileActivityRecordToJSON(v *FileActivityRecord) ([]byte, error) {
 	// Convert to JSON helper struct with string enums
 	helper := fileactivityrecordJSON{
 		FilePath:     v.FilePath,
-		Operation:    claudesensor.FileOperationToString(v.Operation),
-		Email:        v.Email,
+		Operation:    agentsensor.FileOperationToString(v.Operation),
+		SpiffeId:     v.SpiffeId,
 		SessionId:    v.SessionId,
 		AgentId:      v.AgentId,
 		Language:     v.Language,
@@ -8918,8 +8941,8 @@ func FileActivityRecordToJSONPretty(v *FileActivityRecord) ([]byte, error) {
 	// Convert to JSON helper struct with string enums
 	helper := fileactivityrecordJSON{
 		FilePath:     v.FilePath,
-		Operation:    claudesensor.FileOperationToString(v.Operation),
-		Email:        v.Email,
+		Operation:    agentsensor.FileOperationToString(v.Operation),
+		SpiffeId:     v.SpiffeId,
 		SessionId:    v.SessionId,
 		AgentId:      v.AgentId,
 		Language:     v.Language,
@@ -8995,11 +9018,11 @@ func FileActivityRecordFromJSON(data []byte) (*FileActivityRecord, error) {
 	result.FilePath = raw.FilePath
 	// Parse enum field: Operation
 	if raw.Operation != "" {
-		if parsed, err := claudesensor.ParseFileOperation(raw.Operation); err == nil {
+		if parsed, err := agentsensor.ParseFileOperation(raw.Operation); err == nil {
 			result.Operation = parsed
 		}
 	}
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	result.SessionId = raw.SessionId
 	result.AgentId = raw.AgentId
 	result.Language = raw.Language
@@ -9054,13 +9077,13 @@ func FileActivityRecordToTOML(v *FileActivityRecord) ([]byte, error) {
 // GetFileActivityRequestJSON represents GetFileActivityRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type getfileactivityrequestJSON struct {
-	EmailFilter string          `json:"email_filter,omitempty"`
-	PathPrefix  string          `json:"path_prefix,omitempty"`
-	TimeRange   json.RawMessage `json:"time_range,omitempty"`
-	PageToken   string          `json:"page_token,omitempty"`
-	PageSize    int32           `json:"page_size,omitempty"`
-	TraceId     string          `json:"trace_id,omitempty"`
-	Noop        bool            `json:"noop,omitempty"`
+	SpiffeIdFilter string          `json:"spiffe_id_filter,omitempty"`
+	PathPrefix     string          `json:"path_prefix,omitempty"`
+	TimeRange      json.RawMessage `json:"time_range,omitempty"`
+	PageToken      string          `json:"page_token,omitempty"`
+	PageSize       int32           `json:"page_size,omitempty"`
+	TraceId        string          `json:"trace_id,omitempty"`
+	Noop           bool            `json:"noop,omitempty"`
 }
 
 // GetFileActivityRequestToJSON converts GetFileActivityRequest to JSON bytes.
@@ -9071,13 +9094,13 @@ func GetFileActivityRequestToJSON(v *GetFileActivityRequest) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := getfileactivityrequestJSON{
-		EmailFilter: v.EmailFilter,
-		PathPrefix:  v.PathPrefix,
+		SpiffeIdFilter: v.SpiffeIdFilter,
+		PathPrefix:     v.PathPrefix,
 		TimeRange: func() json.RawMessage {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		PageToken: v.PageToken,
@@ -9096,13 +9119,13 @@ func GetFileActivityRequestToJSONPretty(v *GetFileActivityRequest) ([]byte, erro
 	}
 	// Convert to JSON helper struct with string enums
 	helper := getfileactivityrequestJSON{
-		EmailFilter: v.EmailFilter,
-		PathPrefix:  v.PathPrefix,
+		SpiffeIdFilter: v.SpiffeIdFilter,
+		PathPrefix:     v.PathPrefix,
 		TimeRange: func() json.RawMessage {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		PageToken: v.PageToken,
@@ -9173,11 +9196,11 @@ func GetFileActivityRequestFromJSON(data []byte) (*GetFileActivityRequest, error
 	}
 	// Build result with parsed enums
 	result := &GetFileActivityRequest{}
-	result.EmailFilter = raw.EmailFilter
+	result.SpiffeIdFilter = raw.SpiffeIdFilter
 	result.PathPrefix = raw.PathPrefix
 	// Parse message field: TimeRange
 	if len(raw.TimeRange) > 0 {
-		parsed, err := claudesensor.EventTimeRangeFromJSON(raw.TimeRange)
+		parsed, err := agentsensor.EventTimeRangeFromJSON(raw.TimeRange)
 		if err == nil {
 			result.TimeRange = parsed
 		}
@@ -9438,7 +9461,7 @@ func GetSessionTimelineRequestToJSON(v *GetSessionTimelineRequest) ([]byte, erro
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		PageToken: v.PageToken,
@@ -9462,7 +9485,7 @@ func GetSessionTimelineRequestToJSONPretty(v *GetSessionTimelineRequest) ([]byte
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		PageToken: v.PageToken,
@@ -9536,7 +9559,7 @@ func GetSessionTimelineRequestFromJSON(data []byte) (*GetSessionTimelineRequest,
 	result.SessionId = raw.SessionId
 	// Parse message field: TimeRange
 	if len(raw.TimeRange) > 0 {
-		parsed, err := claudesensor.EventTimeRangeFromJSON(raw.TimeRange)
+		parsed, err := agentsensor.EventTimeRangeFromJSON(raw.TimeRange)
 		if err == nil {
 			result.TimeRange = parsed
 		}
@@ -9613,7 +9636,7 @@ func GetSessionTimelineResponseToJSON(v *GetSessionTimelineResponse) ([]byte, er
 			result := make([]json.RawMessage, 0, len(v.Events))
 			for _, item := range v.Events {
 				if item != nil {
-					if data, err := claudesensor.SensorEventToJSON(item); err == nil {
+					if data, err := agentsensor.AgentEventToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -9643,7 +9666,7 @@ func GetSessionTimelineResponseToJSONPretty(v *GetSessionTimelineResponse) ([]by
 			result := make([]json.RawMessage, 0, len(v.Events))
 			for _, item := range v.Events {
 				if item != nil {
-					if data, err := claudesensor.SensorEventToJSON(item); err == nil {
+					if data, err := agentsensor.AgentEventToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -9720,10 +9743,10 @@ func GetSessionTimelineResponseFromJSON(data []byte) (*GetSessionTimelineRespons
 	result := &GetSessionTimelineResponse{}
 	// Parse repeated message field: Events
 	if len(raw.Events) > 0 {
-		result.Events = make([]*claudesensor.SensorEvent, 0, len(raw.Events))
+		result.Events = make([]*agentsensor.AgentEvent, 0, len(raw.Events))
 		for _, itemJSON := range raw.Events {
 			if len(itemJSON) > 0 {
-				parsed, err := claudesensor.SensorEventFromJSON(itemJSON)
+				parsed, err := agentsensor.AgentEventFromJSON(itemJSON)
 				if err == nil {
 					result.Events = append(result.Events, parsed)
 				}
@@ -10324,7 +10347,7 @@ func GetSystemStatsRequestToJSON(v *GetSystemStatsRequest) ([]byte, error) {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		TraceId: v.TraceId,
@@ -10345,7 +10368,7 @@ func GetSystemStatsRequestToJSONPretty(v *GetSystemStatsRequest) ([]byte, error)
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		TraceId: v.TraceId,
@@ -10416,7 +10439,7 @@ func GetSystemStatsRequestFromJSON(data []byte) (*GetSystemStatsRequest, error) 
 	result := &GetSystemStatsRequest{}
 	// Parse message field: TimeRange
 	if len(raw.TimeRange) > 0 {
-		parsed, err := claudesensor.EventTimeRangeFromJSON(raw.TimeRange)
+		parsed, err := agentsensor.EventTimeRangeFromJSON(raw.TimeRange)
 		if err == nil {
 			result.TimeRange = parsed
 		}
@@ -10670,7 +10693,7 @@ func WatchSystemStatsRequestToJSON(v *WatchSystemStatsRequest) ([]byte, error) {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		TraceId: v.TraceId,
@@ -10691,7 +10714,7 @@ func WatchSystemStatsRequestToJSONPretty(v *WatchSystemStatsRequest) ([]byte, er
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		TraceId: v.TraceId,
@@ -10762,7 +10785,7 @@ func WatchSystemStatsRequestFromJSON(data []byte) (*WatchSystemStatsRequest, err
 	result := &WatchSystemStatsRequest{}
 	// Parse message field: TimeRange
 	if len(raw.TimeRange) > 0 {
-		parsed, err := claudesensor.EventTimeRangeFromJSON(raw.TimeRange)
+		parsed, err := agentsensor.EventTimeRangeFromJSON(raw.TimeRange)
 		if err == nil {
 			result.TimeRange = parsed
 		}
@@ -10979,11 +11002,13 @@ func ToolStatToTOML(v *ToolStat) ([]byte, error) {
 // GetToolLeaderboardRequestJSON represents GetToolLeaderboardRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type gettoolleaderboardrequestJSON struct {
-	TimeRange   json.RawMessage `json:"time_range,omitempty"`
-	EmailFilter string          `json:"email_filter,omitempty"`
-	Limit       int32           `json:"limit,omitempty"`
-	TraceId     string          `json:"trace_id,omitempty"`
-	Noop        bool            `json:"noop,omitempty"`
+	TimeRange      json.RawMessage `json:"time_range,omitempty"`
+	SpiffeIdFilter string          `json:"spiffe_id_filter,omitempty"`
+	Limit          int32           `json:"limit,omitempty"`
+	PageToken      string          `json:"page_token,omitempty"`
+	PageSize       int32           `json:"page_size,omitempty"`
+	TraceId        string          `json:"trace_id,omitempty"`
+	Noop           bool            `json:"noop,omitempty"`
 }
 
 // GetToolLeaderboardRequestToJSON converts GetToolLeaderboardRequest to JSON bytes.
@@ -10998,13 +11023,15 @@ func GetToolLeaderboardRequestToJSON(v *GetToolLeaderboardRequest) ([]byte, erro
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
-		EmailFilter: v.EmailFilter,
-		Limit:       v.Limit,
-		TraceId:     v.TraceId,
-		Noop:        v.Noop,
+		SpiffeIdFilter: v.SpiffeIdFilter,
+		Limit:          v.Limit,
+		PageToken:      v.PageToken,
+		PageSize:       v.PageSize,
+		TraceId:        v.TraceId,
+		Noop:           v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -11021,13 +11048,15 @@ func GetToolLeaderboardRequestToJSONPretty(v *GetToolLeaderboardRequest) ([]byte
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
-		EmailFilter: v.EmailFilter,
-		Limit:       v.Limit,
-		TraceId:     v.TraceId,
-		Noop:        v.Noop,
+		SpiffeIdFilter: v.SpiffeIdFilter,
+		Limit:          v.Limit,
+		PageToken:      v.PageToken,
+		PageSize:       v.PageSize,
+		TraceId:        v.TraceId,
+		Noop:           v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -11094,13 +11123,15 @@ func GetToolLeaderboardRequestFromJSON(data []byte) (*GetToolLeaderboardRequest,
 	result := &GetToolLeaderboardRequest{}
 	// Parse message field: TimeRange
 	if len(raw.TimeRange) > 0 {
-		parsed, err := claudesensor.EventTimeRangeFromJSON(raw.TimeRange)
+		parsed, err := agentsensor.EventTimeRangeFromJSON(raw.TimeRange)
 		if err == nil {
 			result.TimeRange = parsed
 		}
 	}
-	result.EmailFilter = raw.EmailFilter
+	result.SpiffeIdFilter = raw.SpiffeIdFilter
 	result.Limit = raw.Limit
+	result.PageToken = raw.PageToken
+	result.PageSize = raw.PageSize
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -11149,9 +11180,10 @@ func GetToolLeaderboardRequestToTOML(v *GetToolLeaderboardRequest) ([]byte, erro
 // GetToolLeaderboardResponseJSON represents GetToolLeaderboardResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type gettoolleaderboardresponseJSON struct {
-	Tools   []json.RawMessage `json:"tools,omitempty"`
-	TraceId string            `json:"trace_id,omitempty"`
-	Noop    bool              `json:"noop,omitempty"`
+	Tools         []json.RawMessage `json:"tools,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // GetToolLeaderboardResponseToJSON converts GetToolLeaderboardResponse to JSON bytes.
@@ -11176,8 +11208,9 @@ func GetToolLeaderboardResponseToJSON(v *GetToolLeaderboardResponse) ([]byte, er
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -11204,8 +11237,9 @@ func GetToolLeaderboardResponseToJSONPretty(v *GetToolLeaderboardResponse) ([]by
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -11282,6 +11316,7 @@ func GetToolLeaderboardResponseFromJSON(data []byte) (*GetToolLeaderboardRespons
 			}
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -11330,11 +11365,11 @@ func GetToolLeaderboardResponseToTOML(v *GetToolLeaderboardResponse) ([]byte, er
 // WatchToolLeaderboardRequestJSON represents WatchToolLeaderboardRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type watchtoolleaderboardrequestJSON struct {
-	TimeRange   json.RawMessage `json:"time_range,omitempty"`
-	EmailFilter string          `json:"email_filter,omitempty"`
-	Limit       int32           `json:"limit,omitempty"`
-	TraceId     string          `json:"trace_id,omitempty"`
-	Noop        bool            `json:"noop,omitempty"`
+	TimeRange      json.RawMessage `json:"time_range,omitempty"`
+	SpiffeIdFilter string          `json:"spiffe_id_filter,omitempty"`
+	Limit          int32           `json:"limit,omitempty"`
+	TraceId        string          `json:"trace_id,omitempty"`
+	Noop           bool            `json:"noop,omitempty"`
 }
 
 // WatchToolLeaderboardRequestToJSON converts WatchToolLeaderboardRequest to JSON bytes.
@@ -11349,13 +11384,13 @@ func WatchToolLeaderboardRequestToJSON(v *WatchToolLeaderboardRequest) ([]byte, 
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
-		EmailFilter: v.EmailFilter,
-		Limit:       v.Limit,
-		TraceId:     v.TraceId,
-		Noop:        v.Noop,
+		SpiffeIdFilter: v.SpiffeIdFilter,
+		Limit:          v.Limit,
+		TraceId:        v.TraceId,
+		Noop:           v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -11372,13 +11407,13 @@ func WatchToolLeaderboardRequestToJSONPretty(v *WatchToolLeaderboardRequest) ([]
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
-		EmailFilter: v.EmailFilter,
-		Limit:       v.Limit,
-		TraceId:     v.TraceId,
-		Noop:        v.Noop,
+		SpiffeIdFilter: v.SpiffeIdFilter,
+		Limit:          v.Limit,
+		TraceId:        v.TraceId,
+		Noop:           v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -11445,12 +11480,12 @@ func WatchToolLeaderboardRequestFromJSON(data []byte) (*WatchToolLeaderboardRequ
 	result := &WatchToolLeaderboardRequest{}
 	// Parse message field: TimeRange
 	if len(raw.TimeRange) > 0 {
-		parsed, err := claudesensor.EventTimeRangeFromJSON(raw.TimeRange)
+		parsed, err := agentsensor.EventTimeRangeFromJSON(raw.TimeRange)
 		if err == nil {
 			result.TimeRange = parsed
 		}
 	}
-	result.EmailFilter = raw.EmailFilter
+	result.SpiffeIdFilter = raw.SpiffeIdFilter
 	result.Limit = raw.Limit
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
@@ -11657,6 +11692,8 @@ func ModelStatToTOML(v *ModelStat) ([]byte, error) {
 // MARKER: JSON helper struct generated from serial.go
 type getmodelusagerequestJSON struct {
 	TimeRange json.RawMessage `json:"time_range,omitempty"`
+	PageToken string          `json:"page_token,omitempty"`
+	PageSize  int32           `json:"page_size,omitempty"`
 	TraceId   string          `json:"trace_id,omitempty"`
 	Noop      bool            `json:"noop,omitempty"`
 }
@@ -11673,11 +11710,13 @@ func GetModelUsageRequestToJSON(v *GetModelUsageRequest) ([]byte, error) {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		PageToken: v.PageToken,
+		PageSize:  v.PageSize,
+		TraceId:   v.TraceId,
+		Noop:      v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -11694,11 +11733,13 @@ func GetModelUsageRequestToJSONPretty(v *GetModelUsageRequest) ([]byte, error) {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		PageToken: v.PageToken,
+		PageSize:  v.PageSize,
+		TraceId:   v.TraceId,
+		Noop:      v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -11765,11 +11806,13 @@ func GetModelUsageRequestFromJSON(data []byte) (*GetModelUsageRequest, error) {
 	result := &GetModelUsageRequest{}
 	// Parse message field: TimeRange
 	if len(raw.TimeRange) > 0 {
-		parsed, err := claudesensor.EventTimeRangeFromJSON(raw.TimeRange)
+		parsed, err := agentsensor.EventTimeRangeFromJSON(raw.TimeRange)
 		if err == nil {
 			result.TimeRange = parsed
 		}
 	}
+	result.PageToken = raw.PageToken
+	result.PageSize = raw.PageSize
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -11818,9 +11861,10 @@ func GetModelUsageRequestToTOML(v *GetModelUsageRequest) ([]byte, error) {
 // GetModelUsageResponseJSON represents GetModelUsageResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type getmodelusageresponseJSON struct {
-	Models  []json.RawMessage `json:"models,omitempty"`
-	TraceId string            `json:"trace_id,omitempty"`
-	Noop    bool              `json:"noop,omitempty"`
+	Models        []json.RawMessage `json:"models,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // GetModelUsageResponseToJSON converts GetModelUsageResponse to JSON bytes.
@@ -11845,8 +11889,9 @@ func GetModelUsageResponseToJSON(v *GetModelUsageResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -11873,8 +11918,9 @@ func GetModelUsageResponseToJSONPretty(v *GetModelUsageResponse) ([]byte, error)
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -11951,6 +11997,7 @@ func GetModelUsageResponseFromJSON(data []byte) (*GetModelUsageResponse, error) 
 			}
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -12162,6 +12209,8 @@ type getactivitytimeseriesrequestJSON struct {
 	TimeRange     json.RawMessage `json:"time_range,omitempty"`
 	BucketSeconds int32           `json:"bucket_seconds,omitempty"`
 	GroupBy       string          `json:"group_by,omitempty"`
+	PageToken     string          `json:"page_token,omitempty"`
+	PageSize      int32           `json:"page_size,omitempty"`
 	TraceId       string          `json:"trace_id,omitempty"`
 	Noop          bool            `json:"noop,omitempty"`
 }
@@ -12178,11 +12227,13 @@ func GetActivityTimeseriesRequestToJSON(v *GetActivityTimeseriesRequest) ([]byte
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		BucketSeconds: v.BucketSeconds,
 		GroupBy:       ActivityGroupByToString(v.GroupBy),
+		PageToken:     v.PageToken,
+		PageSize:      v.PageSize,
 		TraceId:       v.TraceId,
 		Noop:          v.Noop,
 	}
@@ -12201,11 +12252,13 @@ func GetActivityTimeseriesRequestToJSONPretty(v *GetActivityTimeseriesRequest) (
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		BucketSeconds: v.BucketSeconds,
 		GroupBy:       ActivityGroupByToString(v.GroupBy),
+		PageToken:     v.PageToken,
+		PageSize:      v.PageSize,
 		TraceId:       v.TraceId,
 		Noop:          v.Noop,
 	}
@@ -12274,7 +12327,7 @@ func GetActivityTimeseriesRequestFromJSON(data []byte) (*GetActivityTimeseriesRe
 	result := &GetActivityTimeseriesRequest{}
 	// Parse message field: TimeRange
 	if len(raw.TimeRange) > 0 {
-		parsed, err := claudesensor.EventTimeRangeFromJSON(raw.TimeRange)
+		parsed, err := agentsensor.EventTimeRangeFromJSON(raw.TimeRange)
 		if err == nil {
 			result.TimeRange = parsed
 		}
@@ -12286,6 +12339,8 @@ func GetActivityTimeseriesRequestFromJSON(data []byte) (*GetActivityTimeseriesRe
 			result.GroupBy = parsed
 		}
 	}
+	result.PageToken = raw.PageToken
+	result.PageSize = raw.PageSize
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -12334,9 +12389,10 @@ func GetActivityTimeseriesRequestToTOML(v *GetActivityTimeseriesRequest) ([]byte
 // GetActivityTimeseriesResponseJSON represents GetActivityTimeseriesResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type getactivitytimeseriesresponseJSON struct {
-	Buckets []json.RawMessage `json:"buckets,omitempty"`
-	TraceId string            `json:"trace_id,omitempty"`
-	Noop    bool              `json:"noop,omitempty"`
+	Buckets       []json.RawMessage `json:"buckets,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // GetActivityTimeseriesResponseToJSON converts GetActivityTimeseriesResponse to JSON bytes.
@@ -12361,8 +12417,9 @@ func GetActivityTimeseriesResponseToJSON(v *GetActivityTimeseriesResponse) ([]by
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -12389,8 +12446,9 @@ func GetActivityTimeseriesResponseToJSONPretty(v *GetActivityTimeseriesResponse)
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -12467,6 +12525,7 @@ func GetActivityTimeseriesResponseFromJSON(data []byte) (*GetActivityTimeseriesR
 			}
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -12515,7 +12574,7 @@ func GetActivityTimeseriesResponseToTOML(v *GetActivityTimeseriesResponse) ([]by
 // SearchEventsFilterJSON represents SearchEventsFilter in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type searcheventsfilterJSON struct {
-	Email           string          `json:"email,omitempty"`
+	SpiffeId        string          `json:"spiffe_id,omitempty"`
 	SessionId       string          `json:"session_id,omitempty"`
 	AgentId         string          `json:"agent_id,omitempty"`
 	EventType       string          `json:"event_type,omitempty"`
@@ -12534,16 +12593,16 @@ func SearchEventsFilterToJSON(v *SearchEventsFilter) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := searcheventsfilterJSON{
-		Email:     v.Email,
+		SpiffeId:  v.SpiffeId,
 		SessionId: v.SessionId,
 		AgentId:   v.AgentId,
-		EventType: claudesensor.SensorEventTypeToString(v.EventType),
+		EventType: agentsensor.SensorEventTypeToString(v.EventType),
 		ToolName:  v.ToolName,
 		TimeRange: func() json.RawMessage {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		SucceededFilter: v.SucceededFilter,
@@ -12561,16 +12620,16 @@ func SearchEventsFilterToJSONPretty(v *SearchEventsFilter) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := searcheventsfilterJSON{
-		Email:     v.Email,
+		SpiffeId:  v.SpiffeId,
 		SessionId: v.SessionId,
 		AgentId:   v.AgentId,
-		EventType: claudesensor.SensorEventTypeToString(v.EventType),
+		EventType: agentsensor.SensorEventTypeToString(v.EventType),
 		ToolName:  v.ToolName,
 		TimeRange: func() json.RawMessage {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		SucceededFilter: v.SucceededFilter,
@@ -12640,19 +12699,19 @@ func SearchEventsFilterFromJSON(data []byte) (*SearchEventsFilter, error) {
 	}
 	// Build result with parsed enums
 	result := &SearchEventsFilter{}
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	result.SessionId = raw.SessionId
 	result.AgentId = raw.AgentId
 	// Parse enum field: EventType
 	if raw.EventType != "" {
-		if parsed, err := claudesensor.ParseSensorEventType(raw.EventType); err == nil {
+		if parsed, err := agentsensor.ParseSensorEventType(raw.EventType); err == nil {
 			result.EventType = parsed
 		}
 	}
 	result.ToolName = raw.ToolName
 	// Parse message field: TimeRange
 	if len(raw.TimeRange) > 0 {
-		parsed, err := claudesensor.EventTimeRangeFromJSON(raw.TimeRange)
+		parsed, err := agentsensor.EventTimeRangeFromJSON(raw.TimeRange)
 		if err == nil {
 			result.TimeRange = parsed
 		}
@@ -12897,7 +12956,7 @@ func SearchEventsResponseToJSON(v *SearchEventsResponse) ([]byte, error) {
 			result := make([]json.RawMessage, 0, len(v.Events))
 			for _, item := range v.Events {
 				if item != nil {
-					if data, err := claudesensor.SensorEventToJSON(item); err == nil {
+					if data, err := agentsensor.AgentEventToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -12926,7 +12985,7 @@ func SearchEventsResponseToJSONPretty(v *SearchEventsResponse) ([]byte, error) {
 			result := make([]json.RawMessage, 0, len(v.Events))
 			for _, item := range v.Events {
 				if item != nil {
-					if data, err := claudesensor.SensorEventToJSON(item); err == nil {
+					if data, err := agentsensor.AgentEventToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -13002,10 +13061,10 @@ func SearchEventsResponseFromJSON(data []byte) (*SearchEventsResponse, error) {
 	result := &SearchEventsResponse{}
 	// Parse repeated message field: Events
 	if len(raw.Events) > 0 {
-		result.Events = make([]*claudesensor.SensorEvent, 0, len(raw.Events))
+		result.Events = make([]*agentsensor.AgentEvent, 0, len(raw.Events))
 		for _, itemJSON := range raw.Events {
 			if len(itemJSON) > 0 {
-				parsed, err := claudesensor.SensorEventFromJSON(itemJSON)
+				parsed, err := agentsensor.AgentEventFromJSON(itemJSON)
 				if err == nil {
 					result.Events = append(result.Events, parsed)
 				}
@@ -13064,7 +13123,7 @@ type filepathmatchJSON struct {
 	FilePath    string `json:"file_path,omitempty"`
 	SessionId   string `json:"session_id,omitempty"`
 	AgentId     string `json:"agent_id,omitempty"`
-	Email       string `json:"email,omitempty"`
+	SpiffeId    string `json:"spiffe_id,omitempty"`
 	Operation   string `json:"operation,omitempty"`
 	TimestampMs int64  `json:"timestamp_ms,omitempty"`
 	TraceId     string `json:"trace_id,omitempty"`
@@ -13082,8 +13141,8 @@ func FilePathMatchToJSON(v *FilePathMatch) ([]byte, error) {
 		FilePath:    v.FilePath,
 		SessionId:   v.SessionId,
 		AgentId:     v.AgentId,
-		Email:       v.Email,
-		Operation:   claudesensor.FileOperationToString(v.Operation),
+		SpiffeId:    v.SpiffeId,
+		Operation:   agentsensor.FileOperationToString(v.Operation),
 		TimestampMs: v.TimestampMs,
 		TraceId:     v.TraceId,
 		Noop:        v.Noop,
@@ -13102,8 +13161,8 @@ func FilePathMatchToJSONPretty(v *FilePathMatch) ([]byte, error) {
 		FilePath:    v.FilePath,
 		SessionId:   v.SessionId,
 		AgentId:     v.AgentId,
-		Email:       v.Email,
-		Operation:   claudesensor.FileOperationToString(v.Operation),
+		SpiffeId:    v.SpiffeId,
+		Operation:   agentsensor.FileOperationToString(v.Operation),
 		TimestampMs: v.TimestampMs,
 		TraceId:     v.TraceId,
 		Noop:        v.Noop,
@@ -13174,10 +13233,10 @@ func FilePathMatchFromJSON(data []byte) (*FilePathMatch, error) {
 	result.FilePath = raw.FilePath
 	result.SessionId = raw.SessionId
 	result.AgentId = raw.AgentId
-	result.Email = raw.Email
+	result.SpiffeId = raw.SpiffeId
 	// Parse enum field: Operation
 	if raw.Operation != "" {
-		if parsed, err := claudesensor.ParseFileOperation(raw.Operation); err == nil {
+		if parsed, err := agentsensor.ParseFileOperation(raw.Operation); err == nil {
 			result.Operation = parsed
 		}
 	}
@@ -13230,13 +13289,13 @@ func FilePathMatchToTOML(v *FilePathMatch) ([]byte, error) {
 // SearchByFilePathRequestJSON represents SearchByFilePathRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type searchbyfilepathrequestJSON struct {
-	PathPattern string          `json:"path_pattern,omitempty"`
-	EmailFilter string          `json:"email_filter,omitempty"`
-	TimeRange   json.RawMessage `json:"time_range,omitempty"`
-	PageToken   string          `json:"page_token,omitempty"`
-	PageSize    int32           `json:"page_size,omitempty"`
-	TraceId     string          `json:"trace_id,omitempty"`
-	Noop        bool            `json:"noop,omitempty"`
+	PathPattern    string          `json:"path_pattern,omitempty"`
+	SpiffeIdFilter string          `json:"spiffe_id_filter,omitempty"`
+	TimeRange      json.RawMessage `json:"time_range,omitempty"`
+	PageToken      string          `json:"page_token,omitempty"`
+	PageSize       int32           `json:"page_size,omitempty"`
+	TraceId        string          `json:"trace_id,omitempty"`
+	Noop           bool            `json:"noop,omitempty"`
 }
 
 // SearchByFilePathRequestToJSON converts SearchByFilePathRequest to JSON bytes.
@@ -13247,13 +13306,13 @@ func SearchByFilePathRequestToJSON(v *SearchByFilePathRequest) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := searchbyfilepathrequestJSON{
-		PathPattern: v.PathPattern,
-		EmailFilter: v.EmailFilter,
+		PathPattern:    v.PathPattern,
+		SpiffeIdFilter: v.SpiffeIdFilter,
 		TimeRange: func() json.RawMessage {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		PageToken: v.PageToken,
@@ -13272,13 +13331,13 @@ func SearchByFilePathRequestToJSONPretty(v *SearchByFilePathRequest) ([]byte, er
 	}
 	// Convert to JSON helper struct with string enums
 	helper := searchbyfilepathrequestJSON{
-		PathPattern: v.PathPattern,
-		EmailFilter: v.EmailFilter,
+		PathPattern:    v.PathPattern,
+		SpiffeIdFilter: v.SpiffeIdFilter,
 		TimeRange: func() json.RawMessage {
 			if v.TimeRange == nil {
 				return nil
 			}
-			data, _ := claudesensor.EventTimeRangeToJSON(v.TimeRange)
+			data, _ := agentsensor.EventTimeRangeToJSON(v.TimeRange)
 			return data
 		}(),
 		PageToken: v.PageToken,
@@ -13350,10 +13409,10 @@ func SearchByFilePathRequestFromJSON(data []byte) (*SearchByFilePathRequest, err
 	// Build result with parsed enums
 	result := &SearchByFilePathRequest{}
 	result.PathPattern = raw.PathPattern
-	result.EmailFilter = raw.EmailFilter
+	result.SpiffeIdFilter = raw.SpiffeIdFilter
 	// Parse message field: TimeRange
 	if len(raw.TimeRange) > 0 {
-		parsed, err := claudesensor.EventTimeRangeFromJSON(raw.TimeRange)
+		parsed, err := agentsensor.EventTimeRangeFromJSON(raw.TimeRange)
 		if err == nil {
 			result.TimeRange = parsed
 		}
@@ -14239,7 +14298,7 @@ func GetSessionDetailResponseToEnvVar(v *GetSessionDetailResponse) map[string]st
 	}
 	result := make(map[string]string)
 	if v.Summary != nil {
-		for k, val := range claudesensor.SessionSummaryToEnvVar(v.Summary) {
+		for k, val := range agentsensor.SessionSummaryToEnvVar(v.Summary) {
 			result[k] = val
 		}
 	}
@@ -14251,7 +14310,7 @@ func GetSessionDetailResponseToEnvVar(v *GetSessionDetailResponse) map[string]st
 // GetSessionDetailResponseFromEnvVar creates GetSessionDetailResponse from environment variable key-value pairs.
 func GetSessionDetailResponseFromEnvVar(env map[string]string) (*GetSessionDetailResponse, error) {
 	result := &GetSessionDetailResponse{}
-	if sub, err := claudesensor.SessionSummaryFromEnvVar(env); err != nil {
+	if sub, err := agentsensor.SessionSummaryFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.Summary = sub
@@ -14275,7 +14334,7 @@ func GetUserActivityRequestToEnvVar(v *GetUserActivityRequest) map[string]string
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_SERVICES_ARGUS_GET_USER_ACTIVITY_REQUEST_EMAIL"] = v.Email
+	result["PROTO_SERVICES_ARGUS_GET_USER_ACTIVITY_REQUEST_SPIFFE_ID"] = v.SpiffeId
 	result["PROTO_SERVICES_ARGUS_GET_USER_ACTIVITY_REQUEST_TIME_RANGE_HOURS"] = strconv.FormatInt(int64(v.TimeRangeHours), 10)
 	result["PROTO_SERVICES_ARGUS_GET_USER_ACTIVITY_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_ARGUS_GET_USER_ACTIVITY_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
@@ -14285,8 +14344,8 @@ func GetUserActivityRequestToEnvVar(v *GetUserActivityRequest) map[string]string
 // GetUserActivityRequestFromEnvVar creates GetUserActivityRequest from environment variable key-value pairs.
 func GetUserActivityRequestFromEnvVar(env map[string]string) (*GetUserActivityRequest, error) {
 	result := &GetUserActivityRequest{}
-	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_ACTIVITY_REQUEST_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_ACTIVITY_REQUEST_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_ACTIVITY_REQUEST_TIME_RANGE_HOURS"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 32)
@@ -14676,6 +14735,8 @@ func ScratchpadListRequestToEnvVar(v *ScratchpadListRequest) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_ARGUS_SCRATCHPAD_LIST_REQUEST_PAGE_TOKEN"] = v.PageToken
+	result["PROTO_SERVICES_ARGUS_SCRATCHPAD_LIST_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
 	result["PROTO_SERVICES_ARGUS_SCRATCHPAD_LIST_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_ARGUS_SCRATCHPAD_LIST_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -14684,6 +14745,16 @@ func ScratchpadListRequestToEnvVar(v *ScratchpadListRequest) map[string]string {
 // ScratchpadListRequestFromEnvVar creates ScratchpadListRequest from environment variable key-value pairs.
 func ScratchpadListRequestFromEnvVar(env map[string]string) (*ScratchpadListRequest, error) {
 	result := &ScratchpadListRequest{}
+	if val, ok := env["PROTO_SERVICES_ARGUS_SCRATCHPAD_LIST_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_ARGUS_SCRATCHPAD_LIST_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
+	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_SCRATCHPAD_LIST_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -14703,6 +14774,7 @@ func ScratchpadListResponseToEnvVar(v *ScratchpadListResponse) map[string]string
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_ARGUS_SCRATCHPAD_LIST_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
 	result["PROTO_SERVICES_ARGUS_SCRATCHPAD_LIST_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_ARGUS_SCRATCHPAD_LIST_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -14711,6 +14783,9 @@ func ScratchpadListResponseToEnvVar(v *ScratchpadListResponse) map[string]string
 // ScratchpadListResponseFromEnvVar creates ScratchpadListResponse from environment variable key-value pairs.
 func ScratchpadListResponseFromEnvVar(env map[string]string) (*ScratchpadListResponse, error) {
 	result := &ScratchpadListResponse{}
+	if val, ok := env["PROTO_SERVICES_ARGUS_SCRATCHPAD_LIST_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_SCRATCHPAD_LIST_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -14900,7 +14975,7 @@ func WatchUserActivityRequestToEnvVar(v *WatchUserActivityRequest) map[string]st
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_SERVICES_ARGUS_WATCH_USER_ACTIVITY_REQUEST_EMAIL"] = v.Email
+	result["PROTO_SERVICES_ARGUS_WATCH_USER_ACTIVITY_REQUEST_SPIFFE_ID"] = v.SpiffeId
 	result["PROTO_SERVICES_ARGUS_WATCH_USER_ACTIVITY_REQUEST_TIME_RANGE_HOURS"] = strconv.FormatInt(int64(v.TimeRangeHours), 10)
 	result["PROTO_SERVICES_ARGUS_WATCH_USER_ACTIVITY_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_ARGUS_WATCH_USER_ACTIVITY_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
@@ -14910,8 +14985,8 @@ func WatchUserActivityRequestToEnvVar(v *WatchUserActivityRequest) map[string]st
 // WatchUserActivityRequestFromEnvVar creates WatchUserActivityRequest from environment variable key-value pairs.
 func WatchUserActivityRequestFromEnvVar(env map[string]string) (*WatchUserActivityRequest, error) {
 	result := &WatchUserActivityRequest{}
-	if val, ok := env["PROTO_SERVICES_ARGUS_WATCH_USER_ACTIVITY_REQUEST_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_SERVICES_ARGUS_WATCH_USER_ACTIVITY_REQUEST_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_WATCH_USER_ACTIVITY_REQUEST_TIME_RANGE_HOURS"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 32)
@@ -15024,7 +15099,7 @@ func UserSummaryToEnvVar(v *UserSummary) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_SERVICES_ARGUS_USER_SUMMARY_EMAIL"] = v.Email
+	result["PROTO_SERVICES_ARGUS_USER_SUMMARY_SPIFFE_ID"] = v.SpiffeId
 	result["PROTO_SERVICES_ARGUS_USER_SUMMARY_TOTAL_SESSIONS"] = strconv.FormatInt(v.TotalSessions, 10)
 	result["PROTO_SERVICES_ARGUS_USER_SUMMARY_TOTAL_EVENTS"] = strconv.FormatInt(v.TotalEvents, 10)
 	result["PROTO_SERVICES_ARGUS_USER_SUMMARY_FIRST_SEEN_MS"] = strconv.FormatInt(v.FirstSeenMs, 10)
@@ -15039,8 +15114,8 @@ func UserSummaryToEnvVar(v *UserSummary) map[string]string {
 // UserSummaryFromEnvVar creates UserSummary from environment variable key-value pairs.
 func UserSummaryFromEnvVar(env map[string]string) (*UserSummary, error) {
 	result := &UserSummary{}
-	if val, ok := env["PROTO_SERVICES_ARGUS_USER_SUMMARY_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_SERVICES_ARGUS_USER_SUMMARY_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_USER_SUMMARY_TOTAL_SESSIONS"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 64)
@@ -15104,7 +15179,7 @@ func ListUsersRequestToEnvVar(v *ListUsersRequest) map[string]string {
 	}
 	result := make(map[string]string)
 	if v.TimeRange != nil {
-		for k, val := range claudesensor.EventTimeRangeToEnvVar(v.TimeRange) {
+		for k, val := range agentsensor.EventTimeRangeToEnvVar(v.TimeRange) {
 			result[k] = val
 		}
 	}
@@ -15118,7 +15193,7 @@ func ListUsersRequestToEnvVar(v *ListUsersRequest) map[string]string {
 // ListUsersRequestFromEnvVar creates ListUsersRequest from environment variable key-value pairs.
 func ListUsersRequestFromEnvVar(env map[string]string) (*ListUsersRequest, error) {
 	result := &ListUsersRequest{}
-	if sub, err := claudesensor.EventTimeRangeFromEnvVar(env); err != nil {
+	if sub, err := agentsensor.EventTimeRangeFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.TimeRange = sub
@@ -15277,9 +15352,9 @@ func GetUserProfileRequestToEnvVar(v *GetUserProfileRequest) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_SERVICES_ARGUS_GET_USER_PROFILE_REQUEST_EMAIL"] = v.Email
+	result["PROTO_SERVICES_ARGUS_GET_USER_PROFILE_REQUEST_SPIFFE_ID"] = v.SpiffeId
 	if v.TimeRange != nil {
-		for k, val := range claudesensor.EventTimeRangeToEnvVar(v.TimeRange) {
+		for k, val := range agentsensor.EventTimeRangeToEnvVar(v.TimeRange) {
 			result[k] = val
 		}
 	}
@@ -15291,10 +15366,10 @@ func GetUserProfileRequestToEnvVar(v *GetUserProfileRequest) map[string]string {
 // GetUserProfileRequestFromEnvVar creates GetUserProfileRequest from environment variable key-value pairs.
 func GetUserProfileRequestFromEnvVar(env map[string]string) (*GetUserProfileRequest, error) {
 	result := &GetUserProfileRequest{}
-	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_PROFILE_REQUEST_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_PROFILE_REQUEST_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
-	if sub, err := claudesensor.EventTimeRangeFromEnvVar(env); err != nil {
+	if sub, err := agentsensor.EventTimeRangeFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.TimeRange = sub
@@ -15318,7 +15393,7 @@ func GetUserProfileResponseToEnvVar(v *GetUserProfileResponse) map[string]string
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_SERVICES_ARGUS_GET_USER_PROFILE_RESPONSE_EMAIL"] = v.Email
+	result["PROTO_SERVICES_ARGUS_GET_USER_PROFILE_RESPONSE_SPIFFE_ID"] = v.SpiffeId
 	result["PROTO_SERVICES_ARGUS_GET_USER_PROFILE_RESPONSE_FIRST_SEEN_MS"] = strconv.FormatInt(v.FirstSeenMs, 10)
 	result["PROTO_SERVICES_ARGUS_GET_USER_PROFILE_RESPONSE_LAST_SEEN_MS"] = strconv.FormatInt(v.LastSeenMs, 10)
 	result["PROTO_SERVICES_ARGUS_GET_USER_PROFILE_RESPONSE_TOTAL_SESSIONS"] = strconv.FormatInt(v.TotalSessions, 10)
@@ -15341,8 +15416,8 @@ func GetUserProfileResponseToEnvVar(v *GetUserProfileResponse) map[string]string
 // GetUserProfileResponseFromEnvVar creates GetUserProfileResponse from environment variable key-value pairs.
 func GetUserProfileResponseFromEnvVar(env map[string]string) (*GetUserProfileResponse, error) {
 	result := &GetUserProfileResponse{}
-	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_PROFILE_RESPONSE_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_PROFILE_RESPONSE_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_PROFILE_RESPONSE_FIRST_SEEN_MS"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 64)
@@ -15425,9 +15500,9 @@ func WatchUserProfileRequestToEnvVar(v *WatchUserProfileRequest) map[string]stri
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_SERVICES_ARGUS_WATCH_USER_PROFILE_REQUEST_EMAIL"] = v.Email
+	result["PROTO_SERVICES_ARGUS_WATCH_USER_PROFILE_REQUEST_SPIFFE_ID"] = v.SpiffeId
 	if v.TimeRange != nil {
-		for k, val := range claudesensor.EventTimeRangeToEnvVar(v.TimeRange) {
+		for k, val := range agentsensor.EventTimeRangeToEnvVar(v.TimeRange) {
 			result[k] = val
 		}
 	}
@@ -15439,10 +15514,10 @@ func WatchUserProfileRequestToEnvVar(v *WatchUserProfileRequest) map[string]stri
 // WatchUserProfileRequestFromEnvVar creates WatchUserProfileRequest from environment variable key-value pairs.
 func WatchUserProfileRequestFromEnvVar(env map[string]string) (*WatchUserProfileRequest, error) {
 	result := &WatchUserProfileRequest{}
-	if val, ok := env["PROTO_SERVICES_ARGUS_WATCH_USER_PROFILE_REQUEST_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_SERVICES_ARGUS_WATCH_USER_PROFILE_REQUEST_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
-	if sub, err := claudesensor.EventTimeRangeFromEnvVar(env); err != nil {
+	if sub, err := agentsensor.EventTimeRangeFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.TimeRange = sub
@@ -15525,9 +15600,9 @@ func GetUserTokenStatsRequestToEnvVar(v *GetUserTokenStatsRequest) map[string]st
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_SERVICES_ARGUS_GET_USER_TOKEN_STATS_REQUEST_EMAIL"] = v.Email
+	result["PROTO_SERVICES_ARGUS_GET_USER_TOKEN_STATS_REQUEST_SPIFFE_ID"] = v.SpiffeId
 	if v.TimeRange != nil {
-		for k, val := range claudesensor.EventTimeRangeToEnvVar(v.TimeRange) {
+		for k, val := range agentsensor.EventTimeRangeToEnvVar(v.TimeRange) {
 			result[k] = val
 		}
 	}
@@ -15540,10 +15615,10 @@ func GetUserTokenStatsRequestToEnvVar(v *GetUserTokenStatsRequest) map[string]st
 // GetUserTokenStatsRequestFromEnvVar creates GetUserTokenStatsRequest from environment variable key-value pairs.
 func GetUserTokenStatsRequestFromEnvVar(env map[string]string) (*GetUserTokenStatsRequest, error) {
 	result := &GetUserTokenStatsRequest{}
-	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_TOKEN_STATS_REQUEST_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_TOKEN_STATS_REQUEST_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
-	if sub, err := claudesensor.EventTimeRangeFromEnvVar(env); err != nil {
+	if sub, err := agentsensor.EventTimeRangeFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.TimeRange = sub
@@ -15574,7 +15649,7 @@ func GetUserTokenStatsResponseToEnvVar(v *GetUserTokenStatsResponse) map[string]
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_SERVICES_ARGUS_GET_USER_TOKEN_STATS_RESPONSE_EMAIL"] = v.Email
+	result["PROTO_SERVICES_ARGUS_GET_USER_TOKEN_STATS_RESPONSE_SPIFFE_ID"] = v.SpiffeId
 	result["PROTO_SERVICES_ARGUS_GET_USER_TOKEN_STATS_RESPONSE_TOTAL_PROMPTS"] = strconv.FormatInt(v.TotalPrompts, 10)
 	result["PROTO_SERVICES_ARGUS_GET_USER_TOKEN_STATS_RESPONSE_TOTAL_PROMPT_LENGTH"] = strconv.FormatInt(v.TotalPromptLength, 10)
 	result["PROTO_SERVICES_ARGUS_GET_USER_TOKEN_STATS_RESPONSE_AVG_PROMPT_LENGTH"] = strconv.FormatInt(v.AvgPromptLength, 10)
@@ -15588,8 +15663,8 @@ func GetUserTokenStatsResponseToEnvVar(v *GetUserTokenStatsResponse) map[string]
 // GetUserTokenStatsResponseFromEnvVar creates GetUserTokenStatsResponse from environment variable key-value pairs.
 func GetUserTokenStatsResponseFromEnvVar(env map[string]string) (*GetUserTokenStatsResponse, error) {
 	result := &GetUserTokenStatsResponse{}
-	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_TOKEN_STATS_RESPONSE_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_TOKEN_STATS_RESPONSE_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_TOKEN_STATS_RESPONSE_TOTAL_PROMPTS"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 64)
@@ -15652,7 +15727,7 @@ func CommitRecordToEnvVar(v *CommitRecord) map[string]string {
 	result["PROTO_SERVICES_ARGUS_COMMIT_RECORD_COMMAND"] = v.Command
 	result["PROTO_SERVICES_ARGUS_COMMIT_RECORD_OUTPUT"] = v.Output
 	result["PROTO_SERVICES_ARGUS_COMMIT_RECORD_SUCCEEDED"] = strconv.FormatBool(v.Succeeded)
-	result["PROTO_SERVICES_ARGUS_COMMIT_RECORD_EMAIL"] = v.Email
+	result["PROTO_SERVICES_ARGUS_COMMIT_RECORD_SPIFFE_ID"] = v.SpiffeId
 	result["PROTO_SERVICES_ARGUS_COMMIT_RECORD_EVENT_ID"] = v.EventId
 	result["PROTO_SERVICES_ARGUS_COMMIT_RECORD_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_ARGUS_COMMIT_RECORD_NOOP"] = strconv.FormatBool(v.Noop)
@@ -15691,8 +15766,8 @@ func CommitRecordFromEnvVar(env map[string]string) (*CommitRecord, error) {
 		}
 		result.Succeeded = parsed
 	}
-	if val, ok := env["PROTO_SERVICES_ARGUS_COMMIT_RECORD_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_SERVICES_ARGUS_COMMIT_RECORD_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_COMMIT_RECORD_EVENT_ID"]; ok && val != "" {
 		result.EventId = val
@@ -15716,13 +15791,15 @@ func GetUserCommitActivityRequestToEnvVar(v *GetUserCommitActivityRequest) map[s
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_SERVICES_ARGUS_GET_USER_COMMIT_ACTIVITY_REQUEST_EMAIL"] = v.Email
+	result["PROTO_SERVICES_ARGUS_GET_USER_COMMIT_ACTIVITY_REQUEST_SPIFFE_ID"] = v.SpiffeId
 	if v.TimeRange != nil {
-		for k, val := range claudesensor.EventTimeRangeToEnvVar(v.TimeRange) {
+		for k, val := range agentsensor.EventTimeRangeToEnvVar(v.TimeRange) {
 			result[k] = val
 		}
 	}
 	result["PROTO_SERVICES_ARGUS_GET_USER_COMMIT_ACTIVITY_REQUEST_LIMIT"] = strconv.FormatInt(int64(v.Limit), 10)
+	result["PROTO_SERVICES_ARGUS_GET_USER_COMMIT_ACTIVITY_REQUEST_PAGE_TOKEN"] = v.PageToken
+	result["PROTO_SERVICES_ARGUS_GET_USER_COMMIT_ACTIVITY_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
 	result["PROTO_SERVICES_ARGUS_GET_USER_COMMIT_ACTIVITY_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_ARGUS_GET_USER_COMMIT_ACTIVITY_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -15731,10 +15808,10 @@ func GetUserCommitActivityRequestToEnvVar(v *GetUserCommitActivityRequest) map[s
 // GetUserCommitActivityRequestFromEnvVar creates GetUserCommitActivityRequest from environment variable key-value pairs.
 func GetUserCommitActivityRequestFromEnvVar(env map[string]string) (*GetUserCommitActivityRequest, error) {
 	result := &GetUserCommitActivityRequest{}
-	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_COMMIT_ACTIVITY_REQUEST_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_COMMIT_ACTIVITY_REQUEST_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
-	if sub, err := claudesensor.EventTimeRangeFromEnvVar(env); err != nil {
+	if sub, err := agentsensor.EventTimeRangeFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.TimeRange = sub
@@ -15745,6 +15822,16 @@ func GetUserCommitActivityRequestFromEnvVar(env map[string]string) (*GetUserComm
 			return nil, err
 		}
 		result.Limit = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_COMMIT_ACTIVITY_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_COMMIT_ACTIVITY_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
 	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_COMMIT_ACTIVITY_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -15765,6 +15852,7 @@ func GetUserCommitActivityResponseToEnvVar(v *GetUserCommitActivityResponse) map
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_ARGUS_GET_USER_COMMIT_ACTIVITY_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
 	result["PROTO_SERVICES_ARGUS_GET_USER_COMMIT_ACTIVITY_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_ARGUS_GET_USER_COMMIT_ACTIVITY_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -15773,6 +15861,9 @@ func GetUserCommitActivityResponseToEnvVar(v *GetUserCommitActivityResponse) map
 // GetUserCommitActivityResponseFromEnvVar creates GetUserCommitActivityResponse from environment variable key-value pairs.
 func GetUserCommitActivityResponseFromEnvVar(env map[string]string) (*GetUserCommitActivityResponse, error) {
 	result := &GetUserCommitActivityResponse{}
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_COMMIT_ACTIVITY_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_GET_USER_COMMIT_ACTIVITY_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -15793,8 +15884,8 @@ func FileActivityRecordToEnvVar(v *FileActivityRecord) map[string]string {
 	}
 	result := make(map[string]string)
 	result["PROTO_SERVICES_ARGUS_FILE_ACTIVITY_RECORD_FILE_PATH"] = v.FilePath
-	result["PROTO_SERVICES_ARGUS_FILE_ACTIVITY_RECORD_OPERATION"] = claudesensor.FileOperationToString(v.Operation)
-	result["PROTO_SERVICES_ARGUS_FILE_ACTIVITY_RECORD_EMAIL"] = v.Email
+	result["PROTO_SERVICES_ARGUS_FILE_ACTIVITY_RECORD_OPERATION"] = agentsensor.FileOperationToString(v.Operation)
+	result["PROTO_SERVICES_ARGUS_FILE_ACTIVITY_RECORD_SPIFFE_ID"] = v.SpiffeId
 	result["PROTO_SERVICES_ARGUS_FILE_ACTIVITY_RECORD_SESSION_ID"] = v.SessionId
 	result["PROTO_SERVICES_ARGUS_FILE_ACTIVITY_RECORD_AGENT_ID"] = v.AgentId
 	result["PROTO_SERVICES_ARGUS_FILE_ACTIVITY_RECORD_LANGUAGE"] = v.Language
@@ -15813,14 +15904,14 @@ func FileActivityRecordFromEnvVar(env map[string]string) (*FileActivityRecord, e
 		result.FilePath = val
 	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_FILE_ACTIVITY_RECORD_OPERATION"]; ok && val != "" {
-		parsed, err := claudesensor.ParseFileOperation(val)
+		parsed, err := agentsensor.ParseFileOperation(val)
 		if err != nil {
 			return nil, err
 		}
 		result.Operation = parsed
 	}
-	if val, ok := env["PROTO_SERVICES_ARGUS_FILE_ACTIVITY_RECORD_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_SERVICES_ARGUS_FILE_ACTIVITY_RECORD_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_FILE_ACTIVITY_RECORD_SESSION_ID"]; ok && val != "" {
 		result.SessionId = val
@@ -15871,10 +15962,10 @@ func GetFileActivityRequestToEnvVar(v *GetFileActivityRequest) map[string]string
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_SERVICES_ARGUS_GET_FILE_ACTIVITY_REQUEST_EMAIL_FILTER"] = v.EmailFilter
+	result["PROTO_SERVICES_ARGUS_GET_FILE_ACTIVITY_REQUEST_SPIFFE_ID_FILTER"] = v.SpiffeIdFilter
 	result["PROTO_SERVICES_ARGUS_GET_FILE_ACTIVITY_REQUEST_PATH_PREFIX"] = v.PathPrefix
 	if v.TimeRange != nil {
-		for k, val := range claudesensor.EventTimeRangeToEnvVar(v.TimeRange) {
+		for k, val := range agentsensor.EventTimeRangeToEnvVar(v.TimeRange) {
 			result[k] = val
 		}
 	}
@@ -15888,13 +15979,13 @@ func GetFileActivityRequestToEnvVar(v *GetFileActivityRequest) map[string]string
 // GetFileActivityRequestFromEnvVar creates GetFileActivityRequest from environment variable key-value pairs.
 func GetFileActivityRequestFromEnvVar(env map[string]string) (*GetFileActivityRequest, error) {
 	result := &GetFileActivityRequest{}
-	if val, ok := env["PROTO_SERVICES_ARGUS_GET_FILE_ACTIVITY_REQUEST_EMAIL_FILTER"]; ok && val != "" {
-		result.EmailFilter = val
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_FILE_ACTIVITY_REQUEST_SPIFFE_ID_FILTER"]; ok && val != "" {
+		result.SpiffeIdFilter = val
 	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_GET_FILE_ACTIVITY_REQUEST_PATH_PREFIX"]; ok && val != "" {
 		result.PathPrefix = val
 	}
-	if sub, err := claudesensor.EventTimeRangeFromEnvVar(env); err != nil {
+	if sub, err := agentsensor.EventTimeRangeFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.TimeRange = sub
@@ -15961,7 +16052,7 @@ func GetSessionTimelineRequestToEnvVar(v *GetSessionTimelineRequest) map[string]
 	result := make(map[string]string)
 	result["PROTO_SERVICES_ARGUS_GET_SESSION_TIMELINE_REQUEST_SESSION_ID"] = v.SessionId
 	if v.TimeRange != nil {
-		for k, val := range claudesensor.EventTimeRangeToEnvVar(v.TimeRange) {
+		for k, val := range agentsensor.EventTimeRangeToEnvVar(v.TimeRange) {
 			result[k] = val
 		}
 	}
@@ -15978,7 +16069,7 @@ func GetSessionTimelineRequestFromEnvVar(env map[string]string) (*GetSessionTime
 	if val, ok := env["PROTO_SERVICES_ARGUS_GET_SESSION_TIMELINE_REQUEST_SESSION_ID"]; ok && val != "" {
 		result.SessionId = val
 	}
-	if sub, err := claudesensor.EventTimeRangeFromEnvVar(env); err != nil {
+	if sub, err := agentsensor.EventTimeRangeFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.TimeRange = sub
@@ -16211,7 +16302,7 @@ func GetSystemStatsRequestToEnvVar(v *GetSystemStatsRequest) map[string]string {
 	}
 	result := make(map[string]string)
 	if v.TimeRange != nil {
-		for k, val := range claudesensor.EventTimeRangeToEnvVar(v.TimeRange) {
+		for k, val := range agentsensor.EventTimeRangeToEnvVar(v.TimeRange) {
 			result[k] = val
 		}
 	}
@@ -16223,7 +16314,7 @@ func GetSystemStatsRequestToEnvVar(v *GetSystemStatsRequest) map[string]string {
 // GetSystemStatsRequestFromEnvVar creates GetSystemStatsRequest from environment variable key-value pairs.
 func GetSystemStatsRequestFromEnvVar(env map[string]string) (*GetSystemStatsRequest, error) {
 	result := &GetSystemStatsRequest{}
-	if sub, err := claudesensor.EventTimeRangeFromEnvVar(env); err != nil {
+	if sub, err := agentsensor.EventTimeRangeFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.TimeRange = sub
@@ -16363,7 +16454,7 @@ func WatchSystemStatsRequestToEnvVar(v *WatchSystemStatsRequest) map[string]stri
 	}
 	result := make(map[string]string)
 	if v.TimeRange != nil {
-		for k, val := range claudesensor.EventTimeRangeToEnvVar(v.TimeRange) {
+		for k, val := range agentsensor.EventTimeRangeToEnvVar(v.TimeRange) {
 			result[k] = val
 		}
 	}
@@ -16375,7 +16466,7 @@ func WatchSystemStatsRequestToEnvVar(v *WatchSystemStatsRequest) map[string]stri
 // WatchSystemStatsRequestFromEnvVar creates WatchSystemStatsRequest from environment variable key-value pairs.
 func WatchSystemStatsRequestFromEnvVar(env map[string]string) (*WatchSystemStatsRequest, error) {
 	result := &WatchSystemStatsRequest{}
-	if sub, err := claudesensor.EventTimeRangeFromEnvVar(env); err != nil {
+	if sub, err := agentsensor.EventTimeRangeFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.TimeRange = sub
@@ -16471,12 +16562,14 @@ func GetToolLeaderboardRequestToEnvVar(v *GetToolLeaderboardRequest) map[string]
 	}
 	result := make(map[string]string)
 	if v.TimeRange != nil {
-		for k, val := range claudesensor.EventTimeRangeToEnvVar(v.TimeRange) {
+		for k, val := range agentsensor.EventTimeRangeToEnvVar(v.TimeRange) {
 			result[k] = val
 		}
 	}
-	result["PROTO_SERVICES_ARGUS_GET_TOOL_LEADERBOARD_REQUEST_EMAIL_FILTER"] = v.EmailFilter
+	result["PROTO_SERVICES_ARGUS_GET_TOOL_LEADERBOARD_REQUEST_SPIFFE_ID_FILTER"] = v.SpiffeIdFilter
 	result["PROTO_SERVICES_ARGUS_GET_TOOL_LEADERBOARD_REQUEST_LIMIT"] = strconv.FormatInt(int64(v.Limit), 10)
+	result["PROTO_SERVICES_ARGUS_GET_TOOL_LEADERBOARD_REQUEST_PAGE_TOKEN"] = v.PageToken
+	result["PROTO_SERVICES_ARGUS_GET_TOOL_LEADERBOARD_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
 	result["PROTO_SERVICES_ARGUS_GET_TOOL_LEADERBOARD_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_ARGUS_GET_TOOL_LEADERBOARD_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -16485,13 +16578,13 @@ func GetToolLeaderboardRequestToEnvVar(v *GetToolLeaderboardRequest) map[string]
 // GetToolLeaderboardRequestFromEnvVar creates GetToolLeaderboardRequest from environment variable key-value pairs.
 func GetToolLeaderboardRequestFromEnvVar(env map[string]string) (*GetToolLeaderboardRequest, error) {
 	result := &GetToolLeaderboardRequest{}
-	if sub, err := claudesensor.EventTimeRangeFromEnvVar(env); err != nil {
+	if sub, err := agentsensor.EventTimeRangeFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.TimeRange = sub
 	}
-	if val, ok := env["PROTO_SERVICES_ARGUS_GET_TOOL_LEADERBOARD_REQUEST_EMAIL_FILTER"]; ok && val != "" {
-		result.EmailFilter = val
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_TOOL_LEADERBOARD_REQUEST_SPIFFE_ID_FILTER"]; ok && val != "" {
+		result.SpiffeIdFilter = val
 	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_GET_TOOL_LEADERBOARD_REQUEST_LIMIT"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 32)
@@ -16499,6 +16592,16 @@ func GetToolLeaderboardRequestFromEnvVar(env map[string]string) (*GetToolLeaderb
 			return nil, err
 		}
 		result.Limit = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_TOOL_LEADERBOARD_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_TOOL_LEADERBOARD_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
 	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_GET_TOOL_LEADERBOARD_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -16519,6 +16622,7 @@ func GetToolLeaderboardResponseToEnvVar(v *GetToolLeaderboardResponse) map[strin
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_ARGUS_GET_TOOL_LEADERBOARD_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
 	result["PROTO_SERVICES_ARGUS_GET_TOOL_LEADERBOARD_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_ARGUS_GET_TOOL_LEADERBOARD_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -16527,6 +16631,9 @@ func GetToolLeaderboardResponseToEnvVar(v *GetToolLeaderboardResponse) map[strin
 // GetToolLeaderboardResponseFromEnvVar creates GetToolLeaderboardResponse from environment variable key-value pairs.
 func GetToolLeaderboardResponseFromEnvVar(env map[string]string) (*GetToolLeaderboardResponse, error) {
 	result := &GetToolLeaderboardResponse{}
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_TOOL_LEADERBOARD_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_GET_TOOL_LEADERBOARD_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -16547,11 +16654,11 @@ func WatchToolLeaderboardRequestToEnvVar(v *WatchToolLeaderboardRequest) map[str
 	}
 	result := make(map[string]string)
 	if v.TimeRange != nil {
-		for k, val := range claudesensor.EventTimeRangeToEnvVar(v.TimeRange) {
+		for k, val := range agentsensor.EventTimeRangeToEnvVar(v.TimeRange) {
 			result[k] = val
 		}
 	}
-	result["PROTO_SERVICES_ARGUS_WATCH_TOOL_LEADERBOARD_REQUEST_EMAIL_FILTER"] = v.EmailFilter
+	result["PROTO_SERVICES_ARGUS_WATCH_TOOL_LEADERBOARD_REQUEST_SPIFFE_ID_FILTER"] = v.SpiffeIdFilter
 	result["PROTO_SERVICES_ARGUS_WATCH_TOOL_LEADERBOARD_REQUEST_LIMIT"] = strconv.FormatInt(int64(v.Limit), 10)
 	result["PROTO_SERVICES_ARGUS_WATCH_TOOL_LEADERBOARD_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_ARGUS_WATCH_TOOL_LEADERBOARD_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
@@ -16561,13 +16668,13 @@ func WatchToolLeaderboardRequestToEnvVar(v *WatchToolLeaderboardRequest) map[str
 // WatchToolLeaderboardRequestFromEnvVar creates WatchToolLeaderboardRequest from environment variable key-value pairs.
 func WatchToolLeaderboardRequestFromEnvVar(env map[string]string) (*WatchToolLeaderboardRequest, error) {
 	result := &WatchToolLeaderboardRequest{}
-	if sub, err := claudesensor.EventTimeRangeFromEnvVar(env); err != nil {
+	if sub, err := agentsensor.EventTimeRangeFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.TimeRange = sub
 	}
-	if val, ok := env["PROTO_SERVICES_ARGUS_WATCH_TOOL_LEADERBOARD_REQUEST_EMAIL_FILTER"]; ok && val != "" {
-		result.EmailFilter = val
+	if val, ok := env["PROTO_SERVICES_ARGUS_WATCH_TOOL_LEADERBOARD_REQUEST_SPIFFE_ID_FILTER"]; ok && val != "" {
+		result.SpiffeIdFilter = val
 	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_WATCH_TOOL_LEADERBOARD_REQUEST_LIMIT"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 32)
@@ -16649,10 +16756,12 @@ func GetModelUsageRequestToEnvVar(v *GetModelUsageRequest) map[string]string {
 	}
 	result := make(map[string]string)
 	if v.TimeRange != nil {
-		for k, val := range claudesensor.EventTimeRangeToEnvVar(v.TimeRange) {
+		for k, val := range agentsensor.EventTimeRangeToEnvVar(v.TimeRange) {
 			result[k] = val
 		}
 	}
+	result["PROTO_SERVICES_ARGUS_GET_MODEL_USAGE_REQUEST_PAGE_TOKEN"] = v.PageToken
+	result["PROTO_SERVICES_ARGUS_GET_MODEL_USAGE_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
 	result["PROTO_SERVICES_ARGUS_GET_MODEL_USAGE_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_ARGUS_GET_MODEL_USAGE_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -16661,10 +16770,20 @@ func GetModelUsageRequestToEnvVar(v *GetModelUsageRequest) map[string]string {
 // GetModelUsageRequestFromEnvVar creates GetModelUsageRequest from environment variable key-value pairs.
 func GetModelUsageRequestFromEnvVar(env map[string]string) (*GetModelUsageRequest, error) {
 	result := &GetModelUsageRequest{}
-	if sub, err := claudesensor.EventTimeRangeFromEnvVar(env); err != nil {
+	if sub, err := agentsensor.EventTimeRangeFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.TimeRange = sub
+	}
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_MODEL_USAGE_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_MODEL_USAGE_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
 	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_GET_MODEL_USAGE_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -16685,6 +16804,7 @@ func GetModelUsageResponseToEnvVar(v *GetModelUsageResponse) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_ARGUS_GET_MODEL_USAGE_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
 	result["PROTO_SERVICES_ARGUS_GET_MODEL_USAGE_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_ARGUS_GET_MODEL_USAGE_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -16693,6 +16813,9 @@ func GetModelUsageResponseToEnvVar(v *GetModelUsageResponse) map[string]string {
 // GetModelUsageResponseFromEnvVar creates GetModelUsageResponse from environment variable key-value pairs.
 func GetModelUsageResponseFromEnvVar(env map[string]string) (*GetModelUsageResponse, error) {
 	result := &GetModelUsageResponse{}
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_MODEL_USAGE_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_GET_MODEL_USAGE_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -16776,12 +16899,14 @@ func GetActivityTimeseriesRequestToEnvVar(v *GetActivityTimeseriesRequest) map[s
 	}
 	result := make(map[string]string)
 	if v.TimeRange != nil {
-		for k, val := range claudesensor.EventTimeRangeToEnvVar(v.TimeRange) {
+		for k, val := range agentsensor.EventTimeRangeToEnvVar(v.TimeRange) {
 			result[k] = val
 		}
 	}
 	result["PROTO_SERVICES_ARGUS_GET_ACTIVITY_TIMESERIES_REQUEST_BUCKET_SECONDS"] = strconv.FormatInt(int64(v.BucketSeconds), 10)
 	result["PROTO_SERVICES_ARGUS_GET_ACTIVITY_TIMESERIES_REQUEST_GROUP_BY"] = ActivityGroupByToString(v.GroupBy)
+	result["PROTO_SERVICES_ARGUS_GET_ACTIVITY_TIMESERIES_REQUEST_PAGE_TOKEN"] = v.PageToken
+	result["PROTO_SERVICES_ARGUS_GET_ACTIVITY_TIMESERIES_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
 	result["PROTO_SERVICES_ARGUS_GET_ACTIVITY_TIMESERIES_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_ARGUS_GET_ACTIVITY_TIMESERIES_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -16790,7 +16915,7 @@ func GetActivityTimeseriesRequestToEnvVar(v *GetActivityTimeseriesRequest) map[s
 // GetActivityTimeseriesRequestFromEnvVar creates GetActivityTimeseriesRequest from environment variable key-value pairs.
 func GetActivityTimeseriesRequestFromEnvVar(env map[string]string) (*GetActivityTimeseriesRequest, error) {
 	result := &GetActivityTimeseriesRequest{}
-	if sub, err := claudesensor.EventTimeRangeFromEnvVar(env); err != nil {
+	if sub, err := agentsensor.EventTimeRangeFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.TimeRange = sub
@@ -16808,6 +16933,16 @@ func GetActivityTimeseriesRequestFromEnvVar(env map[string]string) (*GetActivity
 			return nil, err
 		}
 		result.GroupBy = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_ACTIVITY_TIMESERIES_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_ACTIVITY_TIMESERIES_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
 	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_GET_ACTIVITY_TIMESERIES_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -16828,6 +16963,7 @@ func GetActivityTimeseriesResponseToEnvVar(v *GetActivityTimeseriesResponse) map
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_ARGUS_GET_ACTIVITY_TIMESERIES_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
 	result["PROTO_SERVICES_ARGUS_GET_ACTIVITY_TIMESERIES_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_ARGUS_GET_ACTIVITY_TIMESERIES_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -16836,6 +16972,9 @@ func GetActivityTimeseriesResponseToEnvVar(v *GetActivityTimeseriesResponse) map
 // GetActivityTimeseriesResponseFromEnvVar creates GetActivityTimeseriesResponse from environment variable key-value pairs.
 func GetActivityTimeseriesResponseFromEnvVar(env map[string]string) (*GetActivityTimeseriesResponse, error) {
 	result := &GetActivityTimeseriesResponse{}
+	if val, ok := env["PROTO_SERVICES_ARGUS_GET_ACTIVITY_TIMESERIES_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_GET_ACTIVITY_TIMESERIES_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -16855,13 +16994,13 @@ func SearchEventsFilterToEnvVar(v *SearchEventsFilter) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_SERVICES_ARGUS_SEARCH_EVENTS_FILTER_EMAIL"] = v.Email
+	result["PROTO_SERVICES_ARGUS_SEARCH_EVENTS_FILTER_SPIFFE_ID"] = v.SpiffeId
 	result["PROTO_SERVICES_ARGUS_SEARCH_EVENTS_FILTER_SESSION_ID"] = v.SessionId
 	result["PROTO_SERVICES_ARGUS_SEARCH_EVENTS_FILTER_AGENT_ID"] = v.AgentId
-	result["PROTO_SERVICES_ARGUS_SEARCH_EVENTS_FILTER_EVENT_TYPE"] = claudesensor.SensorEventTypeToString(v.EventType)
+	result["PROTO_SERVICES_ARGUS_SEARCH_EVENTS_FILTER_EVENT_TYPE"] = agentsensor.SensorEventTypeToString(v.EventType)
 	result["PROTO_SERVICES_ARGUS_SEARCH_EVENTS_FILTER_TOOL_NAME"] = v.ToolName
 	if v.TimeRange != nil {
-		for k, val := range claudesensor.EventTimeRangeToEnvVar(v.TimeRange) {
+		for k, val := range agentsensor.EventTimeRangeToEnvVar(v.TimeRange) {
 			result[k] = val
 		}
 	}
@@ -16874,8 +17013,8 @@ func SearchEventsFilterToEnvVar(v *SearchEventsFilter) map[string]string {
 // SearchEventsFilterFromEnvVar creates SearchEventsFilter from environment variable key-value pairs.
 func SearchEventsFilterFromEnvVar(env map[string]string) (*SearchEventsFilter, error) {
 	result := &SearchEventsFilter{}
-	if val, ok := env["PROTO_SERVICES_ARGUS_SEARCH_EVENTS_FILTER_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_SERVICES_ARGUS_SEARCH_EVENTS_FILTER_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_SEARCH_EVENTS_FILTER_SESSION_ID"]; ok && val != "" {
 		result.SessionId = val
@@ -16884,7 +17023,7 @@ func SearchEventsFilterFromEnvVar(env map[string]string) (*SearchEventsFilter, e
 		result.AgentId = val
 	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_SEARCH_EVENTS_FILTER_EVENT_TYPE"]; ok && val != "" {
-		parsed, err := claudesensor.ParseSensorEventType(val)
+		parsed, err := agentsensor.ParseSensorEventType(val)
 		if err != nil {
 			return nil, err
 		}
@@ -16893,7 +17032,7 @@ func SearchEventsFilterFromEnvVar(env map[string]string) (*SearchEventsFilter, e
 	if val, ok := env["PROTO_SERVICES_ARGUS_SEARCH_EVENTS_FILTER_TOOL_NAME"]; ok && val != "" {
 		result.ToolName = val
 	}
-	if sub, err := claudesensor.EventTimeRangeFromEnvVar(env); err != nil {
+	if sub, err := agentsensor.EventTimeRangeFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.TimeRange = sub
@@ -17007,8 +17146,8 @@ func FilePathMatchToEnvVar(v *FilePathMatch) map[string]string {
 	result["PROTO_SERVICES_ARGUS_FILE_PATH_MATCH_FILE_PATH"] = v.FilePath
 	result["PROTO_SERVICES_ARGUS_FILE_PATH_MATCH_SESSION_ID"] = v.SessionId
 	result["PROTO_SERVICES_ARGUS_FILE_PATH_MATCH_AGENT_ID"] = v.AgentId
-	result["PROTO_SERVICES_ARGUS_FILE_PATH_MATCH_EMAIL"] = v.Email
-	result["PROTO_SERVICES_ARGUS_FILE_PATH_MATCH_OPERATION"] = claudesensor.FileOperationToString(v.Operation)
+	result["PROTO_SERVICES_ARGUS_FILE_PATH_MATCH_SPIFFE_ID"] = v.SpiffeId
+	result["PROTO_SERVICES_ARGUS_FILE_PATH_MATCH_OPERATION"] = agentsensor.FileOperationToString(v.Operation)
 	result["PROTO_SERVICES_ARGUS_FILE_PATH_MATCH_TIMESTAMP_MS"] = strconv.FormatInt(v.TimestampMs, 10)
 	result["PROTO_SERVICES_ARGUS_FILE_PATH_MATCH_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_ARGUS_FILE_PATH_MATCH_NOOP"] = strconv.FormatBool(v.Noop)
@@ -17027,11 +17166,11 @@ func FilePathMatchFromEnvVar(env map[string]string) (*FilePathMatch, error) {
 	if val, ok := env["PROTO_SERVICES_ARGUS_FILE_PATH_MATCH_AGENT_ID"]; ok && val != "" {
 		result.AgentId = val
 	}
-	if val, ok := env["PROTO_SERVICES_ARGUS_FILE_PATH_MATCH_EMAIL"]; ok && val != "" {
-		result.Email = val
+	if val, ok := env["PROTO_SERVICES_ARGUS_FILE_PATH_MATCH_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
 	}
 	if val, ok := env["PROTO_SERVICES_ARGUS_FILE_PATH_MATCH_OPERATION"]; ok && val != "" {
-		parsed, err := claudesensor.ParseFileOperation(val)
+		parsed, err := agentsensor.ParseFileOperation(val)
 		if err != nil {
 			return nil, err
 		}
@@ -17064,9 +17203,9 @@ func SearchByFilePathRequestToEnvVar(v *SearchByFilePathRequest) map[string]stri
 	}
 	result := make(map[string]string)
 	result["PROTO_SERVICES_ARGUS_SEARCH_BY_FILE_PATH_REQUEST_PATH_PATTERN"] = v.PathPattern
-	result["PROTO_SERVICES_ARGUS_SEARCH_BY_FILE_PATH_REQUEST_EMAIL_FILTER"] = v.EmailFilter
+	result["PROTO_SERVICES_ARGUS_SEARCH_BY_FILE_PATH_REQUEST_SPIFFE_ID_FILTER"] = v.SpiffeIdFilter
 	if v.TimeRange != nil {
-		for k, val := range claudesensor.EventTimeRangeToEnvVar(v.TimeRange) {
+		for k, val := range agentsensor.EventTimeRangeToEnvVar(v.TimeRange) {
 			result[k] = val
 		}
 	}
@@ -17083,10 +17222,10 @@ func SearchByFilePathRequestFromEnvVar(env map[string]string) (*SearchByFilePath
 	if val, ok := env["PROTO_SERVICES_ARGUS_SEARCH_BY_FILE_PATH_REQUEST_PATH_PATTERN"]; ok && val != "" {
 		result.PathPattern = val
 	}
-	if val, ok := env["PROTO_SERVICES_ARGUS_SEARCH_BY_FILE_PATH_REQUEST_EMAIL_FILTER"]; ok && val != "" {
-		result.EmailFilter = val
+	if val, ok := env["PROTO_SERVICES_ARGUS_SEARCH_BY_FILE_PATH_REQUEST_SPIFFE_ID_FILTER"]; ok && val != "" {
+		result.SpiffeIdFilter = val
 	}
-	if sub, err := claudesensor.EventTimeRangeFromEnvVar(env); err != nil {
+	if sub, err := agentsensor.EventTimeRangeFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.TimeRange = sub
@@ -17359,7 +17498,7 @@ func ValidateGetDashboardResponseWithDepth(m *GetDashboardResponse, depth int) e
 
 	// Validate TopActive nested messages
 	for i, val := range m.TopActive {
-		if err := claudesensor.ValidateSessionSummaryWithDepth(val, depth+1); err != nil {
+		if err := agentsensor.ValidateSessionSummaryWithDepth(val, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field TopActive[%d] validation failed", i)
 		}
 	}
@@ -17437,7 +17576,7 @@ func ValidateListActiveSessionsResponseWithDepth(m *ListActiveSessionsResponse, 
 
 	// Validate Sessions nested messages
 	for i, val := range m.Sessions {
-		if err := claudesensor.ValidateSessionSummaryWithDepth(val, depth+1); err != nil {
+		if err := agentsensor.ValidateSessionSummaryWithDepth(val, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field Sessions[%d] validation failed", i)
 		}
 	}
@@ -17507,14 +17646,14 @@ func ValidateGetSessionDetailResponseWithDepth(m *GetSessionDetailResponse, dept
 
 	// Validate Summary nested message
 	if m.Summary != nil {
-		if err := claudesensor.ValidateSessionSummaryWithDepth(m.Summary, depth+1); err != nil {
+		if err := agentsensor.ValidateSessionSummaryWithDepth(m.Summary, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field Summary validation failed")
 		}
 	}
 
 	// Validate RecentEvents nested messages
 	for i, val := range m.RecentEvents {
-		if err := claudesensor.ValidateSensorEventWithDepth(val, depth+1); err != nil {
+		if err := agentsensor.ValidateAgentEventWithDepth(val, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field RecentEvents[%d] validation failed", i)
 		}
 	}
@@ -17538,16 +17677,9 @@ func ValidateGetUserActivityRequestWithDepth(m *GetUserActivityRequest, depth in
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Email (assert_required)
-	if m.Email == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email is required")
-	}
-
-	// Validate Email (assert_email)
-	if m.Email != "" {
-		if err := utils.ValidateAssertEmail(m.Email); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field Email email validation failed")
-		}
+	// Validate SpiffeId (assert_required)
+	if m.SpiffeId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId is required")
 	}
 
 	// Validate TimeRangeHours (assert_ge: 1)
@@ -17558,9 +17690,9 @@ func ValidateGetUserActivityRequestWithDepth(m *GetUserActivityRequest, depth in
 	if m.TimeRangeHours > 720 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TimeRangeHours must be <= 720, got: %v", m.TimeRangeHours)
 	}
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -17599,7 +17731,7 @@ func ValidateGetUserActivityResponseWithDepth(m *GetUserActivityResponse, depth 
 
 	// Validate Sessions nested messages
 	for i, val := range m.Sessions {
-		if err := claudesensor.ValidateSessionSummaryWithDepth(val, depth+1); err != nil {
+		if err := agentsensor.ValidateSessionSummaryWithDepth(val, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field Sessions[%d] validation failed", i)
 		}
 	}
@@ -17633,13 +17765,13 @@ func ValidateSearchSessionsRequestWithDepth(m *SearchSessionsRequest, depth int)
 		return protoerrors.NewErrMissingInvalidData(nil, "field Query must be at most 1024 characters, got: %d", len(m.Query))
 	}
 
-	// Validate PageSize (assert_le: 500)
-	if m.PageSize > 500 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 500, got: %v", m.PageSize)
-	}
 	// Validate PageSize (assert_ge: 1)
 	if m.PageSize < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 1, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_le: 500)
+	if m.PageSize > 500 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 500, got: %v", m.PageSize)
 	}
 	// Validate Query (default max size: 32768 bytes)
 	if len(m.Query) > 32768 {
@@ -17692,7 +17824,7 @@ func ValidateSearchSessionsResponseWithDepth(m *SearchSessionsResponse, depth in
 
 	// Validate Sessions nested messages
 	for i, val := range m.Sessions {
-		if err := claudesensor.ValidateSessionSummaryWithDepth(val, depth+1); err != nil {
+		if err := agentsensor.ValidateSessionSummaryWithDepth(val, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field Sessions[%d] validation failed", i)
 		}
 	}
@@ -17944,6 +18076,19 @@ func ValidateScratchpadListRequestWithDepth(m *ScratchpadListRequest, depth int)
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
+	// Validate PageSize (assert_ge: 1)
+	if m.PageSize < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 1, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_le: 1000)
+	if m.PageSize > 1000 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 1000, got: %v", m.PageSize)
+	}
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
+	}
+
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
@@ -17971,6 +18116,11 @@ func ValidateScratchpadListResponseWithDepth(m *ScratchpadListResponse, depth in
 	// Validate Entries (assert_max_size: 1000)
 	if len(m.Entries) > 1000 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Entries exceeds max size of 1000, got: %d", len(m.Entries))
+	}
+
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -18163,16 +18313,9 @@ func ValidateWatchUserActivityRequestWithDepth(m *WatchUserActivityRequest, dept
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Email (assert_required)
-	if m.Email == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email is required")
-	}
-
-	// Validate Email (assert_email)
-	if m.Email != "" {
-		if err := utils.ValidateAssertEmail(m.Email); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field Email email validation failed")
-		}
+	// Validate SpiffeId (assert_required)
+	if m.SpiffeId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId is required")
 	}
 
 	// Validate TimeRangeHours (assert_ge: 1)
@@ -18183,9 +18326,9 @@ func ValidateWatchUserActivityRequestWithDepth(m *WatchUserActivityRequest, dept
 	if m.TimeRangeHours > 720 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TimeRangeHours must be <= 720, got: %v", m.TimeRangeHours)
 	}
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -18260,14 +18403,14 @@ func ValidateWatchScratchpadReadRequestWithDepth(m *WatchScratchpadReadRequest, 
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Key (assert_max_length: 256)
-	if len(m.Key) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Key must be at most 256 characters, got: %d", len(m.Key))
-	}
-
 	// Validate Key (assert_required)
 	if m.Key == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Key is required")
+	}
+
+	// Validate Key (assert_max_length: 256)
+	if len(m.Key) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key must be at most 256 characters, got: %d", len(m.Key))
 	}
 
 	// Validate Key (default max size: 32768 bytes)
@@ -18299,9 +18442,9 @@ func ValidateUserSummaryWithDepth(m *UserSummary, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -18348,7 +18491,7 @@ func ValidateListUsersRequestWithDepth(m *ListUsersRequest, depth int) error {
 
 	// Validate TimeRange nested message
 	if m.TimeRange != nil {
-		if err := claudesensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
+		if err := agentsensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
 		}
 	}
@@ -18471,21 +18614,14 @@ func ValidateGetUserProfileRequestWithDepth(m *GetUserProfileRequest, depth int)
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Email (assert_email)
-	if m.Email != "" {
-		if err := utils.ValidateAssertEmail(m.Email); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field Email email validation failed")
-		}
+	// Validate SpiffeId (assert_required)
+	if m.SpiffeId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId is required")
 	}
 
-	// Validate Email (assert_required)
-	if m.Email == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email is required")
-	}
-
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -18495,7 +18631,7 @@ func ValidateGetUserProfileRequestWithDepth(m *GetUserProfileRequest, depth int)
 
 	// Validate TimeRange nested message
 	if m.TimeRange != nil {
-		if err := claudesensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
+		if err := agentsensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
 		}
 	}
@@ -18553,9 +18689,9 @@ func ValidateGetUserProfileResponseWithDepth(m *GetUserProfileResponse, depth in
 		}
 	}
 
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -18596,21 +18732,14 @@ func ValidateWatchUserProfileRequestWithDepth(m *WatchUserProfileRequest, depth 
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Email (assert_required)
-	if m.Email == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email is required")
+	// Validate SpiffeId (assert_required)
+	if m.SpiffeId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId is required")
 	}
 
-	// Validate Email (assert_email)
-	if m.Email != "" {
-		if err := utils.ValidateAssertEmail(m.Email); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field Email email validation failed")
-		}
-	}
-
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -18620,7 +18749,7 @@ func ValidateWatchUserProfileRequestWithDepth(m *WatchUserProfileRequest, depth 
 
 	// Validate TimeRange nested message
 	if m.TimeRange != nil {
-		if err := claudesensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
+		if err := agentsensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
 		}
 	}
@@ -18668,16 +18797,9 @@ func ValidateGetUserTokenStatsRequestWithDepth(m *GetUserTokenStatsRequest, dept
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Email (assert_required)
-	if m.Email == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email is required")
-	}
-
-	// Validate Email (assert_email)
-	if m.Email != "" {
-		if err := utils.ValidateAssertEmail(m.Email); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field Email email validation failed")
-		}
+	// Validate SpiffeId (assert_required)
+	if m.SpiffeId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId is required")
 	}
 
 	// Validate TimeRange (assert_required)
@@ -18689,9 +18811,9 @@ func ValidateGetUserTokenStatsRequestWithDepth(m *GetUserTokenStatsRequest, dept
 	if m.BucketSeconds < 60 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field BucketSeconds must be >= 60, got: %v", m.BucketSeconds)
 	}
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -18701,7 +18823,7 @@ func ValidateGetUserTokenStatsRequestWithDepth(m *GetUserTokenStatsRequest, dept
 
 	// Validate TimeRange nested message
 	if m.TimeRange != nil {
-		if err := claudesensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
+		if err := agentsensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
 		}
 	}
@@ -18730,9 +18852,9 @@ func ValidateGetUserTokenStatsResponseWithDepth(m *GetUserTokenStatsResponse, de
 		return protoerrors.NewErrMissingInvalidData(nil, "field Buckets exceeds max size of 1000, got: %d", len(m.Buckets))
 	}
 
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -18791,9 +18913,9 @@ func ValidateCommitRecordWithDepth(m *CommitRecord, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Output exceeds max size of 32768 bytes, got: %d", len(m.Output))
 	}
 
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate EventId (default max size: 32768 bytes)
@@ -18825,16 +18947,9 @@ func ValidateGetUserCommitActivityRequestWithDepth(m *GetUserCommitActivityReque
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Email (assert_required)
-	if m.Email == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email is required")
-	}
-
-	// Validate Email (assert_email)
-	if m.Email != "" {
-		if err := utils.ValidateAssertEmail(m.Email); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field Email email validation failed")
-		}
+	// Validate SpiffeId (assert_required)
+	if m.SpiffeId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId is required")
 	}
 
 	// Validate Limit (assert_ge: 1)
@@ -18845,9 +18960,22 @@ func ValidateGetUserCommitActivityRequestWithDepth(m *GetUserCommitActivityReque
 	if m.Limit > 500 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Limit must be <= 500, got: %v", m.Limit)
 	}
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate PageSize (assert_ge: 1)
+	if m.PageSize < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 1, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_le: 500)
+	if m.PageSize > 500 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 500, got: %v", m.PageSize)
+	}
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
+	}
+
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -18857,7 +18985,7 @@ func ValidateGetUserCommitActivityRequestWithDepth(m *GetUserCommitActivityReque
 
 	// Validate TimeRange nested message
 	if m.TimeRange != nil {
-		if err := claudesensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
+		if err := agentsensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
 		}
 	}
@@ -18884,6 +19012,11 @@ func ValidateGetUserCommitActivityResponseWithDepth(m *GetUserCommitActivityResp
 	// Validate Commits (assert_max_size: 500)
 	if len(m.Commits) > 500 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Commits exceeds max size of 500, got: %d", len(m.Commits))
+	}
+
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -18922,9 +19055,9 @@ func ValidateFileActivityRecordWithDepth(m *FileActivityRecord, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field FilePath exceeds max size of 32768 bytes, got: %d", len(m.FilePath))
 	}
 
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate SessionId (default max size: 32768 bytes)
@@ -18948,7 +19081,7 @@ func ValidateFileActivityRecordWithDepth(m *FileActivityRecord, depth int) error
 	}
 
 	// Validate Operation enum value is known
-	if _, ok := claudesensor.FileOperation_name[int32(m.Operation)]; !ok {
+	if _, ok := agentsensor.FileOperation_name[int32(m.Operation)]; !ok {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Operation has unknown enum value %d", int32(m.Operation))
 	}
 
@@ -18984,9 +19117,9 @@ func ValidateGetFileActivityRequestWithDepth(m *GetFileActivityRequest, depth in
 	if m.PageSize > 1000 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 1000, got: %v", m.PageSize)
 	}
-	// Validate EmailFilter (default max size: 32768 bytes)
-	if len(m.EmailFilter) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field EmailFilter exceeds max size of 32768 bytes, got: %d", len(m.EmailFilter))
+	// Validate SpiffeIdFilter (default max size: 32768 bytes)
+	if len(m.SpiffeIdFilter) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeIdFilter exceeds max size of 32768 bytes, got: %d", len(m.SpiffeIdFilter))
 	}
 
 	// Validate PathPrefix (default max size: 32768 bytes)
@@ -19006,7 +19139,7 @@ func ValidateGetFileActivityRequestWithDepth(m *GetFileActivityRequest, depth in
 
 	// Validate TimeRange nested message
 	if m.TimeRange != nil {
-		if err := claudesensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
+		if err := agentsensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
 		}
 	}
@@ -19101,7 +19234,7 @@ func ValidateGetSessionTimelineRequestWithDepth(m *GetSessionTimelineRequest, de
 
 	// Validate TimeRange nested message
 	if m.TimeRange != nil {
-		if err := claudesensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
+		if err := agentsensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
 		}
 	}
@@ -19142,7 +19275,7 @@ func ValidateGetSessionTimelineResponseWithDepth(m *GetSessionTimelineResponse, 
 
 	// Validate Events nested messages
 	for i, val := range m.Events {
-		if err := claudesensor.ValidateSensorEventWithDepth(val, depth+1); err != nil {
+		if err := agentsensor.ValidateAgentEventWithDepth(val, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field Events[%d] validation failed", i)
 		}
 	}
@@ -19294,7 +19427,7 @@ func ValidateGetSystemStatsRequestWithDepth(m *GetSystemStatsRequest, depth int)
 
 	// Validate TimeRange nested message
 	if m.TimeRange != nil {
-		if err := claudesensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
+		if err := agentsensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
 		}
 	}
@@ -19349,7 +19482,7 @@ func ValidateWatchSystemStatsRequestWithDepth(m *WatchSystemStatsRequest, depth 
 
 	// Validate TimeRange nested message
 	if m.TimeRange != nil {
-		if err := claudesensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
+		if err := agentsensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
 		}
 	}
@@ -19415,9 +19548,22 @@ func ValidateGetToolLeaderboardRequestWithDepth(m *GetToolLeaderboardRequest, de
 	if m.Limit > 100 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Limit must be <= 100, got: %v", m.Limit)
 	}
-	// Validate EmailFilter (default max size: 32768 bytes)
-	if len(m.EmailFilter) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field EmailFilter exceeds max size of 32768 bytes, got: %d", len(m.EmailFilter))
+	// Validate PageSize (assert_le: 100)
+	if m.PageSize > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 100, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_ge: 1)
+	if m.PageSize < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 1, got: %v", m.PageSize)
+	}
+	// Validate SpiffeIdFilter (default max size: 32768 bytes)
+	if len(m.SpiffeIdFilter) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeIdFilter exceeds max size of 32768 bytes, got: %d", len(m.SpiffeIdFilter))
+	}
+
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -19427,7 +19573,7 @@ func ValidateGetToolLeaderboardRequestWithDepth(m *GetToolLeaderboardRequest, de
 
 	// Validate TimeRange nested message
 	if m.TimeRange != nil {
-		if err := claudesensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
+		if err := agentsensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
 		}
 	}
@@ -19454,6 +19600,11 @@ func ValidateGetToolLeaderboardResponseWithDepth(m *GetToolLeaderboardResponse, 
 	// Validate Tools (assert_max_size: 1000)
 	if len(m.Tools) > 1000 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Tools exceeds max size of 1000, got: %d", len(m.Tools))
+	}
+
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -19492,17 +19643,17 @@ func ValidateWatchToolLeaderboardRequestWithDepth(m *WatchToolLeaderboardRequest
 		return protoerrors.NewErrMissingInvalidData(nil, "field TimeRange is required")
 	}
 
-	// Validate Limit (assert_le: 100)
-	if m.Limit > 100 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Limit must be <= 100, got: %v", m.Limit)
-	}
 	// Validate Limit (assert_ge: 1)
 	if m.Limit < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Limit must be >= 1, got: %v", m.Limit)
 	}
-	// Validate EmailFilter (default max size: 32768 bytes)
-	if len(m.EmailFilter) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field EmailFilter exceeds max size of 32768 bytes, got: %d", len(m.EmailFilter))
+	// Validate Limit (assert_le: 100)
+	if m.Limit > 100 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Limit must be <= 100, got: %v", m.Limit)
+	}
+	// Validate SpiffeIdFilter (default max size: 32768 bytes)
+	if len(m.SpiffeIdFilter) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeIdFilter exceeds max size of 32768 bytes, got: %d", len(m.SpiffeIdFilter))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -19512,7 +19663,7 @@ func ValidateWatchToolLeaderboardRequestWithDepth(m *WatchToolLeaderboardRequest
 
 	// Validate TimeRange nested message
 	if m.TimeRange != nil {
-		if err := claudesensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
+		if err := agentsensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
 		}
 	}
@@ -19582,6 +19733,19 @@ func ValidateGetModelUsageRequestWithDepth(m *GetModelUsageRequest, depth int) e
 		return protoerrors.NewErrMissingInvalidData(nil, "field TimeRange is required")
 	}
 
+	// Validate PageSize (assert_ge: 1)
+	if m.PageSize < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 1, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_le: 1000)
+	if m.PageSize > 1000 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 1000, got: %v", m.PageSize)
+	}
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
+	}
+
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
@@ -19589,7 +19753,7 @@ func ValidateGetModelUsageRequestWithDepth(m *GetModelUsageRequest, depth int) e
 
 	// Validate TimeRange nested message
 	if m.TimeRange != nil {
-		if err := claudesensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
+		if err := agentsensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
 		}
 	}
@@ -19616,6 +19780,11 @@ func ValidateGetModelUsageResponseWithDepth(m *GetModelUsageResponse, depth int)
 	// Validate Models (assert_max_size: 1000)
 	if len(m.Models) > 1000 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Models exceeds max size of 1000, got: %d", len(m.Models))
+	}
+
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -19687,6 +19856,19 @@ func ValidateGetActivityTimeseriesRequestWithDepth(m *GetActivityTimeseriesReque
 	if m.BucketSeconds < 60 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field BucketSeconds must be >= 60, got: %v", m.BucketSeconds)
 	}
+	// Validate PageSize (assert_ge: 1)
+	if m.PageSize < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 1, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_le: 1000)
+	if m.PageSize > 1000 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 1000, got: %v", m.PageSize)
+	}
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
+	}
+
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
@@ -19699,7 +19881,7 @@ func ValidateGetActivityTimeseriesRequestWithDepth(m *GetActivityTimeseriesReque
 
 	// Validate TimeRange nested message
 	if m.TimeRange != nil {
-		if err := claudesensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
+		if err := agentsensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
 		}
 	}
@@ -19726,6 +19908,11 @@ func ValidateGetActivityTimeseriesResponseWithDepth(m *GetActivityTimeseriesResp
 	// Validate Buckets (assert_max_size: 1000)
 	if len(m.Buckets) > 1000 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Buckets exceeds max size of 1000, got: %d", len(m.Buckets))
+	}
+
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -19759,9 +19946,9 @@ func ValidateSearchEventsFilterWithDepth(m *SearchEventsFilter, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate SessionId (default max size: 32768 bytes)
@@ -19785,13 +19972,13 @@ func ValidateSearchEventsFilterWithDepth(m *SearchEventsFilter, depth int) error
 	}
 
 	// Validate EventType enum value is known
-	if _, ok := claudesensor.SensorEventType_name[int32(m.EventType)]; !ok {
+	if _, ok := agentsensor.SensorEventType_name[int32(m.EventType)]; !ok {
 		return protoerrors.NewErrMissingInvalidData(nil, "field EventType has unknown enum value %d", int32(m.EventType))
 	}
 
 	// Validate TimeRange nested message
 	if m.TimeRange != nil {
-		if err := claudesensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
+		if err := agentsensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
 		}
 	}
@@ -19820,13 +20007,13 @@ func ValidateSearchEventsRequestWithDepth(m *SearchEventsRequest, depth int) err
 		return protoerrors.NewErrMissingInvalidData(nil, "field Filter is required")
 	}
 
-	// Validate PageSize (assert_le: 500)
-	if m.PageSize > 500 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 500, got: %v", m.PageSize)
-	}
 	// Validate PageSize (assert_ge: 1)
 	if m.PageSize < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be >= 1, got: %v", m.PageSize)
+	}
+	// Validate PageSize (assert_le: 500)
+	if m.PageSize > 500 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageSize must be <= 500, got: %v", m.PageSize)
 	}
 	// Validate PageToken (default max size: 32768 bytes)
 	if len(m.PageToken) > 32768 {
@@ -19881,7 +20068,7 @@ func ValidateSearchEventsResponseWithDepth(m *SearchEventsResponse, depth int) e
 
 	// Validate Events nested messages
 	for i, val := range m.Events {
-		if err := claudesensor.ValidateSensorEventWithDepth(val, depth+1); err != nil {
+		if err := agentsensor.ValidateAgentEventWithDepth(val, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field Events[%d] validation failed", i)
 		}
 	}
@@ -19920,9 +20107,9 @@ func ValidateFilePathMatchWithDepth(m *FilePathMatch, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field AgentId exceeds max size of 32768 bytes, got: %d", len(m.AgentId))
 	}
 
-	// Validate Email (default max size: 32768 bytes)
-	if len(m.Email) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
+	// Validate SpiffeId (default max size: 32768 bytes)
+	if len(m.SpiffeId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 32768 bytes, got: %d", len(m.SpiffeId))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -19931,7 +20118,7 @@ func ValidateFilePathMatchWithDepth(m *FilePathMatch, depth int) error {
 	}
 
 	// Validate Operation enum value is known
-	if _, ok := claudesensor.FileOperation_name[int32(m.Operation)]; !ok {
+	if _, ok := agentsensor.FileOperation_name[int32(m.Operation)]; !ok {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Operation has unknown enum value %d", int32(m.Operation))
 	}
 
@@ -19977,9 +20164,9 @@ func ValidateSearchByFilePathRequestWithDepth(m *SearchByFilePathRequest, depth 
 		return protoerrors.NewErrMissingInvalidData(nil, "field PathPattern exceeds max size of 32768 bytes, got: %d", len(m.PathPattern))
 	}
 
-	// Validate EmailFilter (default max size: 32768 bytes)
-	if len(m.EmailFilter) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field EmailFilter exceeds max size of 32768 bytes, got: %d", len(m.EmailFilter))
+	// Validate SpiffeIdFilter (default max size: 32768 bytes)
+	if len(m.SpiffeIdFilter) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeIdFilter exceeds max size of 32768 bytes, got: %d", len(m.SpiffeIdFilter))
 	}
 
 	// Validate PageToken (default max size: 32768 bytes)
@@ -19994,7 +20181,7 @@ func ValidateSearchByFilePathRequestWithDepth(m *SearchByFilePathRequest, depth 
 
 	// Validate TimeRange nested message
 	if m.TimeRange != nil {
-		if err := claudesensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
+		if err := agentsensor.ValidateEventTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
 		}
 	}
@@ -20107,15 +20294,20 @@ const (
 	DefaultListactivesessionsrequestPageSize         int64 = 50
 	DefaultGetuseractivityrequestTimeRangeHours      int64 = 24
 	DefaultSearchsessionsrequestPageSize             int64 = 50
+	DefaultScratchpadlistrequestPageSize             int64 = 100
 	DefaultWatchuseractivityrequestTimeRangeHours    int64 = 24
 	DefaultListusersrequestPageSize                  int64 = 200
 	DefaultGetusertokenstatsrequestBucketSeconds     int64 = 3600
 	DefaultGetusercommitactivityrequestLimit         int64 = 200
+	DefaultGetusercommitactivityrequestPageSize      int64 = 200
 	DefaultGetfileactivityrequestPageSize            int64 = 100
 	DefaultGetsessiontimelinerequestPageSize         int64 = 100
 	DefaultGettoolleaderboardrequestLimit            int64 = 20
+	DefaultGettoolleaderboardrequestPageSize         int64 = 20
 	DefaultWatchtoolleaderboardrequestLimit          int64 = 20
+	DefaultGetmodelusagerequestPageSize              int64 = 100
 	DefaultGetactivitytimeseriesrequestBucketSeconds int64 = 3600
+	DefaultGetactivitytimeseriesrequestPageSize      int64 = 100
 	DefaultSearcheventsrequestPageSize               int64 = 50
 	DefaultSearchbyfilepathrequestPageSize           int64 = 50
 )
@@ -20124,175 +20316,185 @@ const (
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizeConfigTraceId                            int = 32768
-	MaxSizeArgusstateTraceId                        int = 32768
-	MaxSizeArgusservicehealthTraceId                int = 32768
-	MaxSizeGetdashboardrequestTraceId               int = 32768
-	MaxSizeGetdashboardresponseTopActive            int = 10
-	MaxSizeGetdashboardresponseActiveUsers          int = 200
-	MaxSizeGetdashboardresponseTraceId              int = 32768
-	MaxSizeListactivesessionsrequestPageToken       int = 32768
-	MaxSizeListactivesessionsrequestTraceId         int = 32768
-	MaxSizeListactivesessionsresponseSessions       int = 10000
-	MaxSizeListactivesessionsresponseNextPageToken  int = 32768
-	MaxSizeListactivesessionsresponseTraceId        int = 32768
-	MaxSizeGetsessiondetailrequestSessionId         int = 32768
-	MaxSizeGetsessiondetailrequestTraceId           int = 32768
-	MaxSizeGetsessiondetailresponseRecentEvents     int = 100
-	MaxSizeGetsessiondetailresponseTraceId          int = 32768
-	MaxSizeGetuseractivityrequestEmail              int = 32768
-	MaxSizeGetuseractivityrequestTraceId            int = 32768
-	MaxSizeGetuseractivityresponseSessions          int = 10000
-	MaxSizeGetuseractivityresponseTraceId           int = 32768
-	MaxSizeSearchsessionsrequestQuery               int = 32768
-	MaxSizeSearchsessionsrequestPageToken           int = 32768
-	MaxSizeSearchsessionsrequestTraceId             int = 32768
-	MaxSizeSearchsessionsresponseSessions           int = 10000
-	MaxSizeSearchsessionsresponseNextPageToken      int = 32768
-	MaxSizeSearchsessionsresponseTraceId            int = 32768
-	MaxSizeScratchpadentryKey                       int = 32768
-	MaxSizeScratchpadentryTraceId                   int = 32768
-	MaxSizeScratchpadreadrequestKey                 int = 32768
-	MaxSizeScratchpadreadrequestTraceId             int = 32768
-	MaxSizeScratchpadreadresponseValue              int = 32768
-	MaxSizeScratchpadreadresponseTraceId            int = 32768
-	MaxSizeScratchpadwriterequestKey                int = 32768
-	MaxSizeScratchpadwriterequestValue              int = 32768
-	MaxSizeScratchpadwriterequestTraceId            int = 32768
-	MaxSizeScratchpadwriteresponseTraceId           int = 32768
-	MaxSizeScratchpaddeleterequestKey               int = 32768
-	MaxSizeScratchpaddeleterequestTraceId           int = 32768
-	MaxSizeScratchpaddeleteresponseTraceId          int = 32768
-	MaxSizeScratchpadlistrequestTraceId             int = 32768
-	MaxSizeScratchpadlistresponseEntries            int = 1000
-	MaxSizeScratchpadlistresponseTraceId            int = 32768
-	MaxSizeScratchpadclearrequestTraceId            int = 32768
-	MaxSizeScratchpadclearresponseTraceId           int = 32768
-	MaxSizeGetsupervisorcontextrequestTraceId       int = 32768
-	MaxSizeGetsupervisorcontextresponseContextText  int = 32768
-	MaxSizeGetsupervisorcontextresponseTraceId      int = 32768
-	MaxSizeWatchdashboardrequestTraceId             int = 32768
-	MaxSizeWatchsessiondetailrequestSessionId       int = 32768
-	MaxSizeWatchsessiondetailrequestTraceId         int = 32768
-	MaxSizeWatchuseractivityrequestEmail            int = 32768
-	MaxSizeWatchuseractivityrequestTraceId          int = 32768
-	MaxSizeWatchsupervisorcontextrequestTraceId     int = 32768
-	MaxSizeWatchscratchpadlistrequestTraceId        int = 32768
-	MaxSizeWatchscratchpadreadrequestKey            int = 32768
-	MaxSizeWatchscratchpadreadrequestTraceId        int = 32768
-	MaxSizeUsersummaryEmail                         int = 32768
-	MaxSizeUsersummaryTraceId                       int = 32768
-	MaxSizeListusersrequestPageToken                int = 32768
-	MaxSizeListusersrequestTraceId                  int = 32768
-	MaxSizeListusersresponseUsers                   int = 1000
-	MaxSizeListusersresponseNextPageToken           int = 32768
-	MaxSizeListusersresponseTraceId                 int = 32768
-	MaxSizeToolusestatToolName                      int = 32768
-	MaxSizeToolusestatTraceId                       int = 32768
-	MaxSizeModelusestatModel                        int = 32768
-	MaxSizeModelusestatTraceId                      int = 32768
-	MaxSizeGetuserprofilerequestEmail               int = 32768
-	MaxSizeGetuserprofilerequestTraceId             int = 32768
-	MaxSizeGetuserprofileresponseEmail              int = 32768
-	MaxSizeGetuserprofileresponseTopTools           int = 10
-	MaxSizeGetuserprofileresponseModels             int = 20
-	MaxSizeGetuserprofileresponsePermissionModes    int = 10
-	MaxSizeGetuserprofileresponseWorkingDirectories int = 50
-	MaxSizeGetuserprofileresponseTraceId            int = 32768
-	MaxSizeWatchuserprofilerequestEmail             int = 32768
-	MaxSizeWatchuserprofilerequestTraceId           int = 32768
-	MaxSizePromptbucketTraceId                      int = 32768
-	MaxSizeGetusertokenstatsrequestEmail            int = 32768
-	MaxSizeGetusertokenstatsrequestTraceId          int = 32768
-	MaxSizeGetusertokenstatsresponseEmail           int = 32768
-	MaxSizeGetusertokenstatsresponseBuckets         int = 1000
-	MaxSizeGetusertokenstatsresponseTraceId         int = 32768
-	MaxSizeCommitrecordSessionId                    int = 32768
-	MaxSizeCommitrecordAgentId                      int = 32768
-	MaxSizeCommitrecordWorkingDirectory             int = 32768
-	MaxSizeCommitrecordCommand                      int = 32768
-	MaxSizeCommitrecordOutput                       int = 32768
-	MaxSizeCommitrecordEmail                        int = 32768
-	MaxSizeCommitrecordEventId                      int = 32768
-	MaxSizeCommitrecordTraceId                      int = 32768
-	MaxSizeGetusercommitactivityrequestEmail        int = 32768
-	MaxSizeGetusercommitactivityrequestTraceId      int = 32768
-	MaxSizeGetusercommitactivityresponseCommits     int = 500
-	MaxSizeGetusercommitactivityresponseTraceId     int = 32768
-	MaxSizeFileactivityrecordFilePath               int = 32768
-	MaxSizeFileactivityrecordEmail                  int = 32768
-	MaxSizeFileactivityrecordSessionId              int = 32768
-	MaxSizeFileactivityrecordAgentId                int = 32768
-	MaxSizeFileactivityrecordLanguage               int = 32768
-	MaxSizeFileactivityrecordTraceId                int = 32768
-	MaxSizeGetfileactivityrequestEmailFilter        int = 32768
-	MaxSizeGetfileactivityrequestPathPrefix         int = 32768
-	MaxSizeGetfileactivityrequestPageToken          int = 32768
-	MaxSizeGetfileactivityrequestTraceId            int = 32768
-	MaxSizeGetfileactivityresponseRecords           int = 10000
-	MaxSizeGetfileactivityresponseNextPageToken     int = 32768
-	MaxSizeGetfileactivityresponseTraceId           int = 32768
-	MaxSizeGetsessiontimelinerequestSessionId       int = 32768
-	MaxSizeGetsessiontimelinerequestPageToken       int = 32768
-	MaxSizeGetsessiontimelinerequestTraceId         int = 32768
-	MaxSizeGetsessiontimelineresponseEvents         int = 10000
-	MaxSizeGetsessiontimelineresponseNextPageToken  int = 32768
-	MaxSizeGetsessiontimelineresponseTraceId        int = 32768
-	MaxSizeAgentnodeAgentId                         int = 32768
-	MaxSizeAgentnodeParentAgentId                   int = 32768
-	MaxSizeAgentnodeSubagentType                    int = 32768
-	MaxSizeAgentnodeModel                           int = 32768
-	MaxSizeAgentnodeChildren                        int = 1024
-	MaxSizeAgentnodeTraceId                         int = 32768
-	MaxSizeGetagenttreerequestSessionId             int = 32768
-	MaxSizeGetagenttreerequestTraceId               int = 32768
-	MaxSizeGetagenttreeresponseTraceId              int = 32768
-	MaxSizeGetsystemstatsrequestTraceId             int = 32768
-	MaxSizeGetsystemstatsresponseTraceId            int = 32768
-	MaxSizeWatchsystemstatsrequestTraceId           int = 32768
-	MaxSizeToolstatToolName                         int = 32768
-	MaxSizeToolstatTraceId                          int = 32768
-	MaxSizeGettoolleaderboardrequestEmailFilter     int = 32768
-	MaxSizeGettoolleaderboardrequestTraceId         int = 32768
-	MaxSizeGettoolleaderboardresponseTools          int = 1000
-	MaxSizeGettoolleaderboardresponseTraceId        int = 32768
-	MaxSizeWatchtoolleaderboardrequestEmailFilter   int = 32768
-	MaxSizeWatchtoolleaderboardrequestTraceId       int = 32768
-	MaxSizeModelstatModel                           int = 32768
-	MaxSizeModelstatTopUsers                        int = 5
-	MaxSizeModelstatTraceId                         int = 32768
-	MaxSizeGetmodelusagerequestTraceId              int = 32768
-	MaxSizeGetmodelusageresponseModels              int = 1000
-	MaxSizeGetmodelusageresponseTraceId             int = 32768
-	MaxSizeActivitybucketGroupKey                   int = 32768
-	MaxSizeActivitybucketTraceId                    int = 32768
-	MaxSizeGetactivitytimeseriesrequestTraceId      int = 32768
-	MaxSizeGetactivitytimeseriesresponseBuckets     int = 1000
-	MaxSizeGetactivitytimeseriesresponseTraceId     int = 32768
-	MaxSizeSearcheventsfilterEmail                  int = 32768
-	MaxSizeSearcheventsfilterSessionId              int = 32768
-	MaxSizeSearcheventsfilterAgentId                int = 32768
-	MaxSizeSearcheventsfilterToolName               int = 32768
-	MaxSizeSearcheventsfilterTraceId                int = 32768
-	MaxSizeSearcheventsrequestPageToken             int = 32768
-	MaxSizeSearcheventsrequestTraceId               int = 32768
-	MaxSizeSearcheventsresponseEvents               int = 10000
-	MaxSizeSearcheventsresponseNextPageToken        int = 32768
-	MaxSizeSearcheventsresponseTraceId              int = 32768
-	MaxSizeFilepathmatchFilePath                    int = 32768
-	MaxSizeFilepathmatchSessionId                   int = 32768
-	MaxSizeFilepathmatchAgentId                     int = 32768
-	MaxSizeFilepathmatchEmail                       int = 32768
-	MaxSizeFilepathmatchTraceId                     int = 32768
-	MaxSizeSearchbyfilepathrequestPathPattern       int = 32768
-	MaxSizeSearchbyfilepathrequestEmailFilter       int = 32768
-	MaxSizeSearchbyfilepathrequestPageToken         int = 32768
-	MaxSizeSearchbyfilepathrequestTraceId           int = 32768
-	MaxSizeSearchbyfilepathresponseMatches          int = 10000
-	MaxSizeSearchbyfilepathresponseNextPageToken    int = 32768
-	MaxSizeSearchbyfilepathresponseTraceId          int = 32768
-	MaxSizeArgusconfigstateTraceId                  int = 32768
-	MaxSizeMapemptyTraceId                          int = 32768
+	MaxSizeConfigTraceId                              int = 32768
+	MaxSizeArgusstateTraceId                          int = 32768
+	MaxSizeArgusservicehealthTraceId                  int = 32768
+	MaxSizeGetdashboardrequestTraceId                 int = 32768
+	MaxSizeGetdashboardresponseTopActive              int = 10
+	MaxSizeGetdashboardresponseActiveUsers            int = 200
+	MaxSizeGetdashboardresponseTraceId                int = 32768
+	MaxSizeListactivesessionsrequestPageToken         int = 32768
+	MaxSizeListactivesessionsrequestTraceId           int = 32768
+	MaxSizeListactivesessionsresponseSessions         int = 10000
+	MaxSizeListactivesessionsresponseNextPageToken    int = 32768
+	MaxSizeListactivesessionsresponseTraceId          int = 32768
+	MaxSizeGetsessiondetailrequestSessionId           int = 32768
+	MaxSizeGetsessiondetailrequestTraceId             int = 32768
+	MaxSizeGetsessiondetailresponseRecentEvents       int = 100
+	MaxSizeGetsessiondetailresponseTraceId            int = 32768
+	MaxSizeGetuseractivityrequestSpiffeId             int = 32768
+	MaxSizeGetuseractivityrequestTraceId              int = 32768
+	MaxSizeGetuseractivityresponseSessions            int = 10000
+	MaxSizeGetuseractivityresponseTraceId             int = 32768
+	MaxSizeSearchsessionsrequestQuery                 int = 32768
+	MaxSizeSearchsessionsrequestPageToken             int = 32768
+	MaxSizeSearchsessionsrequestTraceId               int = 32768
+	MaxSizeSearchsessionsresponseSessions             int = 10000
+	MaxSizeSearchsessionsresponseNextPageToken        int = 32768
+	MaxSizeSearchsessionsresponseTraceId              int = 32768
+	MaxSizeScratchpadentryKey                         int = 32768
+	MaxSizeScratchpadentryTraceId                     int = 32768
+	MaxSizeScratchpadreadrequestKey                   int = 32768
+	MaxSizeScratchpadreadrequestTraceId               int = 32768
+	MaxSizeScratchpadreadresponseValue                int = 32768
+	MaxSizeScratchpadreadresponseTraceId              int = 32768
+	MaxSizeScratchpadwriterequestKey                  int = 32768
+	MaxSizeScratchpadwriterequestValue                int = 32768
+	MaxSizeScratchpadwriterequestTraceId              int = 32768
+	MaxSizeScratchpadwriteresponseTraceId             int = 32768
+	MaxSizeScratchpaddeleterequestKey                 int = 32768
+	MaxSizeScratchpaddeleterequestTraceId             int = 32768
+	MaxSizeScratchpaddeleteresponseTraceId            int = 32768
+	MaxSizeScratchpadlistrequestPageToken             int = 32768
+	MaxSizeScratchpadlistrequestTraceId               int = 32768
+	MaxSizeScratchpadlistresponseEntries              int = 1000
+	MaxSizeScratchpadlistresponseNextPageToken        int = 32768
+	MaxSizeScratchpadlistresponseTraceId              int = 32768
+	MaxSizeScratchpadclearrequestTraceId              int = 32768
+	MaxSizeScratchpadclearresponseTraceId             int = 32768
+	MaxSizeGetsupervisorcontextrequestTraceId         int = 32768
+	MaxSizeGetsupervisorcontextresponseContextText    int = 32768
+	MaxSizeGetsupervisorcontextresponseTraceId        int = 32768
+	MaxSizeWatchdashboardrequestTraceId               int = 32768
+	MaxSizeWatchsessiondetailrequestSessionId         int = 32768
+	MaxSizeWatchsessiondetailrequestTraceId           int = 32768
+	MaxSizeWatchuseractivityrequestSpiffeId           int = 32768
+	MaxSizeWatchuseractivityrequestTraceId            int = 32768
+	MaxSizeWatchsupervisorcontextrequestTraceId       int = 32768
+	MaxSizeWatchscratchpadlistrequestTraceId          int = 32768
+	MaxSizeWatchscratchpadreadrequestKey              int = 32768
+	MaxSizeWatchscratchpadreadrequestTraceId          int = 32768
+	MaxSizeUsersummarySpiffeId                        int = 32768
+	MaxSizeUsersummaryTraceId                         int = 32768
+	MaxSizeListusersrequestPageToken                  int = 32768
+	MaxSizeListusersrequestTraceId                    int = 32768
+	MaxSizeListusersresponseUsers                     int = 1000
+	MaxSizeListusersresponseNextPageToken             int = 32768
+	MaxSizeListusersresponseTraceId                   int = 32768
+	MaxSizeToolusestatToolName                        int = 32768
+	MaxSizeToolusestatTraceId                         int = 32768
+	MaxSizeModelusestatModel                          int = 32768
+	MaxSizeModelusestatTraceId                        int = 32768
+	MaxSizeGetuserprofilerequestSpiffeId              int = 32768
+	MaxSizeGetuserprofilerequestTraceId               int = 32768
+	MaxSizeGetuserprofileresponseSpiffeId             int = 32768
+	MaxSizeGetuserprofileresponseTopTools             int = 10
+	MaxSizeGetuserprofileresponseModels               int = 20
+	MaxSizeGetuserprofileresponsePermissionModes      int = 10
+	MaxSizeGetuserprofileresponseWorkingDirectories   int = 50
+	MaxSizeGetuserprofileresponseTraceId              int = 32768
+	MaxSizeWatchuserprofilerequestSpiffeId            int = 32768
+	MaxSizeWatchuserprofilerequestTraceId             int = 32768
+	MaxSizePromptbucketTraceId                        int = 32768
+	MaxSizeGetusertokenstatsrequestSpiffeId           int = 32768
+	MaxSizeGetusertokenstatsrequestTraceId            int = 32768
+	MaxSizeGetusertokenstatsresponseSpiffeId          int = 32768
+	MaxSizeGetusertokenstatsresponseBuckets           int = 1000
+	MaxSizeGetusertokenstatsresponseTraceId           int = 32768
+	MaxSizeCommitrecordSessionId                      int = 32768
+	MaxSizeCommitrecordAgentId                        int = 32768
+	MaxSizeCommitrecordWorkingDirectory               int = 32768
+	MaxSizeCommitrecordCommand                        int = 32768
+	MaxSizeCommitrecordOutput                         int = 32768
+	MaxSizeCommitrecordSpiffeId                       int = 32768
+	MaxSizeCommitrecordEventId                        int = 32768
+	MaxSizeCommitrecordTraceId                        int = 32768
+	MaxSizeGetusercommitactivityrequestSpiffeId       int = 32768
+	MaxSizeGetusercommitactivityrequestPageToken      int = 32768
+	MaxSizeGetusercommitactivityrequestTraceId        int = 32768
+	MaxSizeGetusercommitactivityresponseCommits       int = 500
+	MaxSizeGetusercommitactivityresponseNextPageToken int = 32768
+	MaxSizeGetusercommitactivityresponseTraceId       int = 32768
+	MaxSizeFileactivityrecordFilePath                 int = 32768
+	MaxSizeFileactivityrecordSpiffeId                 int = 32768
+	MaxSizeFileactivityrecordSessionId                int = 32768
+	MaxSizeFileactivityrecordAgentId                  int = 32768
+	MaxSizeFileactivityrecordLanguage                 int = 32768
+	MaxSizeFileactivityrecordTraceId                  int = 32768
+	MaxSizeGetfileactivityrequestSpiffeIdFilter       int = 32768
+	MaxSizeGetfileactivityrequestPathPrefix           int = 32768
+	MaxSizeGetfileactivityrequestPageToken            int = 32768
+	MaxSizeGetfileactivityrequestTraceId              int = 32768
+	MaxSizeGetfileactivityresponseRecords             int = 10000
+	MaxSizeGetfileactivityresponseNextPageToken       int = 32768
+	MaxSizeGetfileactivityresponseTraceId             int = 32768
+	MaxSizeGetsessiontimelinerequestSessionId         int = 32768
+	MaxSizeGetsessiontimelinerequestPageToken         int = 32768
+	MaxSizeGetsessiontimelinerequestTraceId           int = 32768
+	MaxSizeGetsessiontimelineresponseEvents           int = 10000
+	MaxSizeGetsessiontimelineresponseNextPageToken    int = 32768
+	MaxSizeGetsessiontimelineresponseTraceId          int = 32768
+	MaxSizeAgentnodeAgentId                           int = 32768
+	MaxSizeAgentnodeParentAgentId                     int = 32768
+	MaxSizeAgentnodeSubagentType                      int = 32768
+	MaxSizeAgentnodeModel                             int = 32768
+	MaxSizeAgentnodeChildren                          int = 1024
+	MaxSizeAgentnodeTraceId                           int = 32768
+	MaxSizeGetagenttreerequestSessionId               int = 32768
+	MaxSizeGetagenttreerequestTraceId                 int = 32768
+	MaxSizeGetagenttreeresponseTraceId                int = 32768
+	MaxSizeGetsystemstatsrequestTraceId               int = 32768
+	MaxSizeGetsystemstatsresponseTraceId              int = 32768
+	MaxSizeWatchsystemstatsrequestTraceId             int = 32768
+	MaxSizeToolstatToolName                           int = 32768
+	MaxSizeToolstatTraceId                            int = 32768
+	MaxSizeGettoolleaderboardrequestSpiffeIdFilter    int = 32768
+	MaxSizeGettoolleaderboardrequestPageToken         int = 32768
+	MaxSizeGettoolleaderboardrequestTraceId           int = 32768
+	MaxSizeGettoolleaderboardresponseTools            int = 1000
+	MaxSizeGettoolleaderboardresponseNextPageToken    int = 32768
+	MaxSizeGettoolleaderboardresponseTraceId          int = 32768
+	MaxSizeWatchtoolleaderboardrequestSpiffeIdFilter  int = 32768
+	MaxSizeWatchtoolleaderboardrequestTraceId         int = 32768
+	MaxSizeModelstatModel                             int = 32768
+	MaxSizeModelstatTopUsers                          int = 5
+	MaxSizeModelstatTraceId                           int = 32768
+	MaxSizeGetmodelusagerequestPageToken              int = 32768
+	MaxSizeGetmodelusagerequestTraceId                int = 32768
+	MaxSizeGetmodelusageresponseModels                int = 1000
+	MaxSizeGetmodelusageresponseNextPageToken         int = 32768
+	MaxSizeGetmodelusageresponseTraceId               int = 32768
+	MaxSizeActivitybucketGroupKey                     int = 32768
+	MaxSizeActivitybucketTraceId                      int = 32768
+	MaxSizeGetactivitytimeseriesrequestPageToken      int = 32768
+	MaxSizeGetactivitytimeseriesrequestTraceId        int = 32768
+	MaxSizeGetactivitytimeseriesresponseBuckets       int = 1000
+	MaxSizeGetactivitytimeseriesresponseNextPageToken int = 32768
+	MaxSizeGetactivitytimeseriesresponseTraceId       int = 32768
+	MaxSizeSearcheventsfilterSpiffeId                 int = 32768
+	MaxSizeSearcheventsfilterSessionId                int = 32768
+	MaxSizeSearcheventsfilterAgentId                  int = 32768
+	MaxSizeSearcheventsfilterToolName                 int = 32768
+	MaxSizeSearcheventsfilterTraceId                  int = 32768
+	MaxSizeSearcheventsrequestPageToken               int = 32768
+	MaxSizeSearcheventsrequestTraceId                 int = 32768
+	MaxSizeSearcheventsresponseEvents                 int = 10000
+	MaxSizeSearcheventsresponseNextPageToken          int = 32768
+	MaxSizeSearcheventsresponseTraceId                int = 32768
+	MaxSizeFilepathmatchFilePath                      int = 32768
+	MaxSizeFilepathmatchSessionId                     int = 32768
+	MaxSizeFilepathmatchAgentId                       int = 32768
+	MaxSizeFilepathmatchSpiffeId                      int = 32768
+	MaxSizeFilepathmatchTraceId                       int = 32768
+	MaxSizeSearchbyfilepathrequestPathPattern         int = 32768
+	MaxSizeSearchbyfilepathrequestSpiffeIdFilter      int = 32768
+	MaxSizeSearchbyfilepathrequestPageToken           int = 32768
+	MaxSizeSearchbyfilepathrequestTraceId             int = 32768
+	MaxSizeSearchbyfilepathresponseMatches            int = 10000
+	MaxSizeSearchbyfilepathresponseNextPageToken      int = 32768
+	MaxSizeSearchbyfilepathresponseTraceId            int = 32768
+	MaxSizeArgusconfigstateTraceId                    int = 32768
+	MaxSizeMapemptyTraceId                            int = 32768
 )
 
 // ============================================================
@@ -20514,6 +20716,9 @@ func ScratchpadDeleteResponseDefaults(v *ScratchpadDeleteResponse) {
 func ScratchpadListRequestDefaults(v *ScratchpadListRequest) {
 	if v == nil {
 		return
+	}
+	if v.PageSize == 0 {
+		v.PageSize = int32(DefaultScratchpadlistrequestPageSize)
 	}
 }
 
@@ -20767,6 +20972,9 @@ func GetUserCommitActivityRequestDefaults(v *GetUserCommitActivityRequest) {
 	if v.Limit == 0 {
 		v.Limit = int32(DefaultGetusercommitactivityrequestLimit)
 	}
+	if v.PageSize == 0 {
+		v.PageSize = int32(DefaultGetusercommitactivityrequestPageSize)
+	}
 }
 
 // ============================================================
@@ -20916,6 +21124,9 @@ func GetToolLeaderboardRequestDefaults(v *GetToolLeaderboardRequest) {
 	if v.Limit == 0 {
 		v.Limit = int32(DefaultGettoolleaderboardrequestLimit)
 	}
+	if v.PageSize == 0 {
+		v.PageSize = int32(DefaultGettoolleaderboardrequestPageSize)
+	}
 }
 
 // ============================================================
@@ -20959,6 +21170,9 @@ func GetModelUsageRequestDefaults(v *GetModelUsageRequest) {
 	if v == nil {
 		return
 	}
+	if v.PageSize == 0 {
+		v.PageSize = int32(DefaultGetmodelusagerequestPageSize)
+	}
 }
 
 // ============================================================
@@ -20991,6 +21205,9 @@ func GetActivityTimeseriesRequestDefaults(v *GetActivityTimeseriesRequest) {
 	}
 	if v.BucketSeconds == 0 {
 		v.BucketSeconds = int32(DefaultGetactivitytimeseriesrequestBucketSeconds)
+	}
+	if v.PageSize == 0 {
+		v.PageSize = int32(DefaultGetactivitytimeseriesrequestPageSize)
 	}
 }
 
@@ -21337,6 +21554,9 @@ func ScratchpadListRequestUndefaults(v *ScratchpadListRequest) {
 	if v == nil {
 		return
 	}
+	if v.PageSize == int32(DefaultScratchpadlistrequestPageSize) {
+		v.PageSize = 0
+	}
 }
 
 // ============================================================
@@ -21613,6 +21833,9 @@ func GetUserCommitActivityRequestUndefaults(v *GetUserCommitActivityRequest) {
 	if v.Limit == int32(DefaultGetusercommitactivityrequestLimit) {
 		v.Limit = 0
 	}
+	if v.PageSize == int32(DefaultGetusercommitactivityrequestPageSize) {
+		v.PageSize = 0
+	}
 }
 
 // ============================================================
@@ -21776,6 +21999,9 @@ func GetToolLeaderboardRequestUndefaults(v *GetToolLeaderboardRequest) {
 	if v.Limit == int32(DefaultGettoolleaderboardrequestLimit) {
 		v.Limit = 0
 	}
+	if v.PageSize == int32(DefaultGettoolleaderboardrequestPageSize) {
+		v.PageSize = 0
+	}
 }
 
 // ============================================================
@@ -21823,6 +22049,9 @@ func GetModelUsageRequestUndefaults(v *GetModelUsageRequest) {
 	if v == nil {
 		return
 	}
+	if v.PageSize == int32(DefaultGetmodelusagerequestPageSize) {
+		v.PageSize = 0
+	}
 }
 
 // ============================================================
@@ -21858,6 +22087,9 @@ func GetActivityTimeseriesRequestUndefaults(v *GetActivityTimeseriesRequest) {
 	}
 	if v.BucketSeconds == int32(DefaultGetactivitytimeseriesrequestBucketSeconds) {
 		v.BucketSeconds = 0
+	}
+	if v.PageSize == int32(DefaultGetactivitytimeseriesrequestPageSize) {
+		v.PageSize = 0
 	}
 }
 
@@ -22142,8 +22374,8 @@ func MergeGetSessionDetailResponse(dst, src *GetSessionDetailResponse) {
 // ============================================================
 // MergeGetUserActivityRequest fills zero-valued fields in dst from src.
 func MergeGetUserActivityRequest(dst, src *GetUserActivityRequest) {
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.TimeRangeHours == 0 {
 		dst.TimeRangeHours = src.TimeRangeHours
@@ -22345,6 +22577,12 @@ func MergeScratchpadDeleteResponse(dst, src *ScratchpadDeleteResponse) {
 // ============================================================
 // MergeScratchpadListRequest fills zero-valued fields in dst from src.
 func MergeScratchpadListRequest(dst, src *ScratchpadListRequest) {
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
+	}
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -22360,6 +22598,9 @@ func MergeScratchpadListRequest(dst, src *ScratchpadListRequest) {
 func MergeScratchpadListResponse(dst, src *ScratchpadListResponse) {
 	if len(dst.Entries) == 0 {
 		dst.Entries = src.Entries
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -22458,8 +22699,8 @@ func MergeWatchSessionDetailRequest(dst, src *WatchSessionDetailRequest) {
 // ============================================================
 // MergeWatchUserActivityRequest fills zero-valued fields in dst from src.
 func MergeWatchUserActivityRequest(dst, src *WatchUserActivityRequest) {
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.TimeRangeHours == 0 {
 		dst.TimeRangeHours = src.TimeRangeHours
@@ -22519,8 +22760,8 @@ func MergeWatchScratchpadReadRequest(dst, src *WatchScratchpadReadRequest) {
 // ============================================================
 // MergeUserSummary fills zero-valued fields in dst from src.
 func MergeUserSummary(dst, src *UserSummary) {
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.TotalSessions == 0 {
 		dst.TotalSessions = src.TotalSessions
@@ -22638,8 +22879,8 @@ func MergeModelUseStat(dst, src *ModelUseStat) {
 // ============================================================
 // MergeGetUserProfileRequest fills zero-valued fields in dst from src.
 func MergeGetUserProfileRequest(dst, src *GetUserProfileRequest) {
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.TimeRange == nil {
 		dst.TimeRange = src.TimeRange
@@ -22657,8 +22898,8 @@ func MergeGetUserProfileRequest(dst, src *GetUserProfileRequest) {
 // ============================================================
 // MergeGetUserProfileResponse fills zero-valued fields in dst from src.
 func MergeGetUserProfileResponse(dst, src *GetUserProfileResponse) {
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.FirstSeenMs == 0 {
 		dst.FirstSeenMs = src.FirstSeenMs
@@ -22709,8 +22950,8 @@ func MergeGetUserProfileResponse(dst, src *GetUserProfileResponse) {
 // ============================================================
 // MergeWatchUserProfileRequest fills zero-valued fields in dst from src.
 func MergeWatchUserProfileRequest(dst, src *WatchUserProfileRequest) {
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.TimeRange == nil {
 		dst.TimeRange = src.TimeRange
@@ -22753,8 +22994,8 @@ func MergePromptBucket(dst, src *PromptBucket) {
 // ============================================================
 // MergeGetUserTokenStatsRequest fills zero-valued fields in dst from src.
 func MergeGetUserTokenStatsRequest(dst, src *GetUserTokenStatsRequest) {
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.TimeRange == nil {
 		dst.TimeRange = src.TimeRange
@@ -22775,8 +23016,8 @@ func MergeGetUserTokenStatsRequest(dst, src *GetUserTokenStatsRequest) {
 // ============================================================
 // MergeGetUserTokenStatsResponse fills zero-valued fields in dst from src.
 func MergeGetUserTokenStatsResponse(dst, src *GetUserTokenStatsResponse) {
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.TotalPrompts == 0 {
 		dst.TotalPrompts = src.TotalPrompts
@@ -22830,8 +23071,8 @@ func MergeCommitRecord(dst, src *CommitRecord) {
 	if !dst.Succeeded {
 		dst.Succeeded = src.Succeeded
 	}
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.EventId == "" {
 		dst.EventId = src.EventId
@@ -22849,14 +23090,20 @@ func MergeCommitRecord(dst, src *CommitRecord) {
 // ============================================================
 // MergeGetUserCommitActivityRequest fills zero-valued fields in dst from src.
 func MergeGetUserCommitActivityRequest(dst, src *GetUserCommitActivityRequest) {
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.TimeRange == nil {
 		dst.TimeRange = src.TimeRange
 	}
 	if dst.Limit == 0 {
 		dst.Limit = src.Limit
+	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
+	}
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -22873,6 +23120,9 @@ func MergeGetUserCommitActivityRequest(dst, src *GetUserCommitActivityRequest) {
 func MergeGetUserCommitActivityResponse(dst, src *GetUserCommitActivityResponse) {
 	if len(dst.Commits) == 0 {
 		dst.Commits = src.Commits
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -22893,8 +23143,8 @@ func MergeFileActivityRecord(dst, src *FileActivityRecord) {
 	if dst.Operation == 0 {
 		dst.Operation = src.Operation
 	}
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.SessionId == "" {
 		dst.SessionId = src.SessionId
@@ -22927,8 +23177,8 @@ func MergeFileActivityRecord(dst, src *FileActivityRecord) {
 // ============================================================
 // MergeGetFileActivityRequest fills zero-valued fields in dst from src.
 func MergeGetFileActivityRequest(dst, src *GetFileActivityRequest) {
-	if dst.EmailFilter == "" {
-		dst.EmailFilter = src.EmailFilter
+	if dst.SpiffeIdFilter == "" {
+		dst.SpiffeIdFilter = src.SpiffeIdFilter
 	}
 	if dst.PathPrefix == "" {
 		dst.PathPrefix = src.PathPrefix
@@ -23213,11 +23463,17 @@ func MergeGetToolLeaderboardRequest(dst, src *GetToolLeaderboardRequest) {
 	if dst.TimeRange == nil {
 		dst.TimeRange = src.TimeRange
 	}
-	if dst.EmailFilter == "" {
-		dst.EmailFilter = src.EmailFilter
+	if dst.SpiffeIdFilter == "" {
+		dst.SpiffeIdFilter = src.SpiffeIdFilter
 	}
 	if dst.Limit == 0 {
 		dst.Limit = src.Limit
+	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
+	}
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -23235,6 +23491,9 @@ func MergeGetToolLeaderboardResponse(dst, src *GetToolLeaderboardResponse) {
 	if len(dst.Tools) == 0 {
 		dst.Tools = src.Tools
 	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -23251,8 +23510,8 @@ func MergeWatchToolLeaderboardRequest(dst, src *WatchToolLeaderboardRequest) {
 	if dst.TimeRange == nil {
 		dst.TimeRange = src.TimeRange
 	}
-	if dst.EmailFilter == "" {
-		dst.EmailFilter = src.EmailFilter
+	if dst.SpiffeIdFilter == "" {
+		dst.SpiffeIdFilter = src.SpiffeIdFilter
 	}
 	if dst.Limit == 0 {
 		dst.Limit = src.Limit
@@ -23298,6 +23557,12 @@ func MergeGetModelUsageRequest(dst, src *GetModelUsageRequest) {
 	if dst.TimeRange == nil {
 		dst.TimeRange = src.TimeRange
 	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
+	}
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -23313,6 +23578,9 @@ func MergeGetModelUsageRequest(dst, src *GetModelUsageRequest) {
 func MergeGetModelUsageResponse(dst, src *GetModelUsageResponse) {
 	if len(dst.Models) == 0 {
 		dst.Models = src.Models
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -23364,6 +23632,12 @@ func MergeGetActivityTimeseriesRequest(dst, src *GetActivityTimeseriesRequest) {
 	if dst.GroupBy == 0 {
 		dst.GroupBy = src.GroupBy
 	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
+	}
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -23380,6 +23654,9 @@ func MergeGetActivityTimeseriesResponse(dst, src *GetActivityTimeseriesResponse)
 	if len(dst.Buckets) == 0 {
 		dst.Buckets = src.Buckets
 	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -23393,8 +23670,8 @@ func MergeGetActivityTimeseriesResponse(dst, src *GetActivityTimeseriesResponse)
 // ============================================================
 // MergeSearchEventsFilter fills zero-valued fields in dst from src.
 func MergeSearchEventsFilter(dst, src *SearchEventsFilter) {
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.SessionId == "" {
 		dst.SessionId = src.SessionId
@@ -23479,8 +23756,8 @@ func MergeFilePathMatch(dst, src *FilePathMatch) {
 	if dst.AgentId == "" {
 		dst.AgentId = src.AgentId
 	}
-	if dst.Email == "" {
-		dst.Email = src.Email
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
 	}
 	if dst.Operation == 0 {
 		dst.Operation = src.Operation
@@ -23504,8 +23781,8 @@ func MergeSearchByFilePathRequest(dst, src *SearchByFilePathRequest) {
 	if dst.PathPattern == "" {
 		dst.PathPattern = src.PathPattern
 	}
-	if dst.EmailFilter == "" {
-		dst.EmailFilter = src.EmailFilter
+	if dst.SpiffeIdFilter == "" {
+		dst.SpiffeIdFilter = src.SpiffeIdFilter
 	}
 	if dst.TimeRange == nil {
 		dst.TimeRange = src.TimeRange

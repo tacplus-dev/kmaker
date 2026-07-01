@@ -372,6 +372,8 @@ message ListIssuesRequest {
   string since = 9;      // ISO 8601 timestamp
   int32 page = 10;
   int32 per_page = 11;
+  int32 page_size = 12;
+  string page_token = 13;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -380,6 +382,7 @@ message ListIssuesResponse {
   repeated Issue issues = 1;
   PaginationInfo pagination = 2;
   RateLimitInfo rate_limit = 3;
+  string next_page_token = 4;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -475,6 +478,8 @@ message ListPullRequestsRequest {
   string base = 8;      // Filter by base branch
   int32 page = 9;
   int32 per_page = 10;
+  int32 page_size = 11;
+  string page_token = 12;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -483,6 +488,7 @@ message ListPullRequestsResponse {
   repeated PullRequest pull_requests = 1;
   PaginationInfo pagination = 2;
   RateLimitInfo rate_limit = 3;
+  string next_page_token = 4;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -553,6 +559,8 @@ message ListPullRequestFilesRequest {
   int32 pull_number = 4;
   int32 page = 5;
   int32 per_page = 6;
+  int32 page_size = 7;
+  string page_token = 8;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -561,6 +569,7 @@ message ListPullRequestFilesResponse {
   repeated PullRequestFile files = 1;
   PaginationInfo pagination = 2;
   RateLimitInfo rate_limit = 3;
+  string next_page_token = 4;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -621,6 +630,8 @@ message ListBranchesRequest {
   string repo = 3;
   int32 page = 4;
   int32 per_page = 5;
+  int32 page_size = 6;
+  string page_token = 7;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -629,6 +640,7 @@ message ListBranchesResponse {
   repeated Branch branches = 1;
   PaginationInfo pagination = 2;
   RateLimitInfo rate_limit = 3;
+  string next_page_token = 4;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -666,6 +678,8 @@ message ListCommitsRequest {
   string until = 8;    // ISO 8601
   int32 page = 9;
   int32 per_page = 10;
+  int32 page_size = 11;
+  string page_token = 12;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -674,6 +688,7 @@ message ListCommitsResponse {
   repeated Commit commits = 1;
   PaginationInfo pagination = 2;
   RateLimitInfo rate_limit = 3;
+  string next_page_token = 4;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -689,15 +704,18 @@ message SearchCodeRequest {
   string order = 4;     // asc, desc
   int32 page = 5;
   int32 per_page = 6;
+  int32 page_size = 7;
+  string page_token = 8;
   string trace_id = 200;
   bool noop = 201;
 }
 
 message SearchCodeResponse {
-  int32 total_count = 1;
+  int64 total_count = 1;
   bool incomplete_results = 2;
   repeated SearchCodeResult items = 3;
   RateLimitInfo rate_limit = 4;
+  string next_page_token = 5;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -811,7 +829,8 @@ service GithubConfigStateService {
 	rpc WatchConfig(trace.TraceRequest) returns (stream Config);
 }
 
-message MapEmpty {  string trace_id = 200;
+message MapEmpty {
+  string trace_id = 200;
   bool noop = 201;
 }
 

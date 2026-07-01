@@ -751,13 +751,13 @@ func ValidatePermissionWithDepth(m *Permission, depth int) error {
 	if m.Owner > 7 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Owner must be <= 7, got: %v", m.Owner)
 	}
-	// Validate Group (assert_le: 7)
-	if m.Group > 7 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Group must be <= 7, got: %v", m.Group)
-	}
 	// Validate Group (assert_ge: 0)
 	if m.Group < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Group must be >= 0, got: %v", m.Group)
+	}
+	// Validate Group (assert_le: 7)
+	if m.Group > 7 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Group must be <= 7, got: %v", m.Group)
 	}
 	// Validate Other (assert_ge: 0)
 	if m.Other < 0 {

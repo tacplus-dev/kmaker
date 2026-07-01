@@ -79,7 +79,7 @@ type MessagingClient interface {
 	// GetChannelHistory retrieves recent messages from a channel.
 	GetChannelHistory(ctx context.Context, in *GetChannelHistoryRequest, opts ...grpc.CallOption) (*GetChannelHistoryResponse, error)
 	// ListChannels lists channels in the workspace.
-	ListChannels(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*ListChannelsResponse, error)
+	ListChannels(ctx context.Context, in *ListChannelsRequest, opts ...grpc.CallOption) (*ListChannelsResponse, error)
 	// CreateReaction adds an emoji reaction to a message.
 	CreateReaction(ctx context.Context, in *ReactionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// DeleteReaction removes an emoji reaction from a message.
@@ -193,7 +193,7 @@ func (c *messagingClient) GetChannelHistory(ctx context.Context, in *GetChannelH
 	return out, nil
 }
 
-func (c *messagingClient) ListChannels(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*ListChannelsResponse, error) {
+func (c *messagingClient) ListChannels(ctx context.Context, in *ListChannelsRequest, opts ...grpc.CallOption) (*ListChannelsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListChannelsResponse)
 	err := c.cc.Invoke(ctx, Messaging_ListChannels_FullMethodName, in, out, cOpts...)
@@ -252,7 +252,7 @@ type MessagingServer interface {
 	// GetChannelHistory retrieves recent messages from a channel.
 	GetChannelHistory(context.Context, *GetChannelHistoryRequest) (*GetChannelHistoryResponse, error)
 	// ListChannels lists channels in the workspace.
-	ListChannels(context.Context, *trace.TraceRequest) (*ListChannelsResponse, error)
+	ListChannels(context.Context, *ListChannelsRequest) (*ListChannelsResponse, error)
 	// CreateReaction adds an emoji reaction to a message.
 	CreateReaction(context.Context, *ReactionRequest) (*emptypb.Empty, error)
 	// DeleteReaction removes an emoji reaction from a message.
@@ -294,7 +294,7 @@ func (UnimplementedMessagingServer) ListThreadMessages(context.Context, *GetThre
 func (UnimplementedMessagingServer) GetChannelHistory(context.Context, *GetChannelHistoryRequest) (*GetChannelHistoryResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetChannelHistory not implemented")
 }
-func (UnimplementedMessagingServer) ListChannels(context.Context, *trace.TraceRequest) (*ListChannelsResponse, error) {
+func (UnimplementedMessagingServer) ListChannels(context.Context, *ListChannelsRequest) (*ListChannelsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListChannels not implemented")
 }
 func (UnimplementedMessagingServer) CreateReaction(context.Context, *ReactionRequest) (*emptypb.Empty, error) {
@@ -480,7 +480,7 @@ func _Messaging_GetChannelHistory_Handler(srv interface{}, ctx context.Context, 
 }
 
 func _Messaging_ListChannels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(trace.TraceRequest)
+	in := new(ListChannelsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -492,7 +492,7 @@ func _Messaging_ListChannels_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: Messaging_ListChannels_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessagingServer).ListChannels(ctx, req.(*trace.TraceRequest))
+		return srv.(MessagingServer).ListChannels(ctx, req.(*ListChannelsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

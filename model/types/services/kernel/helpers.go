@@ -567,6 +567,7 @@ func TypeIDValues() []TypeID {
 		TypeID_TYPE_ID_CLI_TOKEN_BROKER_TOKEN_DELIVERY,
 		TypeID_TYPE_ID_CLI_TOKEN_BROKER_ERROR,
 		TypeID_TYPE_ID_CLOUD_IDENTITY_MATCHER,
+		TypeID_TYPE_ID_KUBERNETES_SERVICE_ACCOUNT_MATCHER,
 		TypeID_TYPE_ID_DELEGATE,
 		TypeID_TYPE_ID_CLUSTER,
 		TypeID_TYPE_ID_ADMIN_SET_LOG_LEVEL_REQUEST,
@@ -594,6 +595,7 @@ func TypeIDValues() []TypeID {
 		TypeID_TYPE_ID_SET_TENANT_CONFIG_REQUEST,
 		TypeID_TYPE_ID_GET_PROJECT_CONFIG_REQUEST,
 		TypeID_TYPE_ID_SET_PROJECT_CONFIG_REQUEST,
+		TypeID_TYPE_ID_PROJECT_NAMESPACE,
 		TypeID_TYPE_ID_LIST_PROJECTS_REQUEST,
 		TypeID_TYPE_ID_LIST_PROJECTS_RESPONSE,
 		TypeID_TYPE_ID_DELETE_PROJECT_REQUEST,
@@ -883,7 +885,7 @@ func TypeIDValues() []TypeID {
 
 // TypeIDStringValues returns all valid TypeID names as strings
 func TypeIDStringValues() []string {
-	return []string{"config", "identity", "identity-fqdn", "signing-key-record", "trusted-ca", "cli-token-broker-request", "cli-token-broker-response", "cli-token-broker-register", "cli-token-broker-register-nonce", "cli-token-broker-complete-nonce", "cli-token-broker-token-delivery", "cli-token-broker-error", "cloud-identity-matcher", "delegate", "cluster", "admin-set-log-level-request", "admin-reload-config-request", "admin-config-dump", "service-health", "workload-revoke-request", "workload-locality", "workload-revocation", "workload-state", "ca", "constraints", "tenant", "tenant-config-entry", "project-config", "project-config-entry", "config-state", "kernel-disk-state", "create-tenant-request", "delete-tenant-request", "delete-tenant-response", "list-tenants-request", "list-tenants-response", "get-tenant-config-request", "set-tenant-config-request", "get-project-config-request", "set-project-config-request", "list-projects-request", "list-projects-response", "delete-project-request", "delete-project-response", "query-value", "predicate", "predicate-group", "sort-field", "collection-query", "verifying-keys-get-request", "verifying-keys-put-request", "verifying-keys-get-all-request", "verifying-keys-keys-request", "verifying-keys-size-request", "verifying-keys-clear-request", "verifying-keys-value-response", "verifying-keys-entries-response", "verifying-keys-keys-response", "verifying-keys-size-response", "verifying-keys-query-request", "verifying-keys-query-response", "trusted-cas-get-request", "trusted-cas-put-request", "trusted-cas-get-all-request", "trusted-cas-keys-request", "trusted-cas-size-request", "trusted-cas-clear-request", "trusted-cas-value-response", "trusted-cas-entries-response", "trusted-cas-keys-response", "trusted-cas-size-response", "trusted-cas-query-request", "trusted-cas-query-response", "node-metrics-get-request", "node-metrics-put-request", "node-metrics-get-all-request", "node-metrics-keys-request", "node-metrics-size-request", "node-metrics-clear-request", "node-metrics-value-response", "node-metrics-entries-response", "node-metrics-keys-response", "node-metrics-size-response", "node-metrics-query-request", "node-metrics-query-response", "grpc-stats-get-request", "grpc-stats-put-request", "grpc-stats-get-all-request", "grpc-stats-keys-request", "grpc-stats-size-request", "grpc-stats-clear-request", "grpc-stats-value-response", "grpc-stats-entries-response", "grpc-stats-keys-response", "grpc-stats-size-response", "grpc-stats-query-request", "grpc-stats-query-response", "persistence-status-get-request", "persistence-status-put-request", "persistence-status-get-all-request", "persistence-status-keys-request", "persistence-status-size-request", "persistence-status-clear-request", "persistence-status-value-response", "persistence-status-entries-response", "persistence-status-keys-response", "persistence-status-size-response", "persistence-status-query-request", "persistence-status-query-response", "network-stats-get-request", "network-stats-put-request", "network-stats-get-all-request", "network-stats-keys-request", "network-stats-size-request", "network-stats-clear-request", "network-stats-value-response", "network-stats-entries-response", "network-stats-keys-response", "network-stats-size-response", "network-stats-query-request", "network-stats-query-response", "thread-info-get-request", "thread-info-put-request", "thread-info-get-all-request", "thread-info-keys-request", "thread-info-size-request", "thread-info-clear-request", "thread-info-value-response", "thread-info-entries-response", "thread-info-keys-response", "thread-info-size-response", "thread-info-query-request", "thread-info-query-response", "token-cache-stats-get-request", "token-cache-stats-put-request", "token-cache-stats-get-all-request", "token-cache-stats-keys-request", "token-cache-stats-size-request", "token-cache-stats-clear-request", "token-cache-stats-value-response", "token-cache-stats-entries-response", "token-cache-stats-keys-response", "token-cache-stats-size-response", "token-cache-stats-query-request", "token-cache-stats-query-response", "map-stats-get-request", "map-stats-put-request", "map-stats-get-all-request", "map-stats-keys-request", "map-stats-size-request", "map-stats-clear-request", "map-stats-value-response", "map-stats-entries-response", "map-stats-keys-response", "map-stats-size-response", "map-stats-query-request", "map-stats-query-response", "graph-registry-get-request", "graph-registry-put-request", "graph-registry-get-all-request", "graph-registry-keys-request", "graph-registry-size-request", "graph-registry-clear-request", "graph-registry-value-response", "graph-registry-entries-response", "graph-registry-keys-response", "graph-registry-size-response", "graph-registry-query-request", "graph-registry-query-response", "service-connections-get-request", "service-connections-put-request", "service-connections-get-all-request", "service-connections-keys-request", "service-connections-size-request", "service-connections-clear-request", "service-connections-value-response", "service-connections-entries-response", "service-connections-keys-response", "service-connections-size-response", "service-connections-query-request", "service-connections-query-response", "queue-stats-get-request", "queue-stats-put-request", "queue-stats-get-all-request", "queue-stats-keys-request", "queue-stats-size-request", "queue-stats-clear-request", "queue-stats-value-response", "queue-stats-entries-response", "queue-stats-keys-response", "queue-stats-size-response", "queue-stats-query-request", "queue-stats-query-response", "topic-stats-get-request", "topic-stats-put-request", "topic-stats-get-all-request", "topic-stats-keys-request", "topic-stats-size-request", "topic-stats-clear-request", "topic-stats-value-response", "topic-stats-entries-response", "topic-stats-keys-response", "topic-stats-size-response", "topic-stats-query-request", "topic-stats-query-response", "watch-health-get-request", "watch-health-put-request", "watch-health-get-all-request", "watch-health-keys-request", "watch-health-size-request", "watch-health-clear-request", "watch-health-value-response", "watch-health-entries-response", "watch-health-keys-response", "watch-health-size-response", "watch-health-query-request", "watch-health-query-response", "mutation-rates-get-request", "mutation-rates-put-request", "mutation-rates-get-all-request", "mutation-rates-keys-request", "mutation-rates-size-request", "mutation-rates-clear-request", "mutation-rates-value-response", "mutation-rates-entries-response", "mutation-rates-keys-response", "mutation-rates-size-response", "mutation-rates-query-request", "mutation-rates-query-response", "instances-get-request", "instances-get-all-request", "instances-keys-request", "instances-size-request", "instances-value-response", "instances-entries-response", "instances-keys-response", "instances-size-response", "instances-query-request", "instances-query-response", "localities-get-request", "localities-put-request", "localities-get-all-request", "localities-keys-request", "localities-size-request", "localities-clear-request", "localities-value-response", "localities-entries-response", "localities-keys-response", "localities-size-response", "localities-query-request", "localities-query-response", "revocations-get-request", "revocations-put-request", "revocations-get-all-request", "revocations-keys-request", "revocations-size-request", "revocations-clear-request", "revocations-value-response", "revocations-entries-response", "revocations-keys-response", "revocations-size-response", "revocations-query-request", "revocations-query-response", "ca-certs-get-request", "ca-certs-put-request", "ca-certs-get-all-request", "ca-certs-keys-request", "ca-certs-size-request", "ca-certs-clear-request", "ca-certs-value-response", "ca-certs-entries-response", "ca-certs-keys-response", "ca-certs-size-response", "ca-certs-query-request", "ca-certs-query-response", "service-cas-get-request", "service-cas-put-request", "service-cas-get-all-request", "service-cas-keys-request", "service-cas-size-request", "service-cas-clear-request", "service-cas-value-response", "service-cas-entries-response", "service-cas-keys-response", "service-cas-size-response", "service-cas-query-request", "service-cas-query-response", "tenants-get-request", "tenants-put-request", "tenants-get-all-request", "tenants-keys-request", "tenants-size-request", "tenants-clear-request", "tenants-value-response", "tenants-entries-response", "tenants-keys-response", "tenants-size-response", "tenants-query-request", "tenants-query-response", "tenant-configs-get-request", "tenant-configs-put-request", "tenant-configs-get-all-request", "tenant-configs-keys-request", "tenant-configs-size-request", "tenant-configs-clear-request", "tenant-configs-value-response", "tenant-configs-entries-response", "tenant-configs-keys-response", "tenant-configs-size-response", "tenant-configs-query-request", "tenant-configs-query-response", "project-configs-get-request", "project-configs-put-request", "project-configs-get-all-request", "project-configs-keys-request", "project-configs-size-request", "project-configs-clear-request", "project-configs-value-response", "project-configs-entries-response", "project-configs-keys-response", "project-configs-size-response", "project-configs-query-request", "project-configs-query-response", "map-empty"}
+	return []string{"config", "identity", "identity-fqdn", "signing-key-record", "trusted-ca", "cli-token-broker-request", "cli-token-broker-response", "cli-token-broker-register", "cli-token-broker-register-nonce", "cli-token-broker-complete-nonce", "cli-token-broker-token-delivery", "cli-token-broker-error", "cloud-identity-matcher", "kubernetes-service-account-matcher", "delegate", "cluster", "admin-set-log-level-request", "admin-reload-config-request", "admin-config-dump", "service-health", "workload-revoke-request", "workload-locality", "workload-revocation", "workload-state", "ca", "constraints", "tenant", "tenant-config-entry", "project-config", "project-config-entry", "config-state", "kernel-disk-state", "create-tenant-request", "delete-tenant-request", "delete-tenant-response", "list-tenants-request", "list-tenants-response", "get-tenant-config-request", "set-tenant-config-request", "get-project-config-request", "set-project-config-request", "project-namespace", "list-projects-request", "list-projects-response", "delete-project-request", "delete-project-response", "query-value", "predicate", "predicate-group", "sort-field", "collection-query", "verifying-keys-get-request", "verifying-keys-put-request", "verifying-keys-get-all-request", "verifying-keys-keys-request", "verifying-keys-size-request", "verifying-keys-clear-request", "verifying-keys-value-response", "verifying-keys-entries-response", "verifying-keys-keys-response", "verifying-keys-size-response", "verifying-keys-query-request", "verifying-keys-query-response", "trusted-cas-get-request", "trusted-cas-put-request", "trusted-cas-get-all-request", "trusted-cas-keys-request", "trusted-cas-size-request", "trusted-cas-clear-request", "trusted-cas-value-response", "trusted-cas-entries-response", "trusted-cas-keys-response", "trusted-cas-size-response", "trusted-cas-query-request", "trusted-cas-query-response", "node-metrics-get-request", "node-metrics-put-request", "node-metrics-get-all-request", "node-metrics-keys-request", "node-metrics-size-request", "node-metrics-clear-request", "node-metrics-value-response", "node-metrics-entries-response", "node-metrics-keys-response", "node-metrics-size-response", "node-metrics-query-request", "node-metrics-query-response", "grpc-stats-get-request", "grpc-stats-put-request", "grpc-stats-get-all-request", "grpc-stats-keys-request", "grpc-stats-size-request", "grpc-stats-clear-request", "grpc-stats-value-response", "grpc-stats-entries-response", "grpc-stats-keys-response", "grpc-stats-size-response", "grpc-stats-query-request", "grpc-stats-query-response", "persistence-status-get-request", "persistence-status-put-request", "persistence-status-get-all-request", "persistence-status-keys-request", "persistence-status-size-request", "persistence-status-clear-request", "persistence-status-value-response", "persistence-status-entries-response", "persistence-status-keys-response", "persistence-status-size-response", "persistence-status-query-request", "persistence-status-query-response", "network-stats-get-request", "network-stats-put-request", "network-stats-get-all-request", "network-stats-keys-request", "network-stats-size-request", "network-stats-clear-request", "network-stats-value-response", "network-stats-entries-response", "network-stats-keys-response", "network-stats-size-response", "network-stats-query-request", "network-stats-query-response", "thread-info-get-request", "thread-info-put-request", "thread-info-get-all-request", "thread-info-keys-request", "thread-info-size-request", "thread-info-clear-request", "thread-info-value-response", "thread-info-entries-response", "thread-info-keys-response", "thread-info-size-response", "thread-info-query-request", "thread-info-query-response", "token-cache-stats-get-request", "token-cache-stats-put-request", "token-cache-stats-get-all-request", "token-cache-stats-keys-request", "token-cache-stats-size-request", "token-cache-stats-clear-request", "token-cache-stats-value-response", "token-cache-stats-entries-response", "token-cache-stats-keys-response", "token-cache-stats-size-response", "token-cache-stats-query-request", "token-cache-stats-query-response", "map-stats-get-request", "map-stats-put-request", "map-stats-get-all-request", "map-stats-keys-request", "map-stats-size-request", "map-stats-clear-request", "map-stats-value-response", "map-stats-entries-response", "map-stats-keys-response", "map-stats-size-response", "map-stats-query-request", "map-stats-query-response", "graph-registry-get-request", "graph-registry-put-request", "graph-registry-get-all-request", "graph-registry-keys-request", "graph-registry-size-request", "graph-registry-clear-request", "graph-registry-value-response", "graph-registry-entries-response", "graph-registry-keys-response", "graph-registry-size-response", "graph-registry-query-request", "graph-registry-query-response", "service-connections-get-request", "service-connections-put-request", "service-connections-get-all-request", "service-connections-keys-request", "service-connections-size-request", "service-connections-clear-request", "service-connections-value-response", "service-connections-entries-response", "service-connections-keys-response", "service-connections-size-response", "service-connections-query-request", "service-connections-query-response", "queue-stats-get-request", "queue-stats-put-request", "queue-stats-get-all-request", "queue-stats-keys-request", "queue-stats-size-request", "queue-stats-clear-request", "queue-stats-value-response", "queue-stats-entries-response", "queue-stats-keys-response", "queue-stats-size-response", "queue-stats-query-request", "queue-stats-query-response", "topic-stats-get-request", "topic-stats-put-request", "topic-stats-get-all-request", "topic-stats-keys-request", "topic-stats-size-request", "topic-stats-clear-request", "topic-stats-value-response", "topic-stats-entries-response", "topic-stats-keys-response", "topic-stats-size-response", "topic-stats-query-request", "topic-stats-query-response", "watch-health-get-request", "watch-health-put-request", "watch-health-get-all-request", "watch-health-keys-request", "watch-health-size-request", "watch-health-clear-request", "watch-health-value-response", "watch-health-entries-response", "watch-health-keys-response", "watch-health-size-response", "watch-health-query-request", "watch-health-query-response", "mutation-rates-get-request", "mutation-rates-put-request", "mutation-rates-get-all-request", "mutation-rates-keys-request", "mutation-rates-size-request", "mutation-rates-clear-request", "mutation-rates-value-response", "mutation-rates-entries-response", "mutation-rates-keys-response", "mutation-rates-size-response", "mutation-rates-query-request", "mutation-rates-query-response", "instances-get-request", "instances-get-all-request", "instances-keys-request", "instances-size-request", "instances-value-response", "instances-entries-response", "instances-keys-response", "instances-size-response", "instances-query-request", "instances-query-response", "localities-get-request", "localities-put-request", "localities-get-all-request", "localities-keys-request", "localities-size-request", "localities-clear-request", "localities-value-response", "localities-entries-response", "localities-keys-response", "localities-size-response", "localities-query-request", "localities-query-response", "revocations-get-request", "revocations-put-request", "revocations-get-all-request", "revocations-keys-request", "revocations-size-request", "revocations-clear-request", "revocations-value-response", "revocations-entries-response", "revocations-keys-response", "revocations-size-response", "revocations-query-request", "revocations-query-response", "ca-certs-get-request", "ca-certs-put-request", "ca-certs-get-all-request", "ca-certs-keys-request", "ca-certs-size-request", "ca-certs-clear-request", "ca-certs-value-response", "ca-certs-entries-response", "ca-certs-keys-response", "ca-certs-size-response", "ca-certs-query-request", "ca-certs-query-response", "service-cas-get-request", "service-cas-put-request", "service-cas-get-all-request", "service-cas-keys-request", "service-cas-size-request", "service-cas-clear-request", "service-cas-value-response", "service-cas-entries-response", "service-cas-keys-response", "service-cas-size-response", "service-cas-query-request", "service-cas-query-response", "tenants-get-request", "tenants-put-request", "tenants-get-all-request", "tenants-keys-request", "tenants-size-request", "tenants-clear-request", "tenants-value-response", "tenants-entries-response", "tenants-keys-response", "tenants-size-response", "tenants-query-request", "tenants-query-response", "tenant-configs-get-request", "tenant-configs-put-request", "tenant-configs-get-all-request", "tenant-configs-keys-request", "tenant-configs-size-request", "tenant-configs-clear-request", "tenant-configs-value-response", "tenant-configs-entries-response", "tenant-configs-keys-response", "tenant-configs-size-response", "tenant-configs-query-request", "tenant-configs-query-response", "project-configs-get-request", "project-configs-put-request", "project-configs-get-all-request", "project-configs-keys-request", "project-configs-size-request", "project-configs-clear-request", "project-configs-value-response", "project-configs-entries-response", "project-configs-keys-response", "project-configs-size-response", "project-configs-query-request", "project-configs-query-response", "map-empty"}
 }
 
 // ParseTypeID converts a string to a TypeID enum value
@@ -920,6 +922,8 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_CLI_TOKEN_BROKER_ERROR, nil
 	case "cloud-identity-matcher", "type-id-cloud-identity-matcher":
 		return TypeID_TYPE_ID_CLOUD_IDENTITY_MATCHER, nil
+	case "kubernetes-service-account-matcher", "type-id-kubernetes-service-account-matcher":
+		return TypeID_TYPE_ID_KUBERNETES_SERVICE_ACCOUNT_MATCHER, nil
 	case "delegate", "type-id-delegate":
 		return TypeID_TYPE_ID_DELEGATE, nil
 	case "cluster", "type-id-cluster":
@@ -974,6 +978,8 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_GET_PROJECT_CONFIG_REQUEST, nil
 	case "set-project-config-request", "type-id-set-project-config-request":
 		return TypeID_TYPE_ID_SET_PROJECT_CONFIG_REQUEST, nil
+	case "project-namespace", "type-id-project-namespace":
+		return TypeID_TYPE_ID_PROJECT_NAMESPACE, nil
 	case "list-projects-request", "type-id-list-projects-request":
 		return TypeID_TYPE_ID_LIST_PROJECTS_REQUEST, nil
 	case "list-projects-response", "type-id-list-projects-response":
@@ -1598,6 +1604,8 @@ func TypeIDToString(v TypeID) string {
 		return "cli-token-broker-error"
 	case TypeID_TYPE_ID_CLOUD_IDENTITY_MATCHER:
 		return "cloud-identity-matcher"
+	case TypeID_TYPE_ID_KUBERNETES_SERVICE_ACCOUNT_MATCHER:
+		return "kubernetes-service-account-matcher"
 	case TypeID_TYPE_ID_DELEGATE:
 		return "delegate"
 	case TypeID_TYPE_ID_CLUSTER:
@@ -1652,6 +1660,8 @@ func TypeIDToString(v TypeID) string {
 		return "get-project-config-request"
 	case TypeID_TYPE_ID_SET_PROJECT_CONFIG_REQUEST:
 		return "set-project-config-request"
+	case TypeID_TYPE_ID_PROJECT_NAMESPACE:
+		return "project-namespace"
 	case TypeID_TYPE_ID_LIST_PROJECTS_REQUEST:
 		return "list-projects-request"
 	case TypeID_TYPE_ID_LIST_PROJECTS_RESPONSE:
@@ -2268,6 +2278,8 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_CLI_TOKEN_BROKER_ERROR
 	case "cloud-identity-matcher", "type-id-cloud-identity-matcher":
 		return TypeID_TYPE_ID_CLOUD_IDENTITY_MATCHER
+	case "kubernetes-service-account-matcher", "type-id-kubernetes-service-account-matcher":
+		return TypeID_TYPE_ID_KUBERNETES_SERVICE_ACCOUNT_MATCHER
 	case "delegate", "type-id-delegate":
 		return TypeID_TYPE_ID_DELEGATE
 	case "cluster", "type-id-cluster":
@@ -2322,6 +2334,8 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_GET_PROJECT_CONFIG_REQUEST
 	case "set-project-config-request", "type-id-set-project-config-request":
 		return TypeID_TYPE_ID_SET_PROJECT_CONFIG_REQUEST
+	case "project-namespace", "type-id-project-namespace":
+		return TypeID_TYPE_ID_PROJECT_NAMESPACE
 	case "list-projects-request", "type-id-list-projects-request":
 		return TypeID_TYPE_ID_LIST_PROJECTS_REQUEST
 	case "list-projects-response", "type-id-list-projects-response":
@@ -2926,6 +2940,8 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_CLI_TOKEN_BROKER_ERROR"
 	case TypeID_TYPE_ID_CLOUD_IDENTITY_MATCHER:
 		return "TYPE_ID_CLOUD_IDENTITY_MATCHER"
+	case TypeID_TYPE_ID_KUBERNETES_SERVICE_ACCOUNT_MATCHER:
+		return "TYPE_ID_KUBERNETES_SERVICE_ACCOUNT_MATCHER"
 	case TypeID_TYPE_ID_DELEGATE:
 		return "TYPE_ID_DELEGATE"
 	case TypeID_TYPE_ID_CLUSTER:
@@ -2980,6 +2996,8 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_GET_PROJECT_CONFIG_REQUEST"
 	case TypeID_TYPE_ID_SET_PROJECT_CONFIG_REQUEST:
 		return "TYPE_ID_SET_PROJECT_CONFIG_REQUEST"
+	case TypeID_TYPE_ID_PROJECT_NAMESPACE:
+		return "TYPE_ID_PROJECT_NAMESPACE"
 	case TypeID_TYPE_ID_LIST_PROJECTS_REQUEST:
 		return "TYPE_ID_LIST_PROJECTS_REQUEST"
 	case TypeID_TYPE_ID_LIST_PROJECTS_RESPONSE:
@@ -9644,9 +9662,10 @@ func CliTokenBrokerRegisterToTOML(v *CliTokenBrokerRegister) ([]byte, error) {
 // CliTokenBrokerRegisterNonceJSON represents CliTokenBrokerRegisterNonce in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type clitokenbrokerregisternonceJSON struct {
-	Nonce   string `json:"nonce,omitempty"`
-	TraceId string `json:"trace_id,omitempty"`
-	Noop    bool   `json:"noop,omitempty"`
+	Nonce         string `json:"nonce,omitempty"`
+	OfflineAccess bool   `json:"offline_access,omitempty"`
+	TraceId       string `json:"trace_id,omitempty"`
+	Noop          bool   `json:"noop,omitempty"`
 }
 
 // CliTokenBrokerRegisterNonceToJSON converts CliTokenBrokerRegisterNonce to JSON bytes.
@@ -9657,9 +9676,10 @@ func CliTokenBrokerRegisterNonceToJSON(v *CliTokenBrokerRegisterNonce) ([]byte, 
 	}
 	// Convert to JSON helper struct with string enums
 	helper := clitokenbrokerregisternonceJSON{
-		Nonce:   v.Nonce,
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		Nonce:         v.Nonce,
+		OfflineAccess: v.OfflineAccess,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -9672,9 +9692,10 @@ func CliTokenBrokerRegisterNonceToJSONPretty(v *CliTokenBrokerRegisterNonce) ([]
 	}
 	// Convert to JSON helper struct with string enums
 	helper := clitokenbrokerregisternonceJSON{
-		Nonce:   v.Nonce,
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		Nonce:         v.Nonce,
+		OfflineAccess: v.OfflineAccess,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -9740,6 +9761,7 @@ func CliTokenBrokerRegisterNonceFromJSON(data []byte) (*CliTokenBrokerRegisterNo
 	// Build result with parsed enums
 	result := &CliTokenBrokerRegisterNonce{}
 	result.Nonce = raw.Nonce
+	result.OfflineAccess = raw.OfflineAccess
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -10404,16 +10426,164 @@ func CloudIdentityMatcherToTOML(v *CloudIdentityMatcher) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
+// KubernetesServiceAccountMatcherJSON represents KubernetesServiceAccountMatcher in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type kubernetesserviceaccountmatcherJSON struct {
+	KubernetesNamespace      string `json:"kubernetes_namespace,omitempty"`
+	KubernetesServiceAccount string `json:"kubernetes_service_account,omitempty"`
+	TraceId                  string `json:"trace_id,omitempty"`
+	Noop                     bool   `json:"noop,omitempty"`
+}
+
+// KubernetesServiceAccountMatcherToJSON converts KubernetesServiceAccountMatcher to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func KubernetesServiceAccountMatcherToJSON(v *KubernetesServiceAccountMatcher) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "kubernetesserviceaccountmatcher is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := kubernetesserviceaccountmatcherJSON{
+		KubernetesNamespace:      v.KubernetesNamespace,
+		KubernetesServiceAccount: v.KubernetesServiceAccount,
+		TraceId:                  v.TraceId,
+		Noop:                     v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// KubernetesServiceAccountMatcherToJSONPretty converts KubernetesServiceAccountMatcher to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func KubernetesServiceAccountMatcherToJSONPretty(v *KubernetesServiceAccountMatcher) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "kubernetesserviceaccountmatcher is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := kubernetesserviceaccountmatcherJSON{
+		KubernetesNamespace:      v.KubernetesNamespace,
+		KubernetesServiceAccount: v.KubernetesServiceAccount,
+		TraceId:                  v.TraceId,
+		Noop:                     v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// KubernetesServiceAccountMatcherFromBytes creates KubernetesServiceAccountMatcher from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func KubernetesServiceAccountMatcherFromBytes(data []byte) (*KubernetesServiceAccountMatcher, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := KubernetesServiceAccountMatcherFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := KubernetesServiceAccountMatcherFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := KubernetesServiceAccountMatcherFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &KubernetesServiceAccountMatcher{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse KubernetesServiceAccountMatcher: unsupported format or invalid data")
+}
+
+// KubernetesServiceAccountMatcherFromJSON creates KubernetesServiceAccountMatcher from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func KubernetesServiceAccountMatcherFromJSON(data []byte) (*KubernetesServiceAccountMatcher, error) {
+	// Unmarshal into helper struct with string enums
+	var raw kubernetesserviceaccountmatcherJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &KubernetesServiceAccountMatcher{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &KubernetesServiceAccountMatcher{}
+	result.KubernetesNamespace = raw.KubernetesNamespace
+	result.KubernetesServiceAccount = raw.KubernetesServiceAccount
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// KubernetesServiceAccountMatcherToYAML converts KubernetesServiceAccountMatcher to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func KubernetesServiceAccountMatcherToYAML(v *KubernetesServiceAccountMatcher) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "kubernetesserviceaccountmatcher is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := KubernetesServiceAccountMatcherToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// KubernetesServiceAccountMatcherToTOML converts KubernetesServiceAccountMatcher to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func KubernetesServiceAccountMatcherToTOML(v *KubernetesServiceAccountMatcher) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "kubernetesserviceaccountmatcher is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := KubernetesServiceAccountMatcherToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
 // DelegateJSON represents Delegate in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type delegateJSON struct {
-	Name               string            `json:"name,omitempty"`
-	CredPairs          []json.RawMessage `json:"cred_pairs,omitempty"`
-	CloudIdentities    []json.RawMessage `json:"cloud_identities,omitempty"`
-	AuthorizedServices []string          `json:"authorized_services,omitempty"`
-	CustomClaims       map[string]string `json:"custom_claims,omitempty"`
-	TraceId            string            `json:"trace_id,omitempty"`
-	Noop               bool              `json:"noop,omitempty"`
+	Name                      string            `json:"name,omitempty"`
+	CloudIdentities           []json.RawMessage `json:"cloud_identities,omitempty"`
+	KubernetesServiceAccounts []json.RawMessage `json:"kubernetes_service_accounts,omitempty"`
+	AuthorizedServices        []string          `json:"authorized_services,omitempty"`
+	CustomClaims              map[string]string `json:"custom_claims,omitempty"`
+	TraceId                   string            `json:"trace_id,omitempty"`
+	Noop                      bool              `json:"noop,omitempty"`
 }
 
 // DelegateToJSON converts Delegate to JSON bytes.
@@ -10425,20 +10595,6 @@ func DelegateToJSON(v *Delegate) ([]byte, error) {
 	// Convert to JSON helper struct with string enums
 	helper := delegateJSON{
 		Name: v.Name,
-		CredPairs: func() []json.RawMessage {
-			if len(v.CredPairs) == 0 {
-				return nil
-			}
-			result := make([]json.RawMessage, 0, len(v.CredPairs))
-			for _, item := range v.CredPairs {
-				if item != nil {
-					if data, err := jwk.JwkToJSON(item); err == nil {
-						result = append(result, data)
-					}
-				}
-			}
-			return result
-		}(),
 		CloudIdentities: func() []json.RawMessage {
 			if len(v.CloudIdentities) == 0 {
 				return nil
@@ -10447,6 +10603,20 @@ func DelegateToJSON(v *Delegate) ([]byte, error) {
 			for _, item := range v.CloudIdentities {
 				if item != nil {
 					if data, err := CloudIdentityMatcherToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		KubernetesServiceAccounts: func() []json.RawMessage {
+			if len(v.KubernetesServiceAccounts) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.KubernetesServiceAccounts))
+			for _, item := range v.KubernetesServiceAccounts {
+				if item != nil {
+					if data, err := KubernetesServiceAccountMatcherToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -10479,20 +10649,6 @@ func DelegateToJSONPretty(v *Delegate) ([]byte, error) {
 	// Convert to JSON helper struct with string enums
 	helper := delegateJSON{
 		Name: v.Name,
-		CredPairs: func() []json.RawMessage {
-			if len(v.CredPairs) == 0 {
-				return nil
-			}
-			result := make([]json.RawMessage, 0, len(v.CredPairs))
-			for _, item := range v.CredPairs {
-				if item != nil {
-					if data, err := jwk.JwkToJSON(item); err == nil {
-						result = append(result, data)
-					}
-				}
-			}
-			return result
-		}(),
 		CloudIdentities: func() []json.RawMessage {
 			if len(v.CloudIdentities) == 0 {
 				return nil
@@ -10501,6 +10657,20 @@ func DelegateToJSONPretty(v *Delegate) ([]byte, error) {
 			for _, item := range v.CloudIdentities {
 				if item != nil {
 					if data, err := CloudIdentityMatcherToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		KubernetesServiceAccounts: func() []json.RawMessage {
+			if len(v.KubernetesServiceAccounts) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.KubernetesServiceAccounts))
+			for _, item := range v.KubernetesServiceAccounts {
+				if item != nil {
+					if data, err := KubernetesServiceAccountMatcherToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -10585,18 +10755,6 @@ func DelegateFromJSON(data []byte) (*Delegate, error) {
 	// Build result with parsed enums
 	result := &Delegate{}
 	result.Name = raw.Name
-	// Parse repeated message field: CredPairs
-	if len(raw.CredPairs) > 0 {
-		result.CredPairs = make([]*jwk.Jwk, 0, len(raw.CredPairs))
-		for _, itemJSON := range raw.CredPairs {
-			if len(itemJSON) > 0 {
-				parsed, err := jwk.JwkFromJSON(itemJSON)
-				if err == nil {
-					result.CredPairs = append(result.CredPairs, parsed)
-				}
-			}
-		}
-	}
 	// Parse repeated message field: CloudIdentities
 	if len(raw.CloudIdentities) > 0 {
 		result.CloudIdentities = make([]*CloudIdentityMatcher, 0, len(raw.CloudIdentities))
@@ -10605,6 +10763,18 @@ func DelegateFromJSON(data []byte) (*Delegate, error) {
 				parsed, err := CloudIdentityMatcherFromJSON(itemJSON)
 				if err == nil {
 					result.CloudIdentities = append(result.CloudIdentities, parsed)
+				}
+			}
+		}
+	}
+	// Parse repeated message field: KubernetesServiceAccounts
+	if len(raw.KubernetesServiceAccounts) > 0 {
+		result.KubernetesServiceAccounts = make([]*KubernetesServiceAccountMatcher, 0, len(raw.KubernetesServiceAccounts))
+		for _, itemJSON := range raw.KubernetesServiceAccounts {
+			if len(itemJSON) > 0 {
+				parsed, err := KubernetesServiceAccountMatcherFromJSON(itemJSON)
+				if err == nil {
+					result.KubernetesServiceAccounts = append(result.KubernetesServiceAccounts, parsed)
 				}
 			}
 		}
@@ -15013,6 +15183,8 @@ func DeleteTenantResponseToTOML(v *DeleteTenantResponse) ([]byte, error) {
 // MARKER: JSON helper struct generated from serial.go
 type listtenantsrequestJSON struct {
 	ParentNamespace string `json:"parent_namespace,omitempty"`
+	PageSize        int32  `json:"page_size,omitempty"`
+	PageToken       string `json:"page_token,omitempty"`
 	TraceId         string `json:"trace_id,omitempty"`
 	Noop            bool   `json:"noop,omitempty"`
 }
@@ -15026,6 +15198,8 @@ func ListTenantsRequestToJSON(v *ListTenantsRequest) ([]byte, error) {
 	// Convert to JSON helper struct with string enums
 	helper := listtenantsrequestJSON{
 		ParentNamespace: v.ParentNamespace,
+		PageSize:        v.PageSize,
+		PageToken:       v.PageToken,
 		TraceId:         v.TraceId,
 		Noop:            v.Noop,
 	}
@@ -15041,6 +15215,8 @@ func ListTenantsRequestToJSONPretty(v *ListTenantsRequest) ([]byte, error) {
 	// Convert to JSON helper struct with string enums
 	helper := listtenantsrequestJSON{
 		ParentNamespace: v.ParentNamespace,
+		PageSize:        v.PageSize,
+		PageToken:       v.PageToken,
 		TraceId:         v.TraceId,
 		Noop:            v.Noop,
 	}
@@ -15108,6 +15284,8 @@ func ListTenantsRequestFromJSON(data []byte) (*ListTenantsRequest, error) {
 	// Build result with parsed enums
 	result := &ListTenantsRequest{}
 	result.ParentNamespace = raw.ParentNamespace
+	result.PageSize = raw.PageSize
+	result.PageToken = raw.PageToken
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -15156,9 +15334,11 @@ func ListTenantsRequestToTOML(v *ListTenantsRequest) ([]byte, error) {
 // ListTenantsResponseJSON represents ListTenantsResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type listtenantsresponseJSON struct {
-	Tenants []json.RawMessage `json:"tenants,omitempty"`
-	TraceId string            `json:"trace_id,omitempty"`
-	Noop    bool              `json:"noop,omitempty"`
+	Tenants       []json.RawMessage `json:"tenants,omitempty"`
+	NextPageToken string            `json:"next_page_token,omitempty"`
+	TotalCount    int64             `json:"total_count,omitempty"`
+	TraceId       string            `json:"trace_id,omitempty"`
+	Noop          bool              `json:"noop,omitempty"`
 }
 
 // ListTenantsResponseToJSON converts ListTenantsResponse to JSON bytes.
@@ -15183,8 +15363,10 @@ func ListTenantsResponseToJSON(v *ListTenantsResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -15211,8 +15393,10 @@ func ListTenantsResponseToJSONPretty(v *ListTenantsResponse) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -15289,6 +15473,8 @@ func ListTenantsResponseFromJSON(data []byte) (*ListTenantsResponse, error) {
 			}
 		}
 	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -15954,10 +16140,156 @@ func SetProjectConfigRequestToTOML(v *SetProjectConfigRequest) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
+// ProjectNamespaceJSON represents ProjectNamespace in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type projectnamespaceJSON struct {
+	ProjectNamespace string `json:"project_namespace,omitempty"`
+	TraceId          string `json:"trace_id,omitempty"`
+	Noop             bool   `json:"noop,omitempty"`
+}
+
+// ProjectNamespaceToJSON converts ProjectNamespace to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func ProjectNamespaceToJSON(v *ProjectNamespace) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "projectnamespace is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := projectnamespaceJSON{
+		ProjectNamespace: v.ProjectNamespace,
+		TraceId:          v.TraceId,
+		Noop:             v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// ProjectNamespaceToJSONPretty converts ProjectNamespace to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func ProjectNamespaceToJSONPretty(v *ProjectNamespace) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "projectnamespace is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := projectnamespaceJSON{
+		ProjectNamespace: v.ProjectNamespace,
+		TraceId:          v.TraceId,
+		Noop:             v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// ProjectNamespaceFromBytes creates ProjectNamespace from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func ProjectNamespaceFromBytes(data []byte) (*ProjectNamespace, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := ProjectNamespaceFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := ProjectNamespaceFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := ProjectNamespaceFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &ProjectNamespace{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse ProjectNamespace: unsupported format or invalid data")
+}
+
+// ProjectNamespaceFromJSON creates ProjectNamespace from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func ProjectNamespaceFromJSON(data []byte) (*ProjectNamespace, error) {
+	// Unmarshal into helper struct with string enums
+	var raw projectnamespaceJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &ProjectNamespace{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &ProjectNamespace{}
+	result.ProjectNamespace = raw.ProjectNamespace
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// ProjectNamespaceToYAML converts ProjectNamespace to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func ProjectNamespaceToYAML(v *ProjectNamespace) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "projectnamespace is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := ProjectNamespaceToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// ProjectNamespaceToTOML converts ProjectNamespace to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func ProjectNamespaceToTOML(v *ProjectNamespace) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "projectnamespace is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := ProjectNamespaceToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
 // ListProjectsRequestJSON represents ListProjectsRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type listprojectsrequestJSON struct {
 	TenantNamespace string `json:"tenant_namespace,omitempty"`
+	PageSize        int32  `json:"page_size,omitempty"`
+	PageToken       string `json:"page_token,omitempty"`
 	TraceId         string `json:"trace_id,omitempty"`
 	Noop            bool   `json:"noop,omitempty"`
 }
@@ -15971,6 +16303,8 @@ func ListProjectsRequestToJSON(v *ListProjectsRequest) ([]byte, error) {
 	// Convert to JSON helper struct with string enums
 	helper := listprojectsrequestJSON{
 		TenantNamespace: v.TenantNamespace,
+		PageSize:        v.PageSize,
+		PageToken:       v.PageToken,
 		TraceId:         v.TraceId,
 		Noop:            v.Noop,
 	}
@@ -15986,6 +16320,8 @@ func ListProjectsRequestToJSONPretty(v *ListProjectsRequest) ([]byte, error) {
 	// Convert to JSON helper struct with string enums
 	helper := listprojectsrequestJSON{
 		TenantNamespace: v.TenantNamespace,
+		PageSize:        v.PageSize,
+		PageToken:       v.PageToken,
 		TraceId:         v.TraceId,
 		Noop:            v.Noop,
 	}
@@ -16053,6 +16389,8 @@ func ListProjectsRequestFromJSON(data []byte) (*ListProjectsRequest, error) {
 	// Build result with parsed enums
 	result := &ListProjectsRequest{}
 	result.TenantNamespace = raw.TenantNamespace
+	result.PageSize = raw.PageSize
+	result.PageToken = raw.PageToken
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -16101,9 +16439,11 @@ func ListProjectsRequestToTOML(v *ListProjectsRequest) ([]byte, error) {
 // ListProjectsResponseJSON represents ListProjectsResponse in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type listprojectsresponseJSON struct {
-	ProjectNamespaces []string `json:"project_namespaces,omitempty"`
-	TraceId           string   `json:"trace_id,omitempty"`
-	Noop              bool     `json:"noop,omitempty"`
+	ProjectNamespaces []json.RawMessage `json:"project_namespaces,omitempty"`
+	NextPageToken     string            `json:"next_page_token,omitempty"`
+	TotalCount        int64             `json:"total_count,omitempty"`
+	TraceId           string            `json:"trace_id,omitempty"`
+	Noop              bool              `json:"noop,omitempty"`
 }
 
 // ListProjectsResponseToJSON converts ListProjectsResponse to JSON bytes.
@@ -16114,9 +16454,24 @@ func ListProjectsResponseToJSON(v *ListProjectsResponse) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := listprojectsresponseJSON{
-		ProjectNamespaces: v.ProjectNamespaces,
-		TraceId:           v.TraceId,
-		Noop:              v.Noop,
+		ProjectNamespaces: func() []json.RawMessage {
+			if len(v.ProjectNamespaces) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.ProjectNamespaces))
+			for _, item := range v.ProjectNamespaces {
+				if item != nil {
+					if data, err := ProjectNamespaceToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -16129,9 +16484,24 @@ func ListProjectsResponseToJSONPretty(v *ListProjectsResponse) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := listprojectsresponseJSON{
-		ProjectNamespaces: v.ProjectNamespaces,
-		TraceId:           v.TraceId,
-		Noop:              v.Noop,
+		ProjectNamespaces: func() []json.RawMessage {
+			if len(v.ProjectNamespaces) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.ProjectNamespaces))
+			for _, item := range v.ProjectNamespaces {
+				if item != nil {
+					if data, err := ProjectNamespaceToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		NextPageToken: v.NextPageToken,
+		TotalCount:    v.TotalCount,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -16196,7 +16566,20 @@ func ListProjectsResponseFromJSON(data []byte) (*ListProjectsResponse, error) {
 	}
 	// Build result with parsed enums
 	result := &ListProjectsResponse{}
-	result.ProjectNamespaces = raw.ProjectNamespaces
+	// Parse repeated message field: ProjectNamespaces
+	if len(raw.ProjectNamespaces) > 0 {
+		result.ProjectNamespaces = make([]*ProjectNamespace, 0, len(raw.ProjectNamespaces))
+		for _, itemJSON := range raw.ProjectNamespaces {
+			if len(itemJSON) > 0 {
+				parsed, err := ProjectNamespaceFromJSON(itemJSON)
+				if err == nil {
+					result.ProjectNamespaces = append(result.ProjectNamespaces, parsed)
+				}
+			}
+		}
+	}
+	result.NextPageToken = raw.NextPageToken
+	result.TotalCount = raw.TotalCount
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -60555,6 +60938,7 @@ func CliTokenBrokerRegisterNonceToEnvVar(v *CliTokenBrokerRegisterNonce) map[str
 	}
 	result := make(map[string]string)
 	result["PROTO_SERVICES_KERNEL_CLI_TOKEN_BROKER_REGISTER_NONCE_NONCE"] = v.Nonce
+	result["PROTO_SERVICES_KERNEL_CLI_TOKEN_BROKER_REGISTER_NONCE_OFFLINE_ACCESS"] = strconv.FormatBool(v.OfflineAccess)
 	result["PROTO_SERVICES_KERNEL_CLI_TOKEN_BROKER_REGISTER_NONCE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_KERNEL_CLI_TOKEN_BROKER_REGISTER_NONCE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -60565,6 +60949,13 @@ func CliTokenBrokerRegisterNonceFromEnvVar(env map[string]string) (*CliTokenBrok
 	result := &CliTokenBrokerRegisterNonce{}
 	if val, ok := env["PROTO_SERVICES_KERNEL_CLI_TOKEN_BROKER_REGISTER_NONCE_NONCE"]; ok && val != "" {
 		result.Nonce = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CLI_TOKEN_BROKER_REGISTER_NONCE_OFFLINE_ACCESS"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.OfflineAccess = parsed
 	}
 	if val, ok := env["PROTO_SERVICES_KERNEL_CLI_TOKEN_BROKER_REGISTER_NONCE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -60714,6 +61105,41 @@ func CloudIdentityMatcherFromEnvVar(env map[string]string) (*CloudIdentityMatche
 		result.TraceId = val
 	}
 	if val, ok := env["PROTO_SERVICES_KERNEL_CLOUD_IDENTITY_MATCHER_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// KubernetesServiceAccountMatcherToEnvVar converts KubernetesServiceAccountMatcher to environment variable key-value pairs.
+func KubernetesServiceAccountMatcherToEnvVar(v *KubernetesServiceAccountMatcher) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_KUBERNETES_SERVICE_ACCOUNT_MATCHER_KUBERNETES_NAMESPACE"] = v.KubernetesNamespace
+	result["PROTO_SERVICES_KERNEL_KUBERNETES_SERVICE_ACCOUNT_MATCHER_KUBERNETES_SERVICE_ACCOUNT"] = v.KubernetesServiceAccount
+	result["PROTO_SERVICES_KERNEL_KUBERNETES_SERVICE_ACCOUNT_MATCHER_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_KUBERNETES_SERVICE_ACCOUNT_MATCHER_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// KubernetesServiceAccountMatcherFromEnvVar creates KubernetesServiceAccountMatcher from environment variable key-value pairs.
+func KubernetesServiceAccountMatcherFromEnvVar(env map[string]string) (*KubernetesServiceAccountMatcher, error) {
+	result := &KubernetesServiceAccountMatcher{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_KUBERNETES_SERVICE_ACCOUNT_MATCHER_KUBERNETES_NAMESPACE"]; ok && val != "" {
+		result.KubernetesNamespace = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_KUBERNETES_SERVICE_ACCOUNT_MATCHER_KUBERNETES_SERVICE_ACCOUNT"]; ok && val != "" {
+		result.KubernetesServiceAccount = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_KUBERNETES_SERVICE_ACCOUNT_MATCHER_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_KUBERNETES_SERVICE_ACCOUNT_MATCHER_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -61501,6 +61927,8 @@ func ListTenantsRequestToEnvVar(v *ListTenantsRequest) map[string]string {
 	}
 	result := make(map[string]string)
 	result["PROTO_SERVICES_KERNEL_LIST_TENANTS_REQUEST_PARENT_NAMESPACE"] = v.ParentNamespace
+	result["PROTO_SERVICES_KERNEL_LIST_TENANTS_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
+	result["PROTO_SERVICES_KERNEL_LIST_TENANTS_REQUEST_PAGE_TOKEN"] = v.PageToken
 	result["PROTO_SERVICES_KERNEL_LIST_TENANTS_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_KERNEL_LIST_TENANTS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -61511,6 +61939,16 @@ func ListTenantsRequestFromEnvVar(env map[string]string) (*ListTenantsRequest, e
 	result := &ListTenantsRequest{}
 	if val, ok := env["PROTO_SERVICES_KERNEL_LIST_TENANTS_REQUEST_PARENT_NAMESPACE"]; ok && val != "" {
 		result.ParentNamespace = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_LIST_TENANTS_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_LIST_TENANTS_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
 	}
 	if val, ok := env["PROTO_SERVICES_KERNEL_LIST_TENANTS_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -61531,6 +61969,8 @@ func ListTenantsResponseToEnvVar(v *ListTenantsResponse) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_LIST_TENANTS_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_KERNEL_LIST_TENANTS_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_KERNEL_LIST_TENANTS_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_KERNEL_LIST_TENANTS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -61539,6 +61979,16 @@ func ListTenantsResponseToEnvVar(v *ListTenantsResponse) map[string]string {
 // ListTenantsResponseFromEnvVar creates ListTenantsResponse from environment variable key-value pairs.
 func ListTenantsResponseFromEnvVar(env map[string]string) (*ListTenantsResponse, error) {
 	result := &ListTenantsResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_LIST_TENANTS_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_LIST_TENANTS_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
+	}
 	if val, ok := env["PROTO_SERVICES_KERNEL_LIST_TENANTS_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -61696,6 +62146,37 @@ func SetProjectConfigRequestFromEnvVar(env map[string]string) (*SetProjectConfig
 	return result, nil
 }
 
+// ProjectNamespaceToEnvVar converts ProjectNamespace to environment variable key-value pairs.
+func ProjectNamespaceToEnvVar(v *ProjectNamespace) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PROJECT_NAMESPACE_PROJECT_NAMESPACE"] = v.ProjectNamespace
+	result["PROTO_SERVICES_KERNEL_PROJECT_NAMESPACE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PROJECT_NAMESPACE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// ProjectNamespaceFromEnvVar creates ProjectNamespace from environment variable key-value pairs.
+func ProjectNamespaceFromEnvVar(env map[string]string) (*ProjectNamespace, error) {
+	result := &ProjectNamespace{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PROJECT_NAMESPACE_PROJECT_NAMESPACE"]; ok && val != "" {
+		result.ProjectNamespace = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PROJECT_NAMESPACE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PROJECT_NAMESPACE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
 // ListProjectsRequestToEnvVar converts ListProjectsRequest to environment variable key-value pairs.
 func ListProjectsRequestToEnvVar(v *ListProjectsRequest) map[string]string {
 	if v == nil {
@@ -61703,6 +62184,8 @@ func ListProjectsRequestToEnvVar(v *ListProjectsRequest) map[string]string {
 	}
 	result := make(map[string]string)
 	result["PROTO_SERVICES_KERNEL_LIST_PROJECTS_REQUEST_TENANT_NAMESPACE"] = v.TenantNamespace
+	result["PROTO_SERVICES_KERNEL_LIST_PROJECTS_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
+	result["PROTO_SERVICES_KERNEL_LIST_PROJECTS_REQUEST_PAGE_TOKEN"] = v.PageToken
 	result["PROTO_SERVICES_KERNEL_LIST_PROJECTS_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_KERNEL_LIST_PROJECTS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -61713,6 +62196,16 @@ func ListProjectsRequestFromEnvVar(env map[string]string) (*ListProjectsRequest,
 	result := &ListProjectsRequest{}
 	if val, ok := env["PROTO_SERVICES_KERNEL_LIST_PROJECTS_REQUEST_TENANT_NAMESPACE"]; ok && val != "" {
 		result.TenantNamespace = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_LIST_PROJECTS_REQUEST_PAGE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PageSize = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_LIST_PROJECTS_REQUEST_PAGE_TOKEN"]; ok && val != "" {
+		result.PageToken = val
 	}
 	if val, ok := env["PROTO_SERVICES_KERNEL_LIST_PROJECTS_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -61733,9 +62226,8 @@ func ListProjectsResponseToEnvVar(v *ListProjectsResponse) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
-	if len(v.ProjectNamespaces) > 0 {
-		result["PROTO_SERVICES_KERNEL_LIST_PROJECTS_RESPONSE_PROJECT_NAMESPACES"] = strings.Join(v.ProjectNamespaces, ",")
-	}
+	result["PROTO_SERVICES_KERNEL_LIST_PROJECTS_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
+	result["PROTO_SERVICES_KERNEL_LIST_PROJECTS_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
 	result["PROTO_SERVICES_KERNEL_LIST_PROJECTS_RESPONSE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_KERNEL_LIST_PROJECTS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -61744,8 +62236,15 @@ func ListProjectsResponseToEnvVar(v *ListProjectsResponse) map[string]string {
 // ListProjectsResponseFromEnvVar creates ListProjectsResponse from environment variable key-value pairs.
 func ListProjectsResponseFromEnvVar(env map[string]string) (*ListProjectsResponse, error) {
 	result := &ListProjectsResponse{}
-	if val, ok := env["PROTO_SERVICES_KERNEL_LIST_PROJECTS_RESPONSE_PROJECT_NAMESPACES"]; ok && val != "" {
-		result.ProjectNamespaces = strings.Split(val, ",")
+	if val, ok := env["PROTO_SERVICES_KERNEL_LIST_PROJECTS_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
+		result.NextPageToken = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_LIST_PROJECTS_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = parsed
 	}
 	if val, ok := env["PROTO_SERVICES_KERNEL_LIST_PROJECTS_RESPONSE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -71724,11 +72223,6 @@ func ValidateCliTokenBrokerRegisterNonceWithDepth(m *CliTokenBrokerRegisterNonce
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate Nonce (assert_required)
-	if m.Nonce == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Nonce is required")
-	}
-
 	// Validate Nonce (assert_min_length: 64)
 	if len(m.Nonce) < 64 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Nonce must be at least 64 characters, got: %d", len(m.Nonce))
@@ -71737,6 +72231,11 @@ func ValidateCliTokenBrokerRegisterNonceWithDepth(m *CliTokenBrokerRegisterNonce
 	// Validate Nonce (assert_max_length: 128)
 	if len(m.Nonce) > 128 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Nonce must be at most 128 characters, got: %d", len(m.Nonce))
+	}
+
+	// Validate Nonce (assert_required)
+	if m.Nonce == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Nonce is required")
 	}
 
 	// Validate Nonce (default max size: 32768 bytes)
@@ -71768,6 +72267,11 @@ func ValidateCliTokenBrokerCompleteNonceWithDepth(m *CliTokenBrokerCompleteNonce
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
+	// Validate Nonce (assert_max_length: 128)
+	if len(m.Nonce) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Nonce must be at most 128 characters, got: %d", len(m.Nonce))
+	}
+
 	// Validate Nonce (assert_required)
 	if m.Nonce == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Nonce is required")
@@ -71776,11 +72280,6 @@ func ValidateCliTokenBrokerCompleteNonceWithDepth(m *CliTokenBrokerCompleteNonce
 	// Validate Nonce (assert_min_length: 64)
 	if len(m.Nonce) < 64 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Nonce must be at least 64 characters, got: %d", len(m.Nonce))
-	}
-
-	// Validate Nonce (assert_max_length: 128)
-	if len(m.Nonce) > 128 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Nonce must be at most 128 characters, got: %d", len(m.Nonce))
 	}
 
 	// Validate Subject (assert_required)
@@ -71918,6 +72417,50 @@ func ValidateCloudIdentityMatcherWithDepth(m *CloudIdentityMatcher, depth int) e
 	return nil
 }
 
+// ValidateKubernetesServiceAccountMatcher validates all fields in KubernetesServiceAccountMatcher according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateKubernetesServiceAccountMatcher(m *KubernetesServiceAccountMatcher) error {
+	return ValidateKubernetesServiceAccountMatcherWithDepth(m, 0)
+}
+
+// ValidateKubernetesServiceAccountMatcherWithDepth validates KubernetesServiceAccountMatcher and carries nested-message depth across
+// generated package boundaries.
+func ValidateKubernetesServiceAccountMatcherWithDepth(m *KubernetesServiceAccountMatcher, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate KubernetesNamespace (assert_required)
+	if m.KubernetesNamespace == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field KubernetesNamespace is required")
+	}
+
+	// Validate KubernetesServiceAccount (assert_required)
+	if m.KubernetesServiceAccount == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field KubernetesServiceAccount is required")
+	}
+
+	// Validate KubernetesNamespace (default max size: 32768 bytes)
+	if len(m.KubernetesNamespace) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field KubernetesNamespace exceeds max size of 32768 bytes, got: %d", len(m.KubernetesNamespace))
+	}
+
+	// Validate KubernetesServiceAccount (default max size: 32768 bytes)
+	if len(m.KubernetesServiceAccount) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field KubernetesServiceAccount exceeds max size of 32768 bytes, got: %d", len(m.KubernetesServiceAccount))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
 // ValidateDelegate validates all fields in Delegate according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateDelegate(m *Delegate) error {
@@ -71939,14 +72482,14 @@ func ValidateDelegateWithDepth(m *Delegate, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Name is required")
 	}
 
-	// Validate CredPairs (assert_max_size: 8)
-	if len(m.CredPairs) > 8 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field CredPairs exceeds max size of 8, got: %d", len(m.CredPairs))
-	}
-
 	// Validate CloudIdentities (assert_max_size: 8)
 	if len(m.CloudIdentities) > 8 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field CloudIdentities exceeds max size of 8, got: %d", len(m.CloudIdentities))
+	}
+
+	// Validate KubernetesServiceAccounts (assert_max_size: 8)
+	if len(m.KubernetesServiceAccounts) > 8 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field KubernetesServiceAccounts exceeds max size of 8, got: %d", len(m.KubernetesServiceAccounts))
 	}
 
 	// Validate AuthorizedServices (assert_max_size: 64)
@@ -71990,17 +72533,17 @@ func ValidateDelegateWithDepth(m *Delegate, depth int) error {
 		}
 	}
 
-	// Validate CredPairs nested messages
-	for i, val := range m.CredPairs {
-		if err := jwk.ValidateJwkWithDepth(val, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field CredPairs[%d] validation failed", i)
-		}
-	}
-
 	// Validate CloudIdentities nested messages
 	for i, val := range m.CloudIdentities {
 		if err := ValidateCloudIdentityMatcherWithDepth(val, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field CloudIdentities[%d] validation failed", i)
+		}
+	}
+
+	// Validate KubernetesServiceAccounts nested messages
+	for i, val := range m.KubernetesServiceAccounts {
+		if err := ValidateKubernetesServiceAccountMatcherWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field KubernetesServiceAccounts[%d] validation failed", i)
 		}
 	}
 
@@ -73101,6 +73644,11 @@ func ValidateListTenantsRequestWithDepth(m *ListTenantsRequest, depth int) error
 		return protoerrors.NewErrMissingInvalidData(nil, "field ParentNamespace exceeds max size of 32768 bytes, got: %d", len(m.ParentNamespace))
 	}
 
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
+	}
+
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
@@ -73128,6 +73676,11 @@ func ValidateListTenantsResponseWithDepth(m *ListTenantsResponse, depth int) err
 	// Validate Tenants (assert_max_size: 4096)
 	if len(m.Tenants) > 4096 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Tenants exceeds max size of 4096, got: %d", len(m.Tenants))
+	}
+
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -73305,6 +73858,40 @@ func ValidateSetProjectConfigRequestWithDepth(m *SetProjectConfigRequest, depth 
 	return nil
 }
 
+// ValidateProjectNamespace validates all fields in ProjectNamespace according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateProjectNamespace(m *ProjectNamespace) error {
+	return ValidateProjectNamespaceWithDepth(m, 0)
+}
+
+// ValidateProjectNamespaceWithDepth validates ProjectNamespace and carries nested-message depth across
+// generated package boundaries.
+func ValidateProjectNamespaceWithDepth(m *ProjectNamespace, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate ProjectNamespace (assert_required)
+	if m.ProjectNamespace == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectNamespace is required")
+	}
+
+	// Validate ProjectNamespace (default max size: 32768 bytes)
+	if len(m.ProjectNamespace) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectNamespace exceeds max size of 32768 bytes, got: %d", len(m.ProjectNamespace))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
 // ValidateListProjectsRequest validates all fields in ListProjectsRequest according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateListProjectsRequest(m *ListProjectsRequest) error {
@@ -73329,6 +73916,11 @@ func ValidateListProjectsRequestWithDepth(m *ListProjectsRequest, depth int) err
 	// Validate TenantNamespace (default max size: 32768 bytes)
 	if len(m.TenantNamespace) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TenantNamespace exceeds max size of 32768 bytes, got: %d", len(m.TenantNamespace))
+	}
+
+	// Validate PageToken (default max size: 32768 bytes)
+	if len(m.PageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -73360,16 +73952,21 @@ func ValidateListProjectsResponseWithDepth(m *ListProjectsResponse, depth int) e
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProjectNamespaces exceeds max size of 4096, got: %d", len(m.ProjectNamespaces))
 	}
 
-	// Validate ProjectNamespaces elements (default max size: 32768 bytes)
-	for i, val := range m.ProjectNamespaces {
-		if len(val) > 32768 {
-			return protoerrors.NewErrMissingInvalidData(nil, "field ProjectNamespaces[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
-		}
+	// Validate NextPageToken (default max size: 32768 bytes)
+	if len(m.NextPageToken) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate ProjectNamespaces nested messages
+	for i, val := range m.ProjectNamespaces {
+		if err := ValidateProjectNamespaceWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field ProjectNamespaces[%d] validation failed", i)
+		}
 	}
 
 	return nil
@@ -81961,529 +82558,538 @@ const (
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizeConfigClusterName                        int = 32768
-	MaxSizeConfigMembers                            int = 32
-	MaxSizeConfigPersistenceDir                     int = 32768
-	MaxSizeConfigClusterCa                          int = 16
-	MaxSizeConfigTrustedCas                         int = 16
-	MaxSizeConfigDelegates                          int = 128
-	MaxSizeConfigFqdn                               int = 32768
-	MaxSizeConfigIssuer                             int = 32768
-	MaxSizeConfigRootCredPairs                      int = 64
-	MaxSizeConfigSpiffeTrustDomain                  int = 32768
-	MaxSizeConfigLocationPath                       int = 32768
-	MaxSizeConfigTraceId                            int = 32768
-	MaxSizeIdentityVerifyingKeys                    int = 16
-	MaxSizeIdentityTraceId                          int = 32768
-	MaxSizeIdentityfqdnFqdn                         int = 32768
-	MaxSizeIdentityfqdnTraceId                      int = 32768
-	MaxSizeSigningkeyrecordTraceId                  int = 32768
-	MaxSizeTrustedcaTrustedCas                      int = 16
-	MaxSizeTrustedcaTraceId                         int = 32768
-	MaxSizeClitokenbrokerrequestTraceId             int = 32768
-	MaxSizeClitokenbrokerresponseTraceId            int = 32768
-	MaxSizeClitokenbrokerregisterInstanceId         int = 32768
-	MaxSizeClitokenbrokerregisterTraceId            int = 32768
-	MaxSizeClitokenbrokerregisternonceNonce         int = 32768
-	MaxSizeClitokenbrokerregisternonceTraceId       int = 32768
-	MaxSizeClitokenbrokercompletenonceNonce         int = 32768
-	MaxSizeClitokenbrokercompletenonceSubject       int = 32768
-	MaxSizeClitokenbrokercompletenonceTraceId       int = 32768
-	MaxSizeClitokenbrokertokendeliveryNonce         int = 32768
-	MaxSizeClitokenbrokertokendeliveryRefreshToken  int = 32768
-	MaxSizeClitokenbrokertokendeliveryTraceId       int = 32768
-	MaxSizeClitokenbrokererrorNonce                 int = 32768
-	MaxSizeClitokenbrokererrorMessage               int = 32768
-	MaxSizeClitokenbrokererrorTraceId               int = 32768
-	MaxSizeCloudidentitymatcherExpectedIdentity     int = 32768
-	MaxSizeCloudidentitymatcherTraceId              int = 32768
-	MaxSizeDelegateName                             int = 32768
-	MaxSizeDelegateCredPairs                        int = 8
-	MaxSizeDelegateCloudIdentities                  int = 8
-	MaxSizeDelegateAuthorizedServices               int = 64
-	MaxSizeDelegateCustomClaims                     int = 20
-	MaxSizeDelegateTraceId                          int = 32768
-	MaxSizeClusterNodeMetrics                       int = 32
-	MaxSizeClusterGrpcStats                         int = 32
-	MaxSizeClusterPersistenceStatus                 int = 32
-	MaxSizeClusterNetworkStats                      int = 32
-	MaxSizeClusterThreadInfo                        int = 32
-	MaxSizeClusterTokenCacheStats                   int = 32
-	MaxSizeClusterMapStats                          int = 1024
-	MaxSizeClusterGraphRegistry                     int = 1024
-	MaxSizeClusterServiceConnections                int = 256
-	MaxSizeClusterQueueStats                        int = 1024
-	MaxSizeClusterTopicStats                        int = 1024
-	MaxSizeClusterWatchHealth                       int = 1024
-	MaxSizeClusterMutationRates                     int = 1024
-	MaxSizeClusterTraceId                           int = 32768
-	MaxSizeAdminsetloglevelrequestLoggerName        int = 32768
-	MaxSizeAdminsetloglevelrequestLevel             int = 32768
-	MaxSizeAdminsetloglevelrequestTraceId           int = 32768
-	MaxSizeAdminreloadconfigrequestTraceId          int = 32768
-	MaxSizeAdminconfigdumpTraceId                   int = 32768
-	MaxSizeServicehealthInstances                   int = 256
-	MaxSizeServicehealthTraceId                     int = 32768
-	MaxSizeWorkloadrevokerequestSpiffeId            int = 32768
-	MaxSizeWorkloadrevokerequestTraceId             int = 32768
-	MaxSizeWorkloadlocalitySpiffeId                 int = 32768
-	MaxSizeWorkloadlocalityLocalityToken            int = 32768
-	MaxSizeWorkloadlocalityTraceId                  int = 32768
-	MaxSizeWorkloadrevocationSpiffeId               int = 32768
-	MaxSizeWorkloadrevocationRevokedBy              int = 32768
-	MaxSizeWorkloadrevocationTraceId                int = 32768
-	MaxSizeWorkloadstateLocalities                  int = 1024
-	MaxSizeWorkloadstateRevocations                 int = 4096
-	MaxSizeWorkloadstateTraceId                     int = 32768
-	MaxSizeCaCaCerts                                int = 16
-	MaxSizeCaServiceCas                             int = 64
-	MaxSizeCaTraceId                                int = 32768
-	MaxSizeConstraintsTraceId                       int = 32768
-	MaxSizeTenantName                               int = 32768
-	MaxSizeTenantTraceId                            int = 32768
-	MaxSizeTenantconfigentryTenantName              int = 32768
-	MaxSizeTenantconfigentryTraceId                 int = 32768
-	MaxSizeProjectconfigTraceId                     int = 32768
-	MaxSizeProjectconfigentryProjectNamespace       int = 32768
-	MaxSizeProjectconfigentryTraceId                int = 32768
-	MaxSizeConfigstateTenants                       int = 4096
-	MaxSizeConfigstateTenantConfigs                 int = 4096
-	MaxSizeConfigstateProjectConfigs                int = 4096
-	MaxSizeConfigstateTraceId                       int = 32768
-	MaxSizeKerneldiskstateSigningKeys               int = 8
-	MaxSizeKerneldiskstateVerifyingKeys             int = 32
-	MaxSizeKerneldiskstateCaCerts                   int = 16
-	MaxSizeKerneldiskstateServiceCas                int = 64
-	MaxSizeKerneldiskstateTenants                   int = 4096
-	MaxSizeKerneldiskstateTenantConfigs             int = 4096
-	MaxSizeKerneldiskstateProjectConfigs            int = 4096
-	MaxSizeKerneldiskstateWorkloadRevocations       int = 4096
-	MaxSizeKerneldiskstateTraceId                   int = 32768
-	MaxSizeCreatetenantrequestTenantNamespace       int = 32768
-	MaxSizeCreatetenantrequestTraceId               int = 32768
-	MaxSizeDeletetenantrequestTenantNamespace       int = 32768
-	MaxSizeDeletetenantrequestTraceId               int = 32768
-	MaxSizeDeletetenantresponseTraceId              int = 32768
-	MaxSizeListtenantsrequestParentNamespace        int = 32768
-	MaxSizeListtenantsrequestTraceId                int = 32768
-	MaxSizeListtenantsresponseTenants               int = 4096
-	MaxSizeListtenantsresponseTraceId               int = 32768
-	MaxSizeGettenantconfigrequestTenantNamespace    int = 32768
-	MaxSizeGettenantconfigrequestTraceId            int = 32768
-	MaxSizeSettenantconfigrequestTenantNamespace    int = 32768
-	MaxSizeSettenantconfigrequestTraceId            int = 32768
-	MaxSizeGetprojectconfigrequestProjectNamespace  int = 32768
-	MaxSizeGetprojectconfigrequestTraceId           int = 32768
-	MaxSizeSetprojectconfigrequestProjectNamespace  int = 32768
-	MaxSizeSetprojectconfigrequestTraceId           int = 32768
-	MaxSizeListprojectsrequestTenantNamespace       int = 32768
-	MaxSizeListprojectsrequestTraceId               int = 32768
-	MaxSizeListprojectsresponseProjectNamespaces    int = 4096
-	MaxSizeListprojectsresponseTraceId              int = 32768
-	MaxSizeDeleteprojectrequestProjectNamespace     int = 32768
-	MaxSizeDeleteprojectrequestTraceId              int = 32768
-	MaxSizeDeleteprojectresponseTraceId             int = 32768
-	MaxSizeQueryvalueStringValue                    int = 32768
-	MaxSizeQueryvalueTraceId                        int = 32768
-	MaxSizePredicateFieldName                       int = 32768
-	MaxSizePredicateValues                          int = 1024
-	MaxSizePredicateTraceId                         int = 32768
-	MaxSizePredicategroupPredicates                 int = 1024
-	MaxSizePredicategroupGroups                     int = 1024
-	MaxSizePredicategroupTraceId                    int = 32768
-	MaxSizeSortfieldFieldName                       int = 32768
-	MaxSizeSortfieldTraceId                         int = 32768
-	MaxSizeCollectionqueryOrderBy                   int = 1024
-	MaxSizeCollectionqueryTraceId                   int = 32768
-	MaxSizeVerifyingkeysgetrequestKey               int = 32768
-	MaxSizeVerifyingkeysgetrequestTraceId           int = 32768
-	MaxSizeVerifyingkeysputrequestKey               int = 32768
-	MaxSizeVerifyingkeysputrequestTraceId           int = 32768
-	MaxSizeVerifyingkeysgetallrequestTraceId        int = 32768
-	MaxSizeVerifyingkeyskeysrequestTraceId          int = 32768
-	MaxSizeVerifyingkeyssizerequestTraceId          int = 32768
-	MaxSizeVerifyingkeysclearrequestTraceId         int = 32768
-	MaxSizeVerifyingkeysvalueresponseTraceId        int = 32768
-	MaxSizeVerifyingkeysentriesresponseEntries      int = 1024
-	MaxSizeVerifyingkeysentriesresponseTraceId      int = 32768
-	MaxSizeVerifyingkeyskeysresponseKeys            int = 1024
-	MaxSizeVerifyingkeyskeysresponseTraceId         int = 32768
-	MaxSizeVerifyingkeyssizeresponseTraceId         int = 32768
-	MaxSizeVerifyingkeysqueryrequestTraceId         int = 32768
-	MaxSizeVerifyingkeysqueryresponseResults        int = 1024
-	MaxSizeVerifyingkeysqueryresponseTraceId        int = 32768
-	MaxSizeTrustedcasgetrequestKey                  int = 32768
-	MaxSizeTrustedcasgetrequestTraceId              int = 32768
-	MaxSizeTrustedcasputrequestKey                  int = 32768
-	MaxSizeTrustedcasputrequestTraceId              int = 32768
-	MaxSizeTrustedcasgetallrequestTraceId           int = 32768
-	MaxSizeTrustedcaskeysrequestTraceId             int = 32768
-	MaxSizeTrustedcassizerequestTraceId             int = 32768
-	MaxSizeTrustedcasclearrequestTraceId            int = 32768
-	MaxSizeTrustedcasvalueresponseTraceId           int = 32768
-	MaxSizeTrustedcasentriesresponseEntries         int = 1024
-	MaxSizeTrustedcasentriesresponseTraceId         int = 32768
-	MaxSizeTrustedcaskeysresponseKeys               int = 1024
-	MaxSizeTrustedcaskeysresponseTraceId            int = 32768
-	MaxSizeTrustedcassizeresponseTraceId            int = 32768
-	MaxSizeTrustedcasqueryrequestTraceId            int = 32768
-	MaxSizeTrustedcasqueryresponseResults           int = 1024
-	MaxSizeTrustedcasqueryresponseTraceId           int = 32768
-	MaxSizeNodemetricsgetrequestKey                 int = 32768
-	MaxSizeNodemetricsgetrequestTraceId             int = 32768
-	MaxSizeNodemetricsputrequestKey                 int = 32768
-	MaxSizeNodemetricsputrequestTraceId             int = 32768
-	MaxSizeNodemetricsgetallrequestTraceId          int = 32768
-	MaxSizeNodemetricskeysrequestTraceId            int = 32768
-	MaxSizeNodemetricssizerequestTraceId            int = 32768
-	MaxSizeNodemetricsclearrequestTraceId           int = 32768
-	MaxSizeNodemetricsvalueresponseTraceId          int = 32768
-	MaxSizeNodemetricsentriesresponseEntries        int = 1024
-	MaxSizeNodemetricsentriesresponseTraceId        int = 32768
-	MaxSizeNodemetricskeysresponseKeys              int = 1024
-	MaxSizeNodemetricskeysresponseTraceId           int = 32768
-	MaxSizeNodemetricssizeresponseTraceId           int = 32768
-	MaxSizeNodemetricsqueryrequestTraceId           int = 32768
-	MaxSizeNodemetricsqueryresponseResults          int = 1024
-	MaxSizeNodemetricsqueryresponseTraceId          int = 32768
-	MaxSizeGrpcstatsgetrequestKey                   int = 32768
-	MaxSizeGrpcstatsgetrequestTraceId               int = 32768
-	MaxSizeGrpcstatsputrequestKey                   int = 32768
-	MaxSizeGrpcstatsputrequestTraceId               int = 32768
-	MaxSizeGrpcstatsgetallrequestTraceId            int = 32768
-	MaxSizeGrpcstatskeysrequestTraceId              int = 32768
-	MaxSizeGrpcstatssizerequestTraceId              int = 32768
-	MaxSizeGrpcstatsclearrequestTraceId             int = 32768
-	MaxSizeGrpcstatsvalueresponseTraceId            int = 32768
-	MaxSizeGrpcstatsentriesresponseEntries          int = 1024
-	MaxSizeGrpcstatsentriesresponseTraceId          int = 32768
-	MaxSizeGrpcstatskeysresponseKeys                int = 1024
-	MaxSizeGrpcstatskeysresponseTraceId             int = 32768
-	MaxSizeGrpcstatssizeresponseTraceId             int = 32768
-	MaxSizeGrpcstatsqueryrequestTraceId             int = 32768
-	MaxSizeGrpcstatsqueryresponseResults            int = 1024
-	MaxSizeGrpcstatsqueryresponseTraceId            int = 32768
-	MaxSizePersistencestatusgetrequestKey           int = 32768
-	MaxSizePersistencestatusgetrequestTraceId       int = 32768
-	MaxSizePersistencestatusputrequestKey           int = 32768
-	MaxSizePersistencestatusputrequestTraceId       int = 32768
-	MaxSizePersistencestatusgetallrequestTraceId    int = 32768
-	MaxSizePersistencestatuskeysrequestTraceId      int = 32768
-	MaxSizePersistencestatussizerequestTraceId      int = 32768
-	MaxSizePersistencestatusclearrequestTraceId     int = 32768
-	MaxSizePersistencestatusvalueresponseTraceId    int = 32768
-	MaxSizePersistencestatusentriesresponseEntries  int = 1024
-	MaxSizePersistencestatusentriesresponseTraceId  int = 32768
-	MaxSizePersistencestatuskeysresponseKeys        int = 1024
-	MaxSizePersistencestatuskeysresponseTraceId     int = 32768
-	MaxSizePersistencestatussizeresponseTraceId     int = 32768
-	MaxSizePersistencestatusqueryrequestTraceId     int = 32768
-	MaxSizePersistencestatusqueryresponseResults    int = 1024
-	MaxSizePersistencestatusqueryresponseTraceId    int = 32768
-	MaxSizeNetworkstatsgetrequestKey                int = 32768
-	MaxSizeNetworkstatsgetrequestTraceId            int = 32768
-	MaxSizeNetworkstatsputrequestKey                int = 32768
-	MaxSizeNetworkstatsputrequestTraceId            int = 32768
-	MaxSizeNetworkstatsgetallrequestTraceId         int = 32768
-	MaxSizeNetworkstatskeysrequestTraceId           int = 32768
-	MaxSizeNetworkstatssizerequestTraceId           int = 32768
-	MaxSizeNetworkstatsclearrequestTraceId          int = 32768
-	MaxSizeNetworkstatsvalueresponseTraceId         int = 32768
-	MaxSizeNetworkstatsentriesresponseEntries       int = 1024
-	MaxSizeNetworkstatsentriesresponseTraceId       int = 32768
-	MaxSizeNetworkstatskeysresponseKeys             int = 1024
-	MaxSizeNetworkstatskeysresponseTraceId          int = 32768
-	MaxSizeNetworkstatssizeresponseTraceId          int = 32768
-	MaxSizeNetworkstatsqueryrequestTraceId          int = 32768
-	MaxSizeNetworkstatsqueryresponseResults         int = 1024
-	MaxSizeNetworkstatsqueryresponseTraceId         int = 32768
-	MaxSizeThreadinfogetrequestKey                  int = 32768
-	MaxSizeThreadinfogetrequestTraceId              int = 32768
-	MaxSizeThreadinfoputrequestKey                  int = 32768
-	MaxSizeThreadinfoputrequestTraceId              int = 32768
-	MaxSizeThreadinfogetallrequestTraceId           int = 32768
-	MaxSizeThreadinfokeysrequestTraceId             int = 32768
-	MaxSizeThreadinfosizerequestTraceId             int = 32768
-	MaxSizeThreadinfoclearrequestTraceId            int = 32768
-	MaxSizeThreadinfovalueresponseTraceId           int = 32768
-	MaxSizeThreadinfoentriesresponseEntries         int = 1024
-	MaxSizeThreadinfoentriesresponseTraceId         int = 32768
-	MaxSizeThreadinfokeysresponseKeys               int = 1024
-	MaxSizeThreadinfokeysresponseTraceId            int = 32768
-	MaxSizeThreadinfosizeresponseTraceId            int = 32768
-	MaxSizeThreadinfoqueryrequestTraceId            int = 32768
-	MaxSizeThreadinfoqueryresponseResults           int = 1024
-	MaxSizeThreadinfoqueryresponseTraceId           int = 32768
-	MaxSizeTokencachestatsgetrequestKey             int = 32768
-	MaxSizeTokencachestatsgetrequestTraceId         int = 32768
-	MaxSizeTokencachestatsputrequestKey             int = 32768
-	MaxSizeTokencachestatsputrequestTraceId         int = 32768
-	MaxSizeTokencachestatsgetallrequestTraceId      int = 32768
-	MaxSizeTokencachestatskeysrequestTraceId        int = 32768
-	MaxSizeTokencachestatssizerequestTraceId        int = 32768
-	MaxSizeTokencachestatsclearrequestTraceId       int = 32768
-	MaxSizeTokencachestatsvalueresponseTraceId      int = 32768
-	MaxSizeTokencachestatsentriesresponseEntries    int = 1024
-	MaxSizeTokencachestatsentriesresponseTraceId    int = 32768
-	MaxSizeTokencachestatskeysresponseKeys          int = 1024
-	MaxSizeTokencachestatskeysresponseTraceId       int = 32768
-	MaxSizeTokencachestatssizeresponseTraceId       int = 32768
-	MaxSizeTokencachestatsqueryrequestTraceId       int = 32768
-	MaxSizeTokencachestatsqueryresponseResults      int = 1024
-	MaxSizeTokencachestatsqueryresponseTraceId      int = 32768
-	MaxSizeMapstatsgetrequestKey                    int = 32768
-	MaxSizeMapstatsgetrequestTraceId                int = 32768
-	MaxSizeMapstatsputrequestKey                    int = 32768
-	MaxSizeMapstatsputrequestTraceId                int = 32768
-	MaxSizeMapstatsgetallrequestTraceId             int = 32768
-	MaxSizeMapstatskeysrequestTraceId               int = 32768
-	MaxSizeMapstatssizerequestTraceId               int = 32768
-	MaxSizeMapstatsclearrequestTraceId              int = 32768
-	MaxSizeMapstatsvalueresponseTraceId             int = 32768
-	MaxSizeMapstatsentriesresponseEntries           int = 1024
-	MaxSizeMapstatsentriesresponseTraceId           int = 32768
-	MaxSizeMapstatskeysresponseKeys                 int = 1024
-	MaxSizeMapstatskeysresponseTraceId              int = 32768
-	MaxSizeMapstatssizeresponseTraceId              int = 32768
-	MaxSizeMapstatsqueryrequestTraceId              int = 32768
-	MaxSizeMapstatsqueryresponseResults             int = 1024
-	MaxSizeMapstatsqueryresponseTraceId             int = 32768
-	MaxSizeGraphregistrygetrequestKey               int = 32768
-	MaxSizeGraphregistrygetrequestTraceId           int = 32768
-	MaxSizeGraphregistryputrequestKey               int = 32768
-	MaxSizeGraphregistryputrequestTraceId           int = 32768
-	MaxSizeGraphregistrygetallrequestTraceId        int = 32768
-	MaxSizeGraphregistrykeysrequestTraceId          int = 32768
-	MaxSizeGraphregistrysizerequestTraceId          int = 32768
-	MaxSizeGraphregistryclearrequestTraceId         int = 32768
-	MaxSizeGraphregistryvalueresponseTraceId        int = 32768
-	MaxSizeGraphregistryentriesresponseEntries      int = 1024
-	MaxSizeGraphregistryentriesresponseTraceId      int = 32768
-	MaxSizeGraphregistrykeysresponseKeys            int = 1024
-	MaxSizeGraphregistrykeysresponseTraceId         int = 32768
-	MaxSizeGraphregistrysizeresponseTraceId         int = 32768
-	MaxSizeGraphregistryqueryrequestTraceId         int = 32768
-	MaxSizeGraphregistryqueryresponseResults        int = 1024
-	MaxSizeGraphregistryqueryresponseTraceId        int = 32768
-	MaxSizeServiceconnectionsgetrequestKey          int = 32768
-	MaxSizeServiceconnectionsgetrequestTraceId      int = 32768
-	MaxSizeServiceconnectionsputrequestKey          int = 32768
-	MaxSizeServiceconnectionsputrequestTraceId      int = 32768
-	MaxSizeServiceconnectionsgetallrequestTraceId   int = 32768
-	MaxSizeServiceconnectionskeysrequestTraceId     int = 32768
-	MaxSizeServiceconnectionssizerequestTraceId     int = 32768
-	MaxSizeServiceconnectionsclearrequestTraceId    int = 32768
-	MaxSizeServiceconnectionsvalueresponseTraceId   int = 32768
-	MaxSizeServiceconnectionsentriesresponseEntries int = 1024
-	MaxSizeServiceconnectionsentriesresponseTraceId int = 32768
-	MaxSizeServiceconnectionskeysresponseKeys       int = 1024
-	MaxSizeServiceconnectionskeysresponseTraceId    int = 32768
-	MaxSizeServiceconnectionssizeresponseTraceId    int = 32768
-	MaxSizeServiceconnectionsqueryrequestTraceId    int = 32768
-	MaxSizeServiceconnectionsqueryresponseResults   int = 1024
-	MaxSizeServiceconnectionsqueryresponseTraceId   int = 32768
-	MaxSizeQueuestatsgetrequestKey                  int = 32768
-	MaxSizeQueuestatsgetrequestTraceId              int = 32768
-	MaxSizeQueuestatsputrequestKey                  int = 32768
-	MaxSizeQueuestatsputrequestTraceId              int = 32768
-	MaxSizeQueuestatsgetallrequestTraceId           int = 32768
-	MaxSizeQueuestatskeysrequestTraceId             int = 32768
-	MaxSizeQueuestatssizerequestTraceId             int = 32768
-	MaxSizeQueuestatsclearrequestTraceId            int = 32768
-	MaxSizeQueuestatsvalueresponseTraceId           int = 32768
-	MaxSizeQueuestatsentriesresponseEntries         int = 1024
-	MaxSizeQueuestatsentriesresponseTraceId         int = 32768
-	MaxSizeQueuestatskeysresponseKeys               int = 1024
-	MaxSizeQueuestatskeysresponseTraceId            int = 32768
-	MaxSizeQueuestatssizeresponseTraceId            int = 32768
-	MaxSizeQueuestatsqueryrequestTraceId            int = 32768
-	MaxSizeQueuestatsqueryresponseResults           int = 1024
-	MaxSizeQueuestatsqueryresponseTraceId           int = 32768
-	MaxSizeTopicstatsgetrequestKey                  int = 32768
-	MaxSizeTopicstatsgetrequestTraceId              int = 32768
-	MaxSizeTopicstatsputrequestKey                  int = 32768
-	MaxSizeTopicstatsputrequestTraceId              int = 32768
-	MaxSizeTopicstatsgetallrequestTraceId           int = 32768
-	MaxSizeTopicstatskeysrequestTraceId             int = 32768
-	MaxSizeTopicstatssizerequestTraceId             int = 32768
-	MaxSizeTopicstatsclearrequestTraceId            int = 32768
-	MaxSizeTopicstatsvalueresponseTraceId           int = 32768
-	MaxSizeTopicstatsentriesresponseEntries         int = 1024
-	MaxSizeTopicstatsentriesresponseTraceId         int = 32768
-	MaxSizeTopicstatskeysresponseKeys               int = 1024
-	MaxSizeTopicstatskeysresponseTraceId            int = 32768
-	MaxSizeTopicstatssizeresponseTraceId            int = 32768
-	MaxSizeTopicstatsqueryrequestTraceId            int = 32768
-	MaxSizeTopicstatsqueryresponseResults           int = 1024
-	MaxSizeTopicstatsqueryresponseTraceId           int = 32768
-	MaxSizeWatchhealthgetrequestKey                 int = 32768
-	MaxSizeWatchhealthgetrequestTraceId             int = 32768
-	MaxSizeWatchhealthputrequestKey                 int = 32768
-	MaxSizeWatchhealthputrequestTraceId             int = 32768
-	MaxSizeWatchhealthgetallrequestTraceId          int = 32768
-	MaxSizeWatchhealthkeysrequestTraceId            int = 32768
-	MaxSizeWatchhealthsizerequestTraceId            int = 32768
-	MaxSizeWatchhealthclearrequestTraceId           int = 32768
-	MaxSizeWatchhealthvalueresponseTraceId          int = 32768
-	MaxSizeWatchhealthentriesresponseEntries        int = 1024
-	MaxSizeWatchhealthentriesresponseTraceId        int = 32768
-	MaxSizeWatchhealthkeysresponseKeys              int = 1024
-	MaxSizeWatchhealthkeysresponseTraceId           int = 32768
-	MaxSizeWatchhealthsizeresponseTraceId           int = 32768
-	MaxSizeWatchhealthqueryrequestTraceId           int = 32768
-	MaxSizeWatchhealthqueryresponseResults          int = 1024
-	MaxSizeWatchhealthqueryresponseTraceId          int = 32768
-	MaxSizeMutationratesgetrequestKey               int = 32768
-	MaxSizeMutationratesgetrequestTraceId           int = 32768
-	MaxSizeMutationratesputrequestKey               int = 32768
-	MaxSizeMutationratesputrequestTraceId           int = 32768
-	MaxSizeMutationratesgetallrequestTraceId        int = 32768
-	MaxSizeMutationrateskeysrequestTraceId          int = 32768
-	MaxSizeMutationratessizerequestTraceId          int = 32768
-	MaxSizeMutationratesclearrequestTraceId         int = 32768
-	MaxSizeMutationratesvalueresponseTraceId        int = 32768
-	MaxSizeMutationratesentriesresponseEntries      int = 1024
-	MaxSizeMutationratesentriesresponseTraceId      int = 32768
-	MaxSizeMutationrateskeysresponseKeys            int = 1024
-	MaxSizeMutationrateskeysresponseTraceId         int = 32768
-	MaxSizeMutationratessizeresponseTraceId         int = 32768
-	MaxSizeMutationratesqueryrequestTraceId         int = 32768
-	MaxSizeMutationratesqueryresponseResults        int = 1024
-	MaxSizeMutationratesqueryresponseTraceId        int = 32768
-	MaxSizeInstancesgetrequestKey                   int = 32768
-	MaxSizeInstancesgetrequestTraceId               int = 32768
-	MaxSizeInstancesgetallrequestTraceId            int = 32768
-	MaxSizeInstanceskeysrequestTraceId              int = 32768
-	MaxSizeInstancessizerequestTraceId              int = 32768
-	MaxSizeInstancesvalueresponseTraceId            int = 32768
-	MaxSizeInstancesentriesresponseEntries          int = 1024
-	MaxSizeInstancesentriesresponseTraceId          int = 32768
-	MaxSizeInstanceskeysresponseKeys                int = 1024
-	MaxSizeInstanceskeysresponseTraceId             int = 32768
-	MaxSizeInstancessizeresponseTraceId             int = 32768
-	MaxSizeInstancesqueryrequestTraceId             int = 32768
-	MaxSizeInstancesqueryresponseResults            int = 1024
-	MaxSizeInstancesqueryresponseTraceId            int = 32768
-	MaxSizeLocalitiesgetrequestKey                  int = 32768
-	MaxSizeLocalitiesgetrequestTraceId              int = 32768
-	MaxSizeLocalitiesputrequestKey                  int = 32768
-	MaxSizeLocalitiesputrequestTraceId              int = 32768
-	MaxSizeLocalitiesgetallrequestTraceId           int = 32768
-	MaxSizeLocalitieskeysrequestTraceId             int = 32768
-	MaxSizeLocalitiessizerequestTraceId             int = 32768
-	MaxSizeLocalitiesclearrequestTraceId            int = 32768
-	MaxSizeLocalitiesvalueresponseTraceId           int = 32768
-	MaxSizeLocalitiesentriesresponseEntries         int = 1024
-	MaxSizeLocalitiesentriesresponseTraceId         int = 32768
-	MaxSizeLocalitieskeysresponseKeys               int = 1024
-	MaxSizeLocalitieskeysresponseTraceId            int = 32768
-	MaxSizeLocalitiessizeresponseTraceId            int = 32768
-	MaxSizeLocalitiesqueryrequestTraceId            int = 32768
-	MaxSizeLocalitiesqueryresponseResults           int = 1024
-	MaxSizeLocalitiesqueryresponseTraceId           int = 32768
-	MaxSizeRevocationsgetrequestKey                 int = 32768
-	MaxSizeRevocationsgetrequestTraceId             int = 32768
-	MaxSizeRevocationsputrequestKey                 int = 32768
-	MaxSizeRevocationsputrequestTraceId             int = 32768
-	MaxSizeRevocationsgetallrequestTraceId          int = 32768
-	MaxSizeRevocationskeysrequestTraceId            int = 32768
-	MaxSizeRevocationssizerequestTraceId            int = 32768
-	MaxSizeRevocationsclearrequestTraceId           int = 32768
-	MaxSizeRevocationsvalueresponseTraceId          int = 32768
-	MaxSizeRevocationsentriesresponseEntries        int = 1024
-	MaxSizeRevocationsentriesresponseTraceId        int = 32768
-	MaxSizeRevocationskeysresponseKeys              int = 1024
-	MaxSizeRevocationskeysresponseTraceId           int = 32768
-	MaxSizeRevocationssizeresponseTraceId           int = 32768
-	MaxSizeRevocationsqueryrequestTraceId           int = 32768
-	MaxSizeRevocationsqueryresponseResults          int = 1024
-	MaxSizeRevocationsqueryresponseTraceId          int = 32768
-	MaxSizeCacertsgetrequestKey                     int = 32768
-	MaxSizeCacertsgetrequestTraceId                 int = 32768
-	MaxSizeCacertsputrequestKey                     int = 32768
-	MaxSizeCacertsputrequestTraceId                 int = 32768
-	MaxSizeCacertsgetallrequestTraceId              int = 32768
-	MaxSizeCacertskeysrequestTraceId                int = 32768
-	MaxSizeCacertssizerequestTraceId                int = 32768
-	MaxSizeCacertsclearrequestTraceId               int = 32768
-	MaxSizeCacertsvalueresponseTraceId              int = 32768
-	MaxSizeCacertsentriesresponseEntries            int = 1024
-	MaxSizeCacertsentriesresponseTraceId            int = 32768
-	MaxSizeCacertskeysresponseKeys                  int = 1024
-	MaxSizeCacertskeysresponseTraceId               int = 32768
-	MaxSizeCacertssizeresponseTraceId               int = 32768
-	MaxSizeCacertsqueryrequestTraceId               int = 32768
-	MaxSizeCacertsqueryresponseResults              int = 1024
-	MaxSizeCacertsqueryresponseTraceId              int = 32768
-	MaxSizeServicecasgetrequestKey                  int = 32768
-	MaxSizeServicecasgetrequestTraceId              int = 32768
-	MaxSizeServicecasputrequestKey                  int = 32768
-	MaxSizeServicecasputrequestTraceId              int = 32768
-	MaxSizeServicecasgetallrequestTraceId           int = 32768
-	MaxSizeServicecaskeysrequestTraceId             int = 32768
-	MaxSizeServicecassizerequestTraceId             int = 32768
-	MaxSizeServicecasclearrequestTraceId            int = 32768
-	MaxSizeServicecasvalueresponseTraceId           int = 32768
-	MaxSizeServicecasentriesresponseEntries         int = 1024
-	MaxSizeServicecasentriesresponseTraceId         int = 32768
-	MaxSizeServicecaskeysresponseKeys               int = 1024
-	MaxSizeServicecaskeysresponseTraceId            int = 32768
-	MaxSizeServicecassizeresponseTraceId            int = 32768
-	MaxSizeServicecasqueryrequestTraceId            int = 32768
-	MaxSizeServicecasqueryresponseResults           int = 1024
-	MaxSizeServicecasqueryresponseTraceId           int = 32768
-	MaxSizeTenantsgetrequestKey                     int = 32768
-	MaxSizeTenantsgetrequestTraceId                 int = 32768
-	MaxSizeTenantsputrequestKey                     int = 32768
-	MaxSizeTenantsputrequestTraceId                 int = 32768
-	MaxSizeTenantsgetallrequestTraceId              int = 32768
-	MaxSizeTenantskeysrequestTraceId                int = 32768
-	MaxSizeTenantssizerequestTraceId                int = 32768
-	MaxSizeTenantsclearrequestTraceId               int = 32768
-	MaxSizeTenantsvalueresponseTraceId              int = 32768
-	MaxSizeTenantsentriesresponseEntries            int = 1024
-	MaxSizeTenantsentriesresponseTraceId            int = 32768
-	MaxSizeTenantskeysresponseKeys                  int = 1024
-	MaxSizeTenantskeysresponseTraceId               int = 32768
-	MaxSizeTenantssizeresponseTraceId               int = 32768
-	MaxSizeTenantsqueryrequestTraceId               int = 32768
-	MaxSizeTenantsqueryresponseResults              int = 1024
-	MaxSizeTenantsqueryresponseTraceId              int = 32768
-	MaxSizeTenantconfigsgetrequestKey               int = 32768
-	MaxSizeTenantconfigsgetrequestTraceId           int = 32768
-	MaxSizeTenantconfigsputrequestKey               int = 32768
-	MaxSizeTenantconfigsputrequestTraceId           int = 32768
-	MaxSizeTenantconfigsgetallrequestTraceId        int = 32768
-	MaxSizeTenantconfigskeysrequestTraceId          int = 32768
-	MaxSizeTenantconfigssizerequestTraceId          int = 32768
-	MaxSizeTenantconfigsclearrequestTraceId         int = 32768
-	MaxSizeTenantconfigsvalueresponseTraceId        int = 32768
-	MaxSizeTenantconfigsentriesresponseEntries      int = 1024
-	MaxSizeTenantconfigsentriesresponseTraceId      int = 32768
-	MaxSizeTenantconfigskeysresponseKeys            int = 1024
-	MaxSizeTenantconfigskeysresponseTraceId         int = 32768
-	MaxSizeTenantconfigssizeresponseTraceId         int = 32768
-	MaxSizeTenantconfigsqueryrequestTraceId         int = 32768
-	MaxSizeTenantconfigsqueryresponseResults        int = 1024
-	MaxSizeTenantconfigsqueryresponseTraceId        int = 32768
-	MaxSizeProjectconfigsgetrequestKey              int = 32768
-	MaxSizeProjectconfigsgetrequestTraceId          int = 32768
-	MaxSizeProjectconfigsputrequestKey              int = 32768
-	MaxSizeProjectconfigsputrequestTraceId          int = 32768
-	MaxSizeProjectconfigsgetallrequestTraceId       int = 32768
-	MaxSizeProjectconfigskeysrequestTraceId         int = 32768
-	MaxSizeProjectconfigssizerequestTraceId         int = 32768
-	MaxSizeProjectconfigsclearrequestTraceId        int = 32768
-	MaxSizeProjectconfigsvalueresponseTraceId       int = 32768
-	MaxSizeProjectconfigsentriesresponseEntries     int = 1024
-	MaxSizeProjectconfigsentriesresponseTraceId     int = 32768
-	MaxSizeProjectconfigskeysresponseKeys           int = 1024
-	MaxSizeProjectconfigskeysresponseTraceId        int = 32768
-	MaxSizeProjectconfigssizeresponseTraceId        int = 32768
-	MaxSizeProjectconfigsqueryrequestTraceId        int = 32768
-	MaxSizeProjectconfigsqueryresponseResults       int = 1024
-	MaxSizeProjectconfigsqueryresponseTraceId       int = 32768
-	MaxSizeMapemptyTraceId                          int = 32768
+	MaxSizeConfigClusterName                                       int = 32768
+	MaxSizeConfigMembers                                           int = 32
+	MaxSizeConfigPersistenceDir                                    int = 32768
+	MaxSizeConfigClusterCa                                         int = 16
+	MaxSizeConfigTrustedCas                                        int = 16
+	MaxSizeConfigDelegates                                         int = 128
+	MaxSizeConfigFqdn                                              int = 32768
+	MaxSizeConfigIssuer                                            int = 32768
+	MaxSizeConfigRootCredPairs                                     int = 64
+	MaxSizeConfigSpiffeTrustDomain                                 int = 32768
+	MaxSizeConfigLocationPath                                      int = 32768
+	MaxSizeConfigTraceId                                           int = 32768
+	MaxSizeIdentityVerifyingKeys                                   int = 16
+	MaxSizeIdentityTraceId                                         int = 32768
+	MaxSizeIdentityfqdnFqdn                                        int = 32768
+	MaxSizeIdentityfqdnTraceId                                     int = 32768
+	MaxSizeSigningkeyrecordTraceId                                 int = 32768
+	MaxSizeTrustedcaTrustedCas                                     int = 16
+	MaxSizeTrustedcaTraceId                                        int = 32768
+	MaxSizeClitokenbrokerrequestTraceId                            int = 32768
+	MaxSizeClitokenbrokerresponseTraceId                           int = 32768
+	MaxSizeClitokenbrokerregisterInstanceId                        int = 32768
+	MaxSizeClitokenbrokerregisterTraceId                           int = 32768
+	MaxSizeClitokenbrokerregisternonceNonce                        int = 32768
+	MaxSizeClitokenbrokerregisternonceTraceId                      int = 32768
+	MaxSizeClitokenbrokercompletenonceNonce                        int = 32768
+	MaxSizeClitokenbrokercompletenonceSubject                      int = 32768
+	MaxSizeClitokenbrokercompletenonceTraceId                      int = 32768
+	MaxSizeClitokenbrokertokendeliveryNonce                        int = 32768
+	MaxSizeClitokenbrokertokendeliveryRefreshToken                 int = 32768
+	MaxSizeClitokenbrokertokendeliveryTraceId                      int = 32768
+	MaxSizeClitokenbrokererrorNonce                                int = 32768
+	MaxSizeClitokenbrokererrorMessage                              int = 32768
+	MaxSizeClitokenbrokererrorTraceId                              int = 32768
+	MaxSizeCloudidentitymatcherExpectedIdentity                    int = 32768
+	MaxSizeCloudidentitymatcherTraceId                             int = 32768
+	MaxSizeKubernetesserviceaccountmatcherKubernetesNamespace      int = 32768
+	MaxSizeKubernetesserviceaccountmatcherKubernetesServiceAccount int = 32768
+	MaxSizeKubernetesserviceaccountmatcherTraceId                  int = 32768
+	MaxSizeDelegateName                                            int = 32768
+	MaxSizeDelegateCloudIdentities                                 int = 8
+	MaxSizeDelegateKubernetesServiceAccounts                       int = 8
+	MaxSizeDelegateAuthorizedServices                              int = 64
+	MaxSizeDelegateCustomClaims                                    int = 20
+	MaxSizeDelegateTraceId                                         int = 32768
+	MaxSizeClusterNodeMetrics                                      int = 32
+	MaxSizeClusterGrpcStats                                        int = 32
+	MaxSizeClusterPersistenceStatus                                int = 32
+	MaxSizeClusterNetworkStats                                     int = 32
+	MaxSizeClusterThreadInfo                                       int = 32
+	MaxSizeClusterTokenCacheStats                                  int = 32
+	MaxSizeClusterMapStats                                         int = 1024
+	MaxSizeClusterGraphRegistry                                    int = 1024
+	MaxSizeClusterServiceConnections                               int = 256
+	MaxSizeClusterQueueStats                                       int = 1024
+	MaxSizeClusterTopicStats                                       int = 1024
+	MaxSizeClusterWatchHealth                                      int = 1024
+	MaxSizeClusterMutationRates                                    int = 1024
+	MaxSizeClusterTraceId                                          int = 32768
+	MaxSizeAdminsetloglevelrequestLoggerName                       int = 32768
+	MaxSizeAdminsetloglevelrequestLevel                            int = 32768
+	MaxSizeAdminsetloglevelrequestTraceId                          int = 32768
+	MaxSizeAdminreloadconfigrequestTraceId                         int = 32768
+	MaxSizeAdminconfigdumpTraceId                                  int = 32768
+	MaxSizeServicehealthInstances                                  int = 256
+	MaxSizeServicehealthTraceId                                    int = 32768
+	MaxSizeWorkloadrevokerequestSpiffeId                           int = 32768
+	MaxSizeWorkloadrevokerequestTraceId                            int = 32768
+	MaxSizeWorkloadlocalitySpiffeId                                int = 32768
+	MaxSizeWorkloadlocalityLocalityToken                           int = 32768
+	MaxSizeWorkloadlocalityTraceId                                 int = 32768
+	MaxSizeWorkloadrevocationSpiffeId                              int = 32768
+	MaxSizeWorkloadrevocationRevokedBy                             int = 32768
+	MaxSizeWorkloadrevocationTraceId                               int = 32768
+	MaxSizeWorkloadstateLocalities                                 int = 1024
+	MaxSizeWorkloadstateRevocations                                int = 4096
+	MaxSizeWorkloadstateTraceId                                    int = 32768
+	MaxSizeCaCaCerts                                               int = 16
+	MaxSizeCaServiceCas                                            int = 64
+	MaxSizeCaTraceId                                               int = 32768
+	MaxSizeConstraintsTraceId                                      int = 32768
+	MaxSizeTenantName                                              int = 32768
+	MaxSizeTenantTraceId                                           int = 32768
+	MaxSizeTenantconfigentryTenantName                             int = 32768
+	MaxSizeTenantconfigentryTraceId                                int = 32768
+	MaxSizeProjectconfigTraceId                                    int = 32768
+	MaxSizeProjectconfigentryProjectNamespace                      int = 32768
+	MaxSizeProjectconfigentryTraceId                               int = 32768
+	MaxSizeConfigstateTenants                                      int = 4096
+	MaxSizeConfigstateTenantConfigs                                int = 4096
+	MaxSizeConfigstateProjectConfigs                               int = 4096
+	MaxSizeConfigstateTraceId                                      int = 32768
+	MaxSizeKerneldiskstateSigningKeys                              int = 8
+	MaxSizeKerneldiskstateVerifyingKeys                            int = 32
+	MaxSizeKerneldiskstateCaCerts                                  int = 16
+	MaxSizeKerneldiskstateServiceCas                               int = 64
+	MaxSizeKerneldiskstateTenants                                  int = 4096
+	MaxSizeKerneldiskstateTenantConfigs                            int = 4096
+	MaxSizeKerneldiskstateProjectConfigs                           int = 4096
+	MaxSizeKerneldiskstateWorkloadRevocations                      int = 4096
+	MaxSizeKerneldiskstateTraceId                                  int = 32768
+	MaxSizeCreatetenantrequestTenantNamespace                      int = 32768
+	MaxSizeCreatetenantrequestTraceId                              int = 32768
+	MaxSizeDeletetenantrequestTenantNamespace                      int = 32768
+	MaxSizeDeletetenantrequestTraceId                              int = 32768
+	MaxSizeDeletetenantresponseTraceId                             int = 32768
+	MaxSizeListtenantsrequestParentNamespace                       int = 32768
+	MaxSizeListtenantsrequestPageToken                             int = 32768
+	MaxSizeListtenantsrequestTraceId                               int = 32768
+	MaxSizeListtenantsresponseTenants                              int = 4096
+	MaxSizeListtenantsresponseNextPageToken                        int = 32768
+	MaxSizeListtenantsresponseTraceId                              int = 32768
+	MaxSizeGettenantconfigrequestTenantNamespace                   int = 32768
+	MaxSizeGettenantconfigrequestTraceId                           int = 32768
+	MaxSizeSettenantconfigrequestTenantNamespace                   int = 32768
+	MaxSizeSettenantconfigrequestTraceId                           int = 32768
+	MaxSizeGetprojectconfigrequestProjectNamespace                 int = 32768
+	MaxSizeGetprojectconfigrequestTraceId                          int = 32768
+	MaxSizeSetprojectconfigrequestProjectNamespace                 int = 32768
+	MaxSizeSetprojectconfigrequestTraceId                          int = 32768
+	MaxSizeProjectnamespaceProjectNamespace                        int = 32768
+	MaxSizeProjectnamespaceTraceId                                 int = 32768
+	MaxSizeListprojectsrequestTenantNamespace                      int = 32768
+	MaxSizeListprojectsrequestPageToken                            int = 32768
+	MaxSizeListprojectsrequestTraceId                              int = 32768
+	MaxSizeListprojectsresponseProjectNamespaces                   int = 4096
+	MaxSizeListprojectsresponseNextPageToken                       int = 32768
+	MaxSizeListprojectsresponseTraceId                             int = 32768
+	MaxSizeDeleteprojectrequestProjectNamespace                    int = 32768
+	MaxSizeDeleteprojectrequestTraceId                             int = 32768
+	MaxSizeDeleteprojectresponseTraceId                            int = 32768
+	MaxSizeQueryvalueStringValue                                   int = 32768
+	MaxSizeQueryvalueTraceId                                       int = 32768
+	MaxSizePredicateFieldName                                      int = 32768
+	MaxSizePredicateValues                                         int = 1024
+	MaxSizePredicateTraceId                                        int = 32768
+	MaxSizePredicategroupPredicates                                int = 1024
+	MaxSizePredicategroupGroups                                    int = 1024
+	MaxSizePredicategroupTraceId                                   int = 32768
+	MaxSizeSortfieldFieldName                                      int = 32768
+	MaxSizeSortfieldTraceId                                        int = 32768
+	MaxSizeCollectionqueryOrderBy                                  int = 1024
+	MaxSizeCollectionqueryTraceId                                  int = 32768
+	MaxSizeVerifyingkeysgetrequestKey                              int = 32768
+	MaxSizeVerifyingkeysgetrequestTraceId                          int = 32768
+	MaxSizeVerifyingkeysputrequestKey                              int = 32768
+	MaxSizeVerifyingkeysputrequestTraceId                          int = 32768
+	MaxSizeVerifyingkeysgetallrequestTraceId                       int = 32768
+	MaxSizeVerifyingkeyskeysrequestTraceId                         int = 32768
+	MaxSizeVerifyingkeyssizerequestTraceId                         int = 32768
+	MaxSizeVerifyingkeysclearrequestTraceId                        int = 32768
+	MaxSizeVerifyingkeysvalueresponseTraceId                       int = 32768
+	MaxSizeVerifyingkeysentriesresponseEntries                     int = 1024
+	MaxSizeVerifyingkeysentriesresponseTraceId                     int = 32768
+	MaxSizeVerifyingkeyskeysresponseKeys                           int = 1024
+	MaxSizeVerifyingkeyskeysresponseTraceId                        int = 32768
+	MaxSizeVerifyingkeyssizeresponseTraceId                        int = 32768
+	MaxSizeVerifyingkeysqueryrequestTraceId                        int = 32768
+	MaxSizeVerifyingkeysqueryresponseResults                       int = 1024
+	MaxSizeVerifyingkeysqueryresponseTraceId                       int = 32768
+	MaxSizeTrustedcasgetrequestKey                                 int = 32768
+	MaxSizeTrustedcasgetrequestTraceId                             int = 32768
+	MaxSizeTrustedcasputrequestKey                                 int = 32768
+	MaxSizeTrustedcasputrequestTraceId                             int = 32768
+	MaxSizeTrustedcasgetallrequestTraceId                          int = 32768
+	MaxSizeTrustedcaskeysrequestTraceId                            int = 32768
+	MaxSizeTrustedcassizerequestTraceId                            int = 32768
+	MaxSizeTrustedcasclearrequestTraceId                           int = 32768
+	MaxSizeTrustedcasvalueresponseTraceId                          int = 32768
+	MaxSizeTrustedcasentriesresponseEntries                        int = 1024
+	MaxSizeTrustedcasentriesresponseTraceId                        int = 32768
+	MaxSizeTrustedcaskeysresponseKeys                              int = 1024
+	MaxSizeTrustedcaskeysresponseTraceId                           int = 32768
+	MaxSizeTrustedcassizeresponseTraceId                           int = 32768
+	MaxSizeTrustedcasqueryrequestTraceId                           int = 32768
+	MaxSizeTrustedcasqueryresponseResults                          int = 1024
+	MaxSizeTrustedcasqueryresponseTraceId                          int = 32768
+	MaxSizeNodemetricsgetrequestKey                                int = 32768
+	MaxSizeNodemetricsgetrequestTraceId                            int = 32768
+	MaxSizeNodemetricsputrequestKey                                int = 32768
+	MaxSizeNodemetricsputrequestTraceId                            int = 32768
+	MaxSizeNodemetricsgetallrequestTraceId                         int = 32768
+	MaxSizeNodemetricskeysrequestTraceId                           int = 32768
+	MaxSizeNodemetricssizerequestTraceId                           int = 32768
+	MaxSizeNodemetricsclearrequestTraceId                          int = 32768
+	MaxSizeNodemetricsvalueresponseTraceId                         int = 32768
+	MaxSizeNodemetricsentriesresponseEntries                       int = 1024
+	MaxSizeNodemetricsentriesresponseTraceId                       int = 32768
+	MaxSizeNodemetricskeysresponseKeys                             int = 1024
+	MaxSizeNodemetricskeysresponseTraceId                          int = 32768
+	MaxSizeNodemetricssizeresponseTraceId                          int = 32768
+	MaxSizeNodemetricsqueryrequestTraceId                          int = 32768
+	MaxSizeNodemetricsqueryresponseResults                         int = 1024
+	MaxSizeNodemetricsqueryresponseTraceId                         int = 32768
+	MaxSizeGrpcstatsgetrequestKey                                  int = 32768
+	MaxSizeGrpcstatsgetrequestTraceId                              int = 32768
+	MaxSizeGrpcstatsputrequestKey                                  int = 32768
+	MaxSizeGrpcstatsputrequestTraceId                              int = 32768
+	MaxSizeGrpcstatsgetallrequestTraceId                           int = 32768
+	MaxSizeGrpcstatskeysrequestTraceId                             int = 32768
+	MaxSizeGrpcstatssizerequestTraceId                             int = 32768
+	MaxSizeGrpcstatsclearrequestTraceId                            int = 32768
+	MaxSizeGrpcstatsvalueresponseTraceId                           int = 32768
+	MaxSizeGrpcstatsentriesresponseEntries                         int = 1024
+	MaxSizeGrpcstatsentriesresponseTraceId                         int = 32768
+	MaxSizeGrpcstatskeysresponseKeys                               int = 1024
+	MaxSizeGrpcstatskeysresponseTraceId                            int = 32768
+	MaxSizeGrpcstatssizeresponseTraceId                            int = 32768
+	MaxSizeGrpcstatsqueryrequestTraceId                            int = 32768
+	MaxSizeGrpcstatsqueryresponseResults                           int = 1024
+	MaxSizeGrpcstatsqueryresponseTraceId                           int = 32768
+	MaxSizePersistencestatusgetrequestKey                          int = 32768
+	MaxSizePersistencestatusgetrequestTraceId                      int = 32768
+	MaxSizePersistencestatusputrequestKey                          int = 32768
+	MaxSizePersistencestatusputrequestTraceId                      int = 32768
+	MaxSizePersistencestatusgetallrequestTraceId                   int = 32768
+	MaxSizePersistencestatuskeysrequestTraceId                     int = 32768
+	MaxSizePersistencestatussizerequestTraceId                     int = 32768
+	MaxSizePersistencestatusclearrequestTraceId                    int = 32768
+	MaxSizePersistencestatusvalueresponseTraceId                   int = 32768
+	MaxSizePersistencestatusentriesresponseEntries                 int = 1024
+	MaxSizePersistencestatusentriesresponseTraceId                 int = 32768
+	MaxSizePersistencestatuskeysresponseKeys                       int = 1024
+	MaxSizePersistencestatuskeysresponseTraceId                    int = 32768
+	MaxSizePersistencestatussizeresponseTraceId                    int = 32768
+	MaxSizePersistencestatusqueryrequestTraceId                    int = 32768
+	MaxSizePersistencestatusqueryresponseResults                   int = 1024
+	MaxSizePersistencestatusqueryresponseTraceId                   int = 32768
+	MaxSizeNetworkstatsgetrequestKey                               int = 32768
+	MaxSizeNetworkstatsgetrequestTraceId                           int = 32768
+	MaxSizeNetworkstatsputrequestKey                               int = 32768
+	MaxSizeNetworkstatsputrequestTraceId                           int = 32768
+	MaxSizeNetworkstatsgetallrequestTraceId                        int = 32768
+	MaxSizeNetworkstatskeysrequestTraceId                          int = 32768
+	MaxSizeNetworkstatssizerequestTraceId                          int = 32768
+	MaxSizeNetworkstatsclearrequestTraceId                         int = 32768
+	MaxSizeNetworkstatsvalueresponseTraceId                        int = 32768
+	MaxSizeNetworkstatsentriesresponseEntries                      int = 1024
+	MaxSizeNetworkstatsentriesresponseTraceId                      int = 32768
+	MaxSizeNetworkstatskeysresponseKeys                            int = 1024
+	MaxSizeNetworkstatskeysresponseTraceId                         int = 32768
+	MaxSizeNetworkstatssizeresponseTraceId                         int = 32768
+	MaxSizeNetworkstatsqueryrequestTraceId                         int = 32768
+	MaxSizeNetworkstatsqueryresponseResults                        int = 1024
+	MaxSizeNetworkstatsqueryresponseTraceId                        int = 32768
+	MaxSizeThreadinfogetrequestKey                                 int = 32768
+	MaxSizeThreadinfogetrequestTraceId                             int = 32768
+	MaxSizeThreadinfoputrequestKey                                 int = 32768
+	MaxSizeThreadinfoputrequestTraceId                             int = 32768
+	MaxSizeThreadinfogetallrequestTraceId                          int = 32768
+	MaxSizeThreadinfokeysrequestTraceId                            int = 32768
+	MaxSizeThreadinfosizerequestTraceId                            int = 32768
+	MaxSizeThreadinfoclearrequestTraceId                           int = 32768
+	MaxSizeThreadinfovalueresponseTraceId                          int = 32768
+	MaxSizeThreadinfoentriesresponseEntries                        int = 1024
+	MaxSizeThreadinfoentriesresponseTraceId                        int = 32768
+	MaxSizeThreadinfokeysresponseKeys                              int = 1024
+	MaxSizeThreadinfokeysresponseTraceId                           int = 32768
+	MaxSizeThreadinfosizeresponseTraceId                           int = 32768
+	MaxSizeThreadinfoqueryrequestTraceId                           int = 32768
+	MaxSizeThreadinfoqueryresponseResults                          int = 1024
+	MaxSizeThreadinfoqueryresponseTraceId                          int = 32768
+	MaxSizeTokencachestatsgetrequestKey                            int = 32768
+	MaxSizeTokencachestatsgetrequestTraceId                        int = 32768
+	MaxSizeTokencachestatsputrequestKey                            int = 32768
+	MaxSizeTokencachestatsputrequestTraceId                        int = 32768
+	MaxSizeTokencachestatsgetallrequestTraceId                     int = 32768
+	MaxSizeTokencachestatskeysrequestTraceId                       int = 32768
+	MaxSizeTokencachestatssizerequestTraceId                       int = 32768
+	MaxSizeTokencachestatsclearrequestTraceId                      int = 32768
+	MaxSizeTokencachestatsvalueresponseTraceId                     int = 32768
+	MaxSizeTokencachestatsentriesresponseEntries                   int = 1024
+	MaxSizeTokencachestatsentriesresponseTraceId                   int = 32768
+	MaxSizeTokencachestatskeysresponseKeys                         int = 1024
+	MaxSizeTokencachestatskeysresponseTraceId                      int = 32768
+	MaxSizeTokencachestatssizeresponseTraceId                      int = 32768
+	MaxSizeTokencachestatsqueryrequestTraceId                      int = 32768
+	MaxSizeTokencachestatsqueryresponseResults                     int = 1024
+	MaxSizeTokencachestatsqueryresponseTraceId                     int = 32768
+	MaxSizeMapstatsgetrequestKey                                   int = 32768
+	MaxSizeMapstatsgetrequestTraceId                               int = 32768
+	MaxSizeMapstatsputrequestKey                                   int = 32768
+	MaxSizeMapstatsputrequestTraceId                               int = 32768
+	MaxSizeMapstatsgetallrequestTraceId                            int = 32768
+	MaxSizeMapstatskeysrequestTraceId                              int = 32768
+	MaxSizeMapstatssizerequestTraceId                              int = 32768
+	MaxSizeMapstatsclearrequestTraceId                             int = 32768
+	MaxSizeMapstatsvalueresponseTraceId                            int = 32768
+	MaxSizeMapstatsentriesresponseEntries                          int = 1024
+	MaxSizeMapstatsentriesresponseTraceId                          int = 32768
+	MaxSizeMapstatskeysresponseKeys                                int = 1024
+	MaxSizeMapstatskeysresponseTraceId                             int = 32768
+	MaxSizeMapstatssizeresponseTraceId                             int = 32768
+	MaxSizeMapstatsqueryrequestTraceId                             int = 32768
+	MaxSizeMapstatsqueryresponseResults                            int = 1024
+	MaxSizeMapstatsqueryresponseTraceId                            int = 32768
+	MaxSizeGraphregistrygetrequestKey                              int = 32768
+	MaxSizeGraphregistrygetrequestTraceId                          int = 32768
+	MaxSizeGraphregistryputrequestKey                              int = 32768
+	MaxSizeGraphregistryputrequestTraceId                          int = 32768
+	MaxSizeGraphregistrygetallrequestTraceId                       int = 32768
+	MaxSizeGraphregistrykeysrequestTraceId                         int = 32768
+	MaxSizeGraphregistrysizerequestTraceId                         int = 32768
+	MaxSizeGraphregistryclearrequestTraceId                        int = 32768
+	MaxSizeGraphregistryvalueresponseTraceId                       int = 32768
+	MaxSizeGraphregistryentriesresponseEntries                     int = 1024
+	MaxSizeGraphregistryentriesresponseTraceId                     int = 32768
+	MaxSizeGraphregistrykeysresponseKeys                           int = 1024
+	MaxSizeGraphregistrykeysresponseTraceId                        int = 32768
+	MaxSizeGraphregistrysizeresponseTraceId                        int = 32768
+	MaxSizeGraphregistryqueryrequestTraceId                        int = 32768
+	MaxSizeGraphregistryqueryresponseResults                       int = 1024
+	MaxSizeGraphregistryqueryresponseTraceId                       int = 32768
+	MaxSizeServiceconnectionsgetrequestKey                         int = 32768
+	MaxSizeServiceconnectionsgetrequestTraceId                     int = 32768
+	MaxSizeServiceconnectionsputrequestKey                         int = 32768
+	MaxSizeServiceconnectionsputrequestTraceId                     int = 32768
+	MaxSizeServiceconnectionsgetallrequestTraceId                  int = 32768
+	MaxSizeServiceconnectionskeysrequestTraceId                    int = 32768
+	MaxSizeServiceconnectionssizerequestTraceId                    int = 32768
+	MaxSizeServiceconnectionsclearrequestTraceId                   int = 32768
+	MaxSizeServiceconnectionsvalueresponseTraceId                  int = 32768
+	MaxSizeServiceconnectionsentriesresponseEntries                int = 1024
+	MaxSizeServiceconnectionsentriesresponseTraceId                int = 32768
+	MaxSizeServiceconnectionskeysresponseKeys                      int = 1024
+	MaxSizeServiceconnectionskeysresponseTraceId                   int = 32768
+	MaxSizeServiceconnectionssizeresponseTraceId                   int = 32768
+	MaxSizeServiceconnectionsqueryrequestTraceId                   int = 32768
+	MaxSizeServiceconnectionsqueryresponseResults                  int = 1024
+	MaxSizeServiceconnectionsqueryresponseTraceId                  int = 32768
+	MaxSizeQueuestatsgetrequestKey                                 int = 32768
+	MaxSizeQueuestatsgetrequestTraceId                             int = 32768
+	MaxSizeQueuestatsputrequestKey                                 int = 32768
+	MaxSizeQueuestatsputrequestTraceId                             int = 32768
+	MaxSizeQueuestatsgetallrequestTraceId                          int = 32768
+	MaxSizeQueuestatskeysrequestTraceId                            int = 32768
+	MaxSizeQueuestatssizerequestTraceId                            int = 32768
+	MaxSizeQueuestatsclearrequestTraceId                           int = 32768
+	MaxSizeQueuestatsvalueresponseTraceId                          int = 32768
+	MaxSizeQueuestatsentriesresponseEntries                        int = 1024
+	MaxSizeQueuestatsentriesresponseTraceId                        int = 32768
+	MaxSizeQueuestatskeysresponseKeys                              int = 1024
+	MaxSizeQueuestatskeysresponseTraceId                           int = 32768
+	MaxSizeQueuestatssizeresponseTraceId                           int = 32768
+	MaxSizeQueuestatsqueryrequestTraceId                           int = 32768
+	MaxSizeQueuestatsqueryresponseResults                          int = 1024
+	MaxSizeQueuestatsqueryresponseTraceId                          int = 32768
+	MaxSizeTopicstatsgetrequestKey                                 int = 32768
+	MaxSizeTopicstatsgetrequestTraceId                             int = 32768
+	MaxSizeTopicstatsputrequestKey                                 int = 32768
+	MaxSizeTopicstatsputrequestTraceId                             int = 32768
+	MaxSizeTopicstatsgetallrequestTraceId                          int = 32768
+	MaxSizeTopicstatskeysrequestTraceId                            int = 32768
+	MaxSizeTopicstatssizerequestTraceId                            int = 32768
+	MaxSizeTopicstatsclearrequestTraceId                           int = 32768
+	MaxSizeTopicstatsvalueresponseTraceId                          int = 32768
+	MaxSizeTopicstatsentriesresponseEntries                        int = 1024
+	MaxSizeTopicstatsentriesresponseTraceId                        int = 32768
+	MaxSizeTopicstatskeysresponseKeys                              int = 1024
+	MaxSizeTopicstatskeysresponseTraceId                           int = 32768
+	MaxSizeTopicstatssizeresponseTraceId                           int = 32768
+	MaxSizeTopicstatsqueryrequestTraceId                           int = 32768
+	MaxSizeTopicstatsqueryresponseResults                          int = 1024
+	MaxSizeTopicstatsqueryresponseTraceId                          int = 32768
+	MaxSizeWatchhealthgetrequestKey                                int = 32768
+	MaxSizeWatchhealthgetrequestTraceId                            int = 32768
+	MaxSizeWatchhealthputrequestKey                                int = 32768
+	MaxSizeWatchhealthputrequestTraceId                            int = 32768
+	MaxSizeWatchhealthgetallrequestTraceId                         int = 32768
+	MaxSizeWatchhealthkeysrequestTraceId                           int = 32768
+	MaxSizeWatchhealthsizerequestTraceId                           int = 32768
+	MaxSizeWatchhealthclearrequestTraceId                          int = 32768
+	MaxSizeWatchhealthvalueresponseTraceId                         int = 32768
+	MaxSizeWatchhealthentriesresponseEntries                       int = 1024
+	MaxSizeWatchhealthentriesresponseTraceId                       int = 32768
+	MaxSizeWatchhealthkeysresponseKeys                             int = 1024
+	MaxSizeWatchhealthkeysresponseTraceId                          int = 32768
+	MaxSizeWatchhealthsizeresponseTraceId                          int = 32768
+	MaxSizeWatchhealthqueryrequestTraceId                          int = 32768
+	MaxSizeWatchhealthqueryresponseResults                         int = 1024
+	MaxSizeWatchhealthqueryresponseTraceId                         int = 32768
+	MaxSizeMutationratesgetrequestKey                              int = 32768
+	MaxSizeMutationratesgetrequestTraceId                          int = 32768
+	MaxSizeMutationratesputrequestKey                              int = 32768
+	MaxSizeMutationratesputrequestTraceId                          int = 32768
+	MaxSizeMutationratesgetallrequestTraceId                       int = 32768
+	MaxSizeMutationrateskeysrequestTraceId                         int = 32768
+	MaxSizeMutationratessizerequestTraceId                         int = 32768
+	MaxSizeMutationratesclearrequestTraceId                        int = 32768
+	MaxSizeMutationratesvalueresponseTraceId                       int = 32768
+	MaxSizeMutationratesentriesresponseEntries                     int = 1024
+	MaxSizeMutationratesentriesresponseTraceId                     int = 32768
+	MaxSizeMutationrateskeysresponseKeys                           int = 1024
+	MaxSizeMutationrateskeysresponseTraceId                        int = 32768
+	MaxSizeMutationratessizeresponseTraceId                        int = 32768
+	MaxSizeMutationratesqueryrequestTraceId                        int = 32768
+	MaxSizeMutationratesqueryresponseResults                       int = 1024
+	MaxSizeMutationratesqueryresponseTraceId                       int = 32768
+	MaxSizeInstancesgetrequestKey                                  int = 32768
+	MaxSizeInstancesgetrequestTraceId                              int = 32768
+	MaxSizeInstancesgetallrequestTraceId                           int = 32768
+	MaxSizeInstanceskeysrequestTraceId                             int = 32768
+	MaxSizeInstancessizerequestTraceId                             int = 32768
+	MaxSizeInstancesvalueresponseTraceId                           int = 32768
+	MaxSizeInstancesentriesresponseEntries                         int = 1024
+	MaxSizeInstancesentriesresponseTraceId                         int = 32768
+	MaxSizeInstanceskeysresponseKeys                               int = 1024
+	MaxSizeInstanceskeysresponseTraceId                            int = 32768
+	MaxSizeInstancessizeresponseTraceId                            int = 32768
+	MaxSizeInstancesqueryrequestTraceId                            int = 32768
+	MaxSizeInstancesqueryresponseResults                           int = 1024
+	MaxSizeInstancesqueryresponseTraceId                           int = 32768
+	MaxSizeLocalitiesgetrequestKey                                 int = 32768
+	MaxSizeLocalitiesgetrequestTraceId                             int = 32768
+	MaxSizeLocalitiesputrequestKey                                 int = 32768
+	MaxSizeLocalitiesputrequestTraceId                             int = 32768
+	MaxSizeLocalitiesgetallrequestTraceId                          int = 32768
+	MaxSizeLocalitieskeysrequestTraceId                            int = 32768
+	MaxSizeLocalitiessizerequestTraceId                            int = 32768
+	MaxSizeLocalitiesclearrequestTraceId                           int = 32768
+	MaxSizeLocalitiesvalueresponseTraceId                          int = 32768
+	MaxSizeLocalitiesentriesresponseEntries                        int = 1024
+	MaxSizeLocalitiesentriesresponseTraceId                        int = 32768
+	MaxSizeLocalitieskeysresponseKeys                              int = 1024
+	MaxSizeLocalitieskeysresponseTraceId                           int = 32768
+	MaxSizeLocalitiessizeresponseTraceId                           int = 32768
+	MaxSizeLocalitiesqueryrequestTraceId                           int = 32768
+	MaxSizeLocalitiesqueryresponseResults                          int = 1024
+	MaxSizeLocalitiesqueryresponseTraceId                          int = 32768
+	MaxSizeRevocationsgetrequestKey                                int = 32768
+	MaxSizeRevocationsgetrequestTraceId                            int = 32768
+	MaxSizeRevocationsputrequestKey                                int = 32768
+	MaxSizeRevocationsputrequestTraceId                            int = 32768
+	MaxSizeRevocationsgetallrequestTraceId                         int = 32768
+	MaxSizeRevocationskeysrequestTraceId                           int = 32768
+	MaxSizeRevocationssizerequestTraceId                           int = 32768
+	MaxSizeRevocationsclearrequestTraceId                          int = 32768
+	MaxSizeRevocationsvalueresponseTraceId                         int = 32768
+	MaxSizeRevocationsentriesresponseEntries                       int = 1024
+	MaxSizeRevocationsentriesresponseTraceId                       int = 32768
+	MaxSizeRevocationskeysresponseKeys                             int = 1024
+	MaxSizeRevocationskeysresponseTraceId                          int = 32768
+	MaxSizeRevocationssizeresponseTraceId                          int = 32768
+	MaxSizeRevocationsqueryrequestTraceId                          int = 32768
+	MaxSizeRevocationsqueryresponseResults                         int = 1024
+	MaxSizeRevocationsqueryresponseTraceId                         int = 32768
+	MaxSizeCacertsgetrequestKey                                    int = 32768
+	MaxSizeCacertsgetrequestTraceId                                int = 32768
+	MaxSizeCacertsputrequestKey                                    int = 32768
+	MaxSizeCacertsputrequestTraceId                                int = 32768
+	MaxSizeCacertsgetallrequestTraceId                             int = 32768
+	MaxSizeCacertskeysrequestTraceId                               int = 32768
+	MaxSizeCacertssizerequestTraceId                               int = 32768
+	MaxSizeCacertsclearrequestTraceId                              int = 32768
+	MaxSizeCacertsvalueresponseTraceId                             int = 32768
+	MaxSizeCacertsentriesresponseEntries                           int = 1024
+	MaxSizeCacertsentriesresponseTraceId                           int = 32768
+	MaxSizeCacertskeysresponseKeys                                 int = 1024
+	MaxSizeCacertskeysresponseTraceId                              int = 32768
+	MaxSizeCacertssizeresponseTraceId                              int = 32768
+	MaxSizeCacertsqueryrequestTraceId                              int = 32768
+	MaxSizeCacertsqueryresponseResults                             int = 1024
+	MaxSizeCacertsqueryresponseTraceId                             int = 32768
+	MaxSizeServicecasgetrequestKey                                 int = 32768
+	MaxSizeServicecasgetrequestTraceId                             int = 32768
+	MaxSizeServicecasputrequestKey                                 int = 32768
+	MaxSizeServicecasputrequestTraceId                             int = 32768
+	MaxSizeServicecasgetallrequestTraceId                          int = 32768
+	MaxSizeServicecaskeysrequestTraceId                            int = 32768
+	MaxSizeServicecassizerequestTraceId                            int = 32768
+	MaxSizeServicecasclearrequestTraceId                           int = 32768
+	MaxSizeServicecasvalueresponseTraceId                          int = 32768
+	MaxSizeServicecasentriesresponseEntries                        int = 1024
+	MaxSizeServicecasentriesresponseTraceId                        int = 32768
+	MaxSizeServicecaskeysresponseKeys                              int = 1024
+	MaxSizeServicecaskeysresponseTraceId                           int = 32768
+	MaxSizeServicecassizeresponseTraceId                           int = 32768
+	MaxSizeServicecasqueryrequestTraceId                           int = 32768
+	MaxSizeServicecasqueryresponseResults                          int = 1024
+	MaxSizeServicecasqueryresponseTraceId                          int = 32768
+	MaxSizeTenantsgetrequestKey                                    int = 32768
+	MaxSizeTenantsgetrequestTraceId                                int = 32768
+	MaxSizeTenantsputrequestKey                                    int = 32768
+	MaxSizeTenantsputrequestTraceId                                int = 32768
+	MaxSizeTenantsgetallrequestTraceId                             int = 32768
+	MaxSizeTenantskeysrequestTraceId                               int = 32768
+	MaxSizeTenantssizerequestTraceId                               int = 32768
+	MaxSizeTenantsclearrequestTraceId                              int = 32768
+	MaxSizeTenantsvalueresponseTraceId                             int = 32768
+	MaxSizeTenantsentriesresponseEntries                           int = 1024
+	MaxSizeTenantsentriesresponseTraceId                           int = 32768
+	MaxSizeTenantskeysresponseKeys                                 int = 1024
+	MaxSizeTenantskeysresponseTraceId                              int = 32768
+	MaxSizeTenantssizeresponseTraceId                              int = 32768
+	MaxSizeTenantsqueryrequestTraceId                              int = 32768
+	MaxSizeTenantsqueryresponseResults                             int = 1024
+	MaxSizeTenantsqueryresponseTraceId                             int = 32768
+	MaxSizeTenantconfigsgetrequestKey                              int = 32768
+	MaxSizeTenantconfigsgetrequestTraceId                          int = 32768
+	MaxSizeTenantconfigsputrequestKey                              int = 32768
+	MaxSizeTenantconfigsputrequestTraceId                          int = 32768
+	MaxSizeTenantconfigsgetallrequestTraceId                       int = 32768
+	MaxSizeTenantconfigskeysrequestTraceId                         int = 32768
+	MaxSizeTenantconfigssizerequestTraceId                         int = 32768
+	MaxSizeTenantconfigsclearrequestTraceId                        int = 32768
+	MaxSizeTenantconfigsvalueresponseTraceId                       int = 32768
+	MaxSizeTenantconfigsentriesresponseEntries                     int = 1024
+	MaxSizeTenantconfigsentriesresponseTraceId                     int = 32768
+	MaxSizeTenantconfigskeysresponseKeys                           int = 1024
+	MaxSizeTenantconfigskeysresponseTraceId                        int = 32768
+	MaxSizeTenantconfigssizeresponseTraceId                        int = 32768
+	MaxSizeTenantconfigsqueryrequestTraceId                        int = 32768
+	MaxSizeTenantconfigsqueryresponseResults                       int = 1024
+	MaxSizeTenantconfigsqueryresponseTraceId                       int = 32768
+	MaxSizeProjectconfigsgetrequestKey                             int = 32768
+	MaxSizeProjectconfigsgetrequestTraceId                         int = 32768
+	MaxSizeProjectconfigsputrequestKey                             int = 32768
+	MaxSizeProjectconfigsputrequestTraceId                         int = 32768
+	MaxSizeProjectconfigsgetallrequestTraceId                      int = 32768
+	MaxSizeProjectconfigskeysrequestTraceId                        int = 32768
+	MaxSizeProjectconfigssizerequestTraceId                        int = 32768
+	MaxSizeProjectconfigsclearrequestTraceId                       int = 32768
+	MaxSizeProjectconfigsvalueresponseTraceId                      int = 32768
+	MaxSizeProjectconfigsentriesresponseEntries                    int = 1024
+	MaxSizeProjectconfigsentriesresponseTraceId                    int = 32768
+	MaxSizeProjectconfigskeysresponseKeys                          int = 1024
+	MaxSizeProjectconfigskeysresponseTraceId                       int = 32768
+	MaxSizeProjectconfigssizeresponseTraceId                       int = 32768
+	MaxSizeProjectconfigsqueryrequestTraceId                       int = 32768
+	MaxSizeProjectconfigsqueryresponseResults                      int = 1024
+	MaxSizeProjectconfigsqueryresponseTraceId                      int = 32768
+	MaxSizeMapemptyTraceId                                         int = 32768
 )
 
 // ============================================================
@@ -82650,6 +83256,16 @@ func CliTokenBrokerErrorDefaults(v *CliTokenBrokerError) {
 // ============================================================
 // CloudIdentityMatcherDefaults applies field-level default values to zero-valued fields.
 func CloudIdentityMatcherDefaults(v *CloudIdentityMatcher) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: KubernetesServiceAccountMatcher
+// ============================================================
+// KubernetesServiceAccountMatcherDefaults applies field-level default values to zero-valued fields.
+func KubernetesServiceAccountMatcherDefaults(v *KubernetesServiceAccountMatcher) {
 	if v == nil {
 		return
 	}
@@ -82928,6 +83544,16 @@ func SetProjectConfigRequestDefaults(v *SetProjectConfigRequest) {
 	}
 	if v.Config == nil {
 		v.Config = &ProjectConfig{}
+	}
+}
+
+// ============================================================
+// TypeDefaults: ProjectNamespace
+// ============================================================
+// ProjectNamespaceDefaults applies field-level default values to zero-valued fields.
+func ProjectNamespaceDefaults(v *ProjectNamespace) {
+	if v == nil {
+		return
 	}
 }
 
@@ -85954,6 +86580,17 @@ func CloudIdentityMatcherUndefaults(v *CloudIdentityMatcher) {
 }
 
 // ============================================================
+// TypeUndefaults: KubernetesServiceAccountMatcher
+// ============================================================
+// KubernetesServiceAccountMatcherUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func KubernetesServiceAccountMatcherUndefaults(v *KubernetesServiceAccountMatcher) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
 // TypeUndefaults: Delegate
 // ============================================================
 // DelegateUndefaults resets fields that match their default values back to zero.
@@ -86248,6 +86885,17 @@ func GetProjectConfigRequestUndefaults(v *GetProjectConfigRequest) {
 // SetProjectConfigRequestUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
 func SetProjectConfigRequestUndefaults(v *SetProjectConfigRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: ProjectNamespace
+// ============================================================
+// ProjectNamespaceUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func ProjectNamespaceUndefaults(v *ProjectNamespace) {
 	if v == nil {
 		return
 	}
@@ -89608,6 +90256,9 @@ func MergeCliTokenBrokerRegisterNonce(dst, src *CliTokenBrokerRegisterNonce) {
 	if dst.Nonce == "" {
 		dst.Nonce = src.Nonce
 	}
+	if !dst.OfflineAccess {
+		dst.OfflineAccess = src.OfflineAccess
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -89696,6 +90347,25 @@ func MergeCloudIdentityMatcher(dst, src *CloudIdentityMatcher) {
 }
 
 // ============================================================
+// Merge: KubernetesServiceAccountMatcher
+// ============================================================
+// MergeKubernetesServiceAccountMatcher fills zero-valued fields in dst from src.
+func MergeKubernetesServiceAccountMatcher(dst, src *KubernetesServiceAccountMatcher) {
+	if dst.KubernetesNamespace == "" {
+		dst.KubernetesNamespace = src.KubernetesNamespace
+	}
+	if dst.KubernetesServiceAccount == "" {
+		dst.KubernetesServiceAccount = src.KubernetesServiceAccount
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
 // Merge: Delegate
 // ============================================================
 // MergeDelegate fills zero-valued fields in dst from src.
@@ -89703,11 +90373,11 @@ func MergeDelegate(dst, src *Delegate) {
 	if dst.Name == "" {
 		dst.Name = src.Name
 	}
-	if len(dst.CredPairs) == 0 {
-		dst.CredPairs = src.CredPairs
-	}
 	if len(dst.CloudIdentities) == 0 {
 		dst.CloudIdentities = src.CloudIdentities
+	}
+	if len(dst.KubernetesServiceAccounts) == 0 {
+		dst.KubernetesServiceAccounts = src.KubernetesServiceAccounts
 	}
 	if len(dst.AuthorizedServices) == 0 {
 		dst.AuthorizedServices = src.AuthorizedServices
@@ -90176,6 +90846,12 @@ func MergeListTenantsRequest(dst, src *ListTenantsRequest) {
 	if dst.ParentNamespace == "" {
 		dst.ParentNamespace = src.ParentNamespace
 	}
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
+	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -90191,6 +90867,12 @@ func MergeListTenantsRequest(dst, src *ListTenantsRequest) {
 func MergeListTenantsResponse(dst, src *ListTenantsResponse) {
 	if len(dst.Tenants) == 0 {
 		dst.Tenants = src.Tenants
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -90273,12 +90955,34 @@ func MergeSetProjectConfigRequest(dst, src *SetProjectConfigRequest) {
 }
 
 // ============================================================
+// Merge: ProjectNamespace
+// ============================================================
+// MergeProjectNamespace fills zero-valued fields in dst from src.
+func MergeProjectNamespace(dst, src *ProjectNamespace) {
+	if dst.ProjectNamespace == "" {
+		dst.ProjectNamespace = src.ProjectNamespace
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
 // Merge: ListProjectsRequest
 // ============================================================
 // MergeListProjectsRequest fills zero-valued fields in dst from src.
 func MergeListProjectsRequest(dst, src *ListProjectsRequest) {
 	if dst.TenantNamespace == "" {
 		dst.TenantNamespace = src.TenantNamespace
+	}
+	if dst.PageSize == 0 {
+		dst.PageSize = src.PageSize
+	}
+	if dst.PageToken == "" {
+		dst.PageToken = src.PageToken
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -90295,6 +90999,12 @@ func MergeListProjectsRequest(dst, src *ListProjectsRequest) {
 func MergeListProjectsResponse(dst, src *ListProjectsResponse) {
 	if len(dst.ProjectNamespaces) == 0 {
 		dst.ProjectNamespaces = src.ProjectNamespaces
+	}
+	if dst.NextPageToken == "" {
+		dst.NextPageToken = src.NextPageToken
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

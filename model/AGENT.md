@@ -5,9 +5,9 @@ This file is embedded in `registry.json` and describes how to navigate it.
 ## Overview
 
 This registry describes a tacplus-generated service mesh with:
-- **1244** message types across **72** packages
-- **721** RPCs across **69** gRPC services
-- **66** state boundaries
+- **1269** message types across **72** packages
+- **738** RPCs across **71** gRPC services
+- **67** state boundaries
 
 ## Structure
 
@@ -476,7 +476,7 @@ Each `RpcInfo` carries:
 ## Services
 
 - **Admin**
-- **AgenticCodeEventBusStateService**
+- **AgentEventBusStateService**
 - **AnthropicConfigStateService**
 - **Argus**
 - **ArgusConfigStateService**
@@ -490,6 +490,8 @@ Each `RpcInfo` carries:
 - **ConnectorStatus**
 - **DaemonControl**
 - **Dashboard**
+- **EventbusConfigStateService**
+- **EventbusStateService**
 - **GatewayConfigStateService**
 - **GatewayJwksViewService**
 - **GatewayStateService**
@@ -613,7 +615,7 @@ Each `RpcInfo` carries:
 - `services/sentinel`
 - `services/stratum`
 - `services/timedb`
-- `vservices/claude-sensor`
+- `vservices/agent-sensor`
 - `vservices/entitlements`
 - `vservices/gitlab-connector`
 - `vservices/llm-sensor`

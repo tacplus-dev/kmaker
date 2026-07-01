@@ -6377,6 +6377,11 @@ func ValidateMessageWithDepth(m *Message, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Role must be defined")
 	}
 
+	// Validate Content (assert_min_size: 1)
+	if len(m.Content) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Content below min size of 1, got: %d", len(m.Content))
+	}
+
 	// Validate Content (assert_required)
 	if len(m.Content) == 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Content is required")
@@ -6385,11 +6390,6 @@ func ValidateMessageWithDepth(m *Message, depth int) error {
 	// Validate Content (assert_max_size: 1024)
 	if len(m.Content) > 1024 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Content exceeds max size of 1024, got: %d", len(m.Content))
-	}
-
-	// Validate Content (assert_min_size: 1)
-	if len(m.Content) < 1 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Content below min size of 1, got: %d", len(m.Content))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -6605,6 +6605,11 @@ func ValidateCreateMessageRequestWithDepth(m *CreateMessageRequest, depth int) e
 		return protoerrors.NewErrMissingInvalidData(nil, "field Model must be at most 128 characters, got: %d", len(m.Model))
 	}
 
+	// Validate Messages (assert_required)
+	if len(m.Messages) == 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Messages is required")
+	}
+
 	// Validate Messages (assert_max_size: 4096)
 	if len(m.Messages) > 4096 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Messages exceeds max size of 4096, got: %d", len(m.Messages))
@@ -6613,11 +6618,6 @@ func ValidateCreateMessageRequestWithDepth(m *CreateMessageRequest, depth int) e
 	// Validate Messages (assert_min_size: 1)
 	if len(m.Messages) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Messages below min size of 1, got: %d", len(m.Messages))
-	}
-
-	// Validate Messages (assert_required)
-	if len(m.Messages) == 0 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Messages is required")
 	}
 
 	// Validate MaxTokens (assert_required: must be > 0)
@@ -7134,14 +7134,14 @@ func ValidateErrorDetailWithDepth(m *ErrorDetail, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Kind must be at most 64 characters, got: %d", len(m.Kind))
 	}
 
-	// Validate Message (assert_max_length: 4096)
-	if len(m.Message) > 4096 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Message must be at most 4096 characters, got: %d", len(m.Message))
-	}
-
 	// Validate Message (assert_required)
 	if m.Message == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Message is required")
+	}
+
+	// Validate Message (assert_max_length: 4096)
+	if len(m.Message) > 4096 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Message must be at most 4096 characters, got: %d", len(m.Message))
 	}
 
 	// Validate Kind (default max size: 32768 bytes)
@@ -7178,6 +7178,11 @@ func ValidateProxyEventWithDepth(m *ProxyEvent, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
+	// Validate Subject (assert_max_length: 256)
+	if len(m.Subject) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Subject must be at most 256 characters, got: %d", len(m.Subject))
+	}
+
 	// Validate Subject (assert_required)
 	if m.Subject == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Subject is required")
@@ -7186,11 +7191,6 @@ func ValidateProxyEventWithDepth(m *ProxyEvent, depth int) error {
 	// Validate Subject (assert_min_length: 1)
 	if len(m.Subject) < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Subject must be at least 1 characters, got: %d", len(m.Subject))
-	}
-
-	// Validate Subject (assert_max_length: 256)
-	if len(m.Subject) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Subject must be at most 256 characters, got: %d", len(m.Subject))
 	}
 
 	// Validate Request (assert_required)

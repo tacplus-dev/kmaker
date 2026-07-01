@@ -166,8 +166,10 @@ message GitLabConnectorEvent {
 
   // ── Author ───────────────────────────────────────────────────────
 
-  // email is required by C2S event handling and contains the GitLab author
-  // email when resolvable. It is a correlation signal, not the owner.
+  // email contains the GitLab author email when resolvable. It is a
+  // correlation signal, not the owner (owner is owner_spiffe). It is no longer
+  // required by C2S event handling — the exported topic satisfies the SPIFFE
+  // identity rule via owner_spiffe (a resource SPIFFE id).
   string email           = 11;
   string author_email    = 12;
   string author_username = 13;
@@ -214,21 +216,20 @@ service GitLabConnectorEventBusStateService {
 	rpc SubscribeToEventStream(trace.TraceRequest) returns (stream GitLabConnectorEventBusEventStreamSubscribeRecord);
 }
 
-message GitLabConnectorEventBusEventStreamSubscribeRecord { EventBusRecordMeta meta = 1; GitLabConnectorEvent payload = 2;   string trace_id = 200;
+message GitLabConnectorEventBusEventStreamSubscribeRecord { EventBusRecordMeta meta = 1; GitLabConnectorEvent payload = 2; }
+
+message MapEmpty {
+  string trace_id = 200;
   bool noop = 201;
 }
 
-message MapEmpty {  string trace_id = 200;
+message TopicPublishReceipt {
+  bool published = 1;
+  string trace_id = 200;
   bool noop = 201;
 }
 
-message TopicPublishReceipt { bool published = 1;   string trace_id = 200;
-  bool noop = 201;
-}
-
-message EventBusRecordMeta { bytes key = 1; string topic = 2; int32 partition = 3; int64 offset = 4; google.protobuf.Timestamp timestamp = 5;   string trace_id = 200;
-  bool noop = 201;
-}
+message EventBusRecordMeta { bytes key = 1; string topic = 2; int32 partition = 3; int64 offset = 4; google.protobuf.Timestamp timestamp = 5; }
 
 // ============================================================================
 // Auto-generated projection messages from spec.graph_projection and

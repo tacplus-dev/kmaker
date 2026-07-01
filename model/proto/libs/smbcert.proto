@@ -12,7 +12,7 @@
 // This is a SEPARATE authority from tlscert.TlsCertService: that one signs
 // leaves under the true-root chain for ordinary server-auth TLS; this one signs
 // under a self-signed, per-SMB isolated root used only among one SMB service's
-// own instances (e.g. Hazelcast peers), within a single cluster. The true ROOT
+// own instances (peer instances), within a single cluster. The true ROOT
 // CA must never enter this exchange or black-box config.
 //
 // Key custody (D7) — two distinct keys, do not conflate:

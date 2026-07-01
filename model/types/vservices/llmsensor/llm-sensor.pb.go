@@ -401,7 +401,7 @@ func (TimeseriesMutationRpcId) EnumDescriptor() ([]byte, []int) {
 // Each event represents one authenticated proxy RPC, regardless of outcome.
 type LlmEvent struct {
 	state       protoimpl.MessageState `protogen:"open.v1"`
-	Email       string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	SpiffeId    string                 `protobuf:"bytes,1,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
 	EventId     string                 `protobuf:"bytes,2,opt,name=event_id,json=eventId,proto3" json:"event_id,omitempty"`
 	TimestampMs int64                  `protobuf:"varint,3,opt,name=timestamp_ms,json=timestampMs,proto3" json:"timestamp_ms,omitempty"`
 	Provider    LlmProvider            `protobuf:"varint,4,opt,name=provider,proto3,enum=llmsensor.LlmProvider" json:"provider,omitempty"`
@@ -463,9 +463,9 @@ func (*LlmEvent) Descriptor() ([]byte, []int) {
 	return file_vservices_llm_sensor_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *LlmEvent) GetEmail() string {
+func (x *LlmEvent) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
@@ -675,8 +675,6 @@ type LlmEventBusEventStreamSubscribeRecord struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Meta          *EventBusRecordMeta    `protobuf:"bytes,1,opt,name=meta,proto3" json:"meta,omitempty"`
 	Payload       *LlmEvent              `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -723,20 +721,6 @@ func (x *LlmEventBusEventStreamSubscribeRecord) GetPayload() *LlmEvent {
 		return x.Payload
 	}
 	return nil
-}
-
-func (x *LlmEventBusEventStreamSubscribeRecord) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *LlmEventBusEventStreamSubscribeRecord) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
 }
 
 type MapEmpty struct {
@@ -858,8 +842,6 @@ type EventBusRecordMeta struct {
 	Partition     int32                  `protobuf:"varint,3,opt,name=partition,proto3" json:"partition,omitempty"`
 	Offset        int64                  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`
 	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -927,20 +909,6 @@ func (x *EventBusRecordMeta) GetTimestamp() *timestamppb.Timestamp {
 		return x.Timestamp
 	}
 	return nil
-}
-
-func (x *EventBusRecordMeta) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *EventBusRecordMeta) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
 }
 
 // LlmModelNode — auto-generated graph projection of llmsensor.LlmEvent.
@@ -1049,7 +1017,7 @@ type LlmCallNode struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	EventId       string                 `protobuf:"bytes,1,opt,name=event_id,json=eventId,proto3" json:"event_id,omitempty"`
 	Model         string                 `protobuf:"bytes,2,opt,name=model,proto3" json:"model,omitempty"`
-	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	SpiffeId      string                 `protobuf:"bytes,3,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
 	Provider      LlmProvider            `protobuf:"varint,4,opt,name=provider,proto3,enum=llmsensor.LlmProvider" json:"provider,omitempty"`
 	Operation     LlmOperationType       `protobuf:"varint,5,opt,name=operation,proto3,enum=llmsensor.LlmOperationType" json:"operation,omitempty"`
 	Succeeded     bool                   `protobuf:"varint,6,opt,name=succeeded,proto3" json:"succeeded,omitempty"`
@@ -1107,9 +1075,9 @@ func (x *LlmCallNode) GetModel() string {
 	return ""
 }
 
-func (x *LlmCallNode) GetEmail() string {
+func (x *LlmCallNode) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
@@ -1183,7 +1151,7 @@ type LlmCallRecord struct {
 	ModelKey                 string                 `protobuf:"bytes,1,opt,name=model_key,json=modelKey,proto3" json:"model_key,omitempty"`
 	TimestampMs              int64                  `protobuf:"varint,2,opt,name=timestamp_ms,json=timestampMs,proto3" json:"timestamp_ms,omitempty"`
 	EventId                  string                 `protobuf:"bytes,3,opt,name=event_id,json=eventId,proto3" json:"event_id,omitempty"`
-	Email                    string                 `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
+	SpiffeId                 string                 `protobuf:"bytes,4,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
 	Provider                 LlmProvider            `protobuf:"varint,5,opt,name=provider,proto3,enum=llmsensor.LlmProvider" json:"provider,omitempty"`
 	ApiEndpoint              string                 `protobuf:"bytes,6,opt,name=api_endpoint,json=apiEndpoint,proto3" json:"api_endpoint,omitempty"`
 	Model                    string                 `protobuf:"bytes,7,opt,name=model,proto3" json:"model,omitempty"`
@@ -1256,9 +1224,9 @@ func (x *LlmCallRecord) GetEventId() string {
 	return ""
 }
 
-func (x *LlmCallRecord) GetEmail() string {
+func (x *LlmCallRecord) GetSpiffeId() string {
 	if x != nil {
-		return x.Email
+		return x.SpiffeId
 	}
 	return ""
 }
@@ -1386,9 +1354,9 @@ var File_vservices_llm_sensor_proto protoreflect.FileDescriptor
 
 const file_vservices_llm_sensor_proto_rawDesc = "" +
 	"\n" +
-	"\x1avservices/llm-sensor.proto\x12\tllmsensor\x1a\x0flibs/spec.proto\x1a\x10libs/trace.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xb7\r\n" +
-	"\bLlmEvent\x12\x1b\n" +
-	"\x05email\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x02R\x05email\x12$\n" +
+	"\x1avservices/llm-sensor.proto\x12\tllmsensor\x1a\x0flibs/spec.proto\x1a\x10libs/trace.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xce\r\n" +
+	"\bLlmEvent\x12&\n" +
+	"\tspiffe_id\x18\x01 \x01(\tB\t\x90\xa7\x1d\x80\b\xe8\xaa\x1d\x01R\bspiffeId\x12$\n" +
 	"\bevent_id\x18\x02 \x01(\tB\t\x88\xa6\x1d\x01\x90\xa7\x1d\x80\x04R\aeventId\x12'\n" +
 	"\ftimestamp_ms\x18\x03 \x01(\x03B\x04\xa8\xa7\x1d\x00R\vtimestampMs\x128\n" +
 	"\bprovider\x18\x04 \x01(\x0e2\x16.llmsensor.LlmProviderB\x04\x98\xa7\x1d\x01R\bprovider\x12(\n" +
@@ -1412,19 +1380,19 @@ const file_vservices_llm_sensor_proto_rawDesc = "" +
 	"\x1bcache_creation_input_tokens\x18\x12 \x01(\x05B\x04\xb0\xa7\x1d\x00R\x18cacheCreationInputTokens\x12/\n" +
 	"\x10reasoning_tokens\x18\x13 \x01(\x05B\x04\xb0\xa7\x1d\x00R\x0freasoningTokens\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\xcf\x06\x8a\xaa\x1d\x11\n" +
-	"\bevent_id\x12\x05email\x92\xaa\x1d\x9d\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\xdb\x06\x8a\xaa\x1d\x15\n" +
+	"\bevent_id\x12\tspiffe_id\x92\xaa\x1d\x9d\x01\n" +
 	"\bLlmModel\x12\tmodel_key\x1a\x14\n" +
 	"\tmodel_key\x1a\x05exact0\x01\x1a\x11\n" +
 	"\bprovider\x1a\x05exact\x1a\x0e\n" +
 	"\x05model\x1a\x05exact\x1a\x15\n" +
 	"\fapi_endpoint\x1a\x05exact\x1a#\n" +
 	"\ftimestamp_ms\x12\x0elast_called_ms\x1a\x03int\x1a\x11\n" +
-	"\bevent_id\x1a\x05exact\x92\xaa\x1d\xe1\x01\n" +
+	"\bevent_id\x1a\x05exact\x92\xaa\x1d\xe5\x01\n" +
 	"\aLlmCall\x12\bevent_id\x1a\x11\n" +
 	"\bevent_id\x1a\x05exact\x1a\x1c\n" +
-	"\tmodel_key\x12\x05model\"\bLlmModel\x1a\x0e\n" +
-	"\x05email\x1a\x05exact\x1a\x11\n" +
+	"\tmodel_key\x12\x05model\"\bLlmModel\x1a\x12\n" +
+	"\tspiffe_id\x1a\x05exact\x1a\x11\n" +
 	"\bprovider\x1a\x05exact\x1a\x12\n" +
 	"\toperation\x1a\x05exact\x1a\x11\n" +
 	"\tsucceeded\x1a\x04bool\x1a\x11\n" +
@@ -1432,12 +1400,12 @@ const file_vservices_llm_sensor_proto_rawDesc = "" +
 	"latency_ms\x1a\x03int\x1a\x13\n" +
 	"\finput_tokens\x1a\x03int\x1a\x14\n" +
 	"\routput_tokens\x1a\x03int\x1a\x13\n" +
-	"\ftimestamp_ms\x1a\x03int\x9a\xaa\x1d\xad\x03\n" +
+	"\ftimestamp_ms\x1a\x03int\x9a\xaa\x1d\xb1\x03\n" +
 	"\rLlmCallRecord\x12 ReplacingMergeTree(timestamp_ms)\x1aDtoDateTime(fromUnixTimestamp64Milli(timestamp_ms)) + INTERVAL 90 DAY*\r\n" +
 	"\tmodel_key\x18\x01*\x12\n" +
 	"\ftimestamp_ms\x18\x02 \x01*\f\n" +
-	"\bevent_id\x18\x03*\a\n" +
-	"\x05email*\f\n" +
+	"\bevent_id\x18\x03*\v\n" +
+	"\tspiffe_id*\f\n" +
 	"\bprovider(\x01*\x0e\n" +
 	"\fapi_endpoint*\t\n" +
 	"\x05model(\x01*\r\n" +
@@ -1460,27 +1428,23 @@ const file_vservices_llm_sensor_proto_rawDesc = "" +
 	"\fevent_stream\x18\x01 \x01(\v2\x13.llmsensor.LlmEventB\x04\x88\xb6\x18\x01R\veventStream\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x10\xe2\xa9\x1d\f\n" +
-	"\beventbus\x18\x01\"\xba\x01\n" +
+	"\beventbus\x18\x01\"\x89\x01\n" +
 	"%LlmEventBusEventStreamSubscribeRecord\x121\n" +
 	"\x04meta\x18\x01 \x01(\v2\x1d.llmsensor.EventBusRecordMetaR\x04meta\x12-\n" +
-	"\apayload\x18\x02 \x01(\v2\x13.llmsensor.LlmEventR\apayload\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\";\n" +
+	"\apayload\x18\x02 \x01(\v2\x13.llmsensor.LlmEventR\apayload\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"d\n" +
 	"\x13TopicPublishReceipt\x12\x1c\n" +
 	"\tpublished\x18\x01 \x01(\bR\tpublished\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xdd\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xac\x01\n" +
 	"\x12EventBusRecordMeta\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\fR\x03key\x12\x14\n" +
 	"\x05topic\x18\x02 \x01(\tR\x05topic\x12\x1c\n" +
 	"\tpartition\x18\x03 \x01(\x05R\tpartition\x12\x16\n" +
 	"\x06offset\x18\x04 \x01(\x03R\x06offset\x128\n" +
-	"\ttimestamp\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x95\x04\n" +
+	"\ttimestamp\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\"\x95\x04\n" +
 	"\fLlmModelNode\x12B\n" +
 	"\tmodel_key\x18\x01 \x01(\tB%\x92\xa9\x1d\x05exact\xfa\xa9\x1d\tmodel_key\x8a\xaa\x1d\v\b\x02\x12\x05exact\x18\x01R\bmodelKey\x12V\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x16.llmsensor.LlmProviderB\"\x92\xa9\x1d\x05exact\xfa\xa9\x1d\bprovider\x8a\xaa\x1d\t\b\x02\x12\x05exactR\bprovider\x125\n" +
@@ -1490,11 +1454,11 @@ const file_vservices_llm_sensor_proto_rawDesc = "" +
 	"\bevent_id\x18\x06 \x01(\tB\"\x92\xa9\x1d\x05exact\xfa\xa9\x1d\bevent_id\x8a\xaa\x1d\t\b\x02\x12\x05exactR\aeventId\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:-\xf2\xa8\x1d)\n" +
-	"\bLlmModel\x12\tmodel_key\x1a\x12llmsensor.LlmEvent\"\xa4\x06\n" +
+	"\bLlmModel\x12\tmodel_key\x1a\x12llmsensor.LlmEvent\"\xaf\x06\n" +
 	"\vLlmCallNode\x12=\n" +
 	"\bevent_id\x18\x01 \x01(\tB\"\x92\xa9\x1d\x05exact\xfa\xa9\x1d\bevent_id\x8a\xaa\x1d\t\b\x02\x12\x05exactR\aeventId\x12/\n" +
-	"\x05model\x18\x02 \x01(\tB\x19\xfa\xa9\x1d\tmodel_key\x82\xaa\x1d\bLlmModelR\x05model\x125\n" +
-	"\x05email\x18\x03 \x01(\tB\x1f\x92\xa9\x1d\x05exact\xfa\xa9\x1d\x05email\x8a\xaa\x1d\t\b\x02\x12\x05exactR\x05email\x12V\n" +
+	"\x05model\x18\x02 \x01(\tB\x19\xfa\xa9\x1d\tmodel_key\x82\xaa\x1d\bLlmModelR\x05model\x12@\n" +
+	"\tspiffe_id\x18\x03 \x01(\tB#\x92\xa9\x1d\x05exact\xfa\xa9\x1d\tspiffe_id\x8a\xaa\x1d\t\b\x02\x12\x05exactR\bspiffeId\x12V\n" +
 	"\bprovider\x18\x04 \x01(\x0e2\x16.llmsensor.LlmProviderB\"\x92\xa9\x1d\x05exact\xfa\xa9\x1d\bprovider\x8a\xaa\x1d\t\b\x02\x12\x05exactR\bprovider\x12^\n" +
 	"\toperation\x18\x05 \x01(\x0e2\x1b.llmsensor.LlmOperationTypeB#\x92\xa9\x1d\x05exact\xfa\xa9\x1d\toperation\x8a\xaa\x1d\t\b\x02\x12\x05exactR\toperation\x12?\n" +
 	"\tsucceeded\x18\x06 \x01(\bB!\x92\xa9\x1d\x04bool\xfa\xa9\x1d\tsucceeded\x8a\xaa\x1d\b\b\x02\x12\x04boolR\tsucceeded\x12?\n" +
@@ -1507,13 +1471,13 @@ const file_vservices_llm_sensor_proto_rawDesc = "" +
 	" \x01(\x03B\"\x92\xa9\x1d\x03int\xfa\xa9\x1d\ftimestamp_ms\x8a\xaa\x1d\a\b\x02\x12\x03intR\vtimestampMs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:+\xf2\xa8\x1d'\n" +
-	"\aLlmCall\x12\bevent_id\x1a\x12llmsensor.LlmEvent\"\xab\n" +
+	"\aLlmCall\x12\bevent_id\x1a\x12llmsensor.LlmEvent\"\xb6\n" +
 	"\n" +
 	"\rLlmCallRecord\x120\n" +
 	"\tmodel_key\x18\x01 \x01(\tB\x13\xfa\xa9\x1d\tmodel_key\x92\xaa\x1d\x02\x18\x01R\bmodelKey\x12;\n" +
 	"\ftimestamp_ms\x18\x02 \x01(\x03B\x18\xfa\xa9\x1d\ftimestamp_ms\x92\xaa\x1d\x04\x18\x02 \x01R\vtimestampMs\x12-\n" +
-	"\bevent_id\x18\x03 \x01(\tB\x12\xfa\xa9\x1d\bevent_id\x92\xaa\x1d\x02\x18\x03R\aeventId\x12#\n" +
-	"\x05email\x18\x04 \x01(\tB\r\xfa\xa9\x1d\x05email\x92\xaa\x1d\x00R\x05email\x12F\n" +
+	"\bevent_id\x18\x03 \x01(\tB\x12\xfa\xa9\x1d\bevent_id\x92\xaa\x1d\x02\x18\x03R\aeventId\x12.\n" +
+	"\tspiffe_id\x18\x04 \x01(\tB\x11\xfa\xa9\x1d\tspiffe_id\x92\xaa\x1d\x00R\bspiffeId\x12F\n" +
 	"\bprovider\x18\x05 \x01(\x0e2\x16.llmsensor.LlmProviderB\x12\xfa\xa9\x1d\bprovider\x92\xaa\x1d\x020\x01R\bprovider\x127\n" +
 	"\fapi_endpoint\x18\x06 \x01(\tB\x14\xfa\xa9\x1d\fapi_endpoint\x92\xaa\x1d\x00R\vapiEndpoint\x12%\n" +
 	"\x05model\x18\a \x01(\tB\x0f\xfa\xa9\x1d\x05model\x92\xaa\x1d\x020\x01R\x05model\x12N\n" +

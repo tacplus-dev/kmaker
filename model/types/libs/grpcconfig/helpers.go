@@ -1495,6 +1495,8 @@ func ServiceConfigStateToTOML(v *ServiceConfigState) ([]byte, error) {
 // MapEmptyJSON represents MapEmpty in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type mapemptyJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
 }
 
 // MapEmptyToJSON converts MapEmpty to JSON bytes.
@@ -1504,7 +1506,10 @@ func MapEmptyToJSON(v *MapEmpty) ([]byte, error) {
 		return nil, protoerrors.NewErrMissingInvalidData(nil, "mapempty is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := mapemptyJSON{}
+	helper := mapemptyJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
 	return json.Marshal(helper)
 }
 
@@ -1515,7 +1520,10 @@ func MapEmptyToJSONPretty(v *MapEmpty) ([]byte, error) {
 		return nil, protoerrors.NewErrMissingInvalidData(nil, "mapempty is nil")
 	}
 	// Convert to JSON helper struct with string enums
-	helper := mapemptyJSON{}
+	helper := mapemptyJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
 	return json.MarshalIndent(helper, "", "  ")
 }
 
@@ -1579,6 +1587,8 @@ func MapEmptyFromJSON(data []byte) (*MapEmpty, error) {
 	}
 	// Build result with parsed enums
 	result := &MapEmpty{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
 	return result, nil
 }
 
@@ -1953,12 +1963,24 @@ func MapEmptyToEnvVar(v *MapEmpty) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
+	result["PROTO_LIBS_GRPCCONFIG_MAP_EMPTY_TRACE_ID"] = v.TraceId
+	result["PROTO_LIBS_GRPCCONFIG_MAP_EMPTY_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
 // MapEmptyFromEnvVar creates MapEmpty from environment variable key-value pairs.
 func MapEmptyFromEnvVar(env map[string]string) (*MapEmpty, error) {
 	result := &MapEmpty{}
+	if val, ok := env["PROTO_LIBS_GRPCCONFIG_MAP_EMPTY_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_LIBS_GRPCCONFIG_MAP_EMPTY_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
 	return result, nil
 }
 
@@ -2348,7 +2370,11 @@ func ValidateMapEmptyWithDepth(m *MapEmpty, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// No field validations defined
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
 	return nil
 }
 
@@ -2384,6 +2410,7 @@ const (
 	MaxSizeClusterinfoClusterName  int = 32768
 	MaxSizeClusterinfoMembers      int = 64
 	MaxSizeClusterstateClusters    int = 32
+	MaxSizeMapemptyTraceId         int = 32768
 )
 
 // ============================================================
@@ -2752,5 +2779,18 @@ func MergeServiceConfigState(dst, src *ServiceConfigState) {
 		dst.Config = src.Config
 	} else if src.Config != nil {
 		MergeConfig(dst.Config, src.Config)
+	}
+}
+
+// ============================================================
+// Merge: MapEmpty
+// ============================================================
+// MergeMapEmpty fills zero-valued fields in dst from src.
+func MergeMapEmpty(dst, src *MapEmpty) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
 	}
 }

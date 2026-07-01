@@ -28,14 +28,11 @@ import (
 
 	"crypto/tls"
 	"crypto/x509"
-	wrapperKey "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/libs/key"
-	wrapperToken "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/libs/token"
 	wrapperX509 "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/libs/x509"
 	common_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/common/tokenrequest"
 	cloudidentity_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/cloudidentity"
 	cloudvendor_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/cloudvendor"
 	grpcconfig_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/grpcconfig"
-	key_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/key"
 	token_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/token"
 	cluster_svc_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kernel"
 	"go.uber.org/zap"
@@ -48,14 +45,18 @@ import (
 // before expired/oldest entries are evicted to prevent unbounded growth.
 const maxTokenCacheEntries = 1000
 
-// tokenLifetime is the lifetime of self-minted throwaway JWTs used for token exchange.
-const tokenLifetime = 10 * time.Second
-
 // tokenRefreshBuffer is how far before expiry to refresh the exchanged service token.
 const tokenRefreshBuffer = 60 * time.Second
 
 // defaultAudience is the default audience when no target-specific audience is available.
 const defaultAudience = "kernel"
+
+// k8sTokenFileEnv names the env var pointing at the projected Kubernetes
+// service-account token file (audience "cavalier-kernel"). Mirrors the operator's
+// KMAKER_K8S_TOKEN_FILE precedent. When set and the file is readable, the service
+// authenticates to the kernel with the projected token. This is the in-cluster
+// bootstrap path; the static cred_pair (private_key) bootstrap arm has been removed.
+const k8sTokenFileEnv = "KERNEL_K8S_TOKEN_FILE"
 
 // exchangeTimeout is the maximum time for a single token exchange RPC.
 const exchangeTimeout = 10 * time.Second
@@ -131,12 +132,13 @@ type IdentityManager struct {
 	authorityTargets   []string
 	activeAuthorityIdx int
 	bareOpts           []grpc.DialOption
-	minter             *tokenMinter      // CredPair auth (nil if cloud)
-	cloudMinter        *cloudTokenMinter // Cloud-native auth (nil if CredPair)
+	k8sMinter          *k8sTokenMinter   // Kubernetes projected-token auth (nil otherwise)
+	cloudMinter        *cloudTokenMinter // Cloud-native auth (nil if k8s)
 }
 
 // New creates an IdentityManager: dials a bare connection to the cluster,
-// detects auth method (CredPair or cloud), and performs initial token exchange.
+// detects auth method (Kubernetes projected-token or cloud), and performs
+// initial token exchange.
 func New(ctx context.Context, cfg *grpcconfig_pb.Config) (*IdentityManager, error) {
 	if len(cfg.Endpoints) == 0 {
 		return nil, fmt.Errorf("im: at least one endpoint is required")
@@ -194,29 +196,35 @@ func New(ctx context.Context, cfg *grpcconfig_pb.Config) (*IdentityManager, erro
 		return nil, fmt.Errorf("im: failed to connect to any endpoint: %w", err)
 	}
 
+	// Bootstrap selection: a configured, readable projected Kubernetes token
+	// file is the in-cluster bootstrap path. Otherwise cloud-native identity is
+	// attempted. The static cred_pair (private_key) bootstrap arm has been
+	// removed; cfg.PrivateKey is no longer read.
+	k8sTokenFile := os.Getenv(k8sTokenFileEnv)
+
 	// Detect auth method and perform initial token exchange.
-	if cfg.PrivateKey != nil {
-		zap.L().Info("IdentityManager: private_key set — configuring CredPair token exchange",
-			zap.String("key_id", cfg.PrivateKey.GetId()))
-		minter, err := newTokenMinter(cfg.PrivateKey)
+	if k8sTokenFile != "" {
+		zap.L().Info("IdentityManager: kubernetes token file configured — using projected-token auth",
+			zap.String("token_file", k8sTokenFile))
+		minter, err := newK8sTokenMinter(k8sTokenFile)
 		if err != nil {
 			im.conn.Close()
 			imCancel()
-			return nil, fmt.Errorf("im: token minter: %w", err)
+			return nil, fmt.Errorf("im: kubernetes token minter: %w", err)
 		}
 		minter.setConn(im.conn)
-		im.minter = minter
+		im.k8sMinter = minter
 		if err := imInitialExchangeWithRetry(imCtx, im.GetToken); err != nil {
 			im.conn.Close()
 			imCancel()
-			return nil, fmt.Errorf("im: initial token exchange: %w", err)
+			return nil, fmt.Errorf("im: initial kubernetes token exchange: %w", err)
 		}
-		zap.L().Info("IdentityManager: initial CredPair token exchange successful")
+		zap.L().Info("IdentityManager: initial kubernetes token exchange successful")
 	} else {
-		// No private_key — attempt cloud-native authentication.
+		// No kubernetes token file — attempt cloud-native authentication.
 		vendor, err := detectCloud(imCtx)
 		if err != nil {
-			zap.L().Warn("IdentityManager: no private_key and not in cloud environment — no authentication",
+			zap.L().Warn("IdentityManager: no kubernetes token file and not in cloud environment — no authentication",
 				zap.Error(err))
 		} else {
 			zap.L().Info("IdentityManager: cloud-native identity detected",
@@ -260,8 +268,8 @@ func (im *IdentityManager) setAuthorityConnLocked(start int) error {
 		oldConn := im.conn
 		im.conn = conn
 		im.activeAuthorityIdx = idx
-		if im.minter != nil {
-			im.minter.setConn(conn)
+		if im.k8sMinter != nil {
+			im.k8sMinter.setConn(conn)
 		}
 		if im.cloudMinter != nil {
 			im.cloudMinter.setConn(conn)
@@ -331,7 +339,7 @@ func (im *IdentityManager) GetTokenFor(audience string) (string, error) {
 	if err == nil {
 		return token, nil
 	}
-	if im.minter == nil && im.cloudMinter == nil {
+	if im.k8sMinter == nil && im.cloudMinter == nil {
 		return "", err
 	}
 	if rotateErr := im.rotateAuthorityConn(); rotateErr != nil {
@@ -345,8 +353,8 @@ func (im *IdentityManager) GetTokenFor(audience string) (string, error) {
 }
 
 func (im *IdentityManager) getTokenForOnce(audience string) (string, error) {
-	if im.minter != nil {
-		return im.minter.getTokenFor(audience)
+	if im.k8sMinter != nil {
+		return im.k8sMinter.getTokenFor(audience)
 	}
 	if im.cloudMinter != nil {
 		return im.cloudMinter.getTokenFor(audience)
@@ -356,8 +364,8 @@ func (im *IdentityManager) getTokenForOnce(audience string) (string, error) {
 
 // RefreshToken forces a token refresh by clearing the cached token.
 func (im *IdentityManager) RefreshToken() error {
-	if im.minter != nil {
-		im.minter.invalidate()
+	if im.k8sMinter != nil {
+		im.k8sMinter.invalidate()
 		_, err := im.GetToken()
 		return err
 	}
@@ -372,10 +380,10 @@ func (im *IdentityManager) RefreshToken() error {
 // InstanceId returns the server-assigned instance_id from the token exchange.
 // Returns empty string before first token exchange or if no auth is configured.
 func (im *IdentityManager) InstanceId() string {
-	if im.minter != nil {
-		im.minter.mu.Lock()
-		defer im.minter.mu.Unlock()
-		return im.minter.instanceId
+	if im.k8sMinter != nil {
+		im.k8sMinter.mu.Lock()
+		defer im.k8sMinter.mu.Unlock()
+		return im.k8sMinter.instanceId
 	}
 	if im.cloudMinter != nil {
 		im.cloudMinter.mu.Lock()
@@ -387,7 +395,7 @@ func (im *IdentityManager) InstanceId() string {
 
 // HasAuth returns true if any authentication method is configured.
 func (im *IdentityManager) HasAuth() bool {
-	return im.minter != nil || im.cloudMinter != nil
+	return im.k8sMinter != nil || im.cloudMinter != nil
 }
 
 // UnaryInterceptor returns a gRPC unary client interceptor that attaches
@@ -396,7 +404,7 @@ func (im *IdentityManager) HasAuth() bool {
 func (im *IdentityManager) UnaryInterceptor() grpc.UnaryClientInterceptor {
 	return func(ctx context.Context, method string, req, reply interface{},
 		cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
-		if im.minter == nil && im.cloudMinter == nil {
+		if im.k8sMinter == nil && im.cloudMinter == nil {
 			return invoker(ctx, method, req, reply, cc, opts...)
 		}
 		aud := audienceFromMethod(method)
@@ -415,7 +423,7 @@ func (im *IdentityManager) UnaryInterceptor() grpc.UnaryClientInterceptor {
 func (im *IdentityManager) StreamInterceptor() grpc.StreamClientInterceptor {
 	return func(ctx context.Context, desc *grpc.StreamDesc, cc *grpc.ClientConn,
 		method string, streamer grpc.Streamer, opts ...grpc.CallOption) (grpc.ClientStream, error) {
-		if im.minter == nil && im.cloudMinter == nil {
+		if im.k8sMinter == nil && im.cloudMinter == nil {
 			return streamer(ctx, desc, cc, method, opts...)
 		}
 		aud := audienceFromMethod(method)
@@ -449,60 +457,62 @@ func (im *IdentityManager) Close() {
 }
 
 // ---------------------------------------------------------------------------
-// Token exchange (CredPair auth)
+// Token exchange (Kubernetes projected-token auth)
 // ---------------------------------------------------------------------------
 
-// tokenMinter handles the CredPair token exchange flow:
-//  1. Mints a short-lived throwaway JWT signed with the CredPair private key
-//  2. Exchanges it via Mint for a refresh token (Phase 1)
-//  3. Exchanges the refresh token for a service token with the correct audience (Phase 2)
+// k8sTokenMinter handles token exchange using a projected Kubernetes
+// service-account token instead of a CredPair-signed throwaway JWT:
+//  1. Reads the projected token file (audience "cavalier-kernel")
+//  2. Exchanges it via Mint for refresh + access tokens (Phase 1),
+//     presenting it as the kubernetes_token credential
+//  3. Exchanges the access token for an audience-scoped service token (Phase 2)
 //  4. Caches and refreshes the service token before expiry
-type tokenMinter struct {
-	key          *wrapperKey.ImmutableKey
+//
+// The token file is re-read on every exchange because the kubelet rotates
+// projected tokens in place (~600s TTL); only the exchanged per-audience
+// service tokens are cached.
+type k8sTokenMinter struct {
+	tokenFile    string
 	mu           sync.Mutex
 	tokens       map[string]*tokenEntry // per-audience token cache
-	refreshLocks map[string]*sync.Mutex // per-audience refresh lock; never held during cache-only reads
+	refreshLocks map[string]*sync.Mutex // per-audience refresh lock
 	instanceId   string                 // instance_id from token exchange (set by server)
 	exchClient   cluster_svc_pb.MintClient
 }
 
-// newTokenMinter creates a tokenMinter from a private key.
-func newTokenMinter(privateKey *key_pb.Key) (*tokenMinter, error) {
-	if privateKey == nil {
-		return nil, fmt.Errorf("private_key is required for authenticated cluster connections")
+// newK8sTokenMinter creates a k8sTokenMinter for the projected token at tokenFile.
+func newK8sTokenMinter(tokenFile string) (*k8sTokenMinter, error) {
+	if tokenFile == "" {
+		return nil, fmt.Errorf("kubernetes token file path is empty")
 	}
-	immKey, err := wrapperKey.NewImmutableKey(privateKey)
-	if err != nil {
-		return nil, fmt.Errorf("parsing private key: %w", err)
-	}
-	return &tokenMinter{
-		key:          immKey,
+	return &k8sTokenMinter{
+		tokenFile:    tokenFile,
 		tokens:       make(map[string]*tokenEntry),
 		refreshLocks: make(map[string]*sync.Mutex),
 	}, nil
 }
 
 // setConn sets the gRPC connection for token exchange.
-func (tm *tokenMinter) setConn(conn *grpc.ClientConn) {
+func (tm *k8sTokenMinter) setConn(conn *grpc.ClientConn) {
 	tm.mu.Lock()
 	defer tm.mu.Unlock()
 	tm.exchClient = cluster_svc_pb.NewMintClient(conn)
 }
 
-func (tm *tokenMinter) exchangeClient() cluster_svc_pb.MintClient {
+func (tm *k8sTokenMinter) exchangeClient() cluster_svc_pb.MintClient {
 	tm.mu.Lock()
 	defer tm.mu.Unlock()
 	return tm.exchClient
 }
 
 // getToken returns a valid bearer token for the default audience.
-func (tm *tokenMinter) getToken() (string, error) {
+func (tm *k8sTokenMinter) getToken() (string, error) {
 	return tm.getTokenFor(defaultAudience)
 }
 
 // getTokenFor returns a valid bearer token for the given audience, performing
 // token exchange if the cached token is expired or about to expire.
-func (tm *tokenMinter) getTokenFor(audience string) (string, error) {
+func (tm *k8sTokenMinter) getTokenFor(audience string) (string, error) {
 	if token, ok := tm.cachedToken(audience); ok {
 		return token, nil
 	}
@@ -511,14 +521,13 @@ func (tm *tokenMinter) getTokenFor(audience string) (string, error) {
 	lock.Lock()
 	defer lock.Unlock()
 
-	// Another goroutine may have refreshed this audience while we waited.
 	if token, ok := tm.cachedToken(audience); ok {
 		return token, nil
 	}
 	return tm.doExchange(audience)
 }
 
-func (tm *tokenMinter) cachedToken(audience string) (string, bool) {
+func (tm *k8sTokenMinter) cachedToken(audience string) (string, bool) {
 	tm.mu.Lock()
 	defer tm.mu.Unlock()
 	if entry, ok := tm.tokens[audience]; ok {
@@ -529,7 +538,7 @@ func (tm *tokenMinter) cachedToken(audience string) (string, bool) {
 	return "", false
 }
 
-func (tm *tokenMinter) refreshLockFor(audience string) *sync.Mutex {
+func (tm *k8sTokenMinter) refreshLockFor(audience string) *sync.Mutex {
 	tm.mu.Lock()
 	defer tm.mu.Unlock()
 	lock := tm.refreshLocks[audience]
@@ -541,48 +550,43 @@ func (tm *tokenMinter) refreshLockFor(audience string) *sync.Mutex {
 }
 
 // invalidate clears all cached tokens, forcing the next getToken to re-exchange.
-func (tm *tokenMinter) invalidate() {
+func (tm *k8sTokenMinter) invalidate() {
 	tm.mu.Lock()
 	defer tm.mu.Unlock()
 	tm.tokens = make(map[string]*tokenEntry)
 }
 
 // doExchange performs the full token exchange for one audience.
-// Phase 1: bootstrap (throwaway → refresh + access token).
+// Phase 1: bootstrap (projected k8s token → refresh + access token).
 // Phase 2: exchange access token for audience-specific token.
-func (tm *tokenMinter) doExchange(audience string) (string, error) {
-	// 1. Mint a throwaway JWT signed with the CredPair private key.
-	now := time.Now()
-	expTime := now.Add(tokenLifetime)
-	tok := wrapperToken.NewImmutableToken(nil)
-	tok.SetIssuer("stateclient").
-		SetSubject("stateclient").
-		SetAudience(defaultAudience).
-		SetIssuedAt(now.Unix()).
-		SetExpiration(expTime.Unix())
-	if err := tok.Sign(tm.key); err != nil {
-		return "", fmt.Errorf("signing throwaway token: %w", err)
+func (tm *k8sTokenMinter) doExchange(audience string) (string, error) {
+	// 1. Re-read the projected token from disk (rotated in place by kubelet).
+	raw, err := os.ReadFile(tm.tokenFile)
+	if err != nil {
+		return "", fmt.Errorf("reading kubernetes token file %s: %w", tm.tokenFile, err)
 	}
-	throwaway := tok.GetBase64()
+	k8sToken := strings.TrimSpace(string(raw))
+	if k8sToken == "" {
+		return "", fmt.Errorf("kubernetes token file %s is empty", tm.tokenFile)
+	}
 
 	exchClient := tm.exchangeClient()
 	if exchClient == nil {
 		return "", fmt.Errorf("token exchange client not initialized")
 	}
 
-	// 2. Phase 1: Bootstrap — exchange throwaway for refresh + access tokens.
+	// 2. Phase 1: Bootstrap — exchange projected token for refresh + access tokens.
 	exchCtx1, cancel1 := context.WithTimeout(context.Background(), exchangeTimeout)
 	defer cancel1()
 	bootstrapResp, err := exchClient.MintServiceToken(exchCtx1, &common_pb.MintServiceTokenRequest{
-		InputToken:   throwaway,
-		TokenPurpose: token_pb.TokenPurpose_TOKEN_PURPOSE_REFRESH,
+		KubernetesToken: k8sToken,
+		TokenPurpose:    token_pb.TokenPurpose_TOKEN_PURPOSE_REFRESH,
 	})
 	if err != nil {
 		return "", fmt.Errorf("token exchange phase 1 (bootstrap): %w", err)
 	}
 	accessToken := bootstrapResp.GetAccessToken().GetBase64()
 
-	// Parse instance_id from the refresh token (server assigns it on bootstrap).
 	instanceId := ""
 	if rt := bootstrapResp.GetRefreshToken(); rt != nil {
 		if payload := rt.GetPayload(); payload != nil {

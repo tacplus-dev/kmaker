@@ -115,12 +115,6 @@ message Topology {
   // saml_nodes is used when optional_services.saml = true.
   int32 saml_nodes       = 13;
 
-  // 14 = retired mint_nodes; 15 = retired config_nodes. The mint and config
-  // services were folded back into kernel (the cluster trust root) — the
-  // operator no longer deploys them.
-  reserved 14, 15;
-  reserved "mint_nodes", "config_nodes";
-
   // kmaker_nodes is the number of bootstrap certificate authority replicas.
   // Kernel instances contact kmaker with Kubernetes projected service account
   // tokens to obtain kernel certificates before kernel itself is available.
@@ -180,6 +174,10 @@ message PKI {
 
   // Edge signing CAs.
   repeated x509.X509CertChain edge_signing_ca = 6;
+
+  // Kmaker signing CA, signed by cluster_ca and constrained to issue only
+  // kernel bootstrap leaf certificates.
+  x509.X509CertChain kmaker_signing_ca = 7;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -199,9 +197,6 @@ message Config {
 
   // How the operator runs.
   OperatorMode mode = 1;
-
-  // Reserved — image_tag removed; series is now derived from service_version.
-  reserved 2;
 
   // Public FQDN for the cluster (e.g. "api.example.com").
   string fqdn = 3;
@@ -257,12 +252,6 @@ message Config {
   // domain at boot, without a runtime SCS round-trip.
   string spiffe_prefix = 15;
 
-  // Field 16 (cluster_cred_pairs, the old ClusterCredPair type) is retired —
-  // there is no special cluster cred_pair type. The root admin is an ordinary
-  // C2S CredPair at the root namespace (see root_cred_pairs).
-  reserved 16;
-  reserved "cluster_cred_pairs";
-
   // root_cred_pairs are the bootstrap admin credentials, loaded from
   // operator.yaml. The operator renders them into kernel's Helm-deployed config
   // (kernel.Config.root_cred_pairs); kernel installs them into the root
@@ -304,7 +293,8 @@ service OperatorConfigStateService {
 	rpc WatchConfig(trace.TraceRequest) returns (stream Config);
 }
 
-message MapEmpty {  string trace_id = 200;
+message MapEmpty {
+  string trace_id = 200;
   bool noop = 201;
 }
 

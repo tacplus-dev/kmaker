@@ -62,19 +62,19 @@ service Dashboard {
   rpc GetClusterHealth(trace.TraceRequest) returns (hazelcast.AdminClusterHealth) {}
 
   // Per-node collections
-  rpc ListNodeMetrics(trace.TraceRequest) returns (NodeMetricsResponse) {
+  rpc ListNodeMetrics(DashboardPageRequest) returns (NodeMetricsResponse) {
   }
-  rpc ListGrpcStats(trace.TraceRequest) returns (GrpcStatsResponse) {
+  rpc ListGrpcStats(DashboardPageRequest) returns (GrpcStatsResponse) {
   }
-  rpc ListPersistenceStatus(trace.TraceRequest) returns (PersistenceStatusResponse) {
+  rpc ListPersistenceStatus(DashboardPageRequest) returns (PersistenceStatusResponse) {
   }
-  rpc ListNetworkStats(trace.TraceRequest) returns (NetworkStatsResponse) {
+  rpc ListNetworkStats(DashboardPageRequest) returns (NetworkStatsResponse) {
   }
-  rpc ListThreadInfo(trace.TraceRequest) returns (ThreadInfoResponse) {
+  rpc ListThreadInfo(DashboardPageRequest) returns (ThreadInfoResponse) {
   }
-  rpc ListTokenCacheStats(trace.TraceRequest) returns (TokenCacheStatsResponse) {
+  rpc ListTokenCacheStats(DashboardPageRequest) returns (TokenCacheStatsResponse) {
   }
-  rpc ListMapStats(trace.TraceRequest) returns (MapStatsResponse) {
+  rpc ListMapStats(DashboardPageRequest) returns (MapStatsResponse) {
   }
 
   // Full snapshot (all data in one call)
@@ -95,30 +95,65 @@ message WatchDashboardRequest {
   bool noop = 201;
 }
 
+message DashboardPageRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
 // ============================================================================
 // Request/Response Types
 // ============================================================================
 
 // Wrapper responses for per-node collections
-message NodeMetricsResponse { repeated hazelcast.AdminNodeMetrics items = 1;   string trace_id = 200;
+message NodeMetricsResponse {
+  repeated hazelcast.AdminNodeMetrics items = 1;
+  string next_page_token = 2;
+  int64 total_count = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message GrpcStatsResponse { repeated hazelcast.AdminGrpcStats items = 1;   string trace_id = 200;
+message GrpcStatsResponse {
+  repeated hazelcast.AdminGrpcStats items = 1;
+  string next_page_token = 2;
+  int64 total_count = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message PersistenceStatusResponse { repeated hazelcast.AdminPersistenceStatus items = 1;   string trace_id = 200;
+message PersistenceStatusResponse {
+  repeated hazelcast.AdminPersistenceStatus items = 1;
+  string next_page_token = 2;
+  int64 total_count = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message NetworkStatsResponse { repeated hazelcast.AdminNetworkStats items = 1;   string trace_id = 200;
+message NetworkStatsResponse {
+  repeated hazelcast.AdminNetworkStats items = 1;
+  string next_page_token = 2;
+  int64 total_count = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message ThreadInfoResponse { repeated hazelcast.AdminThreadInfo items = 1;   string trace_id = 200;
+message ThreadInfoResponse {
+  repeated hazelcast.AdminThreadInfo items = 1;
+  string next_page_token = 2;
+  int64 total_count = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message TokenCacheStatsResponse { repeated hazelcast.AdminTokenCacheStats items = 1;   string trace_id = 200;
+message TokenCacheStatsResponse {
+  repeated hazelcast.AdminTokenCacheStats items = 1;
+  string next_page_token = 2;
+  int64 total_count = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
-message MapStatsResponse { repeated hazelcast.AdminMapStats items = 1;   string trace_id = 200;
+message MapStatsResponse {
+  repeated hazelcast.AdminMapStats items = 1;
+  string next_page_token = 2;
+  int64 total_count = 3;
+  string trace_id = 200;
   bool noop = 201;
 }
 
@@ -163,7 +198,8 @@ service SentinelConfigStateService {
 	rpc WatchConfig(trace.TraceRequest) returns (stream Config);
 }
 
-message MapEmpty {  string trace_id = 200;
+message MapEmpty {
+  string trace_id = 200;
   bool noop = 201;
 }
 
@@ -176,16 +212,17 @@ enum TypeID {
   TYPE_ID_CONFIG = 1;
   TYPE_ID_SENTINEL_STATE = 2;
   TYPE_ID_WATCH_DASHBOARD_REQUEST = 3;
-  TYPE_ID_NODE_METRICS_RESPONSE = 4;
-  TYPE_ID_GRPC_STATS_RESPONSE = 5;
-  TYPE_ID_PERSISTENCE_STATUS_RESPONSE = 6;
-  TYPE_ID_NETWORK_STATS_RESPONSE = 7;
-  TYPE_ID_THREAD_INFO_RESPONSE = 8;
-  TYPE_ID_TOKEN_CACHE_STATS_RESPONSE = 9;
-  TYPE_ID_MAP_STATS_RESPONSE = 10;
-  TYPE_ID_DASHBOARD_RESPONSE = 11;
-  TYPE_ID_SENTINEL_CONFIG_STATE = 12;
-  TYPE_ID_MAP_EMPTY = 13;
+  TYPE_ID_DASHBOARD_PAGE_REQUEST = 4;
+  TYPE_ID_NODE_METRICS_RESPONSE = 5;
+  TYPE_ID_GRPC_STATS_RESPONSE = 6;
+  TYPE_ID_PERSISTENCE_STATUS_RESPONSE = 7;
+  TYPE_ID_NETWORK_STATS_RESPONSE = 8;
+  TYPE_ID_THREAD_INFO_RESPONSE = 9;
+  TYPE_ID_TOKEN_CACHE_STATS_RESPONSE = 10;
+  TYPE_ID_MAP_STATS_RESPONSE = 11;
+  TYPE_ID_DASHBOARD_RESPONSE = 12;
+  TYPE_ID_SENTINEL_CONFIG_STATE = 13;
+  TYPE_ID_MAP_EMPTY = 14;
 }
 
 enum DashboardRpcId {

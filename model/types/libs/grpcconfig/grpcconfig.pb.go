@@ -674,6 +674,8 @@ func (x *ServiceConfigState) GetConfig() *Config {
 
 type MapEmpty struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -708,12 +710,26 @@ func (*MapEmpty) Descriptor() ([]byte, []int) {
 	return file_libs_grpcconfig_proto_rawDescGZIP(), []int{7}
 }
 
+func (x *MapEmpty) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *MapEmpty) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
 var File_libs_grpcconfig_proto protoreflect.FileDescriptor
 
 const file_libs_grpcconfig_proto_rawDesc = "" +
 	"\n" +
 	"\x15libs/grpcconfig.proto\x12\n" +
-	"grpcconfig\x1a\x0flibs/host.proto\x1a\x0elibs/jwk.proto\x1a\x0elibs/key.proto\x1a\x11libs/logger.proto\x1a\x0flibs/spec.proto\x1a\x0flibs/x509.proto\x1a\x10libs/trace.proto\x1a\x14libs/diskstore.proto\"\xda\a\n" +
+	"grpcconfig\x1a\x0flibs/host.proto\x1a\x0elibs/jwk.proto\x1a\x0elibs/key.proto\x1a\x11libs/logger.proto\x1a\x0flibs/spec.proto\x1a\x0flibs/x509.proto\x1a\x10libs/trace.proto\x1a\x14libs/diskstore.proto\"\xc5\a\n" +
 	"\x06Config\x12.\n" +
 	"\tendpoints\x18\x01 \x03(\v2\n" +
 	".host.HostB\x04\xb8\xa8\x1d R\tendpoints\x12&\n" +
@@ -738,7 +754,7 @@ const file_libs_grpcconfig_proto_rawDesc = "" +
 	"trustedCas\x125\n" +
 	"\x13spiffe_trust_domain\x18\x10 \x01(\tB\x05\x90\xa7\x1d\x80\x02R\x11spiffeTrustDomain\x12*\n" +
 	"\rlocation_path\x18\x11 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\flocationPath\x12K\n" +
-	"\x10disk_persistence\x18\x12 \x01(\v2 .diskstore.DiskPersistenceConfigR\x0fdiskPersistenceJ\x04\b\f\x10\rR\rspiffe_prefix\"\\\n" +
+	"\x10disk_persistence\x18\x12 \x01(\v2 .diskstore.DiskPersistenceConfigR\x0fdiskPersistence\"\\\n" +
 	"\n" +
 	"LogMessage\x12)\n" +
 	"\x05level\x18\x01 \x01(\x0e2\r.logger.LevelB\x04\x98\xa7\x1d\x01R\x05level\x12#\n" +
@@ -760,9 +776,10 @@ const file_libs_grpcconfig_proto_rawDesc = "" +
 	"\x06status\x18\x01 \x01(\x0e2\x18.grpcconfig.MemberStatusR\x06status\"h\n" +
 	"\x12ServiceConfigState\x124\n" +
 	"\x06config\x18\x01 \x01(\v2\x12.grpcconfig.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config:\x1c\x9a\xa8\x1d\x14\n" +
-	"\x12ServiceConfigState\xa0\xa8\x1d\x02\"\n" +
-	"\n" +
-	"\bMapEmpty*\xba\x01\n" +
+	"\x12ServiceConfigState\xa0\xa8\x1d\x02\";\n" +
+	"\bMapEmpty\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\xba\x01\n" +
 	"\fMemberStatus\x12\x19\n" +
 	"\x15MEMBER_STATUS_UNKNOWN\x10\x00\x12\x1a\n" +
 	"\x16MEMBER_STATUS_STARTING\x10\x01\x12\x17\n" +

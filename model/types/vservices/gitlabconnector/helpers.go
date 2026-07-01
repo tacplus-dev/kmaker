@@ -1885,8 +1885,6 @@ func GitLabConnectorEventBusToTOML(v *GitLabConnectorEventBus) ([]byte, error) {
 type gitlabconnectoreventbuseventstreamsubscriberecordJSON struct {
 	Meta    json.RawMessage `json:"meta,omitempty"`
 	Payload json.RawMessage `json:"payload,omitempty"`
-	TraceId string          `json:"trace_id,omitempty"`
-	Noop    bool            `json:"noop,omitempty"`
 }
 
 // GitLabConnectorEventBusEventStreamSubscribeRecordToJSON converts GitLabConnectorEventBusEventStreamSubscribeRecord to JSON bytes.
@@ -1911,8 +1909,6 @@ func GitLabConnectorEventBusEventStreamSubscribeRecordToJSON(v *GitLabConnectorE
 			data, _ := GitLabConnectorEventToJSON(v.Payload)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1939,8 +1935,6 @@ func GitLabConnectorEventBusEventStreamSubscribeRecordToJSONPretty(v *GitLabConn
 			data, _ := GitLabConnectorEventToJSON(v.Payload)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -2019,8 +2013,6 @@ func GitLabConnectorEventBusEventStreamSubscribeRecordFromJSON(data []byte) (*Gi
 			result.Payload = parsed
 		}
 	}
-	result.TraceId = raw.TraceId
-	result.Noop = raw.Noop
 	return result, nil
 }
 
@@ -2356,8 +2348,6 @@ type eventbusrecordmetaJSON struct {
 	Partition int32           `json:"partition,omitempty"`
 	Offset    int64           `json:"offset,omitempty"`
 	Timestamp json.RawMessage `json:"timestamp,omitempty"`
-	TraceId   string          `json:"trace_id,omitempty"`
-	Noop      bool            `json:"noop,omitempty"`
 }
 
 // EventBusRecordMetaToJSON converts EventBusRecordMeta to JSON bytes.
@@ -2379,8 +2369,6 @@ func EventBusRecordMetaToJSON(v *EventBusRecordMeta) ([]byte, error) {
 			data, _ := protojson.Marshal(v.Timestamp)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -2404,8 +2392,6 @@ func EventBusRecordMetaToJSONPretty(v *EventBusRecordMeta) ([]byte, error) {
 			data, _ := protojson.Marshal(v.Timestamp)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -2481,8 +2467,6 @@ func EventBusRecordMetaFromJSON(data []byte) (*EventBusRecordMeta, error) {
 			result.Timestamp = nil
 		}
 	}
-	result.TraceId = raw.TraceId
-	result.Noop = raw.Noop
 	return result, nil
 }
 
@@ -3516,8 +3500,6 @@ func GitLabConnectorEventBusEventStreamSubscribeRecordToEnvVar(v *GitLabConnecto
 			result[k] = val
 		}
 	}
-	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
@@ -3533,16 +3515,6 @@ func GitLabConnectorEventBusEventStreamSubscribeRecordFromEnvVar(env map[string]
 		return nil, err
 	} else if sub != nil {
 		result.Payload = sub
-	}
-	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_TRACE_ID"]; ok && val != "" {
-		result.TraceId = val
-	}
-	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM_SUBSCRIBE_RECORD_NOOP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Noop = parsed
 	}
 	return result, nil
 }
@@ -3619,8 +3591,6 @@ func EventBusRecordMetaToEnvVar(v *EventBusRecordMeta) map[string]string {
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_TOPIC"] = v.Topic
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_PARTITION"] = strconv.FormatInt(int64(v.Partition), 10)
 	result["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_OFFSET"] = strconv.FormatInt(v.Offset, 10)
-	result["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_TRACE_ID"] = v.TraceId
-	result["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
 }
 
@@ -3650,16 +3620,6 @@ func EventBusRecordMetaFromEnvVar(env map[string]string) (*EventBusRecordMeta, e
 			return nil, err
 		}
 		result.Offset = parsed
-	}
-	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_TRACE_ID"]; ok && val != "" {
-		result.TraceId = val
-	}
-	if val, ok := env["PROTO_VSERVICES_GITLAB-CONNECTOR_EVENT_BUS_RECORD_META_NOOP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Noop = parsed
 	}
 	return result, nil
 }
@@ -4205,24 +4165,24 @@ func ValidateGitLabConnectorEventWithDepth(m *GitLabConnectorEvent, depth int) e
 	if m.TimestampMs <= 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TimestampMs must be > 0, got: %v", m.TimestampMs)
 	}
-	// Validate TenantNamespace (assert_max_length: 256)
-	if len(m.TenantNamespace) > 256 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TenantNamespace must be at most 256 characters, got: %d", len(m.TenantNamespace))
-	}
-
 	// Validate TenantNamespace (assert_required)
 	if m.TenantNamespace == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TenantNamespace is required")
 	}
 
-	// Validate OwnerSpiffe (assert_required)
-	if m.OwnerSpiffe == "" {
-		return protoerrors.NewErrMissingInvalidData(nil, "field OwnerSpiffe is required")
+	// Validate TenantNamespace (assert_max_length: 256)
+	if len(m.TenantNamespace) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TenantNamespace must be at most 256 characters, got: %d", len(m.TenantNamespace))
 	}
 
 	// Validate OwnerSpiffe (assert_max_length: 1024)
 	if len(m.OwnerSpiffe) > 1024 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field OwnerSpiffe must be at most 1024 characters, got: %d", len(m.OwnerSpiffe))
+	}
+
+	// Validate OwnerSpiffe (assert_required)
+	if m.OwnerSpiffe == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field OwnerSpiffe is required")
 	}
 
 	// Validate ActorSub (assert_max_length: 512)
@@ -4443,11 +4403,6 @@ func ValidateGitLabConnectorEventBusEventStreamSubscribeRecordWithDepth(m *GitLa
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
 	// Validate Meta nested message
 	if m.Meta != nil {
 		if err := ValidateEventBusRecordMetaWithDepth(m.Meta, depth+1); err != nil {
@@ -4537,11 +4492,6 @@ func ValidateEventBusRecordMetaWithDepth(m *EventBusRecordMeta, depth int) error
 	// Validate Topic (default max size: 32768 bytes)
 	if len(m.Topic) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Topic exceeds max size of 32768 bytes, got: %d", len(m.Topic))
-	}
-
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
 	}
 
 	return nil
@@ -4776,77 +4726,75 @@ const (
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizePushpayloadBranch                                        int = 32768
-	MaxSizePushpayloadBeforeSha                                     int = 32768
-	MaxSizePushpayloadAfterSha                                      int = 32768
-	MaxSizePushpayloadTraceId                                       int = 32768
-	MaxSizeMergerequestpayloadState                                 int = 32768
-	MaxSizeMergerequestpayloadAction                                int = 32768
-	MaxSizeMergerequestpayloadSourceBranch                          int = 32768
-	MaxSizeMergerequestpayloadTargetBranch                          int = 32768
-	MaxSizeMergerequestpayloadTitle                                 int = 32768
-	MaxSizeMergerequestpayloadTraceId                               int = 32768
-	MaxSizePipelinepayloadStatus                                    int = 32768
-	MaxSizePipelinepayloadGitRef                                    int = 32768
-	MaxSizePipelinepayloadSha                                       int = 32768
-	MaxSizePipelinepayloadSource                                    int = 32768
-	MaxSizePipelinepayloadTraceId                                   int = 32768
-	MaxSizeIssuepayloadState                                        int = 32768
-	MaxSizeIssuepayloadAction                                       int = 32768
-	MaxSizeIssuepayloadTitle                                        int = 32768
-	MaxSizeIssuepayloadTraceId                                      int = 32768
-	MaxSizeGitlabconnectoreventEventId                              int = 32768
-	MaxSizeGitlabconnectoreventGitlabId                             int = 32768
-	MaxSizeGitlabconnectoreventTenantNamespace                      int = 32768
-	MaxSizeGitlabconnectoreventOwnerSpiffe                          int = 32768
-	MaxSizeGitlabconnectoreventActorSub                             int = 32768
-	MaxSizeGitlabconnectoreventGitlabUrl                            int = 32768
-	MaxSizeGitlabconnectoreventGitlabNamespace                      int = 32768
-	MaxSizeGitlabconnectoreventProjectPath                          int = 32768
-	MaxSizeGitlabconnectoreventProjectKey                           int = 32768
-	MaxSizeGitlabconnectoreventEmail                                int = 32768
-	MaxSizeGitlabconnectoreventAuthorEmail                          int = 32768
-	MaxSizeGitlabconnectoreventAuthorUsername                       int = 32768
-	MaxSizeGitlabconnectoreventIngestionSource                      int = 32768
-	MaxSizeGitlabconnectoreventSchemeVersion                        int = 32768
-	MaxSizeGitlabconnectoreventTraceId                              int = 32768
-	MaxSizeGitlabconnectoreventbusTraceId                           int = 32768
-	MaxSizeGitlabconnectoreventbuseventstreamsubscriberecordTraceId int = 32768
-	MaxSizeMapemptyTraceId                                          int = 32768
-	MaxSizeTopicpublishreceiptTraceId                               int = 32768
-	MaxSizeEventbusrecordmetaKey                                    int = 32768
-	MaxSizeEventbusrecordmetaTopic                                  int = 32768
-	MaxSizeEventbusrecordmetaTraceId                                int = 32768
-	MaxSizeGitlabprojectnodeProjectKey                              int = 32768
-	MaxSizeGitlabprojectnodeTenantNamespace                         int = 32768
-	MaxSizeGitlabprojectnodeGitlabUrl                               int = 32768
-	MaxSizeGitlabprojectnodeGitlabNamespace                         int = 32768
-	MaxSizeGitlabprojectnodeProjectPath                             int = 32768
-	MaxSizeGitlabprojectnodeEventId                                 int = 32768
-	MaxSizeGitlabprojectnodeTraceId                                 int = 32768
-	MaxSizeGitlabactivitynodeEventId                                int = 32768
-	MaxSizeGitlabactivitynodeOwnerSpiffe                            int = 32768
-	MaxSizeGitlabactivitynodeSchemeVersion                          int = 32768
-	MaxSizeGitlabactivitynodeTenantNamespace                        int = 32768
-	MaxSizeGitlabactivitynodeProject                                int = 32768
-	MaxSizeGitlabactivitynodeActorSub                               int = 32768
-	MaxSizeGitlabactivitynodeEmail                                  int = 32768
-	MaxSizeGitlabactivitynodeAuthorEmail                            int = 32768
-	MaxSizeGitlabactivitynodeTraceId                                int = 32768
-	MaxSizeGitlabactivityrecordTenantNamespace                      int = 32768
-	MaxSizeGitlabactivityrecordGitlabNamespace                      int = 32768
-	MaxSizeGitlabactivityrecordProjectPath                          int = 32768
-	MaxSizeGitlabactivityrecordEventId                              int = 32768
-	MaxSizeGitlabactivityrecordOwnerSpiffe                          int = 32768
-	MaxSizeGitlabactivityrecordSchemeVersion                        int = 32768
-	MaxSizeGitlabactivityrecordActorSub                             int = 32768
-	MaxSizeGitlabactivityrecordEmail                                int = 32768
-	MaxSizeGitlabactivityrecordAuthorEmail                          int = 32768
-	MaxSizeGitlabactivityrecordAuthorUsername                       int = 32768
-	MaxSizeGitlabactivityrecordGitlabUrl                            int = 32768
-	MaxSizeGitlabactivityrecordProjectKey                           int = 32768
-	MaxSizeGitlabactivityrecordIngestionSource                      int = 32768
-	MaxSizeGitlabactivityrecordTraceId                              int = 32768
+	MaxSizePushpayloadBranch                   int = 32768
+	MaxSizePushpayloadBeforeSha                int = 32768
+	MaxSizePushpayloadAfterSha                 int = 32768
+	MaxSizePushpayloadTraceId                  int = 32768
+	MaxSizeMergerequestpayloadState            int = 32768
+	MaxSizeMergerequestpayloadAction           int = 32768
+	MaxSizeMergerequestpayloadSourceBranch     int = 32768
+	MaxSizeMergerequestpayloadTargetBranch     int = 32768
+	MaxSizeMergerequestpayloadTitle            int = 32768
+	MaxSizeMergerequestpayloadTraceId          int = 32768
+	MaxSizePipelinepayloadStatus               int = 32768
+	MaxSizePipelinepayloadGitRef               int = 32768
+	MaxSizePipelinepayloadSha                  int = 32768
+	MaxSizePipelinepayloadSource               int = 32768
+	MaxSizePipelinepayloadTraceId              int = 32768
+	MaxSizeIssuepayloadState                   int = 32768
+	MaxSizeIssuepayloadAction                  int = 32768
+	MaxSizeIssuepayloadTitle                   int = 32768
+	MaxSizeIssuepayloadTraceId                 int = 32768
+	MaxSizeGitlabconnectoreventEventId         int = 32768
+	MaxSizeGitlabconnectoreventGitlabId        int = 32768
+	MaxSizeGitlabconnectoreventTenantNamespace int = 32768
+	MaxSizeGitlabconnectoreventOwnerSpiffe     int = 32768
+	MaxSizeGitlabconnectoreventActorSub        int = 32768
+	MaxSizeGitlabconnectoreventGitlabUrl       int = 32768
+	MaxSizeGitlabconnectoreventGitlabNamespace int = 32768
+	MaxSizeGitlabconnectoreventProjectPath     int = 32768
+	MaxSizeGitlabconnectoreventProjectKey      int = 32768
+	MaxSizeGitlabconnectoreventEmail           int = 32768
+	MaxSizeGitlabconnectoreventAuthorEmail     int = 32768
+	MaxSizeGitlabconnectoreventAuthorUsername  int = 32768
+	MaxSizeGitlabconnectoreventIngestionSource int = 32768
+	MaxSizeGitlabconnectoreventSchemeVersion   int = 32768
+	MaxSizeGitlabconnectoreventTraceId         int = 32768
+	MaxSizeGitlabconnectoreventbusTraceId      int = 32768
+	MaxSizeMapemptyTraceId                     int = 32768
+	MaxSizeTopicpublishreceiptTraceId          int = 32768
+	MaxSizeEventbusrecordmetaKey               int = 32768
+	MaxSizeEventbusrecordmetaTopic             int = 32768
+	MaxSizeGitlabprojectnodeProjectKey         int = 32768
+	MaxSizeGitlabprojectnodeTenantNamespace    int = 32768
+	MaxSizeGitlabprojectnodeGitlabUrl          int = 32768
+	MaxSizeGitlabprojectnodeGitlabNamespace    int = 32768
+	MaxSizeGitlabprojectnodeProjectPath        int = 32768
+	MaxSizeGitlabprojectnodeEventId            int = 32768
+	MaxSizeGitlabprojectnodeTraceId            int = 32768
+	MaxSizeGitlabactivitynodeEventId           int = 32768
+	MaxSizeGitlabactivitynodeOwnerSpiffe       int = 32768
+	MaxSizeGitlabactivitynodeSchemeVersion     int = 32768
+	MaxSizeGitlabactivitynodeTenantNamespace   int = 32768
+	MaxSizeGitlabactivitynodeProject           int = 32768
+	MaxSizeGitlabactivitynodeActorSub          int = 32768
+	MaxSizeGitlabactivitynodeEmail             int = 32768
+	MaxSizeGitlabactivitynodeAuthorEmail       int = 32768
+	MaxSizeGitlabactivitynodeTraceId           int = 32768
+	MaxSizeGitlabactivityrecordTenantNamespace int = 32768
+	MaxSizeGitlabactivityrecordGitlabNamespace int = 32768
+	MaxSizeGitlabactivityrecordProjectPath     int = 32768
+	MaxSizeGitlabactivityrecordEventId         int = 32768
+	MaxSizeGitlabactivityrecordOwnerSpiffe     int = 32768
+	MaxSizeGitlabactivityrecordSchemeVersion   int = 32768
+	MaxSizeGitlabactivityrecordActorSub        int = 32768
+	MaxSizeGitlabactivityrecordEmail           int = 32768
+	MaxSizeGitlabactivityrecordAuthorEmail     int = 32768
+	MaxSizeGitlabactivityrecordAuthorUsername  int = 32768
+	MaxSizeGitlabactivityrecordGitlabUrl       int = 32768
+	MaxSizeGitlabactivityrecordProjectKey      int = 32768
+	MaxSizeGitlabactivityrecordIngestionSource int = 32768
+	MaxSizeGitlabactivityrecordTraceId         int = 32768
 )
 
 // ============================================================
@@ -5364,12 +5312,6 @@ func MergeGitLabConnectorEventBusEventStreamSubscribeRecord(dst, src *GitLabConn
 	} else if src.Payload != nil {
 		MergeGitLabConnectorEvent(dst.Payload, src.Payload)
 	}
-	if dst.TraceId == "" {
-		dst.TraceId = src.TraceId
-	}
-	if !dst.Noop {
-		dst.Noop = src.Noop
-	}
 }
 
 // ============================================================
@@ -5420,12 +5362,6 @@ func MergeEventBusRecordMeta(dst, src *EventBusRecordMeta) {
 	}
 	if dst.Timestamp == nil {
 		dst.Timestamp = src.Timestamp
-	}
-	if dst.TraceId == "" {
-		dst.TraceId = src.TraceId
-	}
-	if !dst.Noop {
-		dst.Noop = src.Noop
 	}
 }
 

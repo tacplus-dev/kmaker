@@ -3057,6 +3057,8 @@ type ListIssuesRequest struct {
 	Since         string                 `protobuf:"bytes,9,opt,name=since,proto3" json:"since,omitempty"` // ISO 8601 timestamp
 	Page          int32                  `protobuf:"varint,10,opt,name=page,proto3" json:"page,omitempty"`
 	PerPage       int32                  `protobuf:"varint,11,opt,name=per_page,json=perPage,proto3" json:"per_page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,12,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string                 `protobuf:"bytes,13,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -3170,6 +3172,20 @@ func (x *ListIssuesRequest) GetPerPage() int32 {
 	return 0
 }
 
+func (x *ListIssuesRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListIssuesRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 func (x *ListIssuesRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -3189,6 +3205,7 @@ type ListIssuesResponse struct {
 	Issues        []*Issue               `protobuf:"bytes,1,rep,name=issues,proto3" json:"issues,omitempty"`
 	Pagination    *PaginationInfo        `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	RateLimit     *RateLimitInfo         `protobuf:"bytes,3,opt,name=rate_limit,json=rateLimit,proto3" json:"rate_limit,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,4,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -3244,6 +3261,13 @@ func (x *ListIssuesResponse) GetRateLimit() *RateLimitInfo {
 		return x.RateLimit
 	}
 	return nil
+}
+
+func (x *ListIssuesResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
 }
 
 func (x *ListIssuesResponse) GetTraceId() string {
@@ -3976,6 +4000,8 @@ type ListPullRequestsRequest struct {
 	Base          string                 `protobuf:"bytes,8,opt,name=base,proto3" json:"base,omitempty"`           // Filter by base branch
 	Page          int32                  `protobuf:"varint,9,opt,name=page,proto3" json:"page,omitempty"`
 	PerPage       int32                  `protobuf:"varint,10,opt,name=per_page,json=perPage,proto3" json:"per_page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,11,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string                 `protobuf:"bytes,12,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -4082,6 +4108,20 @@ func (x *ListPullRequestsRequest) GetPerPage() int32 {
 	return 0
 }
 
+func (x *ListPullRequestsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListPullRequestsRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 func (x *ListPullRequestsRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -4101,6 +4141,7 @@ type ListPullRequestsResponse struct {
 	PullRequests  []*PullRequest         `protobuf:"bytes,1,rep,name=pull_requests,json=pullRequests,proto3" json:"pull_requests,omitempty"`
 	Pagination    *PaginationInfo        `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	RateLimit     *RateLimitInfo         `protobuf:"bytes,3,opt,name=rate_limit,json=rateLimit,proto3" json:"rate_limit,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,4,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -4156,6 +4197,13 @@ func (x *ListPullRequestsResponse) GetRateLimit() *RateLimitInfo {
 		return x.RateLimit
 	}
 	return nil
+}
+
+func (x *ListPullRequestsResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
 }
 
 func (x *ListPullRequestsResponse) GetTraceId() string {
@@ -4724,6 +4772,8 @@ type ListPullRequestFilesRequest struct {
 	PullNumber    int32                  `protobuf:"varint,4,opt,name=pull_number,json=pullNumber,proto3" json:"pull_number,omitempty"`
 	Page          int32                  `protobuf:"varint,5,opt,name=page,proto3" json:"page,omitempty"`
 	PerPage       int32                  `protobuf:"varint,6,opt,name=per_page,json=perPage,proto3" json:"per_page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,7,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string                 `protobuf:"bytes,8,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -4802,6 +4852,20 @@ func (x *ListPullRequestFilesRequest) GetPerPage() int32 {
 	return 0
 }
 
+func (x *ListPullRequestFilesRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListPullRequestFilesRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 func (x *ListPullRequestFilesRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -4821,6 +4885,7 @@ type ListPullRequestFilesResponse struct {
 	Files         []*PullRequestFile     `protobuf:"bytes,1,rep,name=files,proto3" json:"files,omitempty"`
 	Pagination    *PaginationInfo        `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	RateLimit     *RateLimitInfo         `protobuf:"bytes,3,opt,name=rate_limit,json=rateLimit,proto3" json:"rate_limit,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,4,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -4876,6 +4941,13 @@ func (x *ListPullRequestFilesResponse) GetRateLimit() *RateLimitInfo {
 		return x.RateLimit
 	}
 	return nil
+}
+
+func (x *ListPullRequestFilesResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
 }
 
 func (x *ListPullRequestFilesResponse) GetTraceId() string {
@@ -5276,6 +5348,8 @@ type ListBranchesRequest struct {
 	Repo          string                 `protobuf:"bytes,3,opt,name=repo,proto3" json:"repo,omitempty"`
 	Page          int32                  `protobuf:"varint,4,opt,name=page,proto3" json:"page,omitempty"`
 	PerPage       int32                  `protobuf:"varint,5,opt,name=per_page,json=perPage,proto3" json:"per_page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,6,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string                 `protobuf:"bytes,7,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -5347,6 +5421,20 @@ func (x *ListBranchesRequest) GetPerPage() int32 {
 	return 0
 }
 
+func (x *ListBranchesRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListBranchesRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 func (x *ListBranchesRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -5366,6 +5454,7 @@ type ListBranchesResponse struct {
 	Branches      []*Branch              `protobuf:"bytes,1,rep,name=branches,proto3" json:"branches,omitempty"`
 	Pagination    *PaginationInfo        `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	RateLimit     *RateLimitInfo         `protobuf:"bytes,3,opt,name=rate_limit,json=rateLimit,proto3" json:"rate_limit,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,4,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -5421,6 +5510,13 @@ func (x *ListBranchesResponse) GetRateLimit() *RateLimitInfo {
 		return x.RateLimit
 	}
 	return nil
+}
+
+func (x *ListBranchesResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
 }
 
 func (x *ListBranchesResponse) GetTraceId() string {
@@ -5610,6 +5706,8 @@ type ListCommitsRequest struct {
 	Until         string                 `protobuf:"bytes,8,opt,name=until,proto3" json:"until,omitempty"`   // ISO 8601
 	Page          int32                  `protobuf:"varint,9,opt,name=page,proto3" json:"page,omitempty"`
 	PerPage       int32                  `protobuf:"varint,10,opt,name=per_page,json=perPage,proto3" json:"per_page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,11,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string                 `protobuf:"bytes,12,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -5716,6 +5814,20 @@ func (x *ListCommitsRequest) GetPerPage() int32 {
 	return 0
 }
 
+func (x *ListCommitsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListCommitsRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 func (x *ListCommitsRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -5735,6 +5847,7 @@ type ListCommitsResponse struct {
 	Commits       []*Commit              `protobuf:"bytes,1,rep,name=commits,proto3" json:"commits,omitempty"`
 	Pagination    *PaginationInfo        `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	RateLimit     *RateLimitInfo         `protobuf:"bytes,3,opt,name=rate_limit,json=rateLimit,proto3" json:"rate_limit,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,4,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -5792,6 +5905,13 @@ func (x *ListCommitsResponse) GetRateLimit() *RateLimitInfo {
 	return nil
 }
 
+func (x *ListCommitsResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
 func (x *ListCommitsResponse) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -5814,6 +5934,8 @@ type SearchCodeRequest struct {
 	Order         string                 `protobuf:"bytes,4,opt,name=order,proto3" json:"order,omitempty"` // asc, desc
 	Page          int32                  `protobuf:"varint,5,opt,name=page,proto3" json:"page,omitempty"`
 	PerPage       int32                  `protobuf:"varint,6,opt,name=per_page,json=perPage,proto3" json:"per_page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,7,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string                 `protobuf:"bytes,8,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -5892,6 +6014,20 @@ func (x *SearchCodeRequest) GetPerPage() int32 {
 	return 0
 }
 
+func (x *SearchCodeRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *SearchCodeRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 func (x *SearchCodeRequest) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -5908,10 +6044,11 @@ func (x *SearchCodeRequest) GetNoop() bool {
 
 type SearchCodeResponse struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	TotalCount        int32                  `protobuf:"varint,1,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
+	TotalCount        int64                  `protobuf:"varint,1,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	IncompleteResults bool                   `protobuf:"varint,2,opt,name=incomplete_results,json=incompleteResults,proto3" json:"incomplete_results,omitempty"`
 	Items             []*SearchCodeResult    `protobuf:"bytes,3,rep,name=items,proto3" json:"items,omitempty"`
 	RateLimit         *RateLimitInfo         `protobuf:"bytes,4,opt,name=rate_limit,json=rateLimit,proto3" json:"rate_limit,omitempty"`
+	NextPageToken     string                 `protobuf:"bytes,5,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	TraceId           string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop              bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields     protoimpl.UnknownFields
@@ -5948,7 +6085,7 @@ func (*SearchCodeResponse) Descriptor() ([]byte, []int) {
 	return file_services_github_proto_rawDescGZIP(), []int{56}
 }
 
-func (x *SearchCodeResponse) GetTotalCount() int32 {
+func (x *SearchCodeResponse) GetTotalCount() int64 {
 	if x != nil {
 		return x.TotalCount
 	}
@@ -5974,6 +6111,13 @@ func (x *SearchCodeResponse) GetRateLimit() *RateLimitInfo {
 		return x.RateLimit
 	}
 	return nil
+}
+
+func (x *SearchCodeResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
 }
 
 func (x *SearchCodeResponse) GetTraceId() string {
@@ -6268,12 +6412,14 @@ var File_services_github_proto protoreflect.FileDescriptor
 
 const file_services_github_proto_rawDesc = "" +
 	"\n" +
-	"\x15services/github.proto\x12\x06github\x1a\x0flibs/http.proto\x1a\x0flibs/spec.proto\x1a\x10libs/trace.proto\"j\n" +
+	"\x15services/github.proto\x12\x06github\x1a\x0flibs/http.proto\x1a\x0flibs/spec.proto\x1a\x10libs/trace.proto\"\x97\x01\n" +
 	"\x06Config\x12!\n" +
 	"\tapi_token\x18\x01 \x01(\tB\x04\x88\xa6\x1d\x01R\bapiToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\fҨ\x1d\b\n" +
-	"\x06github\"\xc2\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:9Ҩ\x1d\b\n" +
+	"\x06githubʪ\x1d)\n" +
+	"\"scmsensor.ScmEventBus.event_stream\x12\x03\n" +
+	"\x01*\"\xc2\x01\n" +
 	"\rRateLimitInfo\x12\x1a\n" +
 	"\x05limit\x18\x01 \x01(\x05B\x04\xb0\xa7\x1d\x00R\x05limit\x12\"\n" +
 	"\tremaining\x18\x02 \x01(\x05B\x04\xb0\xa7\x1d\x00R\tremaining\x12\x18\n" +
@@ -6523,7 +6669,7 @@ const file_services_github_proto_rawDesc = "" +
 	"\n" +
 	"rate_limit\x18\x02 \x01(\v2\x15.github.RateLimitInfoR\trateLimit\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xaa\x03\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xf7\x03\n" +
 	"\x11ListIssuesRequest\x12!\n" +
 	"\bmetadata\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x10R\bmetadata\x12#\n" +
 	"\x05owner\x18\x02 \x01(\tB\r\x88\xa6\x1d\x01\x88\xa7\x1d\x01\x90\xa7\x1d\x80\x02R\x05owner\x12!\n" +
@@ -6536,16 +6682,20 @@ const file_services_github_proto_rawDesc = "" +
 	"\x05since\x18\t \x01(\tB\x04\x90\xa7\x1d@R\x05since\x12\x18\n" +
 	"\x04page\x18\n" +
 	" \x01(\x05B\x04\xb0\xa7\x1d\x00R\x04page\x12#\n" +
-	"\bper_page\x18\v \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12\x1a\n" +
+	"\bper_page\x18\v \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12%\n" +
+	"\tpage_size\x18\f \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\bpageSize\x12$\n" +
+	"\n" +
+	"page_token\x18\r \x01(\tB\x05\x90\xa7\x1d\x80\x04R\tpageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe0\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x8f\x02\n" +
 	"\x12ListIssuesResponse\x12+\n" +
 	"\x06issues\x18\x01 \x03(\v2\r.github.IssueB\x04\xb8\xa8\x1ddR\x06issues\x126\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x16.github.PaginationInfoR\n" +
 	"pagination\x124\n" +
 	"\n" +
-	"rate_limit\x18\x03 \x01(\v2\x15.github.RateLimitInfoR\trateLimit\x12\x1a\n" +
+	"rate_limit\x18\x03 \x01(\v2\x15.github.RateLimitInfoR\trateLimit\x12-\n" +
+	"\x0fnext_page_token\x18\x04 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd6\x01\n" +
 	"\x0fGetIssueRequest\x12!\n" +
@@ -6612,7 +6762,7 @@ const file_services_github_proto_rawDesc = "" +
 	"\n" +
 	"rate_limit\x18\x02 \x01(\v2\x15.github.RateLimitInfoR\trateLimit\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x84\x03\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd1\x03\n" +
 	"\x17ListPullRequestsRequest\x12!\n" +
 	"\bmetadata\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x10R\bmetadata\x12#\n" +
 	"\x05owner\x18\x02 \x01(\tB\r\x88\xa6\x1d\x01\x88\xa7\x1d\x01\x90\xa7\x1d\x80\x02R\x05owner\x12!\n" +
@@ -6624,16 +6774,20 @@ const file_services_github_proto_rawDesc = "" +
 	"\x04base\x18\b \x01(\tB\x05\x90\xa7\x1d\x80\x02R\x04base\x12\x18\n" +
 	"\x04page\x18\t \x01(\x05B\x04\xb0\xa7\x1d\x00R\x04page\x12#\n" +
 	"\bper_page\x18\n" +
-	" \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12\x1a\n" +
+	" \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12%\n" +
+	"\tpage_size\x18\v \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\bpageSize\x12$\n" +
+	"\n" +
+	"page_token\x18\f \x01(\tB\x05\x90\xa7\x1d\x80\x04R\tpageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xf9\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa8\x02\n" +
 	"\x18ListPullRequestsResponse\x12>\n" +
 	"\rpull_requests\x18\x01 \x03(\v2\x13.github.PullRequestB\x04\xb8\xa8\x1ddR\fpullRequests\x126\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x16.github.PaginationInfoR\n" +
 	"pagination\x124\n" +
 	"\n" +
-	"rate_limit\x18\x03 \x01(\v2\x15.github.RateLimitInfoR\trateLimit\x12\x1a\n" +
+	"rate_limit\x18\x03 \x01(\v2\x15.github.RateLimitInfoR\trateLimit\x12-\n" +
+	"\x0fnext_page_token\x18\x04 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xda\x01\n" +
 	"\x15GetPullRequestRequest\x12!\n" +
@@ -6687,7 +6841,7 @@ const file_services_github_proto_rawDesc = "" +
 	"\n" +
 	"rate_limit\x18\x04 \x01(\v2\x15.github.RateLimitInfoR\trateLimit\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9f\x02\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xec\x02\n" +
 	"\x1bListPullRequestFilesRequest\x12!\n" +
 	"\bmetadata\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x10R\bmetadata\x12#\n" +
 	"\x05owner\x18\x02 \x01(\tB\r\x88\xa6\x1d\x01\x88\xa7\x1d\x01\x90\xa7\x1d\x80\x02R\x05owner\x12!\n" +
@@ -6695,16 +6849,20 @@ const file_services_github_proto_rawDesc = "" +
 	"\vpull_number\x18\x04 \x01(\x05B\x04\xb0\xa7\x1d\x01R\n" +
 	"pullNumber\x12\x18\n" +
 	"\x04page\x18\x05 \x01(\x05B\x04\xb0\xa7\x1d\x00R\x04page\x12#\n" +
-	"\bper_page\x18\x06 \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12\x1a\n" +
+	"\bper_page\x18\x06 \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12%\n" +
+	"\tpage_size\x18\a \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\bpageSize\x12$\n" +
+	"\n" +
+	"page_token\x18\b \x01(\tB\x05\x90\xa7\x1d\x80\x04R\tpageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xf3\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa2\x02\n" +
 	"\x1cListPullRequestFilesResponse\x124\n" +
 	"\x05files\x18\x01 \x03(\v2\x17.github.PullRequestFileB\x05\xb8\xa8\x1d\xb8\x17R\x05files\x126\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x16.github.PaginationInfoR\n" +
 	"pagination\x124\n" +
 	"\n" +
-	"rate_limit\x18\x03 \x01(\v2\x15.github.RateLimitInfoR\trateLimit\x12\x1a\n" +
+	"rate_limit\x18\x03 \x01(\v2\x15.github.RateLimitInfoR\trateLimit\x12-\n" +
+	"\x0fnext_page_token\x18\x04 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe7\x01\n" +
 	"\x11GetContentRequest\x12!\n" +
@@ -6742,22 +6900,26 @@ const file_services_github_proto_rawDesc = "" +
 	"\n" +
 	"rate_limit\x18\x03 \x01(\v2\x15.github.RateLimitInfoR\trateLimit\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xf0\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xbd\x02\n" +
 	"\x13ListBranchesRequest\x12!\n" +
 	"\bmetadata\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x10R\bmetadata\x12#\n" +
 	"\x05owner\x18\x02 \x01(\tB\r\x88\xa6\x1d\x01\x88\xa7\x1d\x01\x90\xa7\x1d\x80\x02R\x05owner\x12!\n" +
 	"\x04repo\x18\x03 \x01(\tB\r\x88\xa6\x1d\x01\x88\xa7\x1d\x01\x90\xa7\x1d\x80\x02R\x04repo\x12\x18\n" +
 	"\x04page\x18\x04 \x01(\x05B\x04\xb0\xa7\x1d\x00R\x04page\x12#\n" +
-	"\bper_page\x18\x05 \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12\x1a\n" +
+	"\bper_page\x18\x05 \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12%\n" +
+	"\tpage_size\x18\x06 \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\bpageSize\x12$\n" +
+	"\n" +
+	"page_token\x18\a \x01(\tB\x05\x90\xa7\x1d\x80\x04R\tpageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe7\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x96\x02\n" +
 	"\x14ListBranchesResponse\x120\n" +
 	"\bbranches\x18\x01 \x03(\v2\x0e.github.BranchB\x04\xb8\xa8\x1ddR\bbranches\x126\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x16.github.PaginationInfoR\n" +
 	"pagination\x124\n" +
 	"\n" +
-	"rate_limit\x18\x03 \x01(\v2\x15.github.RateLimitInfoR\trateLimit\x12\x1a\n" +
+	"rate_limit\x18\x03 \x01(\v2\x15.github.RateLimitInfoR\trateLimit\x12-\n" +
+	"\x0fnext_page_token\x18\x04 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xf2\x01\n" +
 	"\x13CreateBranchRequest\x12!\n" +
@@ -6773,7 +6935,7 @@ const file_services_github_proto_rawDesc = "" +
 	"\n" +
 	"rate_limit\x18\x02 \x01(\v2\x15.github.RateLimitInfoR\trateLimit\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xfa\x02\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc7\x03\n" +
 	"\x12ListCommitsRequest\x12!\n" +
 	"\bmetadata\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x10R\bmetadata\x12#\n" +
 	"\x05owner\x18\x02 \x01(\tB\r\x88\xa6\x1d\x01\x88\xa7\x1d\x01\x90\xa7\x1d\x80\x02R\x05owner\x12!\n" +
@@ -6785,34 +6947,42 @@ const file_services_github_proto_rawDesc = "" +
 	"\x05until\x18\b \x01(\tB\x04\x90\xa7\x1d@R\x05until\x12\x18\n" +
 	"\x04page\x18\t \x01(\x05B\x04\xb0\xa7\x1d\x00R\x04page\x12#\n" +
 	"\bper_page\x18\n" +
-	" \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12\x1a\n" +
+	" \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12%\n" +
+	"\tpage_size\x18\v \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\bpageSize\x12$\n" +
+	"\n" +
+	"page_token\x18\f \x01(\tB\x05\x90\xa7\x1d\x80\x04R\tpageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe4\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x93\x02\n" +
 	"\x13ListCommitsResponse\x12.\n" +
 	"\acommits\x18\x01 \x03(\v2\x0e.github.CommitB\x04\xb8\xa8\x1ddR\acommits\x126\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x16.github.PaginationInfoR\n" +
 	"pagination\x124\n" +
 	"\n" +
-	"rate_limit\x18\x03 \x01(\v2\x15.github.RateLimitInfoR\trateLimit\x12\x1a\n" +
+	"rate_limit\x18\x03 \x01(\v2\x15.github.RateLimitInfoR\trateLimit\x12-\n" +
+	"\x0fnext_page_token\x18\x04 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x81\x02\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xce\x02\n" +
 	"\x11SearchCodeRequest\x12!\n" +
 	"\bmetadata\x18\x01 \x01(\tB\x05\x90\xa7\x1d\x80\x10R\bmetadata\x12#\n" +
 	"\x05query\x18\x02 \x01(\tB\r\x88\xa6\x1d\x01\x88\xa7\x1d\x01\x90\xa7\x1d\x80 R\x05query\x12\x18\n" +
 	"\x04sort\x18\x03 \x01(\tB\x04\x90\xa7\x1d\x10R\x04sort\x12\x1a\n" +
 	"\x05order\x18\x04 \x01(\tB\x04\x90\xa7\x1d\bR\x05order\x12\x18\n" +
 	"\x04page\x18\x05 \x01(\x05B\x04\xb0\xa7\x1d\x00R\x04page\x12#\n" +
-	"\bper_page\x18\x06 \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12\x1a\n" +
+	"\bper_page\x18\x06 \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\aperPage\x12%\n" +
+	"\tpage_size\x18\a \x01(\x05B\b\xb0\xa7\x1d\x00\xc0\xa7\x1ddR\bpageSize\x12$\n" +
+	"\n" +
+	"page_token\x18\b \x01(\tB\x05\x90\xa7\x1d\x80\x04R\tpageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x87\x02\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb6\x02\n" +
 	"\x12SearchCodeResponse\x12%\n" +
-	"\vtotal_count\x18\x01 \x01(\x05B\x04\xb0\xa7\x1d\x00R\n" +
+	"\vtotal_count\x18\x01 \x01(\x03B\x04\xb0\xa7\x1d\x00R\n" +
 	"totalCount\x12-\n" +
 	"\x12incomplete_results\x18\x02 \x01(\bR\x11incompleteResults\x124\n" +
 	"\x05items\x18\x03 \x03(\v2\x18.github.SearchCodeResultB\x04\xb8\xa8\x1ddR\x05items\x124\n" +
 	"\n" +
-	"rate_limit\x18\x04 \x01(\v2\x15.github.RateLimitInfoR\trateLimit\x12\x1a\n" +
+	"rate_limit\x18\x04 \x01(\v2\x15.github.RateLimitInfoR\trateLimit\x12-\n" +
+	"\x0fnext_page_token\x18\x05 \x01(\tB\x05\x90\xa7\x1d\x80\x04R\rnextPageToken\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x99\x04\n" +
 	"\n" +
@@ -6833,12 +7003,12 @@ const file_services_github_proto_rawDesc = "" +
 	"durationMs\x12*\n" +
 	"\bprovider\x18\f \x01(\tB\x0e\x90\xa7\x1d@\x8a\xa8\x1d\x06githubR\bprovider\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9d\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9b\x01\n" +
 	"\x11GithubConfigState\x120\n" +
 	"\x06config\x18\x01 \x01(\v2\x0e.github.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:%\x9a\xa8\x1d\x1d\n" +
-	"\x11GithubConfigState\x1a\beventbus\xa0\xa8\x1d\x02\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:#\x9a\xa8\x1d\x1b\n" +
+	"\x11GithubConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\x98\x01\n" +
@@ -6944,31 +7114,31 @@ const file_services_github_proto_rawDesc = "" +
 	"0GITHUB_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x121\n" +
 	"-GITHUB_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x121\n" +
 	"-GITHUB_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x123\n" +
-	"/GITHUB_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\x9c\f\n" +
+	"/GITHUB_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\x9b\f\n" +
 	"\x05Proxy\x126\n" +
 	"\x05Proxy\x12\x15.http.RawProxyRequest\x1a\x16.http.RawProxyResponse\x12L\n" +
 	"\rGetRepository\x12\x1c.github.GetRepositoryRequest\x1a\x1d.github.GetRepositoryResponse\x12a\n" +
 	"\n" +
-	"ListIssues\x12\x19.github.ListIssuesRequest\x1a\x1a.github.ListIssuesResponse\"\x1c\xf2\x88'\x18\b\x01\x12\n" +
-	"updated_at\x12\x06number\x18d\x12=\n" +
+	"ListIssues\x12\x19.github.ListIssuesRequest\x1a\x1a.github.ListIssuesResponse\"\x1c\xf2\x88'\x18\b\x03\x12\n" +
+	"updated_at\x12\x06number(d\x12=\n" +
 	"\bGetIssue\x12\x17.github.GetIssueRequest\x1a\x18.github.GetIssueResponse\x12F\n" +
 	"\vCreateIssue\x12\x1a.github.CreateIssueRequest\x1a\x1b.github.CreateIssueResponse\x12F\n" +
 	"\vUpdateIssue\x12\x1a.github.UpdateIssueRequest\x1a\x1b.github.UpdateIssueResponse\x12[\n" +
 	"\x12CreateIssueComment\x12!.github.CreateIssueCommentRequest\x1a\".github.CreateIssueCommentResponse\x12s\n" +
-	"\x10ListPullRequests\x12\x1f.github.ListPullRequestsRequest\x1a .github.ListPullRequestsResponse\"\x1c\xf2\x88'\x18\b\x01\x12\n" +
-	"updated_at\x12\x06number\x18d\x12O\n" +
+	"\x10ListPullRequests\x12\x1f.github.ListPullRequestsRequest\x1a .github.ListPullRequestsResponse\"\x1c\xf2\x88'\x18\b\x03\x12\n" +
+	"updated_at\x12\x06number(d\x12O\n" +
 	"\x0eGetPullRequest\x12\x1d.github.GetPullRequestRequest\x1a\x1e.github.GetPullRequestResponse\x12X\n" +
 	"\x11CreatePullRequest\x12 .github.CreatePullRequestRequest\x1a!.github.CreatePullRequestResponse\x12U\n" +
-	"\x10MergePullRequest\x12\x1f.github.MergePullRequestRequest\x1a .github.MergePullRequestResponse\x12{\n" +
-	"\x14ListPullRequestFiles\x12#.github.ListPullRequestFilesRequest\x1a$.github.ListPullRequestFilesResponse\"\x18\xf2\x88'\x14\b\x01\x12\bfilename\x12\x03sha\x18\xb8\x17\x12C\n" +
+	"\x10MergePullRequest\x12\x1f.github.MergePullRequestRequest\x1a .github.MergePullRequestResponse\x12z\n" +
+	"\x14ListPullRequestFiles\x12#.github.ListPullRequestFilesRequest\x1a$.github.ListPullRequestFilesResponse\"\x17\xf2\x88'\x13\b\x03\x12\bfilename\x12\x03sha(d\x12C\n" +
 	"\n" +
 	"GetContent\x12\x19.github.GetContentRequest\x1a\x1a.github.GetContentResponse\x12[\n" +
 	"\x12CreateOrUpdateFile\x12!.github.CreateOrUpdateFileRequest\x1a\".github.CreateOrUpdateFileResponse\x12Y\n" +
 	"\fListBranches\x12\x1b.github.ListBranchesRequest\x1a\x1c.github.ListBranchesResponse\"\x0e\xf2\x88'\n" +
-	"\b\x01\x12\x04name\x18d\x12I\n" +
+	"\b\x03\x12\x04name(d\x12I\n" +
 	"\fCreateBranch\x12\x1b.github.CreateBranchRequest\x1a\x1c.github.CreateBranchResponse\x12U\n" +
-	"\vListCommits\x12\x1a.github.ListCommitsRequest\x1a\x1b.github.ListCommitsResponse\"\r\xf2\x88'\t\b\x01\x12\x03sha\x18d\x12c\n" +
-	"\x15ListCodeSearchResults\x12\x19.github.SearchCodeRequest\x1a\x1a.github.SearchCodeResponse\"\x13\xf2\x88'\x0f\b\x01\x12\x04path\x12\x03sha\x18d\x1a\x06\xf2\x97\"\x02\x18\x012\xb5\x01\n" +
+	"\vListCommits\x12\x1a.github.ListCommitsRequest\x1a\x1b.github.ListCommitsResponse\"\r\xf2\x88'\t\b\x03\x12\x03sha(d\x12c\n" +
+	"\x15ListCodeSearchResults\x12\x19.github.SearchCodeRequest\x1a\x1a.github.SearchCodeResponse\"\x13\xf2\x88'\x0f\b\x03\x12\x04path\x12\x03sha(d\x1a\x06\xf2\x97\"\x02\x18\x012\xb5\x01\n" +
 	"\x18GithubConfigStateService\x120\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x0e.github.Config\x12+\n" +
 	"\tSetConfig\x12\x0e.github.Config\x1a\x0e.github.Config\x124\n" +

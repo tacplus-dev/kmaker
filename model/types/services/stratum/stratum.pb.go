@@ -570,12 +570,12 @@ const file_services_stratum_proto_rawDesc = "" +
 	"\vactive_maps\x18\x06 \x01(\x05R\n" +
 	"activeMaps\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x04\x82\xaa\x1d\x00\"\xa0\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x04\x82\xaa\x1d\x00\"\x9e\x01\n" +
 	"\x12StratumConfigState\x121\n" +
 	"\x06config\x18\x01 \x01(\v2\x0f.stratum.ConfigB\b\xe0\xb5\x18\x02\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:&\x9a\xa8\x1d\x1e\n" +
-	"\x12StratumConfigState\x1a\beventbus\xa0\xa8\x1d\x02\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:$\x9a\xa8\x1d\x1c\n" +
+	"\x12StratumConfigState\x1a\x06kernel\xa0\xa8\x1d\x02\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\xad\x01\n" +
@@ -598,10 +598,10 @@ const file_services_stratum_proto_rawDesc = "" +
 	"\x19StratumConfigStateService\x121\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x0f.stratum.Config\x12-\n" +
 	"\tSetConfig\x12\x0f.stratum.Config\x1a\x0f.stratum.Config\x125\n" +
-	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x0f.stratum.Config0\x01\x1a\x04\xea\x97\"\x00B\xb7\x01\x92\xb5\x18\x11\n" +
-	"\fDEFAULT_PORT\x10\xfbAڵ\x18\x00\x92\xb6\x18\x1a\n" +
-	"\x18claudesensor.TimedbQuery\x92\xb6\x18\x1b\n" +
-	"\x19claudesensor.GraphdbQuery\xba\xb6\x18\x00Z[gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/stratumb\x06proto3"
+	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x0f.stratum.Config0\x01\x1a\x04\xea\x97\"\x00B\xb5\x01\x92\xb5\x18\x11\n" +
+	"\fDEFAULT_PORT\x10\xfbAڵ\x18\x00\x92\xb6\x18\x19\n" +
+	"\x17agentsensor.TimedbQuery\x92\xb6\x18\x1a\n" +
+	"\x18agentsensor.GraphdbQuery\xba\xb6\x18\x00Z[gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/stratumb\x06proto3"
 
 var (
 	file_services_stratum_proto_rawDescOnce sync.Once

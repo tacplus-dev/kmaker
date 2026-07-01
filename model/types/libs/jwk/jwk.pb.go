@@ -116,7 +116,7 @@ type Jwk struct {
 	Y string `protobuf:"bytes,9,opt,name=y,proto3" json:"y,omitempty"`
 	// Exp is the expiration in epoch seconds. This is not part of the JWK spec as the spec does
 	// not specify how to handle public key expiration.
-	// When stored in a collection with epoch_expiration, Hazelcast computes TTL = exp - now
+	// When stored in a collection with epoch_expiration, the state store computes TTL = exp - now
 	// and auto-evicts the entry on expiry.
 	Exp int64 `protobuf:"varint,10,opt,name=exp,proto3" json:"exp,omitempty"`
 	// Created is the Unix epoch timestamp (seconds) when the key was created (optional).
