@@ -5,7 +5,7 @@ import (
 	"net"
 	"os"
 
-	hostpb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/host"
+	hostpb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/host"
 	pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
 )
 

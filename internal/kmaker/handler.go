@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/libs/servicemanager"
+	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/servicemanager"
 	kmakergrpc "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/s2sm/grpc/servers/services/kmaker"
-	x509pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/x509"
+	x509pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/x509"
 	pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"

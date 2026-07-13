@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	keypb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/key"
-	x509pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/libs/x509"
+	keypb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/key"
+	x509pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/x509"
 	pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
 )
 
