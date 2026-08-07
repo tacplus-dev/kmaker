@@ -271,113 +271,6 @@ func (LogicalOp) EnumDescriptor() ([]byte, []int) {
 	return file_services_timedb_proto_rawDescGZIP(), []int{3}
 }
 
-type GitLabActivityRecordGroupField int32
-
-const (
-	GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_UNSPECIFIED      GitLabActivityRecordGroupField = 0
-	GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_SCHEME_VERSION   GitLabActivityRecordGroupField = 1
-	GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_AUTHOR_USERNAME  GitLabActivityRecordGroupField = 2
-	GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_EVENT_TYPE       GitLabActivityRecordGroupField = 3
-	GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_INGESTION_SOURCE GitLabActivityRecordGroupField = 4
-)
-
-// Enum value maps for GitLabActivityRecordGroupField.
-var (
-	GitLabActivityRecordGroupField_name = map[int32]string{
-		0: "GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_UNSPECIFIED",
-		1: "GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_SCHEME_VERSION",
-		2: "GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_AUTHOR_USERNAME",
-		3: "GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_EVENT_TYPE",
-		4: "GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_INGESTION_SOURCE",
-	}
-	GitLabActivityRecordGroupField_value = map[string]int32{
-		"GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_UNSPECIFIED":      0,
-		"GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_SCHEME_VERSION":   1,
-		"GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_AUTHOR_USERNAME":  2,
-		"GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_EVENT_TYPE":       3,
-		"GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_INGESTION_SOURCE": 4,
-	}
-)
-
-func (x GitLabActivityRecordGroupField) Enum() *GitLabActivityRecordGroupField {
-	p := new(GitLabActivityRecordGroupField)
-	*p = x
-	return p
-}
-
-func (x GitLabActivityRecordGroupField) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (GitLabActivityRecordGroupField) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_timedb_proto_enumTypes[4].Descriptor()
-}
-
-func (GitLabActivityRecordGroupField) Type() protoreflect.EnumType {
-	return &file_services_timedb_proto_enumTypes[4]
-}
-
-func (x GitLabActivityRecordGroupField) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use GitLabActivityRecordGroupField.Descriptor instead.
-func (GitLabActivityRecordGroupField) EnumDescriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{4}
-}
-
-type LlmCallRecordGroupField int32
-
-const (
-	LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_UNSPECIFIED LlmCallRecordGroupField = 0
-	LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_PROVIDER    LlmCallRecordGroupField = 1
-	LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_MODEL       LlmCallRecordGroupField = 2
-	LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_OPERATION   LlmCallRecordGroupField = 3
-)
-
-// Enum value maps for LlmCallRecordGroupField.
-var (
-	LlmCallRecordGroupField_name = map[int32]string{
-		0: "LLM_CALL_RECORD_GROUP_FIELD_UNSPECIFIED",
-		1: "LLM_CALL_RECORD_GROUP_FIELD_PROVIDER",
-		2: "LLM_CALL_RECORD_GROUP_FIELD_MODEL",
-		3: "LLM_CALL_RECORD_GROUP_FIELD_OPERATION",
-	}
-	LlmCallRecordGroupField_value = map[string]int32{
-		"LLM_CALL_RECORD_GROUP_FIELD_UNSPECIFIED": 0,
-		"LLM_CALL_RECORD_GROUP_FIELD_PROVIDER":    1,
-		"LLM_CALL_RECORD_GROUP_FIELD_MODEL":       2,
-		"LLM_CALL_RECORD_GROUP_FIELD_OPERATION":   3,
-	}
-)
-
-func (x LlmCallRecordGroupField) Enum() *LlmCallRecordGroupField {
-	p := new(LlmCallRecordGroupField)
-	*p = x
-	return p
-}
-
-func (x LlmCallRecordGroupField) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (LlmCallRecordGroupField) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_timedb_proto_enumTypes[5].Descriptor()
-}
-
-func (LlmCallRecordGroupField) Type() protoreflect.EnumType {
-	return &file_services_timedb_proto_enumTypes[5]
-}
-
-func (x LlmCallRecordGroupField) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use LlmCallRecordGroupField.Descriptor instead.
-func (LlmCallRecordGroupField) EnumDescriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{5}
-}
-
 type PromptRecordGroupField int32
 
 const (
@@ -411,11 +304,11 @@ func (x PromptRecordGroupField) String() string {
 }
 
 func (PromptRecordGroupField) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_timedb_proto_enumTypes[6].Descriptor()
+	return file_services_timedb_proto_enumTypes[4].Descriptor()
 }
 
 func (PromptRecordGroupField) Type() protoreflect.EnumType {
-	return &file_services_timedb_proto_enumTypes[6]
+	return &file_services_timedb_proto_enumTypes[4]
 }
 
 func (x PromptRecordGroupField) Number() protoreflect.EnumNumber {
@@ -424,56 +317,7 @@ func (x PromptRecordGroupField) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use PromptRecordGroupField.Descriptor instead.
 func (PromptRecordGroupField) EnumDescriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{6}
-}
-
-type ScmOperationRecordGroupField int32
-
-const (
-	ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_UNSPECIFIED ScmOperationRecordGroupField = 0
-	ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_PROVIDER    ScmOperationRecordGroupField = 1
-	ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_OPERATION   ScmOperationRecordGroupField = 2
-)
-
-// Enum value maps for ScmOperationRecordGroupField.
-var (
-	ScmOperationRecordGroupField_name = map[int32]string{
-		0: "SCM_OPERATION_RECORD_GROUP_FIELD_UNSPECIFIED",
-		1: "SCM_OPERATION_RECORD_GROUP_FIELD_PROVIDER",
-		2: "SCM_OPERATION_RECORD_GROUP_FIELD_OPERATION",
-	}
-	ScmOperationRecordGroupField_value = map[string]int32{
-		"SCM_OPERATION_RECORD_GROUP_FIELD_UNSPECIFIED": 0,
-		"SCM_OPERATION_RECORD_GROUP_FIELD_PROVIDER":    1,
-		"SCM_OPERATION_RECORD_GROUP_FIELD_OPERATION":   2,
-	}
-)
-
-func (x ScmOperationRecordGroupField) Enum() *ScmOperationRecordGroupField {
-	p := new(ScmOperationRecordGroupField)
-	*p = x
-	return p
-}
-
-func (x ScmOperationRecordGroupField) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ScmOperationRecordGroupField) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_timedb_proto_enumTypes[7].Descriptor()
-}
-
-func (ScmOperationRecordGroupField) Type() protoreflect.EnumType {
-	return &file_services_timedb_proto_enumTypes[7]
-}
-
-func (x ScmOperationRecordGroupField) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use ScmOperationRecordGroupField.Descriptor instead.
-func (ScmOperationRecordGroupField) EnumDescriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{7}
+	return file_services_timedb_proto_rawDescGZIP(), []int{4}
 }
 
 type SessionRecordGroupField int32
@@ -518,11 +362,11 @@ func (x SessionRecordGroupField) String() string {
 }
 
 func (SessionRecordGroupField) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_timedb_proto_enumTypes[8].Descriptor()
+	return file_services_timedb_proto_enumTypes[5].Descriptor()
 }
 
 func (SessionRecordGroupField) Type() protoreflect.EnumType {
-	return &file_services_timedb_proto_enumTypes[8]
+	return &file_services_timedb_proto_enumTypes[5]
 }
 
 func (x SessionRecordGroupField) Number() protoreflect.EnumNumber {
@@ -531,7 +375,7 @@ func (x SessionRecordGroupField) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SessionRecordGroupField.Descriptor instead.
 func (SessionRecordGroupField) EnumDescriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{8}
+	return file_services_timedb_proto_rawDescGZIP(), []int{5}
 }
 
 type StopRecordGroupField int32
@@ -570,11 +414,11 @@ func (x StopRecordGroupField) String() string {
 }
 
 func (StopRecordGroupField) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_timedb_proto_enumTypes[9].Descriptor()
+	return file_services_timedb_proto_enumTypes[6].Descriptor()
 }
 
 func (StopRecordGroupField) Type() protoreflect.EnumType {
-	return &file_services_timedb_proto_enumTypes[9]
+	return &file_services_timedb_proto_enumTypes[6]
 }
 
 func (x StopRecordGroupField) Number() protoreflect.EnumNumber {
@@ -583,7 +427,7 @@ func (x StopRecordGroupField) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StopRecordGroupField.Descriptor instead.
 func (StopRecordGroupField) EnumDescriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{9}
+	return file_services_timedb_proto_rawDescGZIP(), []int{6}
 }
 
 type SubagentRecordGroupField int32
@@ -625,11 +469,11 @@ func (x SubagentRecordGroupField) String() string {
 }
 
 func (SubagentRecordGroupField) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_timedb_proto_enumTypes[10].Descriptor()
+	return file_services_timedb_proto_enumTypes[7].Descriptor()
 }
 
 func (SubagentRecordGroupField) Type() protoreflect.EnumType {
-	return &file_services_timedb_proto_enumTypes[10]
+	return &file_services_timedb_proto_enumTypes[7]
 }
 
 func (x SubagentRecordGroupField) Number() protoreflect.EnumNumber {
@@ -638,7 +482,7 @@ func (x SubagentRecordGroupField) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SubagentRecordGroupField.Descriptor instead.
 func (SubagentRecordGroupField) EnumDescriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{10}
+	return file_services_timedb_proto_rawDescGZIP(), []int{7}
 }
 
 type ToolUseRecordGroupField int32
@@ -677,11 +521,11 @@ func (x ToolUseRecordGroupField) String() string {
 }
 
 func (ToolUseRecordGroupField) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_timedb_proto_enumTypes[11].Descriptor()
+	return file_services_timedb_proto_enumTypes[8].Descriptor()
 }
 
 func (ToolUseRecordGroupField) Type() protoreflect.EnumType {
-	return &file_services_timedb_proto_enumTypes[11]
+	return &file_services_timedb_proto_enumTypes[8]
 }
 
 func (x ToolUseRecordGroupField) Number() protoreflect.EnumNumber {
@@ -690,7 +534,7 @@ func (x ToolUseRecordGroupField) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ToolUseRecordGroupField.Descriptor instead.
 func (ToolUseRecordGroupField) EnumDescriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{11}
+	return file_services_timedb_proto_rawDescGZIP(), []int{8}
 }
 
 // ============================================================================
@@ -700,72 +544,60 @@ func (ToolUseRecordGroupField) EnumDescriptor() ([]byte, []int) {
 type TypeID int32
 
 const (
-	TypeID_TYPE_ID_UNSPECIFIED                                       TypeID = 0
-	TypeID_TYPE_ID_TIME_RANGE                                        TypeID = 1
-	TypeID_TYPE_ID_CONFIG                                            TypeID = 2
-	TypeID_TYPE_ID_TIME_DB_NODE                                      TypeID = 3
-	TypeID_TYPE_ID_TIME_DB_STATE                                     TypeID = 4
-	TypeID_TYPE_ID_TIME_DB_HEALTH                                    TypeID = 5
-	TypeID_TYPE_ID_REPLICA_STATUS                                    TypeID = 6
-	TypeID_TYPE_ID_DISK_STATUS                                       TypeID = 7
-	TypeID_TYPE_ID_MERGE_STATUS                                      TypeID = 8
-	TypeID_TYPE_ID_MUTATION_STATUS                                   TypeID = 9
-	TypeID_TYPE_ID_METRIC_ENTRY                                      TypeID = 10
-	TypeID_TYPE_ID_ERROR_ENTRY                                       TypeID = 11
-	TypeID_TYPE_ID_KEEPER_STATUS                                     TypeID = 12
-	TypeID_TYPE_ID_SERVER_SUMMARY                                    TypeID = 13
-	TypeID_TYPE_ID_TIMEDB_CONFIG_STATE                               TypeID = 14
-	TypeID_TYPE_ID_QUERY_VALUE                                       TypeID = 15
-	TypeID_TYPE_ID_PREDICATE                                         TypeID = 16
-	TypeID_TYPE_ID_PREDICATE_GROUP                                   TypeID = 17
-	TypeID_TYPE_ID_SORT_FIELD                                        TypeID = 18
-	TypeID_TYPE_ID_COLLECTION_QUERY                                  TypeID = 19
-	TypeID_TYPE_ID_NODES_GET_REQUEST                                 TypeID = 20
-	TypeID_TYPE_ID_NODES_PUT_REQUEST                                 TypeID = 21
-	TypeID_TYPE_ID_NODES_GET_ALL_REQUEST                             TypeID = 22
-	TypeID_TYPE_ID_NODES_KEYS_REQUEST                                TypeID = 23
-	TypeID_TYPE_ID_NODES_SIZE_REQUEST                                TypeID = 24
-	TypeID_TYPE_ID_NODES_CLEAR_REQUEST                               TypeID = 25
-	TypeID_TYPE_ID_NODES_VALUE_RESPONSE                              TypeID = 26
-	TypeID_TYPE_ID_NODES_ENTRIES_RESPONSE                            TypeID = 27
-	TypeID_TYPE_ID_NODES_KEYS_RESPONSE                               TypeID = 28
-	TypeID_TYPE_ID_NODES_SIZE_RESPONSE                               TypeID = 29
-	TypeID_TYPE_ID_NODES_QUERY_REQUEST                               TypeID = 30
-	TypeID_TYPE_ID_NODES_QUERY_RESPONSE                              TypeID = 31
-	TypeID_TYPE_ID_MAP_EMPTY                                         TypeID = 32
-	TypeID_TYPE_ID_TIMESERIES_GROUP_COUNT                            TypeID = 33
-	TypeID_TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_REQUEST  TypeID = 34
-	TypeID_TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_RESPONSE TypeID = 35
-	TypeID_TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_REQUEST          TypeID = 36
-	TypeID_TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_RESPONSE         TypeID = 37
-	TypeID_TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_REQUEST            TypeID = 38
-	TypeID_TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_RESPONSE           TypeID = 39
-	TypeID_TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_REQUEST     TypeID = 40
-	TypeID_TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_RESPONSE    TypeID = 41
-	TypeID_TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_REQUEST           TypeID = 42
-	TypeID_TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_RESPONSE          TypeID = 43
-	TypeID_TYPE_ID_GET_STOP_RECORD_GROUP_COUNTS_REQUEST              TypeID = 44
-	TypeID_TYPE_ID_GET_STOP_RECORD_GROUP_COUNTS_RESPONSE             TypeID = 45
-	TypeID_TYPE_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS_REQUEST          TypeID = 46
-	TypeID_TYPE_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS_RESPONSE         TypeID = 47
-	TypeID_TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_REQUEST          TypeID = 48
-	TypeID_TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_RESPONSE         TypeID = 49
-	TypeID_TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_REQUEST              TypeID = 50
-	TypeID_TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE             TypeID = 51
-	TypeID_TYPE_ID_LIST_LLM_CALL_RECORD_REQUEST                      TypeID = 52
-	TypeID_TYPE_ID_LIST_LLM_CALL_RECORD_RESPONSE                     TypeID = 53
-	TypeID_TYPE_ID_LIST_PROMPT_RECORD_REQUEST                        TypeID = 54
-	TypeID_TYPE_ID_LIST_PROMPT_RECORD_RESPONSE                       TypeID = 55
-	TypeID_TYPE_ID_LIST_SCM_OPERATION_RECORD_REQUEST                 TypeID = 56
-	TypeID_TYPE_ID_LIST_SCM_OPERATION_RECORD_RESPONSE                TypeID = 57
-	TypeID_TYPE_ID_LIST_SESSION_RECORD_REQUEST                       TypeID = 58
-	TypeID_TYPE_ID_LIST_SESSION_RECORD_RESPONSE                      TypeID = 59
-	TypeID_TYPE_ID_LIST_STOP_RECORD_REQUEST                          TypeID = 60
-	TypeID_TYPE_ID_LIST_STOP_RECORD_RESPONSE                         TypeID = 61
-	TypeID_TYPE_ID_LIST_SUBAGENT_RECORD_REQUEST                      TypeID = 62
-	TypeID_TYPE_ID_LIST_SUBAGENT_RECORD_RESPONSE                     TypeID = 63
-	TypeID_TYPE_ID_LIST_TOOL_USE_RECORD_REQUEST                      TypeID = 64
-	TypeID_TYPE_ID_LIST_TOOL_USE_RECORD_RESPONSE                     TypeID = 65
+	TypeID_TYPE_ID_UNSPECIFIED                               TypeID = 0
+	TypeID_TYPE_ID_TIME_RANGE                                TypeID = 1
+	TypeID_TYPE_ID_CONFIG                                    TypeID = 2
+	TypeID_TYPE_ID_TIME_DB_NODE                              TypeID = 3
+	TypeID_TYPE_ID_TIME_DB_STATE                             TypeID = 4
+	TypeID_TYPE_ID_TIME_DB_HEALTH                            TypeID = 5
+	TypeID_TYPE_ID_REPLICA_STATUS                            TypeID = 6
+	TypeID_TYPE_ID_DISK_STATUS                               TypeID = 7
+	TypeID_TYPE_ID_MERGE_STATUS                              TypeID = 8
+	TypeID_TYPE_ID_MUTATION_STATUS                           TypeID = 9
+	TypeID_TYPE_ID_METRIC_ENTRY                              TypeID = 10
+	TypeID_TYPE_ID_ERROR_ENTRY                               TypeID = 11
+	TypeID_TYPE_ID_KEEPER_STATUS                             TypeID = 12
+	TypeID_TYPE_ID_SERVER_SUMMARY                            TypeID = 13
+	TypeID_TYPE_ID_TIMEDB_CONFIG_STATE                       TypeID = 14
+	TypeID_TYPE_ID_QUERY_VALUE                               TypeID = 15
+	TypeID_TYPE_ID_PREDICATE                                 TypeID = 16
+	TypeID_TYPE_ID_PREDICATE_GROUP                           TypeID = 17
+	TypeID_TYPE_ID_SORT_FIELD                                TypeID = 18
+	TypeID_TYPE_ID_COLLECTION_QUERY                          TypeID = 19
+	TypeID_TYPE_ID_NODES_GET_REQUEST                         TypeID = 20
+	TypeID_TYPE_ID_NODES_PUT_REQUEST                         TypeID = 21
+	TypeID_TYPE_ID_NODES_GET_ALL_REQUEST                     TypeID = 22
+	TypeID_TYPE_ID_NODES_KEYS_REQUEST                        TypeID = 23
+	TypeID_TYPE_ID_NODES_SIZE_REQUEST                        TypeID = 24
+	TypeID_TYPE_ID_NODES_CLEAR_REQUEST                       TypeID = 25
+	TypeID_TYPE_ID_NODES_VALUE_RESPONSE                      TypeID = 26
+	TypeID_TYPE_ID_NODES_ENTRIES_RESPONSE                    TypeID = 27
+	TypeID_TYPE_ID_NODES_KEYS_RESPONSE                       TypeID = 28
+	TypeID_TYPE_ID_NODES_SIZE_RESPONSE                       TypeID = 29
+	TypeID_TYPE_ID_NODES_QUERY_REQUEST                       TypeID = 30
+	TypeID_TYPE_ID_NODES_QUERY_RESPONSE                      TypeID = 31
+	TypeID_TYPE_ID_MAP_EMPTY                                 TypeID = 32
+	TypeID_TYPE_ID_TIMESERIES_GROUP_COUNT                    TypeID = 33
+	TypeID_TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_REQUEST    TypeID = 34
+	TypeID_TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_RESPONSE   TypeID = 35
+	TypeID_TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_REQUEST   TypeID = 36
+	TypeID_TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_RESPONSE  TypeID = 37
+	TypeID_TYPE_ID_GET_STOP_RECORD_GROUP_COUNTS_REQUEST      TypeID = 38
+	TypeID_TYPE_ID_GET_STOP_RECORD_GROUP_COUNTS_RESPONSE     TypeID = 39
+	TypeID_TYPE_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS_REQUEST  TypeID = 40
+	TypeID_TYPE_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS_RESPONSE TypeID = 41
+	TypeID_TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_REQUEST  TypeID = 42
+	TypeID_TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_RESPONSE TypeID = 43
+	TypeID_TYPE_ID_LIST_PROMPT_RECORD_REQUEST                TypeID = 44
+	TypeID_TYPE_ID_LIST_PROMPT_RECORD_RESPONSE               TypeID = 45
+	TypeID_TYPE_ID_LIST_SESSION_RECORD_REQUEST               TypeID = 46
+	TypeID_TYPE_ID_LIST_SESSION_RECORD_RESPONSE              TypeID = 47
+	TypeID_TYPE_ID_LIST_STOP_RECORD_REQUEST                  TypeID = 48
+	TypeID_TYPE_ID_LIST_STOP_RECORD_RESPONSE                 TypeID = 49
+	TypeID_TYPE_ID_LIST_SUBAGENT_RECORD_REQUEST              TypeID = 50
+	TypeID_TYPE_ID_LIST_SUBAGENT_RECORD_RESPONSE             TypeID = 51
+	TypeID_TYPE_ID_LIST_TOOL_USE_RECORD_REQUEST              TypeID = 52
+	TypeID_TYPE_ID_LIST_TOOL_USE_RECORD_RESPONSE             TypeID = 53
 )
 
 // Enum value maps for TypeID.
@@ -805,106 +637,82 @@ var (
 		31: "TYPE_ID_NODES_QUERY_RESPONSE",
 		32: "TYPE_ID_MAP_EMPTY",
 		33: "TYPE_ID_TIMESERIES_GROUP_COUNT",
-		34: "TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_REQUEST",
-		35: "TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_RESPONSE",
-		36: "TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_REQUEST",
-		37: "TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_RESPONSE",
-		38: "TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_REQUEST",
-		39: "TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_RESPONSE",
-		40: "TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_REQUEST",
-		41: "TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_RESPONSE",
-		42: "TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_REQUEST",
-		43: "TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_RESPONSE",
-		44: "TYPE_ID_GET_STOP_RECORD_GROUP_COUNTS_REQUEST",
-		45: "TYPE_ID_GET_STOP_RECORD_GROUP_COUNTS_RESPONSE",
-		46: "TYPE_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS_REQUEST",
-		47: "TYPE_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS_RESPONSE",
-		48: "TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_REQUEST",
-		49: "TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_RESPONSE",
-		50: "TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_REQUEST",
-		51: "TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE",
-		52: "TYPE_ID_LIST_LLM_CALL_RECORD_REQUEST",
-		53: "TYPE_ID_LIST_LLM_CALL_RECORD_RESPONSE",
-		54: "TYPE_ID_LIST_PROMPT_RECORD_REQUEST",
-		55: "TYPE_ID_LIST_PROMPT_RECORD_RESPONSE",
-		56: "TYPE_ID_LIST_SCM_OPERATION_RECORD_REQUEST",
-		57: "TYPE_ID_LIST_SCM_OPERATION_RECORD_RESPONSE",
-		58: "TYPE_ID_LIST_SESSION_RECORD_REQUEST",
-		59: "TYPE_ID_LIST_SESSION_RECORD_RESPONSE",
-		60: "TYPE_ID_LIST_STOP_RECORD_REQUEST",
-		61: "TYPE_ID_LIST_STOP_RECORD_RESPONSE",
-		62: "TYPE_ID_LIST_SUBAGENT_RECORD_REQUEST",
-		63: "TYPE_ID_LIST_SUBAGENT_RECORD_RESPONSE",
-		64: "TYPE_ID_LIST_TOOL_USE_RECORD_REQUEST",
-		65: "TYPE_ID_LIST_TOOL_USE_RECORD_RESPONSE",
+		34: "TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_REQUEST",
+		35: "TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_RESPONSE",
+		36: "TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_REQUEST",
+		37: "TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_RESPONSE",
+		38: "TYPE_ID_GET_STOP_RECORD_GROUP_COUNTS_REQUEST",
+		39: "TYPE_ID_GET_STOP_RECORD_GROUP_COUNTS_RESPONSE",
+		40: "TYPE_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS_REQUEST",
+		41: "TYPE_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS_RESPONSE",
+		42: "TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_REQUEST",
+		43: "TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_RESPONSE",
+		44: "TYPE_ID_LIST_PROMPT_RECORD_REQUEST",
+		45: "TYPE_ID_LIST_PROMPT_RECORD_RESPONSE",
+		46: "TYPE_ID_LIST_SESSION_RECORD_REQUEST",
+		47: "TYPE_ID_LIST_SESSION_RECORD_RESPONSE",
+		48: "TYPE_ID_LIST_STOP_RECORD_REQUEST",
+		49: "TYPE_ID_LIST_STOP_RECORD_RESPONSE",
+		50: "TYPE_ID_LIST_SUBAGENT_RECORD_REQUEST",
+		51: "TYPE_ID_LIST_SUBAGENT_RECORD_RESPONSE",
+		52: "TYPE_ID_LIST_TOOL_USE_RECORD_REQUEST",
+		53: "TYPE_ID_LIST_TOOL_USE_RECORD_RESPONSE",
 	}
 	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":                                       0,
-		"TYPE_ID_TIME_RANGE":                                        1,
-		"TYPE_ID_CONFIG":                                            2,
-		"TYPE_ID_TIME_DB_NODE":                                      3,
-		"TYPE_ID_TIME_DB_STATE":                                     4,
-		"TYPE_ID_TIME_DB_HEALTH":                                    5,
-		"TYPE_ID_REPLICA_STATUS":                                    6,
-		"TYPE_ID_DISK_STATUS":                                       7,
-		"TYPE_ID_MERGE_STATUS":                                      8,
-		"TYPE_ID_MUTATION_STATUS":                                   9,
-		"TYPE_ID_METRIC_ENTRY":                                      10,
-		"TYPE_ID_ERROR_ENTRY":                                       11,
-		"TYPE_ID_KEEPER_STATUS":                                     12,
-		"TYPE_ID_SERVER_SUMMARY":                                    13,
-		"TYPE_ID_TIMEDB_CONFIG_STATE":                               14,
-		"TYPE_ID_QUERY_VALUE":                                       15,
-		"TYPE_ID_PREDICATE":                                         16,
-		"TYPE_ID_PREDICATE_GROUP":                                   17,
-		"TYPE_ID_SORT_FIELD":                                        18,
-		"TYPE_ID_COLLECTION_QUERY":                                  19,
-		"TYPE_ID_NODES_GET_REQUEST":                                 20,
-		"TYPE_ID_NODES_PUT_REQUEST":                                 21,
-		"TYPE_ID_NODES_GET_ALL_REQUEST":                             22,
-		"TYPE_ID_NODES_KEYS_REQUEST":                                23,
-		"TYPE_ID_NODES_SIZE_REQUEST":                                24,
-		"TYPE_ID_NODES_CLEAR_REQUEST":                               25,
-		"TYPE_ID_NODES_VALUE_RESPONSE":                              26,
-		"TYPE_ID_NODES_ENTRIES_RESPONSE":                            27,
-		"TYPE_ID_NODES_KEYS_RESPONSE":                               28,
-		"TYPE_ID_NODES_SIZE_RESPONSE":                               29,
-		"TYPE_ID_NODES_QUERY_REQUEST":                               30,
-		"TYPE_ID_NODES_QUERY_RESPONSE":                              31,
-		"TYPE_ID_MAP_EMPTY":                                         32,
-		"TYPE_ID_TIMESERIES_GROUP_COUNT":                            33,
-		"TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_REQUEST":  34,
-		"TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_RESPONSE": 35,
-		"TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_REQUEST":          36,
-		"TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_RESPONSE":         37,
-		"TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_REQUEST":            38,
-		"TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_RESPONSE":           39,
-		"TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_REQUEST":     40,
-		"TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_RESPONSE":    41,
-		"TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_REQUEST":           42,
-		"TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_RESPONSE":          43,
-		"TYPE_ID_GET_STOP_RECORD_GROUP_COUNTS_REQUEST":              44,
-		"TYPE_ID_GET_STOP_RECORD_GROUP_COUNTS_RESPONSE":             45,
-		"TYPE_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS_REQUEST":          46,
-		"TYPE_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS_RESPONSE":         47,
-		"TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_REQUEST":          48,
-		"TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_RESPONSE":         49,
-		"TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_REQUEST":              50,
-		"TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE":             51,
-		"TYPE_ID_LIST_LLM_CALL_RECORD_REQUEST":                      52,
-		"TYPE_ID_LIST_LLM_CALL_RECORD_RESPONSE":                     53,
-		"TYPE_ID_LIST_PROMPT_RECORD_REQUEST":                        54,
-		"TYPE_ID_LIST_PROMPT_RECORD_RESPONSE":                       55,
-		"TYPE_ID_LIST_SCM_OPERATION_RECORD_REQUEST":                 56,
-		"TYPE_ID_LIST_SCM_OPERATION_RECORD_RESPONSE":                57,
-		"TYPE_ID_LIST_SESSION_RECORD_REQUEST":                       58,
-		"TYPE_ID_LIST_SESSION_RECORD_RESPONSE":                      59,
-		"TYPE_ID_LIST_STOP_RECORD_REQUEST":                          60,
-		"TYPE_ID_LIST_STOP_RECORD_RESPONSE":                         61,
-		"TYPE_ID_LIST_SUBAGENT_RECORD_REQUEST":                      62,
-		"TYPE_ID_LIST_SUBAGENT_RECORD_RESPONSE":                     63,
-		"TYPE_ID_LIST_TOOL_USE_RECORD_REQUEST":                      64,
-		"TYPE_ID_LIST_TOOL_USE_RECORD_RESPONSE":                     65,
+		"TYPE_ID_UNSPECIFIED":                               0,
+		"TYPE_ID_TIME_RANGE":                                1,
+		"TYPE_ID_CONFIG":                                    2,
+		"TYPE_ID_TIME_DB_NODE":                              3,
+		"TYPE_ID_TIME_DB_STATE":                             4,
+		"TYPE_ID_TIME_DB_HEALTH":                            5,
+		"TYPE_ID_REPLICA_STATUS":                            6,
+		"TYPE_ID_DISK_STATUS":                               7,
+		"TYPE_ID_MERGE_STATUS":                              8,
+		"TYPE_ID_MUTATION_STATUS":                           9,
+		"TYPE_ID_METRIC_ENTRY":                              10,
+		"TYPE_ID_ERROR_ENTRY":                               11,
+		"TYPE_ID_KEEPER_STATUS":                             12,
+		"TYPE_ID_SERVER_SUMMARY":                            13,
+		"TYPE_ID_TIMEDB_CONFIG_STATE":                       14,
+		"TYPE_ID_QUERY_VALUE":                               15,
+		"TYPE_ID_PREDICATE":                                 16,
+		"TYPE_ID_PREDICATE_GROUP":                           17,
+		"TYPE_ID_SORT_FIELD":                                18,
+		"TYPE_ID_COLLECTION_QUERY":                          19,
+		"TYPE_ID_NODES_GET_REQUEST":                         20,
+		"TYPE_ID_NODES_PUT_REQUEST":                         21,
+		"TYPE_ID_NODES_GET_ALL_REQUEST":                     22,
+		"TYPE_ID_NODES_KEYS_REQUEST":                        23,
+		"TYPE_ID_NODES_SIZE_REQUEST":                        24,
+		"TYPE_ID_NODES_CLEAR_REQUEST":                       25,
+		"TYPE_ID_NODES_VALUE_RESPONSE":                      26,
+		"TYPE_ID_NODES_ENTRIES_RESPONSE":                    27,
+		"TYPE_ID_NODES_KEYS_RESPONSE":                       28,
+		"TYPE_ID_NODES_SIZE_RESPONSE":                       29,
+		"TYPE_ID_NODES_QUERY_REQUEST":                       30,
+		"TYPE_ID_NODES_QUERY_RESPONSE":                      31,
+		"TYPE_ID_MAP_EMPTY":                                 32,
+		"TYPE_ID_TIMESERIES_GROUP_COUNT":                    33,
+		"TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_REQUEST":    34,
+		"TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_RESPONSE":   35,
+		"TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_REQUEST":   36,
+		"TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_RESPONSE":  37,
+		"TYPE_ID_GET_STOP_RECORD_GROUP_COUNTS_REQUEST":      38,
+		"TYPE_ID_GET_STOP_RECORD_GROUP_COUNTS_RESPONSE":     39,
+		"TYPE_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS_REQUEST":  40,
+		"TYPE_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS_RESPONSE": 41,
+		"TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_REQUEST":  42,
+		"TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_RESPONSE": 43,
+		"TYPE_ID_LIST_PROMPT_RECORD_REQUEST":                44,
+		"TYPE_ID_LIST_PROMPT_RECORD_RESPONSE":               45,
+		"TYPE_ID_LIST_SESSION_RECORD_REQUEST":               46,
+		"TYPE_ID_LIST_SESSION_RECORD_RESPONSE":              47,
+		"TYPE_ID_LIST_STOP_RECORD_REQUEST":                  48,
+		"TYPE_ID_LIST_STOP_RECORD_RESPONSE":                 49,
+		"TYPE_ID_LIST_SUBAGENT_RECORD_REQUEST":              50,
+		"TYPE_ID_LIST_SUBAGENT_RECORD_RESPONSE":             51,
+		"TYPE_ID_LIST_TOOL_USE_RECORD_REQUEST":              52,
+		"TYPE_ID_LIST_TOOL_USE_RECORD_RESPONSE":             53,
 	}
 )
 
@@ -919,11 +727,11 @@ func (x TypeID) String() string {
 }
 
 func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_timedb_proto_enumTypes[12].Descriptor()
+	return file_services_timedb_proto_enumTypes[9].Descriptor()
 }
 
 func (TypeID) Type() protoreflect.EnumType {
-	return &file_services_timedb_proto_enumTypes[12]
+	return &file_services_timedb_proto_enumTypes[9]
 }
 
 func (x TypeID) Number() protoreflect.EnumNumber {
@@ -932,7 +740,7 @@ func (x TypeID) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use TypeID.Descriptor instead.
 func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{12}
+	return file_services_timedb_proto_rawDescGZIP(), []int{9}
 }
 
 type TimeDbStateServiceRpcId int32
@@ -1013,11 +821,11 @@ func (x TimeDbStateServiceRpcId) String() string {
 }
 
 func (TimeDbStateServiceRpcId) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_timedb_proto_enumTypes[13].Descriptor()
+	return file_services_timedb_proto_enumTypes[10].Descriptor()
 }
 
 func (TimeDbStateServiceRpcId) Type() protoreflect.EnumType {
-	return &file_services_timedb_proto_enumTypes[13]
+	return &file_services_timedb_proto_enumTypes[10]
 }
 
 func (x TimeDbStateServiceRpcId) Number() protoreflect.EnumNumber {
@@ -1026,7 +834,7 @@ func (x TimeDbStateServiceRpcId) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use TimeDbStateServiceRpcId.Descriptor instead.
 func (TimeDbStateServiceRpcId) EnumDescriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{13}
+	return file_services_timedb_proto_rawDescGZIP(), []int{10}
 }
 
 type TimedbConfigStateServiceRpcId int32
@@ -1074,11 +882,11 @@ func (x TimedbConfigStateServiceRpcId) String() string {
 }
 
 func (TimedbConfigStateServiceRpcId) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_timedb_proto_enumTypes[14].Descriptor()
+	return file_services_timedb_proto_enumTypes[11].Descriptor()
 }
 
 func (TimedbConfigStateServiceRpcId) Type() protoreflect.EnumType {
-	return &file_services_timedb_proto_enumTypes[14]
+	return &file_services_timedb_proto_enumTypes[11]
 }
 
 func (x TimedbConfigStateServiceRpcId) Number() protoreflect.EnumNumber {
@@ -1087,55 +895,46 @@ func (x TimedbConfigStateServiceRpcId) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use TimedbConfigStateServiceRpcId.Descriptor instead.
 func (TimedbConfigStateServiceRpcId) EnumDescriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{14}
+	return file_services_timedb_proto_rawDescGZIP(), []int{11}
 }
 
 type TimeseriesGroupCountsRpcId int32
 
 const (
-	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_UNSPECIFIED                              TimeseriesGroupCountsRpcId = 0
-	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_ACCESSORS                            TimeseriesGroupCountsRpcId = 1
-	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_MUTATORS                             TimeseriesGroupCountsRpcId = 2
-	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_EXECUTORS                            TimeseriesGroupCountsRpcId = 3
-	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS TimeseriesGroupCountsRpcId = 4
-	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS         TimeseriesGroupCountsRpcId = 5
-	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_PROMPT_RECORD_GROUP_COUNTS           TimeseriesGroupCountsRpcId = 6
-	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS    TimeseriesGroupCountsRpcId = 7
-	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SESSION_RECORD_GROUP_COUNTS          TimeseriesGroupCountsRpcId = 8
-	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_STOP_RECORD_GROUP_COUNTS             TimeseriesGroupCountsRpcId = 9
-	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS         TimeseriesGroupCountsRpcId = 10
-	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS         TimeseriesGroupCountsRpcId = 11
+	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_UNSPECIFIED                      TimeseriesGroupCountsRpcId = 0
+	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_ACCESSORS                    TimeseriesGroupCountsRpcId = 1
+	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_MUTATORS                     TimeseriesGroupCountsRpcId = 2
+	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_EXECUTORS                    TimeseriesGroupCountsRpcId = 3
+	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_PROMPT_RECORD_GROUP_COUNTS   TimeseriesGroupCountsRpcId = 4
+	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SESSION_RECORD_GROUP_COUNTS  TimeseriesGroupCountsRpcId = 5
+	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_STOP_RECORD_GROUP_COUNTS     TimeseriesGroupCountsRpcId = 6
+	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS TimeseriesGroupCountsRpcId = 7
+	TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS TimeseriesGroupCountsRpcId = 8
 )
 
 // Enum value maps for TimeseriesGroupCountsRpcId.
 var (
 	TimeseriesGroupCountsRpcId_name = map[int32]string{
-		0:  "TIMESERIES_GROUP_COUNTS_RPC_ID_UNSPECIFIED",
-		1:  "TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_ACCESSORS",
-		2:  "TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_MUTATORS",
-		3:  "TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_EXECUTORS",
-		4:  "TIMESERIES_GROUP_COUNTS_RPC_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS",
-		5:  "TIMESERIES_GROUP_COUNTS_RPC_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS",
-		6:  "TIMESERIES_GROUP_COUNTS_RPC_ID_GET_PROMPT_RECORD_GROUP_COUNTS",
-		7:  "TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS",
-		8:  "TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SESSION_RECORD_GROUP_COUNTS",
-		9:  "TIMESERIES_GROUP_COUNTS_RPC_ID_GET_STOP_RECORD_GROUP_COUNTS",
-		10: "TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS",
-		11: "TIMESERIES_GROUP_COUNTS_RPC_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS",
+		0: "TIMESERIES_GROUP_COUNTS_RPC_ID_UNSPECIFIED",
+		1: "TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_ACCESSORS",
+		2: "TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_MUTATORS",
+		3: "TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_EXECUTORS",
+		4: "TIMESERIES_GROUP_COUNTS_RPC_ID_GET_PROMPT_RECORD_GROUP_COUNTS",
+		5: "TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SESSION_RECORD_GROUP_COUNTS",
+		6: "TIMESERIES_GROUP_COUNTS_RPC_ID_GET_STOP_RECORD_GROUP_COUNTS",
+		7: "TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS",
+		8: "TIMESERIES_GROUP_COUNTS_RPC_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS",
 	}
 	TimeseriesGroupCountsRpcId_value = map[string]int32{
-		"TIMESERIES_GROUP_COUNTS_RPC_ID_UNSPECIFIED":                              0,
-		"TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_ACCESSORS":                            1,
-		"TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_MUTATORS":                             2,
-		"TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_EXECUTORS":                            3,
-		"TIMESERIES_GROUP_COUNTS_RPC_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS": 4,
-		"TIMESERIES_GROUP_COUNTS_RPC_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS":         5,
-		"TIMESERIES_GROUP_COUNTS_RPC_ID_GET_PROMPT_RECORD_GROUP_COUNTS":           6,
-		"TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS":    7,
-		"TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SESSION_RECORD_GROUP_COUNTS":          8,
-		"TIMESERIES_GROUP_COUNTS_RPC_ID_GET_STOP_RECORD_GROUP_COUNTS":             9,
-		"TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS":         10,
-		"TIMESERIES_GROUP_COUNTS_RPC_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS":         11,
+		"TIMESERIES_GROUP_COUNTS_RPC_ID_UNSPECIFIED":                      0,
+		"TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_ACCESSORS":                    1,
+		"TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_MUTATORS":                     2,
+		"TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_EXECUTORS":                    3,
+		"TIMESERIES_GROUP_COUNTS_RPC_ID_GET_PROMPT_RECORD_GROUP_COUNTS":   4,
+		"TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SESSION_RECORD_GROUP_COUNTS":  5,
+		"TIMESERIES_GROUP_COUNTS_RPC_ID_GET_STOP_RECORD_GROUP_COUNTS":     6,
+		"TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS": 7,
+		"TIMESERIES_GROUP_COUNTS_RPC_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS": 8,
 	}
 )
 
@@ -1150,11 +949,11 @@ func (x TimeseriesGroupCountsRpcId) String() string {
 }
 
 func (TimeseriesGroupCountsRpcId) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_timedb_proto_enumTypes[15].Descriptor()
+	return file_services_timedb_proto_enumTypes[12].Descriptor()
 }
 
 func (TimeseriesGroupCountsRpcId) Type() protoreflect.EnumType {
-	return &file_services_timedb_proto_enumTypes[15]
+	return &file_services_timedb_proto_enumTypes[12]
 }
 
 func (x TimeseriesGroupCountsRpcId) Number() protoreflect.EnumNumber {
@@ -1163,55 +962,46 @@ func (x TimeseriesGroupCountsRpcId) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use TimeseriesGroupCountsRpcId.Descriptor instead.
 func (TimeseriesGroupCountsRpcId) EnumDescriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{15}
+	return file_services_timedb_proto_rawDescGZIP(), []int{12}
 }
 
 type TimeseriesQueryRpcId int32
 
 const (
-	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_UNSPECIFIED                  TimeseriesQueryRpcId = 0
-	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_ALL_ACCESSORS                TimeseriesQueryRpcId = 1
-	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_ALL_MUTATORS                 TimeseriesQueryRpcId = 2
-	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_ALL_EXECUTORS                TimeseriesQueryRpcId = 3
-	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_GIT_LAB_ACTIVITY_RECORD TimeseriesQueryRpcId = 4
-	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_LLM_CALL_RECORD         TimeseriesQueryRpcId = 5
-	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_PROMPT_RECORD           TimeseriesQueryRpcId = 6
-	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_SCM_OPERATION_RECORD    TimeseriesQueryRpcId = 7
-	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_SESSION_RECORD          TimeseriesQueryRpcId = 8
-	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_STOP_RECORD             TimeseriesQueryRpcId = 9
-	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_SUBAGENT_RECORD         TimeseriesQueryRpcId = 10
-	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_TOOL_USE_RECORD         TimeseriesQueryRpcId = 11
+	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_UNSPECIFIED          TimeseriesQueryRpcId = 0
+	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_ALL_ACCESSORS        TimeseriesQueryRpcId = 1
+	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_ALL_MUTATORS         TimeseriesQueryRpcId = 2
+	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_ALL_EXECUTORS        TimeseriesQueryRpcId = 3
+	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_PROMPT_RECORD   TimeseriesQueryRpcId = 4
+	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_SESSION_RECORD  TimeseriesQueryRpcId = 5
+	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_STOP_RECORD     TimeseriesQueryRpcId = 6
+	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_SUBAGENT_RECORD TimeseriesQueryRpcId = 7
+	TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_TOOL_USE_RECORD TimeseriesQueryRpcId = 8
 )
 
 // Enum value maps for TimeseriesQueryRpcId.
 var (
 	TimeseriesQueryRpcId_name = map[int32]string{
-		0:  "TIMESERIES_QUERY_RPC_ID_UNSPECIFIED",
-		1:  "TIMESERIES_QUERY_RPC_ID_ALL_ACCESSORS",
-		2:  "TIMESERIES_QUERY_RPC_ID_ALL_MUTATORS",
-		3:  "TIMESERIES_QUERY_RPC_ID_ALL_EXECUTORS",
-		4:  "TIMESERIES_QUERY_RPC_ID_LIST_GIT_LAB_ACTIVITY_RECORD",
-		5:  "TIMESERIES_QUERY_RPC_ID_LIST_LLM_CALL_RECORD",
-		6:  "TIMESERIES_QUERY_RPC_ID_LIST_PROMPT_RECORD",
-		7:  "TIMESERIES_QUERY_RPC_ID_LIST_SCM_OPERATION_RECORD",
-		8:  "TIMESERIES_QUERY_RPC_ID_LIST_SESSION_RECORD",
-		9:  "TIMESERIES_QUERY_RPC_ID_LIST_STOP_RECORD",
-		10: "TIMESERIES_QUERY_RPC_ID_LIST_SUBAGENT_RECORD",
-		11: "TIMESERIES_QUERY_RPC_ID_LIST_TOOL_USE_RECORD",
+		0: "TIMESERIES_QUERY_RPC_ID_UNSPECIFIED",
+		1: "TIMESERIES_QUERY_RPC_ID_ALL_ACCESSORS",
+		2: "TIMESERIES_QUERY_RPC_ID_ALL_MUTATORS",
+		3: "TIMESERIES_QUERY_RPC_ID_ALL_EXECUTORS",
+		4: "TIMESERIES_QUERY_RPC_ID_LIST_PROMPT_RECORD",
+		5: "TIMESERIES_QUERY_RPC_ID_LIST_SESSION_RECORD",
+		6: "TIMESERIES_QUERY_RPC_ID_LIST_STOP_RECORD",
+		7: "TIMESERIES_QUERY_RPC_ID_LIST_SUBAGENT_RECORD",
+		8: "TIMESERIES_QUERY_RPC_ID_LIST_TOOL_USE_RECORD",
 	}
 	TimeseriesQueryRpcId_value = map[string]int32{
-		"TIMESERIES_QUERY_RPC_ID_UNSPECIFIED":                  0,
-		"TIMESERIES_QUERY_RPC_ID_ALL_ACCESSORS":                1,
-		"TIMESERIES_QUERY_RPC_ID_ALL_MUTATORS":                 2,
-		"TIMESERIES_QUERY_RPC_ID_ALL_EXECUTORS":                3,
-		"TIMESERIES_QUERY_RPC_ID_LIST_GIT_LAB_ACTIVITY_RECORD": 4,
-		"TIMESERIES_QUERY_RPC_ID_LIST_LLM_CALL_RECORD":         5,
-		"TIMESERIES_QUERY_RPC_ID_LIST_PROMPT_RECORD":           6,
-		"TIMESERIES_QUERY_RPC_ID_LIST_SCM_OPERATION_RECORD":    7,
-		"TIMESERIES_QUERY_RPC_ID_LIST_SESSION_RECORD":          8,
-		"TIMESERIES_QUERY_RPC_ID_LIST_STOP_RECORD":             9,
-		"TIMESERIES_QUERY_RPC_ID_LIST_SUBAGENT_RECORD":         10,
-		"TIMESERIES_QUERY_RPC_ID_LIST_TOOL_USE_RECORD":         11,
+		"TIMESERIES_QUERY_RPC_ID_UNSPECIFIED":          0,
+		"TIMESERIES_QUERY_RPC_ID_ALL_ACCESSORS":        1,
+		"TIMESERIES_QUERY_RPC_ID_ALL_MUTATORS":         2,
+		"TIMESERIES_QUERY_RPC_ID_ALL_EXECUTORS":        3,
+		"TIMESERIES_QUERY_RPC_ID_LIST_PROMPT_RECORD":   4,
+		"TIMESERIES_QUERY_RPC_ID_LIST_SESSION_RECORD":  5,
+		"TIMESERIES_QUERY_RPC_ID_LIST_STOP_RECORD":     6,
+		"TIMESERIES_QUERY_RPC_ID_LIST_SUBAGENT_RECORD": 7,
+		"TIMESERIES_QUERY_RPC_ID_LIST_TOOL_USE_RECORD": 8,
 	}
 )
 
@@ -1226,11 +1016,11 @@ func (x TimeseriesQueryRpcId) String() string {
 }
 
 func (TimeseriesQueryRpcId) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_timedb_proto_enumTypes[16].Descriptor()
+	return file_services_timedb_proto_enumTypes[13].Descriptor()
 }
 
 func (TimeseriesQueryRpcId) Type() protoreflect.EnumType {
-	return &file_services_timedb_proto_enumTypes[16]
+	return &file_services_timedb_proto_enumTypes[13]
 }
 
 func (x TimeseriesQueryRpcId) Number() protoreflect.EnumNumber {
@@ -1239,7 +1029,7 @@ func (x TimeseriesQueryRpcId) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use TimeseriesQueryRpcId.Descriptor instead.
 func (TimeseriesQueryRpcId) EnumDescriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{16}
+	return file_services_timedb_proto_rawDescGZIP(), []int{13}
 }
 
 // TimeRange is the query time window used by the generated timeseries query
@@ -4258,262 +4048,6 @@ func (x *TimeseriesGroupCount) GetNoop() bool {
 	return false
 }
 
-type GetGitLabActivityRecordGroupCountsRequest struct {
-	state         protoimpl.MessageState         `protogen:"open.v1"`
-	GroupBy       GitLabActivityRecordGroupField `protobuf:"varint,1,opt,name=group_by,json=groupBy,proto3,enum=timedb.GitLabActivityRecordGroupField" json:"group_by,omitempty"`
-	TimeRange     *TimeRange                     `protobuf:"bytes,2,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	TraceId       string                         `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                           `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetGitLabActivityRecordGroupCountsRequest) Reset() {
-	*x = GetGitLabActivityRecordGroupCountsRequest{}
-	mi := &file_services_timedb_proto_msgTypes[33]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetGitLabActivityRecordGroupCountsRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetGitLabActivityRecordGroupCountsRequest) ProtoMessage() {}
-
-func (x *GetGitLabActivityRecordGroupCountsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[33]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetGitLabActivityRecordGroupCountsRequest.ProtoReflect.Descriptor instead.
-func (*GetGitLabActivityRecordGroupCountsRequest) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{33}
-}
-
-func (x *GetGitLabActivityRecordGroupCountsRequest) GetGroupBy() GitLabActivityRecordGroupField {
-	if x != nil {
-		return x.GroupBy
-	}
-	return GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_UNSPECIFIED
-}
-
-func (x *GetGitLabActivityRecordGroupCountsRequest) GetTimeRange() *TimeRange {
-	if x != nil {
-		return x.TimeRange
-	}
-	return nil
-}
-
-func (x *GetGitLabActivityRecordGroupCountsRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *GetGitLabActivityRecordGroupCountsRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type GetGitLabActivityRecordGroupCountsResponse struct {
-	state         protoimpl.MessageState  `protogen:"open.v1"`
-	Counts        []*TimeseriesGroupCount `protobuf:"bytes,1,rep,name=counts,proto3" json:"counts,omitempty"`
-	TraceId       string                  `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                    `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetGitLabActivityRecordGroupCountsResponse) Reset() {
-	*x = GetGitLabActivityRecordGroupCountsResponse{}
-	mi := &file_services_timedb_proto_msgTypes[34]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetGitLabActivityRecordGroupCountsResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetGitLabActivityRecordGroupCountsResponse) ProtoMessage() {}
-
-func (x *GetGitLabActivityRecordGroupCountsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[34]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetGitLabActivityRecordGroupCountsResponse.ProtoReflect.Descriptor instead.
-func (*GetGitLabActivityRecordGroupCountsResponse) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{34}
-}
-
-func (x *GetGitLabActivityRecordGroupCountsResponse) GetCounts() []*TimeseriesGroupCount {
-	if x != nil {
-		return x.Counts
-	}
-	return nil
-}
-
-func (x *GetGitLabActivityRecordGroupCountsResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *GetGitLabActivityRecordGroupCountsResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type GetLlmCallRecordGroupCountsRequest struct {
-	state         protoimpl.MessageState  `protogen:"open.v1"`
-	GroupBy       LlmCallRecordGroupField `protobuf:"varint,1,opt,name=group_by,json=groupBy,proto3,enum=timedb.LlmCallRecordGroupField" json:"group_by,omitempty"`
-	TimeRange     *TimeRange              `protobuf:"bytes,2,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	TraceId       string                  `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                    `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetLlmCallRecordGroupCountsRequest) Reset() {
-	*x = GetLlmCallRecordGroupCountsRequest{}
-	mi := &file_services_timedb_proto_msgTypes[35]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetLlmCallRecordGroupCountsRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetLlmCallRecordGroupCountsRequest) ProtoMessage() {}
-
-func (x *GetLlmCallRecordGroupCountsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[35]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetLlmCallRecordGroupCountsRequest.ProtoReflect.Descriptor instead.
-func (*GetLlmCallRecordGroupCountsRequest) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{35}
-}
-
-func (x *GetLlmCallRecordGroupCountsRequest) GetGroupBy() LlmCallRecordGroupField {
-	if x != nil {
-		return x.GroupBy
-	}
-	return LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_UNSPECIFIED
-}
-
-func (x *GetLlmCallRecordGroupCountsRequest) GetTimeRange() *TimeRange {
-	if x != nil {
-		return x.TimeRange
-	}
-	return nil
-}
-
-func (x *GetLlmCallRecordGroupCountsRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *GetLlmCallRecordGroupCountsRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type GetLlmCallRecordGroupCountsResponse struct {
-	state         protoimpl.MessageState  `protogen:"open.v1"`
-	Counts        []*TimeseriesGroupCount `protobuf:"bytes,1,rep,name=counts,proto3" json:"counts,omitempty"`
-	TraceId       string                  `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                    `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetLlmCallRecordGroupCountsResponse) Reset() {
-	*x = GetLlmCallRecordGroupCountsResponse{}
-	mi := &file_services_timedb_proto_msgTypes[36]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetLlmCallRecordGroupCountsResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetLlmCallRecordGroupCountsResponse) ProtoMessage() {}
-
-func (x *GetLlmCallRecordGroupCountsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[36]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetLlmCallRecordGroupCountsResponse.ProtoReflect.Descriptor instead.
-func (*GetLlmCallRecordGroupCountsResponse) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{36}
-}
-
-func (x *GetLlmCallRecordGroupCountsResponse) GetCounts() []*TimeseriesGroupCount {
-	if x != nil {
-		return x.Counts
-	}
-	return nil
-}
-
-func (x *GetLlmCallRecordGroupCountsResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *GetLlmCallRecordGroupCountsResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 type GetPromptRecordGroupCountsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	GroupBy       PromptRecordGroupField `protobuf:"varint,1,opt,name=group_by,json=groupBy,proto3,enum=timedb.PromptRecordGroupField" json:"group_by,omitempty"`
@@ -4526,7 +4060,7 @@ type GetPromptRecordGroupCountsRequest struct {
 
 func (x *GetPromptRecordGroupCountsRequest) Reset() {
 	*x = GetPromptRecordGroupCountsRequest{}
-	mi := &file_services_timedb_proto_msgTypes[37]
+	mi := &file_services_timedb_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4538,7 +4072,7 @@ func (x *GetPromptRecordGroupCountsRequest) String() string {
 func (*GetPromptRecordGroupCountsRequest) ProtoMessage() {}
 
 func (x *GetPromptRecordGroupCountsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[37]
+	mi := &file_services_timedb_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4551,7 +4085,7 @@ func (x *GetPromptRecordGroupCountsRequest) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use GetPromptRecordGroupCountsRequest.ProtoReflect.Descriptor instead.
 func (*GetPromptRecordGroupCountsRequest) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{37}
+	return file_services_timedb_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *GetPromptRecordGroupCountsRequest) GetGroupBy() PromptRecordGroupField {
@@ -4593,7 +4127,7 @@ type GetPromptRecordGroupCountsResponse struct {
 
 func (x *GetPromptRecordGroupCountsResponse) Reset() {
 	*x = GetPromptRecordGroupCountsResponse{}
-	mi := &file_services_timedb_proto_msgTypes[38]
+	mi := &file_services_timedb_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4605,7 +4139,7 @@ func (x *GetPromptRecordGroupCountsResponse) String() string {
 func (*GetPromptRecordGroupCountsResponse) ProtoMessage() {}
 
 func (x *GetPromptRecordGroupCountsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[38]
+	mi := &file_services_timedb_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4618,7 +4152,7 @@ func (x *GetPromptRecordGroupCountsResponse) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use GetPromptRecordGroupCountsResponse.ProtoReflect.Descriptor instead.
 func (*GetPromptRecordGroupCountsResponse) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{38}
+	return file_services_timedb_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *GetPromptRecordGroupCountsResponse) GetCounts() []*TimeseriesGroupCount {
@@ -4642,134 +4176,6 @@ func (x *GetPromptRecordGroupCountsResponse) GetNoop() bool {
 	return false
 }
 
-type GetScmOperationRecordGroupCountsRequest struct {
-	state         protoimpl.MessageState       `protogen:"open.v1"`
-	GroupBy       ScmOperationRecordGroupField `protobuf:"varint,1,opt,name=group_by,json=groupBy,proto3,enum=timedb.ScmOperationRecordGroupField" json:"group_by,omitempty"`
-	TimeRange     *TimeRange                   `protobuf:"bytes,2,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	TraceId       string                       `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                         `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetScmOperationRecordGroupCountsRequest) Reset() {
-	*x = GetScmOperationRecordGroupCountsRequest{}
-	mi := &file_services_timedb_proto_msgTypes[39]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetScmOperationRecordGroupCountsRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetScmOperationRecordGroupCountsRequest) ProtoMessage() {}
-
-func (x *GetScmOperationRecordGroupCountsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[39]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetScmOperationRecordGroupCountsRequest.ProtoReflect.Descriptor instead.
-func (*GetScmOperationRecordGroupCountsRequest) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{39}
-}
-
-func (x *GetScmOperationRecordGroupCountsRequest) GetGroupBy() ScmOperationRecordGroupField {
-	if x != nil {
-		return x.GroupBy
-	}
-	return ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_UNSPECIFIED
-}
-
-func (x *GetScmOperationRecordGroupCountsRequest) GetTimeRange() *TimeRange {
-	if x != nil {
-		return x.TimeRange
-	}
-	return nil
-}
-
-func (x *GetScmOperationRecordGroupCountsRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *GetScmOperationRecordGroupCountsRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type GetScmOperationRecordGroupCountsResponse struct {
-	state         protoimpl.MessageState  `protogen:"open.v1"`
-	Counts        []*TimeseriesGroupCount `protobuf:"bytes,1,rep,name=counts,proto3" json:"counts,omitempty"`
-	TraceId       string                  `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                    `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetScmOperationRecordGroupCountsResponse) Reset() {
-	*x = GetScmOperationRecordGroupCountsResponse{}
-	mi := &file_services_timedb_proto_msgTypes[40]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetScmOperationRecordGroupCountsResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetScmOperationRecordGroupCountsResponse) ProtoMessage() {}
-
-func (x *GetScmOperationRecordGroupCountsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[40]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetScmOperationRecordGroupCountsResponse.ProtoReflect.Descriptor instead.
-func (*GetScmOperationRecordGroupCountsResponse) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{40}
-}
-
-func (x *GetScmOperationRecordGroupCountsResponse) GetCounts() []*TimeseriesGroupCount {
-	if x != nil {
-		return x.Counts
-	}
-	return nil
-}
-
-func (x *GetScmOperationRecordGroupCountsResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *GetScmOperationRecordGroupCountsResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 type GetSessionRecordGroupCountsRequest struct {
 	state         protoimpl.MessageState  `protogen:"open.v1"`
 	GroupBy       SessionRecordGroupField `protobuf:"varint,1,opt,name=group_by,json=groupBy,proto3,enum=timedb.SessionRecordGroupField" json:"group_by,omitempty"`
@@ -4782,7 +4188,7 @@ type GetSessionRecordGroupCountsRequest struct {
 
 func (x *GetSessionRecordGroupCountsRequest) Reset() {
 	*x = GetSessionRecordGroupCountsRequest{}
-	mi := &file_services_timedb_proto_msgTypes[41]
+	mi := &file_services_timedb_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4794,7 +4200,7 @@ func (x *GetSessionRecordGroupCountsRequest) String() string {
 func (*GetSessionRecordGroupCountsRequest) ProtoMessage() {}
 
 func (x *GetSessionRecordGroupCountsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[41]
+	mi := &file_services_timedb_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4807,7 +4213,7 @@ func (x *GetSessionRecordGroupCountsRequest) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use GetSessionRecordGroupCountsRequest.ProtoReflect.Descriptor instead.
 func (*GetSessionRecordGroupCountsRequest) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{41}
+	return file_services_timedb_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *GetSessionRecordGroupCountsRequest) GetGroupBy() SessionRecordGroupField {
@@ -4849,7 +4255,7 @@ type GetSessionRecordGroupCountsResponse struct {
 
 func (x *GetSessionRecordGroupCountsResponse) Reset() {
 	*x = GetSessionRecordGroupCountsResponse{}
-	mi := &file_services_timedb_proto_msgTypes[42]
+	mi := &file_services_timedb_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4861,7 +4267,7 @@ func (x *GetSessionRecordGroupCountsResponse) String() string {
 func (*GetSessionRecordGroupCountsResponse) ProtoMessage() {}
 
 func (x *GetSessionRecordGroupCountsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[42]
+	mi := &file_services_timedb_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4874,7 +4280,7 @@ func (x *GetSessionRecordGroupCountsResponse) ProtoReflect() protoreflect.Messag
 
 // Deprecated: Use GetSessionRecordGroupCountsResponse.ProtoReflect.Descriptor instead.
 func (*GetSessionRecordGroupCountsResponse) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{42}
+	return file_services_timedb_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *GetSessionRecordGroupCountsResponse) GetCounts() []*TimeseriesGroupCount {
@@ -4910,7 +4316,7 @@ type GetStopRecordGroupCountsRequest struct {
 
 func (x *GetStopRecordGroupCountsRequest) Reset() {
 	*x = GetStopRecordGroupCountsRequest{}
-	mi := &file_services_timedb_proto_msgTypes[43]
+	mi := &file_services_timedb_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4922,7 +4328,7 @@ func (x *GetStopRecordGroupCountsRequest) String() string {
 func (*GetStopRecordGroupCountsRequest) ProtoMessage() {}
 
 func (x *GetStopRecordGroupCountsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[43]
+	mi := &file_services_timedb_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4935,7 +4341,7 @@ func (x *GetStopRecordGroupCountsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetStopRecordGroupCountsRequest.ProtoReflect.Descriptor instead.
 func (*GetStopRecordGroupCountsRequest) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{43}
+	return file_services_timedb_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *GetStopRecordGroupCountsRequest) GetGroupBy() StopRecordGroupField {
@@ -4977,7 +4383,7 @@ type GetStopRecordGroupCountsResponse struct {
 
 func (x *GetStopRecordGroupCountsResponse) Reset() {
 	*x = GetStopRecordGroupCountsResponse{}
-	mi := &file_services_timedb_proto_msgTypes[44]
+	mi := &file_services_timedb_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4989,7 +4395,7 @@ func (x *GetStopRecordGroupCountsResponse) String() string {
 func (*GetStopRecordGroupCountsResponse) ProtoMessage() {}
 
 func (x *GetStopRecordGroupCountsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[44]
+	mi := &file_services_timedb_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5002,7 +4408,7 @@ func (x *GetStopRecordGroupCountsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetStopRecordGroupCountsResponse.ProtoReflect.Descriptor instead.
 func (*GetStopRecordGroupCountsResponse) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{44}
+	return file_services_timedb_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *GetStopRecordGroupCountsResponse) GetCounts() []*TimeseriesGroupCount {
@@ -5038,7 +4444,7 @@ type GetSubagentRecordGroupCountsRequest struct {
 
 func (x *GetSubagentRecordGroupCountsRequest) Reset() {
 	*x = GetSubagentRecordGroupCountsRequest{}
-	mi := &file_services_timedb_proto_msgTypes[45]
+	mi := &file_services_timedb_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5050,7 +4456,7 @@ func (x *GetSubagentRecordGroupCountsRequest) String() string {
 func (*GetSubagentRecordGroupCountsRequest) ProtoMessage() {}
 
 func (x *GetSubagentRecordGroupCountsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[45]
+	mi := &file_services_timedb_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5063,7 +4469,7 @@ func (x *GetSubagentRecordGroupCountsRequest) ProtoReflect() protoreflect.Messag
 
 // Deprecated: Use GetSubagentRecordGroupCountsRequest.ProtoReflect.Descriptor instead.
 func (*GetSubagentRecordGroupCountsRequest) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{45}
+	return file_services_timedb_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *GetSubagentRecordGroupCountsRequest) GetGroupBy() SubagentRecordGroupField {
@@ -5105,7 +4511,7 @@ type GetSubagentRecordGroupCountsResponse struct {
 
 func (x *GetSubagentRecordGroupCountsResponse) Reset() {
 	*x = GetSubagentRecordGroupCountsResponse{}
-	mi := &file_services_timedb_proto_msgTypes[46]
+	mi := &file_services_timedb_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5117,7 +4523,7 @@ func (x *GetSubagentRecordGroupCountsResponse) String() string {
 func (*GetSubagentRecordGroupCountsResponse) ProtoMessage() {}
 
 func (x *GetSubagentRecordGroupCountsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[46]
+	mi := &file_services_timedb_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5130,7 +4536,7 @@ func (x *GetSubagentRecordGroupCountsResponse) ProtoReflect() protoreflect.Messa
 
 // Deprecated: Use GetSubagentRecordGroupCountsResponse.ProtoReflect.Descriptor instead.
 func (*GetSubagentRecordGroupCountsResponse) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{46}
+	return file_services_timedb_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *GetSubagentRecordGroupCountsResponse) GetCounts() []*TimeseriesGroupCount {
@@ -5166,7 +4572,7 @@ type GetToolUseRecordGroupCountsRequest struct {
 
 func (x *GetToolUseRecordGroupCountsRequest) Reset() {
 	*x = GetToolUseRecordGroupCountsRequest{}
-	mi := &file_services_timedb_proto_msgTypes[47]
+	mi := &file_services_timedb_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5178,7 +4584,7 @@ func (x *GetToolUseRecordGroupCountsRequest) String() string {
 func (*GetToolUseRecordGroupCountsRequest) ProtoMessage() {}
 
 func (x *GetToolUseRecordGroupCountsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[47]
+	mi := &file_services_timedb_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5191,7 +4597,7 @@ func (x *GetToolUseRecordGroupCountsRequest) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use GetToolUseRecordGroupCountsRequest.ProtoReflect.Descriptor instead.
 func (*GetToolUseRecordGroupCountsRequest) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{47}
+	return file_services_timedb_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *GetToolUseRecordGroupCountsRequest) GetGroupBy() ToolUseRecordGroupField {
@@ -5233,7 +4639,7 @@ type GetToolUseRecordGroupCountsResponse struct {
 
 func (x *GetToolUseRecordGroupCountsResponse) Reset() {
 	*x = GetToolUseRecordGroupCountsResponse{}
-	mi := &file_services_timedb_proto_msgTypes[48]
+	mi := &file_services_timedb_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5245,7 +4651,7 @@ func (x *GetToolUseRecordGroupCountsResponse) String() string {
 func (*GetToolUseRecordGroupCountsResponse) ProtoMessage() {}
 
 func (x *GetToolUseRecordGroupCountsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[48]
+	mi := &file_services_timedb_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5258,7 +4664,7 @@ func (x *GetToolUseRecordGroupCountsResponse) ProtoReflect() protoreflect.Messag
 
 // Deprecated: Use GetToolUseRecordGroupCountsResponse.ProtoReflect.Descriptor instead.
 func (*GetToolUseRecordGroupCountsResponse) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{48}
+	return file_services_timedb_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *GetToolUseRecordGroupCountsResponse) GetCounts() []*TimeseriesGroupCount {
@@ -5282,310 +4688,6 @@ func (x *GetToolUseRecordGroupCountsResponse) GetNoop() bool {
 	return false
 }
 
-type ListGitLabActivityRecordRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	TimeRange     *TimeRange             `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	PageSize      int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	PageToken     string                 `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListGitLabActivityRecordRequest) Reset() {
-	*x = ListGitLabActivityRecordRequest{}
-	mi := &file_services_timedb_proto_msgTypes[49]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListGitLabActivityRecordRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListGitLabActivityRecordRequest) ProtoMessage() {}
-
-func (x *ListGitLabActivityRecordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[49]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListGitLabActivityRecordRequest.ProtoReflect.Descriptor instead.
-func (*ListGitLabActivityRecordRequest) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{49}
-}
-
-func (x *ListGitLabActivityRecordRequest) GetTimeRange() *TimeRange {
-	if x != nil {
-		return x.TimeRange
-	}
-	return nil
-}
-
-func (x *ListGitLabActivityRecordRequest) GetPageSize() int32 {
-	if x != nil {
-		return x.PageSize
-	}
-	return 0
-}
-
-func (x *ListGitLabActivityRecordRequest) GetPageToken() string {
-	if x != nil {
-		return x.PageToken
-	}
-	return ""
-}
-
-func (x *ListGitLabActivityRecordRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *ListGitLabActivityRecordRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type ListGitLabActivityRecordResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	RecordKeys    []string               `protobuf:"bytes,1,rep,name=record_keys,json=recordKeys,proto3" json:"record_keys,omitempty"`
-	NextPageToken string                 `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
-	TotalCount    int64                  `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListGitLabActivityRecordResponse) Reset() {
-	*x = ListGitLabActivityRecordResponse{}
-	mi := &file_services_timedb_proto_msgTypes[50]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListGitLabActivityRecordResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListGitLabActivityRecordResponse) ProtoMessage() {}
-
-func (x *ListGitLabActivityRecordResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[50]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListGitLabActivityRecordResponse.ProtoReflect.Descriptor instead.
-func (*ListGitLabActivityRecordResponse) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{50}
-}
-
-func (x *ListGitLabActivityRecordResponse) GetRecordKeys() []string {
-	if x != nil {
-		return x.RecordKeys
-	}
-	return nil
-}
-
-func (x *ListGitLabActivityRecordResponse) GetNextPageToken() string {
-	if x != nil {
-		return x.NextPageToken
-	}
-	return ""
-}
-
-func (x *ListGitLabActivityRecordResponse) GetTotalCount() int64 {
-	if x != nil {
-		return x.TotalCount
-	}
-	return 0
-}
-
-func (x *ListGitLabActivityRecordResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *ListGitLabActivityRecordResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type ListLlmCallRecordRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	TimeRange     *TimeRange             `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	PageSize      int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	PageToken     string                 `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListLlmCallRecordRequest) Reset() {
-	*x = ListLlmCallRecordRequest{}
-	mi := &file_services_timedb_proto_msgTypes[51]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListLlmCallRecordRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListLlmCallRecordRequest) ProtoMessage() {}
-
-func (x *ListLlmCallRecordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[51]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListLlmCallRecordRequest.ProtoReflect.Descriptor instead.
-func (*ListLlmCallRecordRequest) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{51}
-}
-
-func (x *ListLlmCallRecordRequest) GetTimeRange() *TimeRange {
-	if x != nil {
-		return x.TimeRange
-	}
-	return nil
-}
-
-func (x *ListLlmCallRecordRequest) GetPageSize() int32 {
-	if x != nil {
-		return x.PageSize
-	}
-	return 0
-}
-
-func (x *ListLlmCallRecordRequest) GetPageToken() string {
-	if x != nil {
-		return x.PageToken
-	}
-	return ""
-}
-
-func (x *ListLlmCallRecordRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *ListLlmCallRecordRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type ListLlmCallRecordResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	RecordKeys    []string               `protobuf:"bytes,1,rep,name=record_keys,json=recordKeys,proto3" json:"record_keys,omitempty"`
-	NextPageToken string                 `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
-	TotalCount    int64                  `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListLlmCallRecordResponse) Reset() {
-	*x = ListLlmCallRecordResponse{}
-	mi := &file_services_timedb_proto_msgTypes[52]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListLlmCallRecordResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListLlmCallRecordResponse) ProtoMessage() {}
-
-func (x *ListLlmCallRecordResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[52]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListLlmCallRecordResponse.ProtoReflect.Descriptor instead.
-func (*ListLlmCallRecordResponse) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{52}
-}
-
-func (x *ListLlmCallRecordResponse) GetRecordKeys() []string {
-	if x != nil {
-		return x.RecordKeys
-	}
-	return nil
-}
-
-func (x *ListLlmCallRecordResponse) GetNextPageToken() string {
-	if x != nil {
-		return x.NextPageToken
-	}
-	return ""
-}
-
-func (x *ListLlmCallRecordResponse) GetTotalCount() int64 {
-	if x != nil {
-		return x.TotalCount
-	}
-	return 0
-}
-
-func (x *ListLlmCallRecordResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *ListLlmCallRecordResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 type ListPromptRecordRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TimeRange     *TimeRange             `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
@@ -5599,7 +4701,7 @@ type ListPromptRecordRequest struct {
 
 func (x *ListPromptRecordRequest) Reset() {
 	*x = ListPromptRecordRequest{}
-	mi := &file_services_timedb_proto_msgTypes[53]
+	mi := &file_services_timedb_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5611,7 +4713,7 @@ func (x *ListPromptRecordRequest) String() string {
 func (*ListPromptRecordRequest) ProtoMessage() {}
 
 func (x *ListPromptRecordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[53]
+	mi := &file_services_timedb_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5624,7 +4726,7 @@ func (x *ListPromptRecordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPromptRecordRequest.ProtoReflect.Descriptor instead.
 func (*ListPromptRecordRequest) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{53}
+	return file_services_timedb_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *ListPromptRecordRequest) GetTimeRange() *TimeRange {
@@ -5675,7 +4777,7 @@ type ListPromptRecordResponse struct {
 
 func (x *ListPromptRecordResponse) Reset() {
 	*x = ListPromptRecordResponse{}
-	mi := &file_services_timedb_proto_msgTypes[54]
+	mi := &file_services_timedb_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5687,7 +4789,7 @@ func (x *ListPromptRecordResponse) String() string {
 func (*ListPromptRecordResponse) ProtoMessage() {}
 
 func (x *ListPromptRecordResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[54]
+	mi := &file_services_timedb_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5700,7 +4802,7 @@ func (x *ListPromptRecordResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPromptRecordResponse.ProtoReflect.Descriptor instead.
 func (*ListPromptRecordResponse) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{54}
+	return file_services_timedb_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *ListPromptRecordResponse) GetRecordKeys() []string {
@@ -5738,158 +4840,6 @@ func (x *ListPromptRecordResponse) GetNoop() bool {
 	return false
 }
 
-type ListScmOperationRecordRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	TimeRange     *TimeRange             `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
-	PageSize      int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	PageToken     string                 `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListScmOperationRecordRequest) Reset() {
-	*x = ListScmOperationRecordRequest{}
-	mi := &file_services_timedb_proto_msgTypes[55]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListScmOperationRecordRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListScmOperationRecordRequest) ProtoMessage() {}
-
-func (x *ListScmOperationRecordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[55]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListScmOperationRecordRequest.ProtoReflect.Descriptor instead.
-func (*ListScmOperationRecordRequest) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{55}
-}
-
-func (x *ListScmOperationRecordRequest) GetTimeRange() *TimeRange {
-	if x != nil {
-		return x.TimeRange
-	}
-	return nil
-}
-
-func (x *ListScmOperationRecordRequest) GetPageSize() int32 {
-	if x != nil {
-		return x.PageSize
-	}
-	return 0
-}
-
-func (x *ListScmOperationRecordRequest) GetPageToken() string {
-	if x != nil {
-		return x.PageToken
-	}
-	return ""
-}
-
-func (x *ListScmOperationRecordRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *ListScmOperationRecordRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type ListScmOperationRecordResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	RecordKeys    []string               `protobuf:"bytes,1,rep,name=record_keys,json=recordKeys,proto3" json:"record_keys,omitempty"`
-	NextPageToken string                 `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
-	TotalCount    int64                  `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListScmOperationRecordResponse) Reset() {
-	*x = ListScmOperationRecordResponse{}
-	mi := &file_services_timedb_proto_msgTypes[56]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListScmOperationRecordResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListScmOperationRecordResponse) ProtoMessage() {}
-
-func (x *ListScmOperationRecordResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[56]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListScmOperationRecordResponse.ProtoReflect.Descriptor instead.
-func (*ListScmOperationRecordResponse) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{56}
-}
-
-func (x *ListScmOperationRecordResponse) GetRecordKeys() []string {
-	if x != nil {
-		return x.RecordKeys
-	}
-	return nil
-}
-
-func (x *ListScmOperationRecordResponse) GetNextPageToken() string {
-	if x != nil {
-		return x.NextPageToken
-	}
-	return ""
-}
-
-func (x *ListScmOperationRecordResponse) GetTotalCount() int64 {
-	if x != nil {
-		return x.TotalCount
-	}
-	return 0
-}
-
-func (x *ListScmOperationRecordResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *ListScmOperationRecordResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 type ListSessionRecordRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TimeRange     *TimeRange             `protobuf:"bytes,1,opt,name=time_range,json=timeRange,proto3" json:"time_range,omitempty"`
@@ -5903,7 +4853,7 @@ type ListSessionRecordRequest struct {
 
 func (x *ListSessionRecordRequest) Reset() {
 	*x = ListSessionRecordRequest{}
-	mi := &file_services_timedb_proto_msgTypes[57]
+	mi := &file_services_timedb_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5915,7 +4865,7 @@ func (x *ListSessionRecordRequest) String() string {
 func (*ListSessionRecordRequest) ProtoMessage() {}
 
 func (x *ListSessionRecordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[57]
+	mi := &file_services_timedb_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5928,7 +4878,7 @@ func (x *ListSessionRecordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSessionRecordRequest.ProtoReflect.Descriptor instead.
 func (*ListSessionRecordRequest) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{57}
+	return file_services_timedb_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *ListSessionRecordRequest) GetTimeRange() *TimeRange {
@@ -5979,7 +4929,7 @@ type ListSessionRecordResponse struct {
 
 func (x *ListSessionRecordResponse) Reset() {
 	*x = ListSessionRecordResponse{}
-	mi := &file_services_timedb_proto_msgTypes[58]
+	mi := &file_services_timedb_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5991,7 +4941,7 @@ func (x *ListSessionRecordResponse) String() string {
 func (*ListSessionRecordResponse) ProtoMessage() {}
 
 func (x *ListSessionRecordResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[58]
+	mi := &file_services_timedb_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6004,7 +4954,7 @@ func (x *ListSessionRecordResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSessionRecordResponse.ProtoReflect.Descriptor instead.
 func (*ListSessionRecordResponse) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{58}
+	return file_services_timedb_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *ListSessionRecordResponse) GetRecordKeys() []string {
@@ -6055,7 +5005,7 @@ type ListStopRecordRequest struct {
 
 func (x *ListStopRecordRequest) Reset() {
 	*x = ListStopRecordRequest{}
-	mi := &file_services_timedb_proto_msgTypes[59]
+	mi := &file_services_timedb_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6067,7 +5017,7 @@ func (x *ListStopRecordRequest) String() string {
 func (*ListStopRecordRequest) ProtoMessage() {}
 
 func (x *ListStopRecordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[59]
+	mi := &file_services_timedb_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6080,7 +5030,7 @@ func (x *ListStopRecordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListStopRecordRequest.ProtoReflect.Descriptor instead.
 func (*ListStopRecordRequest) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{59}
+	return file_services_timedb_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *ListStopRecordRequest) GetTimeRange() *TimeRange {
@@ -6131,7 +5081,7 @@ type ListStopRecordResponse struct {
 
 func (x *ListStopRecordResponse) Reset() {
 	*x = ListStopRecordResponse{}
-	mi := &file_services_timedb_proto_msgTypes[60]
+	mi := &file_services_timedb_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6143,7 +5093,7 @@ func (x *ListStopRecordResponse) String() string {
 func (*ListStopRecordResponse) ProtoMessage() {}
 
 func (x *ListStopRecordResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[60]
+	mi := &file_services_timedb_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6156,7 +5106,7 @@ func (x *ListStopRecordResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListStopRecordResponse.ProtoReflect.Descriptor instead.
 func (*ListStopRecordResponse) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{60}
+	return file_services_timedb_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *ListStopRecordResponse) GetRecordKeys() []string {
@@ -6207,7 +5157,7 @@ type ListSubagentRecordRequest struct {
 
 func (x *ListSubagentRecordRequest) Reset() {
 	*x = ListSubagentRecordRequest{}
-	mi := &file_services_timedb_proto_msgTypes[61]
+	mi := &file_services_timedb_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6219,7 +5169,7 @@ func (x *ListSubagentRecordRequest) String() string {
 func (*ListSubagentRecordRequest) ProtoMessage() {}
 
 func (x *ListSubagentRecordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[61]
+	mi := &file_services_timedb_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6232,7 +5182,7 @@ func (x *ListSubagentRecordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSubagentRecordRequest.ProtoReflect.Descriptor instead.
 func (*ListSubagentRecordRequest) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{61}
+	return file_services_timedb_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *ListSubagentRecordRequest) GetTimeRange() *TimeRange {
@@ -6283,7 +5233,7 @@ type ListSubagentRecordResponse struct {
 
 func (x *ListSubagentRecordResponse) Reset() {
 	*x = ListSubagentRecordResponse{}
-	mi := &file_services_timedb_proto_msgTypes[62]
+	mi := &file_services_timedb_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6295,7 +5245,7 @@ func (x *ListSubagentRecordResponse) String() string {
 func (*ListSubagentRecordResponse) ProtoMessage() {}
 
 func (x *ListSubagentRecordResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[62]
+	mi := &file_services_timedb_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6308,7 +5258,7 @@ func (x *ListSubagentRecordResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSubagentRecordResponse.ProtoReflect.Descriptor instead.
 func (*ListSubagentRecordResponse) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{62}
+	return file_services_timedb_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *ListSubagentRecordResponse) GetRecordKeys() []string {
@@ -6359,7 +5309,7 @@ type ListToolUseRecordRequest struct {
 
 func (x *ListToolUseRecordRequest) Reset() {
 	*x = ListToolUseRecordRequest{}
-	mi := &file_services_timedb_proto_msgTypes[63]
+	mi := &file_services_timedb_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6371,7 +5321,7 @@ func (x *ListToolUseRecordRequest) String() string {
 func (*ListToolUseRecordRequest) ProtoMessage() {}
 
 func (x *ListToolUseRecordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[63]
+	mi := &file_services_timedb_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6384,7 +5334,7 @@ func (x *ListToolUseRecordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListToolUseRecordRequest.ProtoReflect.Descriptor instead.
 func (*ListToolUseRecordRequest) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{63}
+	return file_services_timedb_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *ListToolUseRecordRequest) GetTimeRange() *TimeRange {
@@ -6435,7 +5385,7 @@ type ListToolUseRecordResponse struct {
 
 func (x *ListToolUseRecordResponse) Reset() {
 	*x = ListToolUseRecordResponse{}
-	mi := &file_services_timedb_proto_msgTypes[64]
+	mi := &file_services_timedb_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6447,7 +5397,7 @@ func (x *ListToolUseRecordResponse) String() string {
 func (*ListToolUseRecordResponse) ProtoMessage() {}
 
 func (x *ListToolUseRecordResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_timedb_proto_msgTypes[64]
+	mi := &file_services_timedb_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6460,7 +5410,7 @@ func (x *ListToolUseRecordResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListToolUseRecordResponse.ProtoReflect.Descriptor instead.
 func (*ListToolUseRecordResponse) Descriptor() ([]byte, []int) {
-	return file_services_timedb_proto_rawDescGZIP(), []int{64}
+	return file_services_timedb_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *ListToolUseRecordResponse) GetRecordKeys() []string {
@@ -6793,26 +5743,6 @@ const file_services_timedb_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05count\x18\x02 \x01(\x03R\x05count\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd1\x01\n" +
-	")GetGitLabActivityRecordGroupCountsRequest\x12A\n" +
-	"\bgroup_by\x18\x01 \x01(\x0e2&.timedb.GitLabActivityRecordGroupFieldR\agroupBy\x120\n" +
-	"\n" +
-	"time_range\x18\x02 \x01(\v2\x11.timedb.TimeRangeR\ttimeRange\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x93\x01\n" +
-	"*GetGitLabActivityRecordGroupCountsResponse\x124\n" +
-	"\x06counts\x18\x01 \x03(\v2\x1c.timedb.TimeseriesGroupCountR\x06counts\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc3\x01\n" +
-	"\"GetLlmCallRecordGroupCountsRequest\x12:\n" +
-	"\bgroup_by\x18\x01 \x01(\x0e2\x1f.timedb.LlmCallRecordGroupFieldR\agroupBy\x120\n" +
-	"\n" +
-	"time_range\x18\x02 \x01(\v2\x11.timedb.TimeRangeR\ttimeRange\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x8c\x01\n" +
-	"#GetLlmCallRecordGroupCountsResponse\x124\n" +
-	"\x06counts\x18\x01 \x03(\v2\x1c.timedb.TimeseriesGroupCountR\x06counts\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc1\x01\n" +
 	"!GetPromptRecordGroupCountsRequest\x129\n" +
 	"\bgroup_by\x18\x01 \x01(\x0e2\x1e.timedb.PromptRecordGroupFieldR\agroupBy\x120\n" +
@@ -6821,16 +5751,6 @@ const file_services_timedb_proto_rawDesc = "" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x8b\x01\n" +
 	"\"GetPromptRecordGroupCountsResponse\x124\n" +
-	"\x06counts\x18\x01 \x03(\v2\x1c.timedb.TimeseriesGroupCountR\x06counts\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xcd\x01\n" +
-	"'GetScmOperationRecordGroupCountsRequest\x12?\n" +
-	"\bgroup_by\x18\x01 \x01(\x0e2$.timedb.ScmOperationRecordGroupFieldR\agroupBy\x120\n" +
-	"\n" +
-	"time_range\x18\x02 \x01(\v2\x11.timedb.TimeRangeR\ttimeRange\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x91\x01\n" +
-	"(GetScmOperationRecordGroupCountsResponse\x124\n" +
 	"\x06counts\x18\x01 \x03(\v2\x1c.timedb.TimeseriesGroupCountR\x06counts\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc3\x01\n" +
@@ -6873,38 +5793,6 @@ const file_services_timedb_proto_rawDesc = "" +
 	"#GetToolUseRecordGroupCountsResponse\x124\n" +
 	"\x06counts\x18\x01 \x03(\v2\x1c.timedb.TimeseriesGroupCountR\x06counts\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc0\x01\n" +
-	"\x1fListGitLabActivityRecordRequest\x120\n" +
-	"\n" +
-	"time_range\x18\x01 \x01(\v2\x11.timedb.TimeRangeR\ttimeRange\x12\x1b\n" +
-	"\tpage_size\x18\x02 \x01(\x05R\bpageSize\x12\x1d\n" +
-	"\n" +
-	"page_token\x18\x03 \x01(\tR\tpageToken\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xbd\x01\n" +
-	" ListGitLabActivityRecordResponse\x12\x1f\n" +
-	"\vrecord_keys\x18\x01 \x03(\tR\n" +
-	"recordKeys\x12&\n" +
-	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1f\n" +
-	"\vtotal_count\x18\x03 \x01(\x03R\n" +
-	"totalCount\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb9\x01\n" +
-	"\x18ListLlmCallRecordRequest\x120\n" +
-	"\n" +
-	"time_range\x18\x01 \x01(\v2\x11.timedb.TimeRangeR\ttimeRange\x12\x1b\n" +
-	"\tpage_size\x18\x02 \x01(\x05R\bpageSize\x12\x1d\n" +
-	"\n" +
-	"page_token\x18\x03 \x01(\tR\tpageToken\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb6\x01\n" +
-	"\x19ListLlmCallRecordResponse\x12\x1f\n" +
-	"\vrecord_keys\x18\x01 \x03(\tR\n" +
-	"recordKeys\x12&\n" +
-	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1f\n" +
-	"\vtotal_count\x18\x03 \x01(\x03R\n" +
-	"totalCount\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb8\x01\n" +
 	"\x17ListPromptRecordRequest\x120\n" +
 	"\n" +
@@ -6915,22 +5803,6 @@ const file_services_timedb_proto_rawDesc = "" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb5\x01\n" +
 	"\x18ListPromptRecordResponse\x12\x1f\n" +
-	"\vrecord_keys\x18\x01 \x03(\tR\n" +
-	"recordKeys\x12&\n" +
-	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1f\n" +
-	"\vtotal_count\x18\x03 \x01(\x03R\n" +
-	"totalCount\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xbe\x01\n" +
-	"\x1dListScmOperationRecordRequest\x120\n" +
-	"\n" +
-	"time_range\x18\x01 \x01(\v2\x11.timedb.TimeRangeR\ttimeRange\x12\x1b\n" +
-	"\tpage_size\x18\x02 \x01(\x05R\bpageSize\x12\x1d\n" +
-	"\n" +
-	"page_token\x18\x03 \x01(\tR\tpageToken\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xbb\x01\n" +
-	"\x1eListScmOperationRecordResponse\x12\x1f\n" +
 	"\vrecord_keys\x18\x01 \x03(\tR\n" +
 	"recordKeys\x12&\n" +
 	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1f\n" +
@@ -7028,26 +5900,11 @@ const file_services_timedb_proto_rawDesc = "" +
 	"\tLogicalOp\x12\x1a\n" +
 	"\x16LOGICAL_OP_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eLOGICAL_OP_AND\x10\x01\x12\x11\n" +
-	"\rLOGICAL_OP_OR\x10\x02*\xb4\x02\n" +
-	"\x1eGitLabActivityRecordGroupField\x123\n" +
-	"/GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_UNSPECIFIED\x10\x00\x126\n" +
-	"2GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_SCHEME_VERSION\x10\x01\x127\n" +
-	"3GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_AUTHOR_USERNAME\x10\x02\x122\n" +
-	".GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_EVENT_TYPE\x10\x03\x128\n" +
-	"4GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_INGESTION_SOURCE\x10\x04*\xc2\x01\n" +
-	"\x17LlmCallRecordGroupField\x12+\n" +
-	"'LLM_CALL_RECORD_GROUP_FIELD_UNSPECIFIED\x10\x00\x12(\n" +
-	"$LLM_CALL_RECORD_GROUP_FIELD_PROVIDER\x10\x01\x12%\n" +
-	"!LLM_CALL_RECORD_GROUP_FIELD_MODEL\x10\x02\x12)\n" +
-	"%LLM_CALL_RECORD_GROUP_FIELD_OPERATION\x10\x03*\x98\x01\n" +
+	"\rLOGICAL_OP_OR\x10\x02*\x98\x01\n" +
 	"\x16PromptRecordGroupField\x12)\n" +
 	"%PROMPT_RECORD_GROUP_FIELD_UNSPECIFIED\x10\x00\x12(\n" +
 	"$PROMPT_RECORD_GROUP_FIELD_EVENT_TYPE\x10\x01\x12)\n" +
-	"%PROMPT_RECORD_GROUP_FIELD_SENSOR_TYPE\x10\x02*\xaf\x01\n" +
-	"\x1cScmOperationRecordGroupField\x120\n" +
-	",SCM_OPERATION_RECORD_GROUP_FIELD_UNSPECIFIED\x10\x00\x12-\n" +
-	")SCM_OPERATION_RECORD_GROUP_FIELD_PROVIDER\x10\x01\x12.\n" +
-	"*SCM_OPERATION_RECORD_GROUP_FIELD_OPERATION\x10\x02*\x99\x02\n" +
+	"%PROMPT_RECORD_GROUP_FIELD_SENSOR_TYPE\x10\x02*\x99\x02\n" +
 	"\x17SessionRecordGroupField\x12*\n" +
 	"&SESSION_RECORD_GROUP_FIELD_UNSPECIFIED\x10\x00\x12)\n" +
 	"%SESSION_RECORD_GROUP_FIELD_EVENT_TYPE\x10\x01\x12*\n" +
@@ -7070,7 +5927,7 @@ const file_services_timedb_proto_rawDesc = "" +
 	"'TOOL_USE_RECORD_GROUP_FIELD_UNSPECIFIED\x10\x00\x12*\n" +
 	"&TOOL_USE_RECORD_GROUP_FIELD_EVENT_TYPE\x10\x01\x12+\n" +
 	"'TOOL_USE_RECORD_GROUP_FIELD_SENSOR_TYPE\x10\x02\x12)\n" +
-	"%TOOL_USE_RECORD_GROUP_FIELD_TOOL_NAME\x10\x03*\x88\x14\n" +
+	"%TOOL_USE_RECORD_GROUP_FIELD_TOOL_NAME\x10\x03*\x8e\x0f\n" +
 	"\x06TypeID\x12\x17\n" +
 	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x16\n" +
 	"\x12TYPE_ID_TIME_RANGE\x10\x01\x12\x12\n" +
@@ -7106,39 +5963,27 @@ const file_services_timedb_proto_rawDesc = "" +
 	"\x1bTYPE_ID_NODES_QUERY_REQUEST\x10\x1e\x12 \n" +
 	"\x1cTYPE_ID_NODES_QUERY_RESPONSE\x10\x1f\x12\x15\n" +
 	"\x11TYPE_ID_MAP_EMPTY\x10 \x12\"\n" +
-	"\x1eTYPE_ID_TIMESERIES_GROUP_COUNT\x10!\x12<\n" +
-	"8TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_REQUEST\x10\"\x12=\n" +
-	"9TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_RESPONSE\x10#\x124\n" +
-	"0TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_REQUEST\x10$\x125\n" +
-	"1TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_RESPONSE\x10%\x122\n" +
-	".TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_REQUEST\x10&\x123\n" +
-	"/TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_RESPONSE\x10'\x129\n" +
-	"5TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_REQUEST\x10(\x12:\n" +
-	"6TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_RESPONSE\x10)\x123\n" +
-	"/TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_REQUEST\x10*\x124\n" +
-	"0TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_RESPONSE\x10+\x120\n" +
-	",TYPE_ID_GET_STOP_RECORD_GROUP_COUNTS_REQUEST\x10,\x121\n" +
-	"-TYPE_ID_GET_STOP_RECORD_GROUP_COUNTS_RESPONSE\x10-\x124\n" +
-	"0TYPE_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS_REQUEST\x10.\x125\n" +
-	"1TYPE_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS_RESPONSE\x10/\x124\n" +
-	"0TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_REQUEST\x100\x125\n" +
-	"1TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_RESPONSE\x101\x120\n" +
-	",TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_REQUEST\x102\x121\n" +
-	"-TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE\x103\x12(\n" +
-	"$TYPE_ID_LIST_LLM_CALL_RECORD_REQUEST\x104\x12)\n" +
-	"%TYPE_ID_LIST_LLM_CALL_RECORD_RESPONSE\x105\x12&\n" +
-	"\"TYPE_ID_LIST_PROMPT_RECORD_REQUEST\x106\x12'\n" +
-	"#TYPE_ID_LIST_PROMPT_RECORD_RESPONSE\x107\x12-\n" +
-	")TYPE_ID_LIST_SCM_OPERATION_RECORD_REQUEST\x108\x12.\n" +
-	"*TYPE_ID_LIST_SCM_OPERATION_RECORD_RESPONSE\x109\x12'\n" +
-	"#TYPE_ID_LIST_SESSION_RECORD_REQUEST\x10:\x12(\n" +
-	"$TYPE_ID_LIST_SESSION_RECORD_RESPONSE\x10;\x12$\n" +
-	" TYPE_ID_LIST_STOP_RECORD_REQUEST\x10<\x12%\n" +
-	"!TYPE_ID_LIST_STOP_RECORD_RESPONSE\x10=\x12(\n" +
-	"$TYPE_ID_LIST_SUBAGENT_RECORD_REQUEST\x10>\x12)\n" +
-	"%TYPE_ID_LIST_SUBAGENT_RECORD_RESPONSE\x10?\x12(\n" +
-	"$TYPE_ID_LIST_TOOL_USE_RECORD_REQUEST\x10@\x12)\n" +
-	"%TYPE_ID_LIST_TOOL_USE_RECORD_RESPONSE\x10A*\xee\x06\n" +
+	"\x1eTYPE_ID_TIMESERIES_GROUP_COUNT\x10!\x122\n" +
+	".TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_REQUEST\x10\"\x123\n" +
+	"/TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_RESPONSE\x10#\x123\n" +
+	"/TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_REQUEST\x10$\x124\n" +
+	"0TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_RESPONSE\x10%\x120\n" +
+	",TYPE_ID_GET_STOP_RECORD_GROUP_COUNTS_REQUEST\x10&\x121\n" +
+	"-TYPE_ID_GET_STOP_RECORD_GROUP_COUNTS_RESPONSE\x10'\x124\n" +
+	"0TYPE_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS_REQUEST\x10(\x125\n" +
+	"1TYPE_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS_RESPONSE\x10)\x124\n" +
+	"0TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_REQUEST\x10*\x125\n" +
+	"1TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_RESPONSE\x10+\x12&\n" +
+	"\"TYPE_ID_LIST_PROMPT_RECORD_REQUEST\x10,\x12'\n" +
+	"#TYPE_ID_LIST_PROMPT_RECORD_RESPONSE\x10-\x12'\n" +
+	"#TYPE_ID_LIST_SESSION_RECORD_REQUEST\x10.\x12(\n" +
+	"$TYPE_ID_LIST_SESSION_RECORD_RESPONSE\x10/\x12$\n" +
+	" TYPE_ID_LIST_STOP_RECORD_REQUEST\x100\x12%\n" +
+	"!TYPE_ID_LIST_STOP_RECORD_RESPONSE\x101\x12(\n" +
+	"$TYPE_ID_LIST_SUBAGENT_RECORD_REQUEST\x102\x12)\n" +
+	"%TYPE_ID_LIST_SUBAGENT_RECORD_RESPONSE\x103\x12(\n" +
+	"$TYPE_ID_LIST_TOOL_USE_RECORD_REQUEST\x104\x12)\n" +
+	"%TYPE_ID_LIST_TOOL_USE_RECORD_RESPONSE\x105*\xee\x06\n" +
 	"\x17TimeDbStateServiceRpcId\x12,\n" +
 	"(TIME_DB_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x12.\n" +
 	"*TIME_DB_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x12-\n" +
@@ -7166,35 +6011,27 @@ const file_services_timedb_proto_rawDesc = "" +
 	"0TIMEDB_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x121\n" +
 	"-TIMEDB_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x121\n" +
 	"-TIMEDB_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x123\n" +
-	"/TIMEDB_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x06*\x8f\x06\n" +
+	"/TIMEDB_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x06*\xb3\x04\n" +
 	"\x1aTimeseriesGroupCountsRpcId\x12.\n" +
 	"*TIMESERIES_GROUP_COUNTS_RPC_ID_UNSPECIFIED\x10\x00\x120\n" +
 	",TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_ACCESSORS\x10\x01\x12/\n" +
 	"+TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_MUTATORS\x10\x02\x120\n" +
-	",TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_EXECUTORS\x10\x03\x12K\n" +
-	"GTIMESERIES_GROUP_COUNTS_RPC_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS\x10\x04\x12C\n" +
-	"?TIMESERIES_GROUP_COUNTS_RPC_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS\x10\x05\x12A\n" +
-	"=TIMESERIES_GROUP_COUNTS_RPC_ID_GET_PROMPT_RECORD_GROUP_COUNTS\x10\x06\x12H\n" +
-	"DTIMESERIES_GROUP_COUNTS_RPC_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS\x10\a\x12B\n" +
-	">TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SESSION_RECORD_GROUP_COUNTS\x10\b\x12?\n" +
-	";TIMESERIES_GROUP_COUNTS_RPC_ID_GET_STOP_RECORD_GROUP_COUNTS\x10\t\x12C\n" +
-	"?TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS\x10\n" +
-	"\x12C\n" +
-	"?TIMESERIES_GROUP_COUNTS_RPC_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS\x10\v*\xd5\x04\n" +
+	",TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_EXECUTORS\x10\x03\x12A\n" +
+	"=TIMESERIES_GROUP_COUNTS_RPC_ID_GET_PROMPT_RECORD_GROUP_COUNTS\x10\x04\x12B\n" +
+	">TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SESSION_RECORD_GROUP_COUNTS\x10\x05\x12?\n" +
+	";TIMESERIES_GROUP_COUNTS_RPC_ID_GET_STOP_RECORD_GROUP_COUNTS\x10\x06\x12C\n" +
+	"?TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS\x10\a\x12C\n" +
+	"?TIMESERIES_GROUP_COUNTS_RPC_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS\x10\b*\xb2\x03\n" +
 	"\x14TimeseriesQueryRpcId\x12'\n" +
 	"#TIMESERIES_QUERY_RPC_ID_UNSPECIFIED\x10\x00\x12)\n" +
 	"%TIMESERIES_QUERY_RPC_ID_ALL_ACCESSORS\x10\x01\x12(\n" +
 	"$TIMESERIES_QUERY_RPC_ID_ALL_MUTATORS\x10\x02\x12)\n" +
-	"%TIMESERIES_QUERY_RPC_ID_ALL_EXECUTORS\x10\x03\x128\n" +
-	"4TIMESERIES_QUERY_RPC_ID_LIST_GIT_LAB_ACTIVITY_RECORD\x10\x04\x120\n" +
-	",TIMESERIES_QUERY_RPC_ID_LIST_LLM_CALL_RECORD\x10\x05\x12.\n" +
-	"*TIMESERIES_QUERY_RPC_ID_LIST_PROMPT_RECORD\x10\x06\x125\n" +
-	"1TIMESERIES_QUERY_RPC_ID_LIST_SCM_OPERATION_RECORD\x10\a\x12/\n" +
-	"+TIMESERIES_QUERY_RPC_ID_LIST_SESSION_RECORD\x10\b\x12,\n" +
-	"(TIMESERIES_QUERY_RPC_ID_LIST_STOP_RECORD\x10\t\x120\n" +
-	",TIMESERIES_QUERY_RPC_ID_LIST_SUBAGENT_RECORD\x10\n" +
-	"\x120\n" +
-	",TIMESERIES_QUERY_RPC_ID_LIST_TOOL_USE_RECORD\x10\v2\xc1\a\n" +
+	"%TIMESERIES_QUERY_RPC_ID_ALL_EXECUTORS\x10\x03\x12.\n" +
+	"*TIMESERIES_QUERY_RPC_ID_LIST_PROMPT_RECORD\x10\x04\x12/\n" +
+	"+TIMESERIES_QUERY_RPC_ID_LIST_SESSION_RECORD\x10\x05\x12,\n" +
+	"(TIMESERIES_QUERY_RPC_ID_LIST_STOP_RECORD\x10\x06\x120\n" +
+	",TIMESERIES_QUERY_RPC_ID_LIST_SUBAGENT_RECORD\x10\a\x120\n" +
+	",TIMESERIES_QUERY_RPC_ID_LIST_TOOL_USE_RECORD\x10\b2\xc1\a\n" +
 	"\x12TimeDbStateService\x12?\n" +
 	"\bGetNodes\x12\x17.timedb.NodesGetRequest\x1a\x1a.timedb.NodesValueResponse\x12?\n" +
 	"\bPutNodes\x12\x17.timedb.NodesPutRequest\x1a\x1a.timedb.NodesValueResponse\x125\n" +
@@ -7216,22 +6053,16 @@ const file_services_timedb_proto_rawDesc = "" +
 	"\x18TimedbConfigStateService\x120\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x0e.timedb.Config\x12+\n" +
 	"\tSetConfig\x12\x0e.timedb.Config\x1a\x0e.timedb.Config\x124\n" +
-	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x0e.timedb.Config0\x01\x1a\x04\xea\x97\"\x002\x81\b\n" +
-	"\x15TimeseriesGroupCounts\x12\x8b\x01\n" +
-	"\"GetGitLabActivityRecordGroupCounts\x121.timedb.GetGitLabActivityRecordGroupCountsRequest\x1a2.timedb.GetGitLabActivityRecordGroupCountsResponse\x12v\n" +
-	"\x1bGetLlmCallRecordGroupCounts\x12*.timedb.GetLlmCallRecordGroupCountsRequest\x1a+.timedb.GetLlmCallRecordGroupCountsResponse\x12s\n" +
-	"\x1aGetPromptRecordGroupCounts\x12).timedb.GetPromptRecordGroupCountsRequest\x1a*.timedb.GetPromptRecordGroupCountsResponse\x12\x85\x01\n" +
-	" GetScmOperationRecordGroupCounts\x12/.timedb.GetScmOperationRecordGroupCountsRequest\x1a0.timedb.GetScmOperationRecordGroupCountsResponse\x12v\n" +
+	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x0e.timedb.Config0\x01\x1a\x04\xea\x97\"\x002\xf3\x04\n" +
+	"\x15TimeseriesGroupCounts\x12s\n" +
+	"\x1aGetPromptRecordGroupCounts\x12).timedb.GetPromptRecordGroupCountsRequest\x1a*.timedb.GetPromptRecordGroupCountsResponse\x12v\n" +
 	"\x1bGetSessionRecordGroupCounts\x12*.timedb.GetSessionRecordGroupCountsRequest\x1a+.timedb.GetSessionRecordGroupCountsResponse\x12m\n" +
 	"\x18GetStopRecordGroupCounts\x12'.timedb.GetStopRecordGroupCountsRequest\x1a(.timedb.GetStopRecordGroupCountsResponse\x12y\n" +
 	"\x1cGetSubagentRecordGroupCounts\x12+.timedb.GetSubagentRecordGroupCountsRequest\x1a,.timedb.GetSubagentRecordGroupCountsResponse\x12v\n" +
 	"\x1bGetToolUseRecordGroupCounts\x12*.timedb.GetToolUseRecordGroupCountsRequest\x1a+.timedb.GetToolUseRecordGroupCountsResponse\x1a\v\xea\x97\"\a\n" +
-	"\x05argus2\xaa\a\n" +
-	"\x0fTimeseriesQuery\x12\x81\x01\n" +
-	"\x18ListGitLabActivityRecord\x12'.timedb.ListGitLabActivityRecordRequest\x1a(.timedb.ListGitLabActivityRecordResponse\"\x12\xf2\x88'\x0e\b\x03\x12\bevent_id(d\x12l\n" +
-	"\x11ListLlmCallRecord\x12 .timedb.ListLlmCallRecordRequest\x1a!.timedb.ListLlmCallRecordResponse\"\x12\xf2\x88'\x0e\b\x03\x12\bevent_id(d\x12i\n" +
-	"\x10ListPromptRecord\x12\x1f.timedb.ListPromptRecordRequest\x1a .timedb.ListPromptRecordResponse\"\x12\xf2\x88'\x0e\b\x03\x12\bevent_id(d\x12{\n" +
-	"\x16ListScmOperationRecord\x12%.timedb.ListScmOperationRecordRequest\x1a&.timedb.ListScmOperationRecordResponse\"\x12\xf2\x88'\x0e\b\x03\x12\bevent_id(d\x12l\n" +
+	"\x05argus2\xbb\x04\n" +
+	"\x0fTimeseriesQuery\x12i\n" +
+	"\x10ListPromptRecord\x12\x1f.timedb.ListPromptRecordRequest\x1a .timedb.ListPromptRecordResponse\"\x12\xf2\x88'\x0e\b\x03\x12\bevent_id(d\x12l\n" +
 	"\x11ListSessionRecord\x12 .timedb.ListSessionRecordRequest\x1a!.timedb.ListSessionRecordResponse\"\x12\xf2\x88'\x0e\b\x03\x12\bevent_id(d\x12c\n" +
 	"\x0eListStopRecord\x12\x1d.timedb.ListStopRecordRequest\x1a\x1e.timedb.ListStopRecordResponse\"\x12\xf2\x88'\x0e\b\x03\x12\bevent_id(d\x12o\n" +
 	"\x12ListSubagentRecord\x12!.timedb.ListSubagentRecordRequest\x1a\".timedb.ListSubagentRecordResponse\"\x12\xf2\x88'\x0e\b\x03\x12\bevent_id(d\x12l\n" +
@@ -7250,230 +6081,191 @@ func file_services_timedb_proto_rawDescGZIP() []byte {
 	return file_services_timedb_proto_rawDescData
 }
 
-var file_services_timedb_proto_enumTypes = make([]protoimpl.EnumInfo, 17)
-var file_services_timedb_proto_msgTypes = make([]protoimpl.MessageInfo, 66)
+var file_services_timedb_proto_enumTypes = make([]protoimpl.EnumInfo, 14)
+var file_services_timedb_proto_msgTypes = make([]protoimpl.MessageInfo, 54)
 var file_services_timedb_proto_goTypes = []any{
-	(NodeMode)(0),                                      // 0: timedb.NodeMode
-	(ComparisonOp)(0),                                  // 1: timedb.ComparisonOp
-	(SortDirection)(0),                                 // 2: timedb.SortDirection
-	(LogicalOp)(0),                                     // 3: timedb.LogicalOp
-	(GitLabActivityRecordGroupField)(0),                // 4: timedb.GitLabActivityRecordGroupField
-	(LlmCallRecordGroupField)(0),                       // 5: timedb.LlmCallRecordGroupField
-	(PromptRecordGroupField)(0),                        // 6: timedb.PromptRecordGroupField
-	(ScmOperationRecordGroupField)(0),                  // 7: timedb.ScmOperationRecordGroupField
-	(SessionRecordGroupField)(0),                       // 8: timedb.SessionRecordGroupField
-	(StopRecordGroupField)(0),                          // 9: timedb.StopRecordGroupField
-	(SubagentRecordGroupField)(0),                      // 10: timedb.SubagentRecordGroupField
-	(ToolUseRecordGroupField)(0),                       // 11: timedb.ToolUseRecordGroupField
-	(TypeID)(0),                                        // 12: timedb.TypeID
-	(TimeDbStateServiceRpcId)(0),                       // 13: timedb.TimeDbStateServiceRpcId
-	(TimedbConfigStateServiceRpcId)(0),                 // 14: timedb.TimedbConfigStateServiceRpcId
-	(TimeseriesGroupCountsRpcId)(0),                    // 15: timedb.TimeseriesGroupCountsRpcId
-	(TimeseriesQueryRpcId)(0),                          // 16: timedb.TimeseriesQueryRpcId
-	(*TimeRange)(nil),                                  // 17: timedb.TimeRange
-	(*Config)(nil),                                     // 18: timedb.Config
-	(*TimeDbNode)(nil),                                 // 19: timedb.TimeDbNode
-	(*TimeDbState)(nil),                                // 20: timedb.TimeDbState
-	(*TimeDbHealth)(nil),                               // 21: timedb.TimeDbHealth
-	(*ReplicaStatus)(nil),                              // 22: timedb.ReplicaStatus
-	(*DiskStatus)(nil),                                 // 23: timedb.DiskStatus
-	(*MergeStatus)(nil),                                // 24: timedb.MergeStatus
-	(*MutationStatus)(nil),                             // 25: timedb.MutationStatus
-	(*MetricEntry)(nil),                                // 26: timedb.MetricEntry
-	(*ErrorEntry)(nil),                                 // 27: timedb.ErrorEntry
-	(*KeeperStatus)(nil),                               // 28: timedb.KeeperStatus
-	(*ServerSummary)(nil),                              // 29: timedb.ServerSummary
-	(*TimedbConfigState)(nil),                          // 30: timedb.TimedbConfigState
-	(*QueryValue)(nil),                                 // 31: timedb.QueryValue
-	(*Predicate)(nil),                                  // 32: timedb.Predicate
-	(*PredicateGroup)(nil),                             // 33: timedb.PredicateGroup
-	(*SortField)(nil),                                  // 34: timedb.SortField
-	(*CollectionQuery)(nil),                            // 35: timedb.CollectionQuery
-	(*NodesGetRequest)(nil),                            // 36: timedb.NodesGetRequest
-	(*NodesPutRequest)(nil),                            // 37: timedb.NodesPutRequest
-	(*NodesGetAllRequest)(nil),                         // 38: timedb.NodesGetAllRequest
-	(*NodesKeysRequest)(nil),                           // 39: timedb.NodesKeysRequest
-	(*NodesSizeRequest)(nil),                           // 40: timedb.NodesSizeRequest
-	(*NodesClearRequest)(nil),                          // 41: timedb.NodesClearRequest
-	(*NodesValueResponse)(nil),                         // 42: timedb.NodesValueResponse
-	(*NodesEntriesResponse)(nil),                       // 43: timedb.NodesEntriesResponse
-	(*NodesKeysResponse)(nil),                          // 44: timedb.NodesKeysResponse
-	(*NodesSizeResponse)(nil),                          // 45: timedb.NodesSizeResponse
-	(*NodesQueryRequest)(nil),                          // 46: timedb.NodesQueryRequest
-	(*NodesQueryResponse)(nil),                         // 47: timedb.NodesQueryResponse
-	(*MapEmpty)(nil),                                   // 48: timedb.MapEmpty
-	(*TimeseriesGroupCount)(nil),                       // 49: timedb.TimeseriesGroupCount
-	(*GetGitLabActivityRecordGroupCountsRequest)(nil),  // 50: timedb.GetGitLabActivityRecordGroupCountsRequest
-	(*GetGitLabActivityRecordGroupCountsResponse)(nil), // 51: timedb.GetGitLabActivityRecordGroupCountsResponse
-	(*GetLlmCallRecordGroupCountsRequest)(nil),         // 52: timedb.GetLlmCallRecordGroupCountsRequest
-	(*GetLlmCallRecordGroupCountsResponse)(nil),        // 53: timedb.GetLlmCallRecordGroupCountsResponse
-	(*GetPromptRecordGroupCountsRequest)(nil),          // 54: timedb.GetPromptRecordGroupCountsRequest
-	(*GetPromptRecordGroupCountsResponse)(nil),         // 55: timedb.GetPromptRecordGroupCountsResponse
-	(*GetScmOperationRecordGroupCountsRequest)(nil),    // 56: timedb.GetScmOperationRecordGroupCountsRequest
-	(*GetScmOperationRecordGroupCountsResponse)(nil),   // 57: timedb.GetScmOperationRecordGroupCountsResponse
-	(*GetSessionRecordGroupCountsRequest)(nil),         // 58: timedb.GetSessionRecordGroupCountsRequest
-	(*GetSessionRecordGroupCountsResponse)(nil),        // 59: timedb.GetSessionRecordGroupCountsResponse
-	(*GetStopRecordGroupCountsRequest)(nil),            // 60: timedb.GetStopRecordGroupCountsRequest
-	(*GetStopRecordGroupCountsResponse)(nil),           // 61: timedb.GetStopRecordGroupCountsResponse
-	(*GetSubagentRecordGroupCountsRequest)(nil),        // 62: timedb.GetSubagentRecordGroupCountsRequest
-	(*GetSubagentRecordGroupCountsResponse)(nil),       // 63: timedb.GetSubagentRecordGroupCountsResponse
-	(*GetToolUseRecordGroupCountsRequest)(nil),         // 64: timedb.GetToolUseRecordGroupCountsRequest
-	(*GetToolUseRecordGroupCountsResponse)(nil),        // 65: timedb.GetToolUseRecordGroupCountsResponse
-	(*ListGitLabActivityRecordRequest)(nil),            // 66: timedb.ListGitLabActivityRecordRequest
-	(*ListGitLabActivityRecordResponse)(nil),           // 67: timedb.ListGitLabActivityRecordResponse
-	(*ListLlmCallRecordRequest)(nil),                   // 68: timedb.ListLlmCallRecordRequest
-	(*ListLlmCallRecordResponse)(nil),                  // 69: timedb.ListLlmCallRecordResponse
-	(*ListPromptRecordRequest)(nil),                    // 70: timedb.ListPromptRecordRequest
-	(*ListPromptRecordResponse)(nil),                   // 71: timedb.ListPromptRecordResponse
-	(*ListScmOperationRecordRequest)(nil),              // 72: timedb.ListScmOperationRecordRequest
-	(*ListScmOperationRecordResponse)(nil),             // 73: timedb.ListScmOperationRecordResponse
-	(*ListSessionRecordRequest)(nil),                   // 74: timedb.ListSessionRecordRequest
-	(*ListSessionRecordResponse)(nil),                  // 75: timedb.ListSessionRecordResponse
-	(*ListStopRecordRequest)(nil),                      // 76: timedb.ListStopRecordRequest
-	(*ListStopRecordResponse)(nil),                     // 77: timedb.ListStopRecordResponse
-	(*ListSubagentRecordRequest)(nil),                  // 78: timedb.ListSubagentRecordRequest
-	(*ListSubagentRecordResponse)(nil),                 // 79: timedb.ListSubagentRecordResponse
-	(*ListToolUseRecordRequest)(nil),                   // 80: timedb.ListToolUseRecordRequest
-	(*ListToolUseRecordResponse)(nil),                  // 81: timedb.ListToolUseRecordResponse
-	nil,                                                // 82: timedb.NodesEntriesResponse.EntriesEntry
-	(*host.Host)(nil),                                  // 83: host.Host
-	(*healthreport.ServiceInstanceHealth)(nil),         // 84: healthreport.ServiceInstanceHealth
-	(*trace.TraceRequest)(nil),                         // 85: trace.TraceRequest
+	(NodeMode)(0),                                // 0: timedb.NodeMode
+	(ComparisonOp)(0),                            // 1: timedb.ComparisonOp
+	(SortDirection)(0),                           // 2: timedb.SortDirection
+	(LogicalOp)(0),                               // 3: timedb.LogicalOp
+	(PromptRecordGroupField)(0),                  // 4: timedb.PromptRecordGroupField
+	(SessionRecordGroupField)(0),                 // 5: timedb.SessionRecordGroupField
+	(StopRecordGroupField)(0),                    // 6: timedb.StopRecordGroupField
+	(SubagentRecordGroupField)(0),                // 7: timedb.SubagentRecordGroupField
+	(ToolUseRecordGroupField)(0),                 // 8: timedb.ToolUseRecordGroupField
+	(TypeID)(0),                                  // 9: timedb.TypeID
+	(TimeDbStateServiceRpcId)(0),                 // 10: timedb.TimeDbStateServiceRpcId
+	(TimedbConfigStateServiceRpcId)(0),           // 11: timedb.TimedbConfigStateServiceRpcId
+	(TimeseriesGroupCountsRpcId)(0),              // 12: timedb.TimeseriesGroupCountsRpcId
+	(TimeseriesQueryRpcId)(0),                    // 13: timedb.TimeseriesQueryRpcId
+	(*TimeRange)(nil),                            // 14: timedb.TimeRange
+	(*Config)(nil),                               // 15: timedb.Config
+	(*TimeDbNode)(nil),                           // 16: timedb.TimeDbNode
+	(*TimeDbState)(nil),                          // 17: timedb.TimeDbState
+	(*TimeDbHealth)(nil),                         // 18: timedb.TimeDbHealth
+	(*ReplicaStatus)(nil),                        // 19: timedb.ReplicaStatus
+	(*DiskStatus)(nil),                           // 20: timedb.DiskStatus
+	(*MergeStatus)(nil),                          // 21: timedb.MergeStatus
+	(*MutationStatus)(nil),                       // 22: timedb.MutationStatus
+	(*MetricEntry)(nil),                          // 23: timedb.MetricEntry
+	(*ErrorEntry)(nil),                           // 24: timedb.ErrorEntry
+	(*KeeperStatus)(nil),                         // 25: timedb.KeeperStatus
+	(*ServerSummary)(nil),                        // 26: timedb.ServerSummary
+	(*TimedbConfigState)(nil),                    // 27: timedb.TimedbConfigState
+	(*QueryValue)(nil),                           // 28: timedb.QueryValue
+	(*Predicate)(nil),                            // 29: timedb.Predicate
+	(*PredicateGroup)(nil),                       // 30: timedb.PredicateGroup
+	(*SortField)(nil),                            // 31: timedb.SortField
+	(*CollectionQuery)(nil),                      // 32: timedb.CollectionQuery
+	(*NodesGetRequest)(nil),                      // 33: timedb.NodesGetRequest
+	(*NodesPutRequest)(nil),                      // 34: timedb.NodesPutRequest
+	(*NodesGetAllRequest)(nil),                   // 35: timedb.NodesGetAllRequest
+	(*NodesKeysRequest)(nil),                     // 36: timedb.NodesKeysRequest
+	(*NodesSizeRequest)(nil),                     // 37: timedb.NodesSizeRequest
+	(*NodesClearRequest)(nil),                    // 38: timedb.NodesClearRequest
+	(*NodesValueResponse)(nil),                   // 39: timedb.NodesValueResponse
+	(*NodesEntriesResponse)(nil),                 // 40: timedb.NodesEntriesResponse
+	(*NodesKeysResponse)(nil),                    // 41: timedb.NodesKeysResponse
+	(*NodesSizeResponse)(nil),                    // 42: timedb.NodesSizeResponse
+	(*NodesQueryRequest)(nil),                    // 43: timedb.NodesQueryRequest
+	(*NodesQueryResponse)(nil),                   // 44: timedb.NodesQueryResponse
+	(*MapEmpty)(nil),                             // 45: timedb.MapEmpty
+	(*TimeseriesGroupCount)(nil),                 // 46: timedb.TimeseriesGroupCount
+	(*GetPromptRecordGroupCountsRequest)(nil),    // 47: timedb.GetPromptRecordGroupCountsRequest
+	(*GetPromptRecordGroupCountsResponse)(nil),   // 48: timedb.GetPromptRecordGroupCountsResponse
+	(*GetSessionRecordGroupCountsRequest)(nil),   // 49: timedb.GetSessionRecordGroupCountsRequest
+	(*GetSessionRecordGroupCountsResponse)(nil),  // 50: timedb.GetSessionRecordGroupCountsResponse
+	(*GetStopRecordGroupCountsRequest)(nil),      // 51: timedb.GetStopRecordGroupCountsRequest
+	(*GetStopRecordGroupCountsResponse)(nil),     // 52: timedb.GetStopRecordGroupCountsResponse
+	(*GetSubagentRecordGroupCountsRequest)(nil),  // 53: timedb.GetSubagentRecordGroupCountsRequest
+	(*GetSubagentRecordGroupCountsResponse)(nil), // 54: timedb.GetSubagentRecordGroupCountsResponse
+	(*GetToolUseRecordGroupCountsRequest)(nil),   // 55: timedb.GetToolUseRecordGroupCountsRequest
+	(*GetToolUseRecordGroupCountsResponse)(nil),  // 56: timedb.GetToolUseRecordGroupCountsResponse
+	(*ListPromptRecordRequest)(nil),              // 57: timedb.ListPromptRecordRequest
+	(*ListPromptRecordResponse)(nil),             // 58: timedb.ListPromptRecordResponse
+	(*ListSessionRecordRequest)(nil),             // 59: timedb.ListSessionRecordRequest
+	(*ListSessionRecordResponse)(nil),            // 60: timedb.ListSessionRecordResponse
+	(*ListStopRecordRequest)(nil),                // 61: timedb.ListStopRecordRequest
+	(*ListStopRecordResponse)(nil),               // 62: timedb.ListStopRecordResponse
+	(*ListSubagentRecordRequest)(nil),            // 63: timedb.ListSubagentRecordRequest
+	(*ListSubagentRecordResponse)(nil),           // 64: timedb.ListSubagentRecordResponse
+	(*ListToolUseRecordRequest)(nil),             // 65: timedb.ListToolUseRecordRequest
+	(*ListToolUseRecordResponse)(nil),            // 66: timedb.ListToolUseRecordResponse
+	nil,                                          // 67: timedb.NodesEntriesResponse.EntriesEntry
+	(*host.Host)(nil),                            // 68: host.Host
+	(*healthreport.ServiceInstanceHealth)(nil),   // 69: healthreport.ServiceInstanceHealth
+	(*trace.TraceRequest)(nil),                   // 70: trace.TraceRequest
 }
 var file_services_timedb_proto_depIdxs = []int32{
 	0,  // 0: timedb.Config.mode:type_name -> timedb.NodeMode
 	0,  // 1: timedb.TimeDbNode.mode:type_name -> timedb.NodeMode
-	83, // 2: timedb.TimeDbNode.endpoint:type_name -> host.Host
-	19, // 3: timedb.TimeDbState.nodes:type_name -> timedb.TimeDbNode
-	84, // 4: timedb.TimeDbHealth.base:type_name -> healthreport.ServiceInstanceHealth
-	22, // 5: timedb.TimeDbHealth.replicas:type_name -> timedb.ReplicaStatus
-	23, // 6: timedb.TimeDbHealth.disks:type_name -> timedb.DiskStatus
-	24, // 7: timedb.TimeDbHealth.active_merges:type_name -> timedb.MergeStatus
-	25, // 8: timedb.TimeDbHealth.active_mutations:type_name -> timedb.MutationStatus
-	26, // 9: timedb.TimeDbHealth.metrics:type_name -> timedb.MetricEntry
-	26, // 10: timedb.TimeDbHealth.async_metrics:type_name -> timedb.MetricEntry
-	27, // 11: timedb.TimeDbHealth.errors:type_name -> timedb.ErrorEntry
-	28, // 12: timedb.TimeDbHealth.keeper:type_name -> timedb.KeeperStatus
-	29, // 13: timedb.TimeDbHealth.server:type_name -> timedb.ServerSummary
-	18, // 14: timedb.TimedbConfigState.config:type_name -> timedb.Config
+	68, // 2: timedb.TimeDbNode.endpoint:type_name -> host.Host
+	16, // 3: timedb.TimeDbState.nodes:type_name -> timedb.TimeDbNode
+	69, // 4: timedb.TimeDbHealth.base:type_name -> healthreport.ServiceInstanceHealth
+	19, // 5: timedb.TimeDbHealth.replicas:type_name -> timedb.ReplicaStatus
+	20, // 6: timedb.TimeDbHealth.disks:type_name -> timedb.DiskStatus
+	21, // 7: timedb.TimeDbHealth.active_merges:type_name -> timedb.MergeStatus
+	22, // 8: timedb.TimeDbHealth.active_mutations:type_name -> timedb.MutationStatus
+	23, // 9: timedb.TimeDbHealth.metrics:type_name -> timedb.MetricEntry
+	23, // 10: timedb.TimeDbHealth.async_metrics:type_name -> timedb.MetricEntry
+	24, // 11: timedb.TimeDbHealth.errors:type_name -> timedb.ErrorEntry
+	25, // 12: timedb.TimeDbHealth.keeper:type_name -> timedb.KeeperStatus
+	26, // 13: timedb.TimeDbHealth.server:type_name -> timedb.ServerSummary
+	15, // 14: timedb.TimedbConfigState.config:type_name -> timedb.Config
 	1,  // 15: timedb.Predicate.op:type_name -> timedb.ComparisonOp
-	31, // 16: timedb.Predicate.value:type_name -> timedb.QueryValue
-	31, // 17: timedb.Predicate.values:type_name -> timedb.QueryValue
+	28, // 16: timedb.Predicate.value:type_name -> timedb.QueryValue
+	28, // 17: timedb.Predicate.values:type_name -> timedb.QueryValue
 	3,  // 18: timedb.PredicateGroup.op:type_name -> timedb.LogicalOp
-	32, // 19: timedb.PredicateGroup.predicates:type_name -> timedb.Predicate
-	33, // 20: timedb.PredicateGroup.groups:type_name -> timedb.PredicateGroup
+	29, // 19: timedb.PredicateGroup.predicates:type_name -> timedb.Predicate
+	30, // 20: timedb.PredicateGroup.groups:type_name -> timedb.PredicateGroup
 	2,  // 21: timedb.SortField.direction:type_name -> timedb.SortDirection
-	33, // 22: timedb.CollectionQuery.where:type_name -> timedb.PredicateGroup
-	34, // 23: timedb.CollectionQuery.order_by:type_name -> timedb.SortField
-	19, // 24: timedb.NodesPutRequest.value:type_name -> timedb.TimeDbNode
-	19, // 25: timedb.NodesValueResponse.value:type_name -> timedb.TimeDbNode
-	82, // 26: timedb.NodesEntriesResponse.entries:type_name -> timedb.NodesEntriesResponse.EntriesEntry
-	35, // 27: timedb.NodesQueryRequest.query:type_name -> timedb.CollectionQuery
-	19, // 28: timedb.NodesQueryResponse.results:type_name -> timedb.TimeDbNode
-	4,  // 29: timedb.GetGitLabActivityRecordGroupCountsRequest.group_by:type_name -> timedb.GitLabActivityRecordGroupField
-	17, // 30: timedb.GetGitLabActivityRecordGroupCountsRequest.time_range:type_name -> timedb.TimeRange
-	49, // 31: timedb.GetGitLabActivityRecordGroupCountsResponse.counts:type_name -> timedb.TimeseriesGroupCount
-	5,  // 32: timedb.GetLlmCallRecordGroupCountsRequest.group_by:type_name -> timedb.LlmCallRecordGroupField
-	17, // 33: timedb.GetLlmCallRecordGroupCountsRequest.time_range:type_name -> timedb.TimeRange
-	49, // 34: timedb.GetLlmCallRecordGroupCountsResponse.counts:type_name -> timedb.TimeseriesGroupCount
-	6,  // 35: timedb.GetPromptRecordGroupCountsRequest.group_by:type_name -> timedb.PromptRecordGroupField
-	17, // 36: timedb.GetPromptRecordGroupCountsRequest.time_range:type_name -> timedb.TimeRange
-	49, // 37: timedb.GetPromptRecordGroupCountsResponse.counts:type_name -> timedb.TimeseriesGroupCount
-	7,  // 38: timedb.GetScmOperationRecordGroupCountsRequest.group_by:type_name -> timedb.ScmOperationRecordGroupField
-	17, // 39: timedb.GetScmOperationRecordGroupCountsRequest.time_range:type_name -> timedb.TimeRange
-	49, // 40: timedb.GetScmOperationRecordGroupCountsResponse.counts:type_name -> timedb.TimeseriesGroupCount
-	8,  // 41: timedb.GetSessionRecordGroupCountsRequest.group_by:type_name -> timedb.SessionRecordGroupField
-	17, // 42: timedb.GetSessionRecordGroupCountsRequest.time_range:type_name -> timedb.TimeRange
-	49, // 43: timedb.GetSessionRecordGroupCountsResponse.counts:type_name -> timedb.TimeseriesGroupCount
-	9,  // 44: timedb.GetStopRecordGroupCountsRequest.group_by:type_name -> timedb.StopRecordGroupField
-	17, // 45: timedb.GetStopRecordGroupCountsRequest.time_range:type_name -> timedb.TimeRange
-	49, // 46: timedb.GetStopRecordGroupCountsResponse.counts:type_name -> timedb.TimeseriesGroupCount
-	10, // 47: timedb.GetSubagentRecordGroupCountsRequest.group_by:type_name -> timedb.SubagentRecordGroupField
-	17, // 48: timedb.GetSubagentRecordGroupCountsRequest.time_range:type_name -> timedb.TimeRange
-	49, // 49: timedb.GetSubagentRecordGroupCountsResponse.counts:type_name -> timedb.TimeseriesGroupCount
-	11, // 50: timedb.GetToolUseRecordGroupCountsRequest.group_by:type_name -> timedb.ToolUseRecordGroupField
-	17, // 51: timedb.GetToolUseRecordGroupCountsRequest.time_range:type_name -> timedb.TimeRange
-	49, // 52: timedb.GetToolUseRecordGroupCountsResponse.counts:type_name -> timedb.TimeseriesGroupCount
-	17, // 53: timedb.ListGitLabActivityRecordRequest.time_range:type_name -> timedb.TimeRange
-	17, // 54: timedb.ListLlmCallRecordRequest.time_range:type_name -> timedb.TimeRange
-	17, // 55: timedb.ListPromptRecordRequest.time_range:type_name -> timedb.TimeRange
-	17, // 56: timedb.ListScmOperationRecordRequest.time_range:type_name -> timedb.TimeRange
-	17, // 57: timedb.ListSessionRecordRequest.time_range:type_name -> timedb.TimeRange
-	17, // 58: timedb.ListStopRecordRequest.time_range:type_name -> timedb.TimeRange
-	17, // 59: timedb.ListSubagentRecordRequest.time_range:type_name -> timedb.TimeRange
-	17, // 60: timedb.ListToolUseRecordRequest.time_range:type_name -> timedb.TimeRange
-	19, // 61: timedb.NodesEntriesResponse.EntriesEntry.value:type_name -> timedb.TimeDbNode
-	36, // 62: timedb.TimeDbStateService.GetNodes:input_type -> timedb.NodesGetRequest
-	37, // 63: timedb.TimeDbStateService.PutNodes:input_type -> timedb.NodesPutRequest
-	37, // 64: timedb.TimeDbStateService.SetNodes:input_type -> timedb.NodesPutRequest
-	36, // 65: timedb.TimeDbStateService.RemoveNodes:input_type -> timedb.NodesGetRequest
-	36, // 66: timedb.TimeDbStateService.DeleteNodes:input_type -> timedb.NodesGetRequest
-	36, // 67: timedb.TimeDbStateService.ContainsKeyNodes:input_type -> timedb.NodesGetRequest
-	38, // 68: timedb.TimeDbStateService.GetAllNodes:input_type -> timedb.NodesGetAllRequest
-	39, // 69: timedb.TimeDbStateService.KeySetNodes:input_type -> timedb.NodesKeysRequest
-	40, // 70: timedb.TimeDbStateService.SizeNodes:input_type -> timedb.NodesSizeRequest
-	41, // 71: timedb.TimeDbStateService.ClearNodes:input_type -> timedb.NodesClearRequest
-	37, // 72: timedb.TimeDbStateService.PutIfAbsentNodes:input_type -> timedb.NodesPutRequest
-	85, // 73: timedb.TimeDbStateService.WatchNodes:input_type -> trace.TraceRequest
-	46, // 74: timedb.TimeDbStateService.QueryNodes:input_type -> timedb.NodesQueryRequest
-	46, // 75: timedb.TimeDbStateService.WatchQueryNodes:input_type -> timedb.NodesQueryRequest
-	85, // 76: timedb.TimedbConfigStateService.GetConfig:input_type -> trace.TraceRequest
-	18, // 77: timedb.TimedbConfigStateService.SetConfig:input_type -> timedb.Config
-	85, // 78: timedb.TimedbConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	50, // 79: timedb.TimeseriesGroupCounts.GetGitLabActivityRecordGroupCounts:input_type -> timedb.GetGitLabActivityRecordGroupCountsRequest
-	52, // 80: timedb.TimeseriesGroupCounts.GetLlmCallRecordGroupCounts:input_type -> timedb.GetLlmCallRecordGroupCountsRequest
-	54, // 81: timedb.TimeseriesGroupCounts.GetPromptRecordGroupCounts:input_type -> timedb.GetPromptRecordGroupCountsRequest
-	56, // 82: timedb.TimeseriesGroupCounts.GetScmOperationRecordGroupCounts:input_type -> timedb.GetScmOperationRecordGroupCountsRequest
-	58, // 83: timedb.TimeseriesGroupCounts.GetSessionRecordGroupCounts:input_type -> timedb.GetSessionRecordGroupCountsRequest
-	60, // 84: timedb.TimeseriesGroupCounts.GetStopRecordGroupCounts:input_type -> timedb.GetStopRecordGroupCountsRequest
-	62, // 85: timedb.TimeseriesGroupCounts.GetSubagentRecordGroupCounts:input_type -> timedb.GetSubagentRecordGroupCountsRequest
-	64, // 86: timedb.TimeseriesGroupCounts.GetToolUseRecordGroupCounts:input_type -> timedb.GetToolUseRecordGroupCountsRequest
-	66, // 87: timedb.TimeseriesQuery.ListGitLabActivityRecord:input_type -> timedb.ListGitLabActivityRecordRequest
-	68, // 88: timedb.TimeseriesQuery.ListLlmCallRecord:input_type -> timedb.ListLlmCallRecordRequest
-	70, // 89: timedb.TimeseriesQuery.ListPromptRecord:input_type -> timedb.ListPromptRecordRequest
-	72, // 90: timedb.TimeseriesQuery.ListScmOperationRecord:input_type -> timedb.ListScmOperationRecordRequest
-	74, // 91: timedb.TimeseriesQuery.ListSessionRecord:input_type -> timedb.ListSessionRecordRequest
-	76, // 92: timedb.TimeseriesQuery.ListStopRecord:input_type -> timedb.ListStopRecordRequest
-	78, // 93: timedb.TimeseriesQuery.ListSubagentRecord:input_type -> timedb.ListSubagentRecordRequest
-	80, // 94: timedb.TimeseriesQuery.ListToolUseRecord:input_type -> timedb.ListToolUseRecordRequest
-	42, // 95: timedb.TimeDbStateService.GetNodes:output_type -> timedb.NodesValueResponse
-	42, // 96: timedb.TimeDbStateService.PutNodes:output_type -> timedb.NodesValueResponse
-	48, // 97: timedb.TimeDbStateService.SetNodes:output_type -> timedb.MapEmpty
-	42, // 98: timedb.TimeDbStateService.RemoveNodes:output_type -> timedb.NodesValueResponse
-	48, // 99: timedb.TimeDbStateService.DeleteNodes:output_type -> timedb.MapEmpty
-	42, // 100: timedb.TimeDbStateService.ContainsKeyNodes:output_type -> timedb.NodesValueResponse
-	43, // 101: timedb.TimeDbStateService.GetAllNodes:output_type -> timedb.NodesEntriesResponse
-	44, // 102: timedb.TimeDbStateService.KeySetNodes:output_type -> timedb.NodesKeysResponse
-	45, // 103: timedb.TimeDbStateService.SizeNodes:output_type -> timedb.NodesSizeResponse
-	48, // 104: timedb.TimeDbStateService.ClearNodes:output_type -> timedb.MapEmpty
-	42, // 105: timedb.TimeDbStateService.PutIfAbsentNodes:output_type -> timedb.NodesValueResponse
-	43, // 106: timedb.TimeDbStateService.WatchNodes:output_type -> timedb.NodesEntriesResponse
-	47, // 107: timedb.TimeDbStateService.QueryNodes:output_type -> timedb.NodesQueryResponse
-	47, // 108: timedb.TimeDbStateService.WatchQueryNodes:output_type -> timedb.NodesQueryResponse
-	18, // 109: timedb.TimedbConfigStateService.GetConfig:output_type -> timedb.Config
-	18, // 110: timedb.TimedbConfigStateService.SetConfig:output_type -> timedb.Config
-	18, // 111: timedb.TimedbConfigStateService.WatchConfig:output_type -> timedb.Config
-	51, // 112: timedb.TimeseriesGroupCounts.GetGitLabActivityRecordGroupCounts:output_type -> timedb.GetGitLabActivityRecordGroupCountsResponse
-	53, // 113: timedb.TimeseriesGroupCounts.GetLlmCallRecordGroupCounts:output_type -> timedb.GetLlmCallRecordGroupCountsResponse
-	55, // 114: timedb.TimeseriesGroupCounts.GetPromptRecordGroupCounts:output_type -> timedb.GetPromptRecordGroupCountsResponse
-	57, // 115: timedb.TimeseriesGroupCounts.GetScmOperationRecordGroupCounts:output_type -> timedb.GetScmOperationRecordGroupCountsResponse
-	59, // 116: timedb.TimeseriesGroupCounts.GetSessionRecordGroupCounts:output_type -> timedb.GetSessionRecordGroupCountsResponse
-	61, // 117: timedb.TimeseriesGroupCounts.GetStopRecordGroupCounts:output_type -> timedb.GetStopRecordGroupCountsResponse
-	63, // 118: timedb.TimeseriesGroupCounts.GetSubagentRecordGroupCounts:output_type -> timedb.GetSubagentRecordGroupCountsResponse
-	65, // 119: timedb.TimeseriesGroupCounts.GetToolUseRecordGroupCounts:output_type -> timedb.GetToolUseRecordGroupCountsResponse
-	67, // 120: timedb.TimeseriesQuery.ListGitLabActivityRecord:output_type -> timedb.ListGitLabActivityRecordResponse
-	69, // 121: timedb.TimeseriesQuery.ListLlmCallRecord:output_type -> timedb.ListLlmCallRecordResponse
-	71, // 122: timedb.TimeseriesQuery.ListPromptRecord:output_type -> timedb.ListPromptRecordResponse
-	73, // 123: timedb.TimeseriesQuery.ListScmOperationRecord:output_type -> timedb.ListScmOperationRecordResponse
-	75, // 124: timedb.TimeseriesQuery.ListSessionRecord:output_type -> timedb.ListSessionRecordResponse
-	77, // 125: timedb.TimeseriesQuery.ListStopRecord:output_type -> timedb.ListStopRecordResponse
-	79, // 126: timedb.TimeseriesQuery.ListSubagentRecord:output_type -> timedb.ListSubagentRecordResponse
-	81, // 127: timedb.TimeseriesQuery.ListToolUseRecord:output_type -> timedb.ListToolUseRecordResponse
-	95, // [95:128] is the sub-list for method output_type
-	62, // [62:95] is the sub-list for method input_type
-	62, // [62:62] is the sub-list for extension type_name
-	62, // [62:62] is the sub-list for extension extendee
-	0,  // [0:62] is the sub-list for field type_name
+	30, // 22: timedb.CollectionQuery.where:type_name -> timedb.PredicateGroup
+	31, // 23: timedb.CollectionQuery.order_by:type_name -> timedb.SortField
+	16, // 24: timedb.NodesPutRequest.value:type_name -> timedb.TimeDbNode
+	16, // 25: timedb.NodesValueResponse.value:type_name -> timedb.TimeDbNode
+	67, // 26: timedb.NodesEntriesResponse.entries:type_name -> timedb.NodesEntriesResponse.EntriesEntry
+	32, // 27: timedb.NodesQueryRequest.query:type_name -> timedb.CollectionQuery
+	16, // 28: timedb.NodesQueryResponse.results:type_name -> timedb.TimeDbNode
+	4,  // 29: timedb.GetPromptRecordGroupCountsRequest.group_by:type_name -> timedb.PromptRecordGroupField
+	14, // 30: timedb.GetPromptRecordGroupCountsRequest.time_range:type_name -> timedb.TimeRange
+	46, // 31: timedb.GetPromptRecordGroupCountsResponse.counts:type_name -> timedb.TimeseriesGroupCount
+	5,  // 32: timedb.GetSessionRecordGroupCountsRequest.group_by:type_name -> timedb.SessionRecordGroupField
+	14, // 33: timedb.GetSessionRecordGroupCountsRequest.time_range:type_name -> timedb.TimeRange
+	46, // 34: timedb.GetSessionRecordGroupCountsResponse.counts:type_name -> timedb.TimeseriesGroupCount
+	6,  // 35: timedb.GetStopRecordGroupCountsRequest.group_by:type_name -> timedb.StopRecordGroupField
+	14, // 36: timedb.GetStopRecordGroupCountsRequest.time_range:type_name -> timedb.TimeRange
+	46, // 37: timedb.GetStopRecordGroupCountsResponse.counts:type_name -> timedb.TimeseriesGroupCount
+	7,  // 38: timedb.GetSubagentRecordGroupCountsRequest.group_by:type_name -> timedb.SubagentRecordGroupField
+	14, // 39: timedb.GetSubagentRecordGroupCountsRequest.time_range:type_name -> timedb.TimeRange
+	46, // 40: timedb.GetSubagentRecordGroupCountsResponse.counts:type_name -> timedb.TimeseriesGroupCount
+	8,  // 41: timedb.GetToolUseRecordGroupCountsRequest.group_by:type_name -> timedb.ToolUseRecordGroupField
+	14, // 42: timedb.GetToolUseRecordGroupCountsRequest.time_range:type_name -> timedb.TimeRange
+	46, // 43: timedb.GetToolUseRecordGroupCountsResponse.counts:type_name -> timedb.TimeseriesGroupCount
+	14, // 44: timedb.ListPromptRecordRequest.time_range:type_name -> timedb.TimeRange
+	14, // 45: timedb.ListSessionRecordRequest.time_range:type_name -> timedb.TimeRange
+	14, // 46: timedb.ListStopRecordRequest.time_range:type_name -> timedb.TimeRange
+	14, // 47: timedb.ListSubagentRecordRequest.time_range:type_name -> timedb.TimeRange
+	14, // 48: timedb.ListToolUseRecordRequest.time_range:type_name -> timedb.TimeRange
+	16, // 49: timedb.NodesEntriesResponse.EntriesEntry.value:type_name -> timedb.TimeDbNode
+	33, // 50: timedb.TimeDbStateService.GetNodes:input_type -> timedb.NodesGetRequest
+	34, // 51: timedb.TimeDbStateService.PutNodes:input_type -> timedb.NodesPutRequest
+	34, // 52: timedb.TimeDbStateService.SetNodes:input_type -> timedb.NodesPutRequest
+	33, // 53: timedb.TimeDbStateService.RemoveNodes:input_type -> timedb.NodesGetRequest
+	33, // 54: timedb.TimeDbStateService.DeleteNodes:input_type -> timedb.NodesGetRequest
+	33, // 55: timedb.TimeDbStateService.ContainsKeyNodes:input_type -> timedb.NodesGetRequest
+	35, // 56: timedb.TimeDbStateService.GetAllNodes:input_type -> timedb.NodesGetAllRequest
+	36, // 57: timedb.TimeDbStateService.KeySetNodes:input_type -> timedb.NodesKeysRequest
+	37, // 58: timedb.TimeDbStateService.SizeNodes:input_type -> timedb.NodesSizeRequest
+	38, // 59: timedb.TimeDbStateService.ClearNodes:input_type -> timedb.NodesClearRequest
+	34, // 60: timedb.TimeDbStateService.PutIfAbsentNodes:input_type -> timedb.NodesPutRequest
+	70, // 61: timedb.TimeDbStateService.WatchNodes:input_type -> trace.TraceRequest
+	43, // 62: timedb.TimeDbStateService.QueryNodes:input_type -> timedb.NodesQueryRequest
+	43, // 63: timedb.TimeDbStateService.WatchQueryNodes:input_type -> timedb.NodesQueryRequest
+	70, // 64: timedb.TimedbConfigStateService.GetConfig:input_type -> trace.TraceRequest
+	15, // 65: timedb.TimedbConfigStateService.SetConfig:input_type -> timedb.Config
+	70, // 66: timedb.TimedbConfigStateService.WatchConfig:input_type -> trace.TraceRequest
+	47, // 67: timedb.TimeseriesGroupCounts.GetPromptRecordGroupCounts:input_type -> timedb.GetPromptRecordGroupCountsRequest
+	49, // 68: timedb.TimeseriesGroupCounts.GetSessionRecordGroupCounts:input_type -> timedb.GetSessionRecordGroupCountsRequest
+	51, // 69: timedb.TimeseriesGroupCounts.GetStopRecordGroupCounts:input_type -> timedb.GetStopRecordGroupCountsRequest
+	53, // 70: timedb.TimeseriesGroupCounts.GetSubagentRecordGroupCounts:input_type -> timedb.GetSubagentRecordGroupCountsRequest
+	55, // 71: timedb.TimeseriesGroupCounts.GetToolUseRecordGroupCounts:input_type -> timedb.GetToolUseRecordGroupCountsRequest
+	57, // 72: timedb.TimeseriesQuery.ListPromptRecord:input_type -> timedb.ListPromptRecordRequest
+	59, // 73: timedb.TimeseriesQuery.ListSessionRecord:input_type -> timedb.ListSessionRecordRequest
+	61, // 74: timedb.TimeseriesQuery.ListStopRecord:input_type -> timedb.ListStopRecordRequest
+	63, // 75: timedb.TimeseriesQuery.ListSubagentRecord:input_type -> timedb.ListSubagentRecordRequest
+	65, // 76: timedb.TimeseriesQuery.ListToolUseRecord:input_type -> timedb.ListToolUseRecordRequest
+	39, // 77: timedb.TimeDbStateService.GetNodes:output_type -> timedb.NodesValueResponse
+	39, // 78: timedb.TimeDbStateService.PutNodes:output_type -> timedb.NodesValueResponse
+	45, // 79: timedb.TimeDbStateService.SetNodes:output_type -> timedb.MapEmpty
+	39, // 80: timedb.TimeDbStateService.RemoveNodes:output_type -> timedb.NodesValueResponse
+	45, // 81: timedb.TimeDbStateService.DeleteNodes:output_type -> timedb.MapEmpty
+	39, // 82: timedb.TimeDbStateService.ContainsKeyNodes:output_type -> timedb.NodesValueResponse
+	40, // 83: timedb.TimeDbStateService.GetAllNodes:output_type -> timedb.NodesEntriesResponse
+	41, // 84: timedb.TimeDbStateService.KeySetNodes:output_type -> timedb.NodesKeysResponse
+	42, // 85: timedb.TimeDbStateService.SizeNodes:output_type -> timedb.NodesSizeResponse
+	45, // 86: timedb.TimeDbStateService.ClearNodes:output_type -> timedb.MapEmpty
+	39, // 87: timedb.TimeDbStateService.PutIfAbsentNodes:output_type -> timedb.NodesValueResponse
+	40, // 88: timedb.TimeDbStateService.WatchNodes:output_type -> timedb.NodesEntriesResponse
+	44, // 89: timedb.TimeDbStateService.QueryNodes:output_type -> timedb.NodesQueryResponse
+	44, // 90: timedb.TimeDbStateService.WatchQueryNodes:output_type -> timedb.NodesQueryResponse
+	15, // 91: timedb.TimedbConfigStateService.GetConfig:output_type -> timedb.Config
+	15, // 92: timedb.TimedbConfigStateService.SetConfig:output_type -> timedb.Config
+	15, // 93: timedb.TimedbConfigStateService.WatchConfig:output_type -> timedb.Config
+	48, // 94: timedb.TimeseriesGroupCounts.GetPromptRecordGroupCounts:output_type -> timedb.GetPromptRecordGroupCountsResponse
+	50, // 95: timedb.TimeseriesGroupCounts.GetSessionRecordGroupCounts:output_type -> timedb.GetSessionRecordGroupCountsResponse
+	52, // 96: timedb.TimeseriesGroupCounts.GetStopRecordGroupCounts:output_type -> timedb.GetStopRecordGroupCountsResponse
+	54, // 97: timedb.TimeseriesGroupCounts.GetSubagentRecordGroupCounts:output_type -> timedb.GetSubagentRecordGroupCountsResponse
+	56, // 98: timedb.TimeseriesGroupCounts.GetToolUseRecordGroupCounts:output_type -> timedb.GetToolUseRecordGroupCountsResponse
+	58, // 99: timedb.TimeseriesQuery.ListPromptRecord:output_type -> timedb.ListPromptRecordResponse
+	60, // 100: timedb.TimeseriesQuery.ListSessionRecord:output_type -> timedb.ListSessionRecordResponse
+	62, // 101: timedb.TimeseriesQuery.ListStopRecord:output_type -> timedb.ListStopRecordResponse
+	64, // 102: timedb.TimeseriesQuery.ListSubagentRecord:output_type -> timedb.ListSubagentRecordResponse
+	66, // 103: timedb.TimeseriesQuery.ListToolUseRecord:output_type -> timedb.ListToolUseRecordResponse
+	77, // [77:104] is the sub-list for method output_type
+	50, // [50:77] is the sub-list for method input_type
+	50, // [50:50] is the sub-list for extension type_name
+	50, // [50:50] is the sub-list for extension extendee
+	0,  // [0:50] is the sub-list for field type_name
 }
 
 func init() { file_services_timedb_proto_init() }
@@ -7492,8 +6284,8 @@ func file_services_timedb_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_services_timedb_proto_rawDesc), len(file_services_timedb_proto_rawDesc)),
-			NumEnums:      17,
-			NumMessages:   66,
+			NumEnums:      14,
+			NumMessages:   54,
 			NumExtensions: 0,
 			NumServices:   4,
 		},

@@ -41,28 +41,22 @@ const (
 type ServiceName int32
 
 const (
-	ServiceName_SERVICE_NAME_UNSPECIFIED     ServiceName = 0
-	ServiceName_SERVICE_NAME_SENTINEL        ServiceName = 5
-	ServiceName_SERVICE_NAME_GATEWAY         ServiceName = 7
-	ServiceName_SERVICE_NAME_KERNEL          ServiceName = 8
-	ServiceName_SERVICE_NAME_LETSENCRYPT     ServiceName = 9
-	ServiceName_SERVICE_NAME_MCP             ServiceName = 12
-	ServiceName_SERVICE_NAME_GRAPHDB         ServiceName = 13
-	ServiceName_SERVICE_NAME_EVENTBUS        ServiceName = 18
-	ServiceName_SERVICE_NAME_TIMEDB          ServiceName = 20
-	ServiceName_SERVICE_NAME_OAUTH           ServiceName = 21
-	ServiceName_SERVICE_NAME_ANTHROPIC       ServiceName = 22
-	ServiceName_SERVICE_NAME_GITHUB          ServiceName = 23
-	ServiceName_SERVICE_NAME_GITLAB          ServiceName = 24
-	ServiceName_SERVICE_NAME_OPENAI          ServiceName = 25
-	ServiceName_SERVICE_NAME_MSGGATEWAY      ServiceName = 28
-	ServiceName_SERVICE_NAME_OPA             ServiceName = 29
-	ServiceName_SERVICE_NAME_STRATUM         ServiceName = 34
-	ServiceName_SERVICE_NAME_ARGUS           ServiceName = 35
-	ServiceName_SERVICE_NAME_GITLABCONNECTOR ServiceName = 41
-	ServiceName_SERVICE_NAME_KMAKER          ServiceName = 49
-	ServiceName_SERVICE_NAME_SAMLSVC         ServiceName = 50
-	ServiceName_SERVICE_NAME_ANY             ServiceName = 99 // wildcard: allow any service
+	ServiceName_SERVICE_NAME_UNSPECIFIED ServiceName = 0
+	ServiceName_SERVICE_NAME_SENTINEL    ServiceName = 5
+	ServiceName_SERVICE_NAME_GATEWAY     ServiceName = 7
+	ServiceName_SERVICE_NAME_KERNEL      ServiceName = 8
+	ServiceName_SERVICE_NAME_LETSENCRYPT ServiceName = 9
+	ServiceName_SERVICE_NAME_GRAPHDB     ServiceName = 13
+	ServiceName_SERVICE_NAME_EVENTBUS    ServiceName = 18
+	ServiceName_SERVICE_NAME_TIMEDB      ServiceName = 20
+	ServiceName_SERVICE_NAME_OAUTH       ServiceName = 21
+	ServiceName_SERVICE_NAME_MSGGATEWAY  ServiceName = 28
+	ServiceName_SERVICE_NAME_OPA         ServiceName = 29
+	ServiceName_SERVICE_NAME_STRATUM     ServiceName = 34
+	ServiceName_SERVICE_NAME_ARGUS       ServiceName = 35
+	ServiceName_SERVICE_NAME_KMAKER      ServiceName = 49
+	ServiceName_SERVICE_NAME_SAMLSVC     ServiceName = 50
+	ServiceName_SERVICE_NAME_ANY         ServiceName = 99 // wildcard: allow any service
 )
 
 // Enum value maps for ServiceName.
@@ -73,47 +67,35 @@ var (
 		7:  "SERVICE_NAME_GATEWAY",
 		8:  "SERVICE_NAME_KERNEL",
 		9:  "SERVICE_NAME_LETSENCRYPT",
-		12: "SERVICE_NAME_MCP",
 		13: "SERVICE_NAME_GRAPHDB",
 		18: "SERVICE_NAME_EVENTBUS",
 		20: "SERVICE_NAME_TIMEDB",
 		21: "SERVICE_NAME_OAUTH",
-		22: "SERVICE_NAME_ANTHROPIC",
-		23: "SERVICE_NAME_GITHUB",
-		24: "SERVICE_NAME_GITLAB",
-		25: "SERVICE_NAME_OPENAI",
 		28: "SERVICE_NAME_MSGGATEWAY",
 		29: "SERVICE_NAME_OPA",
 		34: "SERVICE_NAME_STRATUM",
 		35: "SERVICE_NAME_ARGUS",
-		41: "SERVICE_NAME_GITLABCONNECTOR",
 		49: "SERVICE_NAME_KMAKER",
 		50: "SERVICE_NAME_SAMLSVC",
 		99: "SERVICE_NAME_ANY",
 	}
 	ServiceName_value = map[string]int32{
-		"SERVICE_NAME_UNSPECIFIED":     0,
-		"SERVICE_NAME_SENTINEL":        5,
-		"SERVICE_NAME_GATEWAY":         7,
-		"SERVICE_NAME_KERNEL":          8,
-		"SERVICE_NAME_LETSENCRYPT":     9,
-		"SERVICE_NAME_MCP":             12,
-		"SERVICE_NAME_GRAPHDB":         13,
-		"SERVICE_NAME_EVENTBUS":        18,
-		"SERVICE_NAME_TIMEDB":          20,
-		"SERVICE_NAME_OAUTH":           21,
-		"SERVICE_NAME_ANTHROPIC":       22,
-		"SERVICE_NAME_GITHUB":          23,
-		"SERVICE_NAME_GITLAB":          24,
-		"SERVICE_NAME_OPENAI":          25,
-		"SERVICE_NAME_MSGGATEWAY":      28,
-		"SERVICE_NAME_OPA":             29,
-		"SERVICE_NAME_STRATUM":         34,
-		"SERVICE_NAME_ARGUS":           35,
-		"SERVICE_NAME_GITLABCONNECTOR": 41,
-		"SERVICE_NAME_KMAKER":          49,
-		"SERVICE_NAME_SAMLSVC":         50,
-		"SERVICE_NAME_ANY":             99,
+		"SERVICE_NAME_UNSPECIFIED": 0,
+		"SERVICE_NAME_SENTINEL":    5,
+		"SERVICE_NAME_GATEWAY":     7,
+		"SERVICE_NAME_KERNEL":      8,
+		"SERVICE_NAME_LETSENCRYPT": 9,
+		"SERVICE_NAME_GRAPHDB":     13,
+		"SERVICE_NAME_EVENTBUS":    18,
+		"SERVICE_NAME_TIMEDB":      20,
+		"SERVICE_NAME_OAUTH":       21,
+		"SERVICE_NAME_MSGGATEWAY":  28,
+		"SERVICE_NAME_OPA":         29,
+		"SERVICE_NAME_STRATUM":     34,
+		"SERVICE_NAME_ARGUS":       35,
+		"SERVICE_NAME_KMAKER":      49,
+		"SERVICE_NAME_SAMLSVC":     50,
+		"SERVICE_NAME_ANY":         99,
 	}
 )
 
@@ -357,55 +339,6 @@ func (KernelRPCs) EnumDescriptor() ([]byte, []int) {
 	return file_generated_services_proto_rawDescGZIP(), []int{3}
 }
 
-type McpRPCs int32
-
-const (
-	McpRPCs_MCP_RPCS_UNSPECIFIED McpRPCs = 0
-	McpRPCs_MCP_RPCS_ASSIST      McpRPCs = 1
-	McpRPCs_MCP_RPCS_ANY         McpRPCs = 99 // wildcard: allow any RPC
-)
-
-// Enum value maps for McpRPCs.
-var (
-	McpRPCs_name = map[int32]string{
-		0:  "MCP_RPCS_UNSPECIFIED",
-		1:  "MCP_RPCS_ASSIST",
-		99: "MCP_RPCS_ANY",
-	}
-	McpRPCs_value = map[string]int32{
-		"MCP_RPCS_UNSPECIFIED": 0,
-		"MCP_RPCS_ASSIST":      1,
-		"MCP_RPCS_ANY":         99,
-	}
-)
-
-func (x McpRPCs) Enum() *McpRPCs {
-	p := new(McpRPCs)
-	*p = x
-	return p
-}
-
-func (x McpRPCs) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (McpRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[4].Descriptor()
-}
-
-func (McpRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[4]
-}
-
-func (x McpRPCs) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use McpRPCs.Descriptor instead.
-func (McpRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{4}
-}
-
 type EventbusRPCs int32
 
 const (
@@ -439,11 +372,11 @@ func (x EventbusRPCs) String() string {
 }
 
 func (EventbusRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[5].Descriptor()
+	return file_generated_services_proto_enumTypes[4].Descriptor()
 }
 
 func (EventbusRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[5]
+	return &file_generated_services_proto_enumTypes[4]
 }
 
 func (x EventbusRPCs) Number() protoreflect.EnumNumber {
@@ -452,7 +385,7 @@ func (x EventbusRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use EventbusRPCs.Descriptor instead.
 func (EventbusRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{5}
+	return file_generated_services_proto_rawDescGZIP(), []int{4}
 }
 
 type OauthRPCs int32
@@ -503,11 +436,11 @@ func (x OauthRPCs) String() string {
 }
 
 func (OauthRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[6].Descriptor()
+	return file_generated_services_proto_enumTypes[5].Descriptor()
 }
 
 func (OauthRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[6]
+	return &file_generated_services_proto_enumTypes[5]
 }
 
 func (x OauthRPCs) Number() protoreflect.EnumNumber {
@@ -516,338 +449,7 @@ func (x OauthRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use OauthRPCs.Descriptor instead.
 func (OauthRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{6}
-}
-
-type AnthropicRPCs int32
-
-const (
-	AnthropicRPCs_ANTHROPIC_RPCS_UNSPECIFIED             AnthropicRPCs = 0
-	AnthropicRPCs_ANTHROPIC_RPCS_CREATE_MESSAGE          AnthropicRPCs = 1
-	AnthropicRPCs_ANTHROPIC_RPCS_GENERATE_MESSAGE_STREAM AnthropicRPCs = 2
-	AnthropicRPCs_ANTHROPIC_RPCS_ANY                     AnthropicRPCs = 99 // wildcard: allow any RPC
-)
-
-// Enum value maps for AnthropicRPCs.
-var (
-	AnthropicRPCs_name = map[int32]string{
-		0:  "ANTHROPIC_RPCS_UNSPECIFIED",
-		1:  "ANTHROPIC_RPCS_CREATE_MESSAGE",
-		2:  "ANTHROPIC_RPCS_GENERATE_MESSAGE_STREAM",
-		99: "ANTHROPIC_RPCS_ANY",
-	}
-	AnthropicRPCs_value = map[string]int32{
-		"ANTHROPIC_RPCS_UNSPECIFIED":             0,
-		"ANTHROPIC_RPCS_CREATE_MESSAGE":          1,
-		"ANTHROPIC_RPCS_GENERATE_MESSAGE_STREAM": 2,
-		"ANTHROPIC_RPCS_ANY":                     99,
-	}
-)
-
-func (x AnthropicRPCs) Enum() *AnthropicRPCs {
-	p := new(AnthropicRPCs)
-	*p = x
-	return p
-}
-
-func (x AnthropicRPCs) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (AnthropicRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[7].Descriptor()
-}
-
-func (AnthropicRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[7]
-}
-
-func (x AnthropicRPCs) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use AnthropicRPCs.Descriptor instead.
-func (AnthropicRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{7}
-}
-
-type GithubRPCs int32
-
-const (
-	GithubRPCs_GITHUB_RPCS_UNSPECIFIED              GithubRPCs = 0
-	GithubRPCs_GITHUB_RPCS_PROXY                    GithubRPCs = 1
-	GithubRPCs_GITHUB_RPCS_GET_REPOSITORY           GithubRPCs = 2
-	GithubRPCs_GITHUB_RPCS_LIST_ISSUES              GithubRPCs = 3
-	GithubRPCs_GITHUB_RPCS_GET_ISSUE                GithubRPCs = 4
-	GithubRPCs_GITHUB_RPCS_CREATE_ISSUE             GithubRPCs = 5
-	GithubRPCs_GITHUB_RPCS_UPDATE_ISSUE             GithubRPCs = 6
-	GithubRPCs_GITHUB_RPCS_CREATE_ISSUE_COMMENT     GithubRPCs = 7
-	GithubRPCs_GITHUB_RPCS_LIST_PULL_REQUESTS       GithubRPCs = 8
-	GithubRPCs_GITHUB_RPCS_GET_PULL_REQUEST         GithubRPCs = 9
-	GithubRPCs_GITHUB_RPCS_CREATE_PULL_REQUEST      GithubRPCs = 10
-	GithubRPCs_GITHUB_RPCS_MERGE_PULL_REQUEST       GithubRPCs = 11
-	GithubRPCs_GITHUB_RPCS_LIST_PULL_REQUEST_FILES  GithubRPCs = 12
-	GithubRPCs_GITHUB_RPCS_GET_CONTENT              GithubRPCs = 13
-	GithubRPCs_GITHUB_RPCS_CREATE_OR_UPDATE_FILE    GithubRPCs = 14
-	GithubRPCs_GITHUB_RPCS_LIST_BRANCHES            GithubRPCs = 15
-	GithubRPCs_GITHUB_RPCS_CREATE_BRANCH            GithubRPCs = 16
-	GithubRPCs_GITHUB_RPCS_LIST_COMMITS             GithubRPCs = 17
-	GithubRPCs_GITHUB_RPCS_LIST_CODE_SEARCH_RESULTS GithubRPCs = 18
-	GithubRPCs_GITHUB_RPCS_ANY                      GithubRPCs = 99 // wildcard: allow any RPC
-)
-
-// Enum value maps for GithubRPCs.
-var (
-	GithubRPCs_name = map[int32]string{
-		0:  "GITHUB_RPCS_UNSPECIFIED",
-		1:  "GITHUB_RPCS_PROXY",
-		2:  "GITHUB_RPCS_GET_REPOSITORY",
-		3:  "GITHUB_RPCS_LIST_ISSUES",
-		4:  "GITHUB_RPCS_GET_ISSUE",
-		5:  "GITHUB_RPCS_CREATE_ISSUE",
-		6:  "GITHUB_RPCS_UPDATE_ISSUE",
-		7:  "GITHUB_RPCS_CREATE_ISSUE_COMMENT",
-		8:  "GITHUB_RPCS_LIST_PULL_REQUESTS",
-		9:  "GITHUB_RPCS_GET_PULL_REQUEST",
-		10: "GITHUB_RPCS_CREATE_PULL_REQUEST",
-		11: "GITHUB_RPCS_MERGE_PULL_REQUEST",
-		12: "GITHUB_RPCS_LIST_PULL_REQUEST_FILES",
-		13: "GITHUB_RPCS_GET_CONTENT",
-		14: "GITHUB_RPCS_CREATE_OR_UPDATE_FILE",
-		15: "GITHUB_RPCS_LIST_BRANCHES",
-		16: "GITHUB_RPCS_CREATE_BRANCH",
-		17: "GITHUB_RPCS_LIST_COMMITS",
-		18: "GITHUB_RPCS_LIST_CODE_SEARCH_RESULTS",
-		99: "GITHUB_RPCS_ANY",
-	}
-	GithubRPCs_value = map[string]int32{
-		"GITHUB_RPCS_UNSPECIFIED":              0,
-		"GITHUB_RPCS_PROXY":                    1,
-		"GITHUB_RPCS_GET_REPOSITORY":           2,
-		"GITHUB_RPCS_LIST_ISSUES":              3,
-		"GITHUB_RPCS_GET_ISSUE":                4,
-		"GITHUB_RPCS_CREATE_ISSUE":             5,
-		"GITHUB_RPCS_UPDATE_ISSUE":             6,
-		"GITHUB_RPCS_CREATE_ISSUE_COMMENT":     7,
-		"GITHUB_RPCS_LIST_PULL_REQUESTS":       8,
-		"GITHUB_RPCS_GET_PULL_REQUEST":         9,
-		"GITHUB_RPCS_CREATE_PULL_REQUEST":      10,
-		"GITHUB_RPCS_MERGE_PULL_REQUEST":       11,
-		"GITHUB_RPCS_LIST_PULL_REQUEST_FILES":  12,
-		"GITHUB_RPCS_GET_CONTENT":              13,
-		"GITHUB_RPCS_CREATE_OR_UPDATE_FILE":    14,
-		"GITHUB_RPCS_LIST_BRANCHES":            15,
-		"GITHUB_RPCS_CREATE_BRANCH":            16,
-		"GITHUB_RPCS_LIST_COMMITS":             17,
-		"GITHUB_RPCS_LIST_CODE_SEARCH_RESULTS": 18,
-		"GITHUB_RPCS_ANY":                      99,
-	}
-)
-
-func (x GithubRPCs) Enum() *GithubRPCs {
-	p := new(GithubRPCs)
-	*p = x
-	return p
-}
-
-func (x GithubRPCs) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (GithubRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[8].Descriptor()
-}
-
-func (GithubRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[8]
-}
-
-func (x GithubRPCs) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use GithubRPCs.Descriptor instead.
-func (GithubRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{8}
-}
-
-type GitlabRPCs int32
-
-const (
-	GitlabRPCs_GITLAB_RPCS_UNSPECIFIED                GitlabRPCs = 0
-	GitlabRPCs_GITLAB_RPCS_PROXY                      GitlabRPCs = 1
-	GitlabRPCs_GITLAB_RPCS_GET_PROJECT                GitlabRPCs = 2
-	GitlabRPCs_GITLAB_RPCS_LIST_ISSUES                GitlabRPCs = 3
-	GitlabRPCs_GITLAB_RPCS_GET_ISSUE                  GitlabRPCs = 4
-	GitlabRPCs_GITLAB_RPCS_CREATE_ISSUE               GitlabRPCs = 5
-	GitlabRPCs_GITLAB_RPCS_UPDATE_ISSUE               GitlabRPCs = 6
-	GitlabRPCs_GITLAB_RPCS_CREATE_ISSUE_NOTE          GitlabRPCs = 7
-	GitlabRPCs_GITLAB_RPCS_LIST_MERGE_REQUESTS        GitlabRPCs = 8
-	GitlabRPCs_GITLAB_RPCS_GET_MERGE_REQUEST          GitlabRPCs = 9
-	GitlabRPCs_GITLAB_RPCS_CREATE_MERGE_REQUEST       GitlabRPCs = 10
-	GitlabRPCs_GITLAB_RPCS_UPDATE_MERGE_REQUEST       GitlabRPCs = 11
-	GitlabRPCs_GITLAB_RPCS_MERGE_MERGE_REQUEST        GitlabRPCs = 12
-	GitlabRPCs_GITLAB_RPCS_LIST_MERGE_REQUEST_CHANGES GitlabRPCs = 13
-	GitlabRPCs_GITLAB_RPCS_CREATE_MERGE_REQUEST_NOTE  GitlabRPCs = 14
-	GitlabRPCs_GITLAB_RPCS_LIST_PIPELINES             GitlabRPCs = 15
-	GitlabRPCs_GITLAB_RPCS_GET_PIPELINE               GitlabRPCs = 16
-	GitlabRPCs_GITLAB_RPCS_CREATE_PIPELINE            GitlabRPCs = 17
-	GitlabRPCs_GITLAB_RPCS_CANCEL_PIPELINE            GitlabRPCs = 18
-	GitlabRPCs_GITLAB_RPCS_RETRY_PIPELINE             GitlabRPCs = 19
-	GitlabRPCs_GITLAB_RPCS_LIST_PIPELINE_JOBS         GitlabRPCs = 20
-	GitlabRPCs_GITLAB_RPCS_GET_REPOSITORY_FILE        GitlabRPCs = 21
-	GitlabRPCs_GITLAB_RPCS_CREATE_REPOSITORY_FILE     GitlabRPCs = 22
-	GitlabRPCs_GITLAB_RPCS_UPDATE_REPOSITORY_FILE     GitlabRPCs = 23
-	GitlabRPCs_GITLAB_RPCS_LIST_BRANCHES              GitlabRPCs = 24
-	GitlabRPCs_GITLAB_RPCS_CREATE_BRANCH              GitlabRPCs = 25
-	GitlabRPCs_GITLAB_RPCS_LIST_COMMITS               GitlabRPCs = 26
-	GitlabRPCs_GITLAB_RPCS_LIST_BLOB_SEARCH_RESULTS   GitlabRPCs = 27
-	GitlabRPCs_GITLAB_RPCS_ANY                        GitlabRPCs = 99 // wildcard: allow any RPC
-)
-
-// Enum value maps for GitlabRPCs.
-var (
-	GitlabRPCs_name = map[int32]string{
-		0:  "GITLAB_RPCS_UNSPECIFIED",
-		1:  "GITLAB_RPCS_PROXY",
-		2:  "GITLAB_RPCS_GET_PROJECT",
-		3:  "GITLAB_RPCS_LIST_ISSUES",
-		4:  "GITLAB_RPCS_GET_ISSUE",
-		5:  "GITLAB_RPCS_CREATE_ISSUE",
-		6:  "GITLAB_RPCS_UPDATE_ISSUE",
-		7:  "GITLAB_RPCS_CREATE_ISSUE_NOTE",
-		8:  "GITLAB_RPCS_LIST_MERGE_REQUESTS",
-		9:  "GITLAB_RPCS_GET_MERGE_REQUEST",
-		10: "GITLAB_RPCS_CREATE_MERGE_REQUEST",
-		11: "GITLAB_RPCS_UPDATE_MERGE_REQUEST",
-		12: "GITLAB_RPCS_MERGE_MERGE_REQUEST",
-		13: "GITLAB_RPCS_LIST_MERGE_REQUEST_CHANGES",
-		14: "GITLAB_RPCS_CREATE_MERGE_REQUEST_NOTE",
-		15: "GITLAB_RPCS_LIST_PIPELINES",
-		16: "GITLAB_RPCS_GET_PIPELINE",
-		17: "GITLAB_RPCS_CREATE_PIPELINE",
-		18: "GITLAB_RPCS_CANCEL_PIPELINE",
-		19: "GITLAB_RPCS_RETRY_PIPELINE",
-		20: "GITLAB_RPCS_LIST_PIPELINE_JOBS",
-		21: "GITLAB_RPCS_GET_REPOSITORY_FILE",
-		22: "GITLAB_RPCS_CREATE_REPOSITORY_FILE",
-		23: "GITLAB_RPCS_UPDATE_REPOSITORY_FILE",
-		24: "GITLAB_RPCS_LIST_BRANCHES",
-		25: "GITLAB_RPCS_CREATE_BRANCH",
-		26: "GITLAB_RPCS_LIST_COMMITS",
-		27: "GITLAB_RPCS_LIST_BLOB_SEARCH_RESULTS",
-		99: "GITLAB_RPCS_ANY",
-	}
-	GitlabRPCs_value = map[string]int32{
-		"GITLAB_RPCS_UNSPECIFIED":                0,
-		"GITLAB_RPCS_PROXY":                      1,
-		"GITLAB_RPCS_GET_PROJECT":                2,
-		"GITLAB_RPCS_LIST_ISSUES":                3,
-		"GITLAB_RPCS_GET_ISSUE":                  4,
-		"GITLAB_RPCS_CREATE_ISSUE":               5,
-		"GITLAB_RPCS_UPDATE_ISSUE":               6,
-		"GITLAB_RPCS_CREATE_ISSUE_NOTE":          7,
-		"GITLAB_RPCS_LIST_MERGE_REQUESTS":        8,
-		"GITLAB_RPCS_GET_MERGE_REQUEST":          9,
-		"GITLAB_RPCS_CREATE_MERGE_REQUEST":       10,
-		"GITLAB_RPCS_UPDATE_MERGE_REQUEST":       11,
-		"GITLAB_RPCS_MERGE_MERGE_REQUEST":        12,
-		"GITLAB_RPCS_LIST_MERGE_REQUEST_CHANGES": 13,
-		"GITLAB_RPCS_CREATE_MERGE_REQUEST_NOTE":  14,
-		"GITLAB_RPCS_LIST_PIPELINES":             15,
-		"GITLAB_RPCS_GET_PIPELINE":               16,
-		"GITLAB_RPCS_CREATE_PIPELINE":            17,
-		"GITLAB_RPCS_CANCEL_PIPELINE":            18,
-		"GITLAB_RPCS_RETRY_PIPELINE":             19,
-		"GITLAB_RPCS_LIST_PIPELINE_JOBS":         20,
-		"GITLAB_RPCS_GET_REPOSITORY_FILE":        21,
-		"GITLAB_RPCS_CREATE_REPOSITORY_FILE":     22,
-		"GITLAB_RPCS_UPDATE_REPOSITORY_FILE":     23,
-		"GITLAB_RPCS_LIST_BRANCHES":              24,
-		"GITLAB_RPCS_CREATE_BRANCH":              25,
-		"GITLAB_RPCS_LIST_COMMITS":               26,
-		"GITLAB_RPCS_LIST_BLOB_SEARCH_RESULTS":   27,
-		"GITLAB_RPCS_ANY":                        99,
-	}
-)
-
-func (x GitlabRPCs) Enum() *GitlabRPCs {
-	p := new(GitlabRPCs)
-	*p = x
-	return p
-}
-
-func (x GitlabRPCs) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (GitlabRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[9].Descriptor()
-}
-
-func (GitlabRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[9]
-}
-
-func (x GitlabRPCs) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use GitlabRPCs.Descriptor instead.
-func (GitlabRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{9}
-}
-
-type OpenaiRPCs int32
-
-const (
-	OpenaiRPCs_OPENAI_RPCS_UNSPECIFIED                     OpenaiRPCs = 0
-	OpenaiRPCs_OPENAI_RPCS_CREATE_CHAT_COMPLETION          OpenaiRPCs = 1
-	OpenaiRPCs_OPENAI_RPCS_GENERATE_CHAT_COMPLETION_STREAM OpenaiRPCs = 2
-	OpenaiRPCs_OPENAI_RPCS_ANY                             OpenaiRPCs = 99 // wildcard: allow any RPC
-)
-
-// Enum value maps for OpenaiRPCs.
-var (
-	OpenaiRPCs_name = map[int32]string{
-		0:  "OPENAI_RPCS_UNSPECIFIED",
-		1:  "OPENAI_RPCS_CREATE_CHAT_COMPLETION",
-		2:  "OPENAI_RPCS_GENERATE_CHAT_COMPLETION_STREAM",
-		99: "OPENAI_RPCS_ANY",
-	}
-	OpenaiRPCs_value = map[string]int32{
-		"OPENAI_RPCS_UNSPECIFIED":                     0,
-		"OPENAI_RPCS_CREATE_CHAT_COMPLETION":          1,
-		"OPENAI_RPCS_GENERATE_CHAT_COMPLETION_STREAM": 2,
-		"OPENAI_RPCS_ANY":                             99,
-	}
-)
-
-func (x OpenaiRPCs) Enum() *OpenaiRPCs {
-	p := new(OpenaiRPCs)
-	*p = x
-	return p
-}
-
-func (x OpenaiRPCs) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (OpenaiRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[10].Descriptor()
-}
-
-func (OpenaiRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[10]
-}
-
-func (x OpenaiRPCs) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use OpenaiRPCs.Descriptor instead.
-func (OpenaiRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{10}
+	return file_generated_services_proto_rawDescGZIP(), []int{5}
 }
 
 type ArgusRPCs int32
@@ -982,11 +584,11 @@ func (x ArgusRPCs) String() string {
 }
 
 func (ArgusRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[11].Descriptor()
+	return file_generated_services_proto_enumTypes[6].Descriptor()
 }
 
 func (ArgusRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[11]
+	return &file_generated_services_proto_enumTypes[6]
 }
 
 func (x ArgusRPCs) Number() protoreflect.EnumNumber {
@@ -995,7 +597,7 @@ func (x ArgusRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ArgusRPCs.Descriptor instead.
 func (ArgusRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{11}
+	return file_generated_services_proto_rawDescGZIP(), []int{6}
 }
 
 type SamlRPCs int32
@@ -1049,11 +651,11 @@ func (x SamlRPCs) String() string {
 }
 
 func (SamlRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[12].Descriptor()
+	return file_generated_services_proto_enumTypes[7].Descriptor()
 }
 
 func (SamlRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[12]
+	return &file_generated_services_proto_enumTypes[7]
 }
 
 func (x SamlRPCs) Number() protoreflect.EnumNumber {
@@ -1062,7 +664,7 @@ func (x SamlRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SamlRPCs.Descriptor instead.
 func (SamlRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{12}
+	return file_generated_services_proto_rawDescGZIP(), []int{7}
 }
 
 // agentsensor (vservice, hosted by eventbus)
@@ -1102,11 +704,11 @@ func (x AgentsensorRPCs) String() string {
 }
 
 func (AgentsensorRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[13].Descriptor()
+	return file_generated_services_proto_enumTypes[8].Descriptor()
 }
 
 func (AgentsensorRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[13]
+	return &file_generated_services_proto_enumTypes[8]
 }
 
 func (x AgentsensorRPCs) Number() protoreflect.EnumNumber {
@@ -1115,193 +717,28 @@ func (x AgentsensorRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use AgentsensorRPCs.Descriptor instead.
 func (AgentsensorRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{13}
-}
-
-// scmsensor (vservice, hosted by eventbus)
-type ScmsensorRPCs int32
-
-const (
-	ScmsensorRPCs_SCMSENSOR_RPCS_UNSPECIFIED                                    ScmsensorRPCs = 0
-	ScmsensorRPCs_SCMSENSOR_RPCS_PUBLISH_SCMSENSOR_SCM_EVENT_BUS_EVENT_STREAM   ScmsensorRPCs = 1
-	ScmsensorRPCs_SCMSENSOR_RPCS_SUBSCRIBE_SCMSENSOR_SCM_EVENT_BUS_EVENT_STREAM ScmsensorRPCs = 2
-	ScmsensorRPCs_SCMSENSOR_RPCS_ANY                                            ScmsensorRPCs = 99 // wildcard: allow any RPC
-)
-
-// Enum value maps for ScmsensorRPCs.
-var (
-	ScmsensorRPCs_name = map[int32]string{
-		0:  "SCMSENSOR_RPCS_UNSPECIFIED",
-		1:  "SCMSENSOR_RPCS_PUBLISH_SCMSENSOR_SCM_EVENT_BUS_EVENT_STREAM",
-		2:  "SCMSENSOR_RPCS_SUBSCRIBE_SCMSENSOR_SCM_EVENT_BUS_EVENT_STREAM",
-		99: "SCMSENSOR_RPCS_ANY",
-	}
-	ScmsensorRPCs_value = map[string]int32{
-		"SCMSENSOR_RPCS_UNSPECIFIED":                                    0,
-		"SCMSENSOR_RPCS_PUBLISH_SCMSENSOR_SCM_EVENT_BUS_EVENT_STREAM":   1,
-		"SCMSENSOR_RPCS_SUBSCRIBE_SCMSENSOR_SCM_EVENT_BUS_EVENT_STREAM": 2,
-		"SCMSENSOR_RPCS_ANY":                                            99,
-	}
-)
-
-func (x ScmsensorRPCs) Enum() *ScmsensorRPCs {
-	p := new(ScmsensorRPCs)
-	*p = x
-	return p
-}
-
-func (x ScmsensorRPCs) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ScmsensorRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[14].Descriptor()
-}
-
-func (ScmsensorRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[14]
-}
-
-func (x ScmsensorRPCs) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use ScmsensorRPCs.Descriptor instead.
-func (ScmsensorRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{14}
-}
-
-// llmsensor (vservice, hosted by eventbus)
-type LlmsensorRPCs int32
-
-const (
-	LlmsensorRPCs_LLMSENSOR_RPCS_UNSPECIFIED                                    LlmsensorRPCs = 0
-	LlmsensorRPCs_LLMSENSOR_RPCS_PUBLISH_LLMSENSOR_LLM_EVENT_BUS_EVENT_STREAM   LlmsensorRPCs = 1
-	LlmsensorRPCs_LLMSENSOR_RPCS_SUBSCRIBE_LLMSENSOR_LLM_EVENT_BUS_EVENT_STREAM LlmsensorRPCs = 2
-	LlmsensorRPCs_LLMSENSOR_RPCS_ANY                                            LlmsensorRPCs = 99 // wildcard: allow any RPC
-)
-
-// Enum value maps for LlmsensorRPCs.
-var (
-	LlmsensorRPCs_name = map[int32]string{
-		0:  "LLMSENSOR_RPCS_UNSPECIFIED",
-		1:  "LLMSENSOR_RPCS_PUBLISH_LLMSENSOR_LLM_EVENT_BUS_EVENT_STREAM",
-		2:  "LLMSENSOR_RPCS_SUBSCRIBE_LLMSENSOR_LLM_EVENT_BUS_EVENT_STREAM",
-		99: "LLMSENSOR_RPCS_ANY",
-	}
-	LlmsensorRPCs_value = map[string]int32{
-		"LLMSENSOR_RPCS_UNSPECIFIED":                                    0,
-		"LLMSENSOR_RPCS_PUBLISH_LLMSENSOR_LLM_EVENT_BUS_EVENT_STREAM":   1,
-		"LLMSENSOR_RPCS_SUBSCRIBE_LLMSENSOR_LLM_EVENT_BUS_EVENT_STREAM": 2,
-		"LLMSENSOR_RPCS_ANY":                                            99,
-	}
-)
-
-func (x LlmsensorRPCs) Enum() *LlmsensorRPCs {
-	p := new(LlmsensorRPCs)
-	*p = x
-	return p
-}
-
-func (x LlmsensorRPCs) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (LlmsensorRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[15].Descriptor()
-}
-
-func (LlmsensorRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[15]
-}
-
-func (x LlmsensorRPCs) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use LlmsensorRPCs.Descriptor instead.
-func (LlmsensorRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{15}
-}
-
-// gitlabconnector (vservice, hosted by eventbus)
-type GitlabconnectorRPCs int32
-
-const (
-	GitlabconnectorRPCs_GITLABCONNECTOR_RPCS_UNSPECIFIED                                                        GitlabconnectorRPCs = 0
-	GitlabconnectorRPCs_GITLABCONNECTOR_RPCS_PUBLISH_GITLABCONNECTOR_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM   GitlabconnectorRPCs = 1
-	GitlabconnectorRPCs_GITLABCONNECTOR_RPCS_SUBSCRIBE_GITLABCONNECTOR_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM GitlabconnectorRPCs = 2
-	GitlabconnectorRPCs_GITLABCONNECTOR_RPCS_ANY                                                                GitlabconnectorRPCs = 99 // wildcard: allow any RPC
-)
-
-// Enum value maps for GitlabconnectorRPCs.
-var (
-	GitlabconnectorRPCs_name = map[int32]string{
-		0:  "GITLABCONNECTOR_RPCS_UNSPECIFIED",
-		1:  "GITLABCONNECTOR_RPCS_PUBLISH_GITLABCONNECTOR_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM",
-		2:  "GITLABCONNECTOR_RPCS_SUBSCRIBE_GITLABCONNECTOR_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM",
-		99: "GITLABCONNECTOR_RPCS_ANY",
-	}
-	GitlabconnectorRPCs_value = map[string]int32{
-		"GITLABCONNECTOR_RPCS_UNSPECIFIED": 0,
-		"GITLABCONNECTOR_RPCS_PUBLISH_GITLABCONNECTOR_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM":   1,
-		"GITLABCONNECTOR_RPCS_SUBSCRIBE_GITLABCONNECTOR_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM": 2,
-		"GITLABCONNECTOR_RPCS_ANY": 99,
-	}
-)
-
-func (x GitlabconnectorRPCs) Enum() *GitlabconnectorRPCs {
-	p := new(GitlabconnectorRPCs)
-	*p = x
-	return p
-}
-
-func (x GitlabconnectorRPCs) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (GitlabconnectorRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[16].Descriptor()
-}
-
-func (GitlabconnectorRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[16]
-}
-
-func (x GitlabconnectorRPCs) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use GitlabconnectorRPCs.Descriptor instead.
-func (GitlabconnectorRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{16}
+	return file_generated_services_proto_rawDescGZIP(), []int{8}
 }
 
 var File_generated_services_proto protoreflect.FileDescriptor
 
 const file_generated_services_proto_rawDesc = "" +
 	"\n" +
-	"\x18generated/services.proto\x12\bservices*\xca\x04\n" +
+	"\x18generated/services.proto\x12\bservices*\xab\x03\n" +
 	"\vServiceName\x12\x1c\n" +
 	"\x18SERVICE_NAME_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15SERVICE_NAME_SENTINEL\x10\x05\x12\x18\n" +
 	"\x14SERVICE_NAME_GATEWAY\x10\a\x12\x17\n" +
 	"\x13SERVICE_NAME_KERNEL\x10\b\x12\x1c\n" +
-	"\x18SERVICE_NAME_LETSENCRYPT\x10\t\x12\x14\n" +
-	"\x10SERVICE_NAME_MCP\x10\f\x12\x18\n" +
+	"\x18SERVICE_NAME_LETSENCRYPT\x10\t\x12\x18\n" +
 	"\x14SERVICE_NAME_GRAPHDB\x10\r\x12\x19\n" +
 	"\x15SERVICE_NAME_EVENTBUS\x10\x12\x12\x17\n" +
 	"\x13SERVICE_NAME_TIMEDB\x10\x14\x12\x16\n" +
-	"\x12SERVICE_NAME_OAUTH\x10\x15\x12\x1a\n" +
-	"\x16SERVICE_NAME_ANTHROPIC\x10\x16\x12\x17\n" +
-	"\x13SERVICE_NAME_GITHUB\x10\x17\x12\x17\n" +
-	"\x13SERVICE_NAME_GITLAB\x10\x18\x12\x17\n" +
-	"\x13SERVICE_NAME_OPENAI\x10\x19\x12\x1b\n" +
+	"\x12SERVICE_NAME_OAUTH\x10\x15\x12\x1b\n" +
 	"\x17SERVICE_NAME_MSGGATEWAY\x10\x1c\x12\x14\n" +
 	"\x10SERVICE_NAME_OPA\x10\x1d\x12\x18\n" +
 	"\x14SERVICE_NAME_STRATUM\x10\"\x12\x16\n" +
-	"\x12SERVICE_NAME_ARGUS\x10#\x12 \n" +
-	"\x1cSERVICE_NAME_GITLABCONNECTOR\x10)\x12\x17\n" +
+	"\x12SERVICE_NAME_ARGUS\x10#\x12\x17\n" +
 	"\x13SERVICE_NAME_KMAKER\x101\x12\x18\n" +
 	"\x14SERVICE_NAME_SAMLSVC\x102\x12\x14\n" +
 	"\x10SERVICE_NAME_ANY\x10c*\xdf\x03\n" +
@@ -1340,11 +777,7 @@ const file_generated_services_proto_rawDesc = "" +
 	"!KERNEL_RPCS_UPDATE_PROJECT_CONFIG\x10\a\x12\x1d\n" +
 	"\x19KERNEL_RPCS_LIST_PROJECTS\x10\b\x12\x1e\n" +
 	"\x1aKERNEL_RPCS_DELETE_PROJECT\x10\t\x12\x13\n" +
-	"\x0fKERNEL_RPCS_ANY\x10c*J\n" +
-	"\aMcpRPCs\x12\x18\n" +
-	"\x14MCP_RPCS_UNSPECIFIED\x10\x00\x12\x13\n" +
-	"\x0fMCP_RPCS_ASSIST\x10\x01\x12\x10\n" +
-	"\fMCP_RPCS_ANY\x10c*g\n" +
+	"\x0fKERNEL_RPCS_ANY\x10c*g\n" +
 	"\fEventbusRPCs\x12\x1d\n" +
 	"\x19EVENTBUS_RPCS_UNSPECIFIED\x10\x00\x12!\n" +
 	"\x1dEVENTBUS_RPCS_SUBSCRIBE_TRACE\x10\x01\x12\x15\n" +
@@ -1357,73 +790,7 @@ const file_generated_services_proto_rawDesc = "" +
 	"\x1fOAUTH_RPCS_MINT_CALLBACK_TOKENS\x10\x04\x12\x1d\n" +
 	"\x19OAUTH_RPCS_REVOKE_SESSION\x10\x05\x12\x1e\n" +
 	"\x1aOAUTH_RPCS_BROKER_CLI_AUTH\x10\x06\x12\x12\n" +
-	"\x0eOAUTH_RPCS_ANY\x10c*\x96\x01\n" +
-	"\rAnthropicRPCs\x12\x1e\n" +
-	"\x1aANTHROPIC_RPCS_UNSPECIFIED\x10\x00\x12!\n" +
-	"\x1dANTHROPIC_RPCS_CREATE_MESSAGE\x10\x01\x12*\n" +
-	"&ANTHROPIC_RPCS_GENERATE_MESSAGE_STREAM\x10\x02\x12\x16\n" +
-	"\x12ANTHROPIC_RPCS_ANY\x10c*\x91\x05\n" +
-	"\n" +
-	"GithubRPCs\x12\x1b\n" +
-	"\x17GITHUB_RPCS_UNSPECIFIED\x10\x00\x12\x15\n" +
-	"\x11GITHUB_RPCS_PROXY\x10\x01\x12\x1e\n" +
-	"\x1aGITHUB_RPCS_GET_REPOSITORY\x10\x02\x12\x1b\n" +
-	"\x17GITHUB_RPCS_LIST_ISSUES\x10\x03\x12\x19\n" +
-	"\x15GITHUB_RPCS_GET_ISSUE\x10\x04\x12\x1c\n" +
-	"\x18GITHUB_RPCS_CREATE_ISSUE\x10\x05\x12\x1c\n" +
-	"\x18GITHUB_RPCS_UPDATE_ISSUE\x10\x06\x12$\n" +
-	" GITHUB_RPCS_CREATE_ISSUE_COMMENT\x10\a\x12\"\n" +
-	"\x1eGITHUB_RPCS_LIST_PULL_REQUESTS\x10\b\x12 \n" +
-	"\x1cGITHUB_RPCS_GET_PULL_REQUEST\x10\t\x12#\n" +
-	"\x1fGITHUB_RPCS_CREATE_PULL_REQUEST\x10\n" +
-	"\x12\"\n" +
-	"\x1eGITHUB_RPCS_MERGE_PULL_REQUEST\x10\v\x12'\n" +
-	"#GITHUB_RPCS_LIST_PULL_REQUEST_FILES\x10\f\x12\x1b\n" +
-	"\x17GITHUB_RPCS_GET_CONTENT\x10\r\x12%\n" +
-	"!GITHUB_RPCS_CREATE_OR_UPDATE_FILE\x10\x0e\x12\x1d\n" +
-	"\x19GITHUB_RPCS_LIST_BRANCHES\x10\x0f\x12\x1d\n" +
-	"\x19GITHUB_RPCS_CREATE_BRANCH\x10\x10\x12\x1c\n" +
-	"\x18GITHUB_RPCS_LIST_COMMITS\x10\x11\x12(\n" +
-	"$GITHUB_RPCS_LIST_CODE_SEARCH_RESULTS\x10\x12\x12\x13\n" +
-	"\x0fGITHUB_RPCS_ANY\x10c*\xd8\a\n" +
-	"\n" +
-	"GitlabRPCs\x12\x1b\n" +
-	"\x17GITLAB_RPCS_UNSPECIFIED\x10\x00\x12\x15\n" +
-	"\x11GITLAB_RPCS_PROXY\x10\x01\x12\x1b\n" +
-	"\x17GITLAB_RPCS_GET_PROJECT\x10\x02\x12\x1b\n" +
-	"\x17GITLAB_RPCS_LIST_ISSUES\x10\x03\x12\x19\n" +
-	"\x15GITLAB_RPCS_GET_ISSUE\x10\x04\x12\x1c\n" +
-	"\x18GITLAB_RPCS_CREATE_ISSUE\x10\x05\x12\x1c\n" +
-	"\x18GITLAB_RPCS_UPDATE_ISSUE\x10\x06\x12!\n" +
-	"\x1dGITLAB_RPCS_CREATE_ISSUE_NOTE\x10\a\x12#\n" +
-	"\x1fGITLAB_RPCS_LIST_MERGE_REQUESTS\x10\b\x12!\n" +
-	"\x1dGITLAB_RPCS_GET_MERGE_REQUEST\x10\t\x12$\n" +
-	" GITLAB_RPCS_CREATE_MERGE_REQUEST\x10\n" +
-	"\x12$\n" +
-	" GITLAB_RPCS_UPDATE_MERGE_REQUEST\x10\v\x12#\n" +
-	"\x1fGITLAB_RPCS_MERGE_MERGE_REQUEST\x10\f\x12*\n" +
-	"&GITLAB_RPCS_LIST_MERGE_REQUEST_CHANGES\x10\r\x12)\n" +
-	"%GITLAB_RPCS_CREATE_MERGE_REQUEST_NOTE\x10\x0e\x12\x1e\n" +
-	"\x1aGITLAB_RPCS_LIST_PIPELINES\x10\x0f\x12\x1c\n" +
-	"\x18GITLAB_RPCS_GET_PIPELINE\x10\x10\x12\x1f\n" +
-	"\x1bGITLAB_RPCS_CREATE_PIPELINE\x10\x11\x12\x1f\n" +
-	"\x1bGITLAB_RPCS_CANCEL_PIPELINE\x10\x12\x12\x1e\n" +
-	"\x1aGITLAB_RPCS_RETRY_PIPELINE\x10\x13\x12\"\n" +
-	"\x1eGITLAB_RPCS_LIST_PIPELINE_JOBS\x10\x14\x12#\n" +
-	"\x1fGITLAB_RPCS_GET_REPOSITORY_FILE\x10\x15\x12&\n" +
-	"\"GITLAB_RPCS_CREATE_REPOSITORY_FILE\x10\x16\x12&\n" +
-	"\"GITLAB_RPCS_UPDATE_REPOSITORY_FILE\x10\x17\x12\x1d\n" +
-	"\x19GITLAB_RPCS_LIST_BRANCHES\x10\x18\x12\x1d\n" +
-	"\x19GITLAB_RPCS_CREATE_BRANCH\x10\x19\x12\x1c\n" +
-	"\x18GITLAB_RPCS_LIST_COMMITS\x10\x1a\x12(\n" +
-	"$GITLAB_RPCS_LIST_BLOB_SEARCH_RESULTS\x10\x1b\x12\x13\n" +
-	"\x0fGITLAB_RPCS_ANY\x10c*\x97\x01\n" +
-	"\n" +
-	"OpenaiRPCs\x12\x1b\n" +
-	"\x17OPENAI_RPCS_UNSPECIFIED\x10\x00\x12&\n" +
-	"\"OPENAI_RPCS_CREATE_CHAT_COMPLETION\x10\x01\x12/\n" +
-	"+OPENAI_RPCS_GENERATE_CHAT_COMPLETION_STREAM\x10\x02\x12\x13\n" +
-	"\x0fOPENAI_RPCS_ANY\x10c*\xa9\n" +
+	"\x0eOAUTH_RPCS_ANY\x10c*\xa9\n" +
 	"\n" +
 	"\tArgusRPCs\x12\x1a\n" +
 	"\x16ARGUS_RPCS_UNSPECIFIED\x10\x00\x12\x1c\n" +
@@ -1477,22 +844,7 @@ const file_generated_services_proto_rawDesc = "" +
 	"\x1cAGENTSENSOR_RPCS_UNSPECIFIED\x10\x00\x12E\n" +
 	"AAGENTSENSOR_RPCS_PUBLISH_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM\x10\x01\x12G\n" +
 	"CAGENTSENSOR_RPCS_SUBSCRIBE_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM\x10\x02\x12\x18\n" +
-	"\x14AGENTSENSOR_RPCS_ANY\x10c*\xcb\x01\n" +
-	"\rScmsensorRPCs\x12\x1e\n" +
-	"\x1aSCMSENSOR_RPCS_UNSPECIFIED\x10\x00\x12?\n" +
-	";SCMSENSOR_RPCS_PUBLISH_SCMSENSOR_SCM_EVENT_BUS_EVENT_STREAM\x10\x01\x12A\n" +
-	"=SCMSENSOR_RPCS_SUBSCRIBE_SCMSENSOR_SCM_EVENT_BUS_EVENT_STREAM\x10\x02\x12\x16\n" +
-	"\x12SCMSENSOR_RPCS_ANY\x10c*\xcb\x01\n" +
-	"\rLlmsensorRPCs\x12\x1e\n" +
-	"\x1aLLMSENSOR_RPCS_UNSPECIFIED\x10\x00\x12?\n" +
-	";LLMSENSOR_RPCS_PUBLISH_LLMSENSOR_LLM_EVENT_BUS_EVENT_STREAM\x10\x01\x12A\n" +
-	"=LLMSENSOR_RPCS_SUBSCRIBE_LLMSENSOR_LLM_EVENT_BUS_EVENT_STREAM\x10\x02\x12\x16\n" +
-	"\x12LLMSENSOR_RPCS_ANY\x10c*\x91\x02\n" +
-	"\x13GitlabconnectorRPCs\x12$\n" +
-	" GITLABCONNECTOR_RPCS_UNSPECIFIED\x10\x00\x12Y\n" +
-	"UGITLABCONNECTOR_RPCS_PUBLISH_GITLABCONNECTOR_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM\x10\x01\x12[\n" +
-	"WGITLABCONNECTOR_RPCS_SUBSCRIBE_GITLABCONNECTOR_GIT_LAB_CONNECTOR_EVENT_BUS_EVENT_STREAM\x10\x02\x12\x1c\n" +
-	"\x18GITLABCONNECTOR_RPCS_ANY\x10cBaZ_gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/servicesb\x06proto3"
+	"\x14AGENTSENSOR_RPCS_ANY\x10cBaZ_gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/servicesb\x06proto3"
 
 var (
 	file_generated_services_proto_rawDescOnce sync.Once
@@ -1506,25 +858,17 @@ func file_generated_services_proto_rawDescGZIP() []byte {
 	return file_generated_services_proto_rawDescData
 }
 
-var file_generated_services_proto_enumTypes = make([]protoimpl.EnumInfo, 17)
+var file_generated_services_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
 var file_generated_services_proto_goTypes = []any{
-	(ServiceName)(0),         // 0: services.ServiceName
-	(SentinelRPCs)(0),        // 1: services.SentinelRPCs
-	(GatewayRPCs)(0),         // 2: services.GatewayRPCs
-	(KernelRPCs)(0),          // 3: services.KernelRPCs
-	(McpRPCs)(0),             // 4: services.McpRPCs
-	(EventbusRPCs)(0),        // 5: services.EventbusRPCs
-	(OauthRPCs)(0),           // 6: services.OauthRPCs
-	(AnthropicRPCs)(0),       // 7: services.AnthropicRPCs
-	(GithubRPCs)(0),          // 8: services.GithubRPCs
-	(GitlabRPCs)(0),          // 9: services.GitlabRPCs
-	(OpenaiRPCs)(0),          // 10: services.OpenaiRPCs
-	(ArgusRPCs)(0),           // 11: services.ArgusRPCs
-	(SamlRPCs)(0),            // 12: services.SamlRPCs
-	(AgentsensorRPCs)(0),     // 13: services.AgentsensorRPCs
-	(ScmsensorRPCs)(0),       // 14: services.ScmsensorRPCs
-	(LlmsensorRPCs)(0),       // 15: services.LlmsensorRPCs
-	(GitlabconnectorRPCs)(0), // 16: services.GitlabconnectorRPCs
+	(ServiceName)(0),     // 0: services.ServiceName
+	(SentinelRPCs)(0),    // 1: services.SentinelRPCs
+	(GatewayRPCs)(0),     // 2: services.GatewayRPCs
+	(KernelRPCs)(0),      // 3: services.KernelRPCs
+	(EventbusRPCs)(0),    // 4: services.EventbusRPCs
+	(OauthRPCs)(0),       // 5: services.OauthRPCs
+	(ArgusRPCs)(0),       // 6: services.ArgusRPCs
+	(SamlRPCs)(0),        // 7: services.SamlRPCs
+	(AgentsensorRPCs)(0), // 8: services.AgentsensorRPCs
 }
 var file_generated_services_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -1544,7 +888,7 @@ func file_generated_services_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_generated_services_proto_rawDesc), len(file_generated_services_proto_rawDesc)),
-			NumEnums:      17,
+			NumEnums:      9,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,

@@ -27,6 +27,7 @@ import (
 	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/grpcserver"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
+	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
 	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/grpcconfig"
 	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/service_im"
@@ -318,10 +319,10 @@ func New() (*ServiceManager, error) {
 
 	zap.L().Info("ServiceManager initialized",
 		zap.String("service", "kmaker"),
-		zap.String("tacplus_version", "0.0.0"),
-		zap.String("tacplus_sha", "local"),
+		zap.String("tacplus_version", "v1.2.248"),
+		zap.String("tacplus_sha", "0e4343c0-local"),
 		zap.String("proto_version", ""),
-		zap.String("proto_sha", ""),
+		zap.String("proto_sha", "32252170a75749e0a072bedd99951b0e8670e09e"),
 	)
 
 	return &ServiceManager{
@@ -490,6 +491,39 @@ func (sm *ServiceManager) Close() {
 	if sm.identity != nil {
 		sm.identity.Close()
 	}
+}
+
+// SetServing marks the service as SERVING or NOT_SERVING on the gRPC health
+// endpoint (the same health server that backs the plaintext health probe and
+// any main-server health service).
+//
+// This method is for services that manage their own serving lifecycle
+// (e.g. custom external TLS) and never call Run(). Services that call Run()
+// do not need this — bootstrap automatically flips to SERVING after health
+// publish and TLS setup complete.
+//
+// Contract: Do not call this until your service has completed its own bootstrap
+// (config loaded, TLS ready, handler initialized). Reporting SERVING before
+// bootstrap is complete defeats the purpose of readiness probes and may cause
+// k8s to route traffic to an unready instance.
+func (sm *ServiceManager) SetServing(serving bool) {
+	if sm.healthServer == nil {
+		return
+	}
+	if serving {
+		sm.healthServer.SetServingStatus("", healthpb.HealthCheckResponse_SERVING)
+	} else {
+		sm.healthServer.SetServingStatus("", healthpb.HealthCheckResponse_NOT_SERVING)
+	}
+}
+
+// GoTask launches a background goroutine tied to the ServiceManager lifecycle.
+// The context passed to fn is cancelled when the SM shuts down, and the SM
+// waits for all tasks to complete before Close returns. Use this for
+// application-level background work (polling, cleanup, periodic sync) that
+// must participate in graceful shutdown.
+func (sm *ServiceManager) GoTask(fn func(context.Context)) {
+	sm.tasks.Go(fn)
 }
 
 // StateClients returns the state client instances.

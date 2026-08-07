@@ -22,21 +22,15 @@
 package services_config
 
 import (
-	anthropic "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/anthropic"
 	argus "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/argus"
 	eventbus "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/eventbus"
 	gateway "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gateway"
-	github "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/github"
-	gitlab "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gitlab"
-	gitlabconnectorsvc "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gitlabconnectorsvc"
 	graphdb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/graphdb"
 	kmaker "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
 	letsencrypt "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/letsencrypt"
-	mcp "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/mcp"
 	msggateway "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/msggateway"
 	oauth "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/oauth"
 	opa "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/opa"
-	openai "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/openai"
 	operator "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/operator"
 	samlsvc "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/samlsvc"
 	sentinel "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/sentinel"
@@ -57,29 +51,23 @@ const (
 )
 
 type Services struct {
-	state                 protoimpl.MessageState     `protogen:"open.v1"`
-	SentinelConfig        *sentinel.Config           `protobuf:"bytes,5,opt,name=sentinel_config,json=sentinelConfig,proto3" json:"sentinel_config,omitempty"`
-	GatewayConfig         *gateway.Config            `protobuf:"bytes,7,opt,name=gateway_config,json=gatewayConfig,proto3" json:"gateway_config,omitempty"`
-	LetsencryptConfig     *letsencrypt.Config        `protobuf:"bytes,9,opt,name=letsencrypt_config,json=letsencryptConfig,proto3" json:"letsencrypt_config,omitempty"`
-	McpConfig             *mcp.Config                `protobuf:"bytes,12,opt,name=mcp_config,json=mcpConfig,proto3" json:"mcp_config,omitempty"`
-	GraphdbConfig         *graphdb.Config            `protobuf:"bytes,13,opt,name=graphdb_config,json=graphdbConfig,proto3" json:"graphdb_config,omitempty"`
-	EventbusConfig        *eventbus.Config           `protobuf:"bytes,18,opt,name=eventbus_config,json=eventbusConfig,proto3" json:"eventbus_config,omitempty"`
-	TimedbConfig          *timedb.Config             `protobuf:"bytes,20,opt,name=timedb_config,json=timedbConfig,proto3" json:"timedb_config,omitempty"`
-	OauthConfig           *oauth.Config              `protobuf:"bytes,21,opt,name=oauth_config,json=oauthConfig,proto3" json:"oauth_config,omitempty"`
-	AnthropicConfig       *anthropic.Config          `protobuf:"bytes,22,opt,name=anthropic_config,json=anthropicConfig,proto3" json:"anthropic_config,omitempty"`
-	GithubConfig          *github.Config             `protobuf:"bytes,23,opt,name=github_config,json=githubConfig,proto3" json:"github_config,omitempty"`
-	GitlabConfig          *gitlab.Config             `protobuf:"bytes,24,opt,name=gitlab_config,json=gitlabConfig,proto3" json:"gitlab_config,omitempty"`
-	OpenaiConfig          *openai.Config             `protobuf:"bytes,25,opt,name=openai_config,json=openaiConfig,proto3" json:"openai_config,omitempty"`
-	MsggatewayConfig      *msggateway.Config         `protobuf:"bytes,28,opt,name=msggateway_config,json=msggatewayConfig,proto3" json:"msggateway_config,omitempty"`
-	OpaConfig             *opa.Config                `protobuf:"bytes,29,opt,name=opa_config,json=opaConfig,proto3" json:"opa_config,omitempty"`
-	StratumConfig         *stratum.Config            `protobuf:"bytes,34,opt,name=stratum_config,json=stratumConfig,proto3" json:"stratum_config,omitempty"`
-	ArgusConfig           *argus.Config              `protobuf:"bytes,35,opt,name=argus_config,json=argusConfig,proto3" json:"argus_config,omitempty"`
-	SamlConfig            *samlsvc.Config            `protobuf:"bytes,38,opt,name=saml_config,json=samlConfig,proto3" json:"saml_config,omitempty"`
-	GitlabconnectorConfig *gitlabconnectorsvc.Config `protobuf:"bytes,41,opt,name=gitlabconnector_config,json=gitlabconnectorConfig,proto3" json:"gitlabconnector_config,omitempty"`
-	OperatorConfig        *operator.Config           `protobuf:"bytes,47,opt,name=operator_config,json=operatorConfig,proto3" json:"operator_config,omitempty"`
-	KmakerConfig          *kmaker.Config             `protobuf:"bytes,49,opt,name=kmaker_config,json=kmakerConfig,proto3" json:"kmaker_config,omitempty"`
-	unknownFields         protoimpl.UnknownFields
-	sizeCache             protoimpl.SizeCache
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	SentinelConfig    *sentinel.Config       `protobuf:"bytes,5,opt,name=sentinel_config,json=sentinelConfig,proto3" json:"sentinel_config,omitempty"`
+	GatewayConfig     *gateway.Config        `protobuf:"bytes,7,opt,name=gateway_config,json=gatewayConfig,proto3" json:"gateway_config,omitempty"`
+	LetsencryptConfig *letsencrypt.Config    `protobuf:"bytes,9,opt,name=letsencrypt_config,json=letsencryptConfig,proto3" json:"letsencrypt_config,omitempty"`
+	GraphdbConfig     *graphdb.Config        `protobuf:"bytes,13,opt,name=graphdb_config,json=graphdbConfig,proto3" json:"graphdb_config,omitempty"`
+	EventbusConfig    *eventbus.Config       `protobuf:"bytes,18,opt,name=eventbus_config,json=eventbusConfig,proto3" json:"eventbus_config,omitempty"`
+	TimedbConfig      *timedb.Config         `protobuf:"bytes,20,opt,name=timedb_config,json=timedbConfig,proto3" json:"timedb_config,omitempty"`
+	OauthConfig       *oauth.Config          `protobuf:"bytes,21,opt,name=oauth_config,json=oauthConfig,proto3" json:"oauth_config,omitempty"`
+	MsggatewayConfig  *msggateway.Config     `protobuf:"bytes,28,opt,name=msggateway_config,json=msggatewayConfig,proto3" json:"msggateway_config,omitempty"`
+	OpaConfig         *opa.Config            `protobuf:"bytes,29,opt,name=opa_config,json=opaConfig,proto3" json:"opa_config,omitempty"`
+	StratumConfig     *stratum.Config        `protobuf:"bytes,34,opt,name=stratum_config,json=stratumConfig,proto3" json:"stratum_config,omitempty"`
+	ArgusConfig       *argus.Config          `protobuf:"bytes,35,opt,name=argus_config,json=argusConfig,proto3" json:"argus_config,omitempty"`
+	SamlConfig        *samlsvc.Config        `protobuf:"bytes,38,opt,name=saml_config,json=samlConfig,proto3" json:"saml_config,omitempty"`
+	OperatorConfig    *operator.Config       `protobuf:"bytes,47,opt,name=operator_config,json=operatorConfig,proto3" json:"operator_config,omitempty"`
+	KmakerConfig      *kmaker.Config         `protobuf:"bytes,49,opt,name=kmaker_config,json=kmakerConfig,proto3" json:"kmaker_config,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *Services) Reset() {
@@ -133,13 +121,6 @@ func (x *Services) GetLetsencryptConfig() *letsencrypt.Config {
 	return nil
 }
 
-func (x *Services) GetMcpConfig() *mcp.Config {
-	if x != nil {
-		return x.McpConfig
-	}
-	return nil
-}
-
 func (x *Services) GetGraphdbConfig() *graphdb.Config {
 	if x != nil {
 		return x.GraphdbConfig
@@ -164,34 +145,6 @@ func (x *Services) GetTimedbConfig() *timedb.Config {
 func (x *Services) GetOauthConfig() *oauth.Config {
 	if x != nil {
 		return x.OauthConfig
-	}
-	return nil
-}
-
-func (x *Services) GetAnthropicConfig() *anthropic.Config {
-	if x != nil {
-		return x.AnthropicConfig
-	}
-	return nil
-}
-
-func (x *Services) GetGithubConfig() *github.Config {
-	if x != nil {
-		return x.GithubConfig
-	}
-	return nil
-}
-
-func (x *Services) GetGitlabConfig() *gitlab.Config {
-	if x != nil {
-		return x.GitlabConfig
-	}
-	return nil
-}
-
-func (x *Services) GetOpenaiConfig() *openai.Config {
-	if x != nil {
-		return x.OpenaiConfig
 	}
 	return nil
 }
@@ -231,13 +184,6 @@ func (x *Services) GetSamlConfig() *samlsvc.Config {
 	return nil
 }
 
-func (x *Services) GetGitlabconnectorConfig() *gitlabconnectorsvc.Config {
-	if x != nil {
-		return x.GitlabconnectorConfig
-	}
-	return nil
-}
-
 func (x *Services) GetOperatorConfig() *operator.Config {
 	if x != nil {
 		return x.OperatorConfig
@@ -256,29 +202,22 @@ var File_generated_services_config_proto protoreflect.FileDescriptor
 
 const file_generated_services_config_proto_rawDesc = "" +
 	"\n" +
-	"\x1fgenerated/services_config.proto\x12\x0fservices_config\x1a\x17services/sentinel.proto\x1a\x16services/gateway.proto\x1a\x1aservices/letsencrypt.proto\x1a\x12services/mcp.proto\x1a\x16services/graphdb.proto\x1a\x17services/eventbus.proto\x1a\x15services/timedb.proto\x1a\x14services/oauth.proto\x1a\x18services/anthropic.proto\x1a\x15services/github.proto\x1a\x15services/gitlab.proto\x1a\x15services/openai.proto\x1a\x19services/msggateway.proto\x1a\x12services/opa.proto\x1a\x16services/stratum.proto\x1a\x14services/argus.proto\x1a\x13services/saml.proto\x1a\x1fservices/gitlab-connector.proto\x1a\x17services/operator.proto\x1a\x15services/kmaker.proto\"\xf0\b\n" +
+	"\x1fgenerated/services_config.proto\x12\x0fservices_config\x1a\x17services/sentinel.proto\x1a\x16services/gateway.proto\x1a\x1aservices/letsencrypt.proto\x1a\x16services/graphdb.proto\x1a\x17services/eventbus.proto\x1a\x15services/timedb.proto\x1a\x14services/oauth.proto\x1a\x19services/msggateway.proto\x1a\x12services/opa.proto\x1a\x16services/stratum.proto\x1a\x14services/argus.proto\x1a\x13services/saml.proto\x1a\x17services/operator.proto\x1a\x15services/kmaker.proto\"\x94\x06\n" +
 	"\bServices\x129\n" +
 	"\x0fsentinel_config\x18\x05 \x01(\v2\x10.sentinel.ConfigR\x0esentinelConfig\x126\n" +
 	"\x0egateway_config\x18\a \x01(\v2\x0f.gateway.ConfigR\rgatewayConfig\x12B\n" +
-	"\x12letsencrypt_config\x18\t \x01(\v2\x13.letsencrypt.ConfigR\x11letsencryptConfig\x12*\n" +
-	"\n" +
-	"mcp_config\x18\f \x01(\v2\v.mcp.ConfigR\tmcpConfig\x126\n" +
+	"\x12letsencrypt_config\x18\t \x01(\v2\x13.letsencrypt.ConfigR\x11letsencryptConfig\x126\n" +
 	"\x0egraphdb_config\x18\r \x01(\v2\x0f.graphdb.ConfigR\rgraphdbConfig\x129\n" +
 	"\x0feventbus_config\x18\x12 \x01(\v2\x10.eventbus.ConfigR\x0eeventbusConfig\x123\n" +
 	"\rtimedb_config\x18\x14 \x01(\v2\x0e.timedb.ConfigR\ftimedbConfig\x120\n" +
-	"\foauth_config\x18\x15 \x01(\v2\r.oauth.ConfigR\voauthConfig\x12<\n" +
-	"\x10anthropic_config\x18\x16 \x01(\v2\x11.anthropic.ConfigR\x0fanthropicConfig\x123\n" +
-	"\rgithub_config\x18\x17 \x01(\v2\x0e.github.ConfigR\fgithubConfig\x123\n" +
-	"\rgitlab_config\x18\x18 \x01(\v2\x0e.gitlab.ConfigR\fgitlabConfig\x123\n" +
-	"\ropenai_config\x18\x19 \x01(\v2\x0e.openai.ConfigR\fopenaiConfig\x12?\n" +
+	"\foauth_config\x18\x15 \x01(\v2\r.oauth.ConfigR\voauthConfig\x12?\n" +
 	"\x11msggateway_config\x18\x1c \x01(\v2\x12.msggateway.ConfigR\x10msggatewayConfig\x12*\n" +
 	"\n" +
 	"opa_config\x18\x1d \x01(\v2\v.opa.ConfigR\topaConfig\x126\n" +
 	"\x0estratum_config\x18\" \x01(\v2\x0f.stratum.ConfigR\rstratumConfig\x120\n" +
 	"\fargus_config\x18# \x01(\v2\r.argus.ConfigR\vargusConfig\x120\n" +
 	"\vsaml_config\x18& \x01(\v2\x0f.samlsvc.ConfigR\n" +
-	"samlConfig\x12Q\n" +
-	"\x16gitlabconnector_config\x18) \x01(\v2\x1a.gitlabconnectorsvc.ConfigR\x15gitlabconnectorConfig\x129\n" +
+	"samlConfig\x129\n" +
 	"\x0foperator_config\x18/ \x01(\v2\x10.operator.ConfigR\x0eoperatorConfig\x123\n" +
 	"\rkmaker_config\x181 \x01(\v2\x0e.kmaker.ConfigR\fkmakerConfigBhZfgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/services_configb\x06proto3"
 
@@ -296,54 +235,42 @@ func file_generated_services_config_proto_rawDescGZIP() []byte {
 
 var file_generated_services_config_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_generated_services_config_proto_goTypes = []any{
-	(*Services)(nil),                  // 0: services_config.Services
-	(*sentinel.Config)(nil),           // 1: sentinel.Config
-	(*gateway.Config)(nil),            // 2: gateway.Config
-	(*letsencrypt.Config)(nil),        // 3: letsencrypt.Config
-	(*mcp.Config)(nil),                // 4: mcp.Config
-	(*graphdb.Config)(nil),            // 5: graphdb.Config
-	(*eventbus.Config)(nil),           // 6: eventbus.Config
-	(*timedb.Config)(nil),             // 7: timedb.Config
-	(*oauth.Config)(nil),              // 8: oauth.Config
-	(*anthropic.Config)(nil),          // 9: anthropic.Config
-	(*github.Config)(nil),             // 10: github.Config
-	(*gitlab.Config)(nil),             // 11: gitlab.Config
-	(*openai.Config)(nil),             // 12: openai.Config
-	(*msggateway.Config)(nil),         // 13: msggateway.Config
-	(*opa.Config)(nil),                // 14: opa.Config
-	(*stratum.Config)(nil),            // 15: stratum.Config
-	(*argus.Config)(nil),              // 16: argus.Config
-	(*samlsvc.Config)(nil),            // 17: samlsvc.Config
-	(*gitlabconnectorsvc.Config)(nil), // 18: gitlabconnectorsvc.Config
-	(*operator.Config)(nil),           // 19: operator.Config
-	(*kmaker.Config)(nil),             // 20: kmaker.Config
+	(*Services)(nil),           // 0: services_config.Services
+	(*sentinel.Config)(nil),    // 1: sentinel.Config
+	(*gateway.Config)(nil),     // 2: gateway.Config
+	(*letsencrypt.Config)(nil), // 3: letsencrypt.Config
+	(*graphdb.Config)(nil),     // 4: graphdb.Config
+	(*eventbus.Config)(nil),    // 5: eventbus.Config
+	(*timedb.Config)(nil),      // 6: timedb.Config
+	(*oauth.Config)(nil),       // 7: oauth.Config
+	(*msggateway.Config)(nil),  // 8: msggateway.Config
+	(*opa.Config)(nil),         // 9: opa.Config
+	(*stratum.Config)(nil),     // 10: stratum.Config
+	(*argus.Config)(nil),       // 11: argus.Config
+	(*samlsvc.Config)(nil),     // 12: samlsvc.Config
+	(*operator.Config)(nil),    // 13: operator.Config
+	(*kmaker.Config)(nil),      // 14: kmaker.Config
 }
 var file_generated_services_config_proto_depIdxs = []int32{
 	1,  // 0: services_config.Services.sentinel_config:type_name -> sentinel.Config
 	2,  // 1: services_config.Services.gateway_config:type_name -> gateway.Config
 	3,  // 2: services_config.Services.letsencrypt_config:type_name -> letsencrypt.Config
-	4,  // 3: services_config.Services.mcp_config:type_name -> mcp.Config
-	5,  // 4: services_config.Services.graphdb_config:type_name -> graphdb.Config
-	6,  // 5: services_config.Services.eventbus_config:type_name -> eventbus.Config
-	7,  // 6: services_config.Services.timedb_config:type_name -> timedb.Config
-	8,  // 7: services_config.Services.oauth_config:type_name -> oauth.Config
-	9,  // 8: services_config.Services.anthropic_config:type_name -> anthropic.Config
-	10, // 9: services_config.Services.github_config:type_name -> github.Config
-	11, // 10: services_config.Services.gitlab_config:type_name -> gitlab.Config
-	12, // 11: services_config.Services.openai_config:type_name -> openai.Config
-	13, // 12: services_config.Services.msggateway_config:type_name -> msggateway.Config
-	14, // 13: services_config.Services.opa_config:type_name -> opa.Config
-	15, // 14: services_config.Services.stratum_config:type_name -> stratum.Config
-	16, // 15: services_config.Services.argus_config:type_name -> argus.Config
-	17, // 16: services_config.Services.saml_config:type_name -> samlsvc.Config
-	18, // 17: services_config.Services.gitlabconnector_config:type_name -> gitlabconnectorsvc.Config
-	19, // 18: services_config.Services.operator_config:type_name -> operator.Config
-	20, // 19: services_config.Services.kmaker_config:type_name -> kmaker.Config
-	20, // [20:20] is the sub-list for method output_type
-	20, // [20:20] is the sub-list for method input_type
-	20, // [20:20] is the sub-list for extension type_name
-	20, // [20:20] is the sub-list for extension extendee
-	0,  // [0:20] is the sub-list for field type_name
+	4,  // 3: services_config.Services.graphdb_config:type_name -> graphdb.Config
+	5,  // 4: services_config.Services.eventbus_config:type_name -> eventbus.Config
+	6,  // 5: services_config.Services.timedb_config:type_name -> timedb.Config
+	7,  // 6: services_config.Services.oauth_config:type_name -> oauth.Config
+	8,  // 7: services_config.Services.msggateway_config:type_name -> msggateway.Config
+	9,  // 8: services_config.Services.opa_config:type_name -> opa.Config
+	10, // 9: services_config.Services.stratum_config:type_name -> stratum.Config
+	11, // 10: services_config.Services.argus_config:type_name -> argus.Config
+	12, // 11: services_config.Services.saml_config:type_name -> samlsvc.Config
+	13, // 12: services_config.Services.operator_config:type_name -> operator.Config
+	14, // 13: services_config.Services.kmaker_config:type_name -> kmaker.Config
+	14, // [14:14] is the sub-list for method output_type
+	14, // [14:14] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_generated_services_config_proto_init() }

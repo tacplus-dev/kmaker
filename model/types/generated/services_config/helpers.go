@@ -26,21 +26,15 @@ import (
 	"encoding/json"
 
 	"github.com/pelletier/go-toml/v2"
-	anthropic "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/anthropic"
 	argus "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/argus"
 	eventbus "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/eventbus"
 	gateway "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gateway"
-	github "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/github"
-	gitlab "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gitlab"
-	gitlabconnectorsvc "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gitlabconnectorsvc"
 	graphdb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/graphdb"
 	kmaker "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
 	letsencrypt "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/letsencrypt"
-	mcp "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/mcp"
 	msggateway "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/msggateway"
 	oauth "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/oauth"
 	opa "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/opa"
-	openai "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/openai"
 	operator "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/operator"
 	samlsvc "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/samlsvc"
 	sentinel "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/sentinel"
@@ -59,26 +53,20 @@ import (
 // ServicesJSON represents Services in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type servicesJSON struct {
-	SentinelConfig        json.RawMessage `json:"sentinel_config,omitempty"`
-	GatewayConfig         json.RawMessage `json:"gateway_config,omitempty"`
-	LetsencryptConfig     json.RawMessage `json:"letsencrypt_config,omitempty"`
-	McpConfig             json.RawMessage `json:"mcp_config,omitempty"`
-	GraphdbConfig         json.RawMessage `json:"graphdb_config,omitempty"`
-	EventbusConfig        json.RawMessage `json:"eventbus_config,omitempty"`
-	TimedbConfig          json.RawMessage `json:"timedb_config,omitempty"`
-	OauthConfig           json.RawMessage `json:"oauth_config,omitempty"`
-	AnthropicConfig       json.RawMessage `json:"anthropic_config,omitempty"`
-	GithubConfig          json.RawMessage `json:"github_config,omitempty"`
-	GitlabConfig          json.RawMessage `json:"gitlab_config,omitempty"`
-	OpenaiConfig          json.RawMessage `json:"openai_config,omitempty"`
-	MsggatewayConfig      json.RawMessage `json:"msggateway_config,omitempty"`
-	OpaConfig             json.RawMessage `json:"opa_config,omitempty"`
-	StratumConfig         json.RawMessage `json:"stratum_config,omitempty"`
-	ArgusConfig           json.RawMessage `json:"argus_config,omitempty"`
-	SamlConfig            json.RawMessage `json:"saml_config,omitempty"`
-	GitlabconnectorConfig json.RawMessage `json:"gitlabconnector_config,omitempty"`
-	OperatorConfig        json.RawMessage `json:"operator_config,omitempty"`
-	KmakerConfig          json.RawMessage `json:"kmaker_config,omitempty"`
+	SentinelConfig    json.RawMessage `json:"sentinel_config,omitempty"`
+	GatewayConfig     json.RawMessage `json:"gateway_config,omitempty"`
+	LetsencryptConfig json.RawMessage `json:"letsencrypt_config,omitempty"`
+	GraphdbConfig     json.RawMessage `json:"graphdb_config,omitempty"`
+	EventbusConfig    json.RawMessage `json:"eventbus_config,omitempty"`
+	TimedbConfig      json.RawMessage `json:"timedb_config,omitempty"`
+	OauthConfig       json.RawMessage `json:"oauth_config,omitempty"`
+	MsggatewayConfig  json.RawMessage `json:"msggateway_config,omitempty"`
+	OpaConfig         json.RawMessage `json:"opa_config,omitempty"`
+	StratumConfig     json.RawMessage `json:"stratum_config,omitempty"`
+	ArgusConfig       json.RawMessage `json:"argus_config,omitempty"`
+	SamlConfig        json.RawMessage `json:"saml_config,omitempty"`
+	OperatorConfig    json.RawMessage `json:"operator_config,omitempty"`
+	KmakerConfig      json.RawMessage `json:"kmaker_config,omitempty"`
 }
 
 // ServicesToJSON converts Services to JSON bytes.
@@ -110,13 +98,6 @@ func ServicesToJSON(v *Services) ([]byte, error) {
 			data, _ := letsencrypt.ConfigToJSON(v.LetsencryptConfig)
 			return data
 		}(),
-		McpConfig: func() json.RawMessage {
-			if v.McpConfig == nil {
-				return nil
-			}
-			data, _ := mcp.ConfigToJSON(v.McpConfig)
-			return data
-		}(),
 		GraphdbConfig: func() json.RawMessage {
 			if v.GraphdbConfig == nil {
 				return nil
@@ -143,34 +124,6 @@ func ServicesToJSON(v *Services) ([]byte, error) {
 				return nil
 			}
 			data, _ := oauth.ConfigToJSON(v.OauthConfig)
-			return data
-		}(),
-		AnthropicConfig: func() json.RawMessage {
-			if v.AnthropicConfig == nil {
-				return nil
-			}
-			data, _ := anthropic.ConfigToJSON(v.AnthropicConfig)
-			return data
-		}(),
-		GithubConfig: func() json.RawMessage {
-			if v.GithubConfig == nil {
-				return nil
-			}
-			data, _ := github.ConfigToJSON(v.GithubConfig)
-			return data
-		}(),
-		GitlabConfig: func() json.RawMessage {
-			if v.GitlabConfig == nil {
-				return nil
-			}
-			data, _ := gitlab.ConfigToJSON(v.GitlabConfig)
-			return data
-		}(),
-		OpenaiConfig: func() json.RawMessage {
-			if v.OpenaiConfig == nil {
-				return nil
-			}
-			data, _ := openai.ConfigToJSON(v.OpenaiConfig)
 			return data
 		}(),
 		MsggatewayConfig: func() json.RawMessage {
@@ -206,13 +159,6 @@ func ServicesToJSON(v *Services) ([]byte, error) {
 				return nil
 			}
 			data, _ := samlsvc.ConfigToJSON(v.SamlConfig)
-			return data
-		}(),
-		GitlabconnectorConfig: func() json.RawMessage {
-			if v.GitlabconnectorConfig == nil {
-				return nil
-			}
-			data, _ := gitlabconnectorsvc.ConfigToJSON(v.GitlabconnectorConfig)
 			return data
 		}(),
 		OperatorConfig: func() json.RawMessage {
@@ -262,13 +208,6 @@ func ServicesToJSONPretty(v *Services) ([]byte, error) {
 			data, _ := letsencrypt.ConfigToJSON(v.LetsencryptConfig)
 			return data
 		}(),
-		McpConfig: func() json.RawMessage {
-			if v.McpConfig == nil {
-				return nil
-			}
-			data, _ := mcp.ConfigToJSON(v.McpConfig)
-			return data
-		}(),
 		GraphdbConfig: func() json.RawMessage {
 			if v.GraphdbConfig == nil {
 				return nil
@@ -295,34 +234,6 @@ func ServicesToJSONPretty(v *Services) ([]byte, error) {
 				return nil
 			}
 			data, _ := oauth.ConfigToJSON(v.OauthConfig)
-			return data
-		}(),
-		AnthropicConfig: func() json.RawMessage {
-			if v.AnthropicConfig == nil {
-				return nil
-			}
-			data, _ := anthropic.ConfigToJSON(v.AnthropicConfig)
-			return data
-		}(),
-		GithubConfig: func() json.RawMessage {
-			if v.GithubConfig == nil {
-				return nil
-			}
-			data, _ := github.ConfigToJSON(v.GithubConfig)
-			return data
-		}(),
-		GitlabConfig: func() json.RawMessage {
-			if v.GitlabConfig == nil {
-				return nil
-			}
-			data, _ := gitlab.ConfigToJSON(v.GitlabConfig)
-			return data
-		}(),
-		OpenaiConfig: func() json.RawMessage {
-			if v.OpenaiConfig == nil {
-				return nil
-			}
-			data, _ := openai.ConfigToJSON(v.OpenaiConfig)
 			return data
 		}(),
 		MsggatewayConfig: func() json.RawMessage {
@@ -358,13 +269,6 @@ func ServicesToJSONPretty(v *Services) ([]byte, error) {
 				return nil
 			}
 			data, _ := samlsvc.ConfigToJSON(v.SamlConfig)
-			return data
-		}(),
-		GitlabconnectorConfig: func() json.RawMessage {
-			if v.GitlabconnectorConfig == nil {
-				return nil
-			}
-			data, _ := gitlabconnectorsvc.ConfigToJSON(v.GitlabconnectorConfig)
 			return data
 		}(),
 		OperatorConfig: func() json.RawMessage {
@@ -466,13 +370,6 @@ func ServicesFromJSON(data []byte) (*Services, error) {
 			result.LetsencryptConfig = parsed
 		}
 	}
-	// Parse message field: McpConfig
-	if len(raw.McpConfig) > 0 {
-		parsed, err := mcp.ConfigFromJSON(raw.McpConfig)
-		if err == nil {
-			result.McpConfig = parsed
-		}
-	}
 	// Parse message field: GraphdbConfig
 	if len(raw.GraphdbConfig) > 0 {
 		parsed, err := graphdb.ConfigFromJSON(raw.GraphdbConfig)
@@ -499,34 +396,6 @@ func ServicesFromJSON(data []byte) (*Services, error) {
 		parsed, err := oauth.ConfigFromJSON(raw.OauthConfig)
 		if err == nil {
 			result.OauthConfig = parsed
-		}
-	}
-	// Parse message field: AnthropicConfig
-	if len(raw.AnthropicConfig) > 0 {
-		parsed, err := anthropic.ConfigFromJSON(raw.AnthropicConfig)
-		if err == nil {
-			result.AnthropicConfig = parsed
-		}
-	}
-	// Parse message field: GithubConfig
-	if len(raw.GithubConfig) > 0 {
-		parsed, err := github.ConfigFromJSON(raw.GithubConfig)
-		if err == nil {
-			result.GithubConfig = parsed
-		}
-	}
-	// Parse message field: GitlabConfig
-	if len(raw.GitlabConfig) > 0 {
-		parsed, err := gitlab.ConfigFromJSON(raw.GitlabConfig)
-		if err == nil {
-			result.GitlabConfig = parsed
-		}
-	}
-	// Parse message field: OpenaiConfig
-	if len(raw.OpenaiConfig) > 0 {
-		parsed, err := openai.ConfigFromJSON(raw.OpenaiConfig)
-		if err == nil {
-			result.OpenaiConfig = parsed
 		}
 	}
 	// Parse message field: MsggatewayConfig
@@ -562,13 +431,6 @@ func ServicesFromJSON(data []byte) (*Services, error) {
 		parsed, err := samlsvc.ConfigFromJSON(raw.SamlConfig)
 		if err == nil {
 			result.SamlConfig = parsed
-		}
-	}
-	// Parse message field: GitlabconnectorConfig
-	if len(raw.GitlabconnectorConfig) > 0 {
-		parsed, err := gitlabconnectorsvc.ConfigFromJSON(raw.GitlabconnectorConfig)
-		if err == nil {
-			result.GitlabconnectorConfig = parsed
 		}
 	}
 	// Parse message field: OperatorConfig
@@ -681,11 +543,6 @@ func ServicesToEnvVar(v *Services) map[string]string {
 			result[k] = val
 		}
 	}
-	if v.McpConfig != nil {
-		for k, val := range mcp.ConfigToEnvVar(v.McpConfig) {
-			result[k] = val
-		}
-	}
 	if v.GraphdbConfig != nil {
 		for k, val := range graphdb.ConfigToEnvVar(v.GraphdbConfig) {
 			result[k] = val
@@ -703,26 +560,6 @@ func ServicesToEnvVar(v *Services) map[string]string {
 	}
 	if v.OauthConfig != nil {
 		for k, val := range oauth.ConfigToEnvVar(v.OauthConfig) {
-			result[k] = val
-		}
-	}
-	if v.AnthropicConfig != nil {
-		for k, val := range anthropic.ConfigToEnvVar(v.AnthropicConfig) {
-			result[k] = val
-		}
-	}
-	if v.GithubConfig != nil {
-		for k, val := range github.ConfigToEnvVar(v.GithubConfig) {
-			result[k] = val
-		}
-	}
-	if v.GitlabConfig != nil {
-		for k, val := range gitlab.ConfigToEnvVar(v.GitlabConfig) {
-			result[k] = val
-		}
-	}
-	if v.OpenaiConfig != nil {
-		for k, val := range openai.ConfigToEnvVar(v.OpenaiConfig) {
 			result[k] = val
 		}
 	}
@@ -748,11 +585,6 @@ func ServicesToEnvVar(v *Services) map[string]string {
 	}
 	if v.SamlConfig != nil {
 		for k, val := range samlsvc.ConfigToEnvVar(v.SamlConfig) {
-			result[k] = val
-		}
-	}
-	if v.GitlabconnectorConfig != nil {
-		for k, val := range gitlabconnectorsvc.ConfigToEnvVar(v.GitlabconnectorConfig) {
 			result[k] = val
 		}
 	}
@@ -787,11 +619,6 @@ func ServicesFromEnvVar(env map[string]string) (*Services, error) {
 	} else if sub != nil {
 		result.LetsencryptConfig = sub
 	}
-	if sub, err := mcp.ConfigFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.McpConfig = sub
-	}
 	if sub, err := graphdb.ConfigFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
@@ -811,26 +638,6 @@ func ServicesFromEnvVar(env map[string]string) (*Services, error) {
 		return nil, err
 	} else if sub != nil {
 		result.OauthConfig = sub
-	}
-	if sub, err := anthropic.ConfigFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.AnthropicConfig = sub
-	}
-	if sub, err := github.ConfigFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.GithubConfig = sub
-	}
-	if sub, err := gitlab.ConfigFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.GitlabConfig = sub
-	}
-	if sub, err := openai.ConfigFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.OpenaiConfig = sub
 	}
 	if sub, err := msggateway.ConfigFromEnvVar(env); err != nil {
 		return nil, err
@@ -856,11 +663,6 @@ func ServicesFromEnvVar(env map[string]string) (*Services, error) {
 		return nil, err
 	} else if sub != nil {
 		result.SamlConfig = sub
-	}
-	if sub, err := gitlabconnectorsvc.ConfigFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.GitlabconnectorConfig = sub
 	}
 	if sub, err := operator.ConfigFromEnvVar(env); err != nil {
 		return nil, err
@@ -915,13 +717,6 @@ func ValidateServicesWithDepth(m *Services, depth int) error {
 		}
 	}
 
-	// Validate McpConfig nested message
-	if m.McpConfig != nil {
-		if err := mcp.ValidateConfigWithDepth(m.McpConfig, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field McpConfig validation failed")
-		}
-	}
-
 	// Validate GraphdbConfig nested message
 	if m.GraphdbConfig != nil {
 		if err := graphdb.ValidateConfigWithDepth(m.GraphdbConfig, depth+1); err != nil {
@@ -947,34 +742,6 @@ func ValidateServicesWithDepth(m *Services, depth int) error {
 	if m.OauthConfig != nil {
 		if err := oauth.ValidateConfigWithDepth(m.OauthConfig, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field OauthConfig validation failed")
-		}
-	}
-
-	// Validate AnthropicConfig nested message
-	if m.AnthropicConfig != nil {
-		if err := anthropic.ValidateConfigWithDepth(m.AnthropicConfig, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field AnthropicConfig validation failed")
-		}
-	}
-
-	// Validate GithubConfig nested message
-	if m.GithubConfig != nil {
-		if err := github.ValidateConfigWithDepth(m.GithubConfig, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field GithubConfig validation failed")
-		}
-	}
-
-	// Validate GitlabConfig nested message
-	if m.GitlabConfig != nil {
-		if err := gitlab.ValidateConfigWithDepth(m.GitlabConfig, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field GitlabConfig validation failed")
-		}
-	}
-
-	// Validate OpenaiConfig nested message
-	if m.OpenaiConfig != nil {
-		if err := openai.ValidateConfigWithDepth(m.OpenaiConfig, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field OpenaiConfig validation failed")
 		}
 	}
 
@@ -1010,13 +777,6 @@ func ValidateServicesWithDepth(m *Services, depth int) error {
 	if m.SamlConfig != nil {
 		if err := samlsvc.ValidateConfigWithDepth(m.SamlConfig, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field SamlConfig validation failed")
-		}
-	}
-
-	// Validate GitlabconnectorConfig nested message
-	if m.GitlabconnectorConfig != nil {
-		if err := gitlabconnectorsvc.ValidateConfigWithDepth(m.GitlabconnectorConfig, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field GitlabconnectorConfig validation failed")
 		}
 	}
 
@@ -1072,9 +832,6 @@ func MergeServices(dst, src *Services) {
 	if dst.LetsencryptConfig == nil {
 		dst.LetsencryptConfig = src.LetsencryptConfig
 	}
-	if dst.McpConfig == nil {
-		dst.McpConfig = src.McpConfig
-	}
 	if dst.GraphdbConfig == nil {
 		dst.GraphdbConfig = src.GraphdbConfig
 	}
@@ -1086,18 +843,6 @@ func MergeServices(dst, src *Services) {
 	}
 	if dst.OauthConfig == nil {
 		dst.OauthConfig = src.OauthConfig
-	}
-	if dst.AnthropicConfig == nil {
-		dst.AnthropicConfig = src.AnthropicConfig
-	}
-	if dst.GithubConfig == nil {
-		dst.GithubConfig = src.GithubConfig
-	}
-	if dst.GitlabConfig == nil {
-		dst.GitlabConfig = src.GitlabConfig
-	}
-	if dst.OpenaiConfig == nil {
-		dst.OpenaiConfig = src.OpenaiConfig
 	}
 	if dst.MsggatewayConfig == nil {
 		dst.MsggatewayConfig = src.MsggatewayConfig
@@ -1113,9 +858,6 @@ func MergeServices(dst, src *Services) {
 	}
 	if dst.SamlConfig == nil {
 		dst.SamlConfig = src.SamlConfig
-	}
-	if dst.GitlabconnectorConfig == nil {
-		dst.GitlabconnectorConfig = src.GitlabconnectorConfig
 	}
 	if dst.OperatorConfig == nil {
 		dst.OperatorConfig = src.OperatorConfig

@@ -845,24 +845,18 @@ var TimedbConfigStateService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	TimeseriesGroupCounts_GetGitLabActivityRecordGroupCounts_FullMethodName = "/timedb.TimeseriesGroupCounts/GetGitLabActivityRecordGroupCounts"
-	TimeseriesGroupCounts_GetLlmCallRecordGroupCounts_FullMethodName        = "/timedb.TimeseriesGroupCounts/GetLlmCallRecordGroupCounts"
-	TimeseriesGroupCounts_GetPromptRecordGroupCounts_FullMethodName         = "/timedb.TimeseriesGroupCounts/GetPromptRecordGroupCounts"
-	TimeseriesGroupCounts_GetScmOperationRecordGroupCounts_FullMethodName   = "/timedb.TimeseriesGroupCounts/GetScmOperationRecordGroupCounts"
-	TimeseriesGroupCounts_GetSessionRecordGroupCounts_FullMethodName        = "/timedb.TimeseriesGroupCounts/GetSessionRecordGroupCounts"
-	TimeseriesGroupCounts_GetStopRecordGroupCounts_FullMethodName           = "/timedb.TimeseriesGroupCounts/GetStopRecordGroupCounts"
-	TimeseriesGroupCounts_GetSubagentRecordGroupCounts_FullMethodName       = "/timedb.TimeseriesGroupCounts/GetSubagentRecordGroupCounts"
-	TimeseriesGroupCounts_GetToolUseRecordGroupCounts_FullMethodName        = "/timedb.TimeseriesGroupCounts/GetToolUseRecordGroupCounts"
+	TimeseriesGroupCounts_GetPromptRecordGroupCounts_FullMethodName   = "/timedb.TimeseriesGroupCounts/GetPromptRecordGroupCounts"
+	TimeseriesGroupCounts_GetSessionRecordGroupCounts_FullMethodName  = "/timedb.TimeseriesGroupCounts/GetSessionRecordGroupCounts"
+	TimeseriesGroupCounts_GetStopRecordGroupCounts_FullMethodName     = "/timedb.TimeseriesGroupCounts/GetStopRecordGroupCounts"
+	TimeseriesGroupCounts_GetSubagentRecordGroupCounts_FullMethodName = "/timedb.TimeseriesGroupCounts/GetSubagentRecordGroupCounts"
+	TimeseriesGroupCounts_GetToolUseRecordGroupCounts_FullMethodName  = "/timedb.TimeseriesGroupCounts/GetToolUseRecordGroupCounts"
 )
 
 // TimeseriesGroupCountsClient is the client API for TimeseriesGroupCounts service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TimeseriesGroupCountsClient interface {
-	GetGitLabActivityRecordGroupCounts(ctx context.Context, in *GetGitLabActivityRecordGroupCountsRequest, opts ...grpc.CallOption) (*GetGitLabActivityRecordGroupCountsResponse, error)
-	GetLlmCallRecordGroupCounts(ctx context.Context, in *GetLlmCallRecordGroupCountsRequest, opts ...grpc.CallOption) (*GetLlmCallRecordGroupCountsResponse, error)
 	GetPromptRecordGroupCounts(ctx context.Context, in *GetPromptRecordGroupCountsRequest, opts ...grpc.CallOption) (*GetPromptRecordGroupCountsResponse, error)
-	GetScmOperationRecordGroupCounts(ctx context.Context, in *GetScmOperationRecordGroupCountsRequest, opts ...grpc.CallOption) (*GetScmOperationRecordGroupCountsResponse, error)
 	GetSessionRecordGroupCounts(ctx context.Context, in *GetSessionRecordGroupCountsRequest, opts ...grpc.CallOption) (*GetSessionRecordGroupCountsResponse, error)
 	GetStopRecordGroupCounts(ctx context.Context, in *GetStopRecordGroupCountsRequest, opts ...grpc.CallOption) (*GetStopRecordGroupCountsResponse, error)
 	GetSubagentRecordGroupCounts(ctx context.Context, in *GetSubagentRecordGroupCountsRequest, opts ...grpc.CallOption) (*GetSubagentRecordGroupCountsResponse, error)
@@ -877,40 +871,10 @@ func NewTimeseriesGroupCountsClient(cc grpc.ClientConnInterface) TimeseriesGroup
 	return &timeseriesGroupCountsClient{cc}
 }
 
-func (c *timeseriesGroupCountsClient) GetGitLabActivityRecordGroupCounts(ctx context.Context, in *GetGitLabActivityRecordGroupCountsRequest, opts ...grpc.CallOption) (*GetGitLabActivityRecordGroupCountsResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetGitLabActivityRecordGroupCountsResponse)
-	err := c.cc.Invoke(ctx, TimeseriesGroupCounts_GetGitLabActivityRecordGroupCounts_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *timeseriesGroupCountsClient) GetLlmCallRecordGroupCounts(ctx context.Context, in *GetLlmCallRecordGroupCountsRequest, opts ...grpc.CallOption) (*GetLlmCallRecordGroupCountsResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetLlmCallRecordGroupCountsResponse)
-	err := c.cc.Invoke(ctx, TimeseriesGroupCounts_GetLlmCallRecordGroupCounts_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *timeseriesGroupCountsClient) GetPromptRecordGroupCounts(ctx context.Context, in *GetPromptRecordGroupCountsRequest, opts ...grpc.CallOption) (*GetPromptRecordGroupCountsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetPromptRecordGroupCountsResponse)
 	err := c.cc.Invoke(ctx, TimeseriesGroupCounts_GetPromptRecordGroupCounts_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *timeseriesGroupCountsClient) GetScmOperationRecordGroupCounts(ctx context.Context, in *GetScmOperationRecordGroupCountsRequest, opts ...grpc.CallOption) (*GetScmOperationRecordGroupCountsResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetScmOperationRecordGroupCountsResponse)
-	err := c.cc.Invoke(ctx, TimeseriesGroupCounts_GetScmOperationRecordGroupCounts_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -961,10 +925,7 @@ func (c *timeseriesGroupCountsClient) GetToolUseRecordGroupCounts(ctx context.Co
 // All implementations must embed UnimplementedTimeseriesGroupCountsServer
 // for forward compatibility.
 type TimeseriesGroupCountsServer interface {
-	GetGitLabActivityRecordGroupCounts(context.Context, *GetGitLabActivityRecordGroupCountsRequest) (*GetGitLabActivityRecordGroupCountsResponse, error)
-	GetLlmCallRecordGroupCounts(context.Context, *GetLlmCallRecordGroupCountsRequest) (*GetLlmCallRecordGroupCountsResponse, error)
 	GetPromptRecordGroupCounts(context.Context, *GetPromptRecordGroupCountsRequest) (*GetPromptRecordGroupCountsResponse, error)
-	GetScmOperationRecordGroupCounts(context.Context, *GetScmOperationRecordGroupCountsRequest) (*GetScmOperationRecordGroupCountsResponse, error)
 	GetSessionRecordGroupCounts(context.Context, *GetSessionRecordGroupCountsRequest) (*GetSessionRecordGroupCountsResponse, error)
 	GetStopRecordGroupCounts(context.Context, *GetStopRecordGroupCountsRequest) (*GetStopRecordGroupCountsResponse, error)
 	GetSubagentRecordGroupCounts(context.Context, *GetSubagentRecordGroupCountsRequest) (*GetSubagentRecordGroupCountsResponse, error)
@@ -979,17 +940,8 @@ type TimeseriesGroupCountsServer interface {
 // pointer dereference when methods are called.
 type UnimplementedTimeseriesGroupCountsServer struct{}
 
-func (UnimplementedTimeseriesGroupCountsServer) GetGitLabActivityRecordGroupCounts(context.Context, *GetGitLabActivityRecordGroupCountsRequest) (*GetGitLabActivityRecordGroupCountsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetGitLabActivityRecordGroupCounts not implemented")
-}
-func (UnimplementedTimeseriesGroupCountsServer) GetLlmCallRecordGroupCounts(context.Context, *GetLlmCallRecordGroupCountsRequest) (*GetLlmCallRecordGroupCountsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetLlmCallRecordGroupCounts not implemented")
-}
 func (UnimplementedTimeseriesGroupCountsServer) GetPromptRecordGroupCounts(context.Context, *GetPromptRecordGroupCountsRequest) (*GetPromptRecordGroupCountsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetPromptRecordGroupCounts not implemented")
-}
-func (UnimplementedTimeseriesGroupCountsServer) GetScmOperationRecordGroupCounts(context.Context, *GetScmOperationRecordGroupCountsRequest) (*GetScmOperationRecordGroupCountsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetScmOperationRecordGroupCounts not implemented")
 }
 func (UnimplementedTimeseriesGroupCountsServer) GetSessionRecordGroupCounts(context.Context, *GetSessionRecordGroupCountsRequest) (*GetSessionRecordGroupCountsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetSessionRecordGroupCounts not implemented")
@@ -1024,42 +976,6 @@ func RegisterTimeseriesGroupCountsServer(s grpc.ServiceRegistrar, srv Timeseries
 	s.RegisterService(&TimeseriesGroupCounts_ServiceDesc, srv)
 }
 
-func _TimeseriesGroupCounts_GetGitLabActivityRecordGroupCounts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetGitLabActivityRecordGroupCountsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TimeseriesGroupCountsServer).GetGitLabActivityRecordGroupCounts(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: TimeseriesGroupCounts_GetGitLabActivityRecordGroupCounts_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TimeseriesGroupCountsServer).GetGitLabActivityRecordGroupCounts(ctx, req.(*GetGitLabActivityRecordGroupCountsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _TimeseriesGroupCounts_GetLlmCallRecordGroupCounts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetLlmCallRecordGroupCountsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TimeseriesGroupCountsServer).GetLlmCallRecordGroupCounts(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: TimeseriesGroupCounts_GetLlmCallRecordGroupCounts_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TimeseriesGroupCountsServer).GetLlmCallRecordGroupCounts(ctx, req.(*GetLlmCallRecordGroupCountsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _TimeseriesGroupCounts_GetPromptRecordGroupCounts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetPromptRecordGroupCountsRequest)
 	if err := dec(in); err != nil {
@@ -1074,24 +990,6 @@ func _TimeseriesGroupCounts_GetPromptRecordGroupCounts_Handler(srv interface{}, 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TimeseriesGroupCountsServer).GetPromptRecordGroupCounts(ctx, req.(*GetPromptRecordGroupCountsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _TimeseriesGroupCounts_GetScmOperationRecordGroupCounts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetScmOperationRecordGroupCountsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TimeseriesGroupCountsServer).GetScmOperationRecordGroupCounts(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: TimeseriesGroupCounts_GetScmOperationRecordGroupCounts_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TimeseriesGroupCountsServer).GetScmOperationRecordGroupCounts(ctx, req.(*GetScmOperationRecordGroupCountsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1176,20 +1074,8 @@ var TimeseriesGroupCounts_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*TimeseriesGroupCountsServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetGitLabActivityRecordGroupCounts",
-			Handler:    _TimeseriesGroupCounts_GetGitLabActivityRecordGroupCounts_Handler,
-		},
-		{
-			MethodName: "GetLlmCallRecordGroupCounts",
-			Handler:    _TimeseriesGroupCounts_GetLlmCallRecordGroupCounts_Handler,
-		},
-		{
 			MethodName: "GetPromptRecordGroupCounts",
 			Handler:    _TimeseriesGroupCounts_GetPromptRecordGroupCounts_Handler,
-		},
-		{
-			MethodName: "GetScmOperationRecordGroupCounts",
-			Handler:    _TimeseriesGroupCounts_GetScmOperationRecordGroupCounts_Handler,
 		},
 		{
 			MethodName: "GetSessionRecordGroupCounts",
@@ -1213,24 +1099,18 @@ var TimeseriesGroupCounts_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	TimeseriesQuery_ListGitLabActivityRecord_FullMethodName = "/timedb.TimeseriesQuery/ListGitLabActivityRecord"
-	TimeseriesQuery_ListLlmCallRecord_FullMethodName        = "/timedb.TimeseriesQuery/ListLlmCallRecord"
-	TimeseriesQuery_ListPromptRecord_FullMethodName         = "/timedb.TimeseriesQuery/ListPromptRecord"
-	TimeseriesQuery_ListScmOperationRecord_FullMethodName   = "/timedb.TimeseriesQuery/ListScmOperationRecord"
-	TimeseriesQuery_ListSessionRecord_FullMethodName        = "/timedb.TimeseriesQuery/ListSessionRecord"
-	TimeseriesQuery_ListStopRecord_FullMethodName           = "/timedb.TimeseriesQuery/ListStopRecord"
-	TimeseriesQuery_ListSubagentRecord_FullMethodName       = "/timedb.TimeseriesQuery/ListSubagentRecord"
-	TimeseriesQuery_ListToolUseRecord_FullMethodName        = "/timedb.TimeseriesQuery/ListToolUseRecord"
+	TimeseriesQuery_ListPromptRecord_FullMethodName   = "/timedb.TimeseriesQuery/ListPromptRecord"
+	TimeseriesQuery_ListSessionRecord_FullMethodName  = "/timedb.TimeseriesQuery/ListSessionRecord"
+	TimeseriesQuery_ListStopRecord_FullMethodName     = "/timedb.TimeseriesQuery/ListStopRecord"
+	TimeseriesQuery_ListSubagentRecord_FullMethodName = "/timedb.TimeseriesQuery/ListSubagentRecord"
+	TimeseriesQuery_ListToolUseRecord_FullMethodName  = "/timedb.TimeseriesQuery/ListToolUseRecord"
 )
 
 // TimeseriesQueryClient is the client API for TimeseriesQuery service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TimeseriesQueryClient interface {
-	ListGitLabActivityRecord(ctx context.Context, in *ListGitLabActivityRecordRequest, opts ...grpc.CallOption) (*ListGitLabActivityRecordResponse, error)
-	ListLlmCallRecord(ctx context.Context, in *ListLlmCallRecordRequest, opts ...grpc.CallOption) (*ListLlmCallRecordResponse, error)
 	ListPromptRecord(ctx context.Context, in *ListPromptRecordRequest, opts ...grpc.CallOption) (*ListPromptRecordResponse, error)
-	ListScmOperationRecord(ctx context.Context, in *ListScmOperationRecordRequest, opts ...grpc.CallOption) (*ListScmOperationRecordResponse, error)
 	ListSessionRecord(ctx context.Context, in *ListSessionRecordRequest, opts ...grpc.CallOption) (*ListSessionRecordResponse, error)
 	ListStopRecord(ctx context.Context, in *ListStopRecordRequest, opts ...grpc.CallOption) (*ListStopRecordResponse, error)
 	ListSubagentRecord(ctx context.Context, in *ListSubagentRecordRequest, opts ...grpc.CallOption) (*ListSubagentRecordResponse, error)
@@ -1245,40 +1125,10 @@ func NewTimeseriesQueryClient(cc grpc.ClientConnInterface) TimeseriesQueryClient
 	return &timeseriesQueryClient{cc}
 }
 
-func (c *timeseriesQueryClient) ListGitLabActivityRecord(ctx context.Context, in *ListGitLabActivityRecordRequest, opts ...grpc.CallOption) (*ListGitLabActivityRecordResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListGitLabActivityRecordResponse)
-	err := c.cc.Invoke(ctx, TimeseriesQuery_ListGitLabActivityRecord_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *timeseriesQueryClient) ListLlmCallRecord(ctx context.Context, in *ListLlmCallRecordRequest, opts ...grpc.CallOption) (*ListLlmCallRecordResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListLlmCallRecordResponse)
-	err := c.cc.Invoke(ctx, TimeseriesQuery_ListLlmCallRecord_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *timeseriesQueryClient) ListPromptRecord(ctx context.Context, in *ListPromptRecordRequest, opts ...grpc.CallOption) (*ListPromptRecordResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListPromptRecordResponse)
 	err := c.cc.Invoke(ctx, TimeseriesQuery_ListPromptRecord_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *timeseriesQueryClient) ListScmOperationRecord(ctx context.Context, in *ListScmOperationRecordRequest, opts ...grpc.CallOption) (*ListScmOperationRecordResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListScmOperationRecordResponse)
-	err := c.cc.Invoke(ctx, TimeseriesQuery_ListScmOperationRecord_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1329,10 +1179,7 @@ func (c *timeseriesQueryClient) ListToolUseRecord(ctx context.Context, in *ListT
 // All implementations must embed UnimplementedTimeseriesQueryServer
 // for forward compatibility.
 type TimeseriesQueryServer interface {
-	ListGitLabActivityRecord(context.Context, *ListGitLabActivityRecordRequest) (*ListGitLabActivityRecordResponse, error)
-	ListLlmCallRecord(context.Context, *ListLlmCallRecordRequest) (*ListLlmCallRecordResponse, error)
 	ListPromptRecord(context.Context, *ListPromptRecordRequest) (*ListPromptRecordResponse, error)
-	ListScmOperationRecord(context.Context, *ListScmOperationRecordRequest) (*ListScmOperationRecordResponse, error)
 	ListSessionRecord(context.Context, *ListSessionRecordRequest) (*ListSessionRecordResponse, error)
 	ListStopRecord(context.Context, *ListStopRecordRequest) (*ListStopRecordResponse, error)
 	ListSubagentRecord(context.Context, *ListSubagentRecordRequest) (*ListSubagentRecordResponse, error)
@@ -1347,17 +1194,8 @@ type TimeseriesQueryServer interface {
 // pointer dereference when methods are called.
 type UnimplementedTimeseriesQueryServer struct{}
 
-func (UnimplementedTimeseriesQueryServer) ListGitLabActivityRecord(context.Context, *ListGitLabActivityRecordRequest) (*ListGitLabActivityRecordResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListGitLabActivityRecord not implemented")
-}
-func (UnimplementedTimeseriesQueryServer) ListLlmCallRecord(context.Context, *ListLlmCallRecordRequest) (*ListLlmCallRecordResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListLlmCallRecord not implemented")
-}
 func (UnimplementedTimeseriesQueryServer) ListPromptRecord(context.Context, *ListPromptRecordRequest) (*ListPromptRecordResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListPromptRecord not implemented")
-}
-func (UnimplementedTimeseriesQueryServer) ListScmOperationRecord(context.Context, *ListScmOperationRecordRequest) (*ListScmOperationRecordResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListScmOperationRecord not implemented")
 }
 func (UnimplementedTimeseriesQueryServer) ListSessionRecord(context.Context, *ListSessionRecordRequest) (*ListSessionRecordResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSessionRecord not implemented")
@@ -1392,42 +1230,6 @@ func RegisterTimeseriesQueryServer(s grpc.ServiceRegistrar, srv TimeseriesQueryS
 	s.RegisterService(&TimeseriesQuery_ServiceDesc, srv)
 }
 
-func _TimeseriesQuery_ListGitLabActivityRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListGitLabActivityRecordRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TimeseriesQueryServer).ListGitLabActivityRecord(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: TimeseriesQuery_ListGitLabActivityRecord_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TimeseriesQueryServer).ListGitLabActivityRecord(ctx, req.(*ListGitLabActivityRecordRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _TimeseriesQuery_ListLlmCallRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListLlmCallRecordRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TimeseriesQueryServer).ListLlmCallRecord(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: TimeseriesQuery_ListLlmCallRecord_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TimeseriesQueryServer).ListLlmCallRecord(ctx, req.(*ListLlmCallRecordRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _TimeseriesQuery_ListPromptRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListPromptRecordRequest)
 	if err := dec(in); err != nil {
@@ -1442,24 +1244,6 @@ func _TimeseriesQuery_ListPromptRecord_Handler(srv interface{}, ctx context.Cont
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TimeseriesQueryServer).ListPromptRecord(ctx, req.(*ListPromptRecordRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _TimeseriesQuery_ListScmOperationRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListScmOperationRecordRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TimeseriesQueryServer).ListScmOperationRecord(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: TimeseriesQuery_ListScmOperationRecord_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TimeseriesQueryServer).ListScmOperationRecord(ctx, req.(*ListScmOperationRecordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1544,20 +1328,8 @@ var TimeseriesQuery_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*TimeseriesQueryServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ListGitLabActivityRecord",
-			Handler:    _TimeseriesQuery_ListGitLabActivityRecord_Handler,
-		},
-		{
-			MethodName: "ListLlmCallRecord",
-			Handler:    _TimeseriesQuery_ListLlmCallRecord_Handler,
-		},
-		{
 			MethodName: "ListPromptRecord",
 			Handler:    _TimeseriesQuery_ListPromptRecord_Handler,
-		},
-		{
-			MethodName: "ListScmOperationRecord",
-			Handler:    _TimeseriesQuery_ListScmOperationRecord_Handler,
 		},
 		{
 			MethodName: "ListSessionRecord",

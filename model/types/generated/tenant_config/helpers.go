@@ -27,7 +27,6 @@ import (
 
 	"github.com/pelletier/go-toml/v2"
 	credentials "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/common/credentials"
-	gitlabconnectorsvc "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gitlabconnectorsvc"
 	oauth "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/oauth"
 	opa "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/opa"
 	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/errors"
@@ -43,10 +42,9 @@ import (
 // TenantConfigJSON represents TenantConfig in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type tenantconfigJSON struct {
-	Kernel          json.RawMessage `json:"kernel,omitempty"`
-	Opa             json.RawMessage `json:"opa,omitempty"`
-	Oauth           json.RawMessage `json:"oauth,omitempty"`
-	Gitlabconnector json.RawMessage `json:"gitlabconnector,omitempty"`
+	Kernel json.RawMessage `json:"kernel,omitempty"`
+	Opa    json.RawMessage `json:"opa,omitempty"`
+	Oauth  json.RawMessage `json:"oauth,omitempty"`
 }
 
 // TenantConfigToJSON converts TenantConfig to JSON bytes.
@@ -76,13 +74,6 @@ func TenantConfigToJSON(v *TenantConfig) ([]byte, error) {
 				return nil
 			}
 			data, _ := oauth.OAuthTenantConfigToJSON(v.Oauth)
-			return data
-		}(),
-		Gitlabconnector: func() json.RawMessage {
-			if v.Gitlabconnector == nil {
-				return nil
-			}
-			data, _ := gitlabconnectorsvc.GitLabConnectorTenantConfigToJSON(v.Gitlabconnector)
 			return data
 		}(),
 	}
@@ -116,13 +107,6 @@ func TenantConfigToJSONPretty(v *TenantConfig) ([]byte, error) {
 				return nil
 			}
 			data, _ := oauth.OAuthTenantConfigToJSON(v.Oauth)
-			return data
-		}(),
-		Gitlabconnector: func() json.RawMessage {
-			if v.Gitlabconnector == nil {
-				return nil
-			}
-			data, _ := gitlabconnectorsvc.GitLabConnectorTenantConfigToJSON(v.Gitlabconnector)
 			return data
 		}(),
 	}
@@ -208,13 +192,6 @@ func TenantConfigFromJSON(data []byte) (*TenantConfig, error) {
 		parsed, err := oauth.OAuthTenantConfigFromJSON(raw.Oauth)
 		if err == nil {
 			result.Oauth = parsed
-		}
-	}
-	// Parse message field: Gitlabconnector
-	if len(raw.Gitlabconnector) > 0 {
-		parsed, err := gitlabconnectorsvc.GitLabConnectorTenantConfigFromJSON(raw.Gitlabconnector)
-		if err == nil {
-			result.Gitlabconnector = parsed
 		}
 	}
 	return result, nil
@@ -313,11 +290,6 @@ func TenantConfigToEnvVar(v *TenantConfig) map[string]string {
 			result[k] = val
 		}
 	}
-	if v.Gitlabconnector != nil {
-		for k, val := range gitlabconnectorsvc.GitLabConnectorTenantConfigToEnvVar(v.Gitlabconnector) {
-			result[k] = val
-		}
-	}
 	return result
 }
 
@@ -338,11 +310,6 @@ func TenantConfigFromEnvVar(env map[string]string) (*TenantConfig, error) {
 		return nil, err
 	} else if sub != nil {
 		result.Oauth = sub
-	}
-	if sub, err := gitlabconnectorsvc.GitLabConnectorTenantConfigFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.Gitlabconnector = sub
 	}
 	return result, nil
 }
@@ -387,13 +354,6 @@ func ValidateTenantConfigWithDepth(m *TenantConfig, depth int) error {
 		}
 	}
 
-	// Validate Gitlabconnector nested message
-	if m.Gitlabconnector != nil {
-		if err := gitlabconnectorsvc.ValidateGitLabConnectorTenantConfigWithDepth(m.Gitlabconnector, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field Gitlabconnector validation failed")
-		}
-	}
-
 	return nil
 }
 
@@ -431,8 +391,5 @@ func MergeTenantConfig(dst, src *TenantConfig) {
 	}
 	if dst.Oauth == nil {
 		dst.Oauth = src.Oauth
-	}
-	if dst.Gitlabconnector == nil {
-		dst.Gitlabconnector = src.Gitlabconnector
 	}
 }

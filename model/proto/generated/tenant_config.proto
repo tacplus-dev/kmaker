@@ -8,7 +8,6 @@ option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/k
 
 import "sys/spec.proto";
 import "common/credentials.proto";
-import "services/gitlab-connector.proto";
 import "services/oauth.proto";
 import "services/opa.proto";
 
@@ -19,5 +18,4 @@ message TenantConfig {
   credentials.KernelTenantConfig kernel = 1;
   opa.OpaTenantConfig opa = 2;
   oauth.OAuthTenantConfig oauth = 3;
-  gitlabconnectorsvc.GitLabConnectorTenantConfig gitlabconnector = 4;
 }

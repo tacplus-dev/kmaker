@@ -26,9 +26,6 @@ import (
 	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
 	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
 	agentsensor "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/vservices/agentsensor"
-	gitlabconnector "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/vservices/gitlabconnector"
-	llmsensor "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/vservices/llmsensor"
-	scmsensor "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/vservices/scmsensor"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -102,35 +99,20 @@ func (RecordChangeType) EnumDescriptor() ([]byte, []int) {
 type TypeID int32
 
 const (
-	TypeID_TYPE_ID_UNSPECIFIED                                TypeID = 0
-	TypeID_TYPE_ID_CONFIG                                     TypeID = 1
-	TypeID_TYPE_ID_STRATUM_STATE                              TypeID = 2
-	TypeID_TYPE_ID_STRATUM_SERVICE_HEALTH                     TypeID = 3
-	TypeID_TYPE_ID_STRATUM_CONFIG_STATE                       TypeID = 4
-	TypeID_TYPE_ID_MAP_EMPTY                                  TypeID = 5
-	TypeID_TYPE_ID_QUERY_HANDLE                               TypeID = 6
-	TypeID_TYPE_ID_QUERY_STATS                                TypeID = 7
-	TypeID_TYPE_ID_RECORD_COUNT                               TypeID = 8
-	TypeID_TYPE_ID_OPEN_AGENT_EVENT_QUERY_REQUEST             TypeID = 9
-	TypeID_TYPE_ID_SAMPLE_AGENT_EVENT_REQUEST                 TypeID = 10
-	TypeID_TYPE_ID_SAMPLE_AGENT_EVENT_RESPONSE                TypeID = 11
-	TypeID_TYPE_ID_PULL_AGENT_EVENT_REQUEST                   TypeID = 12
-	TypeID_TYPE_ID_PULL_AGENT_EVENT_RESPONSE                  TypeID = 13
-	TypeID_TYPE_ID_OPEN_GIT_LAB_CONNECTOR_EVENT_QUERY_REQUEST TypeID = 14
-	TypeID_TYPE_ID_SAMPLE_GIT_LAB_CONNECTOR_EVENT_REQUEST     TypeID = 15
-	TypeID_TYPE_ID_SAMPLE_GIT_LAB_CONNECTOR_EVENT_RESPONSE    TypeID = 16
-	TypeID_TYPE_ID_PULL_GIT_LAB_CONNECTOR_EVENT_REQUEST       TypeID = 17
-	TypeID_TYPE_ID_PULL_GIT_LAB_CONNECTOR_EVENT_RESPONSE      TypeID = 18
-	TypeID_TYPE_ID_OPEN_LLM_EVENT_QUERY_REQUEST               TypeID = 19
-	TypeID_TYPE_ID_SAMPLE_LLM_EVENT_REQUEST                   TypeID = 20
-	TypeID_TYPE_ID_SAMPLE_LLM_EVENT_RESPONSE                  TypeID = 21
-	TypeID_TYPE_ID_PULL_LLM_EVENT_REQUEST                     TypeID = 22
-	TypeID_TYPE_ID_PULL_LLM_EVENT_RESPONSE                    TypeID = 23
-	TypeID_TYPE_ID_OPEN_SCM_EVENT_QUERY_REQUEST               TypeID = 24
-	TypeID_TYPE_ID_SAMPLE_SCM_EVENT_REQUEST                   TypeID = 25
-	TypeID_TYPE_ID_SAMPLE_SCM_EVENT_RESPONSE                  TypeID = 26
-	TypeID_TYPE_ID_PULL_SCM_EVENT_REQUEST                     TypeID = 27
-	TypeID_TYPE_ID_PULL_SCM_EVENT_RESPONSE                    TypeID = 28
+	TypeID_TYPE_ID_UNSPECIFIED                    TypeID = 0
+	TypeID_TYPE_ID_CONFIG                         TypeID = 1
+	TypeID_TYPE_ID_STRATUM_STATE                  TypeID = 2
+	TypeID_TYPE_ID_STRATUM_SERVICE_HEALTH         TypeID = 3
+	TypeID_TYPE_ID_STRATUM_CONFIG_STATE           TypeID = 4
+	TypeID_TYPE_ID_MAP_EMPTY                      TypeID = 5
+	TypeID_TYPE_ID_QUERY_HANDLE                   TypeID = 6
+	TypeID_TYPE_ID_QUERY_STATS                    TypeID = 7
+	TypeID_TYPE_ID_RECORD_COUNT                   TypeID = 8
+	TypeID_TYPE_ID_OPEN_AGENT_EVENT_QUERY_REQUEST TypeID = 9
+	TypeID_TYPE_ID_SAMPLE_AGENT_EVENT_REQUEST     TypeID = 10
+	TypeID_TYPE_ID_SAMPLE_AGENT_EVENT_RESPONSE    TypeID = 11
+	TypeID_TYPE_ID_PULL_AGENT_EVENT_REQUEST       TypeID = 12
+	TypeID_TYPE_ID_PULL_AGENT_EVENT_RESPONSE      TypeID = 13
 )
 
 // Enum value maps for TypeID.
@@ -150,52 +132,22 @@ var (
 		11: "TYPE_ID_SAMPLE_AGENT_EVENT_RESPONSE",
 		12: "TYPE_ID_PULL_AGENT_EVENT_REQUEST",
 		13: "TYPE_ID_PULL_AGENT_EVENT_RESPONSE",
-		14: "TYPE_ID_OPEN_GIT_LAB_CONNECTOR_EVENT_QUERY_REQUEST",
-		15: "TYPE_ID_SAMPLE_GIT_LAB_CONNECTOR_EVENT_REQUEST",
-		16: "TYPE_ID_SAMPLE_GIT_LAB_CONNECTOR_EVENT_RESPONSE",
-		17: "TYPE_ID_PULL_GIT_LAB_CONNECTOR_EVENT_REQUEST",
-		18: "TYPE_ID_PULL_GIT_LAB_CONNECTOR_EVENT_RESPONSE",
-		19: "TYPE_ID_OPEN_LLM_EVENT_QUERY_REQUEST",
-		20: "TYPE_ID_SAMPLE_LLM_EVENT_REQUEST",
-		21: "TYPE_ID_SAMPLE_LLM_EVENT_RESPONSE",
-		22: "TYPE_ID_PULL_LLM_EVENT_REQUEST",
-		23: "TYPE_ID_PULL_LLM_EVENT_RESPONSE",
-		24: "TYPE_ID_OPEN_SCM_EVENT_QUERY_REQUEST",
-		25: "TYPE_ID_SAMPLE_SCM_EVENT_REQUEST",
-		26: "TYPE_ID_SAMPLE_SCM_EVENT_RESPONSE",
-		27: "TYPE_ID_PULL_SCM_EVENT_REQUEST",
-		28: "TYPE_ID_PULL_SCM_EVENT_RESPONSE",
 	}
 	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":                                0,
-		"TYPE_ID_CONFIG":                                     1,
-		"TYPE_ID_STRATUM_STATE":                              2,
-		"TYPE_ID_STRATUM_SERVICE_HEALTH":                     3,
-		"TYPE_ID_STRATUM_CONFIG_STATE":                       4,
-		"TYPE_ID_MAP_EMPTY":                                  5,
-		"TYPE_ID_QUERY_HANDLE":                               6,
-		"TYPE_ID_QUERY_STATS":                                7,
-		"TYPE_ID_RECORD_COUNT":                               8,
-		"TYPE_ID_OPEN_AGENT_EVENT_QUERY_REQUEST":             9,
-		"TYPE_ID_SAMPLE_AGENT_EVENT_REQUEST":                 10,
-		"TYPE_ID_SAMPLE_AGENT_EVENT_RESPONSE":                11,
-		"TYPE_ID_PULL_AGENT_EVENT_REQUEST":                   12,
-		"TYPE_ID_PULL_AGENT_EVENT_RESPONSE":                  13,
-		"TYPE_ID_OPEN_GIT_LAB_CONNECTOR_EVENT_QUERY_REQUEST": 14,
-		"TYPE_ID_SAMPLE_GIT_LAB_CONNECTOR_EVENT_REQUEST":     15,
-		"TYPE_ID_SAMPLE_GIT_LAB_CONNECTOR_EVENT_RESPONSE":    16,
-		"TYPE_ID_PULL_GIT_LAB_CONNECTOR_EVENT_REQUEST":       17,
-		"TYPE_ID_PULL_GIT_LAB_CONNECTOR_EVENT_RESPONSE":      18,
-		"TYPE_ID_OPEN_LLM_EVENT_QUERY_REQUEST":               19,
-		"TYPE_ID_SAMPLE_LLM_EVENT_REQUEST":                   20,
-		"TYPE_ID_SAMPLE_LLM_EVENT_RESPONSE":                  21,
-		"TYPE_ID_PULL_LLM_EVENT_REQUEST":                     22,
-		"TYPE_ID_PULL_LLM_EVENT_RESPONSE":                    23,
-		"TYPE_ID_OPEN_SCM_EVENT_QUERY_REQUEST":               24,
-		"TYPE_ID_SAMPLE_SCM_EVENT_REQUEST":                   25,
-		"TYPE_ID_SAMPLE_SCM_EVENT_RESPONSE":                  26,
-		"TYPE_ID_PULL_SCM_EVENT_REQUEST":                     27,
-		"TYPE_ID_PULL_SCM_EVENT_RESPONSE":                    28,
+		"TYPE_ID_UNSPECIFIED":                    0,
+		"TYPE_ID_CONFIG":                         1,
+		"TYPE_ID_STRATUM_STATE":                  2,
+		"TYPE_ID_STRATUM_SERVICE_HEALTH":         3,
+		"TYPE_ID_STRATUM_CONFIG_STATE":           4,
+		"TYPE_ID_MAP_EMPTY":                      5,
+		"TYPE_ID_QUERY_HANDLE":                   6,
+		"TYPE_ID_QUERY_STATS":                    7,
+		"TYPE_ID_RECORD_COUNT":                   8,
+		"TYPE_ID_OPEN_AGENT_EVENT_QUERY_REQUEST": 9,
+		"TYPE_ID_SAMPLE_AGENT_EVENT_REQUEST":     10,
+		"TYPE_ID_SAMPLE_AGENT_EVENT_RESPONSE":    11,
+		"TYPE_ID_PULL_AGENT_EVENT_REQUEST":       12,
+		"TYPE_ID_PULL_AGENT_EVENT_RESPONSE":      13,
 	}
 )
 
@@ -290,85 +242,40 @@ func (StratumConfigStateServiceRpcId) EnumDescriptor() ([]byte, []int) {
 type RecordMapRpcId int32
 
 const (
-	RecordMapRpcId_RECORD_MAP_RPC_ID_UNSPECIFIED                        RecordMapRpcId = 0
-	RecordMapRpcId_RECORD_MAP_RPC_ID_ALL_ACCESSORS                      RecordMapRpcId = 1
-	RecordMapRpcId_RECORD_MAP_RPC_ID_ALL_MUTATORS                       RecordMapRpcId = 2
-	RecordMapRpcId_RECORD_MAP_RPC_ID_ALL_EXECUTORS                      RecordMapRpcId = 3
-	RecordMapRpcId_RECORD_MAP_RPC_ID_OPEN_AGENT_EVENT_QUERY             RecordMapRpcId = 4
-	RecordMapRpcId_RECORD_MAP_RPC_ID_COUNT_AGENT_EVENT                  RecordMapRpcId = 5
-	RecordMapRpcId_RECORD_MAP_RPC_ID_SAMPLE_AGENT_EVENT                 RecordMapRpcId = 6
-	RecordMapRpcId_RECORD_MAP_RPC_ID_PULL_AGENT_EVENT                   RecordMapRpcId = 7
-	RecordMapRpcId_RECORD_MAP_RPC_ID_CLOSE_AGENT_EVENT                  RecordMapRpcId = 8
-	RecordMapRpcId_RECORD_MAP_RPC_ID_OPEN_GIT_LAB_CONNECTOR_EVENT_QUERY RecordMapRpcId = 9
-	RecordMapRpcId_RECORD_MAP_RPC_ID_COUNT_GIT_LAB_CONNECTOR_EVENT      RecordMapRpcId = 10
-	RecordMapRpcId_RECORD_MAP_RPC_ID_SAMPLE_GIT_LAB_CONNECTOR_EVENT     RecordMapRpcId = 11
-	RecordMapRpcId_RECORD_MAP_RPC_ID_PULL_GIT_LAB_CONNECTOR_EVENT       RecordMapRpcId = 12
-	RecordMapRpcId_RECORD_MAP_RPC_ID_CLOSE_GIT_LAB_CONNECTOR_EVENT      RecordMapRpcId = 13
-	RecordMapRpcId_RECORD_MAP_RPC_ID_OPEN_LLM_EVENT_QUERY               RecordMapRpcId = 14
-	RecordMapRpcId_RECORD_MAP_RPC_ID_COUNT_LLM_EVENT                    RecordMapRpcId = 15
-	RecordMapRpcId_RECORD_MAP_RPC_ID_SAMPLE_LLM_EVENT                   RecordMapRpcId = 16
-	RecordMapRpcId_RECORD_MAP_RPC_ID_PULL_LLM_EVENT                     RecordMapRpcId = 17
-	RecordMapRpcId_RECORD_MAP_RPC_ID_CLOSE_LLM_EVENT                    RecordMapRpcId = 18
-	RecordMapRpcId_RECORD_MAP_RPC_ID_OPEN_SCM_EVENT_QUERY               RecordMapRpcId = 19
-	RecordMapRpcId_RECORD_MAP_RPC_ID_COUNT_SCM_EVENT                    RecordMapRpcId = 20
-	RecordMapRpcId_RECORD_MAP_RPC_ID_SAMPLE_SCM_EVENT                   RecordMapRpcId = 21
-	RecordMapRpcId_RECORD_MAP_RPC_ID_PULL_SCM_EVENT                     RecordMapRpcId = 22
-	RecordMapRpcId_RECORD_MAP_RPC_ID_CLOSE_SCM_EVENT                    RecordMapRpcId = 23
+	RecordMapRpcId_RECORD_MAP_RPC_ID_UNSPECIFIED            RecordMapRpcId = 0
+	RecordMapRpcId_RECORD_MAP_RPC_ID_ALL_ACCESSORS          RecordMapRpcId = 1
+	RecordMapRpcId_RECORD_MAP_RPC_ID_ALL_MUTATORS           RecordMapRpcId = 2
+	RecordMapRpcId_RECORD_MAP_RPC_ID_ALL_EXECUTORS          RecordMapRpcId = 3
+	RecordMapRpcId_RECORD_MAP_RPC_ID_OPEN_AGENT_EVENT_QUERY RecordMapRpcId = 4
+	RecordMapRpcId_RECORD_MAP_RPC_ID_COUNT_AGENT_EVENT      RecordMapRpcId = 5
+	RecordMapRpcId_RECORD_MAP_RPC_ID_SAMPLE_AGENT_EVENT     RecordMapRpcId = 6
+	RecordMapRpcId_RECORD_MAP_RPC_ID_PULL_AGENT_EVENT       RecordMapRpcId = 7
+	RecordMapRpcId_RECORD_MAP_RPC_ID_CLOSE_AGENT_EVENT      RecordMapRpcId = 8
 )
 
 // Enum value maps for RecordMapRpcId.
 var (
 	RecordMapRpcId_name = map[int32]string{
-		0:  "RECORD_MAP_RPC_ID_UNSPECIFIED",
-		1:  "RECORD_MAP_RPC_ID_ALL_ACCESSORS",
-		2:  "RECORD_MAP_RPC_ID_ALL_MUTATORS",
-		3:  "RECORD_MAP_RPC_ID_ALL_EXECUTORS",
-		4:  "RECORD_MAP_RPC_ID_OPEN_AGENT_EVENT_QUERY",
-		5:  "RECORD_MAP_RPC_ID_COUNT_AGENT_EVENT",
-		6:  "RECORD_MAP_RPC_ID_SAMPLE_AGENT_EVENT",
-		7:  "RECORD_MAP_RPC_ID_PULL_AGENT_EVENT",
-		8:  "RECORD_MAP_RPC_ID_CLOSE_AGENT_EVENT",
-		9:  "RECORD_MAP_RPC_ID_OPEN_GIT_LAB_CONNECTOR_EVENT_QUERY",
-		10: "RECORD_MAP_RPC_ID_COUNT_GIT_LAB_CONNECTOR_EVENT",
-		11: "RECORD_MAP_RPC_ID_SAMPLE_GIT_LAB_CONNECTOR_EVENT",
-		12: "RECORD_MAP_RPC_ID_PULL_GIT_LAB_CONNECTOR_EVENT",
-		13: "RECORD_MAP_RPC_ID_CLOSE_GIT_LAB_CONNECTOR_EVENT",
-		14: "RECORD_MAP_RPC_ID_OPEN_LLM_EVENT_QUERY",
-		15: "RECORD_MAP_RPC_ID_COUNT_LLM_EVENT",
-		16: "RECORD_MAP_RPC_ID_SAMPLE_LLM_EVENT",
-		17: "RECORD_MAP_RPC_ID_PULL_LLM_EVENT",
-		18: "RECORD_MAP_RPC_ID_CLOSE_LLM_EVENT",
-		19: "RECORD_MAP_RPC_ID_OPEN_SCM_EVENT_QUERY",
-		20: "RECORD_MAP_RPC_ID_COUNT_SCM_EVENT",
-		21: "RECORD_MAP_RPC_ID_SAMPLE_SCM_EVENT",
-		22: "RECORD_MAP_RPC_ID_PULL_SCM_EVENT",
-		23: "RECORD_MAP_RPC_ID_CLOSE_SCM_EVENT",
+		0: "RECORD_MAP_RPC_ID_UNSPECIFIED",
+		1: "RECORD_MAP_RPC_ID_ALL_ACCESSORS",
+		2: "RECORD_MAP_RPC_ID_ALL_MUTATORS",
+		3: "RECORD_MAP_RPC_ID_ALL_EXECUTORS",
+		4: "RECORD_MAP_RPC_ID_OPEN_AGENT_EVENT_QUERY",
+		5: "RECORD_MAP_RPC_ID_COUNT_AGENT_EVENT",
+		6: "RECORD_MAP_RPC_ID_SAMPLE_AGENT_EVENT",
+		7: "RECORD_MAP_RPC_ID_PULL_AGENT_EVENT",
+		8: "RECORD_MAP_RPC_ID_CLOSE_AGENT_EVENT",
 	}
 	RecordMapRpcId_value = map[string]int32{
-		"RECORD_MAP_RPC_ID_UNSPECIFIED":                        0,
-		"RECORD_MAP_RPC_ID_ALL_ACCESSORS":                      1,
-		"RECORD_MAP_RPC_ID_ALL_MUTATORS":                       2,
-		"RECORD_MAP_RPC_ID_ALL_EXECUTORS":                      3,
-		"RECORD_MAP_RPC_ID_OPEN_AGENT_EVENT_QUERY":             4,
-		"RECORD_MAP_RPC_ID_COUNT_AGENT_EVENT":                  5,
-		"RECORD_MAP_RPC_ID_SAMPLE_AGENT_EVENT":                 6,
-		"RECORD_MAP_RPC_ID_PULL_AGENT_EVENT":                   7,
-		"RECORD_MAP_RPC_ID_CLOSE_AGENT_EVENT":                  8,
-		"RECORD_MAP_RPC_ID_OPEN_GIT_LAB_CONNECTOR_EVENT_QUERY": 9,
-		"RECORD_MAP_RPC_ID_COUNT_GIT_LAB_CONNECTOR_EVENT":      10,
-		"RECORD_MAP_RPC_ID_SAMPLE_GIT_LAB_CONNECTOR_EVENT":     11,
-		"RECORD_MAP_RPC_ID_PULL_GIT_LAB_CONNECTOR_EVENT":       12,
-		"RECORD_MAP_RPC_ID_CLOSE_GIT_LAB_CONNECTOR_EVENT":      13,
-		"RECORD_MAP_RPC_ID_OPEN_LLM_EVENT_QUERY":               14,
-		"RECORD_MAP_RPC_ID_COUNT_LLM_EVENT":                    15,
-		"RECORD_MAP_RPC_ID_SAMPLE_LLM_EVENT":                   16,
-		"RECORD_MAP_RPC_ID_PULL_LLM_EVENT":                     17,
-		"RECORD_MAP_RPC_ID_CLOSE_LLM_EVENT":                    18,
-		"RECORD_MAP_RPC_ID_OPEN_SCM_EVENT_QUERY":               19,
-		"RECORD_MAP_RPC_ID_COUNT_SCM_EVENT":                    20,
-		"RECORD_MAP_RPC_ID_SAMPLE_SCM_EVENT":                   21,
-		"RECORD_MAP_RPC_ID_PULL_SCM_EVENT":                     22,
-		"RECORD_MAP_RPC_ID_CLOSE_SCM_EVENT":                    23,
+		"RECORD_MAP_RPC_ID_UNSPECIFIED":            0,
+		"RECORD_MAP_RPC_ID_ALL_ACCESSORS":          1,
+		"RECORD_MAP_RPC_ID_ALL_MUTATORS":           2,
+		"RECORD_MAP_RPC_ID_ALL_EXECUTORS":          3,
+		"RECORD_MAP_RPC_ID_OPEN_AGENT_EVENT_QUERY": 4,
+		"RECORD_MAP_RPC_ID_COUNT_AGENT_EVENT":      5,
+		"RECORD_MAP_RPC_ID_SAMPLE_AGENT_EVENT":     6,
+		"RECORD_MAP_RPC_ID_PULL_AGENT_EVENT":       7,
+		"RECORD_MAP_RPC_ID_CLOSE_AGENT_EVENT":      8,
 	}
 )
 
@@ -1313,1055 +1220,11 @@ func (x *PullAgentEventResponse) GetNoop() bool {
 	return false
 }
 
-type OpenGitLabConnectorEventQueryRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Standing      bool                   `protobuf:"varint,1,opt,name=standing,proto3" json:"standing,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *OpenGitLabConnectorEventQueryRequest) Reset() {
-	*x = OpenGitLabConnectorEventQueryRequest{}
-	mi := &file_services_stratum_proto_msgTypes[13]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *OpenGitLabConnectorEventQueryRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*OpenGitLabConnectorEventQueryRequest) ProtoMessage() {}
-
-func (x *OpenGitLabConnectorEventQueryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[13]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use OpenGitLabConnectorEventQueryRequest.ProtoReflect.Descriptor instead.
-func (*OpenGitLabConnectorEventQueryRequest) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{13}
-}
-
-func (x *OpenGitLabConnectorEventQueryRequest) GetStanding() bool {
-	if x != nil {
-		return x.Standing
-	}
-	return false
-}
-
-func (x *OpenGitLabConnectorEventQueryRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *OpenGitLabConnectorEventQueryRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type SampleGitLabConnectorEventRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	QueryId       string                 `protobuf:"bytes,1,opt,name=query_id,json=queryId,proto3" json:"query_id,omitempty"`
-	N             int32                  `protobuf:"varint,2,opt,name=n,proto3" json:"n,omitempty"`
-	Seed          uint64                 `protobuf:"varint,3,opt,name=seed,proto3" json:"seed,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SampleGitLabConnectorEventRequest) Reset() {
-	*x = SampleGitLabConnectorEventRequest{}
-	mi := &file_services_stratum_proto_msgTypes[14]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SampleGitLabConnectorEventRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SampleGitLabConnectorEventRequest) ProtoMessage() {}
-
-func (x *SampleGitLabConnectorEventRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[14]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SampleGitLabConnectorEventRequest.ProtoReflect.Descriptor instead.
-func (*SampleGitLabConnectorEventRequest) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{14}
-}
-
-func (x *SampleGitLabConnectorEventRequest) GetQueryId() string {
-	if x != nil {
-		return x.QueryId
-	}
-	return ""
-}
-
-func (x *SampleGitLabConnectorEventRequest) GetN() int32 {
-	if x != nil {
-		return x.N
-	}
-	return 0
-}
-
-func (x *SampleGitLabConnectorEventRequest) GetSeed() uint64 {
-	if x != nil {
-		return x.Seed
-	}
-	return 0
-}
-
-func (x *SampleGitLabConnectorEventRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *SampleGitLabConnectorEventRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type SampleGitLabConnectorEventResponse struct {
-	state         protoimpl.MessageState                  `protogen:"open.v1"`
-	Items         []*gitlabconnector.GitLabConnectorEvent `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
-	TraceId       string                                  `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                                    `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SampleGitLabConnectorEventResponse) Reset() {
-	*x = SampleGitLabConnectorEventResponse{}
-	mi := &file_services_stratum_proto_msgTypes[15]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SampleGitLabConnectorEventResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SampleGitLabConnectorEventResponse) ProtoMessage() {}
-
-func (x *SampleGitLabConnectorEventResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[15]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SampleGitLabConnectorEventResponse.ProtoReflect.Descriptor instead.
-func (*SampleGitLabConnectorEventResponse) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{15}
-}
-
-func (x *SampleGitLabConnectorEventResponse) GetItems() []*gitlabconnector.GitLabConnectorEvent {
-	if x != nil {
-		return x.Items
-	}
-	return nil
-}
-
-func (x *SampleGitLabConnectorEventResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *SampleGitLabConnectorEventResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type PullGitLabConnectorEventRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	QueryId       string                 `protobuf:"bytes,1,opt,name=query_id,json=queryId,proto3" json:"query_id,omitempty"`
-	PageSize      int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	PageToken     string                 `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PullGitLabConnectorEventRequest) Reset() {
-	*x = PullGitLabConnectorEventRequest{}
-	mi := &file_services_stratum_proto_msgTypes[16]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PullGitLabConnectorEventRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PullGitLabConnectorEventRequest) ProtoMessage() {}
-
-func (x *PullGitLabConnectorEventRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[16]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PullGitLabConnectorEventRequest.ProtoReflect.Descriptor instead.
-func (*PullGitLabConnectorEventRequest) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{16}
-}
-
-func (x *PullGitLabConnectorEventRequest) GetQueryId() string {
-	if x != nil {
-		return x.QueryId
-	}
-	return ""
-}
-
-func (x *PullGitLabConnectorEventRequest) GetPageSize() int32 {
-	if x != nil {
-		return x.PageSize
-	}
-	return 0
-}
-
-func (x *PullGitLabConnectorEventRequest) GetPageToken() string {
-	if x != nil {
-		return x.PageToken
-	}
-	return ""
-}
-
-func (x *PullGitLabConnectorEventRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *PullGitLabConnectorEventRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type PullGitLabConnectorEventResponse struct {
-	state         protoimpl.MessageState                  `protogen:"open.v1"`
-	Items         []*gitlabconnector.GitLabConnectorEvent `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
-	NextPageToken string                                  `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
-	TotalCount    int64                                   `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
-	TraceId       string                                  `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                                    `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PullGitLabConnectorEventResponse) Reset() {
-	*x = PullGitLabConnectorEventResponse{}
-	mi := &file_services_stratum_proto_msgTypes[17]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PullGitLabConnectorEventResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PullGitLabConnectorEventResponse) ProtoMessage() {}
-
-func (x *PullGitLabConnectorEventResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[17]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PullGitLabConnectorEventResponse.ProtoReflect.Descriptor instead.
-func (*PullGitLabConnectorEventResponse) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{17}
-}
-
-func (x *PullGitLabConnectorEventResponse) GetItems() []*gitlabconnector.GitLabConnectorEvent {
-	if x != nil {
-		return x.Items
-	}
-	return nil
-}
-
-func (x *PullGitLabConnectorEventResponse) GetNextPageToken() string {
-	if x != nil {
-		return x.NextPageToken
-	}
-	return ""
-}
-
-func (x *PullGitLabConnectorEventResponse) GetTotalCount() int64 {
-	if x != nil {
-		return x.TotalCount
-	}
-	return 0
-}
-
-func (x *PullGitLabConnectorEventResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *PullGitLabConnectorEventResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type OpenLlmEventQueryRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Standing      bool                   `protobuf:"varint,1,opt,name=standing,proto3" json:"standing,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *OpenLlmEventQueryRequest) Reset() {
-	*x = OpenLlmEventQueryRequest{}
-	mi := &file_services_stratum_proto_msgTypes[18]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *OpenLlmEventQueryRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*OpenLlmEventQueryRequest) ProtoMessage() {}
-
-func (x *OpenLlmEventQueryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[18]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use OpenLlmEventQueryRequest.ProtoReflect.Descriptor instead.
-func (*OpenLlmEventQueryRequest) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{18}
-}
-
-func (x *OpenLlmEventQueryRequest) GetStanding() bool {
-	if x != nil {
-		return x.Standing
-	}
-	return false
-}
-
-func (x *OpenLlmEventQueryRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *OpenLlmEventQueryRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type SampleLlmEventRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	QueryId       string                 `protobuf:"bytes,1,opt,name=query_id,json=queryId,proto3" json:"query_id,omitempty"`
-	N             int32                  `protobuf:"varint,2,opt,name=n,proto3" json:"n,omitempty"`
-	Seed          uint64                 `protobuf:"varint,3,opt,name=seed,proto3" json:"seed,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SampleLlmEventRequest) Reset() {
-	*x = SampleLlmEventRequest{}
-	mi := &file_services_stratum_proto_msgTypes[19]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SampleLlmEventRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SampleLlmEventRequest) ProtoMessage() {}
-
-func (x *SampleLlmEventRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[19]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SampleLlmEventRequest.ProtoReflect.Descriptor instead.
-func (*SampleLlmEventRequest) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{19}
-}
-
-func (x *SampleLlmEventRequest) GetQueryId() string {
-	if x != nil {
-		return x.QueryId
-	}
-	return ""
-}
-
-func (x *SampleLlmEventRequest) GetN() int32 {
-	if x != nil {
-		return x.N
-	}
-	return 0
-}
-
-func (x *SampleLlmEventRequest) GetSeed() uint64 {
-	if x != nil {
-		return x.Seed
-	}
-	return 0
-}
-
-func (x *SampleLlmEventRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *SampleLlmEventRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type SampleLlmEventResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Items         []*llmsensor.LlmEvent  `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SampleLlmEventResponse) Reset() {
-	*x = SampleLlmEventResponse{}
-	mi := &file_services_stratum_proto_msgTypes[20]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SampleLlmEventResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SampleLlmEventResponse) ProtoMessage() {}
-
-func (x *SampleLlmEventResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[20]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SampleLlmEventResponse.ProtoReflect.Descriptor instead.
-func (*SampleLlmEventResponse) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{20}
-}
-
-func (x *SampleLlmEventResponse) GetItems() []*llmsensor.LlmEvent {
-	if x != nil {
-		return x.Items
-	}
-	return nil
-}
-
-func (x *SampleLlmEventResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *SampleLlmEventResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type PullLlmEventRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	QueryId       string                 `protobuf:"bytes,1,opt,name=query_id,json=queryId,proto3" json:"query_id,omitempty"`
-	PageSize      int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	PageToken     string                 `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PullLlmEventRequest) Reset() {
-	*x = PullLlmEventRequest{}
-	mi := &file_services_stratum_proto_msgTypes[21]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PullLlmEventRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PullLlmEventRequest) ProtoMessage() {}
-
-func (x *PullLlmEventRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[21]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PullLlmEventRequest.ProtoReflect.Descriptor instead.
-func (*PullLlmEventRequest) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{21}
-}
-
-func (x *PullLlmEventRequest) GetQueryId() string {
-	if x != nil {
-		return x.QueryId
-	}
-	return ""
-}
-
-func (x *PullLlmEventRequest) GetPageSize() int32 {
-	if x != nil {
-		return x.PageSize
-	}
-	return 0
-}
-
-func (x *PullLlmEventRequest) GetPageToken() string {
-	if x != nil {
-		return x.PageToken
-	}
-	return ""
-}
-
-func (x *PullLlmEventRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *PullLlmEventRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type PullLlmEventResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Items         []*llmsensor.LlmEvent  `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
-	NextPageToken string                 `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
-	TotalCount    int64                  `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PullLlmEventResponse) Reset() {
-	*x = PullLlmEventResponse{}
-	mi := &file_services_stratum_proto_msgTypes[22]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PullLlmEventResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PullLlmEventResponse) ProtoMessage() {}
-
-func (x *PullLlmEventResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[22]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PullLlmEventResponse.ProtoReflect.Descriptor instead.
-func (*PullLlmEventResponse) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{22}
-}
-
-func (x *PullLlmEventResponse) GetItems() []*llmsensor.LlmEvent {
-	if x != nil {
-		return x.Items
-	}
-	return nil
-}
-
-func (x *PullLlmEventResponse) GetNextPageToken() string {
-	if x != nil {
-		return x.NextPageToken
-	}
-	return ""
-}
-
-func (x *PullLlmEventResponse) GetTotalCount() int64 {
-	if x != nil {
-		return x.TotalCount
-	}
-	return 0
-}
-
-func (x *PullLlmEventResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *PullLlmEventResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type OpenScmEventQueryRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Standing      bool                   `protobuf:"varint,1,opt,name=standing,proto3" json:"standing,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *OpenScmEventQueryRequest) Reset() {
-	*x = OpenScmEventQueryRequest{}
-	mi := &file_services_stratum_proto_msgTypes[23]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *OpenScmEventQueryRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*OpenScmEventQueryRequest) ProtoMessage() {}
-
-func (x *OpenScmEventQueryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[23]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use OpenScmEventQueryRequest.ProtoReflect.Descriptor instead.
-func (*OpenScmEventQueryRequest) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{23}
-}
-
-func (x *OpenScmEventQueryRequest) GetStanding() bool {
-	if x != nil {
-		return x.Standing
-	}
-	return false
-}
-
-func (x *OpenScmEventQueryRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *OpenScmEventQueryRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type SampleScmEventRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	QueryId       string                 `protobuf:"bytes,1,opt,name=query_id,json=queryId,proto3" json:"query_id,omitempty"`
-	N             int32                  `protobuf:"varint,2,opt,name=n,proto3" json:"n,omitempty"`
-	Seed          uint64                 `protobuf:"varint,3,opt,name=seed,proto3" json:"seed,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SampleScmEventRequest) Reset() {
-	*x = SampleScmEventRequest{}
-	mi := &file_services_stratum_proto_msgTypes[24]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SampleScmEventRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SampleScmEventRequest) ProtoMessage() {}
-
-func (x *SampleScmEventRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[24]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SampleScmEventRequest.ProtoReflect.Descriptor instead.
-func (*SampleScmEventRequest) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{24}
-}
-
-func (x *SampleScmEventRequest) GetQueryId() string {
-	if x != nil {
-		return x.QueryId
-	}
-	return ""
-}
-
-func (x *SampleScmEventRequest) GetN() int32 {
-	if x != nil {
-		return x.N
-	}
-	return 0
-}
-
-func (x *SampleScmEventRequest) GetSeed() uint64 {
-	if x != nil {
-		return x.Seed
-	}
-	return 0
-}
-
-func (x *SampleScmEventRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *SampleScmEventRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type SampleScmEventResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Items         []*scmsensor.ScmEvent  `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SampleScmEventResponse) Reset() {
-	*x = SampleScmEventResponse{}
-	mi := &file_services_stratum_proto_msgTypes[25]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SampleScmEventResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SampleScmEventResponse) ProtoMessage() {}
-
-func (x *SampleScmEventResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[25]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SampleScmEventResponse.ProtoReflect.Descriptor instead.
-func (*SampleScmEventResponse) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{25}
-}
-
-func (x *SampleScmEventResponse) GetItems() []*scmsensor.ScmEvent {
-	if x != nil {
-		return x.Items
-	}
-	return nil
-}
-
-func (x *SampleScmEventResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *SampleScmEventResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type PullScmEventRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	QueryId       string                 `protobuf:"bytes,1,opt,name=query_id,json=queryId,proto3" json:"query_id,omitempty"`
-	PageSize      int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	PageToken     string                 `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PullScmEventRequest) Reset() {
-	*x = PullScmEventRequest{}
-	mi := &file_services_stratum_proto_msgTypes[26]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PullScmEventRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PullScmEventRequest) ProtoMessage() {}
-
-func (x *PullScmEventRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[26]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PullScmEventRequest.ProtoReflect.Descriptor instead.
-func (*PullScmEventRequest) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{26}
-}
-
-func (x *PullScmEventRequest) GetQueryId() string {
-	if x != nil {
-		return x.QueryId
-	}
-	return ""
-}
-
-func (x *PullScmEventRequest) GetPageSize() int32 {
-	if x != nil {
-		return x.PageSize
-	}
-	return 0
-}
-
-func (x *PullScmEventRequest) GetPageToken() string {
-	if x != nil {
-		return x.PageToken
-	}
-	return ""
-}
-
-func (x *PullScmEventRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *PullScmEventRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type PullScmEventResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Items         []*scmsensor.ScmEvent  `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
-	NextPageToken string                 `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
-	TotalCount    int64                  `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PullScmEventResponse) Reset() {
-	*x = PullScmEventResponse{}
-	mi := &file_services_stratum_proto_msgTypes[27]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PullScmEventResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PullScmEventResponse) ProtoMessage() {}
-
-func (x *PullScmEventResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[27]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PullScmEventResponse.ProtoReflect.Descriptor instead.
-func (*PullScmEventResponse) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{27}
-}
-
-func (x *PullScmEventResponse) GetItems() []*scmsensor.ScmEvent {
-	if x != nil {
-		return x.Items
-	}
-	return nil
-}
-
-func (x *PullScmEventResponse) GetNextPageToken() string {
-	if x != nil {
-		return x.NextPageToken
-	}
-	return ""
-}
-
-func (x *PullScmEventResponse) GetTotalCount() int64 {
-	if x != nil {
-		return x.TotalCount
-	}
-	return 0
-}
-
-func (x *PullScmEventResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *PullScmEventResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 var File_services_stratum_proto protoreflect.FileDescriptor
 
 const file_services_stratum_proto_rawDesc = "" +
 	"\n" +
-	"\x16services/stratum.proto\x12\astratum\x1a\x0esys/spec.proto\x1a\x16sys/healthreport.proto\x1a\x0fsys/trace.proto\x1a\x1cvservices/agent-sensor.proto\x1a vservices/gitlab-connector.proto\x1a\x1avservices/llm-sensor.proto\x1a\x1avservices/scm-sensor.proto\"\xa5\x03\n" +
+	"\x16services/stratum.proto\x12\astratum\x1a\x0esys/spec.proto\x1a\x16sys/healthreport.proto\x1a\x0fsys/trace.proto\x1a\x1cvservices/agent-sensor.proto\"\xa5\x03\n" +
 	"\x06Config\x12:\n" +
 	"\x13hazelcast_memory_mb\x18\x01 \x01(\x05B\n" +
 	"\xb0\xa7\x1d\x80\x02\x90\xa8\x1d\x80\x10R\x11hazelcastMemoryMb\x12:\n" +
@@ -2437,96 +1300,12 @@ const file_services_stratum_proto_rawDesc = "" +
 	"\vtotal_count\x18\x03 \x01(\x03R\n" +
 	"totalCount\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"s\n" +
-	"$OpenGitLabConnectorEventQueryRequest\x12\x1a\n" +
-	"\bstanding\x18\x01 \x01(\bR\bstanding\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x91\x01\n" +
-	"!SampleGitLabConnectorEventRequest\x12\x19\n" +
-	"\bquery_id\x18\x01 \x01(\tR\aqueryId\x12\f\n" +
-	"\x01n\x18\x02 \x01(\x05R\x01n\x12\x12\n" +
-	"\x04seed\x18\x03 \x01(\x04R\x04seed\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x92\x01\n" +
-	"\"SampleGitLabConnectorEventResponse\x12;\n" +
-	"\x05items\x18\x01 \x03(\v2%.gitlabconnector.GitLabConnectorEventR\x05items\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa9\x01\n" +
-	"\x1fPullGitLabConnectorEventRequest\x12\x19\n" +
-	"\bquery_id\x18\x01 \x01(\tR\aqueryId\x12\x1b\n" +
-	"\tpage_size\x18\x02 \x01(\x05R\bpageSize\x12\x1d\n" +
-	"\n" +
-	"page_token\x18\x03 \x01(\tR\tpageToken\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd9\x01\n" +
-	" PullGitLabConnectorEventResponse\x12;\n" +
-	"\x05items\x18\x01 \x03(\v2%.gitlabconnector.GitLabConnectorEventR\x05items\x12&\n" +
-	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1f\n" +
-	"\vtotal_count\x18\x03 \x01(\x03R\n" +
-	"totalCount\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"g\n" +
-	"\x18OpenLlmEventQueryRequest\x12\x1a\n" +
-	"\bstanding\x18\x01 \x01(\bR\bstanding\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x85\x01\n" +
-	"\x15SampleLlmEventRequest\x12\x19\n" +
-	"\bquery_id\x18\x01 \x01(\tR\aqueryId\x12\f\n" +
-	"\x01n\x18\x02 \x01(\x05R\x01n\x12\x12\n" +
-	"\x04seed\x18\x03 \x01(\x04R\x04seed\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"t\n" +
-	"\x16SampleLlmEventResponse\x12)\n" +
-	"\x05items\x18\x01 \x03(\v2\x13.llmsensor.LlmEventR\x05items\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9d\x01\n" +
-	"\x13PullLlmEventRequest\x12\x19\n" +
-	"\bquery_id\x18\x01 \x01(\tR\aqueryId\x12\x1b\n" +
-	"\tpage_size\x18\x02 \x01(\x05R\bpageSize\x12\x1d\n" +
-	"\n" +
-	"page_token\x18\x03 \x01(\tR\tpageToken\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xbb\x01\n" +
-	"\x14PullLlmEventResponse\x12)\n" +
-	"\x05items\x18\x01 \x03(\v2\x13.llmsensor.LlmEventR\x05items\x12&\n" +
-	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1f\n" +
-	"\vtotal_count\x18\x03 \x01(\x03R\n" +
-	"totalCount\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"g\n" +
-	"\x18OpenScmEventQueryRequest\x12\x1a\n" +
-	"\bstanding\x18\x01 \x01(\bR\bstanding\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x85\x01\n" +
-	"\x15SampleScmEventRequest\x12\x19\n" +
-	"\bquery_id\x18\x01 \x01(\tR\aqueryId\x12\f\n" +
-	"\x01n\x18\x02 \x01(\x05R\x01n\x12\x12\n" +
-	"\x04seed\x18\x03 \x01(\x04R\x04seed\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"t\n" +
-	"\x16SampleScmEventResponse\x12)\n" +
-	"\x05items\x18\x01 \x03(\v2\x13.scmsensor.ScmEventR\x05items\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9d\x01\n" +
-	"\x13PullScmEventRequest\x12\x19\n" +
-	"\bquery_id\x18\x01 \x01(\tR\aqueryId\x12\x1b\n" +
-	"\tpage_size\x18\x02 \x01(\x05R\bpageSize\x12\x1d\n" +
-	"\n" +
-	"page_token\x18\x03 \x01(\tR\tpageToken\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xbb\x01\n" +
-	"\x14PullScmEventResponse\x12)\n" +
-	"\x05items\x18\x01 \x03(\v2\x13.scmsensor.ScmEventR\x05items\x12&\n" +
-	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1f\n" +
-	"\vtotal_count\x18\x03 \x01(\x03R\n" +
-	"totalCount\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\x90\x01\n" +
 	"\x10RecordChangeType\x12\"\n" +
 	"\x1eRECORD_CHANGE_TYPE_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16RECORD_CHANGE_TYPE_ADD\x10\x01\x12\x1d\n" +
 	"\x19RECORD_CHANGE_TYPE_MODIFY\x10\x02\x12\x1d\n" +
-	"\x19RECORD_CHANGE_TYPE_DELETE\x10\x03*\xca\b\n" +
+	"\x19RECORD_CHANGE_TYPE_DELETE\x10\x03*\xc4\x03\n" +
 	"\x06TypeID\x12\x17\n" +
 	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eTYPE_ID_CONFIG\x10\x01\x12\x19\n" +
@@ -2542,22 +1321,7 @@ const file_services_stratum_proto_rawDesc = "" +
 	"\x12'\n" +
 	"#TYPE_ID_SAMPLE_AGENT_EVENT_RESPONSE\x10\v\x12$\n" +
 	" TYPE_ID_PULL_AGENT_EVENT_REQUEST\x10\f\x12%\n" +
-	"!TYPE_ID_PULL_AGENT_EVENT_RESPONSE\x10\r\x126\n" +
-	"2TYPE_ID_OPEN_GIT_LAB_CONNECTOR_EVENT_QUERY_REQUEST\x10\x0e\x122\n" +
-	".TYPE_ID_SAMPLE_GIT_LAB_CONNECTOR_EVENT_REQUEST\x10\x0f\x123\n" +
-	"/TYPE_ID_SAMPLE_GIT_LAB_CONNECTOR_EVENT_RESPONSE\x10\x10\x120\n" +
-	",TYPE_ID_PULL_GIT_LAB_CONNECTOR_EVENT_REQUEST\x10\x11\x121\n" +
-	"-TYPE_ID_PULL_GIT_LAB_CONNECTOR_EVENT_RESPONSE\x10\x12\x12(\n" +
-	"$TYPE_ID_OPEN_LLM_EVENT_QUERY_REQUEST\x10\x13\x12$\n" +
-	" TYPE_ID_SAMPLE_LLM_EVENT_REQUEST\x10\x14\x12%\n" +
-	"!TYPE_ID_SAMPLE_LLM_EVENT_RESPONSE\x10\x15\x12\"\n" +
-	"\x1eTYPE_ID_PULL_LLM_EVENT_REQUEST\x10\x16\x12#\n" +
-	"\x1fTYPE_ID_PULL_LLM_EVENT_RESPONSE\x10\x17\x12(\n" +
-	"$TYPE_ID_OPEN_SCM_EVENT_QUERY_REQUEST\x10\x18\x12$\n" +
-	" TYPE_ID_SAMPLE_SCM_EVENT_REQUEST\x10\x19\x12%\n" +
-	"!TYPE_ID_SAMPLE_SCM_EVENT_RESPONSE\x10\x1a\x12\"\n" +
-	"\x1eTYPE_ID_PULL_SCM_EVENT_REQUEST\x10\x1b\x12#\n" +
-	"\x1fTYPE_ID_PULL_SCM_EVENT_RESPONSE\x10\x1c*\x97\x03\n" +
+	"!TYPE_ID_PULL_AGENT_EVENT_RESPONSE\x10\r*\x97\x03\n" +
 	"\x1eStratumConfigStateServiceRpcId\x123\n" +
 	"/STRATUM_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x125\n" +
 	"1STRATUM_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x124\n" +
@@ -2565,7 +1329,7 @@ const file_services_stratum_proto_rawDesc = "" +
 	"1STRATUM_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x122\n" +
 	".STRATUM_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x122\n" +
 	".STRATUM_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x124\n" +
-	"0STRATUM_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x06*\x91\b\n" +
+	"0STRATUM_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x06*\xf3\x02\n" +
 	"\x0eRecordMapRpcId\x12!\n" +
 	"\x1dRECORD_MAP_RPC_ID_UNSPECIFIED\x10\x00\x12#\n" +
 	"\x1fRECORD_MAP_RPC_ID_ALL_ACCESSORS\x10\x01\x12\"\n" +
@@ -2575,49 +1339,18 @@ const file_services_stratum_proto_rawDesc = "" +
 	"#RECORD_MAP_RPC_ID_COUNT_AGENT_EVENT\x10\x05\x12(\n" +
 	"$RECORD_MAP_RPC_ID_SAMPLE_AGENT_EVENT\x10\x06\x12&\n" +
 	"\"RECORD_MAP_RPC_ID_PULL_AGENT_EVENT\x10\a\x12'\n" +
-	"#RECORD_MAP_RPC_ID_CLOSE_AGENT_EVENT\x10\b\x128\n" +
-	"4RECORD_MAP_RPC_ID_OPEN_GIT_LAB_CONNECTOR_EVENT_QUERY\x10\t\x123\n" +
-	"/RECORD_MAP_RPC_ID_COUNT_GIT_LAB_CONNECTOR_EVENT\x10\n" +
-	"\x124\n" +
-	"0RECORD_MAP_RPC_ID_SAMPLE_GIT_LAB_CONNECTOR_EVENT\x10\v\x122\n" +
-	".RECORD_MAP_RPC_ID_PULL_GIT_LAB_CONNECTOR_EVENT\x10\f\x123\n" +
-	"/RECORD_MAP_RPC_ID_CLOSE_GIT_LAB_CONNECTOR_EVENT\x10\r\x12*\n" +
-	"&RECORD_MAP_RPC_ID_OPEN_LLM_EVENT_QUERY\x10\x0e\x12%\n" +
-	"!RECORD_MAP_RPC_ID_COUNT_LLM_EVENT\x10\x0f\x12&\n" +
-	"\"RECORD_MAP_RPC_ID_SAMPLE_LLM_EVENT\x10\x10\x12$\n" +
-	" RECORD_MAP_RPC_ID_PULL_LLM_EVENT\x10\x11\x12%\n" +
-	"!RECORD_MAP_RPC_ID_CLOSE_LLM_EVENT\x10\x12\x12*\n" +
-	"&RECORD_MAP_RPC_ID_OPEN_SCM_EVENT_QUERY\x10\x13\x12%\n" +
-	"!RECORD_MAP_RPC_ID_COUNT_SCM_EVENT\x10\x14\x12&\n" +
-	"\"RECORD_MAP_RPC_ID_SAMPLE_SCM_EVENT\x10\x15\x12$\n" +
-	" RECORD_MAP_RPC_ID_PULL_SCM_EVENT\x10\x16\x12%\n" +
-	"!RECORD_MAP_RPC_ID_CLOSE_SCM_EVENT\x10\x172\x1b\n" +
+	"#RECORD_MAP_RPC_ID_CLOSE_AGENT_EVENT\x10\b2\x1b\n" +
 	"\x13StratumStateService\x1a\x04\xea\x97\"\x002\xba\x01\n" +
 	"\x19StratumConfigStateService\x121\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x0f.stratum.Config\x12-\n" +
 	"\tSetConfig\x12\x0f.stratum.Config\x1a\x0f.stratum.Config\x125\n" +
-	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x0f.stratum.Config0\x01\x1a\x04\xea\x97\"\x002\x91\r\n" +
+	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x0f.stratum.Config0\x01\x1a\x04\xea\x97\"\x002\xa7\x03\n" +
 	"\tRecordMap\x12P\n" +
 	"\x13OpenAgentEventQuery\x12#.stratum.OpenAgentEventQueryRequest\x1a\x14.stratum.QueryHandle\x12=\n" +
 	"\x0fCountAgentEvent\x12\x14.stratum.QueryHandle\x1a\x14.stratum.RecordCount\x12W\n" +
 	"\x10SampleAgentEvent\x12 .stratum.SampleAgentEventRequest\x1a!.stratum.SampleAgentEventResponse\x12e\n" +
 	"\x0ePullAgentEvent\x12\x1e.stratum.PullAgentEventRequest\x1a\x1f.stratum.PullAgentEventResponse\"\x12\xf2\x88'\x0e\b\x03\x12\bevent_id(d\x12<\n" +
-	"\x0fCloseAgentEvent\x12\x14.stratum.QueryHandle\x1a\x13.stratum.QueryStats\x12d\n" +
-	"\x1dOpenGitLabConnectorEventQuery\x12-.stratum.OpenGitLabConnectorEventQueryRequest\x1a\x14.stratum.QueryHandle\x12G\n" +
-	"\x19CountGitLabConnectorEvent\x12\x14.stratum.QueryHandle\x1a\x14.stratum.RecordCount\x12u\n" +
-	"\x1aSampleGitLabConnectorEvent\x12*.stratum.SampleGitLabConnectorEventRequest\x1a+.stratum.SampleGitLabConnectorEventResponse\x12\x83\x01\n" +
-	"\x18PullGitLabConnectorEvent\x12(.stratum.PullGitLabConnectorEventRequest\x1a).stratum.PullGitLabConnectorEventResponse\"\x12\xf2\x88'\x0e\b\x03\x12\bevent_id(d\x12F\n" +
-	"\x19CloseGitLabConnectorEvent\x12\x14.stratum.QueryHandle\x1a\x13.stratum.QueryStats\x12L\n" +
-	"\x11OpenLlmEventQuery\x12!.stratum.OpenLlmEventQueryRequest\x1a\x14.stratum.QueryHandle\x12;\n" +
-	"\rCountLlmEvent\x12\x14.stratum.QueryHandle\x1a\x14.stratum.RecordCount\x12Q\n" +
-	"\x0eSampleLlmEvent\x12\x1e.stratum.SampleLlmEventRequest\x1a\x1f.stratum.SampleLlmEventResponse\x12_\n" +
-	"\fPullLlmEvent\x12\x1c.stratum.PullLlmEventRequest\x1a\x1d.stratum.PullLlmEventResponse\"\x12\xf2\x88'\x0e\b\x03\x12\bevent_id(d\x12:\n" +
-	"\rCloseLlmEvent\x12\x14.stratum.QueryHandle\x1a\x13.stratum.QueryStats\x12L\n" +
-	"\x11OpenScmEventQuery\x12!.stratum.OpenScmEventQueryRequest\x1a\x14.stratum.QueryHandle\x12;\n" +
-	"\rCountScmEvent\x12\x14.stratum.QueryHandle\x1a\x14.stratum.RecordCount\x12Q\n" +
-	"\x0eSampleScmEvent\x12\x1e.stratum.SampleScmEventRequest\x1a\x1f.stratum.SampleScmEventResponse\x12_\n" +
-	"\fPullScmEvent\x12\x1c.stratum.PullScmEventRequest\x1a\x1d.stratum.PullScmEventResponse\"\x12\xf2\x88'\x0e\b\x03\x12\bevent_id(d\x12:\n" +
-	"\rCloseScmEvent\x12\x14.stratum.QueryHandle\x1a\x13.stratum.QueryStats\x1a\v\xea\x97\"\a\n" +
+	"\x0fCloseAgentEvent\x12\x14.stratum.QueryHandle\x1a\x13.stratum.QueryStats\x1a\v\xea\x97\"\a\n" +
 	"\x05argusB\xb7\x01\x92\xb5\x18\x11\n" +
 	"\fDEFAULT_PORT\x10\xfbAڵ\x18\x00\x92\xb6\x18\x19\n" +
 	"\x17agentsensor.TimedbQuery\x92\xb6\x18\x1a\n" +
@@ -2636,109 +1369,55 @@ func file_services_stratum_proto_rawDescGZIP() []byte {
 }
 
 var file_services_stratum_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_services_stratum_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
+var file_services_stratum_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_services_stratum_proto_goTypes = []any{
-	(RecordChangeType)(0),                        // 0: stratum.RecordChangeType
-	(TypeID)(0),                                  // 1: stratum.TypeID
-	(StratumConfigStateServiceRpcId)(0),          // 2: stratum.StratumConfigStateServiceRpcId
-	(RecordMapRpcId)(0),                          // 3: stratum.RecordMapRpcId
-	(*Config)(nil),                               // 4: stratum.Config
-	(*StratumState)(nil),                         // 5: stratum.StratumState
-	(*StratumServiceHealth)(nil),                 // 6: stratum.StratumServiceHealth
-	(*StratumConfigState)(nil),                   // 7: stratum.StratumConfigState
-	(*MapEmpty)(nil),                             // 8: stratum.MapEmpty
-	(*QueryHandle)(nil),                          // 9: stratum.QueryHandle
-	(*QueryStats)(nil),                           // 10: stratum.QueryStats
-	(*RecordCount)(nil),                          // 11: stratum.RecordCount
-	(*OpenAgentEventQueryRequest)(nil),           // 12: stratum.OpenAgentEventQueryRequest
-	(*SampleAgentEventRequest)(nil),              // 13: stratum.SampleAgentEventRequest
-	(*SampleAgentEventResponse)(nil),             // 14: stratum.SampleAgentEventResponse
-	(*PullAgentEventRequest)(nil),                // 15: stratum.PullAgentEventRequest
-	(*PullAgentEventResponse)(nil),               // 16: stratum.PullAgentEventResponse
-	(*OpenGitLabConnectorEventQueryRequest)(nil), // 17: stratum.OpenGitLabConnectorEventQueryRequest
-	(*SampleGitLabConnectorEventRequest)(nil),    // 18: stratum.SampleGitLabConnectorEventRequest
-	(*SampleGitLabConnectorEventResponse)(nil),   // 19: stratum.SampleGitLabConnectorEventResponse
-	(*PullGitLabConnectorEventRequest)(nil),      // 20: stratum.PullGitLabConnectorEventRequest
-	(*PullGitLabConnectorEventResponse)(nil),     // 21: stratum.PullGitLabConnectorEventResponse
-	(*OpenLlmEventQueryRequest)(nil),             // 22: stratum.OpenLlmEventQueryRequest
-	(*SampleLlmEventRequest)(nil),                // 23: stratum.SampleLlmEventRequest
-	(*SampleLlmEventResponse)(nil),               // 24: stratum.SampleLlmEventResponse
-	(*PullLlmEventRequest)(nil),                  // 25: stratum.PullLlmEventRequest
-	(*PullLlmEventResponse)(nil),                 // 26: stratum.PullLlmEventResponse
-	(*OpenScmEventQueryRequest)(nil),             // 27: stratum.OpenScmEventQueryRequest
-	(*SampleScmEventRequest)(nil),                // 28: stratum.SampleScmEventRequest
-	(*SampleScmEventResponse)(nil),               // 29: stratum.SampleScmEventResponse
-	(*PullScmEventRequest)(nil),                  // 30: stratum.PullScmEventRequest
-	(*PullScmEventResponse)(nil),                 // 31: stratum.PullScmEventResponse
-	(*healthreport.ServiceInstanceHealth)(nil),   // 32: healthreport.ServiceInstanceHealth
-	(*agentsensor.AgentEvent)(nil),               // 33: agentsensor.AgentEvent
-	(*gitlabconnector.GitLabConnectorEvent)(nil), // 34: gitlabconnector.GitLabConnectorEvent
-	(*llmsensor.LlmEvent)(nil),                   // 35: llmsensor.LlmEvent
-	(*scmsensor.ScmEvent)(nil),                   // 36: scmsensor.ScmEvent
-	(*trace.TraceRequest)(nil),                   // 37: trace.TraceRequest
+	(RecordChangeType)(0),                      // 0: stratum.RecordChangeType
+	(TypeID)(0),                                // 1: stratum.TypeID
+	(StratumConfigStateServiceRpcId)(0),        // 2: stratum.StratumConfigStateServiceRpcId
+	(RecordMapRpcId)(0),                        // 3: stratum.RecordMapRpcId
+	(*Config)(nil),                             // 4: stratum.Config
+	(*StratumState)(nil),                       // 5: stratum.StratumState
+	(*StratumServiceHealth)(nil),               // 6: stratum.StratumServiceHealth
+	(*StratumConfigState)(nil),                 // 7: stratum.StratumConfigState
+	(*MapEmpty)(nil),                           // 8: stratum.MapEmpty
+	(*QueryHandle)(nil),                        // 9: stratum.QueryHandle
+	(*QueryStats)(nil),                         // 10: stratum.QueryStats
+	(*RecordCount)(nil),                        // 11: stratum.RecordCount
+	(*OpenAgentEventQueryRequest)(nil),         // 12: stratum.OpenAgentEventQueryRequest
+	(*SampleAgentEventRequest)(nil),            // 13: stratum.SampleAgentEventRequest
+	(*SampleAgentEventResponse)(nil),           // 14: stratum.SampleAgentEventResponse
+	(*PullAgentEventRequest)(nil),              // 15: stratum.PullAgentEventRequest
+	(*PullAgentEventResponse)(nil),             // 16: stratum.PullAgentEventResponse
+	(*healthreport.ServiceInstanceHealth)(nil), // 17: healthreport.ServiceInstanceHealth
+	(*agentsensor.AgentEvent)(nil),             // 18: agentsensor.AgentEvent
+	(*trace.TraceRequest)(nil),                 // 19: trace.TraceRequest
 }
 var file_services_stratum_proto_depIdxs = []int32{
-	32, // 0: stratum.StratumServiceHealth.base:type_name -> healthreport.ServiceInstanceHealth
+	17, // 0: stratum.StratumServiceHealth.base:type_name -> healthreport.ServiceInstanceHealth
 	4,  // 1: stratum.StratumConfigState.config:type_name -> stratum.Config
-	33, // 2: stratum.SampleAgentEventResponse.items:type_name -> agentsensor.AgentEvent
-	33, // 3: stratum.PullAgentEventResponse.items:type_name -> agentsensor.AgentEvent
-	34, // 4: stratum.SampleGitLabConnectorEventResponse.items:type_name -> gitlabconnector.GitLabConnectorEvent
-	34, // 5: stratum.PullGitLabConnectorEventResponse.items:type_name -> gitlabconnector.GitLabConnectorEvent
-	35, // 6: stratum.SampleLlmEventResponse.items:type_name -> llmsensor.LlmEvent
-	35, // 7: stratum.PullLlmEventResponse.items:type_name -> llmsensor.LlmEvent
-	36, // 8: stratum.SampleScmEventResponse.items:type_name -> scmsensor.ScmEvent
-	36, // 9: stratum.PullScmEventResponse.items:type_name -> scmsensor.ScmEvent
-	37, // 10: stratum.StratumConfigStateService.GetConfig:input_type -> trace.TraceRequest
-	4,  // 11: stratum.StratumConfigStateService.SetConfig:input_type -> stratum.Config
-	37, // 12: stratum.StratumConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	12, // 13: stratum.RecordMap.OpenAgentEventQuery:input_type -> stratum.OpenAgentEventQueryRequest
-	9,  // 14: stratum.RecordMap.CountAgentEvent:input_type -> stratum.QueryHandle
-	13, // 15: stratum.RecordMap.SampleAgentEvent:input_type -> stratum.SampleAgentEventRequest
-	15, // 16: stratum.RecordMap.PullAgentEvent:input_type -> stratum.PullAgentEventRequest
-	9,  // 17: stratum.RecordMap.CloseAgentEvent:input_type -> stratum.QueryHandle
-	17, // 18: stratum.RecordMap.OpenGitLabConnectorEventQuery:input_type -> stratum.OpenGitLabConnectorEventQueryRequest
-	9,  // 19: stratum.RecordMap.CountGitLabConnectorEvent:input_type -> stratum.QueryHandle
-	18, // 20: stratum.RecordMap.SampleGitLabConnectorEvent:input_type -> stratum.SampleGitLabConnectorEventRequest
-	20, // 21: stratum.RecordMap.PullGitLabConnectorEvent:input_type -> stratum.PullGitLabConnectorEventRequest
-	9,  // 22: stratum.RecordMap.CloseGitLabConnectorEvent:input_type -> stratum.QueryHandle
-	22, // 23: stratum.RecordMap.OpenLlmEventQuery:input_type -> stratum.OpenLlmEventQueryRequest
-	9,  // 24: stratum.RecordMap.CountLlmEvent:input_type -> stratum.QueryHandle
-	23, // 25: stratum.RecordMap.SampleLlmEvent:input_type -> stratum.SampleLlmEventRequest
-	25, // 26: stratum.RecordMap.PullLlmEvent:input_type -> stratum.PullLlmEventRequest
-	9,  // 27: stratum.RecordMap.CloseLlmEvent:input_type -> stratum.QueryHandle
-	27, // 28: stratum.RecordMap.OpenScmEventQuery:input_type -> stratum.OpenScmEventQueryRequest
-	9,  // 29: stratum.RecordMap.CountScmEvent:input_type -> stratum.QueryHandle
-	28, // 30: stratum.RecordMap.SampleScmEvent:input_type -> stratum.SampleScmEventRequest
-	30, // 31: stratum.RecordMap.PullScmEvent:input_type -> stratum.PullScmEventRequest
-	9,  // 32: stratum.RecordMap.CloseScmEvent:input_type -> stratum.QueryHandle
-	4,  // 33: stratum.StratumConfigStateService.GetConfig:output_type -> stratum.Config
-	4,  // 34: stratum.StratumConfigStateService.SetConfig:output_type -> stratum.Config
-	4,  // 35: stratum.StratumConfigStateService.WatchConfig:output_type -> stratum.Config
-	9,  // 36: stratum.RecordMap.OpenAgentEventQuery:output_type -> stratum.QueryHandle
-	11, // 37: stratum.RecordMap.CountAgentEvent:output_type -> stratum.RecordCount
-	14, // 38: stratum.RecordMap.SampleAgentEvent:output_type -> stratum.SampleAgentEventResponse
-	16, // 39: stratum.RecordMap.PullAgentEvent:output_type -> stratum.PullAgentEventResponse
-	10, // 40: stratum.RecordMap.CloseAgentEvent:output_type -> stratum.QueryStats
-	9,  // 41: stratum.RecordMap.OpenGitLabConnectorEventQuery:output_type -> stratum.QueryHandle
-	11, // 42: stratum.RecordMap.CountGitLabConnectorEvent:output_type -> stratum.RecordCount
-	19, // 43: stratum.RecordMap.SampleGitLabConnectorEvent:output_type -> stratum.SampleGitLabConnectorEventResponse
-	21, // 44: stratum.RecordMap.PullGitLabConnectorEvent:output_type -> stratum.PullGitLabConnectorEventResponse
-	10, // 45: stratum.RecordMap.CloseGitLabConnectorEvent:output_type -> stratum.QueryStats
-	9,  // 46: stratum.RecordMap.OpenLlmEventQuery:output_type -> stratum.QueryHandle
-	11, // 47: stratum.RecordMap.CountLlmEvent:output_type -> stratum.RecordCount
-	24, // 48: stratum.RecordMap.SampleLlmEvent:output_type -> stratum.SampleLlmEventResponse
-	26, // 49: stratum.RecordMap.PullLlmEvent:output_type -> stratum.PullLlmEventResponse
-	10, // 50: stratum.RecordMap.CloseLlmEvent:output_type -> stratum.QueryStats
-	9,  // 51: stratum.RecordMap.OpenScmEventQuery:output_type -> stratum.QueryHandle
-	11, // 52: stratum.RecordMap.CountScmEvent:output_type -> stratum.RecordCount
-	29, // 53: stratum.RecordMap.SampleScmEvent:output_type -> stratum.SampleScmEventResponse
-	31, // 54: stratum.RecordMap.PullScmEvent:output_type -> stratum.PullScmEventResponse
-	10, // 55: stratum.RecordMap.CloseScmEvent:output_type -> stratum.QueryStats
-	33, // [33:56] is the sub-list for method output_type
-	10, // [10:33] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	18, // 2: stratum.SampleAgentEventResponse.items:type_name -> agentsensor.AgentEvent
+	18, // 3: stratum.PullAgentEventResponse.items:type_name -> agentsensor.AgentEvent
+	19, // 4: stratum.StratumConfigStateService.GetConfig:input_type -> trace.TraceRequest
+	4,  // 5: stratum.StratumConfigStateService.SetConfig:input_type -> stratum.Config
+	19, // 6: stratum.StratumConfigStateService.WatchConfig:input_type -> trace.TraceRequest
+	12, // 7: stratum.RecordMap.OpenAgentEventQuery:input_type -> stratum.OpenAgentEventQueryRequest
+	9,  // 8: stratum.RecordMap.CountAgentEvent:input_type -> stratum.QueryHandle
+	13, // 9: stratum.RecordMap.SampleAgentEvent:input_type -> stratum.SampleAgentEventRequest
+	15, // 10: stratum.RecordMap.PullAgentEvent:input_type -> stratum.PullAgentEventRequest
+	9,  // 11: stratum.RecordMap.CloseAgentEvent:input_type -> stratum.QueryHandle
+	4,  // 12: stratum.StratumConfigStateService.GetConfig:output_type -> stratum.Config
+	4,  // 13: stratum.StratumConfigStateService.SetConfig:output_type -> stratum.Config
+	4,  // 14: stratum.StratumConfigStateService.WatchConfig:output_type -> stratum.Config
+	9,  // 15: stratum.RecordMap.OpenAgentEventQuery:output_type -> stratum.QueryHandle
+	11, // 16: stratum.RecordMap.CountAgentEvent:output_type -> stratum.RecordCount
+	14, // 17: stratum.RecordMap.SampleAgentEvent:output_type -> stratum.SampleAgentEventResponse
+	16, // 18: stratum.RecordMap.PullAgentEvent:output_type -> stratum.PullAgentEventResponse
+	10, // 19: stratum.RecordMap.CloseAgentEvent:output_type -> stratum.QueryStats
+	12, // [12:20] is the sub-list for method output_type
+	4,  // [4:12] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_services_stratum_proto_init() }
@@ -2752,7 +1431,7 @@ func file_services_stratum_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_services_stratum_proto_rawDesc), len(file_services_stratum_proto_rawDesc)),
 			NumEnums:      4,
-			NumMessages:   28,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   3,
 		},

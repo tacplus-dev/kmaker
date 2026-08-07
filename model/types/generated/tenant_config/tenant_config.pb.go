@@ -23,7 +23,6 @@ package tenant_config
 
 import (
 	credentials "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/common/credentials"
-	gitlabconnectorsvc "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gitlabconnectorsvc"
 	oauth "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/oauth"
 	opa "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/opa"
 	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
@@ -44,13 +43,12 @@ const (
 // TenantConfig aggregates per-service tenant configuration slices.
 // Field names match service names; field numbers are stable via registry.yaml.
 type TenantConfig struct {
-	state           protoimpl.MessageState                          `protogen:"open.v1"`
-	Kernel          *credentials.KernelTenantConfig                 `protobuf:"bytes,1,opt,name=kernel,proto3" json:"kernel,omitempty"`
-	Opa             *opa.OpaTenantConfig                            `protobuf:"bytes,2,opt,name=opa,proto3" json:"opa,omitempty"`
-	Oauth           *oauth.OAuthTenantConfig                        `protobuf:"bytes,3,opt,name=oauth,proto3" json:"oauth,omitempty"`
-	Gitlabconnector *gitlabconnectorsvc.GitLabConnectorTenantConfig `protobuf:"bytes,4,opt,name=gitlabconnector,proto3" json:"gitlabconnector,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	state         protoimpl.MessageState          `protogen:"open.v1"`
+	Kernel        *credentials.KernelTenantConfig `protobuf:"bytes,1,opt,name=kernel,proto3" json:"kernel,omitempty"`
+	Opa           *opa.OpaTenantConfig            `protobuf:"bytes,2,opt,name=opa,proto3" json:"opa,omitempty"`
+	Oauth         *oauth.OAuthTenantConfig        `protobuf:"bytes,3,opt,name=oauth,proto3" json:"oauth,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *TenantConfig) Reset() {
@@ -104,23 +102,15 @@ func (x *TenantConfig) GetOauth() *oauth.OAuthTenantConfig {
 	return nil
 }
 
-func (x *TenantConfig) GetGitlabconnector() *gitlabconnectorsvc.GitLabConnectorTenantConfig {
-	if x != nil {
-		return x.Gitlabconnector
-	}
-	return nil
-}
-
 var File_generated_tenant_config_proto protoreflect.FileDescriptor
 
 const file_generated_tenant_config_proto_rawDesc = "" +
 	"\n" +
-	"\x1dgenerated/tenant_config.proto\x12\rtenant_config\x1a\x0esys/spec.proto\x1a\x18common/credentials.proto\x1a\x1fservices/gitlab-connector.proto\x1a\x14services/oauth.proto\x1a\x12services/opa.proto\"\x80\x02\n" +
+	"\x1dgenerated/tenant_config.proto\x12\rtenant_config\x1a\x0esys/spec.proto\x1a\x18common/credentials.proto\x1a\x14services/oauth.proto\x1a\x12services/opa.proto\"\xa5\x01\n" +
 	"\fTenantConfig\x127\n" +
 	"\x06kernel\x18\x01 \x01(\v2\x1f.credentials.KernelTenantConfigR\x06kernel\x12&\n" +
 	"\x03opa\x18\x02 \x01(\v2\x14.opa.OpaTenantConfigR\x03opa\x12.\n" +
-	"\x05oauth\x18\x03 \x01(\v2\x18.oauth.OAuthTenantConfigR\x05oauth\x12Y\n" +
-	"\x0fgitlabconnector\x18\x04 \x01(\v2/.gitlabconnectorsvc.GitLabConnectorTenantConfigR\x0fgitlabconnector:\x04\xa0\xaa\x1d\x01BfZdgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/tenant_configb\x06proto3"
+	"\x05oauth\x18\x03 \x01(\v2\x18.oauth.OAuthTenantConfigR\x05oauth:\x04\xa0\xaa\x1d\x01BfZdgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/tenant_configb\x06proto3"
 
 var (
 	file_generated_tenant_config_proto_rawDescOnce sync.Once
@@ -136,22 +126,20 @@ func file_generated_tenant_config_proto_rawDescGZIP() []byte {
 
 var file_generated_tenant_config_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_generated_tenant_config_proto_goTypes = []any{
-	(*TenantConfig)(nil),                                   // 0: tenant_config.TenantConfig
-	(*credentials.KernelTenantConfig)(nil),                 // 1: credentials.KernelTenantConfig
-	(*opa.OpaTenantConfig)(nil),                            // 2: opa.OpaTenantConfig
-	(*oauth.OAuthTenantConfig)(nil),                        // 3: oauth.OAuthTenantConfig
-	(*gitlabconnectorsvc.GitLabConnectorTenantConfig)(nil), // 4: gitlabconnectorsvc.GitLabConnectorTenantConfig
+	(*TenantConfig)(nil),                   // 0: tenant_config.TenantConfig
+	(*credentials.KernelTenantConfig)(nil), // 1: credentials.KernelTenantConfig
+	(*opa.OpaTenantConfig)(nil),            // 2: opa.OpaTenantConfig
+	(*oauth.OAuthTenantConfig)(nil),        // 3: oauth.OAuthTenantConfig
 }
 var file_generated_tenant_config_proto_depIdxs = []int32{
 	1, // 0: tenant_config.TenantConfig.kernel:type_name -> credentials.KernelTenantConfig
 	2, // 1: tenant_config.TenantConfig.opa:type_name -> opa.OpaTenantConfig
 	3, // 2: tenant_config.TenantConfig.oauth:type_name -> oauth.OAuthTenantConfig
-	4, // 3: tenant_config.TenantConfig.gitlabconnector:type_name -> gitlabconnectorsvc.GitLabConnectorTenantConfig
-	4, // [4:4] is the sub-list for method output_type
-	4, // [4:4] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_generated_tenant_config_proto_init() }

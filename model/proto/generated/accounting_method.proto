@@ -14,13 +14,8 @@ message AccountingMethod {
   services.SentinelRPCs sentinel = 5;
   services.GatewayRPCs gateway = 7;
   services.KernelRPCs kernel = 8;
-  services.McpRPCs mcp = 12;
   services.EventbusRPCs eventbus = 18;
   services.OauthRPCs oauth = 21;
-  services.AnthropicRPCs anthropic = 22;
-  services.GithubRPCs github = 23;
-  services.GitlabRPCs gitlab = 24;
-  services.OpenaiRPCs openai = 25;
   services.ArgusRPCs argus = 35;
   services.SamlRPCs saml = 38;
 }

@@ -1,31 +1,25 @@
 {
-  "binary_hash": "7f5b88ad190b571ef06ad0ec2ec0540d784cb4be654c56666f9d1267b2703036",
+  "binary_hash": "4650f147c74221cce8b291e549373d1a9fa1079f084e15271610c4fb304ef49f",
   "config_hash": "fe5c6af0c1fb3c3a8b3bb7e9417987079d3b749a2428a1f171ec2b01a97ee7ca",
-  "structure_hash": "475a8c4e83431d1226343762ca14300c0fa6223d99c931c3ed95e02d76bf9cef",
+  "structure_hash": "2e41dcf3b1a4e3e93c43eae4d5df4404a11b09c5d88212b0e1e0948d2a6f2ba3",
   "files": {
     "clients/bluerock.proto": "5c83feca286fc070f423fe37456e59e160bceb665f18d7667c8e7571b7f8ae9d",
     "clients/bluerockctl.proto": "e82a37ebbdc9ad216689c8479c343cbdbc1cc0ab2b96510c50a63b6144e0c098",
     "clients/webapp.proto": "a2a15ce02101596e54392a48545802f1316363a7177cc583bd51a61f6b32dba8",
     "common/credentials.proto": "eff3c36262592f0dbc9b2272341ee371afd469d49af38c72f87db0ba09e9a63f",
     "common/hazelcast.proto": "6be73e56ac52a6d89eb8d9237fb318027be7e0bad6a95f4462a36d8cfe7cc5a6",
-    "dependencies.yaml": "20627caef6f9569958985140a47c32fe1ad9a684cd7db62dea4971be0924be6a",
-    "registry.yaml": "d34622f8833dd2d3c9cabefcc9ca087b0918e712426eddbf5fc181a23a4d43c2",
-    "services/anthropic.proto": "bc9102ef20984dd39486a016d4a407ae00b98fd67a6180a54d3a2b41d33b4d14",
+    "dependencies.yaml": "f1a664fb154249e93611416af79da3313cabe34c535d04e6f29b61a96990f74c",
+    "registry.yaml": "a863fe37aa3dd3b301f3f77f19da2a3288e8dcbccbca42cb73e7aa0804f785f4",
     "services/argus.proto": "543f3f6d8a437beb88cbd0c14df420d233f68e8d5bafb85746bd1d2ef6852780",
     "services/eventbus.proto": "e8a94cfdd57ba7d43347e1c196676d511b031e6fd644895c7686f644ec6fa114",
     "services/gateway.proto": "5e7a4105ae414a712011334d68ef92f260cd90332e07445563d38c8013e22c13",
-    "services/github.proto": "6718364405d2564527228d9877ed93dd5ab39d654d1f058a62d9e72fb3f84282",
-    "services/gitlab-connector.proto": "267dc6b62482ca1236e60dd7ee693e0296a3521eba4e59071fc31dba5f29be43",
-    "services/gitlab.proto": "3d1bf92930d4b8bc0bc0d94f6cca14f2f200fe319b1722281078986a9fb15cbf",
     "services/graphdb.proto": "f3635a8cbfb246e69b8b563c54cd7a8ec33b04598b7ffb18f69f6547b75978e2",
     "services/kernel.proto": "c4b8e12c421a8755ad8bcf0aa535f4dd6c6931eaff5f9d39c9d913181ea0d9a8",
     "services/kmaker.proto": "fcf414f5002ec6d8a146f14c12d2f3df2cb3982f47fba7cb6246fc03e0101cf9",
     "services/letsencrypt.proto": "7fa924220f2b20fa1f93df397307ef1f9945043df8a95c172816181beeb6bbe4",
-    "services/mcp.proto": "7fcce8c4df7c21a49fe1b4b9fb930f9137e5bd8d0306ada3afe0acedfbc7565d",
     "services/msggateway.proto": "beba63c2ee249dfa520123e8dbaebd970491b70192900d619a9accb3bc0e7e4c",
     "services/oauth.proto": "efe6b7bae6f7920eb064a318d05738026a89bf13509d302402df82e001773734",
     "services/opa.proto": "8ea264afdd0f543a70ea0427986e64c564ad9b3ea39a6360b74adcbab6db6258",
-    "services/openai.proto": "40f31b1f1367a9764df0765dd53fae2ef17c0264f1997a3905425dae642c591c",
     "services/operator.proto": "a26dceaab8cd1820ded65f3e594dc3aaeda08a3c6ca8ec62685a6b5623515064",
     "services/saml.proto": "575472c670c83bddd5186a78f52ab38691e3ad2aa6e94d4a9b308056c26025ea",
     "services/sentinel.proto": "71dd329a9419192cf04fa46e176f14ed13f876a5532b1c09f0784bd512ca048f",
@@ -33,10 +27,7 @@
     "services/timedb.proto": "d8e19fe7c8644d3a29bd533e36f25d0cc86813546b7b5d9ccff35e09ba4b4d15",
     "vservices/agent-sensor.proto": "d389f41b29ab7f1f0a8b70f2cdfa52ff05a7f647da1023c11a17bf5f679a621c",
     "vservices/entitlements.proto": "629d6299347f2bcd11572b1ee7fb1624e58e7249ddcff648ea46eeb6bbfb1448",
-    "vservices/gitlab-connector.proto": "de8a0634c38d4651300393fbe2ee72cccc9f25b06fc6c640ee0a4adad7e53d41",
-    "vservices/llm-sensor.proto": "c0dff344a62e3de051a295eacbf7cc7cf5917aee7647429e1b1a1c746ff20493",
-    "vservices/proxy-policy.proto": "6597b2dd7ce0932ca91f3e06f78f0839bf543e0e04e12ae83c7448faee1fd2a7",
-    "vservices/scm-sensor.proto": "e0846e4280c6983c3140c106a0c34d10cf00656b48b6b2daa35c8d0f8e60f7e4"
+    "vservices/proxy-policy.proto": "6597b2dd7ce0932ca91f3e06f78f0839bf543e0e04e12ae83c7448faee1fd2a7"
   },
-  "src_hash": "d51bbfb6167d42e61fccb2875237a22d644dfc9e34fb5eb0fee9c016c42832cd"
+  "src_hash": "7cab0142778762bb6e5cbb18ad8241993b98608a7949bb9a5561ab1c01421c74"
 }

@@ -5,9 +5,9 @@ This file is embedded in `registry.json` and describes how to navigate it.
 ## Overview
 
 This registry describes a tacplus-generated service mesh with:
-- **1298** message types across **72** packages
-- **755** RPCs across **71** gRPC services
-- **67** state boundaries
+- **1006** message types across **63** packages
+- **631** RPCs across **58** gRPC services
+- **56** state boundaries
 
 ## Structure
 
@@ -475,28 +475,20 @@ Each `RpcInfo` carries:
 
 - **Admin**
 - **AgentEventBusStateService**
-- **AnthropicConfigStateService**
 - **Argus**
 - **ArgusConfigStateService**
-- **Assist**
 - **Auth**
 - **CaStateService**
 - **CliTokenBroker**
 - **ClusterService**
 - **ClusterStateService**
 - **ConfigStateService**
-- **ConnectorStatus**
 - **DaemonControl**
 - **Dashboard**
 - **EventbusConfigStateService**
 - **EventbusStateService**
 - **GatewayConfigStateService**
 - **GatewayStateService**
-- **GitLabConnectorEventBusStateService**
-- **GitLabConnectorStateService**
-- **GithubConfigStateService**
-- **GitlabConfigStateService**
-- **GitlabconnectorConfigStateService**
 - **GraphdbConfigStateService**
 - **GraphdbQuery**
 - **GraphdbStateService**
@@ -508,8 +500,6 @@ Each `RpcInfo` carries:
 - **KmakerConfigStateService**
 - **LetsEncryptStateService**
 - **LetsencryptConfigStateService**
-- **LlmEventBusStateService**
-- **McpConfigStateService**
 - **Messaging**
 - **Metadata**
 - **Mint**
@@ -518,14 +508,11 @@ Each `RpcInfo` carries:
 - **OpaConfigStateService**
 - **OpaEval**
 - **OpaStateService**
-- **OpenaiConfigStateService**
 - **OperatorConfigStateService**
 - **Outbound**
-- **Proxy**
 - **PublicJwksViewService**
 - **RecordMap**
 - **SamlConfigStateService**
-- **ScmEventBusStateService**
 - **SentinelConfigStateService**
 - **ServiceConfigStateService**
 - **ServiceHealthStateService**
@@ -558,22 +545,16 @@ Each `RpcInfo` carries:
 - `generated/services`
 - `generated/services_config`
 - `generated/tenant_config`
-- `services/anthropic`
 - `services/argus`
 - `services/eventbus`
 - `services/gateway`
-- `services/github`
-- `services/gitlab`
-- `services/gitlab-connector`
 - `services/graphdb`
 - `services/kernel`
 - `services/kmaker`
 - `services/letsencrypt`
-- `services/mcp`
 - `services/msggateway`
 - `services/oauth`
 - `services/opa`
-- `services/openai`
 - `services/operator`
 - `services/saml`
 - `services/sentinel`
@@ -615,10 +596,7 @@ Each `RpcInfo` carries:
 - `sys/x509`
 - `vservices/agent-sensor`
 - `vservices/entitlements`
-- `vservices/gitlab-connector`
-- `vservices/llm-sensor`
 - `vservices/proxy-policy`
-- `vservices/scm-sensor`
 
 ## Documentation
 

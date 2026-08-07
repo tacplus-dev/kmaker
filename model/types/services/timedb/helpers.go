@@ -545,241 +545,6 @@ func LogicalOpToSpecName(v LogicalOp) string {
 	}
 }
 
-// GitLabActivityRecordGroupFieldValues returns all valid GitLabActivityRecordGroupField values (excluding UNDEFINED)
-func GitLabActivityRecordGroupFieldValues() []GitLabActivityRecordGroupField {
-	return []GitLabActivityRecordGroupField{
-		GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_SCHEME_VERSION,
-		GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_AUTHOR_USERNAME,
-		GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_EVENT_TYPE,
-		GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_INGESTION_SOURCE,
-	}
-}
-
-// GitLabActivityRecordGroupFieldStringValues returns all valid GitLabActivityRecordGroupField names as strings
-func GitLabActivityRecordGroupFieldStringValues() []string {
-	return []string{"scheme-version", "author-username", "event-type", "ingestion-source"}
-}
-
-// ParseGitLabActivityRecordGroupField converts a string to a GitLabActivityRecordGroupField enum value
-// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseGitLabActivityRecordGroupField(s string) (GitLabActivityRecordGroupField, error) {
-	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
-	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
-	switch normalized {
-	case "":
-		return GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_UNSPECIFIED, nil
-	case "scheme-version", "git-lab-activity-record-group-field-scheme-version":
-		return GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_SCHEME_VERSION, nil
-	case "author-username", "git-lab-activity-record-group-field-author-username":
-		return GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_AUTHOR_USERNAME, nil
-	case "event-type", "git-lab-activity-record-group-field-event-type":
-		return GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_EVENT_TYPE, nil
-	case "ingestion-source", "git-lab-activity-record-group-field-ingestion-source":
-		return GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_INGESTION_SOURCE, nil
-	default:
-		return GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid gitlabactivityrecordgroupfield %s, expecting one of: %v", s, GitLabActivityRecordGroupFieldStringValues())
-	}
-}
-
-// ParseGitLabActivityRecordGroupFields converts a comma-separated string to a slice of GitLabActivityRecordGroupField enum values
-// Returns an error if any value is invalid
-func ParseGitLabActivityRecordGroupFields(s string) ([]GitLabActivityRecordGroupField, error) {
-	if s == "" {
-		return nil, nil
-	}
-	parts := strings.Split(s, ",")
-	result := make([]GitLabActivityRecordGroupField, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed == "" {
-			continue
-		}
-		val, err := ParseGitLabActivityRecordGroupField(trimmed)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, val)
-	}
-	return result, nil
-}
-
-// GitLabActivityRecordGroupFieldToString converts a GitLabActivityRecordGroupField to its lowercase string representation
-func GitLabActivityRecordGroupFieldToString(v GitLabActivityRecordGroupField) string {
-	switch v {
-	case GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_SCHEME_VERSION:
-		return "scheme-version"
-	case GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_AUTHOR_USERNAME:
-		return "author-username"
-	case GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_EVENT_TYPE:
-		return "event-type"
-	case GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_INGESTION_SOURCE:
-		return "ingestion-source"
-	default:
-		return ""
-	}
-}
-
-// ParseGitLabActivityRecordGroupFieldLiberal parses a GitLabActivityRecordGroupField liberally, accepting:
-// - Integer values (as string or int)
-// - Enum names in any case
-// - RFC-compliant JSON names
-func ParseGitLabActivityRecordGroupFieldLiberal(s string) GitLabActivityRecordGroupField {
-	if s == "" {
-		return GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_UNSPECIFIED
-	}
-	// Try parsing as integer
-	if num, err := strconv.Atoi(s); err == nil {
-		return GitLabActivityRecordGroupField(num)
-	}
-	// Normalize and try parsing
-	normalized := strings.ToLower(strings.TrimSpace(s))
-	normalized = strings.ReplaceAll(normalized, "_", "-")
-	normalized = strings.ReplaceAll(normalized, " ", "-")
-	switch normalized {
-	case "scheme-version", "git-lab-activity-record-group-field-scheme-version":
-		return GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_SCHEME_VERSION
-	case "author-username", "git-lab-activity-record-group-field-author-username":
-		return GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_AUTHOR_USERNAME
-	case "event-type", "git-lab-activity-record-group-field-event-type":
-		return GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_EVENT_TYPE
-	case "ingestion-source", "git-lab-activity-record-group-field-ingestion-source":
-		return GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_INGESTION_SOURCE
-	default:
-		return GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_UNSPECIFIED
-	}
-}
-
-// GitLabActivityRecordGroupFieldToSpecName converts a GitLabActivityRecordGroupField to its canonical protobuf spec name
-func GitLabActivityRecordGroupFieldToSpecName(v GitLabActivityRecordGroupField) string {
-	switch v {
-	case GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_UNSPECIFIED:
-		return "GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_UNSPECIFIED"
-	case GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_SCHEME_VERSION:
-		return "GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_SCHEME_VERSION"
-	case GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_AUTHOR_USERNAME:
-		return "GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_AUTHOR_USERNAME"
-	case GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_EVENT_TYPE:
-		return "GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_EVENT_TYPE"
-	case GitLabActivityRecordGroupField_GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_INGESTION_SOURCE:
-		return "GIT_LAB_ACTIVITY_RECORD_GROUP_FIELD_INGESTION_SOURCE"
-	default:
-		return ""
-	}
-}
-
-// LlmCallRecordGroupFieldValues returns all valid LlmCallRecordGroupField values (excluding UNDEFINED)
-func LlmCallRecordGroupFieldValues() []LlmCallRecordGroupField {
-	return []LlmCallRecordGroupField{
-		LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_PROVIDER,
-		LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_MODEL,
-		LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_OPERATION,
-	}
-}
-
-// LlmCallRecordGroupFieldStringValues returns all valid LlmCallRecordGroupField names as strings
-func LlmCallRecordGroupFieldStringValues() []string {
-	return []string{"provider", "model", "operation"}
-}
-
-// ParseLlmCallRecordGroupField converts a string to a LlmCallRecordGroupField enum value
-// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseLlmCallRecordGroupField(s string) (LlmCallRecordGroupField, error) {
-	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
-	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
-	switch normalized {
-	case "":
-		return LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_UNSPECIFIED, nil
-	case "provider", "llm-call-record-group-field-provider":
-		return LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_PROVIDER, nil
-	case "model", "llm-call-record-group-field-model":
-		return LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_MODEL, nil
-	case "operation", "llm-call-record-group-field-operation":
-		return LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_OPERATION, nil
-	default:
-		return LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid llmcallrecordgroupfield %s, expecting one of: %v", s, LlmCallRecordGroupFieldStringValues())
-	}
-}
-
-// ParseLlmCallRecordGroupFields converts a comma-separated string to a slice of LlmCallRecordGroupField enum values
-// Returns an error if any value is invalid
-func ParseLlmCallRecordGroupFields(s string) ([]LlmCallRecordGroupField, error) {
-	if s == "" {
-		return nil, nil
-	}
-	parts := strings.Split(s, ",")
-	result := make([]LlmCallRecordGroupField, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed == "" {
-			continue
-		}
-		val, err := ParseLlmCallRecordGroupField(trimmed)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, val)
-	}
-	return result, nil
-}
-
-// LlmCallRecordGroupFieldToString converts a LlmCallRecordGroupField to its lowercase string representation
-func LlmCallRecordGroupFieldToString(v LlmCallRecordGroupField) string {
-	switch v {
-	case LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_PROVIDER:
-		return "provider"
-	case LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_MODEL:
-		return "model"
-	case LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_OPERATION:
-		return "operation"
-	default:
-		return ""
-	}
-}
-
-// ParseLlmCallRecordGroupFieldLiberal parses a LlmCallRecordGroupField liberally, accepting:
-// - Integer values (as string or int)
-// - Enum names in any case
-// - RFC-compliant JSON names
-func ParseLlmCallRecordGroupFieldLiberal(s string) LlmCallRecordGroupField {
-	if s == "" {
-		return LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_UNSPECIFIED
-	}
-	// Try parsing as integer
-	if num, err := strconv.Atoi(s); err == nil {
-		return LlmCallRecordGroupField(num)
-	}
-	// Normalize and try parsing
-	normalized := strings.ToLower(strings.TrimSpace(s))
-	normalized = strings.ReplaceAll(normalized, "_", "-")
-	normalized = strings.ReplaceAll(normalized, " ", "-")
-	switch normalized {
-	case "provider", "llm-call-record-group-field-provider":
-		return LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_PROVIDER
-	case "model", "llm-call-record-group-field-model":
-		return LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_MODEL
-	case "operation", "llm-call-record-group-field-operation":
-		return LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_OPERATION
-	default:
-		return LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_UNSPECIFIED
-	}
-}
-
-// LlmCallRecordGroupFieldToSpecName converts a LlmCallRecordGroupField to its canonical protobuf spec name
-func LlmCallRecordGroupFieldToSpecName(v LlmCallRecordGroupField) string {
-	switch v {
-	case LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_UNSPECIFIED:
-		return "LLM_CALL_RECORD_GROUP_FIELD_UNSPECIFIED"
-	case LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_PROVIDER:
-		return "LLM_CALL_RECORD_GROUP_FIELD_PROVIDER"
-	case LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_MODEL:
-		return "LLM_CALL_RECORD_GROUP_FIELD_MODEL"
-	case LlmCallRecordGroupField_LLM_CALL_RECORD_GROUP_FIELD_OPERATION:
-		return "LLM_CALL_RECORD_GROUP_FIELD_OPERATION"
-	default:
-		return ""
-	}
-}
-
 // PromptRecordGroupFieldValues returns all valid PromptRecordGroupField values (excluding UNDEFINED)
 func PromptRecordGroupFieldValues() []PromptRecordGroupField {
 	return []PromptRecordGroupField{
@@ -879,110 +644,6 @@ func PromptRecordGroupFieldToSpecName(v PromptRecordGroupField) string {
 		return "PROMPT_RECORD_GROUP_FIELD_EVENT_TYPE"
 	case PromptRecordGroupField_PROMPT_RECORD_GROUP_FIELD_SENSOR_TYPE:
 		return "PROMPT_RECORD_GROUP_FIELD_SENSOR_TYPE"
-	default:
-		return ""
-	}
-}
-
-// ScmOperationRecordGroupFieldValues returns all valid ScmOperationRecordGroupField values (excluding UNDEFINED)
-func ScmOperationRecordGroupFieldValues() []ScmOperationRecordGroupField {
-	return []ScmOperationRecordGroupField{
-		ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_PROVIDER,
-		ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_OPERATION,
-	}
-}
-
-// ScmOperationRecordGroupFieldStringValues returns all valid ScmOperationRecordGroupField names as strings
-func ScmOperationRecordGroupFieldStringValues() []string {
-	return []string{"provider", "operation"}
-}
-
-// ParseScmOperationRecordGroupField converts a string to a ScmOperationRecordGroupField enum value
-// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseScmOperationRecordGroupField(s string) (ScmOperationRecordGroupField, error) {
-	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
-	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
-	switch normalized {
-	case "":
-		return ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_UNSPECIFIED, nil
-	case "provider", "scm-operation-record-group-field-provider":
-		return ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_PROVIDER, nil
-	case "operation", "scm-operation-record-group-field-operation":
-		return ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_OPERATION, nil
-	default:
-		return ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid scmoperationrecordgroupfield %s, expecting one of: %v", s, ScmOperationRecordGroupFieldStringValues())
-	}
-}
-
-// ParseScmOperationRecordGroupFields converts a comma-separated string to a slice of ScmOperationRecordGroupField enum values
-// Returns an error if any value is invalid
-func ParseScmOperationRecordGroupFields(s string) ([]ScmOperationRecordGroupField, error) {
-	if s == "" {
-		return nil, nil
-	}
-	parts := strings.Split(s, ",")
-	result := make([]ScmOperationRecordGroupField, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed == "" {
-			continue
-		}
-		val, err := ParseScmOperationRecordGroupField(trimmed)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, val)
-	}
-	return result, nil
-}
-
-// ScmOperationRecordGroupFieldToString converts a ScmOperationRecordGroupField to its lowercase string representation
-func ScmOperationRecordGroupFieldToString(v ScmOperationRecordGroupField) string {
-	switch v {
-	case ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_PROVIDER:
-		return "provider"
-	case ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_OPERATION:
-		return "operation"
-	default:
-		return ""
-	}
-}
-
-// ParseScmOperationRecordGroupFieldLiberal parses a ScmOperationRecordGroupField liberally, accepting:
-// - Integer values (as string or int)
-// - Enum names in any case
-// - RFC-compliant JSON names
-func ParseScmOperationRecordGroupFieldLiberal(s string) ScmOperationRecordGroupField {
-	if s == "" {
-		return ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_UNSPECIFIED
-	}
-	// Try parsing as integer
-	if num, err := strconv.Atoi(s); err == nil {
-		return ScmOperationRecordGroupField(num)
-	}
-	// Normalize and try parsing
-	normalized := strings.ToLower(strings.TrimSpace(s))
-	normalized = strings.ReplaceAll(normalized, "_", "-")
-	normalized = strings.ReplaceAll(normalized, " ", "-")
-	switch normalized {
-	case "provider", "scm-operation-record-group-field-provider":
-		return ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_PROVIDER
-	case "operation", "scm-operation-record-group-field-operation":
-		return ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_OPERATION
-	default:
-		return ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_UNSPECIFIED
-	}
-}
-
-// ScmOperationRecordGroupFieldToSpecName converts a ScmOperationRecordGroupField to its canonical protobuf spec name
-func ScmOperationRecordGroupFieldToSpecName(v ScmOperationRecordGroupField) string {
-	switch v {
-	case ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_UNSPECIFIED:
-		return "SCM_OPERATION_RECORD_GROUP_FIELD_UNSPECIFIED"
-	case ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_PROVIDER:
-		return "SCM_OPERATION_RECORD_GROUP_FIELD_PROVIDER"
-	case ScmOperationRecordGroupField_SCM_OPERATION_RECORD_GROUP_FIELD_OPERATION:
-		return "SCM_OPERATION_RECORD_GROUP_FIELD_OPERATION"
 	default:
 		return ""
 	}
@@ -1503,14 +1164,8 @@ func TypeIDValues() []TypeID {
 		TypeID_TYPE_ID_NODES_QUERY_RESPONSE,
 		TypeID_TYPE_ID_MAP_EMPTY,
 		TypeID_TYPE_ID_TIMESERIES_GROUP_COUNT,
-		TypeID_TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_REQUEST,
-		TypeID_TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_RESPONSE,
-		TypeID_TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_REQUEST,
-		TypeID_TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_RESPONSE,
 		TypeID_TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_REQUEST,
 		TypeID_TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_RESPONSE,
-		TypeID_TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_REQUEST,
-		TypeID_TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_RESPONSE,
 		TypeID_TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_REQUEST,
 		TypeID_TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_RESPONSE,
 		TypeID_TYPE_ID_GET_STOP_RECORD_GROUP_COUNTS_REQUEST,
@@ -1519,14 +1174,8 @@ func TypeIDValues() []TypeID {
 		TypeID_TYPE_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS_RESPONSE,
 		TypeID_TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_REQUEST,
 		TypeID_TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_RESPONSE,
-		TypeID_TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_REQUEST,
-		TypeID_TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE,
-		TypeID_TYPE_ID_LIST_LLM_CALL_RECORD_REQUEST,
-		TypeID_TYPE_ID_LIST_LLM_CALL_RECORD_RESPONSE,
 		TypeID_TYPE_ID_LIST_PROMPT_RECORD_REQUEST,
 		TypeID_TYPE_ID_LIST_PROMPT_RECORD_RESPONSE,
-		TypeID_TYPE_ID_LIST_SCM_OPERATION_RECORD_REQUEST,
-		TypeID_TYPE_ID_LIST_SCM_OPERATION_RECORD_RESPONSE,
 		TypeID_TYPE_ID_LIST_SESSION_RECORD_REQUEST,
 		TypeID_TYPE_ID_LIST_SESSION_RECORD_RESPONSE,
 		TypeID_TYPE_ID_LIST_STOP_RECORD_REQUEST,
@@ -1540,7 +1189,7 @@ func TypeIDValues() []TypeID {
 
 // TypeIDStringValues returns all valid TypeID names as strings
 func TypeIDStringValues() []string {
-	return []string{"time-range", "config", "time-db-node", "time-db-state", "time-db-health", "replica-status", "disk-status", "merge-status", "mutation-status", "metric-entry", "error-entry", "keeper-status", "server-summary", "timedb-config-state", "query-value", "predicate", "predicate-group", "sort-field", "collection-query", "nodes-get-request", "nodes-put-request", "nodes-get-all-request", "nodes-keys-request", "nodes-size-request", "nodes-clear-request", "nodes-value-response", "nodes-entries-response", "nodes-keys-response", "nodes-size-response", "nodes-query-request", "nodes-query-response", "map-empty", "timeseries-group-count", "get-git-lab-activity-record-group-counts-request", "get-git-lab-activity-record-group-counts-response", "get-llm-call-record-group-counts-request", "get-llm-call-record-group-counts-response", "get-prompt-record-group-counts-request", "get-prompt-record-group-counts-response", "get-scm-operation-record-group-counts-request", "get-scm-operation-record-group-counts-response", "get-session-record-group-counts-request", "get-session-record-group-counts-response", "get-stop-record-group-counts-request", "get-stop-record-group-counts-response", "get-subagent-record-group-counts-request", "get-subagent-record-group-counts-response", "get-tool-use-record-group-counts-request", "get-tool-use-record-group-counts-response", "list-git-lab-activity-record-request", "list-git-lab-activity-record-response", "list-llm-call-record-request", "list-llm-call-record-response", "list-prompt-record-request", "list-prompt-record-response", "list-scm-operation-record-request", "list-scm-operation-record-response", "list-session-record-request", "list-session-record-response", "list-stop-record-request", "list-stop-record-response", "list-subagent-record-request", "list-subagent-record-response", "list-tool-use-record-request", "list-tool-use-record-response"}
+	return []string{"time-range", "config", "time-db-node", "time-db-state", "time-db-health", "replica-status", "disk-status", "merge-status", "mutation-status", "metric-entry", "error-entry", "keeper-status", "server-summary", "timedb-config-state", "query-value", "predicate", "predicate-group", "sort-field", "collection-query", "nodes-get-request", "nodes-put-request", "nodes-get-all-request", "nodes-keys-request", "nodes-size-request", "nodes-clear-request", "nodes-value-response", "nodes-entries-response", "nodes-keys-response", "nodes-size-response", "nodes-query-request", "nodes-query-response", "map-empty", "timeseries-group-count", "get-prompt-record-group-counts-request", "get-prompt-record-group-counts-response", "get-session-record-group-counts-request", "get-session-record-group-counts-response", "get-stop-record-group-counts-request", "get-stop-record-group-counts-response", "get-subagent-record-group-counts-request", "get-subagent-record-group-counts-response", "get-tool-use-record-group-counts-request", "get-tool-use-record-group-counts-response", "list-prompt-record-request", "list-prompt-record-response", "list-session-record-request", "list-session-record-response", "list-stop-record-request", "list-stop-record-response", "list-subagent-record-request", "list-subagent-record-response", "list-tool-use-record-request", "list-tool-use-record-response"}
 }
 
 // ParseTypeID converts a string to a TypeID enum value
@@ -1617,22 +1266,10 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_MAP_EMPTY, nil
 	case "timeseries-group-count", "type-id-timeseries-group-count":
 		return TypeID_TYPE_ID_TIMESERIES_GROUP_COUNT, nil
-	case "get-git-lab-activity-record-group-counts-request", "type-id-get-git-lab-activity-record-group-counts-request":
-		return TypeID_TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_REQUEST, nil
-	case "get-git-lab-activity-record-group-counts-response", "type-id-get-git-lab-activity-record-group-counts-response":
-		return TypeID_TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_RESPONSE, nil
-	case "get-llm-call-record-group-counts-request", "type-id-get-llm-call-record-group-counts-request":
-		return TypeID_TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_REQUEST, nil
-	case "get-llm-call-record-group-counts-response", "type-id-get-llm-call-record-group-counts-response":
-		return TypeID_TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_RESPONSE, nil
 	case "get-prompt-record-group-counts-request", "type-id-get-prompt-record-group-counts-request":
 		return TypeID_TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_REQUEST, nil
 	case "get-prompt-record-group-counts-response", "type-id-get-prompt-record-group-counts-response":
 		return TypeID_TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_RESPONSE, nil
-	case "get-scm-operation-record-group-counts-request", "type-id-get-scm-operation-record-group-counts-request":
-		return TypeID_TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_REQUEST, nil
-	case "get-scm-operation-record-group-counts-response", "type-id-get-scm-operation-record-group-counts-response":
-		return TypeID_TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_RESPONSE, nil
 	case "get-session-record-group-counts-request", "type-id-get-session-record-group-counts-request":
 		return TypeID_TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_REQUEST, nil
 	case "get-session-record-group-counts-response", "type-id-get-session-record-group-counts-response":
@@ -1649,22 +1286,10 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_REQUEST, nil
 	case "get-tool-use-record-group-counts-response", "type-id-get-tool-use-record-group-counts-response":
 		return TypeID_TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_RESPONSE, nil
-	case "list-git-lab-activity-record-request", "type-id-list-git-lab-activity-record-request":
-		return TypeID_TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_REQUEST, nil
-	case "list-git-lab-activity-record-response", "type-id-list-git-lab-activity-record-response":
-		return TypeID_TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE, nil
-	case "list-llm-call-record-request", "type-id-list-llm-call-record-request":
-		return TypeID_TYPE_ID_LIST_LLM_CALL_RECORD_REQUEST, nil
-	case "list-llm-call-record-response", "type-id-list-llm-call-record-response":
-		return TypeID_TYPE_ID_LIST_LLM_CALL_RECORD_RESPONSE, nil
 	case "list-prompt-record-request", "type-id-list-prompt-record-request":
 		return TypeID_TYPE_ID_LIST_PROMPT_RECORD_REQUEST, nil
 	case "list-prompt-record-response", "type-id-list-prompt-record-response":
 		return TypeID_TYPE_ID_LIST_PROMPT_RECORD_RESPONSE, nil
-	case "list-scm-operation-record-request", "type-id-list-scm-operation-record-request":
-		return TypeID_TYPE_ID_LIST_SCM_OPERATION_RECORD_REQUEST, nil
-	case "list-scm-operation-record-response", "type-id-list-scm-operation-record-response":
-		return TypeID_TYPE_ID_LIST_SCM_OPERATION_RECORD_RESPONSE, nil
 	case "list-session-record-request", "type-id-list-session-record-request":
 		return TypeID_TYPE_ID_LIST_SESSION_RECORD_REQUEST, nil
 	case "list-session-record-response", "type-id-list-session-record-response":
@@ -1777,22 +1402,10 @@ func TypeIDToString(v TypeID) string {
 		return "map-empty"
 	case TypeID_TYPE_ID_TIMESERIES_GROUP_COUNT:
 		return "timeseries-group-count"
-	case TypeID_TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_REQUEST:
-		return "get-git-lab-activity-record-group-counts-request"
-	case TypeID_TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_RESPONSE:
-		return "get-git-lab-activity-record-group-counts-response"
-	case TypeID_TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_REQUEST:
-		return "get-llm-call-record-group-counts-request"
-	case TypeID_TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_RESPONSE:
-		return "get-llm-call-record-group-counts-response"
 	case TypeID_TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_REQUEST:
 		return "get-prompt-record-group-counts-request"
 	case TypeID_TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_RESPONSE:
 		return "get-prompt-record-group-counts-response"
-	case TypeID_TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_REQUEST:
-		return "get-scm-operation-record-group-counts-request"
-	case TypeID_TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_RESPONSE:
-		return "get-scm-operation-record-group-counts-response"
 	case TypeID_TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_REQUEST:
 		return "get-session-record-group-counts-request"
 	case TypeID_TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_RESPONSE:
@@ -1809,22 +1422,10 @@ func TypeIDToString(v TypeID) string {
 		return "get-tool-use-record-group-counts-request"
 	case TypeID_TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_RESPONSE:
 		return "get-tool-use-record-group-counts-response"
-	case TypeID_TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_REQUEST:
-		return "list-git-lab-activity-record-request"
-	case TypeID_TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE:
-		return "list-git-lab-activity-record-response"
-	case TypeID_TYPE_ID_LIST_LLM_CALL_RECORD_REQUEST:
-		return "list-llm-call-record-request"
-	case TypeID_TYPE_ID_LIST_LLM_CALL_RECORD_RESPONSE:
-		return "list-llm-call-record-response"
 	case TypeID_TYPE_ID_LIST_PROMPT_RECORD_REQUEST:
 		return "list-prompt-record-request"
 	case TypeID_TYPE_ID_LIST_PROMPT_RECORD_RESPONSE:
 		return "list-prompt-record-response"
-	case TypeID_TYPE_ID_LIST_SCM_OPERATION_RECORD_REQUEST:
-		return "list-scm-operation-record-request"
-	case TypeID_TYPE_ID_LIST_SCM_OPERATION_RECORD_RESPONSE:
-		return "list-scm-operation-record-response"
 	case TypeID_TYPE_ID_LIST_SESSION_RECORD_REQUEST:
 		return "list-session-record-request"
 	case TypeID_TYPE_ID_LIST_SESSION_RECORD_RESPONSE:
@@ -1929,22 +1530,10 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_MAP_EMPTY
 	case "timeseries-group-count", "type-id-timeseries-group-count":
 		return TypeID_TYPE_ID_TIMESERIES_GROUP_COUNT
-	case "get-git-lab-activity-record-group-counts-request", "type-id-get-git-lab-activity-record-group-counts-request":
-		return TypeID_TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_REQUEST
-	case "get-git-lab-activity-record-group-counts-response", "type-id-get-git-lab-activity-record-group-counts-response":
-		return TypeID_TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_RESPONSE
-	case "get-llm-call-record-group-counts-request", "type-id-get-llm-call-record-group-counts-request":
-		return TypeID_TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_REQUEST
-	case "get-llm-call-record-group-counts-response", "type-id-get-llm-call-record-group-counts-response":
-		return TypeID_TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_RESPONSE
 	case "get-prompt-record-group-counts-request", "type-id-get-prompt-record-group-counts-request":
 		return TypeID_TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_REQUEST
 	case "get-prompt-record-group-counts-response", "type-id-get-prompt-record-group-counts-response":
 		return TypeID_TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_RESPONSE
-	case "get-scm-operation-record-group-counts-request", "type-id-get-scm-operation-record-group-counts-request":
-		return TypeID_TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_REQUEST
-	case "get-scm-operation-record-group-counts-response", "type-id-get-scm-operation-record-group-counts-response":
-		return TypeID_TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_RESPONSE
 	case "get-session-record-group-counts-request", "type-id-get-session-record-group-counts-request":
 		return TypeID_TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_REQUEST
 	case "get-session-record-group-counts-response", "type-id-get-session-record-group-counts-response":
@@ -1961,22 +1550,10 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_REQUEST
 	case "get-tool-use-record-group-counts-response", "type-id-get-tool-use-record-group-counts-response":
 		return TypeID_TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_RESPONSE
-	case "list-git-lab-activity-record-request", "type-id-list-git-lab-activity-record-request":
-		return TypeID_TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_REQUEST
-	case "list-git-lab-activity-record-response", "type-id-list-git-lab-activity-record-response":
-		return TypeID_TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE
-	case "list-llm-call-record-request", "type-id-list-llm-call-record-request":
-		return TypeID_TYPE_ID_LIST_LLM_CALL_RECORD_REQUEST
-	case "list-llm-call-record-response", "type-id-list-llm-call-record-response":
-		return TypeID_TYPE_ID_LIST_LLM_CALL_RECORD_RESPONSE
 	case "list-prompt-record-request", "type-id-list-prompt-record-request":
 		return TypeID_TYPE_ID_LIST_PROMPT_RECORD_REQUEST
 	case "list-prompt-record-response", "type-id-list-prompt-record-response":
 		return TypeID_TYPE_ID_LIST_PROMPT_RECORD_RESPONSE
-	case "list-scm-operation-record-request", "type-id-list-scm-operation-record-request":
-		return TypeID_TYPE_ID_LIST_SCM_OPERATION_RECORD_REQUEST
-	case "list-scm-operation-record-response", "type-id-list-scm-operation-record-response":
-		return TypeID_TYPE_ID_LIST_SCM_OPERATION_RECORD_RESPONSE
 	case "list-session-record-request", "type-id-list-session-record-request":
 		return TypeID_TYPE_ID_LIST_SESSION_RECORD_REQUEST
 	case "list-session-record-response", "type-id-list-session-record-response":
@@ -2069,22 +1646,10 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_MAP_EMPTY"
 	case TypeID_TYPE_ID_TIMESERIES_GROUP_COUNT:
 		return "TYPE_ID_TIMESERIES_GROUP_COUNT"
-	case TypeID_TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_REQUEST:
-		return "TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_REQUEST"
-	case TypeID_TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_RESPONSE:
-		return "TYPE_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_RESPONSE"
-	case TypeID_TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_REQUEST:
-		return "TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_REQUEST"
-	case TypeID_TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_RESPONSE:
-		return "TYPE_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS_RESPONSE"
 	case TypeID_TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_REQUEST:
 		return "TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_REQUEST"
 	case TypeID_TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_RESPONSE:
 		return "TYPE_ID_GET_PROMPT_RECORD_GROUP_COUNTS_RESPONSE"
-	case TypeID_TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_REQUEST:
-		return "TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_REQUEST"
-	case TypeID_TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_RESPONSE:
-		return "TYPE_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_RESPONSE"
 	case TypeID_TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_REQUEST:
 		return "TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_REQUEST"
 	case TypeID_TYPE_ID_GET_SESSION_RECORD_GROUP_COUNTS_RESPONSE:
@@ -2101,22 +1666,10 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_REQUEST"
 	case TypeID_TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_RESPONSE:
 		return "TYPE_ID_GET_TOOL_USE_RECORD_GROUP_COUNTS_RESPONSE"
-	case TypeID_TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_REQUEST:
-		return "TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_REQUEST"
-	case TypeID_TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE:
-		return "TYPE_ID_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE"
-	case TypeID_TYPE_ID_LIST_LLM_CALL_RECORD_REQUEST:
-		return "TYPE_ID_LIST_LLM_CALL_RECORD_REQUEST"
-	case TypeID_TYPE_ID_LIST_LLM_CALL_RECORD_RESPONSE:
-		return "TYPE_ID_LIST_LLM_CALL_RECORD_RESPONSE"
 	case TypeID_TYPE_ID_LIST_PROMPT_RECORD_REQUEST:
 		return "TYPE_ID_LIST_PROMPT_RECORD_REQUEST"
 	case TypeID_TYPE_ID_LIST_PROMPT_RECORD_RESPONSE:
 		return "TYPE_ID_LIST_PROMPT_RECORD_RESPONSE"
-	case TypeID_TYPE_ID_LIST_SCM_OPERATION_RECORD_REQUEST:
-		return "TYPE_ID_LIST_SCM_OPERATION_RECORD_REQUEST"
-	case TypeID_TYPE_ID_LIST_SCM_OPERATION_RECORD_RESPONSE:
-		return "TYPE_ID_LIST_SCM_OPERATION_RECORD_RESPONSE"
 	case TypeID_TYPE_ID_LIST_SESSION_RECORD_REQUEST:
 		return "TYPE_ID_LIST_SESSION_RECORD_REQUEST"
 	case TypeID_TYPE_ID_LIST_SESSION_RECORD_RESPONSE:
@@ -2523,10 +2076,7 @@ func TimeseriesGroupCountsRpcIdValues() []TimeseriesGroupCountsRpcId {
 		TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_ACCESSORS,
 		TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_MUTATORS,
 		TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_EXECUTORS,
-		TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS,
-		TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS,
 		TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_PROMPT_RECORD_GROUP_COUNTS,
-		TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS,
 		TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SESSION_RECORD_GROUP_COUNTS,
 		TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_STOP_RECORD_GROUP_COUNTS,
 		TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SUBAGENT_RECORD_GROUP_COUNTS,
@@ -2536,7 +2086,7 @@ func TimeseriesGroupCountsRpcIdValues() []TimeseriesGroupCountsRpcId {
 
 // TimeseriesGroupCountsRpcIdStringValues returns all valid TimeseriesGroupCountsRpcId names as strings
 func TimeseriesGroupCountsRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "get-git-lab-activity-record-group-counts", "get-llm-call-record-group-counts", "get-prompt-record-group-counts", "get-scm-operation-record-group-counts", "get-session-record-group-counts", "get-stop-record-group-counts", "get-subagent-record-group-counts", "get-tool-use-record-group-counts"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "get-prompt-record-group-counts", "get-session-record-group-counts", "get-stop-record-group-counts", "get-subagent-record-group-counts", "get-tool-use-record-group-counts"}
 }
 
 // ParseTimeseriesGroupCountsRpcId converts a string to a TimeseriesGroupCountsRpcId enum value
@@ -2553,14 +2103,8 @@ func ParseTimeseriesGroupCountsRpcId(s string) (TimeseriesGroupCountsRpcId, erro
 		return TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_MUTATORS, nil
 	case "all-executors", "timeseries-group-counts-rpc-id-all-executors":
 		return TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_EXECUTORS, nil
-	case "get-git-lab-activity-record-group-counts", "timeseries-group-counts-rpc-id-get-git-lab-activity-record-group-counts":
-		return TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS, nil
-	case "get-llm-call-record-group-counts", "timeseries-group-counts-rpc-id-get-llm-call-record-group-counts":
-		return TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS, nil
 	case "get-prompt-record-group-counts", "timeseries-group-counts-rpc-id-get-prompt-record-group-counts":
 		return TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_PROMPT_RECORD_GROUP_COUNTS, nil
-	case "get-scm-operation-record-group-counts", "timeseries-group-counts-rpc-id-get-scm-operation-record-group-counts":
-		return TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS, nil
 	case "get-session-record-group-counts", "timeseries-group-counts-rpc-id-get-session-record-group-counts":
 		return TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SESSION_RECORD_GROUP_COUNTS, nil
 	case "get-stop-record-group-counts", "timeseries-group-counts-rpc-id-get-stop-record-group-counts":
@@ -2605,14 +2149,8 @@ func TimeseriesGroupCountsRpcIdToString(v TimeseriesGroupCountsRpcId) string {
 		return "all-mutators"
 	case TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_EXECUTORS:
 		return "all-executors"
-	case TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS:
-		return "get-git-lab-activity-record-group-counts"
-	case TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS:
-		return "get-llm-call-record-group-counts"
 	case TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_PROMPT_RECORD_GROUP_COUNTS:
 		return "get-prompt-record-group-counts"
-	case TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS:
-		return "get-scm-operation-record-group-counts"
 	case TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SESSION_RECORD_GROUP_COUNTS:
 		return "get-session-record-group-counts"
 	case TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_STOP_RECORD_GROUP_COUNTS:
@@ -2649,14 +2187,8 @@ func ParseTimeseriesGroupCountsRpcIdLiberal(s string) TimeseriesGroupCountsRpcId
 		return TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_MUTATORS
 	case "all-executors", "timeseries-group-counts-rpc-id-all-executors":
 		return TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_EXECUTORS
-	case "get-git-lab-activity-record-group-counts", "timeseries-group-counts-rpc-id-get-git-lab-activity-record-group-counts":
-		return TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS
-	case "get-llm-call-record-group-counts", "timeseries-group-counts-rpc-id-get-llm-call-record-group-counts":
-		return TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS
 	case "get-prompt-record-group-counts", "timeseries-group-counts-rpc-id-get-prompt-record-group-counts":
 		return TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_PROMPT_RECORD_GROUP_COUNTS
-	case "get-scm-operation-record-group-counts", "timeseries-group-counts-rpc-id-get-scm-operation-record-group-counts":
-		return TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS
 	case "get-session-record-group-counts", "timeseries-group-counts-rpc-id-get-session-record-group-counts":
 		return TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SESSION_RECORD_GROUP_COUNTS
 	case "get-stop-record-group-counts", "timeseries-group-counts-rpc-id-get-stop-record-group-counts":
@@ -2681,14 +2213,8 @@ func TimeseriesGroupCountsRpcIdToSpecName(v TimeseriesGroupCountsRpcId) string {
 		return "TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_MUTATORS"
 	case TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_EXECUTORS:
 		return "TIMESERIES_GROUP_COUNTS_RPC_ID_ALL_EXECUTORS"
-	case TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS:
-		return "TIMESERIES_GROUP_COUNTS_RPC_ID_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS"
-	case TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS:
-		return "TIMESERIES_GROUP_COUNTS_RPC_ID_GET_LLM_CALL_RECORD_GROUP_COUNTS"
 	case TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_PROMPT_RECORD_GROUP_COUNTS:
 		return "TIMESERIES_GROUP_COUNTS_RPC_ID_GET_PROMPT_RECORD_GROUP_COUNTS"
-	case TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS:
-		return "TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SCM_OPERATION_RECORD_GROUP_COUNTS"
 	case TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SESSION_RECORD_GROUP_COUNTS:
 		return "TIMESERIES_GROUP_COUNTS_RPC_ID_GET_SESSION_RECORD_GROUP_COUNTS"
 	case TimeseriesGroupCountsRpcId_TIMESERIES_GROUP_COUNTS_RPC_ID_GET_STOP_RECORD_GROUP_COUNTS:
@@ -2708,10 +2234,7 @@ func TimeseriesQueryRpcIdValues() []TimeseriesQueryRpcId {
 		TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_ALL_ACCESSORS,
 		TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_ALL_MUTATORS,
 		TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_ALL_EXECUTORS,
-		TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_GIT_LAB_ACTIVITY_RECORD,
-		TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_LLM_CALL_RECORD,
 		TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_PROMPT_RECORD,
-		TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_SCM_OPERATION_RECORD,
 		TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_SESSION_RECORD,
 		TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_STOP_RECORD,
 		TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_SUBAGENT_RECORD,
@@ -2721,7 +2244,7 @@ func TimeseriesQueryRpcIdValues() []TimeseriesQueryRpcId {
 
 // TimeseriesQueryRpcIdStringValues returns all valid TimeseriesQueryRpcId names as strings
 func TimeseriesQueryRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "list-git-lab-activity-record", "list-llm-call-record", "list-prompt-record", "list-scm-operation-record", "list-session-record", "list-stop-record", "list-subagent-record", "list-tool-use-record"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "list-prompt-record", "list-session-record", "list-stop-record", "list-subagent-record", "list-tool-use-record"}
 }
 
 // ParseTimeseriesQueryRpcId converts a string to a TimeseriesQueryRpcId enum value
@@ -2738,14 +2261,8 @@ func ParseTimeseriesQueryRpcId(s string) (TimeseriesQueryRpcId, error) {
 		return TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_ALL_MUTATORS, nil
 	case "all-executors", "timeseries-query-rpc-id-all-executors":
 		return TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_ALL_EXECUTORS, nil
-	case "list-git-lab-activity-record", "timeseries-query-rpc-id-list-git-lab-activity-record":
-		return TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_GIT_LAB_ACTIVITY_RECORD, nil
-	case "list-llm-call-record", "timeseries-query-rpc-id-list-llm-call-record":
-		return TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_LLM_CALL_RECORD, nil
 	case "list-prompt-record", "timeseries-query-rpc-id-list-prompt-record":
 		return TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_PROMPT_RECORD, nil
-	case "list-scm-operation-record", "timeseries-query-rpc-id-list-scm-operation-record":
-		return TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_SCM_OPERATION_RECORD, nil
 	case "list-session-record", "timeseries-query-rpc-id-list-session-record":
 		return TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_SESSION_RECORD, nil
 	case "list-stop-record", "timeseries-query-rpc-id-list-stop-record":
@@ -2790,14 +2307,8 @@ func TimeseriesQueryRpcIdToString(v TimeseriesQueryRpcId) string {
 		return "all-mutators"
 	case TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_ALL_EXECUTORS:
 		return "all-executors"
-	case TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_GIT_LAB_ACTIVITY_RECORD:
-		return "list-git-lab-activity-record"
-	case TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_LLM_CALL_RECORD:
-		return "list-llm-call-record"
 	case TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_PROMPT_RECORD:
 		return "list-prompt-record"
-	case TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_SCM_OPERATION_RECORD:
-		return "list-scm-operation-record"
 	case TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_SESSION_RECORD:
 		return "list-session-record"
 	case TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_STOP_RECORD:
@@ -2834,14 +2345,8 @@ func ParseTimeseriesQueryRpcIdLiberal(s string) TimeseriesQueryRpcId {
 		return TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_ALL_MUTATORS
 	case "all-executors", "timeseries-query-rpc-id-all-executors":
 		return TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_ALL_EXECUTORS
-	case "list-git-lab-activity-record", "timeseries-query-rpc-id-list-git-lab-activity-record":
-		return TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_GIT_LAB_ACTIVITY_RECORD
-	case "list-llm-call-record", "timeseries-query-rpc-id-list-llm-call-record":
-		return TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_LLM_CALL_RECORD
 	case "list-prompt-record", "timeseries-query-rpc-id-list-prompt-record":
 		return TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_PROMPT_RECORD
-	case "list-scm-operation-record", "timeseries-query-rpc-id-list-scm-operation-record":
-		return TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_SCM_OPERATION_RECORD
 	case "list-session-record", "timeseries-query-rpc-id-list-session-record":
 		return TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_SESSION_RECORD
 	case "list-stop-record", "timeseries-query-rpc-id-list-stop-record":
@@ -2866,14 +2371,8 @@ func TimeseriesQueryRpcIdToSpecName(v TimeseriesQueryRpcId) string {
 		return "TIMESERIES_QUERY_RPC_ID_ALL_MUTATORS"
 	case TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_ALL_EXECUTORS:
 		return "TIMESERIES_QUERY_RPC_ID_ALL_EXECUTORS"
-	case TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_GIT_LAB_ACTIVITY_RECORD:
-		return "TIMESERIES_QUERY_RPC_ID_LIST_GIT_LAB_ACTIVITY_RECORD"
-	case TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_LLM_CALL_RECORD:
-		return "TIMESERIES_QUERY_RPC_ID_LIST_LLM_CALL_RECORD"
 	case TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_PROMPT_RECORD:
 		return "TIMESERIES_QUERY_RPC_ID_LIST_PROMPT_RECORD"
-	case TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_SCM_OPERATION_RECORD:
-		return "TIMESERIES_QUERY_RPC_ID_LIST_SCM_OPERATION_RECORD"
 	case TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_SESSION_RECORD:
 		return "TIMESERIES_QUERY_RPC_ID_LIST_SESSION_RECORD"
 	case TimeseriesQueryRpcId_TIMESERIES_QUERY_RPC_ID_LIST_STOP_RECORD:
@@ -8871,710 +8370,6 @@ func TimeseriesGroupCountToTOML(v *TimeseriesGroupCount) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
-// GetGitLabActivityRecordGroupCountsRequestJSON represents GetGitLabActivityRecordGroupCountsRequest in external JSON format (with string enums)
-// MARKER: JSON helper struct generated from serial.go
-type getgitlabactivityrecordgroupcountsrequestJSON struct {
-	GroupBy   string          `json:"group_by,omitempty"`
-	TimeRange json.RawMessage `json:"time_range,omitempty"`
-	TraceId   string          `json:"trace_id,omitempty"`
-	Noop      bool            `json:"noop,omitempty"`
-}
-
-// GetGitLabActivityRecordGroupCountsRequestToJSON converts GetGitLabActivityRecordGroupCountsRequest to JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func GetGitLabActivityRecordGroupCountsRequestToJSON(v *GetGitLabActivityRecordGroupCountsRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getgitlabactivityrecordgroupcountsrequest is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := getgitlabactivityrecordgroupcountsrequestJSON{
-		GroupBy: GitLabActivityRecordGroupFieldToString(v.GroupBy),
-		TimeRange: func() json.RawMessage {
-			if v.TimeRange == nil {
-				return nil
-			}
-			data, _ := TimeRangeToJSON(v.TimeRange)
-			return data
-		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
-	}
-	return json.Marshal(helper)
-}
-
-// GetGitLabActivityRecordGroupCountsRequestToJSONPretty converts GetGitLabActivityRecordGroupCountsRequest to indented JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func GetGitLabActivityRecordGroupCountsRequestToJSONPretty(v *GetGitLabActivityRecordGroupCountsRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getgitlabactivityrecordgroupcountsrequest is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := getgitlabactivityrecordgroupcountsrequestJSON{
-		GroupBy: GitLabActivityRecordGroupFieldToString(v.GroupBy),
-		TimeRange: func() json.RawMessage {
-			if v.TimeRange == nil {
-				return nil
-			}
-			data, _ := TimeRangeToJSON(v.TimeRange)
-			return data
-		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
-	}
-	return json.MarshalIndent(helper, "", "  ")
-}
-
-// GetGitLabActivityRecordGroupCountsRequestFromBytes creates GetGitLabActivityRecordGroupCountsRequest from bytes, auto-detecting the format.
-// Supports JSON, YAML, TOML, and binary protobuf formats.
-func GetGitLabActivityRecordGroupCountsRequestFromBytes(data []byte) (*GetGitLabActivityRecordGroupCountsRequest, error) {
-	// Trim leading whitespace to check format
-	trimmed := bytes.TrimSpace(data)
-	if len(trimmed) == 0 {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
-	}
-	// Try JSON first (most common, starts with { or [)
-	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := GetGitLabActivityRecordGroupCountsRequestFromJSON(data); err == nil {
-			return result, nil
-		}
-	}
-	// Try TOML (try before YAML since YAML is more permissive)
-	var tomlObj any
-	if err := toml.Unmarshal(data, &tomlObj); err == nil {
-		// Convert TOML to JSON, then parse
-		jsonData, err := json.Marshal(tomlObj)
-		if err == nil {
-			if result, err := GetGitLabActivityRecordGroupCountsRequestFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try YAML
-	var yamlObj any
-	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
-		// Convert YAML to JSON, then parse
-		jsonData, err := json.Marshal(yamlObj)
-		if err == nil {
-			if result, err := GetGitLabActivityRecordGroupCountsRequestFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try binary protobuf
-	v := &GetGitLabActivityRecordGroupCountsRequest{}
-	if err := proto.Unmarshal(data, v); err == nil {
-		return v, nil
-	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse GetGitLabActivityRecordGroupCountsRequest: unsupported format or invalid data")
-}
-
-// GetGitLabActivityRecordGroupCountsRequestFromJSON creates GetGitLabActivityRecordGroupCountsRequest from JSON bytes.
-// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func GetGitLabActivityRecordGroupCountsRequestFromJSON(data []byte) (*GetGitLabActivityRecordGroupCountsRequest, error) {
-	// Unmarshal into helper struct with string enums
-	var raw getgitlabactivityrecordgroupcountsrequestJSON
-	if err := json.Unmarshal(data, &raw); err != nil {
-		// Fall back to protojson which handles proto3 JSON conventions
-		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &GetGitLabActivityRecordGroupCountsRequest{}
-		if pErr := protojson.Unmarshal(data, v); pErr != nil {
-			return nil, err
-		}
-		return v, nil
-	}
-	// Build result with parsed enums
-	result := &GetGitLabActivityRecordGroupCountsRequest{}
-	// Parse enum field: GroupBy
-	if raw.GroupBy != "" {
-		if parsed, err := ParseGitLabActivityRecordGroupField(raw.GroupBy); err == nil {
-			result.GroupBy = parsed
-		}
-	}
-	// Parse message field: TimeRange
-	if len(raw.TimeRange) > 0 {
-		parsed, err := TimeRangeFromJSON(raw.TimeRange)
-		if err == nil {
-			result.TimeRange = parsed
-		}
-	}
-	result.TraceId = raw.TraceId
-	result.Noop = raw.Noop
-	return result, nil
-}
-
-// GetGitLabActivityRecordGroupCountsRequestToYAML converts GetGitLabActivityRecordGroupCountsRequest to YAML bytes.
-// Converts to JSON first, then to YAML for proper protobuf handling.
-func GetGitLabActivityRecordGroupCountsRequestToYAML(v *GetGitLabActivityRecordGroupCountsRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getgitlabactivityrecordgroupcountsrequest is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := GetGitLabActivityRecordGroupCountsRequestToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to YAML, preserving integer precision
-	dec := json.NewDecoder(bytes.NewReader(jsonData))
-	dec.UseNumber()
-	var obj any
-	if err := dec.Decode(&obj); err != nil {
-		return nil, err
-	}
-	return yaml.Marshal(convertJSONNumbers(obj))
-}
-
-// GetGitLabActivityRecordGroupCountsRequestToTOML converts GetGitLabActivityRecordGroupCountsRequest to TOML bytes.
-// Converts to JSON first, then to TOML for proper protobuf handling.
-func GetGitLabActivityRecordGroupCountsRequestToTOML(v *GetGitLabActivityRecordGroupCountsRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getgitlabactivityrecordgroupcountsrequest is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := GetGitLabActivityRecordGroupCountsRequestToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to TOML
-	var obj any
-	if err := json.Unmarshal(jsonData, &obj); err != nil {
-		return nil, err
-	}
-	return toml.Marshal(obj)
-}
-
-// GetGitLabActivityRecordGroupCountsResponseJSON represents GetGitLabActivityRecordGroupCountsResponse in external JSON format (with string enums)
-// MARKER: JSON helper struct generated from serial.go
-type getgitlabactivityrecordgroupcountsresponseJSON struct {
-	Counts  []json.RawMessage `json:"counts,omitempty"`
-	TraceId string            `json:"trace_id,omitempty"`
-	Noop    bool              `json:"noop,omitempty"`
-}
-
-// GetGitLabActivityRecordGroupCountsResponseToJSON converts GetGitLabActivityRecordGroupCountsResponse to JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func GetGitLabActivityRecordGroupCountsResponseToJSON(v *GetGitLabActivityRecordGroupCountsResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getgitlabactivityrecordgroupcountsresponse is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := getgitlabactivityrecordgroupcountsresponseJSON{
-		Counts: func() []json.RawMessage {
-			if len(v.Counts) == 0 {
-				return nil
-			}
-			result := make([]json.RawMessage, 0, len(v.Counts))
-			for _, item := range v.Counts {
-				if item != nil {
-					if data, err := TimeseriesGroupCountToJSON(item); err == nil {
-						result = append(result, data)
-					}
-				}
-			}
-			return result
-		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
-	}
-	return json.Marshal(helper)
-}
-
-// GetGitLabActivityRecordGroupCountsResponseToJSONPretty converts GetGitLabActivityRecordGroupCountsResponse to indented JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func GetGitLabActivityRecordGroupCountsResponseToJSONPretty(v *GetGitLabActivityRecordGroupCountsResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getgitlabactivityrecordgroupcountsresponse is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := getgitlabactivityrecordgroupcountsresponseJSON{
-		Counts: func() []json.RawMessage {
-			if len(v.Counts) == 0 {
-				return nil
-			}
-			result := make([]json.RawMessage, 0, len(v.Counts))
-			for _, item := range v.Counts {
-				if item != nil {
-					if data, err := TimeseriesGroupCountToJSON(item); err == nil {
-						result = append(result, data)
-					}
-				}
-			}
-			return result
-		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
-	}
-	return json.MarshalIndent(helper, "", "  ")
-}
-
-// GetGitLabActivityRecordGroupCountsResponseFromBytes creates GetGitLabActivityRecordGroupCountsResponse from bytes, auto-detecting the format.
-// Supports JSON, YAML, TOML, and binary protobuf formats.
-func GetGitLabActivityRecordGroupCountsResponseFromBytes(data []byte) (*GetGitLabActivityRecordGroupCountsResponse, error) {
-	// Trim leading whitespace to check format
-	trimmed := bytes.TrimSpace(data)
-	if len(trimmed) == 0 {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
-	}
-	// Try JSON first (most common, starts with { or [)
-	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := GetGitLabActivityRecordGroupCountsResponseFromJSON(data); err == nil {
-			return result, nil
-		}
-	}
-	// Try TOML (try before YAML since YAML is more permissive)
-	var tomlObj any
-	if err := toml.Unmarshal(data, &tomlObj); err == nil {
-		// Convert TOML to JSON, then parse
-		jsonData, err := json.Marshal(tomlObj)
-		if err == nil {
-			if result, err := GetGitLabActivityRecordGroupCountsResponseFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try YAML
-	var yamlObj any
-	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
-		// Convert YAML to JSON, then parse
-		jsonData, err := json.Marshal(yamlObj)
-		if err == nil {
-			if result, err := GetGitLabActivityRecordGroupCountsResponseFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try binary protobuf
-	v := &GetGitLabActivityRecordGroupCountsResponse{}
-	if err := proto.Unmarshal(data, v); err == nil {
-		return v, nil
-	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse GetGitLabActivityRecordGroupCountsResponse: unsupported format or invalid data")
-}
-
-// GetGitLabActivityRecordGroupCountsResponseFromJSON creates GetGitLabActivityRecordGroupCountsResponse from JSON bytes.
-// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func GetGitLabActivityRecordGroupCountsResponseFromJSON(data []byte) (*GetGitLabActivityRecordGroupCountsResponse, error) {
-	// Unmarshal into helper struct with string enums
-	var raw getgitlabactivityrecordgroupcountsresponseJSON
-	if err := json.Unmarshal(data, &raw); err != nil {
-		// Fall back to protojson which handles proto3 JSON conventions
-		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &GetGitLabActivityRecordGroupCountsResponse{}
-		if pErr := protojson.Unmarshal(data, v); pErr != nil {
-			return nil, err
-		}
-		return v, nil
-	}
-	// Build result with parsed enums
-	result := &GetGitLabActivityRecordGroupCountsResponse{}
-	// Parse repeated message field: Counts
-	if len(raw.Counts) > 0 {
-		result.Counts = make([]*TimeseriesGroupCount, 0, len(raw.Counts))
-		for _, itemJSON := range raw.Counts {
-			if len(itemJSON) > 0 {
-				parsed, err := TimeseriesGroupCountFromJSON(itemJSON)
-				if err == nil {
-					result.Counts = append(result.Counts, parsed)
-				}
-			}
-		}
-	}
-	result.TraceId = raw.TraceId
-	result.Noop = raw.Noop
-	return result, nil
-}
-
-// GetGitLabActivityRecordGroupCountsResponseToYAML converts GetGitLabActivityRecordGroupCountsResponse to YAML bytes.
-// Converts to JSON first, then to YAML for proper protobuf handling.
-func GetGitLabActivityRecordGroupCountsResponseToYAML(v *GetGitLabActivityRecordGroupCountsResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getgitlabactivityrecordgroupcountsresponse is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := GetGitLabActivityRecordGroupCountsResponseToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to YAML, preserving integer precision
-	dec := json.NewDecoder(bytes.NewReader(jsonData))
-	dec.UseNumber()
-	var obj any
-	if err := dec.Decode(&obj); err != nil {
-		return nil, err
-	}
-	return yaml.Marshal(convertJSONNumbers(obj))
-}
-
-// GetGitLabActivityRecordGroupCountsResponseToTOML converts GetGitLabActivityRecordGroupCountsResponse to TOML bytes.
-// Converts to JSON first, then to TOML for proper protobuf handling.
-func GetGitLabActivityRecordGroupCountsResponseToTOML(v *GetGitLabActivityRecordGroupCountsResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getgitlabactivityrecordgroupcountsresponse is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := GetGitLabActivityRecordGroupCountsResponseToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to TOML
-	var obj any
-	if err := json.Unmarshal(jsonData, &obj); err != nil {
-		return nil, err
-	}
-	return toml.Marshal(obj)
-}
-
-// GetLlmCallRecordGroupCountsRequestJSON represents GetLlmCallRecordGroupCountsRequest in external JSON format (with string enums)
-// MARKER: JSON helper struct generated from serial.go
-type getllmcallrecordgroupcountsrequestJSON struct {
-	GroupBy   string          `json:"group_by,omitempty"`
-	TimeRange json.RawMessage `json:"time_range,omitempty"`
-	TraceId   string          `json:"trace_id,omitempty"`
-	Noop      bool            `json:"noop,omitempty"`
-}
-
-// GetLlmCallRecordGroupCountsRequestToJSON converts GetLlmCallRecordGroupCountsRequest to JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func GetLlmCallRecordGroupCountsRequestToJSON(v *GetLlmCallRecordGroupCountsRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getllmcallrecordgroupcountsrequest is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := getllmcallrecordgroupcountsrequestJSON{
-		GroupBy: LlmCallRecordGroupFieldToString(v.GroupBy),
-		TimeRange: func() json.RawMessage {
-			if v.TimeRange == nil {
-				return nil
-			}
-			data, _ := TimeRangeToJSON(v.TimeRange)
-			return data
-		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
-	}
-	return json.Marshal(helper)
-}
-
-// GetLlmCallRecordGroupCountsRequestToJSONPretty converts GetLlmCallRecordGroupCountsRequest to indented JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func GetLlmCallRecordGroupCountsRequestToJSONPretty(v *GetLlmCallRecordGroupCountsRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getllmcallrecordgroupcountsrequest is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := getllmcallrecordgroupcountsrequestJSON{
-		GroupBy: LlmCallRecordGroupFieldToString(v.GroupBy),
-		TimeRange: func() json.RawMessage {
-			if v.TimeRange == nil {
-				return nil
-			}
-			data, _ := TimeRangeToJSON(v.TimeRange)
-			return data
-		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
-	}
-	return json.MarshalIndent(helper, "", "  ")
-}
-
-// GetLlmCallRecordGroupCountsRequestFromBytes creates GetLlmCallRecordGroupCountsRequest from bytes, auto-detecting the format.
-// Supports JSON, YAML, TOML, and binary protobuf formats.
-func GetLlmCallRecordGroupCountsRequestFromBytes(data []byte) (*GetLlmCallRecordGroupCountsRequest, error) {
-	// Trim leading whitespace to check format
-	trimmed := bytes.TrimSpace(data)
-	if len(trimmed) == 0 {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
-	}
-	// Try JSON first (most common, starts with { or [)
-	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := GetLlmCallRecordGroupCountsRequestFromJSON(data); err == nil {
-			return result, nil
-		}
-	}
-	// Try TOML (try before YAML since YAML is more permissive)
-	var tomlObj any
-	if err := toml.Unmarshal(data, &tomlObj); err == nil {
-		// Convert TOML to JSON, then parse
-		jsonData, err := json.Marshal(tomlObj)
-		if err == nil {
-			if result, err := GetLlmCallRecordGroupCountsRequestFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try YAML
-	var yamlObj any
-	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
-		// Convert YAML to JSON, then parse
-		jsonData, err := json.Marshal(yamlObj)
-		if err == nil {
-			if result, err := GetLlmCallRecordGroupCountsRequestFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try binary protobuf
-	v := &GetLlmCallRecordGroupCountsRequest{}
-	if err := proto.Unmarshal(data, v); err == nil {
-		return v, nil
-	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse GetLlmCallRecordGroupCountsRequest: unsupported format or invalid data")
-}
-
-// GetLlmCallRecordGroupCountsRequestFromJSON creates GetLlmCallRecordGroupCountsRequest from JSON bytes.
-// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func GetLlmCallRecordGroupCountsRequestFromJSON(data []byte) (*GetLlmCallRecordGroupCountsRequest, error) {
-	// Unmarshal into helper struct with string enums
-	var raw getllmcallrecordgroupcountsrequestJSON
-	if err := json.Unmarshal(data, &raw); err != nil {
-		// Fall back to protojson which handles proto3 JSON conventions
-		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &GetLlmCallRecordGroupCountsRequest{}
-		if pErr := protojson.Unmarshal(data, v); pErr != nil {
-			return nil, err
-		}
-		return v, nil
-	}
-	// Build result with parsed enums
-	result := &GetLlmCallRecordGroupCountsRequest{}
-	// Parse enum field: GroupBy
-	if raw.GroupBy != "" {
-		if parsed, err := ParseLlmCallRecordGroupField(raw.GroupBy); err == nil {
-			result.GroupBy = parsed
-		}
-	}
-	// Parse message field: TimeRange
-	if len(raw.TimeRange) > 0 {
-		parsed, err := TimeRangeFromJSON(raw.TimeRange)
-		if err == nil {
-			result.TimeRange = parsed
-		}
-	}
-	result.TraceId = raw.TraceId
-	result.Noop = raw.Noop
-	return result, nil
-}
-
-// GetLlmCallRecordGroupCountsRequestToYAML converts GetLlmCallRecordGroupCountsRequest to YAML bytes.
-// Converts to JSON first, then to YAML for proper protobuf handling.
-func GetLlmCallRecordGroupCountsRequestToYAML(v *GetLlmCallRecordGroupCountsRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getllmcallrecordgroupcountsrequest is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := GetLlmCallRecordGroupCountsRequestToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to YAML, preserving integer precision
-	dec := json.NewDecoder(bytes.NewReader(jsonData))
-	dec.UseNumber()
-	var obj any
-	if err := dec.Decode(&obj); err != nil {
-		return nil, err
-	}
-	return yaml.Marshal(convertJSONNumbers(obj))
-}
-
-// GetLlmCallRecordGroupCountsRequestToTOML converts GetLlmCallRecordGroupCountsRequest to TOML bytes.
-// Converts to JSON first, then to TOML for proper protobuf handling.
-func GetLlmCallRecordGroupCountsRequestToTOML(v *GetLlmCallRecordGroupCountsRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getllmcallrecordgroupcountsrequest is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := GetLlmCallRecordGroupCountsRequestToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to TOML
-	var obj any
-	if err := json.Unmarshal(jsonData, &obj); err != nil {
-		return nil, err
-	}
-	return toml.Marshal(obj)
-}
-
-// GetLlmCallRecordGroupCountsResponseJSON represents GetLlmCallRecordGroupCountsResponse in external JSON format (with string enums)
-// MARKER: JSON helper struct generated from serial.go
-type getllmcallrecordgroupcountsresponseJSON struct {
-	Counts  []json.RawMessage `json:"counts,omitempty"`
-	TraceId string            `json:"trace_id,omitempty"`
-	Noop    bool              `json:"noop,omitempty"`
-}
-
-// GetLlmCallRecordGroupCountsResponseToJSON converts GetLlmCallRecordGroupCountsResponse to JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func GetLlmCallRecordGroupCountsResponseToJSON(v *GetLlmCallRecordGroupCountsResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getllmcallrecordgroupcountsresponse is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := getllmcallrecordgroupcountsresponseJSON{
-		Counts: func() []json.RawMessage {
-			if len(v.Counts) == 0 {
-				return nil
-			}
-			result := make([]json.RawMessage, 0, len(v.Counts))
-			for _, item := range v.Counts {
-				if item != nil {
-					if data, err := TimeseriesGroupCountToJSON(item); err == nil {
-						result = append(result, data)
-					}
-				}
-			}
-			return result
-		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
-	}
-	return json.Marshal(helper)
-}
-
-// GetLlmCallRecordGroupCountsResponseToJSONPretty converts GetLlmCallRecordGroupCountsResponse to indented JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func GetLlmCallRecordGroupCountsResponseToJSONPretty(v *GetLlmCallRecordGroupCountsResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getllmcallrecordgroupcountsresponse is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := getllmcallrecordgroupcountsresponseJSON{
-		Counts: func() []json.RawMessage {
-			if len(v.Counts) == 0 {
-				return nil
-			}
-			result := make([]json.RawMessage, 0, len(v.Counts))
-			for _, item := range v.Counts {
-				if item != nil {
-					if data, err := TimeseriesGroupCountToJSON(item); err == nil {
-						result = append(result, data)
-					}
-				}
-			}
-			return result
-		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
-	}
-	return json.MarshalIndent(helper, "", "  ")
-}
-
-// GetLlmCallRecordGroupCountsResponseFromBytes creates GetLlmCallRecordGroupCountsResponse from bytes, auto-detecting the format.
-// Supports JSON, YAML, TOML, and binary protobuf formats.
-func GetLlmCallRecordGroupCountsResponseFromBytes(data []byte) (*GetLlmCallRecordGroupCountsResponse, error) {
-	// Trim leading whitespace to check format
-	trimmed := bytes.TrimSpace(data)
-	if len(trimmed) == 0 {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
-	}
-	// Try JSON first (most common, starts with { or [)
-	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := GetLlmCallRecordGroupCountsResponseFromJSON(data); err == nil {
-			return result, nil
-		}
-	}
-	// Try TOML (try before YAML since YAML is more permissive)
-	var tomlObj any
-	if err := toml.Unmarshal(data, &tomlObj); err == nil {
-		// Convert TOML to JSON, then parse
-		jsonData, err := json.Marshal(tomlObj)
-		if err == nil {
-			if result, err := GetLlmCallRecordGroupCountsResponseFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try YAML
-	var yamlObj any
-	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
-		// Convert YAML to JSON, then parse
-		jsonData, err := json.Marshal(yamlObj)
-		if err == nil {
-			if result, err := GetLlmCallRecordGroupCountsResponseFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try binary protobuf
-	v := &GetLlmCallRecordGroupCountsResponse{}
-	if err := proto.Unmarshal(data, v); err == nil {
-		return v, nil
-	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse GetLlmCallRecordGroupCountsResponse: unsupported format or invalid data")
-}
-
-// GetLlmCallRecordGroupCountsResponseFromJSON creates GetLlmCallRecordGroupCountsResponse from JSON bytes.
-// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func GetLlmCallRecordGroupCountsResponseFromJSON(data []byte) (*GetLlmCallRecordGroupCountsResponse, error) {
-	// Unmarshal into helper struct with string enums
-	var raw getllmcallrecordgroupcountsresponseJSON
-	if err := json.Unmarshal(data, &raw); err != nil {
-		// Fall back to protojson which handles proto3 JSON conventions
-		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &GetLlmCallRecordGroupCountsResponse{}
-		if pErr := protojson.Unmarshal(data, v); pErr != nil {
-			return nil, err
-		}
-		return v, nil
-	}
-	// Build result with parsed enums
-	result := &GetLlmCallRecordGroupCountsResponse{}
-	// Parse repeated message field: Counts
-	if len(raw.Counts) > 0 {
-		result.Counts = make([]*TimeseriesGroupCount, 0, len(raw.Counts))
-		for _, itemJSON := range raw.Counts {
-			if len(itemJSON) > 0 {
-				parsed, err := TimeseriesGroupCountFromJSON(itemJSON)
-				if err == nil {
-					result.Counts = append(result.Counts, parsed)
-				}
-			}
-		}
-	}
-	result.TraceId = raw.TraceId
-	result.Noop = raw.Noop
-	return result, nil
-}
-
-// GetLlmCallRecordGroupCountsResponseToYAML converts GetLlmCallRecordGroupCountsResponse to YAML bytes.
-// Converts to JSON first, then to YAML for proper protobuf handling.
-func GetLlmCallRecordGroupCountsResponseToYAML(v *GetLlmCallRecordGroupCountsResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getllmcallrecordgroupcountsresponse is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := GetLlmCallRecordGroupCountsResponseToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to YAML, preserving integer precision
-	dec := json.NewDecoder(bytes.NewReader(jsonData))
-	dec.UseNumber()
-	var obj any
-	if err := dec.Decode(&obj); err != nil {
-		return nil, err
-	}
-	return yaml.Marshal(convertJSONNumbers(obj))
-}
-
-// GetLlmCallRecordGroupCountsResponseToTOML converts GetLlmCallRecordGroupCountsResponse to TOML bytes.
-// Converts to JSON first, then to TOML for proper protobuf handling.
-func GetLlmCallRecordGroupCountsResponseToTOML(v *GetLlmCallRecordGroupCountsResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getllmcallrecordgroupcountsresponse is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := GetLlmCallRecordGroupCountsResponseToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to TOML
-	var obj any
-	if err := json.Unmarshal(jsonData, &obj); err != nil {
-		return nil, err
-	}
-	return toml.Marshal(obj)
-}
-
 // GetPromptRecordGroupCountsRequestJSON represents GetPromptRecordGroupCountsRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type getpromptrecordgroupcountsrequestJSON struct {
@@ -9916,358 +8711,6 @@ func GetPromptRecordGroupCountsResponseToTOML(v *GetPromptRecordGroupCountsRespo
 	}
 	// Convert to JSON first
 	jsonData, err := GetPromptRecordGroupCountsResponseToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to TOML
-	var obj any
-	if err := json.Unmarshal(jsonData, &obj); err != nil {
-		return nil, err
-	}
-	return toml.Marshal(obj)
-}
-
-// GetScmOperationRecordGroupCountsRequestJSON represents GetScmOperationRecordGroupCountsRequest in external JSON format (with string enums)
-// MARKER: JSON helper struct generated from serial.go
-type getscmoperationrecordgroupcountsrequestJSON struct {
-	GroupBy   string          `json:"group_by,omitempty"`
-	TimeRange json.RawMessage `json:"time_range,omitempty"`
-	TraceId   string          `json:"trace_id,omitempty"`
-	Noop      bool            `json:"noop,omitempty"`
-}
-
-// GetScmOperationRecordGroupCountsRequestToJSON converts GetScmOperationRecordGroupCountsRequest to JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func GetScmOperationRecordGroupCountsRequestToJSON(v *GetScmOperationRecordGroupCountsRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getscmoperationrecordgroupcountsrequest is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := getscmoperationrecordgroupcountsrequestJSON{
-		GroupBy: ScmOperationRecordGroupFieldToString(v.GroupBy),
-		TimeRange: func() json.RawMessage {
-			if v.TimeRange == nil {
-				return nil
-			}
-			data, _ := TimeRangeToJSON(v.TimeRange)
-			return data
-		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
-	}
-	return json.Marshal(helper)
-}
-
-// GetScmOperationRecordGroupCountsRequestToJSONPretty converts GetScmOperationRecordGroupCountsRequest to indented JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func GetScmOperationRecordGroupCountsRequestToJSONPretty(v *GetScmOperationRecordGroupCountsRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getscmoperationrecordgroupcountsrequest is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := getscmoperationrecordgroupcountsrequestJSON{
-		GroupBy: ScmOperationRecordGroupFieldToString(v.GroupBy),
-		TimeRange: func() json.RawMessage {
-			if v.TimeRange == nil {
-				return nil
-			}
-			data, _ := TimeRangeToJSON(v.TimeRange)
-			return data
-		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
-	}
-	return json.MarshalIndent(helper, "", "  ")
-}
-
-// GetScmOperationRecordGroupCountsRequestFromBytes creates GetScmOperationRecordGroupCountsRequest from bytes, auto-detecting the format.
-// Supports JSON, YAML, TOML, and binary protobuf formats.
-func GetScmOperationRecordGroupCountsRequestFromBytes(data []byte) (*GetScmOperationRecordGroupCountsRequest, error) {
-	// Trim leading whitespace to check format
-	trimmed := bytes.TrimSpace(data)
-	if len(trimmed) == 0 {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
-	}
-	// Try JSON first (most common, starts with { or [)
-	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := GetScmOperationRecordGroupCountsRequestFromJSON(data); err == nil {
-			return result, nil
-		}
-	}
-	// Try TOML (try before YAML since YAML is more permissive)
-	var tomlObj any
-	if err := toml.Unmarshal(data, &tomlObj); err == nil {
-		// Convert TOML to JSON, then parse
-		jsonData, err := json.Marshal(tomlObj)
-		if err == nil {
-			if result, err := GetScmOperationRecordGroupCountsRequestFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try YAML
-	var yamlObj any
-	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
-		// Convert YAML to JSON, then parse
-		jsonData, err := json.Marshal(yamlObj)
-		if err == nil {
-			if result, err := GetScmOperationRecordGroupCountsRequestFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try binary protobuf
-	v := &GetScmOperationRecordGroupCountsRequest{}
-	if err := proto.Unmarshal(data, v); err == nil {
-		return v, nil
-	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse GetScmOperationRecordGroupCountsRequest: unsupported format or invalid data")
-}
-
-// GetScmOperationRecordGroupCountsRequestFromJSON creates GetScmOperationRecordGroupCountsRequest from JSON bytes.
-// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func GetScmOperationRecordGroupCountsRequestFromJSON(data []byte) (*GetScmOperationRecordGroupCountsRequest, error) {
-	// Unmarshal into helper struct with string enums
-	var raw getscmoperationrecordgroupcountsrequestJSON
-	if err := json.Unmarshal(data, &raw); err != nil {
-		// Fall back to protojson which handles proto3 JSON conventions
-		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &GetScmOperationRecordGroupCountsRequest{}
-		if pErr := protojson.Unmarshal(data, v); pErr != nil {
-			return nil, err
-		}
-		return v, nil
-	}
-	// Build result with parsed enums
-	result := &GetScmOperationRecordGroupCountsRequest{}
-	// Parse enum field: GroupBy
-	if raw.GroupBy != "" {
-		if parsed, err := ParseScmOperationRecordGroupField(raw.GroupBy); err == nil {
-			result.GroupBy = parsed
-		}
-	}
-	// Parse message field: TimeRange
-	if len(raw.TimeRange) > 0 {
-		parsed, err := TimeRangeFromJSON(raw.TimeRange)
-		if err == nil {
-			result.TimeRange = parsed
-		}
-	}
-	result.TraceId = raw.TraceId
-	result.Noop = raw.Noop
-	return result, nil
-}
-
-// GetScmOperationRecordGroupCountsRequestToYAML converts GetScmOperationRecordGroupCountsRequest to YAML bytes.
-// Converts to JSON first, then to YAML for proper protobuf handling.
-func GetScmOperationRecordGroupCountsRequestToYAML(v *GetScmOperationRecordGroupCountsRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getscmoperationrecordgroupcountsrequest is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := GetScmOperationRecordGroupCountsRequestToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to YAML, preserving integer precision
-	dec := json.NewDecoder(bytes.NewReader(jsonData))
-	dec.UseNumber()
-	var obj any
-	if err := dec.Decode(&obj); err != nil {
-		return nil, err
-	}
-	return yaml.Marshal(convertJSONNumbers(obj))
-}
-
-// GetScmOperationRecordGroupCountsRequestToTOML converts GetScmOperationRecordGroupCountsRequest to TOML bytes.
-// Converts to JSON first, then to TOML for proper protobuf handling.
-func GetScmOperationRecordGroupCountsRequestToTOML(v *GetScmOperationRecordGroupCountsRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getscmoperationrecordgroupcountsrequest is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := GetScmOperationRecordGroupCountsRequestToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to TOML
-	var obj any
-	if err := json.Unmarshal(jsonData, &obj); err != nil {
-		return nil, err
-	}
-	return toml.Marshal(obj)
-}
-
-// GetScmOperationRecordGroupCountsResponseJSON represents GetScmOperationRecordGroupCountsResponse in external JSON format (with string enums)
-// MARKER: JSON helper struct generated from serial.go
-type getscmoperationrecordgroupcountsresponseJSON struct {
-	Counts  []json.RawMessage `json:"counts,omitempty"`
-	TraceId string            `json:"trace_id,omitempty"`
-	Noop    bool              `json:"noop,omitempty"`
-}
-
-// GetScmOperationRecordGroupCountsResponseToJSON converts GetScmOperationRecordGroupCountsResponse to JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func GetScmOperationRecordGroupCountsResponseToJSON(v *GetScmOperationRecordGroupCountsResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getscmoperationrecordgroupcountsresponse is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := getscmoperationrecordgroupcountsresponseJSON{
-		Counts: func() []json.RawMessage {
-			if len(v.Counts) == 0 {
-				return nil
-			}
-			result := make([]json.RawMessage, 0, len(v.Counts))
-			for _, item := range v.Counts {
-				if item != nil {
-					if data, err := TimeseriesGroupCountToJSON(item); err == nil {
-						result = append(result, data)
-					}
-				}
-			}
-			return result
-		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
-	}
-	return json.Marshal(helper)
-}
-
-// GetScmOperationRecordGroupCountsResponseToJSONPretty converts GetScmOperationRecordGroupCountsResponse to indented JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func GetScmOperationRecordGroupCountsResponseToJSONPretty(v *GetScmOperationRecordGroupCountsResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getscmoperationrecordgroupcountsresponse is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := getscmoperationrecordgroupcountsresponseJSON{
-		Counts: func() []json.RawMessage {
-			if len(v.Counts) == 0 {
-				return nil
-			}
-			result := make([]json.RawMessage, 0, len(v.Counts))
-			for _, item := range v.Counts {
-				if item != nil {
-					if data, err := TimeseriesGroupCountToJSON(item); err == nil {
-						result = append(result, data)
-					}
-				}
-			}
-			return result
-		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
-	}
-	return json.MarshalIndent(helper, "", "  ")
-}
-
-// GetScmOperationRecordGroupCountsResponseFromBytes creates GetScmOperationRecordGroupCountsResponse from bytes, auto-detecting the format.
-// Supports JSON, YAML, TOML, and binary protobuf formats.
-func GetScmOperationRecordGroupCountsResponseFromBytes(data []byte) (*GetScmOperationRecordGroupCountsResponse, error) {
-	// Trim leading whitespace to check format
-	trimmed := bytes.TrimSpace(data)
-	if len(trimmed) == 0 {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
-	}
-	// Try JSON first (most common, starts with { or [)
-	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := GetScmOperationRecordGroupCountsResponseFromJSON(data); err == nil {
-			return result, nil
-		}
-	}
-	// Try TOML (try before YAML since YAML is more permissive)
-	var tomlObj any
-	if err := toml.Unmarshal(data, &tomlObj); err == nil {
-		// Convert TOML to JSON, then parse
-		jsonData, err := json.Marshal(tomlObj)
-		if err == nil {
-			if result, err := GetScmOperationRecordGroupCountsResponseFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try YAML
-	var yamlObj any
-	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
-		// Convert YAML to JSON, then parse
-		jsonData, err := json.Marshal(yamlObj)
-		if err == nil {
-			if result, err := GetScmOperationRecordGroupCountsResponseFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try binary protobuf
-	v := &GetScmOperationRecordGroupCountsResponse{}
-	if err := proto.Unmarshal(data, v); err == nil {
-		return v, nil
-	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse GetScmOperationRecordGroupCountsResponse: unsupported format or invalid data")
-}
-
-// GetScmOperationRecordGroupCountsResponseFromJSON creates GetScmOperationRecordGroupCountsResponse from JSON bytes.
-// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func GetScmOperationRecordGroupCountsResponseFromJSON(data []byte) (*GetScmOperationRecordGroupCountsResponse, error) {
-	// Unmarshal into helper struct with string enums
-	var raw getscmoperationrecordgroupcountsresponseJSON
-	if err := json.Unmarshal(data, &raw); err != nil {
-		// Fall back to protojson which handles proto3 JSON conventions
-		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &GetScmOperationRecordGroupCountsResponse{}
-		if pErr := protojson.Unmarshal(data, v); pErr != nil {
-			return nil, err
-		}
-		return v, nil
-	}
-	// Build result with parsed enums
-	result := &GetScmOperationRecordGroupCountsResponse{}
-	// Parse repeated message field: Counts
-	if len(raw.Counts) > 0 {
-		result.Counts = make([]*TimeseriesGroupCount, 0, len(raw.Counts))
-		for _, itemJSON := range raw.Counts {
-			if len(itemJSON) > 0 {
-				parsed, err := TimeseriesGroupCountFromJSON(itemJSON)
-				if err == nil {
-					result.Counts = append(result.Counts, parsed)
-				}
-			}
-		}
-	}
-	result.TraceId = raw.TraceId
-	result.Noop = raw.Noop
-	return result, nil
-}
-
-// GetScmOperationRecordGroupCountsResponseToYAML converts GetScmOperationRecordGroupCountsResponse to YAML bytes.
-// Converts to JSON first, then to YAML for proper protobuf handling.
-func GetScmOperationRecordGroupCountsResponseToYAML(v *GetScmOperationRecordGroupCountsResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getscmoperationrecordgroupcountsresponse is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := GetScmOperationRecordGroupCountsResponseToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to YAML, preserving integer precision
-	dec := json.NewDecoder(bytes.NewReader(jsonData))
-	dec.UseNumber()
-	var obj any
-	if err := dec.Decode(&obj); err != nil {
-		return nil, err
-	}
-	return yaml.Marshal(convertJSONNumbers(obj))
-}
-
-// GetScmOperationRecordGroupCountsResponseToTOML converts GetScmOperationRecordGroupCountsResponse to TOML bytes.
-// Converts to JSON first, then to TOML for proper protobuf handling.
-func GetScmOperationRecordGroupCountsResponseToTOML(v *GetScmOperationRecordGroupCountsResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "getscmoperationrecordgroupcountsresponse is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := GetScmOperationRecordGroupCountsResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -11687,650 +10130,6 @@ func GetToolUseRecordGroupCountsResponseToTOML(v *GetToolUseRecordGroupCountsRes
 	return toml.Marshal(obj)
 }
 
-// ListGitLabActivityRecordRequestJSON represents ListGitLabActivityRecordRequest in external JSON format (with string enums)
-// MARKER: JSON helper struct generated from serial.go
-type listgitlabactivityrecordrequestJSON struct {
-	TimeRange json.RawMessage `json:"time_range,omitempty"`
-	PageSize  int32           `json:"page_size,omitempty"`
-	PageToken string          `json:"page_token,omitempty"`
-	TraceId   string          `json:"trace_id,omitempty"`
-	Noop      bool            `json:"noop,omitempty"`
-}
-
-// ListGitLabActivityRecordRequestToJSON converts ListGitLabActivityRecordRequest to JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func ListGitLabActivityRecordRequestToJSON(v *ListGitLabActivityRecordRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listgitlabactivityrecordrequest is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := listgitlabactivityrecordrequestJSON{
-		TimeRange: func() json.RawMessage {
-			if v.TimeRange == nil {
-				return nil
-			}
-			data, _ := TimeRangeToJSON(v.TimeRange)
-			return data
-		}(),
-		PageSize:  v.PageSize,
-		PageToken: v.PageToken,
-		TraceId:   v.TraceId,
-		Noop:      v.Noop,
-	}
-	return json.Marshal(helper)
-}
-
-// ListGitLabActivityRecordRequestToJSONPretty converts ListGitLabActivityRecordRequest to indented JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func ListGitLabActivityRecordRequestToJSONPretty(v *ListGitLabActivityRecordRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listgitlabactivityrecordrequest is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := listgitlabactivityrecordrequestJSON{
-		TimeRange: func() json.RawMessage {
-			if v.TimeRange == nil {
-				return nil
-			}
-			data, _ := TimeRangeToJSON(v.TimeRange)
-			return data
-		}(),
-		PageSize:  v.PageSize,
-		PageToken: v.PageToken,
-		TraceId:   v.TraceId,
-		Noop:      v.Noop,
-	}
-	return json.MarshalIndent(helper, "", "  ")
-}
-
-// ListGitLabActivityRecordRequestFromBytes creates ListGitLabActivityRecordRequest from bytes, auto-detecting the format.
-// Supports JSON, YAML, TOML, and binary protobuf formats.
-func ListGitLabActivityRecordRequestFromBytes(data []byte) (*ListGitLabActivityRecordRequest, error) {
-	// Trim leading whitespace to check format
-	trimmed := bytes.TrimSpace(data)
-	if len(trimmed) == 0 {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
-	}
-	// Try JSON first (most common, starts with { or [)
-	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := ListGitLabActivityRecordRequestFromJSON(data); err == nil {
-			return result, nil
-		}
-	}
-	// Try TOML (try before YAML since YAML is more permissive)
-	var tomlObj any
-	if err := toml.Unmarshal(data, &tomlObj); err == nil {
-		// Convert TOML to JSON, then parse
-		jsonData, err := json.Marshal(tomlObj)
-		if err == nil {
-			if result, err := ListGitLabActivityRecordRequestFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try YAML
-	var yamlObj any
-	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
-		// Convert YAML to JSON, then parse
-		jsonData, err := json.Marshal(yamlObj)
-		if err == nil {
-			if result, err := ListGitLabActivityRecordRequestFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try binary protobuf
-	v := &ListGitLabActivityRecordRequest{}
-	if err := proto.Unmarshal(data, v); err == nil {
-		return v, nil
-	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse ListGitLabActivityRecordRequest: unsupported format or invalid data")
-}
-
-// ListGitLabActivityRecordRequestFromJSON creates ListGitLabActivityRecordRequest from JSON bytes.
-// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func ListGitLabActivityRecordRequestFromJSON(data []byte) (*ListGitLabActivityRecordRequest, error) {
-	// Unmarshal into helper struct with string enums
-	var raw listgitlabactivityrecordrequestJSON
-	if err := json.Unmarshal(data, &raw); err != nil {
-		// Fall back to protojson which handles proto3 JSON conventions
-		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &ListGitLabActivityRecordRequest{}
-		if pErr := protojson.Unmarshal(data, v); pErr != nil {
-			return nil, err
-		}
-		return v, nil
-	}
-	// Build result with parsed enums
-	result := &ListGitLabActivityRecordRequest{}
-	// Parse message field: TimeRange
-	if len(raw.TimeRange) > 0 {
-		parsed, err := TimeRangeFromJSON(raw.TimeRange)
-		if err == nil {
-			result.TimeRange = parsed
-		}
-	}
-	result.PageSize = raw.PageSize
-	result.PageToken = raw.PageToken
-	result.TraceId = raw.TraceId
-	result.Noop = raw.Noop
-	return result, nil
-}
-
-// ListGitLabActivityRecordRequestToYAML converts ListGitLabActivityRecordRequest to YAML bytes.
-// Converts to JSON first, then to YAML for proper protobuf handling.
-func ListGitLabActivityRecordRequestToYAML(v *ListGitLabActivityRecordRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listgitlabactivityrecordrequest is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := ListGitLabActivityRecordRequestToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to YAML, preserving integer precision
-	dec := json.NewDecoder(bytes.NewReader(jsonData))
-	dec.UseNumber()
-	var obj any
-	if err := dec.Decode(&obj); err != nil {
-		return nil, err
-	}
-	return yaml.Marshal(convertJSONNumbers(obj))
-}
-
-// ListGitLabActivityRecordRequestToTOML converts ListGitLabActivityRecordRequest to TOML bytes.
-// Converts to JSON first, then to TOML for proper protobuf handling.
-func ListGitLabActivityRecordRequestToTOML(v *ListGitLabActivityRecordRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listgitlabactivityrecordrequest is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := ListGitLabActivityRecordRequestToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to TOML
-	var obj any
-	if err := json.Unmarshal(jsonData, &obj); err != nil {
-		return nil, err
-	}
-	return toml.Marshal(obj)
-}
-
-// ListGitLabActivityRecordResponseJSON represents ListGitLabActivityRecordResponse in external JSON format (with string enums)
-// MARKER: JSON helper struct generated from serial.go
-type listgitlabactivityrecordresponseJSON struct {
-	RecordKeys    []string `json:"record_keys,omitempty"`
-	NextPageToken string   `json:"next_page_token,omitempty"`
-	TotalCount    int64    `json:"total_count,omitempty"`
-	TraceId       string   `json:"trace_id,omitempty"`
-	Noop          bool     `json:"noop,omitempty"`
-}
-
-// ListGitLabActivityRecordResponseToJSON converts ListGitLabActivityRecordResponse to JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func ListGitLabActivityRecordResponseToJSON(v *ListGitLabActivityRecordResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listgitlabactivityrecordresponse is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := listgitlabactivityrecordresponseJSON{
-		RecordKeys:    v.RecordKeys,
-		NextPageToken: v.NextPageToken,
-		TotalCount:    v.TotalCount,
-		TraceId:       v.TraceId,
-		Noop:          v.Noop,
-	}
-	return json.Marshal(helper)
-}
-
-// ListGitLabActivityRecordResponseToJSONPretty converts ListGitLabActivityRecordResponse to indented JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func ListGitLabActivityRecordResponseToJSONPretty(v *ListGitLabActivityRecordResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listgitlabactivityrecordresponse is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := listgitlabactivityrecordresponseJSON{
-		RecordKeys:    v.RecordKeys,
-		NextPageToken: v.NextPageToken,
-		TotalCount:    v.TotalCount,
-		TraceId:       v.TraceId,
-		Noop:          v.Noop,
-	}
-	return json.MarshalIndent(helper, "", "  ")
-}
-
-// ListGitLabActivityRecordResponseFromBytes creates ListGitLabActivityRecordResponse from bytes, auto-detecting the format.
-// Supports JSON, YAML, TOML, and binary protobuf formats.
-func ListGitLabActivityRecordResponseFromBytes(data []byte) (*ListGitLabActivityRecordResponse, error) {
-	// Trim leading whitespace to check format
-	trimmed := bytes.TrimSpace(data)
-	if len(trimmed) == 0 {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
-	}
-	// Try JSON first (most common, starts with { or [)
-	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := ListGitLabActivityRecordResponseFromJSON(data); err == nil {
-			return result, nil
-		}
-	}
-	// Try TOML (try before YAML since YAML is more permissive)
-	var tomlObj any
-	if err := toml.Unmarshal(data, &tomlObj); err == nil {
-		// Convert TOML to JSON, then parse
-		jsonData, err := json.Marshal(tomlObj)
-		if err == nil {
-			if result, err := ListGitLabActivityRecordResponseFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try YAML
-	var yamlObj any
-	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
-		// Convert YAML to JSON, then parse
-		jsonData, err := json.Marshal(yamlObj)
-		if err == nil {
-			if result, err := ListGitLabActivityRecordResponseFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try binary protobuf
-	v := &ListGitLabActivityRecordResponse{}
-	if err := proto.Unmarshal(data, v); err == nil {
-		return v, nil
-	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse ListGitLabActivityRecordResponse: unsupported format or invalid data")
-}
-
-// ListGitLabActivityRecordResponseFromJSON creates ListGitLabActivityRecordResponse from JSON bytes.
-// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func ListGitLabActivityRecordResponseFromJSON(data []byte) (*ListGitLabActivityRecordResponse, error) {
-	// Unmarshal into helper struct with string enums
-	var raw listgitlabactivityrecordresponseJSON
-	if err := json.Unmarshal(data, &raw); err != nil {
-		// Fall back to protojson which handles proto3 JSON conventions
-		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &ListGitLabActivityRecordResponse{}
-		if pErr := protojson.Unmarshal(data, v); pErr != nil {
-			return nil, err
-		}
-		return v, nil
-	}
-	// Build result with parsed enums
-	result := &ListGitLabActivityRecordResponse{}
-	result.RecordKeys = raw.RecordKeys
-	result.NextPageToken = raw.NextPageToken
-	result.TotalCount = raw.TotalCount
-	result.TraceId = raw.TraceId
-	result.Noop = raw.Noop
-	return result, nil
-}
-
-// ListGitLabActivityRecordResponseToYAML converts ListGitLabActivityRecordResponse to YAML bytes.
-// Converts to JSON first, then to YAML for proper protobuf handling.
-func ListGitLabActivityRecordResponseToYAML(v *ListGitLabActivityRecordResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listgitlabactivityrecordresponse is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := ListGitLabActivityRecordResponseToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to YAML, preserving integer precision
-	dec := json.NewDecoder(bytes.NewReader(jsonData))
-	dec.UseNumber()
-	var obj any
-	if err := dec.Decode(&obj); err != nil {
-		return nil, err
-	}
-	return yaml.Marshal(convertJSONNumbers(obj))
-}
-
-// ListGitLabActivityRecordResponseToTOML converts ListGitLabActivityRecordResponse to TOML bytes.
-// Converts to JSON first, then to TOML for proper protobuf handling.
-func ListGitLabActivityRecordResponseToTOML(v *ListGitLabActivityRecordResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listgitlabactivityrecordresponse is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := ListGitLabActivityRecordResponseToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to TOML
-	var obj any
-	if err := json.Unmarshal(jsonData, &obj); err != nil {
-		return nil, err
-	}
-	return toml.Marshal(obj)
-}
-
-// ListLlmCallRecordRequestJSON represents ListLlmCallRecordRequest in external JSON format (with string enums)
-// MARKER: JSON helper struct generated from serial.go
-type listllmcallrecordrequestJSON struct {
-	TimeRange json.RawMessage `json:"time_range,omitempty"`
-	PageSize  int32           `json:"page_size,omitempty"`
-	PageToken string          `json:"page_token,omitempty"`
-	TraceId   string          `json:"trace_id,omitempty"`
-	Noop      bool            `json:"noop,omitempty"`
-}
-
-// ListLlmCallRecordRequestToJSON converts ListLlmCallRecordRequest to JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func ListLlmCallRecordRequestToJSON(v *ListLlmCallRecordRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listllmcallrecordrequest is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := listllmcallrecordrequestJSON{
-		TimeRange: func() json.RawMessage {
-			if v.TimeRange == nil {
-				return nil
-			}
-			data, _ := TimeRangeToJSON(v.TimeRange)
-			return data
-		}(),
-		PageSize:  v.PageSize,
-		PageToken: v.PageToken,
-		TraceId:   v.TraceId,
-		Noop:      v.Noop,
-	}
-	return json.Marshal(helper)
-}
-
-// ListLlmCallRecordRequestToJSONPretty converts ListLlmCallRecordRequest to indented JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func ListLlmCallRecordRequestToJSONPretty(v *ListLlmCallRecordRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listllmcallrecordrequest is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := listllmcallrecordrequestJSON{
-		TimeRange: func() json.RawMessage {
-			if v.TimeRange == nil {
-				return nil
-			}
-			data, _ := TimeRangeToJSON(v.TimeRange)
-			return data
-		}(),
-		PageSize:  v.PageSize,
-		PageToken: v.PageToken,
-		TraceId:   v.TraceId,
-		Noop:      v.Noop,
-	}
-	return json.MarshalIndent(helper, "", "  ")
-}
-
-// ListLlmCallRecordRequestFromBytes creates ListLlmCallRecordRequest from bytes, auto-detecting the format.
-// Supports JSON, YAML, TOML, and binary protobuf formats.
-func ListLlmCallRecordRequestFromBytes(data []byte) (*ListLlmCallRecordRequest, error) {
-	// Trim leading whitespace to check format
-	trimmed := bytes.TrimSpace(data)
-	if len(trimmed) == 0 {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
-	}
-	// Try JSON first (most common, starts with { or [)
-	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := ListLlmCallRecordRequestFromJSON(data); err == nil {
-			return result, nil
-		}
-	}
-	// Try TOML (try before YAML since YAML is more permissive)
-	var tomlObj any
-	if err := toml.Unmarshal(data, &tomlObj); err == nil {
-		// Convert TOML to JSON, then parse
-		jsonData, err := json.Marshal(tomlObj)
-		if err == nil {
-			if result, err := ListLlmCallRecordRequestFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try YAML
-	var yamlObj any
-	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
-		// Convert YAML to JSON, then parse
-		jsonData, err := json.Marshal(yamlObj)
-		if err == nil {
-			if result, err := ListLlmCallRecordRequestFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try binary protobuf
-	v := &ListLlmCallRecordRequest{}
-	if err := proto.Unmarshal(data, v); err == nil {
-		return v, nil
-	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse ListLlmCallRecordRequest: unsupported format or invalid data")
-}
-
-// ListLlmCallRecordRequestFromJSON creates ListLlmCallRecordRequest from JSON bytes.
-// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func ListLlmCallRecordRequestFromJSON(data []byte) (*ListLlmCallRecordRequest, error) {
-	// Unmarshal into helper struct with string enums
-	var raw listllmcallrecordrequestJSON
-	if err := json.Unmarshal(data, &raw); err != nil {
-		// Fall back to protojson which handles proto3 JSON conventions
-		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &ListLlmCallRecordRequest{}
-		if pErr := protojson.Unmarshal(data, v); pErr != nil {
-			return nil, err
-		}
-		return v, nil
-	}
-	// Build result with parsed enums
-	result := &ListLlmCallRecordRequest{}
-	// Parse message field: TimeRange
-	if len(raw.TimeRange) > 0 {
-		parsed, err := TimeRangeFromJSON(raw.TimeRange)
-		if err == nil {
-			result.TimeRange = parsed
-		}
-	}
-	result.PageSize = raw.PageSize
-	result.PageToken = raw.PageToken
-	result.TraceId = raw.TraceId
-	result.Noop = raw.Noop
-	return result, nil
-}
-
-// ListLlmCallRecordRequestToYAML converts ListLlmCallRecordRequest to YAML bytes.
-// Converts to JSON first, then to YAML for proper protobuf handling.
-func ListLlmCallRecordRequestToYAML(v *ListLlmCallRecordRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listllmcallrecordrequest is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := ListLlmCallRecordRequestToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to YAML, preserving integer precision
-	dec := json.NewDecoder(bytes.NewReader(jsonData))
-	dec.UseNumber()
-	var obj any
-	if err := dec.Decode(&obj); err != nil {
-		return nil, err
-	}
-	return yaml.Marshal(convertJSONNumbers(obj))
-}
-
-// ListLlmCallRecordRequestToTOML converts ListLlmCallRecordRequest to TOML bytes.
-// Converts to JSON first, then to TOML for proper protobuf handling.
-func ListLlmCallRecordRequestToTOML(v *ListLlmCallRecordRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listllmcallrecordrequest is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := ListLlmCallRecordRequestToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to TOML
-	var obj any
-	if err := json.Unmarshal(jsonData, &obj); err != nil {
-		return nil, err
-	}
-	return toml.Marshal(obj)
-}
-
-// ListLlmCallRecordResponseJSON represents ListLlmCallRecordResponse in external JSON format (with string enums)
-// MARKER: JSON helper struct generated from serial.go
-type listllmcallrecordresponseJSON struct {
-	RecordKeys    []string `json:"record_keys,omitempty"`
-	NextPageToken string   `json:"next_page_token,omitempty"`
-	TotalCount    int64    `json:"total_count,omitempty"`
-	TraceId       string   `json:"trace_id,omitempty"`
-	Noop          bool     `json:"noop,omitempty"`
-}
-
-// ListLlmCallRecordResponseToJSON converts ListLlmCallRecordResponse to JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func ListLlmCallRecordResponseToJSON(v *ListLlmCallRecordResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listllmcallrecordresponse is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := listllmcallrecordresponseJSON{
-		RecordKeys:    v.RecordKeys,
-		NextPageToken: v.NextPageToken,
-		TotalCount:    v.TotalCount,
-		TraceId:       v.TraceId,
-		Noop:          v.Noop,
-	}
-	return json.Marshal(helper)
-}
-
-// ListLlmCallRecordResponseToJSONPretty converts ListLlmCallRecordResponse to indented JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func ListLlmCallRecordResponseToJSONPretty(v *ListLlmCallRecordResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listllmcallrecordresponse is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := listllmcallrecordresponseJSON{
-		RecordKeys:    v.RecordKeys,
-		NextPageToken: v.NextPageToken,
-		TotalCount:    v.TotalCount,
-		TraceId:       v.TraceId,
-		Noop:          v.Noop,
-	}
-	return json.MarshalIndent(helper, "", "  ")
-}
-
-// ListLlmCallRecordResponseFromBytes creates ListLlmCallRecordResponse from bytes, auto-detecting the format.
-// Supports JSON, YAML, TOML, and binary protobuf formats.
-func ListLlmCallRecordResponseFromBytes(data []byte) (*ListLlmCallRecordResponse, error) {
-	// Trim leading whitespace to check format
-	trimmed := bytes.TrimSpace(data)
-	if len(trimmed) == 0 {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
-	}
-	// Try JSON first (most common, starts with { or [)
-	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := ListLlmCallRecordResponseFromJSON(data); err == nil {
-			return result, nil
-		}
-	}
-	// Try TOML (try before YAML since YAML is more permissive)
-	var tomlObj any
-	if err := toml.Unmarshal(data, &tomlObj); err == nil {
-		// Convert TOML to JSON, then parse
-		jsonData, err := json.Marshal(tomlObj)
-		if err == nil {
-			if result, err := ListLlmCallRecordResponseFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try YAML
-	var yamlObj any
-	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
-		// Convert YAML to JSON, then parse
-		jsonData, err := json.Marshal(yamlObj)
-		if err == nil {
-			if result, err := ListLlmCallRecordResponseFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try binary protobuf
-	v := &ListLlmCallRecordResponse{}
-	if err := proto.Unmarshal(data, v); err == nil {
-		return v, nil
-	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse ListLlmCallRecordResponse: unsupported format or invalid data")
-}
-
-// ListLlmCallRecordResponseFromJSON creates ListLlmCallRecordResponse from JSON bytes.
-// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func ListLlmCallRecordResponseFromJSON(data []byte) (*ListLlmCallRecordResponse, error) {
-	// Unmarshal into helper struct with string enums
-	var raw listllmcallrecordresponseJSON
-	if err := json.Unmarshal(data, &raw); err != nil {
-		// Fall back to protojson which handles proto3 JSON conventions
-		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &ListLlmCallRecordResponse{}
-		if pErr := protojson.Unmarshal(data, v); pErr != nil {
-			return nil, err
-		}
-		return v, nil
-	}
-	// Build result with parsed enums
-	result := &ListLlmCallRecordResponse{}
-	result.RecordKeys = raw.RecordKeys
-	result.NextPageToken = raw.NextPageToken
-	result.TotalCount = raw.TotalCount
-	result.TraceId = raw.TraceId
-	result.Noop = raw.Noop
-	return result, nil
-}
-
-// ListLlmCallRecordResponseToYAML converts ListLlmCallRecordResponse to YAML bytes.
-// Converts to JSON first, then to YAML for proper protobuf handling.
-func ListLlmCallRecordResponseToYAML(v *ListLlmCallRecordResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listllmcallrecordresponse is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := ListLlmCallRecordResponseToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to YAML, preserving integer precision
-	dec := json.NewDecoder(bytes.NewReader(jsonData))
-	dec.UseNumber()
-	var obj any
-	if err := dec.Decode(&obj); err != nil {
-		return nil, err
-	}
-	return yaml.Marshal(convertJSONNumbers(obj))
-}
-
-// ListLlmCallRecordResponseToTOML converts ListLlmCallRecordResponse to TOML bytes.
-// Converts to JSON first, then to TOML for proper protobuf handling.
-func ListLlmCallRecordResponseToTOML(v *ListLlmCallRecordResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listllmcallrecordresponse is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := ListLlmCallRecordResponseToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to TOML
-	var obj any
-	if err := json.Unmarshal(jsonData, &obj); err != nil {
-		return nil, err
-	}
-	return toml.Marshal(obj)
-}
-
 // ListPromptRecordRequestJSON represents ListPromptRecordRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type listpromptrecordrequestJSON struct {
@@ -12642,328 +10441,6 @@ func ListPromptRecordResponseToTOML(v *ListPromptRecordResponse) ([]byte, error)
 	}
 	// Convert to JSON first
 	jsonData, err := ListPromptRecordResponseToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to TOML
-	var obj any
-	if err := json.Unmarshal(jsonData, &obj); err != nil {
-		return nil, err
-	}
-	return toml.Marshal(obj)
-}
-
-// ListScmOperationRecordRequestJSON represents ListScmOperationRecordRequest in external JSON format (with string enums)
-// MARKER: JSON helper struct generated from serial.go
-type listscmoperationrecordrequestJSON struct {
-	TimeRange json.RawMessage `json:"time_range,omitempty"`
-	PageSize  int32           `json:"page_size,omitempty"`
-	PageToken string          `json:"page_token,omitempty"`
-	TraceId   string          `json:"trace_id,omitempty"`
-	Noop      bool            `json:"noop,omitempty"`
-}
-
-// ListScmOperationRecordRequestToJSON converts ListScmOperationRecordRequest to JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func ListScmOperationRecordRequestToJSON(v *ListScmOperationRecordRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listscmoperationrecordrequest is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := listscmoperationrecordrequestJSON{
-		TimeRange: func() json.RawMessage {
-			if v.TimeRange == nil {
-				return nil
-			}
-			data, _ := TimeRangeToJSON(v.TimeRange)
-			return data
-		}(),
-		PageSize:  v.PageSize,
-		PageToken: v.PageToken,
-		TraceId:   v.TraceId,
-		Noop:      v.Noop,
-	}
-	return json.Marshal(helper)
-}
-
-// ListScmOperationRecordRequestToJSONPretty converts ListScmOperationRecordRequest to indented JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func ListScmOperationRecordRequestToJSONPretty(v *ListScmOperationRecordRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listscmoperationrecordrequest is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := listscmoperationrecordrequestJSON{
-		TimeRange: func() json.RawMessage {
-			if v.TimeRange == nil {
-				return nil
-			}
-			data, _ := TimeRangeToJSON(v.TimeRange)
-			return data
-		}(),
-		PageSize:  v.PageSize,
-		PageToken: v.PageToken,
-		TraceId:   v.TraceId,
-		Noop:      v.Noop,
-	}
-	return json.MarshalIndent(helper, "", "  ")
-}
-
-// ListScmOperationRecordRequestFromBytes creates ListScmOperationRecordRequest from bytes, auto-detecting the format.
-// Supports JSON, YAML, TOML, and binary protobuf formats.
-func ListScmOperationRecordRequestFromBytes(data []byte) (*ListScmOperationRecordRequest, error) {
-	// Trim leading whitespace to check format
-	trimmed := bytes.TrimSpace(data)
-	if len(trimmed) == 0 {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
-	}
-	// Try JSON first (most common, starts with { or [)
-	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := ListScmOperationRecordRequestFromJSON(data); err == nil {
-			return result, nil
-		}
-	}
-	// Try TOML (try before YAML since YAML is more permissive)
-	var tomlObj any
-	if err := toml.Unmarshal(data, &tomlObj); err == nil {
-		// Convert TOML to JSON, then parse
-		jsonData, err := json.Marshal(tomlObj)
-		if err == nil {
-			if result, err := ListScmOperationRecordRequestFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try YAML
-	var yamlObj any
-	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
-		// Convert YAML to JSON, then parse
-		jsonData, err := json.Marshal(yamlObj)
-		if err == nil {
-			if result, err := ListScmOperationRecordRequestFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try binary protobuf
-	v := &ListScmOperationRecordRequest{}
-	if err := proto.Unmarshal(data, v); err == nil {
-		return v, nil
-	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse ListScmOperationRecordRequest: unsupported format or invalid data")
-}
-
-// ListScmOperationRecordRequestFromJSON creates ListScmOperationRecordRequest from JSON bytes.
-// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func ListScmOperationRecordRequestFromJSON(data []byte) (*ListScmOperationRecordRequest, error) {
-	// Unmarshal into helper struct with string enums
-	var raw listscmoperationrecordrequestJSON
-	if err := json.Unmarshal(data, &raw); err != nil {
-		// Fall back to protojson which handles proto3 JSON conventions
-		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &ListScmOperationRecordRequest{}
-		if pErr := protojson.Unmarshal(data, v); pErr != nil {
-			return nil, err
-		}
-		return v, nil
-	}
-	// Build result with parsed enums
-	result := &ListScmOperationRecordRequest{}
-	// Parse message field: TimeRange
-	if len(raw.TimeRange) > 0 {
-		parsed, err := TimeRangeFromJSON(raw.TimeRange)
-		if err == nil {
-			result.TimeRange = parsed
-		}
-	}
-	result.PageSize = raw.PageSize
-	result.PageToken = raw.PageToken
-	result.TraceId = raw.TraceId
-	result.Noop = raw.Noop
-	return result, nil
-}
-
-// ListScmOperationRecordRequestToYAML converts ListScmOperationRecordRequest to YAML bytes.
-// Converts to JSON first, then to YAML for proper protobuf handling.
-func ListScmOperationRecordRequestToYAML(v *ListScmOperationRecordRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listscmoperationrecordrequest is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := ListScmOperationRecordRequestToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to YAML, preserving integer precision
-	dec := json.NewDecoder(bytes.NewReader(jsonData))
-	dec.UseNumber()
-	var obj any
-	if err := dec.Decode(&obj); err != nil {
-		return nil, err
-	}
-	return yaml.Marshal(convertJSONNumbers(obj))
-}
-
-// ListScmOperationRecordRequestToTOML converts ListScmOperationRecordRequest to TOML bytes.
-// Converts to JSON first, then to TOML for proper protobuf handling.
-func ListScmOperationRecordRequestToTOML(v *ListScmOperationRecordRequest) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listscmoperationrecordrequest is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := ListScmOperationRecordRequestToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to TOML
-	var obj any
-	if err := json.Unmarshal(jsonData, &obj); err != nil {
-		return nil, err
-	}
-	return toml.Marshal(obj)
-}
-
-// ListScmOperationRecordResponseJSON represents ListScmOperationRecordResponse in external JSON format (with string enums)
-// MARKER: JSON helper struct generated from serial.go
-type listscmoperationrecordresponseJSON struct {
-	RecordKeys    []string `json:"record_keys,omitempty"`
-	NextPageToken string   `json:"next_page_token,omitempty"`
-	TotalCount    int64    `json:"total_count,omitempty"`
-	TraceId       string   `json:"trace_id,omitempty"`
-	Noop          bool     `json:"noop,omitempty"`
-}
-
-// ListScmOperationRecordResponseToJSON converts ListScmOperationRecordResponse to JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func ListScmOperationRecordResponseToJSON(v *ListScmOperationRecordResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listscmoperationrecordresponse is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := listscmoperationrecordresponseJSON{
-		RecordKeys:    v.RecordKeys,
-		NextPageToken: v.NextPageToken,
-		TotalCount:    v.TotalCount,
-		TraceId:       v.TraceId,
-		Noop:          v.Noop,
-	}
-	return json.Marshal(helper)
-}
-
-// ListScmOperationRecordResponseToJSONPretty converts ListScmOperationRecordResponse to indented JSON bytes.
-// Uses custom JSON helper for friendly enum strings and proper int64 handling.
-func ListScmOperationRecordResponseToJSONPretty(v *ListScmOperationRecordResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listscmoperationrecordresponse is nil")
-	}
-	// Convert to JSON helper struct with string enums
-	helper := listscmoperationrecordresponseJSON{
-		RecordKeys:    v.RecordKeys,
-		NextPageToken: v.NextPageToken,
-		TotalCount:    v.TotalCount,
-		TraceId:       v.TraceId,
-		Noop:          v.Noop,
-	}
-	return json.MarshalIndent(helper, "", "  ")
-}
-
-// ListScmOperationRecordResponseFromBytes creates ListScmOperationRecordResponse from bytes, auto-detecting the format.
-// Supports JSON, YAML, TOML, and binary protobuf formats.
-func ListScmOperationRecordResponseFromBytes(data []byte) (*ListScmOperationRecordResponse, error) {
-	// Trim leading whitespace to check format
-	trimmed := bytes.TrimSpace(data)
-	if len(trimmed) == 0 {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
-	}
-	// Try JSON first (most common, starts with { or [)
-	if trimmed[0] == '{' || trimmed[0] == '[' {
-		if result, err := ListScmOperationRecordResponseFromJSON(data); err == nil {
-			return result, nil
-		}
-	}
-	// Try TOML (try before YAML since YAML is more permissive)
-	var tomlObj any
-	if err := toml.Unmarshal(data, &tomlObj); err == nil {
-		// Convert TOML to JSON, then parse
-		jsonData, err := json.Marshal(tomlObj)
-		if err == nil {
-			if result, err := ListScmOperationRecordResponseFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try YAML
-	var yamlObj any
-	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
-		// Convert YAML to JSON, then parse
-		jsonData, err := json.Marshal(yamlObj)
-		if err == nil {
-			if result, err := ListScmOperationRecordResponseFromJSON(jsonData); err == nil {
-				return result, nil
-			}
-		}
-	}
-	// Try binary protobuf
-	v := &ListScmOperationRecordResponse{}
-	if err := proto.Unmarshal(data, v); err == nil {
-		return v, nil
-	}
-	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse ListScmOperationRecordResponse: unsupported format or invalid data")
-}
-
-// ListScmOperationRecordResponseFromJSON creates ListScmOperationRecordResponse from JSON bytes.
-// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
-func ListScmOperationRecordResponseFromJSON(data []byte) (*ListScmOperationRecordResponse, error) {
-	// Unmarshal into helper struct with string enums
-	var raw listscmoperationrecordresponseJSON
-	if err := json.Unmarshal(data, &raw); err != nil {
-		// Fall back to protojson which handles proto3 JSON conventions
-		// (string-encoded int64/uint64, standard enum names, etc.)
-		v := &ListScmOperationRecordResponse{}
-		if pErr := protojson.Unmarshal(data, v); pErr != nil {
-			return nil, err
-		}
-		return v, nil
-	}
-	// Build result with parsed enums
-	result := &ListScmOperationRecordResponse{}
-	result.RecordKeys = raw.RecordKeys
-	result.NextPageToken = raw.NextPageToken
-	result.TotalCount = raw.TotalCount
-	result.TraceId = raw.TraceId
-	result.Noop = raw.Noop
-	return result, nil
-}
-
-// ListScmOperationRecordResponseToYAML converts ListScmOperationRecordResponse to YAML bytes.
-// Converts to JSON first, then to YAML for proper protobuf handling.
-func ListScmOperationRecordResponseToYAML(v *ListScmOperationRecordResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listscmoperationrecordresponse is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := ListScmOperationRecordResponseToJSON(v)
-	if err != nil {
-		return nil, err
-	}
-	// Convert JSON to YAML, preserving integer precision
-	dec := json.NewDecoder(bytes.NewReader(jsonData))
-	dec.UseNumber()
-	var obj any
-	if err := dec.Decode(&obj); err != nil {
-		return nil, err
-	}
-	return yaml.Marshal(convertJSONNumbers(obj))
-}
-
-// ListScmOperationRecordResponseToTOML converts ListScmOperationRecordResponse to TOML bytes.
-// Converts to JSON first, then to TOML for proper protobuf handling.
-func ListScmOperationRecordResponseToTOML(v *ListScmOperationRecordResponse) ([]byte, error) {
-	if v == nil {
-		return nil, protoerrors.NewErrMissingInvalidData(nil, "listscmoperationrecordresponse is nil")
-	}
-	// Convert to JSON first
-	jsonData, err := ListScmOperationRecordResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -16124,150 +13601,6 @@ func TimeseriesGroupCountFromEnvVar(env map[string]string) (*TimeseriesGroupCoun
 	return result, nil
 }
 
-// GetGitLabActivityRecordGroupCountsRequestToEnvVar converts GetGitLabActivityRecordGroupCountsRequest to environment variable key-value pairs.
-func GetGitLabActivityRecordGroupCountsRequestToEnvVar(v *GetGitLabActivityRecordGroupCountsRequest) map[string]string {
-	if v == nil {
-		return nil
-	}
-	result := make(map[string]string)
-	result["PROTO_SERVICES_TIMEDB_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_REQUEST_GROUP_BY"] = GitLabActivityRecordGroupFieldToString(v.GroupBy)
-	if v.TimeRange != nil {
-		for k, val := range TimeRangeToEnvVar(v.TimeRange) {
-			result[k] = val
-		}
-	}
-	result["PROTO_SERVICES_TIMEDB_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_SERVICES_TIMEDB_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
-	return result
-}
-
-// GetGitLabActivityRecordGroupCountsRequestFromEnvVar creates GetGitLabActivityRecordGroupCountsRequest from environment variable key-value pairs.
-func GetGitLabActivityRecordGroupCountsRequestFromEnvVar(env map[string]string) (*GetGitLabActivityRecordGroupCountsRequest, error) {
-	result := &GetGitLabActivityRecordGroupCountsRequest{}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_REQUEST_GROUP_BY"]; ok && val != "" {
-		parsed, err := ParseGitLabActivityRecordGroupField(val)
-		if err != nil {
-			return nil, err
-		}
-		result.GroupBy = parsed
-	}
-	if sub, err := TimeRangeFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.TimeRange = sub
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_REQUEST_TRACE_ID"]; ok && val != "" {
-		result.TraceId = val
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_REQUEST_NOOP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Noop = parsed
-	}
-	return result, nil
-}
-
-// GetGitLabActivityRecordGroupCountsResponseToEnvVar converts GetGitLabActivityRecordGroupCountsResponse to environment variable key-value pairs.
-func GetGitLabActivityRecordGroupCountsResponseToEnvVar(v *GetGitLabActivityRecordGroupCountsResponse) map[string]string {
-	if v == nil {
-		return nil
-	}
-	result := make(map[string]string)
-	result["PROTO_SERVICES_TIMEDB_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_RESPONSE_TRACE_ID"] = v.TraceId
-	result["PROTO_SERVICES_TIMEDB_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
-	return result
-}
-
-// GetGitLabActivityRecordGroupCountsResponseFromEnvVar creates GetGitLabActivityRecordGroupCountsResponse from environment variable key-value pairs.
-func GetGitLabActivityRecordGroupCountsResponseFromEnvVar(env map[string]string) (*GetGitLabActivityRecordGroupCountsResponse, error) {
-	result := &GetGitLabActivityRecordGroupCountsResponse{}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_RESPONSE_TRACE_ID"]; ok && val != "" {
-		result.TraceId = val
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_GET_GIT_LAB_ACTIVITY_RECORD_GROUP_COUNTS_RESPONSE_NOOP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Noop = parsed
-	}
-	return result, nil
-}
-
-// GetLlmCallRecordGroupCountsRequestToEnvVar converts GetLlmCallRecordGroupCountsRequest to environment variable key-value pairs.
-func GetLlmCallRecordGroupCountsRequestToEnvVar(v *GetLlmCallRecordGroupCountsRequest) map[string]string {
-	if v == nil {
-		return nil
-	}
-	result := make(map[string]string)
-	result["PROTO_SERVICES_TIMEDB_GET_LLM_CALL_RECORD_GROUP_COUNTS_REQUEST_GROUP_BY"] = LlmCallRecordGroupFieldToString(v.GroupBy)
-	if v.TimeRange != nil {
-		for k, val := range TimeRangeToEnvVar(v.TimeRange) {
-			result[k] = val
-		}
-	}
-	result["PROTO_SERVICES_TIMEDB_GET_LLM_CALL_RECORD_GROUP_COUNTS_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_SERVICES_TIMEDB_GET_LLM_CALL_RECORD_GROUP_COUNTS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
-	return result
-}
-
-// GetLlmCallRecordGroupCountsRequestFromEnvVar creates GetLlmCallRecordGroupCountsRequest from environment variable key-value pairs.
-func GetLlmCallRecordGroupCountsRequestFromEnvVar(env map[string]string) (*GetLlmCallRecordGroupCountsRequest, error) {
-	result := &GetLlmCallRecordGroupCountsRequest{}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_GET_LLM_CALL_RECORD_GROUP_COUNTS_REQUEST_GROUP_BY"]; ok && val != "" {
-		parsed, err := ParseLlmCallRecordGroupField(val)
-		if err != nil {
-			return nil, err
-		}
-		result.GroupBy = parsed
-	}
-	if sub, err := TimeRangeFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.TimeRange = sub
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_GET_LLM_CALL_RECORD_GROUP_COUNTS_REQUEST_TRACE_ID"]; ok && val != "" {
-		result.TraceId = val
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_GET_LLM_CALL_RECORD_GROUP_COUNTS_REQUEST_NOOP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Noop = parsed
-	}
-	return result, nil
-}
-
-// GetLlmCallRecordGroupCountsResponseToEnvVar converts GetLlmCallRecordGroupCountsResponse to environment variable key-value pairs.
-func GetLlmCallRecordGroupCountsResponseToEnvVar(v *GetLlmCallRecordGroupCountsResponse) map[string]string {
-	if v == nil {
-		return nil
-	}
-	result := make(map[string]string)
-	result["PROTO_SERVICES_TIMEDB_GET_LLM_CALL_RECORD_GROUP_COUNTS_RESPONSE_TRACE_ID"] = v.TraceId
-	result["PROTO_SERVICES_TIMEDB_GET_LLM_CALL_RECORD_GROUP_COUNTS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
-	return result
-}
-
-// GetLlmCallRecordGroupCountsResponseFromEnvVar creates GetLlmCallRecordGroupCountsResponse from environment variable key-value pairs.
-func GetLlmCallRecordGroupCountsResponseFromEnvVar(env map[string]string) (*GetLlmCallRecordGroupCountsResponse, error) {
-	result := &GetLlmCallRecordGroupCountsResponse{}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_GET_LLM_CALL_RECORD_GROUP_COUNTS_RESPONSE_TRACE_ID"]; ok && val != "" {
-		result.TraceId = val
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_GET_LLM_CALL_RECORD_GROUP_COUNTS_RESPONSE_NOOP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Noop = parsed
-	}
-	return result, nil
-}
-
 // GetPromptRecordGroupCountsRequestToEnvVar converts GetPromptRecordGroupCountsRequest to environment variable key-value pairs.
 func GetPromptRecordGroupCountsRequestToEnvVar(v *GetPromptRecordGroupCountsRequest) map[string]string {
 	if v == nil {
@@ -16331,78 +13664,6 @@ func GetPromptRecordGroupCountsResponseFromEnvVar(env map[string]string) (*GetPr
 		result.TraceId = val
 	}
 	if val, ok := env["PROTO_SERVICES_TIMEDB_GET_PROMPT_RECORD_GROUP_COUNTS_RESPONSE_NOOP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Noop = parsed
-	}
-	return result, nil
-}
-
-// GetScmOperationRecordGroupCountsRequestToEnvVar converts GetScmOperationRecordGroupCountsRequest to environment variable key-value pairs.
-func GetScmOperationRecordGroupCountsRequestToEnvVar(v *GetScmOperationRecordGroupCountsRequest) map[string]string {
-	if v == nil {
-		return nil
-	}
-	result := make(map[string]string)
-	result["PROTO_SERVICES_TIMEDB_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_REQUEST_GROUP_BY"] = ScmOperationRecordGroupFieldToString(v.GroupBy)
-	if v.TimeRange != nil {
-		for k, val := range TimeRangeToEnvVar(v.TimeRange) {
-			result[k] = val
-		}
-	}
-	result["PROTO_SERVICES_TIMEDB_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_SERVICES_TIMEDB_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
-	return result
-}
-
-// GetScmOperationRecordGroupCountsRequestFromEnvVar creates GetScmOperationRecordGroupCountsRequest from environment variable key-value pairs.
-func GetScmOperationRecordGroupCountsRequestFromEnvVar(env map[string]string) (*GetScmOperationRecordGroupCountsRequest, error) {
-	result := &GetScmOperationRecordGroupCountsRequest{}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_REQUEST_GROUP_BY"]; ok && val != "" {
-		parsed, err := ParseScmOperationRecordGroupField(val)
-		if err != nil {
-			return nil, err
-		}
-		result.GroupBy = parsed
-	}
-	if sub, err := TimeRangeFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.TimeRange = sub
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_REQUEST_TRACE_ID"]; ok && val != "" {
-		result.TraceId = val
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_REQUEST_NOOP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Noop = parsed
-	}
-	return result, nil
-}
-
-// GetScmOperationRecordGroupCountsResponseToEnvVar converts GetScmOperationRecordGroupCountsResponse to environment variable key-value pairs.
-func GetScmOperationRecordGroupCountsResponseToEnvVar(v *GetScmOperationRecordGroupCountsResponse) map[string]string {
-	if v == nil {
-		return nil
-	}
-	result := make(map[string]string)
-	result["PROTO_SERVICES_TIMEDB_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_RESPONSE_TRACE_ID"] = v.TraceId
-	result["PROTO_SERVICES_TIMEDB_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
-	return result
-}
-
-// GetScmOperationRecordGroupCountsResponseFromEnvVar creates GetScmOperationRecordGroupCountsResponse from environment variable key-value pairs.
-func GetScmOperationRecordGroupCountsResponseFromEnvVar(env map[string]string) (*GetScmOperationRecordGroupCountsResponse, error) {
-	result := &GetScmOperationRecordGroupCountsResponse{}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_RESPONSE_TRACE_ID"]; ok && val != "" {
-		result.TraceId = val
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_GET_SCM_OPERATION_RECORD_GROUP_COUNTS_RESPONSE_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -16700,194 +13961,6 @@ func GetToolUseRecordGroupCountsResponseFromEnvVar(env map[string]string) (*GetT
 	return result, nil
 }
 
-// ListGitLabActivityRecordRequestToEnvVar converts ListGitLabActivityRecordRequest to environment variable key-value pairs.
-func ListGitLabActivityRecordRequestToEnvVar(v *ListGitLabActivityRecordRequest) map[string]string {
-	if v == nil {
-		return nil
-	}
-	result := make(map[string]string)
-	if v.TimeRange != nil {
-		for k, val := range TimeRangeToEnvVar(v.TimeRange) {
-			result[k] = val
-		}
-	}
-	result["PROTO_SERVICES_TIMEDB_LIST_GIT_LAB_ACTIVITY_RECORD_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
-	result["PROTO_SERVICES_TIMEDB_LIST_GIT_LAB_ACTIVITY_RECORD_REQUEST_PAGE_TOKEN"] = v.PageToken
-	result["PROTO_SERVICES_TIMEDB_LIST_GIT_LAB_ACTIVITY_RECORD_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_SERVICES_TIMEDB_LIST_GIT_LAB_ACTIVITY_RECORD_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
-	return result
-}
-
-// ListGitLabActivityRecordRequestFromEnvVar creates ListGitLabActivityRecordRequest from environment variable key-value pairs.
-func ListGitLabActivityRecordRequestFromEnvVar(env map[string]string) (*ListGitLabActivityRecordRequest, error) {
-	result := &ListGitLabActivityRecordRequest{}
-	if sub, err := TimeRangeFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.TimeRange = sub
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_GIT_LAB_ACTIVITY_RECORD_REQUEST_PAGE_SIZE"]; ok && val != "" {
-		parsed, err := strconv.ParseInt(val, 10, 32)
-		if err != nil {
-			return nil, err
-		}
-		result.PageSize = int32(parsed)
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_GIT_LAB_ACTIVITY_RECORD_REQUEST_PAGE_TOKEN"]; ok && val != "" {
-		result.PageToken = val
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_GIT_LAB_ACTIVITY_RECORD_REQUEST_TRACE_ID"]; ok && val != "" {
-		result.TraceId = val
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_GIT_LAB_ACTIVITY_RECORD_REQUEST_NOOP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Noop = parsed
-	}
-	return result, nil
-}
-
-// ListGitLabActivityRecordResponseToEnvVar converts ListGitLabActivityRecordResponse to environment variable key-value pairs.
-func ListGitLabActivityRecordResponseToEnvVar(v *ListGitLabActivityRecordResponse) map[string]string {
-	if v == nil {
-		return nil
-	}
-	result := make(map[string]string)
-	if len(v.RecordKeys) > 0 {
-		result["PROTO_SERVICES_TIMEDB_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE_RECORD_KEYS"] = strings.Join(v.RecordKeys, ",")
-	}
-	result["PROTO_SERVICES_TIMEDB_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
-	result["PROTO_SERVICES_TIMEDB_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
-	result["PROTO_SERVICES_TIMEDB_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE_TRACE_ID"] = v.TraceId
-	result["PROTO_SERVICES_TIMEDB_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
-	return result
-}
-
-// ListGitLabActivityRecordResponseFromEnvVar creates ListGitLabActivityRecordResponse from environment variable key-value pairs.
-func ListGitLabActivityRecordResponseFromEnvVar(env map[string]string) (*ListGitLabActivityRecordResponse, error) {
-	result := &ListGitLabActivityRecordResponse{}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE_RECORD_KEYS"]; ok && val != "" {
-		result.RecordKeys = strings.Split(val, ",")
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
-		result.NextPageToken = val
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
-		parsed, err := strconv.ParseInt(val, 10, 64)
-		if err != nil {
-			return nil, err
-		}
-		result.TotalCount = parsed
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE_TRACE_ID"]; ok && val != "" {
-		result.TraceId = val
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_GIT_LAB_ACTIVITY_RECORD_RESPONSE_NOOP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Noop = parsed
-	}
-	return result, nil
-}
-
-// ListLlmCallRecordRequestToEnvVar converts ListLlmCallRecordRequest to environment variable key-value pairs.
-func ListLlmCallRecordRequestToEnvVar(v *ListLlmCallRecordRequest) map[string]string {
-	if v == nil {
-		return nil
-	}
-	result := make(map[string]string)
-	if v.TimeRange != nil {
-		for k, val := range TimeRangeToEnvVar(v.TimeRange) {
-			result[k] = val
-		}
-	}
-	result["PROTO_SERVICES_TIMEDB_LIST_LLM_CALL_RECORD_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
-	result["PROTO_SERVICES_TIMEDB_LIST_LLM_CALL_RECORD_REQUEST_PAGE_TOKEN"] = v.PageToken
-	result["PROTO_SERVICES_TIMEDB_LIST_LLM_CALL_RECORD_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_SERVICES_TIMEDB_LIST_LLM_CALL_RECORD_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
-	return result
-}
-
-// ListLlmCallRecordRequestFromEnvVar creates ListLlmCallRecordRequest from environment variable key-value pairs.
-func ListLlmCallRecordRequestFromEnvVar(env map[string]string) (*ListLlmCallRecordRequest, error) {
-	result := &ListLlmCallRecordRequest{}
-	if sub, err := TimeRangeFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.TimeRange = sub
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_LLM_CALL_RECORD_REQUEST_PAGE_SIZE"]; ok && val != "" {
-		parsed, err := strconv.ParseInt(val, 10, 32)
-		if err != nil {
-			return nil, err
-		}
-		result.PageSize = int32(parsed)
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_LLM_CALL_RECORD_REQUEST_PAGE_TOKEN"]; ok && val != "" {
-		result.PageToken = val
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_LLM_CALL_RECORD_REQUEST_TRACE_ID"]; ok && val != "" {
-		result.TraceId = val
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_LLM_CALL_RECORD_REQUEST_NOOP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Noop = parsed
-	}
-	return result, nil
-}
-
-// ListLlmCallRecordResponseToEnvVar converts ListLlmCallRecordResponse to environment variable key-value pairs.
-func ListLlmCallRecordResponseToEnvVar(v *ListLlmCallRecordResponse) map[string]string {
-	if v == nil {
-		return nil
-	}
-	result := make(map[string]string)
-	if len(v.RecordKeys) > 0 {
-		result["PROTO_SERVICES_TIMEDB_LIST_LLM_CALL_RECORD_RESPONSE_RECORD_KEYS"] = strings.Join(v.RecordKeys, ",")
-	}
-	result["PROTO_SERVICES_TIMEDB_LIST_LLM_CALL_RECORD_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
-	result["PROTO_SERVICES_TIMEDB_LIST_LLM_CALL_RECORD_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
-	result["PROTO_SERVICES_TIMEDB_LIST_LLM_CALL_RECORD_RESPONSE_TRACE_ID"] = v.TraceId
-	result["PROTO_SERVICES_TIMEDB_LIST_LLM_CALL_RECORD_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
-	return result
-}
-
-// ListLlmCallRecordResponseFromEnvVar creates ListLlmCallRecordResponse from environment variable key-value pairs.
-func ListLlmCallRecordResponseFromEnvVar(env map[string]string) (*ListLlmCallRecordResponse, error) {
-	result := &ListLlmCallRecordResponse{}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_LLM_CALL_RECORD_RESPONSE_RECORD_KEYS"]; ok && val != "" {
-		result.RecordKeys = strings.Split(val, ",")
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_LLM_CALL_RECORD_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
-		result.NextPageToken = val
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_LLM_CALL_RECORD_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
-		parsed, err := strconv.ParseInt(val, 10, 64)
-		if err != nil {
-			return nil, err
-		}
-		result.TotalCount = parsed
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_LLM_CALL_RECORD_RESPONSE_TRACE_ID"]; ok && val != "" {
-		result.TraceId = val
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_LLM_CALL_RECORD_RESPONSE_NOOP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Noop = parsed
-	}
-	return result, nil
-}
-
 // ListPromptRecordRequestToEnvVar converts ListPromptRecordRequest to environment variable key-value pairs.
 func ListPromptRecordRequestToEnvVar(v *ListPromptRecordRequest) map[string]string {
 	if v == nil {
@@ -16973,100 +14046,6 @@ func ListPromptRecordResponseFromEnvVar(env map[string]string) (*ListPromptRecor
 		result.TraceId = val
 	}
 	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_PROMPT_RECORD_RESPONSE_NOOP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Noop = parsed
-	}
-	return result, nil
-}
-
-// ListScmOperationRecordRequestToEnvVar converts ListScmOperationRecordRequest to environment variable key-value pairs.
-func ListScmOperationRecordRequestToEnvVar(v *ListScmOperationRecordRequest) map[string]string {
-	if v == nil {
-		return nil
-	}
-	result := make(map[string]string)
-	if v.TimeRange != nil {
-		for k, val := range TimeRangeToEnvVar(v.TimeRange) {
-			result[k] = val
-		}
-	}
-	result["PROTO_SERVICES_TIMEDB_LIST_SCM_OPERATION_RECORD_REQUEST_PAGE_SIZE"] = strconv.FormatInt(int64(v.PageSize), 10)
-	result["PROTO_SERVICES_TIMEDB_LIST_SCM_OPERATION_RECORD_REQUEST_PAGE_TOKEN"] = v.PageToken
-	result["PROTO_SERVICES_TIMEDB_LIST_SCM_OPERATION_RECORD_REQUEST_TRACE_ID"] = v.TraceId
-	result["PROTO_SERVICES_TIMEDB_LIST_SCM_OPERATION_RECORD_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
-	return result
-}
-
-// ListScmOperationRecordRequestFromEnvVar creates ListScmOperationRecordRequest from environment variable key-value pairs.
-func ListScmOperationRecordRequestFromEnvVar(env map[string]string) (*ListScmOperationRecordRequest, error) {
-	result := &ListScmOperationRecordRequest{}
-	if sub, err := TimeRangeFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.TimeRange = sub
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_SCM_OPERATION_RECORD_REQUEST_PAGE_SIZE"]; ok && val != "" {
-		parsed, err := strconv.ParseInt(val, 10, 32)
-		if err != nil {
-			return nil, err
-		}
-		result.PageSize = int32(parsed)
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_SCM_OPERATION_RECORD_REQUEST_PAGE_TOKEN"]; ok && val != "" {
-		result.PageToken = val
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_SCM_OPERATION_RECORD_REQUEST_TRACE_ID"]; ok && val != "" {
-		result.TraceId = val
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_SCM_OPERATION_RECORD_REQUEST_NOOP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Noop = parsed
-	}
-	return result, nil
-}
-
-// ListScmOperationRecordResponseToEnvVar converts ListScmOperationRecordResponse to environment variable key-value pairs.
-func ListScmOperationRecordResponseToEnvVar(v *ListScmOperationRecordResponse) map[string]string {
-	if v == nil {
-		return nil
-	}
-	result := make(map[string]string)
-	if len(v.RecordKeys) > 0 {
-		result["PROTO_SERVICES_TIMEDB_LIST_SCM_OPERATION_RECORD_RESPONSE_RECORD_KEYS"] = strings.Join(v.RecordKeys, ",")
-	}
-	result["PROTO_SERVICES_TIMEDB_LIST_SCM_OPERATION_RECORD_RESPONSE_NEXT_PAGE_TOKEN"] = v.NextPageToken
-	result["PROTO_SERVICES_TIMEDB_LIST_SCM_OPERATION_RECORD_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(v.TotalCount, 10)
-	result["PROTO_SERVICES_TIMEDB_LIST_SCM_OPERATION_RECORD_RESPONSE_TRACE_ID"] = v.TraceId
-	result["PROTO_SERVICES_TIMEDB_LIST_SCM_OPERATION_RECORD_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
-	return result
-}
-
-// ListScmOperationRecordResponseFromEnvVar creates ListScmOperationRecordResponse from environment variable key-value pairs.
-func ListScmOperationRecordResponseFromEnvVar(env map[string]string) (*ListScmOperationRecordResponse, error) {
-	result := &ListScmOperationRecordResponse{}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_SCM_OPERATION_RECORD_RESPONSE_RECORD_KEYS"]; ok && val != "" {
-		result.RecordKeys = strings.Split(val, ",")
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_SCM_OPERATION_RECORD_RESPONSE_NEXT_PAGE_TOKEN"]; ok && val != "" {
-		result.NextPageToken = val
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_SCM_OPERATION_RECORD_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
-		parsed, err := strconv.ParseInt(val, 10, 64)
-		if err != nil {
-			return nil, err
-		}
-		result.TotalCount = parsed
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_SCM_OPERATION_RECORD_RESPONSE_TRACE_ID"]; ok && val != "" {
-		result.TraceId = val
-	}
-	if val, ok := env["PROTO_SERVICES_TIMEDB_LIST_SCM_OPERATION_RECORD_RESPONSE_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -18734,150 +15713,6 @@ func ValidateTimeseriesGroupCountWithDepth(m *TimeseriesGroupCount, depth int) e
 	return nil
 }
 
-// ValidateGetGitLabActivityRecordGroupCountsRequest validates all fields in GetGitLabActivityRecordGroupCountsRequest according to their annotations.
-// Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateGetGitLabActivityRecordGroupCountsRequest(m *GetGitLabActivityRecordGroupCountsRequest) error {
-	return ValidateGetGitLabActivityRecordGroupCountsRequestWithDepth(m, 0)
-}
-
-// ValidateGetGitLabActivityRecordGroupCountsRequestWithDepth validates GetGitLabActivityRecordGroupCountsRequest and carries nested-message depth across
-// generated package boundaries.
-func ValidateGetGitLabActivityRecordGroupCountsRequestWithDepth(m *GetGitLabActivityRecordGroupCountsRequest, depth int) error {
-	if m == nil {
-		return nil
-	}
-	if depth > 24 {
-		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
-	}
-
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
-	// Validate GroupBy enum value is known
-	if _, ok := GitLabActivityRecordGroupField_name[int32(m.GroupBy)]; !ok {
-		return protoerrors.NewErrMissingInvalidData(nil, "field GroupBy has unknown enum value %d", int32(m.GroupBy))
-	}
-
-	// Validate TimeRange nested message
-	if m.TimeRange != nil {
-		if err := ValidateTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
-		}
-	}
-
-	return nil
-}
-
-// ValidateGetGitLabActivityRecordGroupCountsResponse validates all fields in GetGitLabActivityRecordGroupCountsResponse according to their annotations.
-// Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateGetGitLabActivityRecordGroupCountsResponse(m *GetGitLabActivityRecordGroupCountsResponse) error {
-	return ValidateGetGitLabActivityRecordGroupCountsResponseWithDepth(m, 0)
-}
-
-// ValidateGetGitLabActivityRecordGroupCountsResponseWithDepth validates GetGitLabActivityRecordGroupCountsResponse and carries nested-message depth across
-// generated package boundaries.
-func ValidateGetGitLabActivityRecordGroupCountsResponseWithDepth(m *GetGitLabActivityRecordGroupCountsResponse, depth int) error {
-	if m == nil {
-		return nil
-	}
-	if depth > 24 {
-		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
-	}
-
-	// Validate Counts (default max size: 1024 elements)
-	if len(m.Counts) > 1024 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Counts exceeds max size of 1024 elements, got: %d", len(m.Counts))
-	}
-
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
-	// Validate Counts nested messages
-	for i, val := range m.Counts {
-		if err := ValidateTimeseriesGroupCountWithDepth(val, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field Counts[%d] validation failed", i)
-		}
-	}
-
-	return nil
-}
-
-// ValidateGetLlmCallRecordGroupCountsRequest validates all fields in GetLlmCallRecordGroupCountsRequest according to their annotations.
-// Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateGetLlmCallRecordGroupCountsRequest(m *GetLlmCallRecordGroupCountsRequest) error {
-	return ValidateGetLlmCallRecordGroupCountsRequestWithDepth(m, 0)
-}
-
-// ValidateGetLlmCallRecordGroupCountsRequestWithDepth validates GetLlmCallRecordGroupCountsRequest and carries nested-message depth across
-// generated package boundaries.
-func ValidateGetLlmCallRecordGroupCountsRequestWithDepth(m *GetLlmCallRecordGroupCountsRequest, depth int) error {
-	if m == nil {
-		return nil
-	}
-	if depth > 24 {
-		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
-	}
-
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
-	// Validate GroupBy enum value is known
-	if _, ok := LlmCallRecordGroupField_name[int32(m.GroupBy)]; !ok {
-		return protoerrors.NewErrMissingInvalidData(nil, "field GroupBy has unknown enum value %d", int32(m.GroupBy))
-	}
-
-	// Validate TimeRange nested message
-	if m.TimeRange != nil {
-		if err := ValidateTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
-		}
-	}
-
-	return nil
-}
-
-// ValidateGetLlmCallRecordGroupCountsResponse validates all fields in GetLlmCallRecordGroupCountsResponse according to their annotations.
-// Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateGetLlmCallRecordGroupCountsResponse(m *GetLlmCallRecordGroupCountsResponse) error {
-	return ValidateGetLlmCallRecordGroupCountsResponseWithDepth(m, 0)
-}
-
-// ValidateGetLlmCallRecordGroupCountsResponseWithDepth validates GetLlmCallRecordGroupCountsResponse and carries nested-message depth across
-// generated package boundaries.
-func ValidateGetLlmCallRecordGroupCountsResponseWithDepth(m *GetLlmCallRecordGroupCountsResponse, depth int) error {
-	if m == nil {
-		return nil
-	}
-	if depth > 24 {
-		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
-	}
-
-	// Validate Counts (default max size: 1024 elements)
-	if len(m.Counts) > 1024 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Counts exceeds max size of 1024 elements, got: %d", len(m.Counts))
-	}
-
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
-	// Validate Counts nested messages
-	for i, val := range m.Counts {
-		if err := ValidateTimeseriesGroupCountWithDepth(val, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field Counts[%d] validation failed", i)
-		}
-	}
-
-	return nil
-}
-
 // ValidateGetPromptRecordGroupCountsRequest validates all fields in GetPromptRecordGroupCountsRequest according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateGetPromptRecordGroupCountsRequest(m *GetPromptRecordGroupCountsRequest) error {
@@ -18923,78 +15758,6 @@ func ValidateGetPromptRecordGroupCountsResponse(m *GetPromptRecordGroupCountsRes
 // ValidateGetPromptRecordGroupCountsResponseWithDepth validates GetPromptRecordGroupCountsResponse and carries nested-message depth across
 // generated package boundaries.
 func ValidateGetPromptRecordGroupCountsResponseWithDepth(m *GetPromptRecordGroupCountsResponse, depth int) error {
-	if m == nil {
-		return nil
-	}
-	if depth > 24 {
-		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
-	}
-
-	// Validate Counts (default max size: 1024 elements)
-	if len(m.Counts) > 1024 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Counts exceeds max size of 1024 elements, got: %d", len(m.Counts))
-	}
-
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
-	// Validate Counts nested messages
-	for i, val := range m.Counts {
-		if err := ValidateTimeseriesGroupCountWithDepth(val, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field Counts[%d] validation failed", i)
-		}
-	}
-
-	return nil
-}
-
-// ValidateGetScmOperationRecordGroupCountsRequest validates all fields in GetScmOperationRecordGroupCountsRequest according to their annotations.
-// Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateGetScmOperationRecordGroupCountsRequest(m *GetScmOperationRecordGroupCountsRequest) error {
-	return ValidateGetScmOperationRecordGroupCountsRequestWithDepth(m, 0)
-}
-
-// ValidateGetScmOperationRecordGroupCountsRequestWithDepth validates GetScmOperationRecordGroupCountsRequest and carries nested-message depth across
-// generated package boundaries.
-func ValidateGetScmOperationRecordGroupCountsRequestWithDepth(m *GetScmOperationRecordGroupCountsRequest, depth int) error {
-	if m == nil {
-		return nil
-	}
-	if depth > 24 {
-		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
-	}
-
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
-	// Validate GroupBy enum value is known
-	if _, ok := ScmOperationRecordGroupField_name[int32(m.GroupBy)]; !ok {
-		return protoerrors.NewErrMissingInvalidData(nil, "field GroupBy has unknown enum value %d", int32(m.GroupBy))
-	}
-
-	// Validate TimeRange nested message
-	if m.TimeRange != nil {
-		if err := ValidateTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
-		}
-	}
-
-	return nil
-}
-
-// ValidateGetScmOperationRecordGroupCountsResponse validates all fields in GetScmOperationRecordGroupCountsResponse according to their annotations.
-// Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateGetScmOperationRecordGroupCountsResponse(m *GetScmOperationRecordGroupCountsResponse) error {
-	return ValidateGetScmOperationRecordGroupCountsResponseWithDepth(m, 0)
-}
-
-// ValidateGetScmOperationRecordGroupCountsResponseWithDepth validates GetScmOperationRecordGroupCountsResponse and carries nested-message depth across
-// generated package boundaries.
-func ValidateGetScmOperationRecordGroupCountsResponseWithDepth(m *GetScmOperationRecordGroupCountsResponse, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -19310,160 +16073,6 @@ func ValidateGetToolUseRecordGroupCountsResponseWithDepth(m *GetToolUseRecordGro
 	return nil
 }
 
-// ValidateListGitLabActivityRecordRequest validates all fields in ListGitLabActivityRecordRequest according to their annotations.
-// Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateListGitLabActivityRecordRequest(m *ListGitLabActivityRecordRequest) error {
-	return ValidateListGitLabActivityRecordRequestWithDepth(m, 0)
-}
-
-// ValidateListGitLabActivityRecordRequestWithDepth validates ListGitLabActivityRecordRequest and carries nested-message depth across
-// generated package boundaries.
-func ValidateListGitLabActivityRecordRequestWithDepth(m *ListGitLabActivityRecordRequest, depth int) error {
-	if m == nil {
-		return nil
-	}
-	if depth > 24 {
-		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
-	}
-
-	// Validate PageToken (default max size: 32768 bytes)
-	if len(m.PageToken) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
-	}
-
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
-	// Validate TimeRange nested message
-	if m.TimeRange != nil {
-		if err := ValidateTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
-		}
-	}
-
-	return nil
-}
-
-// ValidateListGitLabActivityRecordResponse validates all fields in ListGitLabActivityRecordResponse according to their annotations.
-// Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateListGitLabActivityRecordResponse(m *ListGitLabActivityRecordResponse) error {
-	return ValidateListGitLabActivityRecordResponseWithDepth(m, 0)
-}
-
-// ValidateListGitLabActivityRecordResponseWithDepth validates ListGitLabActivityRecordResponse and carries nested-message depth across
-// generated package boundaries.
-func ValidateListGitLabActivityRecordResponseWithDepth(m *ListGitLabActivityRecordResponse, depth int) error {
-	if m == nil {
-		return nil
-	}
-	if depth > 24 {
-		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
-	}
-
-	// Validate RecordKeys (default max size: 1024 elements)
-	if len(m.RecordKeys) > 1024 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field RecordKeys exceeds max size of 1024 elements, got: %d", len(m.RecordKeys))
-	}
-
-	// Validate RecordKeys elements (default max size: 32768 bytes)
-	for i, val := range m.RecordKeys {
-		if len(val) > 32768 {
-			return protoerrors.NewErrMissingInvalidData(nil, "field RecordKeys[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
-		}
-	}
-
-	// Validate NextPageToken (default max size: 32768 bytes)
-	if len(m.NextPageToken) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
-	}
-
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
-	return nil
-}
-
-// ValidateListLlmCallRecordRequest validates all fields in ListLlmCallRecordRequest according to their annotations.
-// Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateListLlmCallRecordRequest(m *ListLlmCallRecordRequest) error {
-	return ValidateListLlmCallRecordRequestWithDepth(m, 0)
-}
-
-// ValidateListLlmCallRecordRequestWithDepth validates ListLlmCallRecordRequest and carries nested-message depth across
-// generated package boundaries.
-func ValidateListLlmCallRecordRequestWithDepth(m *ListLlmCallRecordRequest, depth int) error {
-	if m == nil {
-		return nil
-	}
-	if depth > 24 {
-		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
-	}
-
-	// Validate PageToken (default max size: 32768 bytes)
-	if len(m.PageToken) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
-	}
-
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
-	// Validate TimeRange nested message
-	if m.TimeRange != nil {
-		if err := ValidateTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
-		}
-	}
-
-	return nil
-}
-
-// ValidateListLlmCallRecordResponse validates all fields in ListLlmCallRecordResponse according to their annotations.
-// Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateListLlmCallRecordResponse(m *ListLlmCallRecordResponse) error {
-	return ValidateListLlmCallRecordResponseWithDepth(m, 0)
-}
-
-// ValidateListLlmCallRecordResponseWithDepth validates ListLlmCallRecordResponse and carries nested-message depth across
-// generated package boundaries.
-func ValidateListLlmCallRecordResponseWithDepth(m *ListLlmCallRecordResponse, depth int) error {
-	if m == nil {
-		return nil
-	}
-	if depth > 24 {
-		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
-	}
-
-	// Validate RecordKeys (default max size: 1024 elements)
-	if len(m.RecordKeys) > 1024 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field RecordKeys exceeds max size of 1024 elements, got: %d", len(m.RecordKeys))
-	}
-
-	// Validate RecordKeys elements (default max size: 32768 bytes)
-	for i, val := range m.RecordKeys {
-		if len(val) > 32768 {
-			return protoerrors.NewErrMissingInvalidData(nil, "field RecordKeys[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
-		}
-	}
-
-	// Validate NextPageToken (default max size: 32768 bytes)
-	if len(m.NextPageToken) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
-	}
-
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
-	return nil
-}
-
 // ValidateListPromptRecordRequest validates all fields in ListPromptRecordRequest according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateListPromptRecordRequest(m *ListPromptRecordRequest) error {
@@ -19509,83 +16118,6 @@ func ValidateListPromptRecordResponse(m *ListPromptRecordResponse) error {
 // ValidateListPromptRecordResponseWithDepth validates ListPromptRecordResponse and carries nested-message depth across
 // generated package boundaries.
 func ValidateListPromptRecordResponseWithDepth(m *ListPromptRecordResponse, depth int) error {
-	if m == nil {
-		return nil
-	}
-	if depth > 24 {
-		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
-	}
-
-	// Validate RecordKeys (default max size: 1024 elements)
-	if len(m.RecordKeys) > 1024 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field RecordKeys exceeds max size of 1024 elements, got: %d", len(m.RecordKeys))
-	}
-
-	// Validate RecordKeys elements (default max size: 32768 bytes)
-	for i, val := range m.RecordKeys {
-		if len(val) > 32768 {
-			return protoerrors.NewErrMissingInvalidData(nil, "field RecordKeys[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
-		}
-	}
-
-	// Validate NextPageToken (default max size: 32768 bytes)
-	if len(m.NextPageToken) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field NextPageToken exceeds max size of 32768 bytes, got: %d", len(m.NextPageToken))
-	}
-
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
-	return nil
-}
-
-// ValidateListScmOperationRecordRequest validates all fields in ListScmOperationRecordRequest according to their annotations.
-// Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateListScmOperationRecordRequest(m *ListScmOperationRecordRequest) error {
-	return ValidateListScmOperationRecordRequestWithDepth(m, 0)
-}
-
-// ValidateListScmOperationRecordRequestWithDepth validates ListScmOperationRecordRequest and carries nested-message depth across
-// generated package boundaries.
-func ValidateListScmOperationRecordRequestWithDepth(m *ListScmOperationRecordRequest, depth int) error {
-	if m == nil {
-		return nil
-	}
-	if depth > 24 {
-		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
-	}
-
-	// Validate PageToken (default max size: 32768 bytes)
-	if len(m.PageToken) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field PageToken exceeds max size of 32768 bytes, got: %d", len(m.PageToken))
-	}
-
-	// Validate TraceId (default max size: 32768 bytes)
-	if len(m.TraceId) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
-	// Validate TimeRange nested message
-	if m.TimeRange != nil {
-		if err := ValidateTimeRangeWithDepth(m.TimeRange, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field TimeRange validation failed")
-		}
-	}
-
-	return nil
-}
-
-// ValidateListScmOperationRecordResponse validates all fields in ListScmOperationRecordResponse according to their annotations.
-// Returns a BlueErr if validation fails, or nil if all validations pass.
-func ValidateListScmOperationRecordResponse(m *ListScmOperationRecordResponse) error {
-	return ValidateListScmOperationRecordResponseWithDepth(m, 0)
-}
-
-// ValidateListScmOperationRecordResponseWithDepth validates ListScmOperationRecordResponse and carries nested-message depth across
-// generated package boundaries.
-func ValidateListScmOperationRecordResponseWithDepth(m *ListScmOperationRecordResponse, depth int) error {
 	if m == nil {
 		return nil
 	}
@@ -19941,153 +16473,129 @@ const (
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizeTimerangeTraceId                                  int = 32768
-	MaxSizeConfigTraceId                                     int = 32768
-	MaxSizeTimedbnodeNodeId                                  int = 32768
-	MaxSizeTimedbnodeTraceId                                 int = 32768
-	MaxSizeTimedbstateNodes                                  int = 32
-	MaxSizeTimedbstateTraceId                                int = 32768
-	MaxSizeTimedbhealthReplicas                              int = 1024
-	MaxSizeTimedbhealthDisks                                 int = 1024
-	MaxSizeTimedbhealthActiveMerges                          int = 1024
-	MaxSizeTimedbhealthActiveMutations                       int = 1024
-	MaxSizeTimedbhealthMetrics                               int = 1024
-	MaxSizeTimedbhealthAsyncMetrics                          int = 1024
-	MaxSizeTimedbhealthErrors                                int = 1024
-	MaxSizeTimedbhealthTraceId                               int = 32768
-	MaxSizeReplicastatusDatabase                             int = 32768
-	MaxSizeReplicastatusTable                                int = 32768
-	MaxSizeReplicastatusEngine                               int = 32768
-	MaxSizeReplicastatusZookeeperPath                        int = 32768
-	MaxSizeReplicastatusReplicaName                          int = 32768
-	MaxSizeReplicastatusReplicaPath                          int = 32768
-	MaxSizeReplicastatusZookeeperException                   int = 32768
-	MaxSizeReplicastatusTraceId                              int = 32768
-	MaxSizeDiskstatusName                                    int = 32768
-	MaxSizeDiskstatusPath                                    int = 32768
-	MaxSizeDiskstatusDiskType                                int = 32768
-	MaxSizeDiskstatusTraceId                                 int = 32768
-	MaxSizeMergestatusDatabase                               int = 32768
-	MaxSizeMergestatusTable                                  int = 32768
-	MaxSizeMergestatusResultPartName                         int = 32768
-	MaxSizeMergestatusPartitionId                            int = 32768
-	MaxSizeMergestatusTraceId                                int = 32768
-	MaxSizeMutationstatusDatabase                            int = 32768
-	MaxSizeMutationstatusTable                               int = 32768
-	MaxSizeMutationstatusMutationId                          int = 32768
-	MaxSizeMutationstatusCommand                             int = 32768
-	MaxSizeMutationstatusCreateTime                          int = 32768
-	MaxSizeMutationstatusLatestFailReason                    int = 32768
-	MaxSizeMutationstatusTraceId                             int = 32768
-	MaxSizeMetricentryMetric                                 int = 32768
-	MaxSizeMetricentryDescription                            int = 32768
-	MaxSizeMetricentryTraceId                                int = 32768
-	MaxSizeErrorentryName                                    int = 32768
-	MaxSizeErrorentryLastErrorTime                           int = 32768
-	MaxSizeErrorentryLastErrorMessage                        int = 32768
-	MaxSizeErrorentryLastErrorTrace                          int = 32768
-	MaxSizeErrorentryTraceId                                 int = 32768
-	MaxSizeKeeperstatusZookeeperException                    int = 32768
-	MaxSizeKeeperstatusTraceId                               int = 32768
-	MaxSizeServersummaryVersion                              int = 32768
-	MaxSizeServersummaryTraceId                              int = 32768
-	MaxSizeTimedbconfigstateTraceId                          int = 32768
-	MaxSizeQueryvalueStringValue                             int = 32768
-	MaxSizeQueryvalueTraceId                                 int = 32768
-	MaxSizePredicateFieldName                                int = 32768
-	MaxSizePredicateValues                                   int = 1024
-	MaxSizePredicateTraceId                                  int = 32768
-	MaxSizePredicategroupPredicates                          int = 1024
-	MaxSizePredicategroupGroups                              int = 1024
-	MaxSizePredicategroupTraceId                             int = 32768
-	MaxSizeSortfieldFieldName                                int = 32768
-	MaxSizeSortfieldTraceId                                  int = 32768
-	MaxSizeCollectionqueryOrderBy                            int = 1024
-	MaxSizeCollectionqueryTraceId                            int = 32768
-	MaxSizeNodesgetrequestKey                                int = 32768
-	MaxSizeNodesgetrequestTraceId                            int = 32768
-	MaxSizeNodesputrequestKey                                int = 32768
-	MaxSizeNodesputrequestTraceId                            int = 32768
-	MaxSizeNodesgetallrequestTraceId                         int = 32768
-	MaxSizeNodeskeysrequestTraceId                           int = 32768
-	MaxSizeNodessizerequestTraceId                           int = 32768
-	MaxSizeNodesclearrequestTraceId                          int = 32768
-	MaxSizeNodesvalueresponseTraceId                         int = 32768
-	MaxSizeNodesentriesresponseEntries                       int = 1024
-	MaxSizeNodesentriesresponseTraceId                       int = 32768
-	MaxSizeNodeskeysresponseKeys                             int = 1024
-	MaxSizeNodeskeysresponseTraceId                          int = 32768
-	MaxSizeNodessizeresponseTraceId                          int = 32768
-	MaxSizeNodesqueryrequestTraceId                          int = 32768
-	MaxSizeNodesqueryresponseResults                         int = 1024
-	MaxSizeNodesqueryresponseTraceId                         int = 32768
-	MaxSizeMapemptyTraceId                                   int = 32768
-	MaxSizeTimeseriesgroupcountKey                           int = 32768
-	MaxSizeTimeseriesgroupcountTraceId                       int = 32768
-	MaxSizeGetgitlabactivityrecordgroupcountsrequestTraceId  int = 32768
-	MaxSizeGetgitlabactivityrecordgroupcountsresponseCounts  int = 1024
-	MaxSizeGetgitlabactivityrecordgroupcountsresponseTraceId int = 32768
-	MaxSizeGetllmcallrecordgroupcountsrequestTraceId         int = 32768
-	MaxSizeGetllmcallrecordgroupcountsresponseCounts         int = 1024
-	MaxSizeGetllmcallrecordgroupcountsresponseTraceId        int = 32768
-	MaxSizeGetpromptrecordgroupcountsrequestTraceId          int = 32768
-	MaxSizeGetpromptrecordgroupcountsresponseCounts          int = 1024
-	MaxSizeGetpromptrecordgroupcountsresponseTraceId         int = 32768
-	MaxSizeGetscmoperationrecordgroupcountsrequestTraceId    int = 32768
-	MaxSizeGetscmoperationrecordgroupcountsresponseCounts    int = 1024
-	MaxSizeGetscmoperationrecordgroupcountsresponseTraceId   int = 32768
-	MaxSizeGetsessionrecordgroupcountsrequestTraceId         int = 32768
-	MaxSizeGetsessionrecordgroupcountsresponseCounts         int = 1024
-	MaxSizeGetsessionrecordgroupcountsresponseTraceId        int = 32768
-	MaxSizeGetstoprecordgroupcountsrequestTraceId            int = 32768
-	MaxSizeGetstoprecordgroupcountsresponseCounts            int = 1024
-	MaxSizeGetstoprecordgroupcountsresponseTraceId           int = 32768
-	MaxSizeGetsubagentrecordgroupcountsrequestTraceId        int = 32768
-	MaxSizeGetsubagentrecordgroupcountsresponseCounts        int = 1024
-	MaxSizeGetsubagentrecordgroupcountsresponseTraceId       int = 32768
-	MaxSizeGettooluserecordgroupcountsrequestTraceId         int = 32768
-	MaxSizeGettooluserecordgroupcountsresponseCounts         int = 1024
-	MaxSizeGettooluserecordgroupcountsresponseTraceId        int = 32768
-	MaxSizeListgitlabactivityrecordrequestPageToken          int = 32768
-	MaxSizeListgitlabactivityrecordrequestTraceId            int = 32768
-	MaxSizeListgitlabactivityrecordresponseRecordKeys        int = 1024
-	MaxSizeListgitlabactivityrecordresponseNextPageToken     int = 32768
-	MaxSizeListgitlabactivityrecordresponseTraceId           int = 32768
-	MaxSizeListllmcallrecordrequestPageToken                 int = 32768
-	MaxSizeListllmcallrecordrequestTraceId                   int = 32768
-	MaxSizeListllmcallrecordresponseRecordKeys               int = 1024
-	MaxSizeListllmcallrecordresponseNextPageToken            int = 32768
-	MaxSizeListllmcallrecordresponseTraceId                  int = 32768
-	MaxSizeListpromptrecordrequestPageToken                  int = 32768
-	MaxSizeListpromptrecordrequestTraceId                    int = 32768
-	MaxSizeListpromptrecordresponseRecordKeys                int = 1024
-	MaxSizeListpromptrecordresponseNextPageToken             int = 32768
-	MaxSizeListpromptrecordresponseTraceId                   int = 32768
-	MaxSizeListscmoperationrecordrequestPageToken            int = 32768
-	MaxSizeListscmoperationrecordrequestTraceId              int = 32768
-	MaxSizeListscmoperationrecordresponseRecordKeys          int = 1024
-	MaxSizeListscmoperationrecordresponseNextPageToken       int = 32768
-	MaxSizeListscmoperationrecordresponseTraceId             int = 32768
-	MaxSizeListsessionrecordrequestPageToken                 int = 32768
-	MaxSizeListsessionrecordrequestTraceId                   int = 32768
-	MaxSizeListsessionrecordresponseRecordKeys               int = 1024
-	MaxSizeListsessionrecordresponseNextPageToken            int = 32768
-	MaxSizeListsessionrecordresponseTraceId                  int = 32768
-	MaxSizeListstoprecordrequestPageToken                    int = 32768
-	MaxSizeListstoprecordrequestTraceId                      int = 32768
-	MaxSizeListstoprecordresponseRecordKeys                  int = 1024
-	MaxSizeListstoprecordresponseNextPageToken               int = 32768
-	MaxSizeListstoprecordresponseTraceId                     int = 32768
-	MaxSizeListsubagentrecordrequestPageToken                int = 32768
-	MaxSizeListsubagentrecordrequestTraceId                  int = 32768
-	MaxSizeListsubagentrecordresponseRecordKeys              int = 1024
-	MaxSizeListsubagentrecordresponseNextPageToken           int = 32768
-	MaxSizeListsubagentrecordresponseTraceId                 int = 32768
-	MaxSizeListtooluserecordrequestPageToken                 int = 32768
-	MaxSizeListtooluserecordrequestTraceId                   int = 32768
-	MaxSizeListtooluserecordresponseRecordKeys               int = 1024
-	MaxSizeListtooluserecordresponseNextPageToken            int = 32768
-	MaxSizeListtooluserecordresponseTraceId                  int = 32768
+	MaxSizeTimerangeTraceId                            int = 32768
+	MaxSizeConfigTraceId                               int = 32768
+	MaxSizeTimedbnodeNodeId                            int = 32768
+	MaxSizeTimedbnodeTraceId                           int = 32768
+	MaxSizeTimedbstateNodes                            int = 32
+	MaxSizeTimedbstateTraceId                          int = 32768
+	MaxSizeTimedbhealthReplicas                        int = 1024
+	MaxSizeTimedbhealthDisks                           int = 1024
+	MaxSizeTimedbhealthActiveMerges                    int = 1024
+	MaxSizeTimedbhealthActiveMutations                 int = 1024
+	MaxSizeTimedbhealthMetrics                         int = 1024
+	MaxSizeTimedbhealthAsyncMetrics                    int = 1024
+	MaxSizeTimedbhealthErrors                          int = 1024
+	MaxSizeTimedbhealthTraceId                         int = 32768
+	MaxSizeReplicastatusDatabase                       int = 32768
+	MaxSizeReplicastatusTable                          int = 32768
+	MaxSizeReplicastatusEngine                         int = 32768
+	MaxSizeReplicastatusZookeeperPath                  int = 32768
+	MaxSizeReplicastatusReplicaName                    int = 32768
+	MaxSizeReplicastatusReplicaPath                    int = 32768
+	MaxSizeReplicastatusZookeeperException             int = 32768
+	MaxSizeReplicastatusTraceId                        int = 32768
+	MaxSizeDiskstatusName                              int = 32768
+	MaxSizeDiskstatusPath                              int = 32768
+	MaxSizeDiskstatusDiskType                          int = 32768
+	MaxSizeDiskstatusTraceId                           int = 32768
+	MaxSizeMergestatusDatabase                         int = 32768
+	MaxSizeMergestatusTable                            int = 32768
+	MaxSizeMergestatusResultPartName                   int = 32768
+	MaxSizeMergestatusPartitionId                      int = 32768
+	MaxSizeMergestatusTraceId                          int = 32768
+	MaxSizeMutationstatusDatabase                      int = 32768
+	MaxSizeMutationstatusTable                         int = 32768
+	MaxSizeMutationstatusMutationId                    int = 32768
+	MaxSizeMutationstatusCommand                       int = 32768
+	MaxSizeMutationstatusCreateTime                    int = 32768
+	MaxSizeMutationstatusLatestFailReason              int = 32768
+	MaxSizeMutationstatusTraceId                       int = 32768
+	MaxSizeMetricentryMetric                           int = 32768
+	MaxSizeMetricentryDescription                      int = 32768
+	MaxSizeMetricentryTraceId                          int = 32768
+	MaxSizeErrorentryName                              int = 32768
+	MaxSizeErrorentryLastErrorTime                     int = 32768
+	MaxSizeErrorentryLastErrorMessage                  int = 32768
+	MaxSizeErrorentryLastErrorTrace                    int = 32768
+	MaxSizeErrorentryTraceId                           int = 32768
+	MaxSizeKeeperstatusZookeeperException              int = 32768
+	MaxSizeKeeperstatusTraceId                         int = 32768
+	MaxSizeServersummaryVersion                        int = 32768
+	MaxSizeServersummaryTraceId                        int = 32768
+	MaxSizeTimedbconfigstateTraceId                    int = 32768
+	MaxSizeQueryvalueStringValue                       int = 32768
+	MaxSizeQueryvalueTraceId                           int = 32768
+	MaxSizePredicateFieldName                          int = 32768
+	MaxSizePredicateValues                             int = 1024
+	MaxSizePredicateTraceId                            int = 32768
+	MaxSizePredicategroupPredicates                    int = 1024
+	MaxSizePredicategroupGroups                        int = 1024
+	MaxSizePredicategroupTraceId                       int = 32768
+	MaxSizeSortfieldFieldName                          int = 32768
+	MaxSizeSortfieldTraceId                            int = 32768
+	MaxSizeCollectionqueryOrderBy                      int = 1024
+	MaxSizeCollectionqueryTraceId                      int = 32768
+	MaxSizeNodesgetrequestKey                          int = 32768
+	MaxSizeNodesgetrequestTraceId                      int = 32768
+	MaxSizeNodesputrequestKey                          int = 32768
+	MaxSizeNodesputrequestTraceId                      int = 32768
+	MaxSizeNodesgetallrequestTraceId                   int = 32768
+	MaxSizeNodeskeysrequestTraceId                     int = 32768
+	MaxSizeNodessizerequestTraceId                     int = 32768
+	MaxSizeNodesclearrequestTraceId                    int = 32768
+	MaxSizeNodesvalueresponseTraceId                   int = 32768
+	MaxSizeNodesentriesresponseEntries                 int = 1024
+	MaxSizeNodesentriesresponseTraceId                 int = 32768
+	MaxSizeNodeskeysresponseKeys                       int = 1024
+	MaxSizeNodeskeysresponseTraceId                    int = 32768
+	MaxSizeNodessizeresponseTraceId                    int = 32768
+	MaxSizeNodesqueryrequestTraceId                    int = 32768
+	MaxSizeNodesqueryresponseResults                   int = 1024
+	MaxSizeNodesqueryresponseTraceId                   int = 32768
+	MaxSizeMapemptyTraceId                             int = 32768
+	MaxSizeTimeseriesgroupcountKey                     int = 32768
+	MaxSizeTimeseriesgroupcountTraceId                 int = 32768
+	MaxSizeGetpromptrecordgroupcountsrequestTraceId    int = 32768
+	MaxSizeGetpromptrecordgroupcountsresponseCounts    int = 1024
+	MaxSizeGetpromptrecordgroupcountsresponseTraceId   int = 32768
+	MaxSizeGetsessionrecordgroupcountsrequestTraceId   int = 32768
+	MaxSizeGetsessionrecordgroupcountsresponseCounts   int = 1024
+	MaxSizeGetsessionrecordgroupcountsresponseTraceId  int = 32768
+	MaxSizeGetstoprecordgroupcountsrequestTraceId      int = 32768
+	MaxSizeGetstoprecordgroupcountsresponseCounts      int = 1024
+	MaxSizeGetstoprecordgroupcountsresponseTraceId     int = 32768
+	MaxSizeGetsubagentrecordgroupcountsrequestTraceId  int = 32768
+	MaxSizeGetsubagentrecordgroupcountsresponseCounts  int = 1024
+	MaxSizeGetsubagentrecordgroupcountsresponseTraceId int = 32768
+	MaxSizeGettooluserecordgroupcountsrequestTraceId   int = 32768
+	MaxSizeGettooluserecordgroupcountsresponseCounts   int = 1024
+	MaxSizeGettooluserecordgroupcountsresponseTraceId  int = 32768
+	MaxSizeListpromptrecordrequestPageToken            int = 32768
+	MaxSizeListpromptrecordrequestTraceId              int = 32768
+	MaxSizeListpromptrecordresponseRecordKeys          int = 1024
+	MaxSizeListpromptrecordresponseNextPageToken       int = 32768
+	MaxSizeListpromptrecordresponseTraceId             int = 32768
+	MaxSizeListsessionrecordrequestPageToken           int = 32768
+	MaxSizeListsessionrecordrequestTraceId             int = 32768
+	MaxSizeListsessionrecordresponseRecordKeys         int = 1024
+	MaxSizeListsessionrecordresponseNextPageToken      int = 32768
+	MaxSizeListsessionrecordresponseTraceId            int = 32768
+	MaxSizeListstoprecordrequestPageToken              int = 32768
+	MaxSizeListstoprecordrequestTraceId                int = 32768
+	MaxSizeListstoprecordresponseRecordKeys            int = 1024
+	MaxSizeListstoprecordresponseNextPageToken         int = 32768
+	MaxSizeListstoprecordresponseTraceId               int = 32768
+	MaxSizeListsubagentrecordrequestPageToken          int = 32768
+	MaxSizeListsubagentrecordrequestTraceId            int = 32768
+	MaxSizeListsubagentrecordresponseRecordKeys        int = 1024
+	MaxSizeListsubagentrecordresponseNextPageToken     int = 32768
+	MaxSizeListsubagentrecordresponseTraceId           int = 32768
+	MaxSizeListtooluserecordrequestPageToken           int = 32768
+	MaxSizeListtooluserecordrequestTraceId             int = 32768
+	MaxSizeListtooluserecordresponseRecordKeys         int = 1024
+	MaxSizeListtooluserecordresponseNextPageToken      int = 32768
+	MaxSizeListtooluserecordresponseTraceId            int = 32768
 )
 
 // ============================================================
@@ -20439,46 +16947,6 @@ func TimeseriesGroupCountDefaults(v *TimeseriesGroupCount) {
 }
 
 // ============================================================
-// TypeDefaults: GetGitLabActivityRecordGroupCountsRequest
-// ============================================================
-// GetGitLabActivityRecordGroupCountsRequestDefaults applies field-level default values to zero-valued fields.
-func GetGitLabActivityRecordGroupCountsRequestDefaults(v *GetGitLabActivityRecordGroupCountsRequest) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeDefaults: GetGitLabActivityRecordGroupCountsResponse
-// ============================================================
-// GetGitLabActivityRecordGroupCountsResponseDefaults applies field-level default values to zero-valued fields.
-func GetGitLabActivityRecordGroupCountsResponseDefaults(v *GetGitLabActivityRecordGroupCountsResponse) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeDefaults: GetLlmCallRecordGroupCountsRequest
-// ============================================================
-// GetLlmCallRecordGroupCountsRequestDefaults applies field-level default values to zero-valued fields.
-func GetLlmCallRecordGroupCountsRequestDefaults(v *GetLlmCallRecordGroupCountsRequest) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeDefaults: GetLlmCallRecordGroupCountsResponse
-// ============================================================
-// GetLlmCallRecordGroupCountsResponseDefaults applies field-level default values to zero-valued fields.
-func GetLlmCallRecordGroupCountsResponseDefaults(v *GetLlmCallRecordGroupCountsResponse) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
 // TypeDefaults: GetPromptRecordGroupCountsRequest
 // ============================================================
 // GetPromptRecordGroupCountsRequestDefaults applies field-level default values to zero-valued fields.
@@ -20493,26 +16961,6 @@ func GetPromptRecordGroupCountsRequestDefaults(v *GetPromptRecordGroupCountsRequ
 // ============================================================
 // GetPromptRecordGroupCountsResponseDefaults applies field-level default values to zero-valued fields.
 func GetPromptRecordGroupCountsResponseDefaults(v *GetPromptRecordGroupCountsResponse) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeDefaults: GetScmOperationRecordGroupCountsRequest
-// ============================================================
-// GetScmOperationRecordGroupCountsRequestDefaults applies field-level default values to zero-valued fields.
-func GetScmOperationRecordGroupCountsRequestDefaults(v *GetScmOperationRecordGroupCountsRequest) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeDefaults: GetScmOperationRecordGroupCountsResponse
-// ============================================================
-// GetScmOperationRecordGroupCountsResponseDefaults applies field-level default values to zero-valued fields.
-func GetScmOperationRecordGroupCountsResponseDefaults(v *GetScmOperationRecordGroupCountsResponse) {
 	if v == nil {
 		return
 	}
@@ -20599,46 +17047,6 @@ func GetToolUseRecordGroupCountsResponseDefaults(v *GetToolUseRecordGroupCountsR
 }
 
 // ============================================================
-// TypeDefaults: ListGitLabActivityRecordRequest
-// ============================================================
-// ListGitLabActivityRecordRequestDefaults applies field-level default values to zero-valued fields.
-func ListGitLabActivityRecordRequestDefaults(v *ListGitLabActivityRecordRequest) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeDefaults: ListGitLabActivityRecordResponse
-// ============================================================
-// ListGitLabActivityRecordResponseDefaults applies field-level default values to zero-valued fields.
-func ListGitLabActivityRecordResponseDefaults(v *ListGitLabActivityRecordResponse) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeDefaults: ListLlmCallRecordRequest
-// ============================================================
-// ListLlmCallRecordRequestDefaults applies field-level default values to zero-valued fields.
-func ListLlmCallRecordRequestDefaults(v *ListLlmCallRecordRequest) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeDefaults: ListLlmCallRecordResponse
-// ============================================================
-// ListLlmCallRecordResponseDefaults applies field-level default values to zero-valued fields.
-func ListLlmCallRecordResponseDefaults(v *ListLlmCallRecordResponse) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
 // TypeDefaults: ListPromptRecordRequest
 // ============================================================
 // ListPromptRecordRequestDefaults applies field-level default values to zero-valued fields.
@@ -20653,26 +17061,6 @@ func ListPromptRecordRequestDefaults(v *ListPromptRecordRequest) {
 // ============================================================
 // ListPromptRecordResponseDefaults applies field-level default values to zero-valued fields.
 func ListPromptRecordResponseDefaults(v *ListPromptRecordResponse) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeDefaults: ListScmOperationRecordRequest
-// ============================================================
-// ListScmOperationRecordRequestDefaults applies field-level default values to zero-valued fields.
-func ListScmOperationRecordRequestDefaults(v *ListScmOperationRecordRequest) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeDefaults: ListScmOperationRecordResponse
-// ============================================================
-// ListScmOperationRecordResponseDefaults applies field-level default values to zero-valued fields.
-func ListScmOperationRecordResponseDefaults(v *ListScmOperationRecordResponse) {
 	if v == nil {
 		return
 	}
@@ -21140,50 +17528,6 @@ func TimeseriesGroupCountUndefaults(v *TimeseriesGroupCount) {
 }
 
 // ============================================================
-// TypeUndefaults: GetGitLabActivityRecordGroupCountsRequest
-// ============================================================
-// GetGitLabActivityRecordGroupCountsRequestUndefaults resets fields that match their default values back to zero.
-// Use before persisting to store only explicit user overrides.
-func GetGitLabActivityRecordGroupCountsRequestUndefaults(v *GetGitLabActivityRecordGroupCountsRequest) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeUndefaults: GetGitLabActivityRecordGroupCountsResponse
-// ============================================================
-// GetGitLabActivityRecordGroupCountsResponseUndefaults resets fields that match their default values back to zero.
-// Use before persisting to store only explicit user overrides.
-func GetGitLabActivityRecordGroupCountsResponseUndefaults(v *GetGitLabActivityRecordGroupCountsResponse) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeUndefaults: GetLlmCallRecordGroupCountsRequest
-// ============================================================
-// GetLlmCallRecordGroupCountsRequestUndefaults resets fields that match their default values back to zero.
-// Use before persisting to store only explicit user overrides.
-func GetLlmCallRecordGroupCountsRequestUndefaults(v *GetLlmCallRecordGroupCountsRequest) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeUndefaults: GetLlmCallRecordGroupCountsResponse
-// ============================================================
-// GetLlmCallRecordGroupCountsResponseUndefaults resets fields that match their default values back to zero.
-// Use before persisting to store only explicit user overrides.
-func GetLlmCallRecordGroupCountsResponseUndefaults(v *GetLlmCallRecordGroupCountsResponse) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
 // TypeUndefaults: GetPromptRecordGroupCountsRequest
 // ============================================================
 // GetPromptRecordGroupCountsRequestUndefaults resets fields that match their default values back to zero.
@@ -21200,28 +17544,6 @@ func GetPromptRecordGroupCountsRequestUndefaults(v *GetPromptRecordGroupCountsRe
 // GetPromptRecordGroupCountsResponseUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
 func GetPromptRecordGroupCountsResponseUndefaults(v *GetPromptRecordGroupCountsResponse) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeUndefaults: GetScmOperationRecordGroupCountsRequest
-// ============================================================
-// GetScmOperationRecordGroupCountsRequestUndefaults resets fields that match their default values back to zero.
-// Use before persisting to store only explicit user overrides.
-func GetScmOperationRecordGroupCountsRequestUndefaults(v *GetScmOperationRecordGroupCountsRequest) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeUndefaults: GetScmOperationRecordGroupCountsResponse
-// ============================================================
-// GetScmOperationRecordGroupCountsResponseUndefaults resets fields that match their default values back to zero.
-// Use before persisting to store only explicit user overrides.
-func GetScmOperationRecordGroupCountsResponseUndefaults(v *GetScmOperationRecordGroupCountsResponse) {
 	if v == nil {
 		return
 	}
@@ -21316,50 +17638,6 @@ func GetToolUseRecordGroupCountsResponseUndefaults(v *GetToolUseRecordGroupCount
 }
 
 // ============================================================
-// TypeUndefaults: ListGitLabActivityRecordRequest
-// ============================================================
-// ListGitLabActivityRecordRequestUndefaults resets fields that match their default values back to zero.
-// Use before persisting to store only explicit user overrides.
-func ListGitLabActivityRecordRequestUndefaults(v *ListGitLabActivityRecordRequest) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeUndefaults: ListGitLabActivityRecordResponse
-// ============================================================
-// ListGitLabActivityRecordResponseUndefaults resets fields that match their default values back to zero.
-// Use before persisting to store only explicit user overrides.
-func ListGitLabActivityRecordResponseUndefaults(v *ListGitLabActivityRecordResponse) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeUndefaults: ListLlmCallRecordRequest
-// ============================================================
-// ListLlmCallRecordRequestUndefaults resets fields that match their default values back to zero.
-// Use before persisting to store only explicit user overrides.
-func ListLlmCallRecordRequestUndefaults(v *ListLlmCallRecordRequest) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeUndefaults: ListLlmCallRecordResponse
-// ============================================================
-// ListLlmCallRecordResponseUndefaults resets fields that match their default values back to zero.
-// Use before persisting to store only explicit user overrides.
-func ListLlmCallRecordResponseUndefaults(v *ListLlmCallRecordResponse) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
 // TypeUndefaults: ListPromptRecordRequest
 // ============================================================
 // ListPromptRecordRequestUndefaults resets fields that match their default values back to zero.
@@ -21376,28 +17654,6 @@ func ListPromptRecordRequestUndefaults(v *ListPromptRecordRequest) {
 // ListPromptRecordResponseUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
 func ListPromptRecordResponseUndefaults(v *ListPromptRecordResponse) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeUndefaults: ListScmOperationRecordRequest
-// ============================================================
-// ListScmOperationRecordRequestUndefaults resets fields that match their default values back to zero.
-// Use before persisting to store only explicit user overrides.
-func ListScmOperationRecordRequestUndefaults(v *ListScmOperationRecordRequest) {
-	if v == nil {
-		return
-	}
-}
-
-// ============================================================
-// TypeUndefaults: ListScmOperationRecordResponse
-// ============================================================
-// ListScmOperationRecordResponseUndefaults resets fields that match their default values back to zero.
-// Use before persisting to store only explicit user overrides.
-func ListScmOperationRecordResponseUndefaults(v *ListScmOperationRecordResponse) {
 	if v == nil {
 		return
 	}
@@ -22386,80 +18642,6 @@ func MergeTimeseriesGroupCount(dst, src *TimeseriesGroupCount) {
 }
 
 // ============================================================
-// Merge: GetGitLabActivityRecordGroupCountsRequest
-// ============================================================
-// MergeGetGitLabActivityRecordGroupCountsRequest fills zero-valued fields in dst from src.
-func MergeGetGitLabActivityRecordGroupCountsRequest(dst, src *GetGitLabActivityRecordGroupCountsRequest) {
-	if dst.GroupBy == 0 {
-		dst.GroupBy = src.GroupBy
-	}
-	if dst.TimeRange == nil {
-		dst.TimeRange = src.TimeRange
-	} else if src.TimeRange != nil {
-		MergeTimeRange(dst.TimeRange, src.TimeRange)
-	}
-	if dst.TraceId == "" {
-		dst.TraceId = src.TraceId
-	}
-	if !dst.Noop {
-		dst.Noop = src.Noop
-	}
-}
-
-// ============================================================
-// Merge: GetGitLabActivityRecordGroupCountsResponse
-// ============================================================
-// MergeGetGitLabActivityRecordGroupCountsResponse fills zero-valued fields in dst from src.
-func MergeGetGitLabActivityRecordGroupCountsResponse(dst, src *GetGitLabActivityRecordGroupCountsResponse) {
-	if len(dst.Counts) == 0 {
-		dst.Counts = src.Counts
-	}
-	if dst.TraceId == "" {
-		dst.TraceId = src.TraceId
-	}
-	if !dst.Noop {
-		dst.Noop = src.Noop
-	}
-}
-
-// ============================================================
-// Merge: GetLlmCallRecordGroupCountsRequest
-// ============================================================
-// MergeGetLlmCallRecordGroupCountsRequest fills zero-valued fields in dst from src.
-func MergeGetLlmCallRecordGroupCountsRequest(dst, src *GetLlmCallRecordGroupCountsRequest) {
-	if dst.GroupBy == 0 {
-		dst.GroupBy = src.GroupBy
-	}
-	if dst.TimeRange == nil {
-		dst.TimeRange = src.TimeRange
-	} else if src.TimeRange != nil {
-		MergeTimeRange(dst.TimeRange, src.TimeRange)
-	}
-	if dst.TraceId == "" {
-		dst.TraceId = src.TraceId
-	}
-	if !dst.Noop {
-		dst.Noop = src.Noop
-	}
-}
-
-// ============================================================
-// Merge: GetLlmCallRecordGroupCountsResponse
-// ============================================================
-// MergeGetLlmCallRecordGroupCountsResponse fills zero-valued fields in dst from src.
-func MergeGetLlmCallRecordGroupCountsResponse(dst, src *GetLlmCallRecordGroupCountsResponse) {
-	if len(dst.Counts) == 0 {
-		dst.Counts = src.Counts
-	}
-	if dst.TraceId == "" {
-		dst.TraceId = src.TraceId
-	}
-	if !dst.Noop {
-		dst.Noop = src.Noop
-	}
-}
-
-// ============================================================
 // Merge: GetPromptRecordGroupCountsRequest
 // ============================================================
 // MergeGetPromptRecordGroupCountsRequest fills zero-valued fields in dst from src.
@@ -22485,43 +18667,6 @@ func MergeGetPromptRecordGroupCountsRequest(dst, src *GetPromptRecordGroupCounts
 // ============================================================
 // MergeGetPromptRecordGroupCountsResponse fills zero-valued fields in dst from src.
 func MergeGetPromptRecordGroupCountsResponse(dst, src *GetPromptRecordGroupCountsResponse) {
-	if len(dst.Counts) == 0 {
-		dst.Counts = src.Counts
-	}
-	if dst.TraceId == "" {
-		dst.TraceId = src.TraceId
-	}
-	if !dst.Noop {
-		dst.Noop = src.Noop
-	}
-}
-
-// ============================================================
-// Merge: GetScmOperationRecordGroupCountsRequest
-// ============================================================
-// MergeGetScmOperationRecordGroupCountsRequest fills zero-valued fields in dst from src.
-func MergeGetScmOperationRecordGroupCountsRequest(dst, src *GetScmOperationRecordGroupCountsRequest) {
-	if dst.GroupBy == 0 {
-		dst.GroupBy = src.GroupBy
-	}
-	if dst.TimeRange == nil {
-		dst.TimeRange = src.TimeRange
-	} else if src.TimeRange != nil {
-		MergeTimeRange(dst.TimeRange, src.TimeRange)
-	}
-	if dst.TraceId == "" {
-		dst.TraceId = src.TraceId
-	}
-	if !dst.Noop {
-		dst.Noop = src.Noop
-	}
-}
-
-// ============================================================
-// Merge: GetScmOperationRecordGroupCountsResponse
-// ============================================================
-// MergeGetScmOperationRecordGroupCountsResponse fills zero-valued fields in dst from src.
-func MergeGetScmOperationRecordGroupCountsResponse(dst, src *GetScmOperationRecordGroupCountsResponse) {
 	if len(dst.Counts) == 0 {
 		dst.Counts = src.Counts
 	}
@@ -22682,98 +18827,6 @@ func MergeGetToolUseRecordGroupCountsResponse(dst, src *GetToolUseRecordGroupCou
 }
 
 // ============================================================
-// Merge: ListGitLabActivityRecordRequest
-// ============================================================
-// MergeListGitLabActivityRecordRequest fills zero-valued fields in dst from src.
-func MergeListGitLabActivityRecordRequest(dst, src *ListGitLabActivityRecordRequest) {
-	if dst.TimeRange == nil {
-		dst.TimeRange = src.TimeRange
-	} else if src.TimeRange != nil {
-		MergeTimeRange(dst.TimeRange, src.TimeRange)
-	}
-	if dst.PageSize == 0 {
-		dst.PageSize = src.PageSize
-	}
-	if dst.PageToken == "" {
-		dst.PageToken = src.PageToken
-	}
-	if dst.TraceId == "" {
-		dst.TraceId = src.TraceId
-	}
-	if !dst.Noop {
-		dst.Noop = src.Noop
-	}
-}
-
-// ============================================================
-// Merge: ListGitLabActivityRecordResponse
-// ============================================================
-// MergeListGitLabActivityRecordResponse fills zero-valued fields in dst from src.
-func MergeListGitLabActivityRecordResponse(dst, src *ListGitLabActivityRecordResponse) {
-	if len(dst.RecordKeys) == 0 {
-		dst.RecordKeys = src.RecordKeys
-	}
-	if dst.NextPageToken == "" {
-		dst.NextPageToken = src.NextPageToken
-	}
-	if dst.TotalCount == 0 {
-		dst.TotalCount = src.TotalCount
-	}
-	if dst.TraceId == "" {
-		dst.TraceId = src.TraceId
-	}
-	if !dst.Noop {
-		dst.Noop = src.Noop
-	}
-}
-
-// ============================================================
-// Merge: ListLlmCallRecordRequest
-// ============================================================
-// MergeListLlmCallRecordRequest fills zero-valued fields in dst from src.
-func MergeListLlmCallRecordRequest(dst, src *ListLlmCallRecordRequest) {
-	if dst.TimeRange == nil {
-		dst.TimeRange = src.TimeRange
-	} else if src.TimeRange != nil {
-		MergeTimeRange(dst.TimeRange, src.TimeRange)
-	}
-	if dst.PageSize == 0 {
-		dst.PageSize = src.PageSize
-	}
-	if dst.PageToken == "" {
-		dst.PageToken = src.PageToken
-	}
-	if dst.TraceId == "" {
-		dst.TraceId = src.TraceId
-	}
-	if !dst.Noop {
-		dst.Noop = src.Noop
-	}
-}
-
-// ============================================================
-// Merge: ListLlmCallRecordResponse
-// ============================================================
-// MergeListLlmCallRecordResponse fills zero-valued fields in dst from src.
-func MergeListLlmCallRecordResponse(dst, src *ListLlmCallRecordResponse) {
-	if len(dst.RecordKeys) == 0 {
-		dst.RecordKeys = src.RecordKeys
-	}
-	if dst.NextPageToken == "" {
-		dst.NextPageToken = src.NextPageToken
-	}
-	if dst.TotalCount == 0 {
-		dst.TotalCount = src.TotalCount
-	}
-	if dst.TraceId == "" {
-		dst.TraceId = src.TraceId
-	}
-	if !dst.Noop {
-		dst.Noop = src.Noop
-	}
-}
-
-// ============================================================
 // Merge: ListPromptRecordRequest
 // ============================================================
 // MergeListPromptRecordRequest fills zero-valued fields in dst from src.
@@ -22802,52 +18855,6 @@ func MergeListPromptRecordRequest(dst, src *ListPromptRecordRequest) {
 // ============================================================
 // MergeListPromptRecordResponse fills zero-valued fields in dst from src.
 func MergeListPromptRecordResponse(dst, src *ListPromptRecordResponse) {
-	if len(dst.RecordKeys) == 0 {
-		dst.RecordKeys = src.RecordKeys
-	}
-	if dst.NextPageToken == "" {
-		dst.NextPageToken = src.NextPageToken
-	}
-	if dst.TotalCount == 0 {
-		dst.TotalCount = src.TotalCount
-	}
-	if dst.TraceId == "" {
-		dst.TraceId = src.TraceId
-	}
-	if !dst.Noop {
-		dst.Noop = src.Noop
-	}
-}
-
-// ============================================================
-// Merge: ListScmOperationRecordRequest
-// ============================================================
-// MergeListScmOperationRecordRequest fills zero-valued fields in dst from src.
-func MergeListScmOperationRecordRequest(dst, src *ListScmOperationRecordRequest) {
-	if dst.TimeRange == nil {
-		dst.TimeRange = src.TimeRange
-	} else if src.TimeRange != nil {
-		MergeTimeRange(dst.TimeRange, src.TimeRange)
-	}
-	if dst.PageSize == 0 {
-		dst.PageSize = src.PageSize
-	}
-	if dst.PageToken == "" {
-		dst.PageToken = src.PageToken
-	}
-	if dst.TraceId == "" {
-		dst.TraceId = src.TraceId
-	}
-	if !dst.Noop {
-		dst.Noop = src.Noop
-	}
-}
-
-// ============================================================
-// Merge: ListScmOperationRecordResponse
-// ============================================================
-// MergeListScmOperationRecordResponse fills zero-valued fields in dst from src.
-func MergeListScmOperationRecordResponse(dst, src *ListScmOperationRecordResponse) {
 	if len(dst.RecordKeys) == 0 {
 		dst.RecordKeys = src.RecordKeys
 	}

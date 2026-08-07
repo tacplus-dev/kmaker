@@ -40,18 +40,13 @@ import (
 // AccountingMethodJSON represents AccountingMethod in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type accountingmethodJSON struct {
-	Sentinel  string `json:"sentinel,omitempty"`
-	Gateway   string `json:"gateway,omitempty"`
-	Kernel    string `json:"kernel,omitempty"`
-	Mcp       string `json:"mcp,omitempty"`
-	Eventbus  string `json:"eventbus,omitempty"`
-	Oauth     string `json:"oauth,omitempty"`
-	Anthropic string `json:"anthropic,omitempty"`
-	Github    string `json:"github,omitempty"`
-	Gitlab    string `json:"gitlab,omitempty"`
-	Openai    string `json:"openai,omitempty"`
-	Argus     string `json:"argus,omitempty"`
-	Saml      string `json:"saml,omitempty"`
+	Sentinel string `json:"sentinel,omitempty"`
+	Gateway  string `json:"gateway,omitempty"`
+	Kernel   string `json:"kernel,omitempty"`
+	Eventbus string `json:"eventbus,omitempty"`
+	Oauth    string `json:"oauth,omitempty"`
+	Argus    string `json:"argus,omitempty"`
+	Saml     string `json:"saml,omitempty"`
 }
 
 // AccountingMethodToJSON converts AccountingMethod to JSON bytes.
@@ -62,18 +57,13 @@ func AccountingMethodToJSON(v *AccountingMethod) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := accountingmethodJSON{
-		Sentinel:  services.SentinelRPCsToString(v.Sentinel),
-		Gateway:   services.GatewayRPCsToString(v.Gateway),
-		Kernel:    services.KernelRPCsToString(v.Kernel),
-		Mcp:       services.McpRPCsToString(v.Mcp),
-		Eventbus:  services.EventbusRPCsToString(v.Eventbus),
-		Oauth:     services.OauthRPCsToString(v.Oauth),
-		Anthropic: services.AnthropicRPCsToString(v.Anthropic),
-		Github:    services.GithubRPCsToString(v.Github),
-		Gitlab:    services.GitlabRPCsToString(v.Gitlab),
-		Openai:    services.OpenaiRPCsToString(v.Openai),
-		Argus:     services.ArgusRPCsToString(v.Argus),
-		Saml:      services.SamlRPCsToString(v.Saml),
+		Sentinel: services.SentinelRPCsToString(v.Sentinel),
+		Gateway:  services.GatewayRPCsToString(v.Gateway),
+		Kernel:   services.KernelRPCsToString(v.Kernel),
+		Eventbus: services.EventbusRPCsToString(v.Eventbus),
+		Oauth:    services.OauthRPCsToString(v.Oauth),
+		Argus:    services.ArgusRPCsToString(v.Argus),
+		Saml:     services.SamlRPCsToString(v.Saml),
 	}
 	return json.Marshal(helper)
 }
@@ -86,18 +76,13 @@ func AccountingMethodToJSONPretty(v *AccountingMethod) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := accountingmethodJSON{
-		Sentinel:  services.SentinelRPCsToString(v.Sentinel),
-		Gateway:   services.GatewayRPCsToString(v.Gateway),
-		Kernel:    services.KernelRPCsToString(v.Kernel),
-		Mcp:       services.McpRPCsToString(v.Mcp),
-		Eventbus:  services.EventbusRPCsToString(v.Eventbus),
-		Oauth:     services.OauthRPCsToString(v.Oauth),
-		Anthropic: services.AnthropicRPCsToString(v.Anthropic),
-		Github:    services.GithubRPCsToString(v.Github),
-		Gitlab:    services.GitlabRPCsToString(v.Gitlab),
-		Openai:    services.OpenaiRPCsToString(v.Openai),
-		Argus:     services.ArgusRPCsToString(v.Argus),
-		Saml:      services.SamlRPCsToString(v.Saml),
+		Sentinel: services.SentinelRPCsToString(v.Sentinel),
+		Gateway:  services.GatewayRPCsToString(v.Gateway),
+		Kernel:   services.KernelRPCsToString(v.Kernel),
+		Eventbus: services.EventbusRPCsToString(v.Eventbus),
+		Oauth:    services.OauthRPCsToString(v.Oauth),
+		Argus:    services.ArgusRPCsToString(v.Argus),
+		Saml:     services.SamlRPCsToString(v.Saml),
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -180,12 +165,6 @@ func AccountingMethodFromJSON(data []byte) (*AccountingMethod, error) {
 			result.Kernel = parsed
 		}
 	}
-	// Parse enum field: Mcp
-	if raw.Mcp != "" {
-		if parsed, err := services.ParseMcpRPCs(raw.Mcp); err == nil {
-			result.Mcp = parsed
-		}
-	}
 	// Parse enum field: Eventbus
 	if raw.Eventbus != "" {
 		if parsed, err := services.ParseEventbusRPCs(raw.Eventbus); err == nil {
@@ -196,30 +175,6 @@ func AccountingMethodFromJSON(data []byte) (*AccountingMethod, error) {
 	if raw.Oauth != "" {
 		if parsed, err := services.ParseOauthRPCs(raw.Oauth); err == nil {
 			result.Oauth = parsed
-		}
-	}
-	// Parse enum field: Anthropic
-	if raw.Anthropic != "" {
-		if parsed, err := services.ParseAnthropicRPCs(raw.Anthropic); err == nil {
-			result.Anthropic = parsed
-		}
-	}
-	// Parse enum field: Github
-	if raw.Github != "" {
-		if parsed, err := services.ParseGithubRPCs(raw.Github); err == nil {
-			result.Github = parsed
-		}
-	}
-	// Parse enum field: Gitlab
-	if raw.Gitlab != "" {
-		if parsed, err := services.ParseGitlabRPCs(raw.Gitlab); err == nil {
-			result.Gitlab = parsed
-		}
-	}
-	// Parse enum field: Openai
-	if raw.Openai != "" {
-		if parsed, err := services.ParseOpenaiRPCs(raw.Openai); err == nil {
-			result.Openai = parsed
 		}
 	}
 	// Parse enum field: Argus
@@ -318,13 +273,8 @@ func AccountingMethodToEnvVar(v *AccountingMethod) map[string]string {
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SENTINEL"] = services.SentinelRPCsToString(v.Sentinel)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_GATEWAY"] = services.GatewayRPCsToString(v.Gateway)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_KERNEL"] = services.KernelRPCsToString(v.Kernel)
-	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_MCP"] = services.McpRPCsToString(v.Mcp)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_EVENTBUS"] = services.EventbusRPCsToString(v.Eventbus)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_OAUTH"] = services.OauthRPCsToString(v.Oauth)
-	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_ANTHROPIC"] = services.AnthropicRPCsToString(v.Anthropic)
-	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_GITHUB"] = services.GithubRPCsToString(v.Github)
-	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_GITLAB"] = services.GitlabRPCsToString(v.Gitlab)
-	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_OPENAI"] = services.OpenaiRPCsToString(v.Openai)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_ARGUS"] = services.ArgusRPCsToString(v.Argus)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SAML"] = services.SamlRPCsToString(v.Saml)
 	return result
@@ -354,13 +304,6 @@ func AccountingMethodFromEnvVar(env map[string]string) (*AccountingMethod, error
 		}
 		result.Kernel = parsed
 	}
-	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_MCP"]; ok && val != "" {
-		parsed, err := services.ParseMcpRPCs(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Mcp = parsed
-	}
 	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_EVENTBUS"]; ok && val != "" {
 		parsed, err := services.ParseEventbusRPCs(val)
 		if err != nil {
@@ -374,34 +317,6 @@ func AccountingMethodFromEnvVar(env map[string]string) (*AccountingMethod, error
 			return nil, err
 		}
 		result.Oauth = parsed
-	}
-	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_ANTHROPIC"]; ok && val != "" {
-		parsed, err := services.ParseAnthropicRPCs(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Anthropic = parsed
-	}
-	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_GITHUB"]; ok && val != "" {
-		parsed, err := services.ParseGithubRPCs(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Github = parsed
-	}
-	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_GITLAB"]; ok && val != "" {
-		parsed, err := services.ParseGitlabRPCs(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Gitlab = parsed
-	}
-	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_OPENAI"]; ok && val != "" {
-		parsed, err := services.ParseOpenaiRPCs(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Openai = parsed
 	}
 	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_ARGUS"]; ok && val != "" {
 		parsed, err := services.ParseArgusRPCs(val)
@@ -454,11 +369,6 @@ func ValidateAccountingMethodWithDepth(m *AccountingMethod, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Kernel has unknown enum value %d", int32(m.Kernel))
 	}
 
-	// Validate Mcp enum value is known
-	if _, ok := services.McpRPCs_name[int32(m.Mcp)]; !ok {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Mcp has unknown enum value %d", int32(m.Mcp))
-	}
-
 	// Validate Eventbus enum value is known
 	if _, ok := services.EventbusRPCs_name[int32(m.Eventbus)]; !ok {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Eventbus has unknown enum value %d", int32(m.Eventbus))
@@ -467,26 +377,6 @@ func ValidateAccountingMethodWithDepth(m *AccountingMethod, depth int) error {
 	// Validate Oauth enum value is known
 	if _, ok := services.OauthRPCs_name[int32(m.Oauth)]; !ok {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Oauth has unknown enum value %d", int32(m.Oauth))
-	}
-
-	// Validate Anthropic enum value is known
-	if _, ok := services.AnthropicRPCs_name[int32(m.Anthropic)]; !ok {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Anthropic has unknown enum value %d", int32(m.Anthropic))
-	}
-
-	// Validate Github enum value is known
-	if _, ok := services.GithubRPCs_name[int32(m.Github)]; !ok {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Github has unknown enum value %d", int32(m.Github))
-	}
-
-	// Validate Gitlab enum value is known
-	if _, ok := services.GitlabRPCs_name[int32(m.Gitlab)]; !ok {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Gitlab has unknown enum value %d", int32(m.Gitlab))
-	}
-
-	// Validate Openai enum value is known
-	if _, ok := services.OpenaiRPCs_name[int32(m.Openai)]; !ok {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Openai has unknown enum value %d", int32(m.Openai))
 	}
 
 	// Validate Argus enum value is known
@@ -537,26 +427,11 @@ func MergeAccountingMethod(dst, src *AccountingMethod) {
 	if dst.Kernel == 0 {
 		dst.Kernel = src.Kernel
 	}
-	if dst.Mcp == 0 {
-		dst.Mcp = src.Mcp
-	}
 	if dst.Eventbus == 0 {
 		dst.Eventbus = src.Eventbus
 	}
 	if dst.Oauth == 0 {
 		dst.Oauth = src.Oauth
-	}
-	if dst.Anthropic == 0 {
-		dst.Anthropic = src.Anthropic
-	}
-	if dst.Github == 0 {
-		dst.Github = src.Github
-	}
-	if dst.Gitlab == 0 {
-		dst.Gitlab = src.Gitlab
-	}
-	if dst.Openai == 0 {
-		dst.Openai = src.Openai
 	}
 	if dst.Argus == 0 {
 		dst.Argus = src.Argus
