@@ -11,6 +11,7 @@ import (
 
 	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/grpcserver"
 	kmakergrpc "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/s2sm/grpc/servers/services/kmaker"
+	pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -30,6 +31,12 @@ func Run(args []string) error {
 	if err != nil {
 		return err
 	}
+	// Apply annotated proto defaults before ANY field is read. kmaker does not
+	// use the generated ServiceManager (which does this in its own bootstrap),
+	// so nothing else applies them. Without this GetHealthProbePort() returns 0,
+	// the `> 0` guard below skips, and the plaintext probe never binds — the
+	// exact failure kernel hit for the same reason.
+	pb.ConfigDefaults(cfg)
 
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
