@@ -9,10 +9,12 @@ import (
 	"syscall"
 	"time"
 
+	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/grpcserver"
 	kmakergrpc "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/s2sm/grpc/servers/services/kmaker"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -28,6 +30,22 @@ func Run(args []string) error {
 	if err != nil {
 		return err
 	}
+
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
+
+	// Create the health server EARLY so the plaintext probe can bind before
+	// any kernel-dependent init. Starts NOT_SERVING; flipped to SERVING once
+	// the main gRPC server is ready.
+	healthServer := grpcserver.NewHealthServer()
+	if port := cfg.GetHealthProbePort(); port > 0 {
+		go func() {
+			if err := grpcserver.ListenHealthProbe(ctx, port, healthServer); err != nil && ctx.Err() == nil {
+				zap.L().Error("health probe server error", zap.Error(err))
+			}
+		}()
+	}
+
 	signer, err := NewSigner(cfg)
 	if err != nil {
 		return fmt.Errorf("signer: %w", err)
@@ -67,10 +85,13 @@ func Run(args []string) error {
 	if err := wrapper.RegisterServices(server); err != nil {
 		return fmt.Errorf("register kmaker service: %w", err)
 	}
+	// Share the same health server on the main gRPC listener so TLS clients
+	// can also query grpc.health.v1.
+	healthpb.RegisterHealthServer(server, healthServer)
 	reflection.Register(server)
 
-	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-	defer stop()
+	// Flip to SERVING now that the main server is fully wired.
+	healthServer.SetServingStatus("", healthpb.HealthCheckResponse_SERVING)
 
 	errCh := make(chan error, 1)
 	go func() {

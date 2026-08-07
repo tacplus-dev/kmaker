@@ -6,7 +6,7 @@ syntax = "proto3";
 package tenant_config;
 option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/tenant_config";
 
-import "libs/spec.proto";
+import "sys/spec.proto";
 import "common/credentials.proto";
 import "services/gitlab-connector.proto";
 import "services/oauth.proto";

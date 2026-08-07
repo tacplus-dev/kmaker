@@ -5,8 +5,8 @@ This file is embedded in `registry.json` and describes how to navigate it.
 ## Overview
 
 This registry describes a tacplus-generated service mesh with:
-- **1269** message types across **72** packages
-- **738** RPCs across **71** gRPC services
+- **1298** message types across **72** packages
+- **755** RPCs across **71** gRPC services
 - **67** state boundaries
 
 ## Structure
@@ -29,12 +29,12 @@ declared protobuf identity.
 ## Self-Description
 
 The `$schema` field points to `registry.schema.json` (JSON Schema format).
-The type definitions under `libs/tacplus` describe this document's own structure:
-`PackageNode`, `TypeInfo`, `FieldInfo`, `RpcInfo`, `BoundaryInfo`, `EnumValueInfo`, `StatePermEntry`.
+The type definitions under `sys/tacplus` describe this document's own structure:
+`PackageNode`, `TypeInfo`, `FieldInfo`, `RpcInfo`, `BoundaryInfo`, `EnumValueInfo`.
 
 ## Generated Field Reference
 
-This field list is generated from `pkg/proto/libs/tacplus.proto`.
+This field list is generated from `pkg/proto/sys/tacplus.proto`.
 
 ### LanguageDependencies
 - `dependencies` — map<string, string>
@@ -52,22 +52,14 @@ This field list is generated from `pkg/proto/libs/tacplus.proto`.
 - `lang` — map<string, tacplus.LanguageDependencies>
 
 
-### StatePermEntry
-- `target` — string
-- `mode` — spec.StatePermsMode
-
-
 ### BoundaryInfo
 - `service` — tacplus.ServiceName
 - `state_root` — string
 - `boundary` — string
-- `consistency` — spec.ConsistencyModel
 - `persistence` — bool
 - `collection` — bool
 - `type_fqn` — string
 - `boundary_callers` — repeated string
-- `boundary_perms` — repeated tacplus.StatePermEntry
-- `state_perms` — repeated tacplus.StatePermEntry
 - `rpcs` — repeated string
 - `is_config` — bool
 - `tag` — string
@@ -154,17 +146,15 @@ This field list is generated from `pkg/proto/libs/tacplus.proto`.
 - `graph_field_index` — string
 - `graph_upsert` — bool
 - `graph_reverse` — bool
-- `timeseries_type` — string
-- `timeseries_codec` — string
 - `timeseries_order_key` — int32
 - `timeseries_partition_key` — bool
-- `timeseries_default_expr` — string
-- `timeseries_low_cardinality` — bool
 - `oneof` — bool
 - `oneof_name` — string
 - `store_key` — bool
 - `quorum_write` — bool
 - `constraint_infos` — repeated tacplus.FieldConstraintInfo
+- `timeseries_cardinality_hint` — spec.CardinalityHint
+- `data_entitlement_mode` — spec.RedactMode
 
 
 ### TypeInfo
@@ -176,18 +166,19 @@ This field list is generated from `pkg/proto/libs/tacplus.proto`.
 - `fields` — repeated tacplus.FieldInfo
 - `graph_type` — string
 - `graph_xid_field` — string
-- `graph_schema` — string
 - `graph_type_source` — string
-- `timeseries_schema` — string
 - `timeseries_table_name` — string
 - `timeseries_table_source` — string
-- `eventdb_key` — string
-- `eventdb_owner` — string
+- `record_key` — string
+- `record_owner` — string
 - `graph_projections` — repeated tacplus.GraphProjectionInfo
 - `timeseries_projections` — repeated tacplus.TimeseriesProjectionInfo
 - `service_store` — bool
 - `service_store_name` — string
 - `service_store_tag` — string
+- `timeseries_retention` — tacplus.RetentionPolicyInfo
+- `timeseries_dedup` — tacplus.DedupPolicyInfo
+- `data_entitlement_default` — spec.RedactMode
 
 
 ### GraphProjectionFieldInfo
@@ -210,15 +201,26 @@ This field list is generated from `pkg/proto/libs/tacplus.proto`.
 - `as` — string
 - `order_key` — int32
 - `partition_key` — bool
-- `low_cardinality` — bool
+- `cardinality_hint` — spec.CardinalityHint
+
+
+### RetentionPolicyInfo
+- `timestamp_field` — string
+- `duration_seconds` — int64
+
+
+### DedupPolicyInfo
+- `strategy` — spec.DedupStrategy
+- `key_fields` — repeated string
+- `version_field` — string
 
 
 ### TimeseriesProjectionInfo
 - `name` — string
-- `engine` — string
-- `ttl` — string
 - `when` — string
 - `field` — repeated tacplus.TimeseriesProjectionFieldInfo
+- `retention` — tacplus.RetentionPolicyInfo
+- `dedup` — tacplus.DedupPolicyInfo
 
 
 ### RpcSurfaceInfo
@@ -300,7 +302,6 @@ This field list is generated from `pkg/proto/libs/tacplus.proto`.
 - `grpc_service` — string
 - `rpcs` — repeated tacplus.RpcInfo
 - `boundaries` — repeated string
-- `dependencies` — repeated string
 - `event_tag` — string
 - `smb` — bool
 - `smb_authority` — bool
@@ -453,10 +454,7 @@ Per-service aggregate enum values (`ALL_ACCESSORS`, `ALL_MUTATORS`, `ALL_EXECUTO
 ## Security Metadata
 
 Each `BoundaryInfo` carries:
-- `state_perms` — which other state roots this service accesses (target + mode: RO/RW/WORM/CALL)
-- `internal` — namespace isolation flag
 - `boundary_callers` — which services can call this boundary cross-namespace
-- `boundary_perms` — per-boundary access overrides
 
 Each `RpcInfo` carries:
 - `auth_disabled` — whether authentication is bypassed
@@ -493,14 +491,12 @@ Each `RpcInfo` carries:
 - **EventbusConfigStateService**
 - **EventbusStateService**
 - **GatewayConfigStateService**
-- **GatewayJwksViewService**
 - **GatewayStateService**
 - **GitLabConnectorEventBusStateService**
 - **GitLabConnectorStateService**
 - **GithubConfigStateService**
 - **GitlabConfigStateService**
 - **GitlabconnectorConfigStateService**
-- **GraphMutation**
 - **GraphdbConfigStateService**
 - **GraphdbQuery**
 - **GraphdbStateService**
@@ -513,7 +509,6 @@ Each `RpcInfo` carries:
 - **LetsEncryptStateService**
 - **LetsencryptConfigStateService**
 - **LlmEventBusStateService**
-- **LockService**
 - **McpConfigStateService**
 - **Messaging**
 - **Metadata**
@@ -527,6 +522,8 @@ Each `RpcInfo` carries:
 - **OperatorConfigStateService**
 - **Outbound**
 - **Proxy**
+- **PublicJwksViewService**
+- **RecordMap**
 - **SamlConfigStateService**
 - **ScmEventBusStateService**
 - **SentinelConfigStateService**
@@ -540,7 +537,8 @@ Each `RpcInfo` carries:
 - **TimeDbStateService**
 - **TimedbConfigStateService**
 - **TimedbQuery**
-- **TimeseriesMutation**
+- **TimeseriesGroupCounts**
+- **TimeseriesQuery**
 - **TlsCertService**
 - **TraceEventBusStateService**
 - **TraceSession**
@@ -549,51 +547,17 @@ Each `RpcInfo` carries:
 
 ## Packages
 
-- `clients/cavalier`
-- `clients/cavalierctl`
+- `clients/bluerock`
+- `clients/bluerockctl`
 - `common/credentials`
 - `common/hazelcast`
-- `common/tokenrequest`
 - `generated/accounting_method`
 - `generated/entitlements`
+- `generated/eventbus_support`
 - `generated/project_config`
 - `generated/services`
 - `generated/services_config`
 - `generated/tenant_config`
-- `libs/accounting`
-- `libs/alpn`
-- `libs/cloudidentity`
-- `libs/cloudvendor`
-- `libs/credpair`
-- `libs/diskstore`
-- `libs/errors`
-- `libs/filesystem`
-- `libs/gatewayjwksview`
-- `libs/graph_api`
-- `libs/grpcconfig`
-- `libs/healthreport`
-- `libs/host`
-- `libs/http`
-- `libs/httpclient`
-- `libs/ip`
-- `libs/jwk`
-- `libs/jwkview`
-- `libs/key`
-- `libs/lock`
-- `libs/logger`
-- `libs/opalib`
-- `libs/outputformat`
-- `libs/query`
-- `libs/saml`
-- `libs/smbcert`
-- `libs/spec`
-- `libs/tacplus`
-- `libs/tags`
-- `libs/tlscert`
-- `libs/token`
-- `libs/tokencache`
-- `libs/trace`
-- `libs/x509`
 - `services/anthropic`
 - `services/argus`
 - `services/eventbus`
@@ -615,6 +579,40 @@ Each `RpcInfo` carries:
 - `services/sentinel`
 - `services/stratum`
 - `services/timedb`
+- `sys/accounting`
+- `sys/alpn`
+- `sys/cloudidentity`
+- `sys/cloudvendor`
+- `sys/credpair`
+- `sys/diskstore`
+- `sys/entitlement`
+- `sys/errors`
+- `sys/filesystem`
+- `sys/grpcconfig`
+- `sys/healthreport`
+- `sys/host`
+- `sys/http`
+- `sys/httpclient`
+- `sys/ip`
+- `sys/jwk`
+- `sys/jwkview`
+- `sys/key`
+- `sys/logger`
+- `sys/opalib`
+- `sys/outputformat`
+- `sys/publicjwksview`
+- `sys/query`
+- `sys/saml`
+- `sys/smbcert`
+- `sys/spec`
+- `sys/tacplus`
+- `sys/tags`
+- `sys/tlscert`
+- `sys/token`
+- `sys/tokencache`
+- `sys/tokenrequest`
+- `sys/trace`
+- `sys/x509`
 - `vservices/agent-sensor`
 - `vservices/entitlements`
 - `vservices/gitlab-connector`

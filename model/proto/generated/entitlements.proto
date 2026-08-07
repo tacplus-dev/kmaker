@@ -11,6 +11,13 @@ option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/k
 message TokenEntitlements {
   // grants is a flat list of generated grant tokens, e.g. PACKAGE_SERVICE_RPC.
   repeated string grants = 1;
+  // data_grants is a flat list of generated data-entitlement grant tokens, e.g.
+  // PACKAGE_RECORD_FIELD. A data grant names what the caller may SEE RAW: a MAY_*
+  // redact field with a matching grant egresses raw; absent a grant the field gets
+  // its most-protective default (MAY_REDACT -> REDACT, MAY_ANONYMIZE -> ANONYMIZE).
+  // Stamped by OPA at token-exchange time alongside grants — an identity property,
+  // never a request parameter.
+  repeated string data_grants = 2;
   // azp restricts these entitlements to tokens with a matching authorized party.
   // Empty = entitlements apply regardless of azp.
   repeated string azp = 100;

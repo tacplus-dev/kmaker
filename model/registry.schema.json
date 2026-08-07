@@ -15,27 +15,11 @@
           },
           "type": "array"
         },
-        "boundary_perms": {
-          "items": {
-            "$ref": "#/$defs/StatePermEntry"
-          },
-          "type": "array"
-        },
         "collected_health": {
           "type": "boolean"
         },
         "collection": {
           "type": "boolean"
-        },
-        "consistency": {
-          "enum": [
-            "CONSISTENCY_UNSPECIFIED",
-            "CONSISTENCY_ATOMIC",
-            "CONSISTENCY_CONVERGENT",
-            "CONSISTENCY_INHERITED",
-            "CONSISTENCY_REPLICATED"
-          ],
-          "type": "string"
         },
         "graph_type": {
           "type": "string"
@@ -58,12 +42,6 @@
             "SERVICE_NAME_ANY"
           ],
           "type": "string"
-        },
-        "state_perms": {
-          "items": {
-            "$ref": "#/$defs/StatePermEntry"
-          },
-          "type": "array"
         },
         "state_root": {
           "type": "string"
@@ -112,6 +90,28 @@
         },
         "wildcard": {
           "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "DedupPolicyInfo": {
+      "description": "tacplus.DedupPolicyInfo",
+      "properties": {
+        "key_fields": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "strategy": {
+          "enum": [
+            "DEDUP_NONE",
+            "DEDUP_LATEST_BY_VERSION"
+          ],
+          "type": "string"
+        },
+        "version_field": {
+          "type": "string"
         }
       },
       "type": "object"
@@ -390,6 +390,16 @@
           },
           "type": "array"
         },
+        "data_entitlement_mode": {
+          "enum": [
+            "REDACT_MODE_UNSPECIFIED",
+            "REDACT_MODE_DROP",
+            "REDACT_MODE_PSEUDONYMIZE",
+            "REDACT_MODE_MAY_REDACT",
+            "REDACT_MODE_MAY_ANONYMIZE"
+          ],
+          "type": "string"
+        },
         "default_json": {
           "type": "string"
         },
@@ -453,23 +463,19 @@
         "store_key": {
           "type": "boolean"
         },
-        "timeseries_codec": {
+        "timeseries_cardinality_hint": {
+          "enum": [
+            "CARDINALITY_UNSPECIFIED",
+            "CARDINALITY_LOW",
+            "CARDINALITY_HIGH"
+          ],
           "type": "string"
-        },
-        "timeseries_default_expr": {
-          "type": "string"
-        },
-        "timeseries_low_cardinality": {
-          "type": "boolean"
         },
         "timeseries_order_key": {
           "type": "integer"
         },
         "timeseries_partition_key": {
           "type": "boolean"
-        },
-        "timeseries_type": {
-          "type": "string"
         },
         "type": {
           "enum": [
@@ -656,6 +662,26 @@
             "$ref": "#/$defs/VServiceInfo"
           },
           "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "RetentionPolicyInfo": {
+      "description": "tacplus.RetentionPolicyInfo",
+      "properties": {
+        "duration_seconds": {
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "pattern": "^-?\\d+$",
+              "type": "string"
+            }
+          ]
+        },
+        "timestamp_field": {
+          "type": "string"
         }
       },
       "type": "object"
@@ -895,12 +921,6 @@
           },
           "type": "array"
         },
-        "dependencies": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
         "description": {
           "type": "string"
         },
@@ -941,25 +961,6 @@
       },
       "type": "object"
     },
-    "StatePermEntry": {
-      "description": "tacplus.StatePermEntry",
-      "properties": {
-        "mode": {
-          "enum": [
-            "STATE_PERMS_MODE_UNSPECIFIED",
-            "STATE_PERMS_MODE_RO",
-            "STATE_PERMS_MODE_RW",
-            "STATE_PERMS_MODE_WORM",
-            "STATE_PERMS_MODE_CALL"
-          ],
-          "type": "string"
-        },
-        "target": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
     "SubscriptionInfo": {
       "description": "tacplus.SubscriptionInfo",
       "properties": {
@@ -987,8 +988,13 @@
         "as": {
           "type": "string"
         },
-        "low_cardinality": {
-          "type": "boolean"
+        "cardinality_hint": {
+          "enum": [
+            "CARDINALITY_UNSPECIFIED",
+            "CARDINALITY_LOW",
+            "CARDINALITY_HIGH"
+          ],
+          "type": "string"
         },
         "order_key": {
           "type": "integer"
@@ -1005,8 +1011,8 @@
     "TimeseriesProjectionInfo": {
       "description": "tacplus.TimeseriesProjectionInfo",
       "properties": {
-        "engine": {
-          "type": "string"
+        "dedup": {
+          "$ref": "#/$defs/DedupPolicyInfo"
         },
         "field": {
           "items": {
@@ -1017,8 +1023,8 @@
         "name": {
           "type": "string"
         },
-        "ttl": {
-          "type": "string"
+        "retention": {
+          "$ref": "#/$defs/RetentionPolicyInfo"
         },
         "when": {
           "type": "string"
@@ -1029,13 +1035,17 @@
     "TypeInfo": {
       "description": "tacplus.TypeInfo",
       "properties": {
+        "data_entitlement_default": {
+          "enum": [
+            "REDACT_MODE_UNSPECIFIED",
+            "REDACT_MODE_DROP",
+            "REDACT_MODE_PSEUDONYMIZE",
+            "REDACT_MODE_MAY_REDACT",
+            "REDACT_MODE_MAY_ANONYMIZE"
+          ],
+          "type": "string"
+        },
         "description": {
-          "type": "string"
-        },
-        "eventdb_key": {
-          "type": "string"
-        },
-        "eventdb_owner": {
           "type": "string"
         },
         "fields": {
@@ -1053,9 +1063,6 @@
           },
           "type": "array"
         },
-        "graph_schema": {
-          "type": "string"
-        },
         "graph_type": {
           "type": "string"
         },
@@ -1071,6 +1078,12 @@
         "package": {
           "type": "string"
         },
+        "record_key": {
+          "type": "string"
+        },
+        "record_owner": {
+          "type": "string"
+        },
         "schema_json": {
           "type": "string"
         },
@@ -1083,14 +1096,17 @@
         "service_store_tag": {
           "type": "string"
         },
+        "timeseries_dedup": {
+          "$ref": "#/$defs/DedupPolicyInfo"
+        },
         "timeseries_projections": {
           "items": {
             "$ref": "#/$defs/TimeseriesProjectionInfo"
           },
           "type": "array"
         },
-        "timeseries_schema": {
-          "type": "string"
+        "timeseries_retention": {
+          "$ref": "#/$defs/RetentionPolicyInfo"
         },
         "timeseries_table_name": {
           "type": "string"
@@ -1191,6 +1207,6 @@
   "$id": "registry.schema.json",
   "$ref": "#/$defs/PackageNode",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Schema for the tacplus registry.json, generated from libs/tacplus.proto descriptors.",
+  "description": "Schema for the tacplus registry.json, generated from sys/tacplus.proto descriptors.",
   "title": "tacplus Registry"
 }
