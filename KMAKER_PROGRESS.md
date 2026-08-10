@@ -5,7 +5,7 @@
 - Aligned handwritten kmaker code with the governed proto contract:
   - `SignKernelCert` is now `MintKernelCert`.
   - signer and handler tests use the generated `MintKernelCertRequest`.
-- Regenerated the Go model from `/Users/jody/workspace/cavalier/proto` using the
+- Regenerated the Go model from `/Users/jody/workspace/schematic/proto` using the
   source-built tacplus binary after fixing the generator.
 - Verified generated service manager code now calls `MintX509Cert` instead of
   the legacy `X509Mint`.

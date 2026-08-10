@@ -13,7 +13,7 @@ LABEL org.opencontainers.image.created="${BUILD_DATE}" \
       org.opencontainers.image.revision="${VCS_REF}" \
       org.opencontainers.image.vendor="Second Star Cavalier LLC" \
       org.opencontainers.image.title="Kmaker" \
-      org.opencontainers.image.description="Kernel bootstrap certificate signing service for Cavalier control plane"
+      org.opencontainers.image.description="Kernel bootstrap certificate signing service for Schematic control plane"
 
 COPY bin/kmaker /usr/local/bin/kmaker
 

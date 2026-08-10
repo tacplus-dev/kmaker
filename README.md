@@ -4,11 +4,11 @@ Kmaker is the bootstrap certificate authority for kernel instances.
 Kernel pods present Kubernetes projected service account tokens to
 `Kmaker.MintKernelCert`; kmaker validates the token with the Kubernetes
 TokenReview API, verifies the token-bound pod with the Kubernetes Pod API, and
-signs a Cavalier `x509.X509CertRequest` under the operator-provisioned cluster
+signs a Schematic `x509.X509CertRequest` under the operator-provisioned cluster
 signing CA.
 
 Kmaker intentionally starts outside the normal kernel-backed service manager:
-kernel needs kmaker before kernel can mint ordinary Cavalier service
+kernel needs kmaker before kernel can mint ordinary Schematic service
 certificates. The RPC still uses generated tacplus protobuf types.
 
 ## Configuration
@@ -18,12 +18,12 @@ config.
 
 | Field | Default | Description |
 |-------|---------|-------------|
-| `cluster_name` | - | Logical Cavalier cluster name |
+| `cluster_name` | - | Logical Schematic cluster name |
 | `listener` | `0.0.0.0:8443` | gRPC bind address |
 | `signing_ca` | - | Cluster signing CA chain and private key |
 | `spiffe_prefix` | `local/dev` | Prefix for `spiffe://<prefix>/kernel` |
 | `token_audience` | `kmaker` | Required Kubernetes token audience |
-| `kernel_service_accounts` | `cavalier/kernel` | Service accounts allowed to request kernel certs |
+| `kernel_service_accounts` | `schematic/kernel` | Service accounts allowed to request kernel certs |
 | `kernel_cert_lifetime_seconds` | `86400` | Maximum issued cert lifetime |
 | `tls` | - | Optional serving certificate for kmaker |
 
@@ -33,7 +33,7 @@ is intended only for local/development bootstrap.
 ## Kubernetes
 
 The kmaker pod must be allowed to create TokenReview requests and read Pods in
-the Cavalier namespace:
+the Schematic namespace:
 
 ```yaml
 rules:

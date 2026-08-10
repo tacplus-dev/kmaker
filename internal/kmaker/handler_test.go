@@ -40,11 +40,11 @@ func (f fakePodGetter) GetPod(context.Context, string, string) (*KubernetesPod, 
 }
 
 func TestParseServiceAccountUsername(t *testing.T) {
-	sa, ok := ParseServiceAccountUsername("system:serviceaccount:cavalier:kernel")
+	sa, ok := ParseServiceAccountUsername("system:serviceaccount:schematic:kernel")
 	if !ok {
 		t.Fatal("expected service account username to parse")
 	}
-	if sa.Namespace != "cavalier" || sa.Name != "kernel" {
+	if sa.Namespace != "schematic" || sa.Name != "kernel" {
 		t.Fatalf("unexpected service account: %#v", sa)
 	}
 	if _, ok := ParseServiceAccountUsername("alice@example.com"); ok {
@@ -60,11 +60,11 @@ func TestHandlerSignsKernelCert(t *testing.T) {
 	}
 	handler, err := NewHandler(cfg, signer, fakeReviewer{status: &TokenReviewStatus{
 		Authenticated: true,
-		Username:      "system:serviceaccount:cavalier:kernel",
+		Username:      "system:serviceaccount:schematic:kernel",
 		UID:           "uid-1",
 		Audiences:     []string{"kmaker"},
 		Extra:         tokenReviewPodExtra("kernel-0", "pod-uid-0"),
-	}}, fakePodGetter{pod: testKubernetesPod("cavalier", "kernel-0", "pod-uid-0", "kernel", "Running")})
+	}}, fakePodGetter{pod: testKubernetesPod("schematic", "kernel-0", "pod-uid-0", "kernel", "Running")})
 	if err != nil {
 		t.Fatalf("NewHandler: %v", err)
 	}
@@ -107,11 +107,11 @@ func TestHandlerRejectsCallerSuppliedKernelIdentity(t *testing.T) {
 	}
 	handler, err := NewHandler(cfg, signer, fakeReviewer{status: &TokenReviewStatus{
 		Authenticated: true,
-		Username:      "system:serviceaccount:cavalier:kernel",
+		Username:      "system:serviceaccount:schematic:kernel",
 		UID:           "uid-1",
 		Audiences:     []string{"kmaker"},
 		Extra:         tokenReviewPodExtra("kernel-0", "pod-uid-0"),
-	}}, fakePodGetter{pod: testKubernetesPod("cavalier", "kernel-0", "pod-uid-0", "kernel", "Running")})
+	}}, fakePodGetter{pod: testKubernetesPod("schematic", "kernel-0", "pod-uid-0", "kernel", "Running")})
 	if err != nil {
 		t.Fatalf("NewHandler: %v", err)
 	}
@@ -123,7 +123,7 @@ func TestHandlerRejectsCallerSuppliedKernelIdentity(t *testing.T) {
 		{
 			name: "dns san",
 			mutate: func(req *pb.MintKernelCertRequest) {
-				req.CertRequest.DnsNames = []string{"kernel-0.cavalier.svc"}
+				req.CertRequest.DnsNames = []string{"kernel-0.schematic.svc"}
 			},
 		},
 		{
@@ -176,11 +176,11 @@ func TestHandlerAllowsCallerMetadataMatchingTokenBoundPod(t *testing.T) {
 	}
 	handler, err := NewHandler(cfg, signer, fakeReviewer{status: &TokenReviewStatus{
 		Authenticated: true,
-		Username:      "system:serviceaccount:cavalier:kernel",
+		Username:      "system:serviceaccount:schematic:kernel",
 		UID:           "uid-1",
 		Audiences:     []string{"kmaker"},
 		Extra:         tokenReviewPodExtra("kernel-0", "pod-uid-0"),
-	}}, fakePodGetter{pod: testKubernetesPod("cavalier", "kernel-0", "pod-uid-0", "kernel", "Running")})
+	}}, fakePodGetter{pod: testKubernetesPod("schematic", "kernel-0", "pod-uid-0", "kernel", "Running")})
 	if err != nil {
 		t.Fatalf("NewHandler: %v", err)
 	}
@@ -210,11 +210,11 @@ func TestHandlerRejectsCallerMetadataMismatchingTokenBoundPod(t *testing.T) {
 	}
 	handler, err := NewHandler(cfg, signer, fakeReviewer{status: &TokenReviewStatus{
 		Authenticated: true,
-		Username:      "system:serviceaccount:cavalier:kernel",
+		Username:      "system:serviceaccount:schematic:kernel",
 		UID:           "uid-1",
 		Audiences:     []string{"kmaker"},
 		Extra:         tokenReviewPodExtra("kernel-0", "pod-uid-0"),
-	}}, fakePodGetter{pod: testKubernetesPod("cavalier", "kernel-0", "pod-uid-0", "kernel", "Running")})
+	}}, fakePodGetter{pod: testKubernetesPod("schematic", "kernel-0", "pod-uid-0", "kernel", "Running")})
 	if err != nil {
 		t.Fatalf("NewHandler: %v", err)
 	}
@@ -265,10 +265,10 @@ func TestHandlerRejectsMissingTokenBoundPod(t *testing.T) {
 	}
 	handler, err := NewHandler(cfg, signer, fakeReviewer{status: &TokenReviewStatus{
 		Authenticated: true,
-		Username:      "system:serviceaccount:cavalier:kernel",
+		Username:      "system:serviceaccount:schematic:kernel",
 		UID:           "uid-1",
 		Audiences:     []string{"kmaker"},
-	}}, fakePodGetter{pod: testKubernetesPod("cavalier", "kernel-0", "pod-uid-0", "kernel", "Running")})
+	}}, fakePodGetter{pod: testKubernetesPod("schematic", "kernel-0", "pod-uid-0", "kernel", "Running")})
 	if err != nil {
 		t.Fatalf("NewHandler: %v", err)
 	}
@@ -290,19 +290,19 @@ func TestHandlerRejectsLivePodMismatch(t *testing.T) {
 	}{
 		{
 			name: "uid mismatch",
-			pod:  testKubernetesPod("cavalier", "kernel-0", "pod-uid-1", "kernel", "Running"),
+			pod:  testKubernetesPod("schematic", "kernel-0", "pod-uid-1", "kernel", "Running"),
 		},
 		{
 			name: "service account mismatch",
-			pod:  testKubernetesPod("cavalier", "kernel-0", "pod-uid-0", "not-kernel", "Running"),
+			pod:  testKubernetesPod("schematic", "kernel-0", "pod-uid-0", "not-kernel", "Running"),
 		},
 		{
 			name: "terminal pod",
-			pod:  testKubernetesPod("cavalier", "kernel-0", "pod-uid-0", "kernel", "Succeeded"),
+			pod:  testKubernetesPod("schematic", "kernel-0", "pod-uid-0", "kernel", "Succeeded"),
 		},
 		{
 			name: "unknown pod phase",
-			pod:  testKubernetesPod("cavalier", "kernel-0", "pod-uid-0", "kernel", "Unknown"),
+			pod:  testKubernetesPod("schematic", "kernel-0", "pod-uid-0", "kernel", "Unknown"),
 		},
 		{
 			name: "pod lookup error",
@@ -322,7 +322,7 @@ func TestHandlerRejectsLivePodMismatch(t *testing.T) {
 			}
 			handler, err := NewHandler(cfg, signer, fakeReviewer{status: &TokenReviewStatus{
 				Authenticated: true,
-				Username:      "system:serviceaccount:cavalier:kernel",
+				Username:      "system:serviceaccount:schematic:kernel",
 				UID:           "uid-1",
 				Audiences:     []string{"kmaker"},
 				Extra:         tokenReviewPodExtra("kernel-0", "pod-uid-0"),
@@ -425,7 +425,7 @@ func testConfig(t *testing.T) *pb.Config {
 		SpiffePrefix:              "local/dev",
 		TokenAudience:             "kmaker",
 		KernelCertLifetimeSeconds: 3600,
-		KernelServiceAccounts:     []*pb.KernelServiceAccount{{Namespace: "cavalier", Name: "kernel"}},
+		KernelServiceAccounts:     []*pb.KernelServiceAccount{{Namespace: "schematic", Name: "kernel"}},
 		SigningCa: &x509pb.X509CertChain{
 			Id: "test-ca",
 			Key: &keypb.Key{

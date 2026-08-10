@@ -15,7 +15,7 @@ const (
 	defaultSpiffePrefix          = "local/dev"
 	defaultTokenAudience         = "kmaker"
 	defaultCertLifetime          = int64(86400)
-	defaultKernelNamespace       = "cavalier"
+	defaultKernelNamespace       = "schematic"
 	defaultKernelSAName          = "kernel"
 )
 
