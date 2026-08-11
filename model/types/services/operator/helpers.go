@@ -598,21 +598,21 @@ func TLSConfigToTOML(v *TLSConfig) ([]byte, error) {
 // TopologyJSON represents Topology in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type topologyJSON struct {
-	KernelNodes     int32  `json:"kernel_nodes,omitempty"`
-	SentinelNodes   int32  `json:"sentinel_nodes,omitempty"`
-	EventbusNodes   int32  `json:"eventbus_nodes,omitempty"`
-	GatewayNodes    int32  `json:"gateway_nodes,omitempty"`
-	OauthNodes      int32  `json:"oauth_nodes,omitempty"`
-	MsggatewayNodes int32  `json:"msggateway_nodes,omitempty"`
-	OpaNodes        int32  `json:"opa_nodes,omitempty"`
-	TimedbNodes     int32  `json:"timedb_nodes,omitempty"`
-	GraphdbNodes    int32  `json:"graphdb_nodes,omitempty"`
-	ArgusNodes      int32  `json:"argus_nodes,omitempty"`
-	StratumNodes    int32  `json:"stratum_nodes,omitempty"`
-	SamlNodes       int32  `json:"saml_nodes,omitempty"`
-	KmakerNodes     int32  `json:"kmaker_nodes,omitempty"`
-	TraceId         string `json:"trace_id,omitempty"`
-	Noop            bool   `json:"noop,omitempty"`
+	KernelNodes   int32  `json:"kernel_nodes,omitempty"`
+	SentinelNodes int32  `json:"sentinel_nodes,omitempty"`
+	EventbusNodes int32  `json:"eventbus_nodes,omitempty"`
+	GatewayNodes  int32  `json:"gateway_nodes,omitempty"`
+	OauthNodes    int32  `json:"oauth_nodes,omitempty"`
+	OpaNodes      int32  `json:"opa_nodes,omitempty"`
+	TimedbNodes   int32  `json:"timedb_nodes,omitempty"`
+	GraphdbNodes  int32  `json:"graphdb_nodes,omitempty"`
+	ArgusNodes    int32  `json:"argus_nodes,omitempty"`
+	StratumNodes  int32  `json:"stratum_nodes,omitempty"`
+	SamlNodes     int32  `json:"saml_nodes,omitempty"`
+	KmakerNodes   int32  `json:"kmaker_nodes,omitempty"`
+	EchoNodes     int32  `json:"echo_nodes,omitempty"`
+	TraceId       string `json:"trace_id,omitempty"`
+	Noop          bool   `json:"noop,omitempty"`
 }
 
 // TopologyToJSON converts Topology to JSON bytes.
@@ -623,21 +623,21 @@ func TopologyToJSON(v *Topology) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := topologyJSON{
-		KernelNodes:     v.KernelNodes,
-		SentinelNodes:   v.SentinelNodes,
-		EventbusNodes:   v.EventbusNodes,
-		GatewayNodes:    v.GatewayNodes,
-		OauthNodes:      v.OauthNodes,
-		MsggatewayNodes: v.MsggatewayNodes,
-		OpaNodes:        v.OpaNodes,
-		TimedbNodes:     v.TimedbNodes,
-		GraphdbNodes:    v.GraphdbNodes,
-		ArgusNodes:      v.ArgusNodes,
-		StratumNodes:    v.StratumNodes,
-		SamlNodes:       v.SamlNodes,
-		KmakerNodes:     v.KmakerNodes,
-		TraceId:         v.TraceId,
-		Noop:            v.Noop,
+		KernelNodes:   v.KernelNodes,
+		SentinelNodes: v.SentinelNodes,
+		EventbusNodes: v.EventbusNodes,
+		GatewayNodes:  v.GatewayNodes,
+		OauthNodes:    v.OauthNodes,
+		OpaNodes:      v.OpaNodes,
+		TimedbNodes:   v.TimedbNodes,
+		GraphdbNodes:  v.GraphdbNodes,
+		ArgusNodes:    v.ArgusNodes,
+		StratumNodes:  v.StratumNodes,
+		SamlNodes:     v.SamlNodes,
+		KmakerNodes:   v.KmakerNodes,
+		EchoNodes:     v.EchoNodes,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -650,21 +650,21 @@ func TopologyToJSONPretty(v *Topology) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := topologyJSON{
-		KernelNodes:     v.KernelNodes,
-		SentinelNodes:   v.SentinelNodes,
-		EventbusNodes:   v.EventbusNodes,
-		GatewayNodes:    v.GatewayNodes,
-		OauthNodes:      v.OauthNodes,
-		MsggatewayNodes: v.MsggatewayNodes,
-		OpaNodes:        v.OpaNodes,
-		TimedbNodes:     v.TimedbNodes,
-		GraphdbNodes:    v.GraphdbNodes,
-		ArgusNodes:      v.ArgusNodes,
-		StratumNodes:    v.StratumNodes,
-		SamlNodes:       v.SamlNodes,
-		KmakerNodes:     v.KmakerNodes,
-		TraceId:         v.TraceId,
-		Noop:            v.Noop,
+		KernelNodes:   v.KernelNodes,
+		SentinelNodes: v.SentinelNodes,
+		EventbusNodes: v.EventbusNodes,
+		GatewayNodes:  v.GatewayNodes,
+		OauthNodes:    v.OauthNodes,
+		OpaNodes:      v.OpaNodes,
+		TimedbNodes:   v.TimedbNodes,
+		GraphdbNodes:  v.GraphdbNodes,
+		ArgusNodes:    v.ArgusNodes,
+		StratumNodes:  v.StratumNodes,
+		SamlNodes:     v.SamlNodes,
+		KmakerNodes:   v.KmakerNodes,
+		EchoNodes:     v.EchoNodes,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -734,7 +734,6 @@ func TopologyFromJSON(data []byte) (*Topology, error) {
 	result.EventbusNodes = raw.EventbusNodes
 	result.GatewayNodes = raw.GatewayNodes
 	result.OauthNodes = raw.OauthNodes
-	result.MsggatewayNodes = raw.MsggatewayNodes
 	result.OpaNodes = raw.OpaNodes
 	result.TimedbNodes = raw.TimedbNodes
 	result.GraphdbNodes = raw.GraphdbNodes
@@ -742,6 +741,7 @@ func TopologyFromJSON(data []byte) (*Topology, error) {
 	result.StratumNodes = raw.StratumNodes
 	result.SamlNodes = raw.SamlNodes
 	result.KmakerNodes = raw.KmakerNodes
+	result.EchoNodes = raw.EchoNodes
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -790,16 +790,12 @@ func TopologyToTOML(v *Topology) ([]byte, error) {
 // OptionalServicesJSON represents OptionalServices in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type optionalservicesJSON struct {
-	Anthropic bool   `json:"anthropic,omitempty"`
-	Openai    bool   `json:"openai,omitempty"`
-	Gitlab    bool   `json:"gitlab,omitempty"`
-	Github    bool   `json:"github,omitempty"`
-	Mcp       bool   `json:"mcp,omitempty"`
-	Saml      bool   `json:"saml,omitempty"`
-	Oauth     bool   `json:"oauth,omitempty"`
-	Keycloak  bool   `json:"keycloak,omitempty"`
-	TraceId   string `json:"trace_id,omitempty"`
-	Noop      bool   `json:"noop,omitempty"`
+	Saml     bool   `json:"saml,omitempty"`
+	Oauth    bool   `json:"oauth,omitempty"`
+	Keycloak bool   `json:"keycloak,omitempty"`
+	Echo     bool   `json:"echo,omitempty"`
+	TraceId  string `json:"trace_id,omitempty"`
+	Noop     bool   `json:"noop,omitempty"`
 }
 
 // OptionalServicesToJSON converts OptionalServices to JSON bytes.
@@ -810,16 +806,12 @@ func OptionalServicesToJSON(v *OptionalServices) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := optionalservicesJSON{
-		Anthropic: v.Anthropic,
-		Openai:    v.Openai,
-		Gitlab:    v.Gitlab,
-		Github:    v.Github,
-		Mcp:       v.Mcp,
-		Saml:      v.Saml,
-		Oauth:     v.Oauth,
-		Keycloak:  v.Keycloak,
-		TraceId:   v.TraceId,
-		Noop:      v.Noop,
+		Saml:     v.Saml,
+		Oauth:    v.Oauth,
+		Keycloak: v.Keycloak,
+		Echo:     v.Echo,
+		TraceId:  v.TraceId,
+		Noop:     v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -832,16 +824,12 @@ func OptionalServicesToJSONPretty(v *OptionalServices) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := optionalservicesJSON{
-		Anthropic: v.Anthropic,
-		Openai:    v.Openai,
-		Gitlab:    v.Gitlab,
-		Github:    v.Github,
-		Mcp:       v.Mcp,
-		Saml:      v.Saml,
-		Oauth:     v.Oauth,
-		Keycloak:  v.Keycloak,
-		TraceId:   v.TraceId,
-		Noop:      v.Noop,
+		Saml:     v.Saml,
+		Oauth:    v.Oauth,
+		Keycloak: v.Keycloak,
+		Echo:     v.Echo,
+		TraceId:  v.TraceId,
+		Noop:     v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -906,14 +894,10 @@ func OptionalServicesFromJSON(data []byte) (*OptionalServices, error) {
 	}
 	// Build result with parsed enums
 	result := &OptionalServices{}
-	result.Anthropic = raw.Anthropic
-	result.Openai = raw.Openai
-	result.Gitlab = raw.Gitlab
-	result.Github = raw.Github
-	result.Mcp = raw.Mcp
 	result.Saml = raw.Saml
 	result.Oauth = raw.Oauth
 	result.Keycloak = raw.Keycloak
+	result.Echo = raw.Echo
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -2077,7 +2061,6 @@ func TopologyToEnvVar(v *Topology) map[string]string {
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_EVENTBUS_NODES"] = strconv.FormatInt(int64(v.EventbusNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_GATEWAY_NODES"] = strconv.FormatInt(int64(v.GatewayNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_OAUTH_NODES"] = strconv.FormatInt(int64(v.OauthNodes), 10)
-	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_MSGGATEWAY_NODES"] = strconv.FormatInt(int64(v.MsggatewayNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_OPA_NODES"] = strconv.FormatInt(int64(v.OpaNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_TIMEDB_NODES"] = strconv.FormatInt(int64(v.TimedbNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_GRAPHDB_NODES"] = strconv.FormatInt(int64(v.GraphdbNodes), 10)
@@ -2085,6 +2068,7 @@ func TopologyToEnvVar(v *Topology) map[string]string {
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_STRATUM_NODES"] = strconv.FormatInt(int64(v.StratumNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_SAML_NODES"] = strconv.FormatInt(int64(v.SamlNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_KMAKER_NODES"] = strconv.FormatInt(int64(v.KmakerNodes), 10)
+	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_ECHO_NODES"] = strconv.FormatInt(int64(v.EchoNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -2127,13 +2111,6 @@ func TopologyFromEnvVar(env map[string]string) (*Topology, error) {
 			return nil, err
 		}
 		result.OauthNodes = int32(parsed)
-	}
-	if val, ok := env["PROTO_SERVICES_OPERATOR_TOPOLOGY_MSGGATEWAY_NODES"]; ok && val != "" {
-		parsed, err := strconv.ParseInt(val, 10, 32)
-		if err != nil {
-			return nil, err
-		}
-		result.MsggatewayNodes = int32(parsed)
 	}
 	if val, ok := env["PROTO_SERVICES_OPERATOR_TOPOLOGY_OPA_NODES"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 32)
@@ -2184,6 +2161,13 @@ func TopologyFromEnvVar(env map[string]string) (*Topology, error) {
 		}
 		result.KmakerNodes = int32(parsed)
 	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_TOPOLOGY_ECHO_NODES"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.EchoNodes = int32(parsed)
+	}
 	if val, ok := env["PROTO_SERVICES_OPERATOR_TOPOLOGY_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -2203,14 +2187,10 @@ func OptionalServicesToEnvVar(v *OptionalServices) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_ANTHROPIC"] = strconv.FormatBool(v.Anthropic)
-	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_OPENAI"] = strconv.FormatBool(v.Openai)
-	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_GITLAB"] = strconv.FormatBool(v.Gitlab)
-	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_GITHUB"] = strconv.FormatBool(v.Github)
-	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_MCP"] = strconv.FormatBool(v.Mcp)
 	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_SAML"] = strconv.FormatBool(v.Saml)
 	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_OAUTH"] = strconv.FormatBool(v.Oauth)
 	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_KEYCLOAK"] = strconv.FormatBool(v.Keycloak)
+	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_ECHO"] = strconv.FormatBool(v.Echo)
 	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -2219,41 +2199,6 @@ func OptionalServicesToEnvVar(v *OptionalServices) map[string]string {
 // OptionalServicesFromEnvVar creates OptionalServices from environment variable key-value pairs.
 func OptionalServicesFromEnvVar(env map[string]string) (*OptionalServices, error) {
 	result := &OptionalServices{}
-	if val, ok := env["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_ANTHROPIC"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Anthropic = parsed
-	}
-	if val, ok := env["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_OPENAI"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Openai = parsed
-	}
-	if val, ok := env["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_GITLAB"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Gitlab = parsed
-	}
-	if val, ok := env["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_GITHUB"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Github = parsed
-	}
-	if val, ok := env["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_MCP"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Mcp = parsed
-	}
 	if val, ok := env["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_SAML"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
@@ -2274,6 +2219,13 @@ func OptionalServicesFromEnvVar(env map[string]string) (*OptionalServices, error
 			return nil, err
 		}
 		result.Keycloak = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_ECHO"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Echo = parsed
 	}
 	if val, ok := env["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -2910,10 +2862,11 @@ const (
 	DefaultStratumNodes  int64  = 3
 	DefaultSamlNodes     int64  = 3
 	DefaultKmakerNodes   int64  = 3
+	DefaultEchoNodes     int64  = 1
 	DefaultOauth         bool   = true
 	DefaultKeycloak      bool   = true
 	DefaultPort          int64  = 443
-	DefaultNamespace     string = "cavalier"
+	DefaultNamespace     string = "schematic"
 	DefaultOutputDir     string = "charts"
 	DefaultSpiffePrefix  string = "local/dev"
 )
@@ -2992,6 +2945,9 @@ func TopologyDefaults(v *Topology) {
 	}
 	if v.KmakerNodes == 0 {
 		v.KmakerNodes = int32(DefaultKmakerNodes)
+	}
+	if v.EchoNodes == 0 {
+		v.EchoNodes = int32(DefaultEchoNodes)
 	}
 }
 
@@ -3125,6 +3081,9 @@ func TopologyUndefaults(v *Topology) {
 	if v.KmakerNodes == int32(DefaultKmakerNodes) {
 		v.KmakerNodes = 0
 	}
+	if v.EchoNodes == int32(DefaultEchoNodes) {
+		v.EchoNodes = 0
+	}
 }
 
 // ============================================================
@@ -3248,9 +3207,6 @@ func MergeTopology(dst, src *Topology) {
 	if dst.OauthNodes == 0 {
 		dst.OauthNodes = src.OauthNodes
 	}
-	if dst.MsggatewayNodes == 0 {
-		dst.MsggatewayNodes = src.MsggatewayNodes
-	}
 	if dst.OpaNodes == 0 {
 		dst.OpaNodes = src.OpaNodes
 	}
@@ -3272,6 +3228,9 @@ func MergeTopology(dst, src *Topology) {
 	if dst.KmakerNodes == 0 {
 		dst.KmakerNodes = src.KmakerNodes
 	}
+	if dst.EchoNodes == 0 {
+		dst.EchoNodes = src.EchoNodes
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -3285,21 +3244,6 @@ func MergeTopology(dst, src *Topology) {
 // ============================================================
 // MergeOptionalServices fills zero-valued fields in dst from src.
 func MergeOptionalServices(dst, src *OptionalServices) {
-	if !dst.Anthropic {
-		dst.Anthropic = src.Anthropic
-	}
-	if !dst.Openai {
-		dst.Openai = src.Openai
-	}
-	if !dst.Gitlab {
-		dst.Gitlab = src.Gitlab
-	}
-	if !dst.Github {
-		dst.Github = src.Github
-	}
-	if !dst.Mcp {
-		dst.Mcp = src.Mcp
-	}
 	if !dst.Saml {
 		dst.Saml = src.Saml
 	}
@@ -3308,6 +3252,9 @@ func MergeOptionalServices(dst, src *OptionalServices) {
 	}
 	if !dst.Keycloak {
 		dst.Keycloak = src.Keycloak
+	}
+	if !dst.Echo {
+		dst.Echo = src.Echo
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

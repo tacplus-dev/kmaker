@@ -157,7 +157,7 @@ type ProxyPolicyEvalInput struct {
 	// service_entitlements). Uses google.protobuf.Struct to preserve native
 	// JSON types (arrays, objects, booleans).
 	Claims *structpb.Struct `protobuf:"bytes,1,opt,name=claims,proto3" json:"claims,omitempty"`
-	// metadata is the opaque string from the cavalierctl listener config,
+	// metadata is the opaque string from the schematicctl listener config,
 	// forwarded verbatim by the proxy. The policy uses it to determine which
 	// upstream is being targeted (e.g. by mapping to a known URL or label)
 	// and whether the caller is permitted to reach it.

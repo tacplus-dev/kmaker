@@ -44,7 +44,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type InboundClient interface {
 	// MintAcsTokens accepts an inbound SAML assertion from an external IDP,
-	// verifies it, and mints Cavalier tokens.
+	// verifies it, and mints Schematic tokens.
 	// This is the POST endpoint that external IDPs redirect users to.
 	// The SAMLResponse form field contains the base64-encoded signed XML.
 	MintAcsTokens(ctx context.Context, in *AcsRequest, opts ...grpc.CallOption) (*AcsResponse, error)
@@ -86,7 +86,7 @@ func (c *inboundClient) Authorize(ctx context.Context, in *SamlAuthorizeRequest,
 // for forward compatibility.
 type InboundServer interface {
 	// MintAcsTokens accepts an inbound SAML assertion from an external IDP,
-	// verifies it, and mints Cavalier tokens.
+	// verifies it, and mints Schematic tokens.
 	// This is the POST endpoint that external IDPs redirect users to.
 	// The SAMLResponse form field contains the base64-encoded signed XML.
 	MintAcsTokens(context.Context, *AcsRequest) (*AcsResponse, error)
@@ -195,7 +195,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OutboundClient interface {
-	// MintAssertion accepts a valid Cavalier JWT and produces a signed SAML
+	// MintAssertion accepts a valid Schematic JWT and produces a signed SAML
 	// assertion addressed to the named SP. The caller redirects the user to
 	// the SP's ACS URL with this assertion as the SAMLResponse POST body.
 	//
@@ -238,7 +238,7 @@ func (c *outboundClient) ListSPs(ctx context.Context, in *ListSPsRequest, opts .
 // All implementations must embed UnimplementedOutboundServer
 // for forward compatibility.
 type OutboundServer interface {
-	// MintAssertion accepts a valid Cavalier JWT and produces a signed SAML
+	// MintAssertion accepts a valid Schematic JWT and produces a signed SAML
 	// assertion addressed to the named SP. The caller redirects the user to
 	// the SP's ACS URL with this assertion as the SAMLResponse POST body.
 	//

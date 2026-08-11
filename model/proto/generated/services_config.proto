@@ -13,13 +13,13 @@ import "services/graphdb.proto";
 import "services/eventbus.proto";
 import "services/timedb.proto";
 import "services/oauth.proto";
-import "services/msggateway.proto";
 import "services/opa.proto";
 import "services/stratum.proto";
 import "services/argus.proto";
 import "services/saml.proto";
 import "services/operator.proto";
 import "services/kmaker.proto";
+import "services/echo.proto";
 
 message Services {
   sentinel.Config sentinel_config = 5;
@@ -29,11 +29,11 @@ message Services {
   eventbus.Config eventbus_config = 18;
   timedb.Config timedb_config = 20;
   oauth.Config oauth_config = 21;
-  msggateway.Config msggateway_config = 28;
   opa.Config opa_config = 29;
   stratum.Config stratum_config = 34;
   argus.Config argus_config = 35;
   samlsvc.Config saml_config = 38;
   operator.Config operator_config = 47;
   kmaker.Config kmaker_config = 49;
+  echo.Config echo_config = 50;
 }

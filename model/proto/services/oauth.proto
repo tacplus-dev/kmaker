@@ -47,7 +47,7 @@
 //
 // CLI auth flow:
 //
-//   1. cavalierctl generates a session ID, opens a bidi stream to OAuth,
+//   1. schematicctl generates a session ID, opens a bidi stream to OAuth,
 //      and launches the browser to the OAuth login URL with the session ID.
 //
 //   2. The session ID is encrypted into the OAuth state parameter alongside
@@ -56,7 +56,7 @@
 //   3. On callback, OAuth decodes the state, recovers the session ID, mints
 //      a token via kernel, and writes it to OAuthState (kernel-hosted shared
 //      state). The OAuth pod holding the bidi stream watches OAuthState and
-//      delivers the token to cavalierctl.
+//      delivers the token to schematicctl.
 //
 // This design is stateless across OAuth pods — any pod can handle the
 // callback, and any pod can deliver the token via the shared kernel state.
@@ -192,7 +192,7 @@ message CompleteCliAuthResponse {
 // is to obtain one, so each RPC has auth_disabled.
 service Session {
 
-  // BrokerSession is a bidirectional stream between cavalierctl and OAuth.
+  // BrokerSession is a bidirectional stream between schematicctl and OAuth.
   // The client sends a session_id, then waits for token delivery.
   // OAuth holds the stream open until the Callback handler writes a
   // matching token to OAuthState or the session times out.

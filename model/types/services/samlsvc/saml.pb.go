@@ -510,9 +510,9 @@ type IdpConfig struct {
 	// Example: "/saml/acs/okta"
 	// Defaults to "/saml/acs" if empty.
 	AcsPath string `protobuf:"bytes,6,opt,name=acs_path,json=acsPath,proto3" json:"acs_path,omitempty"`
-	// attribute_map maps IDP attribute names to Cavalier claim names.
+	// attribute_map maps IDP attribute names to Schematic claim names.
 	// Keys are SAML attribute names (e.g. "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").
-	// Values are the Cavalier claim names to pass to kernel (e.g. "email").
+	// Values are the Schematic claim names to pass to kernel (e.g. "email").
 	// If the "email" key is absent after mapping, the NameID is used as the subject.
 	AttributeMap map[string]string `protobuf:"bytes,7,rep,name=attribute_map,json=attributeMap,proto3" json:"attribute_map,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// domains maps email domains to this IDP. Used for IDP selection hints.
@@ -637,8 +637,8 @@ type SpConfig struct {
 	// name_id_format is the SAML NameID format to use in issued assertions.
 	// Defaults to emailAddress if empty.
 	NameIdFormat string `protobuf:"bytes,5,opt,name=name_id_format,json=nameIdFormat,proto3" json:"name_id_format,omitempty"`
-	// attribute_map maps Cavalier claim names to SAML attribute names to include
-	// in issued assertions. Keys are Cavalier token claims; values are SAML attribute names.
+	// attribute_map maps Schematic claim names to SAML attribute names to include
+	// in issued assertions. Keys are Schematic token claims; values are SAML attribute names.
 	AttributeMap map[string]string `protobuf:"bytes,6,rep,name=attribute_map,json=attributeMap,proto3" json:"attribute_map,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// want_signed_authn_request indicates whether this SP requires signed AuthnRequests.
 	WantSignedAuthnRequest bool   `protobuf:"varint,7,opt,name=want_signed_authn_request,json=wantSignedAuthnRequest,proto3" json:"want_signed_authn_request,omitempty"`
@@ -813,12 +813,12 @@ func (x *AcsRequest) GetNoop() bool {
 	return false
 }
 
-// AcsResponse contains the minted Cavalier tokens.
+// AcsResponse contains the minted Schematic tokens.
 type AcsResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// access_token is the short-lived Cavalier access token.
+	// access_token is the short-lived Schematic access token.
 	AccessToken string `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
-	// refresh_token is the long-lived Cavalier refresh token.
+	// refresh_token is the long-lived Schematic refresh token.
 	RefreshToken string `protobuf:"bytes,2,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
 	// relay_state is the original relay_state passed in, for client use.
 	RelayState string `protobuf:"bytes,3,opt,name=relay_state,json=relayState,proto3" json:"relay_state,omitempty"`

@@ -18,12 +18,12 @@ enum ServiceName {
   SERVICE_NAME_EVENTBUS = 18;
   SERVICE_NAME_TIMEDB = 20;
   SERVICE_NAME_OAUTH = 21;
-  SERVICE_NAME_MSGGATEWAY = 28;
   SERVICE_NAME_OPA = 29;
   SERVICE_NAME_STRATUM = 34;
   SERVICE_NAME_ARGUS = 35;
   SERVICE_NAME_KMAKER = 49;
-  SERVICE_NAME_SAMLSVC = 50;
+  SERVICE_NAME_ECHO = 50;
+  SERVICE_NAME_SAMLSVC = 51;
   SERVICE_NAME_ANY = 99; // wildcard: allow any service
 }
 
@@ -133,6 +133,12 @@ enum SamlRPCs {
   SAML_RPCS_GET_SP_METADATA = 6;
   SAML_RPCS_GET_IDP_DESCRIPTOR = 7;
   SAML_RPCS_ANY = 99; // wildcard: allow any RPC
+}
+
+enum EchoRPCs {
+  ECHO_RPCS_UNSPECIFIED = 0;
+  ECHO_RPCS_PING = 1;
+  ECHO_RPCS_ANY = 99; // wildcard: allow any RPC
 }
 
 // agentsensor (vservice, hosted by eventbus)

@@ -53,7 +53,7 @@ message Config {
   int64 renewal_check_interval_seconds = 3;
 
   // hostnames is the list of domain names to include as SANs on the
-  // Let's Encrypt certificate (e.g. ["api.cavalier.io", "console.cavalier.io"]).
+  // Let's Encrypt certificate (e.g. ["api.schematic.io", "console.schematic.io"]).
   // All hostnames must be reachable on port 80 for HTTP-01 challenge validation.
   repeated string hostnames = 4;
   string trace_id = 200;

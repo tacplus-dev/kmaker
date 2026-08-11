@@ -45,7 +45,7 @@ import "sys/trace.proto";
 message Config {
 
   // entitlements_policy is the OPA bundle for entitlement evaluation.
-  // Loaded from services/opa/ by cavalier, delivered to opa via config push.
+  // Loaded from services/opa/ by schematic, delivered to opa via config push.
   opalib.OpaPolicy entitlements_policy = 1;
 
   // proxy_policy is the OPA bundle for proxy request policy evaluation.

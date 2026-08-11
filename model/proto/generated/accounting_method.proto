@@ -18,4 +18,5 @@ message AccountingMethod {
   services.OauthRPCs oauth = 21;
   services.ArgusRPCs argus = 35;
   services.SamlRPCs saml = 38;
+  services.EchoRPCs echo = 50;
 }

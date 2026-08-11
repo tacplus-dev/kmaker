@@ -5,9 +5,9 @@ This file is embedded in `registry.json` and describes how to navigate it.
 ## Overview
 
 This registry describes a tacplus-generated service mesh with:
-- **1006** message types across **63** packages
-- **631** RPCs across **58** gRPC services
-- **56** state boundaries
+- **932** message types across **61** packages
+- **582** RPCs across **55** gRPC services
+- **54** state boundaries
 
 ## Structure
 
@@ -483,16 +483,15 @@ Each `RpcInfo` carries:
 - **ClusterService**
 - **ClusterStateService**
 - **ConfigStateService**
-- **DaemonControl**
 - **Dashboard**
+- **Echo**
+- **EchoConfigStateService**
 - **EventbusConfigStateService**
 - **EventbusStateService**
 - **GatewayConfigStateService**
-- **GatewayStateService**
 - **GraphdbConfigStateService**
 - **GraphdbQuery**
 - **GraphdbStateService**
-- **HookReceiver**
 - **IdentityStateService**
 - **Inbound**
 - **JwkVerifyingKeysViewService**
@@ -500,10 +499,8 @@ Each `RpcInfo` carries:
 - **KmakerConfigStateService**
 - **LetsEncryptStateService**
 - **LetsencryptConfigStateService**
-- **Messaging**
 - **Metadata**
 - **Mint**
-- **MsggatewayConfigStateService**
 - **OauthConfigStateService**
 - **OpaConfigStateService**
 - **OpaEval**
@@ -534,8 +531,6 @@ Each `RpcInfo` carries:
 
 ## Packages
 
-- `clients/bluerock`
-- `clients/bluerockctl`
 - `common/credentials`
 - `common/hazelcast`
 - `generated/accounting_method`
@@ -546,13 +541,13 @@ Each `RpcInfo` carries:
 - `generated/services_config`
 - `generated/tenant_config`
 - `services/argus`
+- `services/echo`
 - `services/eventbus`
 - `services/gateway`
 - `services/graphdb`
 - `services/kernel`
 - `services/kmaker`
 - `services/letsencrypt`
-- `services/msggateway`
 - `services/oauth`
 - `services/opa`
 - `services/operator`

@@ -305,8 +305,6 @@ func (x *TLSConfig) GetNoop() bool {
 // automatically sets it to the number of schedulable Kubernetes nodes at each
 // reconciliation cycle (one gateway per node). When mode = GENERATE_ONLY,
 // gateway_nodes must be set explicitly.
-//
-// msggateway_nodes is on hold; leave at 0 to disable.
 type Topology struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	KernelNodes   int32                  `protobuf:"varint,1,opt,name=kernel_nodes,json=kernelNodes,proto3" json:"kernel_nodes,omitempty"`
@@ -317,20 +315,22 @@ type Topology struct {
 	// scale to one replica per gateway node.
 	GatewayNodes int32 `protobuf:"varint,4,opt,name=gateway_nodes,json=gatewayNodes,proto3" json:"gateway_nodes,omitempty"`
 	// oauth_nodes is used when optional_services.oauth = true (default).
-	OauthNodes int32 `protobuf:"varint,5,opt,name=oauth_nodes,json=oauthNodes,proto3" json:"oauth_nodes,omitempty"`
-	// On hold — leave at 0 to disable.
-	MsggatewayNodes int32 `protobuf:"varint,6,opt,name=msggateway_nodes,json=msggatewayNodes,proto3" json:"msggateway_nodes,omitempty"`
-	OpaNodes        int32 `protobuf:"varint,7,opt,name=opa_nodes,json=opaNodes,proto3" json:"opa_nodes,omitempty"`
-	TimedbNodes     int32 `protobuf:"varint,8,opt,name=timedb_nodes,json=timedbNodes,proto3" json:"timedb_nodes,omitempty"`
-	GraphdbNodes    int32 `protobuf:"varint,9,opt,name=graphdb_nodes,json=graphdbNodes,proto3" json:"graphdb_nodes,omitempty"`
-	ArgusNodes      int32 `protobuf:"varint,11,opt,name=argus_nodes,json=argusNodes,proto3" json:"argus_nodes,omitempty"`
-	StratumNodes    int32 `protobuf:"varint,12,opt,name=stratum_nodes,json=stratumNodes,proto3" json:"stratum_nodes,omitempty"`
+	OauthNodes   int32 `protobuf:"varint,5,opt,name=oauth_nodes,json=oauthNodes,proto3" json:"oauth_nodes,omitempty"`
+	OpaNodes     int32 `protobuf:"varint,7,opt,name=opa_nodes,json=opaNodes,proto3" json:"opa_nodes,omitempty"`
+	TimedbNodes  int32 `protobuf:"varint,8,opt,name=timedb_nodes,json=timedbNodes,proto3" json:"timedb_nodes,omitempty"`
+	GraphdbNodes int32 `protobuf:"varint,9,opt,name=graphdb_nodes,json=graphdbNodes,proto3" json:"graphdb_nodes,omitempty"`
+	ArgusNodes   int32 `protobuf:"varint,11,opt,name=argus_nodes,json=argusNodes,proto3" json:"argus_nodes,omitempty"`
+	StratumNodes int32 `protobuf:"varint,12,opt,name=stratum_nodes,json=stratumNodes,proto3" json:"stratum_nodes,omitempty"`
 	// saml_nodes is used when optional_services.saml = true.
 	SamlNodes int32 `protobuf:"varint,13,opt,name=saml_nodes,json=samlNodes,proto3" json:"saml_nodes,omitempty"`
 	// kmaker_nodes is the number of bootstrap certificate authority replicas.
 	// Kernel instances contact kmaker with Kubernetes projected service account
 	// tokens to obtain kernel certificates before kernel itself is available.
-	KmakerNodes   int32  `protobuf:"varint,16,opt,name=kmaker_nodes,json=kmakerNodes,proto3" json:"kmaker_nodes,omitempty"`
+	KmakerNodes int32 `protobuf:"varint,16,opt,name=kmaker_nodes,json=kmakerNodes,proto3" json:"kmaker_nodes,omitempty"`
+	// echo_nodes is used when optional_services.echo = true.
+	// Defaults to 1 rather than 3: the sample service is stateless and exists to
+	// be poked at, so a second replica proves nothing and costs a pod.
+	EchoNodes     int32  `protobuf:"varint,17,opt,name=echo_nodes,json=echoNodes,proto3" json:"echo_nodes,omitempty"`
 	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -402,13 +402,6 @@ func (x *Topology) GetOauthNodes() int32 {
 	return 0
 }
 
-func (x *Topology) GetMsggatewayNodes() int32 {
-	if x != nil {
-		return x.MsggatewayNodes
-	}
-	return 0
-}
-
 func (x *Topology) GetOpaNodes() int32 {
 	if x != nil {
 		return x.OpaNodes
@@ -458,6 +451,13 @@ func (x *Topology) GetKmakerNodes() int32 {
 	return 0
 }
 
+func (x *Topology) GetEchoNodes() int32 {
+	if x != nil {
+		return x.EchoNodes
+	}
+	return 0
+}
+
 func (x *Topology) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -475,13 +475,6 @@ func (x *Topology) GetNoop() bool {
 // OptionalServices controls which optional services are enabled.
 type OptionalServices struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Proxy services — when enabled, one replica per gateway node.
-	Anthropic bool `protobuf:"varint,1,opt,name=anthropic,proto3" json:"anthropic,omitempty"`
-	Openai    bool `protobuf:"varint,2,opt,name=openai,proto3" json:"openai,omitempty"`
-	Gitlab    bool `protobuf:"varint,3,opt,name=gitlab,proto3" json:"gitlab,omitempty"`
-	Github    bool `protobuf:"varint,4,opt,name=github,proto3" json:"github,omitempty"`
-	// MCP server — one replica when enabled.
-	Mcp bool `protobuf:"varint,5,opt,name=mcp,proto3" json:"mcp,omitempty"`
 	// SAML identity provider bridge — saml_nodes replicas when enabled.
 	// Disabled by default.
 	Saml bool `protobuf:"varint,6,opt,name=saml,proto3" json:"saml,omitempty"`
@@ -490,7 +483,11 @@ type OptionalServices struct {
 	Oauth bool `protobuf:"varint,7,opt,name=oauth,proto3" json:"oauth,omitempty"`
 	// Keycloak IDP — production identity provider.
 	// Replaces mockidp. Enabled by default.
-	Keycloak      bool   `protobuf:"varint,8,opt,name=keycloak,proto3" json:"keycloak,omitempty"`
+	Keycloak bool `protobuf:"varint,8,opt,name=keycloak,proto3" json:"keycloak,omitempty"`
+	// Echo sample service — echo_nodes replicas when enabled.
+	// Disabled by default: it is a diagnostic/reference service, not something a
+	// production cluster should carry.
+	Echo          bool   `protobuf:"varint,9,opt,name=echo,proto3" json:"echo,omitempty"`
 	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -527,41 +524,6 @@ func (*OptionalServices) Descriptor() ([]byte, []int) {
 	return file_services_operator_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *OptionalServices) GetAnthropic() bool {
-	if x != nil {
-		return x.Anthropic
-	}
-	return false
-}
-
-func (x *OptionalServices) GetOpenai() bool {
-	if x != nil {
-		return x.Openai
-	}
-	return false
-}
-
-func (x *OptionalServices) GetGitlab() bool {
-	if x != nil {
-		return x.Gitlab
-	}
-	return false
-}
-
-func (x *OptionalServices) GetGithub() bool {
-	if x != nil {
-		return x.Github
-	}
-	return false
-}
-
-func (x *OptionalServices) GetMcp() bool {
-	if x != nil {
-		return x.Mcp
-	}
-	return false
-}
-
 func (x *OptionalServices) GetSaml() bool {
 	if x != nil {
 		return x.Saml
@@ -579,6 +541,13 @@ func (x *OptionalServices) GetOauth() bool {
 func (x *OptionalServices) GetKeycloak() bool {
 	if x != nil {
 		return x.Keycloak
+	}
+	return false
+}
+
+func (x *OptionalServices) GetEcho() bool {
+	if x != nil {
+		return x.Echo
 	}
 	return false
 }
@@ -729,8 +698,8 @@ func (x *PKI) GetNoop() bool {
 //
 // When deployed to Kubernetes:
 //
-//	operator.yaml  → ConfigMap  (cavalier-operator-config)
-//	crypto.yaml    → Secret     (cavalier-operator-crypto)
+//	operator.yaml  → ConfigMap  (schematic-operator-config)
+//	crypto.yaml    → Secret     (schematic-operator-crypto)
 //
 // Both are mounted and merged by the operator at startup.
 type Config struct {
@@ -741,7 +710,7 @@ type Config struct {
 	Fqdn string `protobuf:"bytes,3,opt,name=fqdn,proto3" json:"fqdn,omitempty"`
 	// HTTPS gateway port. Default 443 for production; 8443 for local testing.
 	Port int32 `protobuf:"varint,4,opt,name=port,proto3" json:"port,omitempty"`
-	// Kubernetes namespace to deploy all cavalier services into.
+	// Kubernetes namespace to deploy all schematic services into.
 	Namespace string `protobuf:"bytes,5,opt,name=namespace,proto3" json:"namespace,omitempty"`
 	// Service replica topology.
 	Topology *Topology `protobuf:"bytes,6,opt,name=topology,proto3" json:"topology,omitempty"`
@@ -768,7 +737,7 @@ type Config struct {
 	Dev bool `protobuf:"varint,13,opt,name=dev,proto3" json:"dev,omitempty"`
 	// gitlab_registry_token is an OAuth2 personal access token (read_registry scope)
 	// used to pull images from registry.gitlab.com. When set, the operator creates a
-	// "gitlab-registry" docker-registry Secret in the cavalier namespace as part of
+	// "gitlab-registry" docker-registry Secret in the schematic namespace as part of
 	// the generated Helm chart. Keep this out of version control — store in crypto.yaml.
 	GitlabRegistryToken string `protobuf:"bytes,14,opt,name=gitlab_registry_token,json=gitlabRegistryToken,proto3" json:"gitlab_registry_token,omitempty"`
 	// SPIFFE trust-domain prefix for identity URIs. Every workload identity is
@@ -1085,15 +1054,14 @@ const file_services_operator_proto_rawDesc = "" +
 	"\vletsencrypt\x18\x01 \x01(\bR\vletsencrypt\x12#\n" +
 	"\x02ca\x18\x02 \x01(\v2\x13.x509.X509CertChainR\x02ca\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xcc\x04\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xde\x04\n" +
 	"\bTopology\x12'\n" +
 	"\fkernel_nodes\x18\x01 \x01(\x05B\x04\x90\xa8\x1d\x03R\vkernelNodes\x12+\n" +
 	"\x0esentinel_nodes\x18\x02 \x01(\x05B\x04\x90\xa8\x1d\x03R\rsentinelNodes\x12+\n" +
 	"\x0eeventbus_nodes\x18\x03 \x01(\x05B\x04\x90\xa8\x1d\x03R\reventbusNodes\x12#\n" +
 	"\rgateway_nodes\x18\x04 \x01(\x05R\fgatewayNodes\x12%\n" +
 	"\voauth_nodes\x18\x05 \x01(\x05B\x04\x90\xa8\x1d\x03R\n" +
-	"oauthNodes\x12)\n" +
-	"\x10msggateway_nodes\x18\x06 \x01(\x05R\x0fmsggatewayNodes\x12!\n" +
+	"oauthNodes\x12!\n" +
 	"\topa_nodes\x18\a \x01(\x05B\x04\x90\xa8\x1d\x03R\bopaNodes\x12'\n" +
 	"\ftimedb_nodes\x18\b \x01(\x05B\x04\x90\xa8\x1d\x03R\vtimedbNodes\x12)\n" +
 	"\rgraphdb_nodes\x18\t \x01(\x05B\x04\x90\xa8\x1d\x03R\fgraphdbNodes\x12%\n" +
@@ -1102,20 +1070,18 @@ const file_services_operator_proto_rawDesc = "" +
 	"\rstratum_nodes\x18\f \x01(\x05B\x04\x90\xa8\x1d\x03R\fstratumNodes\x12#\n" +
 	"\n" +
 	"saml_nodes\x18\r \x01(\x05B\x04\x90\xa8\x1d\x03R\tsamlNodes\x12'\n" +
-	"\fkmaker_nodes\x18\x10 \x01(\x05B\x04\x90\xa8\x1d\x03R\vkmakerNodes\x12\x1a\n" +
+	"\fkmaker_nodes\x18\x10 \x01(\x05B\x04\x90\xa8\x1d\x03R\vkmakerNodes\x12#\n" +
+	"\n" +
+	"echo_nodes\x18\x11 \x01(\x05B\x04\x90\xa8\x1d\x01R\techoNodes\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x8d\x02\n" +
-	"\x10OptionalServices\x12\x1c\n" +
-	"\tanthropic\x18\x01 \x01(\bR\tanthropic\x12\x16\n" +
-	"\x06openai\x18\x02 \x01(\bR\x06openai\x12\x16\n" +
-	"\x06gitlab\x18\x03 \x01(\bR\x06gitlab\x12\x16\n" +
-	"\x06github\x18\x04 \x01(\bR\x06github\x12\x10\n" +
-	"\x03mcp\x18\x05 \x01(\bR\x03mcp\x12\x12\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopJ\x04\b\x06\x10\aR\x10msggateway_nodes\"\xef\x01\n" +
+	"\x10OptionalServices\x12\x12\n" +
 	"\x04saml\x18\x06 \x01(\bR\x04saml\x12\x1a\n" +
 	"\x05oauth\x18\a \x01(\bB\x04\xa0\xa8\x1d\x01R\x05oauth\x12 \n" +
-	"\bkeycloak\x18\b \x01(\bB\x04\xa0\xa8\x1d\x01R\bkeycloak\x12\x1a\n" +
+	"\bkeycloak\x18\b \x01(\bB\x04\xa0\xa8\x1d\x01R\bkeycloak\x12\x12\n" +
+	"\x04echo\x18\t \x01(\bR\x04echo\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xcf\x03\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopJ\x04\b\x01\x10\x02J\x04\b\x02\x10\x03J\x04\b\x03\x10\x04J\x04\b\x04\x10\x05J\x04\b\x05\x10\x06R\tanthropicR\x06openaiR\x06gitlabR\x06githubR\x03mcp\"\xcf\x03\n" +
 	"\x03PKI\x12,\n" +
 	"\aroot_ca\x18\x01 \x01(\v2\x13.x509.X509CertChainR\x06rootCa\x122\n" +
 	"\n" +
@@ -1126,12 +1092,12 @@ const file_services_operator_proto_rawDesc = "" +
 	"\x0fedge_signing_ca\x18\x06 \x03(\v2\x13.x509.X509CertChainB\x05\xb8\xa8\x1d\x80\bR\redgeSigningCa\x12?\n" +
 	"\x11kmaker_signing_ca\x18\a \x01(\v2\x13.x509.X509CertChainR\x0fkmakerSigningCa\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x94\x06\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x95\x06\n" +
 	"\x06Config\x12*\n" +
 	"\x04mode\x18\x01 \x01(\x0e2\x16.operator.OperatorModeR\x04mode\x12\x12\n" +
 	"\x04fqdn\x18\x03 \x01(\tR\x04fqdn\x12\x19\n" +
-	"\x04port\x18\x04 \x01(\x05B\x05\x90\xa8\x1d\xbb\x03R\x04port\x12*\n" +
-	"\tnamespace\x18\x05 \x01(\tB\f\x8a\xa8\x1d\bcavalierR\tnamespace\x12.\n" +
+	"\x04port\x18\x04 \x01(\x05B\x05\x90\xa8\x1d\xbb\x03R\x04port\x12+\n" +
+	"\tnamespace\x18\x05 \x01(\tB\r\x8a\xa8\x1d\tschematicR\tnamespace\x12.\n" +
 	"\btopology\x18\x06 \x01(\v2\x12.operator.TopologyR\btopology\x12%\n" +
 	"\x03tls\x18\a \x01(\v2\x13.operator.TLSConfigR\x03tls\x12\x1f\n" +
 	"\x03pki\x18\b \x01(\v2\r.operator.PKIR\x03pki\x12G\n" +

@@ -19,10 +19,10 @@
 //
 // Source: services/operator.proto
 
-// Package operator defines configuration for the cavalier operator.
+// Package operator defines configuration for the schematic operator.
 //
 // The operator is the cluster lifecycle manager. It generates Helm charts
-// for all cavalier services and either applies them to a live Kubernetes cluster
+// for all schematic services and either applies them to a live Kubernetes cluster
 // (IN_CLUSTER mode) or writes them to disk (GENERATE_ONLY mode).
 //
 // The operator is NOT tenant-aware. Tenant lifecycle is owned by kernel
@@ -85,7 +85,6 @@ message TLSConfig {
 // reconciliation cycle (one gateway per node). When mode = GENERATE_ONLY,
 // gateway_nodes must be set explicitly.
 //
-// msggateway_nodes is on hold; leave at 0 to disable.
 message Topology {
   int32 kernel_nodes     = 1;
   int32 sentinel_nodes   = 2;
@@ -99,8 +98,10 @@ message Topology {
   // oauth_nodes is used when optional_services.oauth = true (default).
   int32 oauth_nodes  = 5;
 
-  // On hold — leave at 0 to disable.
-  int32 msggateway_nodes = 6;
+  // 6 held msggateway_nodes. The service was permanently on hold and has been
+  // removed from the platform.
+  reserved 6;
+  reserved "msggateway_nodes";
 
   int32 opa_nodes   = 7;
   int32 timedb_nodes     = 8;
@@ -118,20 +119,24 @@ message Topology {
   // Kernel instances contact kmaker with Kubernetes projected service account
   // tokens to obtain kernel certificates before kernel itself is available.
   int32 kmaker_nodes = 16;
+
+  // echo_nodes is used when optional_services.echo = true.
+  // Defaults to 1 rather than 3: the sample service is stateless and exists to
+  // be poked at, so a second replica proves nothing and costs a pod.
+  int32 echo_nodes = 17;
   string trace_id = 200;
   bool noop = 201;
 }
 
 // OptionalServices controls which optional services are enabled.
 message OptionalServices {
-  // Proxy services — when enabled, one replica per gateway node.
-  bool anthropic = 1;
-  bool openai    = 2;
-  bool gitlab    = 3;
-  bool github    = 4;
-
-  // MCP server — one replica when enabled.
-  bool mcp       = 5;
+  // 1-5 held the application proxy services (anthropic, openai, gitlab, github)
+  // and the MCP server. Those moved out of the platform: schematic is the base
+  // an application is built ON, not the application. RESERVED rather than
+  // deleted so the numbers can never be reused and an old config cannot be
+  // silently reinterpreted.
+  reserved 1, 2, 3, 4, 5;
+  reserved "anthropic", "openai", "gitlab", "github", "mcp";
 
   // SAML identity provider bridge — saml_nodes replicas when enabled.
   // Disabled by default.
@@ -144,6 +149,11 @@ message OptionalServices {
   // Keycloak IDP — production identity provider.
   // Replaces mockidp. Enabled by default.
   bool keycloak = 8;
+
+  // Echo sample service — echo_nodes replicas when enabled.
+  // Disabled by default: it is a diagnostic/reference service, not something a
+  // production cluster should carry.
+  bool echo = 9;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -189,8 +199,8 @@ message PKI {
 //   3. operator                           — run (IN_CLUSTER) or generate charts (GENERATE_ONLY)
 //
 // When deployed to Kubernetes:
-//   operator.yaml  → ConfigMap  (cavalier-operator-config)
-//   crypto.yaml    → Secret     (cavalier-operator-crypto)
+//   operator.yaml  → ConfigMap  (schematic-operator-config)
+//   crypto.yaml    → Secret     (schematic-operator-crypto)
 // Both are mounted and merged by the operator at startup.
 message Config {
 
@@ -203,7 +213,7 @@ message Config {
   // HTTPS gateway port. Default 443 for production; 8443 for local testing.
   int32 port = 4;
 
-  // Kubernetes namespace to deploy all cavalier services into.
+  // Kubernetes namespace to deploy all schematic services into.
   string namespace = 5;
 
   // Service replica topology.
@@ -239,7 +249,7 @@ message Config {
 
   // gitlab_registry_token is an OAuth2 personal access token (read_registry scope)
   // used to pull images from registry.gitlab.com. When set, the operator creates a
-  // "gitlab-registry" docker-registry Secret in the cavalier namespace as part of
+  // "gitlab-registry" docker-registry Secret in the schematic namespace as part of
   // the generated Helm chart. Keep this out of version control — store in crypto.yaml.
   string gitlab_registry_token = 14;
 

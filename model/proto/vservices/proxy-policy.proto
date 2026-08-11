@@ -28,7 +28,7 @@
 //
 // Kernel calls opa with the caller's claims and metadata before minting an
 // external token via ExternalTokenMint. The OPA result drives both the allow/deny
-// decision and the shape of the minted token — replacing the old cavalier_proxy
+// decision and the shape of the minted token — replacing the old schematic_proxy
 // claim approach with a fully policy-driven, per-destination token mutation model.
 
 syntax = "proto3";
@@ -51,7 +51,7 @@ message ProxyPolicyEvalInput {
   // JSON types (arrays, objects, booleans).
   google.protobuf.Struct claims = 1;
 
-  // metadata is the opaque string from the cavalierctl listener config,
+  // metadata is the opaque string from the schematicctl listener config,
   // forwarded verbatim by the proxy. The policy uses it to determine which
   // upstream is being targeted (e.g. by mapping to a known URL or label)
   // and whether the caller is permitted to reach it.

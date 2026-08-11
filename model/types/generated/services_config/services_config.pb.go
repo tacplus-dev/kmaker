@@ -23,12 +23,12 @@ package services_config
 
 import (
 	argus "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/argus"
+	echo "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/echo"
 	eventbus "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/eventbus"
 	gateway "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gateway"
 	graphdb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/graphdb"
 	kmaker "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
 	letsencrypt "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/letsencrypt"
-	msggateway "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/msggateway"
 	oauth "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/oauth"
 	opa "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/opa"
 	operator "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/operator"
@@ -59,13 +59,13 @@ type Services struct {
 	EventbusConfig    *eventbus.Config       `protobuf:"bytes,18,opt,name=eventbus_config,json=eventbusConfig,proto3" json:"eventbus_config,omitempty"`
 	TimedbConfig      *timedb.Config         `protobuf:"bytes,20,opt,name=timedb_config,json=timedbConfig,proto3" json:"timedb_config,omitempty"`
 	OauthConfig       *oauth.Config          `protobuf:"bytes,21,opt,name=oauth_config,json=oauthConfig,proto3" json:"oauth_config,omitempty"`
-	MsggatewayConfig  *msggateway.Config     `protobuf:"bytes,28,opt,name=msggateway_config,json=msggatewayConfig,proto3" json:"msggateway_config,omitempty"`
 	OpaConfig         *opa.Config            `protobuf:"bytes,29,opt,name=opa_config,json=opaConfig,proto3" json:"opa_config,omitempty"`
 	StratumConfig     *stratum.Config        `protobuf:"bytes,34,opt,name=stratum_config,json=stratumConfig,proto3" json:"stratum_config,omitempty"`
 	ArgusConfig       *argus.Config          `protobuf:"bytes,35,opt,name=argus_config,json=argusConfig,proto3" json:"argus_config,omitempty"`
 	SamlConfig        *samlsvc.Config        `protobuf:"bytes,38,opt,name=saml_config,json=samlConfig,proto3" json:"saml_config,omitempty"`
 	OperatorConfig    *operator.Config       `protobuf:"bytes,47,opt,name=operator_config,json=operatorConfig,proto3" json:"operator_config,omitempty"`
 	KmakerConfig      *kmaker.Config         `protobuf:"bytes,49,opt,name=kmaker_config,json=kmakerConfig,proto3" json:"kmaker_config,omitempty"`
+	EchoConfig        *echo.Config           `protobuf:"bytes,50,opt,name=echo_config,json=echoConfig,proto3" json:"echo_config,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -149,13 +149,6 @@ func (x *Services) GetOauthConfig() *oauth.Config {
 	return nil
 }
 
-func (x *Services) GetMsggatewayConfig() *msggateway.Config {
-	if x != nil {
-		return x.MsggatewayConfig
-	}
-	return nil
-}
-
 func (x *Services) GetOpaConfig() *opa.Config {
 	if x != nil {
 		return x.OpaConfig
@@ -198,11 +191,18 @@ func (x *Services) GetKmakerConfig() *kmaker.Config {
 	return nil
 }
 
+func (x *Services) GetEchoConfig() *echo.Config {
+	if x != nil {
+		return x.EchoConfig
+	}
+	return nil
+}
+
 var File_generated_services_config_proto protoreflect.FileDescriptor
 
 const file_generated_services_config_proto_rawDesc = "" +
 	"\n" +
-	"\x1fgenerated/services_config.proto\x12\x0fservices_config\x1a\x17services/sentinel.proto\x1a\x16services/gateway.proto\x1a\x1aservices/letsencrypt.proto\x1a\x16services/graphdb.proto\x1a\x17services/eventbus.proto\x1a\x15services/timedb.proto\x1a\x14services/oauth.proto\x1a\x19services/msggateway.proto\x1a\x12services/opa.proto\x1a\x16services/stratum.proto\x1a\x14services/argus.proto\x1a\x13services/saml.proto\x1a\x17services/operator.proto\x1a\x15services/kmaker.proto\"\x94\x06\n" +
+	"\x1fgenerated/services_config.proto\x12\x0fservices_config\x1a\x17services/sentinel.proto\x1a\x16services/gateway.proto\x1a\x1aservices/letsencrypt.proto\x1a\x16services/graphdb.proto\x1a\x17services/eventbus.proto\x1a\x15services/timedb.proto\x1a\x14services/oauth.proto\x1a\x12services/opa.proto\x1a\x16services/stratum.proto\x1a\x14services/argus.proto\x1a\x13services/saml.proto\x1a\x17services/operator.proto\x1a\x15services/kmaker.proto\x1a\x13services/echo.proto\"\x82\x06\n" +
 	"\bServices\x129\n" +
 	"\x0fsentinel_config\x18\x05 \x01(\v2\x10.sentinel.ConfigR\x0esentinelConfig\x126\n" +
 	"\x0egateway_config\x18\a \x01(\v2\x0f.gateway.ConfigR\rgatewayConfig\x12B\n" +
@@ -210,8 +210,7 @@ const file_generated_services_config_proto_rawDesc = "" +
 	"\x0egraphdb_config\x18\r \x01(\v2\x0f.graphdb.ConfigR\rgraphdbConfig\x129\n" +
 	"\x0feventbus_config\x18\x12 \x01(\v2\x10.eventbus.ConfigR\x0eeventbusConfig\x123\n" +
 	"\rtimedb_config\x18\x14 \x01(\v2\x0e.timedb.ConfigR\ftimedbConfig\x120\n" +
-	"\foauth_config\x18\x15 \x01(\v2\r.oauth.ConfigR\voauthConfig\x12?\n" +
-	"\x11msggateway_config\x18\x1c \x01(\v2\x12.msggateway.ConfigR\x10msggatewayConfig\x12*\n" +
+	"\foauth_config\x18\x15 \x01(\v2\r.oauth.ConfigR\voauthConfig\x12*\n" +
 	"\n" +
 	"opa_config\x18\x1d \x01(\v2\v.opa.ConfigR\topaConfig\x126\n" +
 	"\x0estratum_config\x18\" \x01(\v2\x0f.stratum.ConfigR\rstratumConfig\x120\n" +
@@ -219,7 +218,9 @@ const file_generated_services_config_proto_rawDesc = "" +
 	"\vsaml_config\x18& \x01(\v2\x0f.samlsvc.ConfigR\n" +
 	"samlConfig\x129\n" +
 	"\x0foperator_config\x18/ \x01(\v2\x10.operator.ConfigR\x0eoperatorConfig\x123\n" +
-	"\rkmaker_config\x181 \x01(\v2\x0e.kmaker.ConfigR\fkmakerConfigBhZfgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/services_configb\x06proto3"
+	"\rkmaker_config\x181 \x01(\v2\x0e.kmaker.ConfigR\fkmakerConfig\x12-\n" +
+	"\vecho_config\x182 \x01(\v2\f.echo.ConfigR\n" +
+	"echoConfigBhZfgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/services_configb\x06proto3"
 
 var (
 	file_generated_services_config_proto_rawDescOnce sync.Once
@@ -243,13 +244,13 @@ var file_generated_services_config_proto_goTypes = []any{
 	(*eventbus.Config)(nil),    // 5: eventbus.Config
 	(*timedb.Config)(nil),      // 6: timedb.Config
 	(*oauth.Config)(nil),       // 7: oauth.Config
-	(*msggateway.Config)(nil),  // 8: msggateway.Config
-	(*opa.Config)(nil),         // 9: opa.Config
-	(*stratum.Config)(nil),     // 10: stratum.Config
-	(*argus.Config)(nil),       // 11: argus.Config
-	(*samlsvc.Config)(nil),     // 12: samlsvc.Config
-	(*operator.Config)(nil),    // 13: operator.Config
-	(*kmaker.Config)(nil),      // 14: kmaker.Config
+	(*opa.Config)(nil),         // 8: opa.Config
+	(*stratum.Config)(nil),     // 9: stratum.Config
+	(*argus.Config)(nil),       // 10: argus.Config
+	(*samlsvc.Config)(nil),     // 11: samlsvc.Config
+	(*operator.Config)(nil),    // 12: operator.Config
+	(*kmaker.Config)(nil),      // 13: kmaker.Config
+	(*echo.Config)(nil),        // 14: echo.Config
 }
 var file_generated_services_config_proto_depIdxs = []int32{
 	1,  // 0: services_config.Services.sentinel_config:type_name -> sentinel.Config
@@ -259,13 +260,13 @@ var file_generated_services_config_proto_depIdxs = []int32{
 	5,  // 4: services_config.Services.eventbus_config:type_name -> eventbus.Config
 	6,  // 5: services_config.Services.timedb_config:type_name -> timedb.Config
 	7,  // 6: services_config.Services.oauth_config:type_name -> oauth.Config
-	8,  // 7: services_config.Services.msggateway_config:type_name -> msggateway.Config
-	9,  // 8: services_config.Services.opa_config:type_name -> opa.Config
-	10, // 9: services_config.Services.stratum_config:type_name -> stratum.Config
-	11, // 10: services_config.Services.argus_config:type_name -> argus.Config
-	12, // 11: services_config.Services.saml_config:type_name -> samlsvc.Config
-	13, // 12: services_config.Services.operator_config:type_name -> operator.Config
-	14, // 13: services_config.Services.kmaker_config:type_name -> kmaker.Config
+	8,  // 7: services_config.Services.opa_config:type_name -> opa.Config
+	9,  // 8: services_config.Services.stratum_config:type_name -> stratum.Config
+	10, // 9: services_config.Services.argus_config:type_name -> argus.Config
+	11, // 10: services_config.Services.saml_config:type_name -> samlsvc.Config
+	12, // 11: services_config.Services.operator_config:type_name -> operator.Config
+	13, // 12: services_config.Services.kmaker_config:type_name -> kmaker.Config
+	14, // 13: services_config.Services.echo_config:type_name -> echo.Config
 	14, // [14:14] is the sub-list for method output_type
 	14, // [14:14] is the sub-list for method input_type
 	14, // [14:14] is the sub-list for extension type_name

@@ -222,7 +222,7 @@ func (KmakerConfigStateServiceRpcId) EnumDescriptor() ([]byte, []int) {
 // Config is rendered by operator and mounted into kmaker at startup.
 type Config struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// cluster_name is the logical Cavalier cluster this kmaker signs for.
+	// cluster_name is the logical Schematic cluster this kmaker signs for.
 	ClusterName string `protobuf:"bytes,1,opt,name=cluster_name,json=clusterName,proto3" json:"cluster_name,omitempty"`
 	// listener is the gRPC bind address for kmaker.
 	Listener *host.Host `protobuf:"bytes,2,opt,name=listener,proto3" json:"listener,omitempty"`
@@ -240,7 +240,7 @@ type Config struct {
 	// token_audience is the required Kubernetes TokenReview audience.
 	TokenAudience string `protobuf:"bytes,7,opt,name=token_audience,json=tokenAudience,proto3" json:"token_audience,omitempty"`
 	// kernel_service_accounts are Kubernetes service accounts allowed to request
-	// kernel certificates. Empty means namespace=cavalier, name=kernel.
+	// kernel certificates. Empty means namespace=schematic, name=kernel.
 	KernelServiceAccounts []*KernelServiceAccount `protobuf:"bytes,8,rep,name=kernel_service_accounts,json=kernelServiceAccounts,proto3" json:"kernel_service_accounts,omitempty"`
 	// kernel_cert_lifetime_seconds caps issued kernel certificate lifetimes.
 	KernelCertLifetimeSeconds int64 `protobuf:"varint,9,opt,name=kernel_cert_lifetime_seconds,json=kernelCertLifetimeSeconds,proto3" json:"kernel_cert_lifetime_seconds,omitempty"`

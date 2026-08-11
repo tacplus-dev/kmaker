@@ -47,6 +47,7 @@ type accountingmethodJSON struct {
 	Oauth    string `json:"oauth,omitempty"`
 	Argus    string `json:"argus,omitempty"`
 	Saml     string `json:"saml,omitempty"`
+	Echo     string `json:"echo,omitempty"`
 }
 
 // AccountingMethodToJSON converts AccountingMethod to JSON bytes.
@@ -64,6 +65,7 @@ func AccountingMethodToJSON(v *AccountingMethod) ([]byte, error) {
 		Oauth:    services.OauthRPCsToString(v.Oauth),
 		Argus:    services.ArgusRPCsToString(v.Argus),
 		Saml:     services.SamlRPCsToString(v.Saml),
+		Echo:     services.EchoRPCsToString(v.Echo),
 	}
 	return json.Marshal(helper)
 }
@@ -83,6 +85,7 @@ func AccountingMethodToJSONPretty(v *AccountingMethod) ([]byte, error) {
 		Oauth:    services.OauthRPCsToString(v.Oauth),
 		Argus:    services.ArgusRPCsToString(v.Argus),
 		Saml:     services.SamlRPCsToString(v.Saml),
+		Echo:     services.EchoRPCsToString(v.Echo),
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -189,6 +192,12 @@ func AccountingMethodFromJSON(data []byte) (*AccountingMethod, error) {
 			result.Saml = parsed
 		}
 	}
+	// Parse enum field: Echo
+	if raw.Echo != "" {
+		if parsed, err := services.ParseEchoRPCs(raw.Echo); err == nil {
+			result.Echo = parsed
+		}
+	}
 	return result, nil
 }
 
@@ -277,6 +286,7 @@ func AccountingMethodToEnvVar(v *AccountingMethod) map[string]string {
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_OAUTH"] = services.OauthRPCsToString(v.Oauth)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_ARGUS"] = services.ArgusRPCsToString(v.Argus)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SAML"] = services.SamlRPCsToString(v.Saml)
+	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_ECHO"] = services.EchoRPCsToString(v.Echo)
 	return result
 }
 
@@ -331,6 +341,13 @@ func AccountingMethodFromEnvVar(env map[string]string) (*AccountingMethod, error
 			return nil, err
 		}
 		result.Saml = parsed
+	}
+	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_ECHO"]; ok && val != "" {
+		parsed, err := services.ParseEchoRPCs(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Echo = parsed
 	}
 	return result, nil
 }
@@ -389,6 +406,11 @@ func ValidateAccountingMethodWithDepth(m *AccountingMethod, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Saml has unknown enum value %d", int32(m.Saml))
 	}
 
+	// Validate Echo enum value is known
+	if _, ok := services.EchoRPCs_name[int32(m.Echo)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Echo has unknown enum value %d", int32(m.Echo))
+	}
+
 	return nil
 }
 
@@ -438,5 +460,8 @@ func MergeAccountingMethod(dst, src *AccountingMethod) {
 	}
 	if dst.Saml == 0 {
 		dst.Saml = src.Saml
+	}
+	if dst.Echo == 0 {
+		dst.Echo = src.Echo
 	}
 }

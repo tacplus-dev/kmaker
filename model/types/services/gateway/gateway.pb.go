@@ -310,7 +310,7 @@ type Config struct {
 	ExternalKeyPem string `protobuf:"bytes,10,opt,name=external_key_pem,json=externalKeyPem,proto3" json:"external_key_pem,omitempty"`
 	// root_ca holds the root CA certificate(s) that clients should trust when
 	// connecting to the gateway's external HTTPS endpoint. Served via PublicCa
-	// so clients (cavalierctl, webapp) can configure TLS trust automatically.
+	// so clients (schematicctl, webapp) can configure TLS trust automatically.
 	// Required in CERT_CHAIN mode. Omit in LETSENCRYPT mode (publicly trusted).
 	RootCa        []*x509.X509Cert `protobuf:"bytes,11,rep,name=root_ca,json=rootCa,proto3" json:"root_ca,omitempty"`
 	TraceId       string           `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`

@@ -86,7 +86,7 @@ message Config {
 
   // root_ca holds the root CA certificate(s) that clients should trust when
   // connecting to the gateway's external HTTPS endpoint. Served via PublicCa
-  // so clients (cavalierctl, webapp) can configure TLS trust automatically.
+  // so clients (schematicctl, webapp) can configure TLS trust automatically.
   // Required in CERT_CHAIN mode. Omit in LETSENCRYPT mode (publicly trusted).
   repeated x509.X509Cert root_ca = 11;
   string trace_id = 200;
@@ -126,7 +126,7 @@ service Mint {
   }
 
   // ListPublicCa returns the cluster root CA certificate(s).
-  // Clients (e.g. cavalierctl) use these to verify TLS connections to the gateway.
+  // Clients (e.g. schematicctl) use these to verify TLS connections to the gateway.
   // No authentication required — the CA is public trust anchor information.
   rpc ListPublicCa(trace.TraceRequest) returns (PublicCaResponse) {
   }

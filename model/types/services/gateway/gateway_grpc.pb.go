@@ -64,7 +64,7 @@ type MintClient interface {
 	// MintX509Cert signs an X.509 certificate. Delegated to kernel's Mint service.
 	MintX509Cert(ctx context.Context, in *tokenrequest.X509MintRequest, opts ...grpc.CallOption) (*x509.X509CertChain, error)
 	// ListPublicCa returns the cluster root CA certificate(s).
-	// Clients (e.g. cavalierctl) use these to verify TLS connections to the gateway.
+	// Clients (e.g. schematicctl) use these to verify TLS connections to the gateway.
 	// No authentication required — the CA is public trust anchor information.
 	ListPublicCa(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*PublicCaResponse, error)
 }
@@ -146,7 +146,7 @@ type MintServer interface {
 	// MintX509Cert signs an X.509 certificate. Delegated to kernel's Mint service.
 	MintX509Cert(context.Context, *tokenrequest.X509MintRequest) (*x509.X509CertChain, error)
 	// ListPublicCa returns the cluster root CA certificate(s).
-	// Clients (e.g. cavalierctl) use these to verify TLS connections to the gateway.
+	// Clients (e.g. schematicctl) use these to verify TLS connections to the gateway.
 	// No authentication required — the CA is public trust anchor information.
 	ListPublicCa(context.Context, *trace.TraceRequest) (*PublicCaResponse, error)
 	mustEmbedUnimplementedMintServer()

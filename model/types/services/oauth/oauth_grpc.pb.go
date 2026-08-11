@@ -46,7 +46,7 @@ const (
 // The client doesn't have a token yet — the whole point of this flow
 // is to obtain one, so each RPC has auth_disabled.
 type SessionClient interface {
-	// BrokerSession is a bidirectional stream between cavalierctl and OAuth.
+	// BrokerSession is a bidirectional stream between schematicctl and OAuth.
 	// The client sends a session_id, then waits for token delivery.
 	// OAuth holds the stream open until the Callback handler writes a
 	// matching token to OAuthState or the session times out.
@@ -82,7 +82,7 @@ type Session_BrokerSessionClient = grpc.BidiStreamingClient[SessionRequest, Sess
 // The client doesn't have a token yet — the whole point of this flow
 // is to obtain one, so each RPC has auth_disabled.
 type SessionServer interface {
-	// BrokerSession is a bidirectional stream between cavalierctl and OAuth.
+	// BrokerSession is a bidirectional stream between schematicctl and OAuth.
 	// The client sends a session_id, then waits for token delivery.
 	// OAuth holds the stream open until the Callback handler writes a
 	// matching token to OAuthState or the session times out.

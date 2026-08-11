@@ -242,7 +242,7 @@ type Config struct {
 	// needs renewal (seconds). Default: 3600 (1 hour).
 	RenewalCheckIntervalSeconds int64 `protobuf:"varint,3,opt,name=renewal_check_interval_seconds,json=renewalCheckIntervalSeconds,proto3" json:"renewal_check_interval_seconds,omitempty"`
 	// hostnames is the list of domain names to include as SANs on the
-	// Let's Encrypt certificate (e.g. ["api.cavalier.io", "console.cavalier.io"]).
+	// Let's Encrypt certificate (e.g. ["api.schematic.io", "console.schematic.io"]).
 	// All hostnames must be reachable on port 80 for HTTP-01 challenge validation.
 	Hostnames     []string `protobuf:"bytes,4,rep,name=hostnames,proto3" json:"hostnames,omitempty"`
 	TraceId       string   `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`

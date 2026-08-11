@@ -24,7 +24,7 @@
 // Kmaker is the cluster bootstrap certificate authority for kernel.
 // Kernel instances authenticate with Kubernetes projected service account
 // tokens and receive kernel TLS/signing certificates before the kernel service
-// itself is available to mint ordinary Cavalier service certificates.
+// itself is available to mint ordinary Schematic service certificates.
 
 syntax = "proto3";
 
@@ -40,7 +40,7 @@ import "sys/trace.proto";
 // Config is rendered by operator and mounted into kmaker at startup.
 message Config {
 
-  // cluster_name is the logical Cavalier cluster this kmaker signs for.
+  // cluster_name is the logical Schematic cluster this kmaker signs for.
   string cluster_name = 1;
 
   // listener is the gRPC bind address for kmaker.
@@ -65,7 +65,7 @@ message Config {
   string token_audience = 7;
 
   // kernel_service_accounts are Kubernetes service accounts allowed to request
-  // kernel certificates. Empty means namespace=cavalier, name=kernel.
+  // kernel certificates. Empty means namespace=schematic, name=kernel.
   repeated KernelServiceAccount kernel_service_accounts = 8;
 
   // kernel_cert_lifetime_seconds caps issued kernel certificate lifetimes.

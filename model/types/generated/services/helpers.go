@@ -42,11 +42,11 @@ func ServiceNameValues() []ServiceName {
 		ServiceName_SERVICE_NAME_EVENTBUS,
 		ServiceName_SERVICE_NAME_TIMEDB,
 		ServiceName_SERVICE_NAME_OAUTH,
-		ServiceName_SERVICE_NAME_MSGGATEWAY,
 		ServiceName_SERVICE_NAME_OPA,
 		ServiceName_SERVICE_NAME_STRATUM,
 		ServiceName_SERVICE_NAME_ARGUS,
 		ServiceName_SERVICE_NAME_KMAKER,
+		ServiceName_SERVICE_NAME_ECHO,
 		ServiceName_SERVICE_NAME_SAMLSVC,
 		ServiceName_SERVICE_NAME_ANY,
 	}
@@ -54,7 +54,7 @@ func ServiceNameValues() []ServiceName {
 
 // ServiceNameStringValues returns all valid ServiceName names as strings
 func ServiceNameStringValues() []string {
-	return []string{"sentinel", "gateway", "kernel", "letsencrypt", "graphdb", "eventbus", "timedb", "oauth", "msggateway", "opa", "stratum", "argus", "kmaker", "samlsvc", "any"}
+	return []string{"sentinel", "gateway", "kernel", "letsencrypt", "graphdb", "eventbus", "timedb", "oauth", "opa", "stratum", "argus", "kmaker", "echo", "samlsvc", "any"}
 }
 
 // ParseServiceName converts a string to a ServiceName enum value
@@ -81,8 +81,6 @@ func ParseServiceName(s string) (ServiceName, error) {
 		return ServiceName_SERVICE_NAME_TIMEDB, nil
 	case "oauth", "service-name-oauth":
 		return ServiceName_SERVICE_NAME_OAUTH, nil
-	case "msggateway", "service-name-msggateway":
-		return ServiceName_SERVICE_NAME_MSGGATEWAY, nil
 	case "opa", "service-name-opa":
 		return ServiceName_SERVICE_NAME_OPA, nil
 	case "stratum", "service-name-stratum":
@@ -91,6 +89,8 @@ func ParseServiceName(s string) (ServiceName, error) {
 		return ServiceName_SERVICE_NAME_ARGUS, nil
 	case "kmaker", "service-name-kmaker":
 		return ServiceName_SERVICE_NAME_KMAKER, nil
+	case "echo", "service-name-echo":
+		return ServiceName_SERVICE_NAME_ECHO, nil
 	case "samlsvc", "service-name-samlsvc":
 		return ServiceName_SERVICE_NAME_SAMLSVC, nil
 	case "any", "service-name-any":
@@ -141,8 +141,6 @@ func ServiceNameToString(v ServiceName) string {
 		return "timedb"
 	case ServiceName_SERVICE_NAME_OAUTH:
 		return "oauth"
-	case ServiceName_SERVICE_NAME_MSGGATEWAY:
-		return "msggateway"
 	case ServiceName_SERVICE_NAME_OPA:
 		return "opa"
 	case ServiceName_SERVICE_NAME_STRATUM:
@@ -151,6 +149,8 @@ func ServiceNameToString(v ServiceName) string {
 		return "argus"
 	case ServiceName_SERVICE_NAME_KMAKER:
 		return "kmaker"
+	case ServiceName_SERVICE_NAME_ECHO:
+		return "echo"
 	case ServiceName_SERVICE_NAME_SAMLSVC:
 		return "samlsvc"
 	case ServiceName_SERVICE_NAME_ANY:
@@ -193,8 +193,6 @@ func ParseServiceNameLiberal(s string) ServiceName {
 		return ServiceName_SERVICE_NAME_TIMEDB
 	case "oauth", "service-name-oauth":
 		return ServiceName_SERVICE_NAME_OAUTH
-	case "msggateway", "service-name-msggateway":
-		return ServiceName_SERVICE_NAME_MSGGATEWAY
 	case "opa", "service-name-opa":
 		return ServiceName_SERVICE_NAME_OPA
 	case "stratum", "service-name-stratum":
@@ -203,6 +201,8 @@ func ParseServiceNameLiberal(s string) ServiceName {
 		return ServiceName_SERVICE_NAME_ARGUS
 	case "kmaker", "service-name-kmaker":
 		return ServiceName_SERVICE_NAME_KMAKER
+	case "echo", "service-name-echo":
+		return ServiceName_SERVICE_NAME_ECHO
 	case "samlsvc", "service-name-samlsvc":
 		return ServiceName_SERVICE_NAME_SAMLSVC
 	case "any", "service-name-any":
@@ -233,8 +233,6 @@ func ServiceNameToSpecName(v ServiceName) string {
 		return "SERVICE_NAME_TIMEDB"
 	case ServiceName_SERVICE_NAME_OAUTH:
 		return "SERVICE_NAME_OAUTH"
-	case ServiceName_SERVICE_NAME_MSGGATEWAY:
-		return "SERVICE_NAME_MSGGATEWAY"
 	case ServiceName_SERVICE_NAME_OPA:
 		return "SERVICE_NAME_OPA"
 	case ServiceName_SERVICE_NAME_STRATUM:
@@ -243,6 +241,8 @@ func ServiceNameToSpecName(v ServiceName) string {
 		return "SERVICE_NAME_ARGUS"
 	case ServiceName_SERVICE_NAME_KMAKER:
 		return "SERVICE_NAME_KMAKER"
+	case ServiceName_SERVICE_NAME_ECHO:
+		return "SERVICE_NAME_ECHO"
 	case ServiceName_SERVICE_NAME_SAMLSVC:
 		return "SERVICE_NAME_SAMLSVC"
 	case ServiceName_SERVICE_NAME_ANY:
@@ -1569,6 +1569,110 @@ func SamlRPCsToSpecName(v SamlRPCs) string {
 		return "SAML_RPCS_GET_IDP_DESCRIPTOR"
 	case SamlRPCs_SAML_RPCS_ANY:
 		return "SAML_RPCS_ANY"
+	default:
+		return ""
+	}
+}
+
+// EchoRPCsValues returns all valid EchoRPCs values (excluding UNDEFINED)
+func EchoRPCsValues() []EchoRPCs {
+	return []EchoRPCs{
+		EchoRPCs_ECHO_RPCS_PING,
+		EchoRPCs_ECHO_RPCS_ANY,
+	}
+}
+
+// EchoRPCsStringValues returns all valid EchoRPCs names as strings
+func EchoRPCsStringValues() []string {
+	return []string{"echo-rpcs-ping", "echo-rpcs-any"}
+}
+
+// ParseEchoRPCs converts a string to a EchoRPCs enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseEchoRPCs(s string) (EchoRPCs, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return EchoRPCs_ECHO_RPCS_UNSPECIFIED, nil
+	case "echo-rpcs-ping":
+		return EchoRPCs_ECHO_RPCS_PING, nil
+	case "echo-rpcs-any":
+		return EchoRPCs_ECHO_RPCS_ANY, nil
+	default:
+		return EchoRPCs_ECHO_RPCS_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid echorpcs %s, expecting one of: %v", s, EchoRPCsStringValues())
+	}
+}
+
+// ParseEchoRPCss converts a comma-separated string to a slice of EchoRPCs enum values
+// Returns an error if any value is invalid
+func ParseEchoRPCss(s string) ([]EchoRPCs, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]EchoRPCs, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseEchoRPCs(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// EchoRPCsToString converts a EchoRPCs to its lowercase string representation
+func EchoRPCsToString(v EchoRPCs) string {
+	switch v {
+	case EchoRPCs_ECHO_RPCS_PING:
+		return "echo-rpcs-ping"
+	case EchoRPCs_ECHO_RPCS_ANY:
+		return "echo-rpcs-any"
+	default:
+		return ""
+	}
+}
+
+// ParseEchoRPCsLiberal parses a EchoRPCs liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseEchoRPCsLiberal(s string) EchoRPCs {
+	if s == "" {
+		return EchoRPCs_ECHO_RPCS_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return EchoRPCs(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "echo-rpcs-ping":
+		return EchoRPCs_ECHO_RPCS_PING
+	case "echo-rpcs-any":
+		return EchoRPCs_ECHO_RPCS_ANY
+	default:
+		return EchoRPCs_ECHO_RPCS_UNSPECIFIED
+	}
+}
+
+// EchoRPCsToSpecName converts a EchoRPCs to its canonical protobuf spec name
+func EchoRPCsToSpecName(v EchoRPCs) string {
+	switch v {
+	case EchoRPCs_ECHO_RPCS_UNSPECIFIED:
+		return "ECHO_RPCS_UNSPECIFIED"
+	case EchoRPCs_ECHO_RPCS_PING:
+		return "ECHO_RPCS_PING"
+	case EchoRPCs_ECHO_RPCS_ANY:
+		return "ECHO_RPCS_ANY"
 	default:
 		return ""
 	}

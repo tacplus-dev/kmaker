@@ -97,13 +97,13 @@ type MintClient interface {
 	// and returns the resolved dst_url. The PROXY — not kernel — performs the
 	// off-cluster api.anthropic.com exchange. Signs ES256 (WIF rejects EdDSA).
 	MintExternalToken(ctx context.Context, in *tokenrequest.ExternalTokenMintRequest, opts ...grpc.CallOption) (*tokenrequest.ExternalTokenMintResponse, error)
-	// MintClientToken — cred_pair bootstrap. A client (cavalierctl, CI, admins)
+	// MintClientToken — cred_pair bootstrap. A client (schematicctl, CI, admins)
 	// presents a JWT signed by its cred_pair private key; kernel verifies the
 	// signature against the cred_pair PUBLIC keys held in the per-namespace config
 	// (ConfigState below; the root namespace's config holds the root admin
 	// cred_pairs seeded from Config.root_cred_pairs), and mints a bearer token
 	// with the resolved SPIFFE subject. S2S here; the gateway fronts this as C2S so
-	// pre-tenant external clients (cavalier CLI, CI pipelines) can reach it.
+	// pre-tenant external clients (schematic CLI, CI pipelines) can reach it.
 	// auth_disabled: the request body carries its own proof (no bearer header).
 	MintClientToken(ctx context.Context, in *tokenrequest.MintClientTokenRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error)
 	// MintX509Cert signs an X.509 certificate under a per-service intermediate CA.
@@ -267,13 +267,13 @@ type MintServer interface {
 	// and returns the resolved dst_url. The PROXY — not kernel — performs the
 	// off-cluster api.anthropic.com exchange. Signs ES256 (WIF rejects EdDSA).
 	MintExternalToken(context.Context, *tokenrequest.ExternalTokenMintRequest) (*tokenrequest.ExternalTokenMintResponse, error)
-	// MintClientToken — cred_pair bootstrap. A client (cavalierctl, CI, admins)
+	// MintClientToken — cred_pair bootstrap. A client (schematicctl, CI, admins)
 	// presents a JWT signed by its cred_pair private key; kernel verifies the
 	// signature against the cred_pair PUBLIC keys held in the per-namespace config
 	// (ConfigState below; the root namespace's config holds the root admin
 	// cred_pairs seeded from Config.root_cred_pairs), and mints a bearer token
 	// with the resolved SPIFFE subject. S2S here; the gateway fronts this as C2S so
-	// pre-tenant external clients (cavalier CLI, CI pipelines) can reach it.
+	// pre-tenant external clients (schematic CLI, CI pipelines) can reach it.
 	// auth_disabled: the request body carries its own proof (no bearer header).
 	MintClientToken(context.Context, *tokenrequest.MintClientTokenRequest) (*tokenrequest.TokenMintResponse, error)
 	// MintX509Cert signs an X.509 certificate under a per-service intermediate CA.

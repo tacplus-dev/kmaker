@@ -506,7 +506,7 @@ func (OpaConfigStateServiceRpcId) EnumDescriptor() ([]byte, []int) {
 type Config struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// entitlements_policy is the OPA bundle for entitlement evaluation.
-	// Loaded from services/opa/ by cavalier, delivered to opa via config push.
+	// Loaded from services/opa/ by schematic, delivered to opa via config push.
 	EntitlementsPolicy *opalib.OpaPolicy `protobuf:"bytes,1,opt,name=entitlements_policy,json=entitlementsPolicy,proto3" json:"entitlements_policy,omitempty"`
 	// proxy_policy is the OPA bundle for proxy request policy evaluation.
 	// The policy receives caller claims and opaque routing metadata, returns

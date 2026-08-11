@@ -29,11 +29,11 @@
 //     An external IDP has authenticated a user and POSTed a signed SAMLResponse to
 //     our ACS endpoint. SAML verifies the assertion against the IDP's certificate,
 //     extracts the subject and attributes, then calls kernel's MintUserToken to
-//     produce a Cavalier JWT. This is the SAML parallel to oauth's OAuth callback.
+//     produce a Schematic JWT. This is the SAML parallel to oauth's OAuth callback.
 //
 //   Outbound (IDP role) — Issuing SAML assertions to third-party SPs:
-//     A Cavalier user with a valid access token wants to authenticate to an external
-//     SAML SP (e.g. AWS Console, Salesforce). The user presents their Cavalier JWT,
+//     A Schematic user with a valid access token wants to authenticate to an external
+//     SAML SP (e.g. AWS Console, Salesforce). The user presents their Schematic JWT,
 //     SAML validates it via kernel, then issues a signed SAML assertion addressed
 //     to the target SP's ACS URL. This is the SAML parallel to ProxyTokenExchange.
 //
@@ -112,9 +112,9 @@ message IdpConfig {
   // Defaults to "/saml/acs" if empty.
   string acs_path = 6;
 
-  // attribute_map maps IDP attribute names to Cavalier claim names.
+  // attribute_map maps IDP attribute names to Schematic claim names.
   // Keys are SAML attribute names (e.g. "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").
-  // Values are the Cavalier claim names to pass to kernel (e.g. "email").
+  // Values are the Schematic claim names to pass to kernel (e.g. "email").
   // If the "email" key is absent after mapping, the NameID is used as the subject.
   map<string, string> attribute_map = 7;
 
@@ -142,8 +142,8 @@ message SpConfig {
   // Defaults to emailAddress if empty.
   string name_id_format = 5;
 
-  // attribute_map maps Cavalier claim names to SAML attribute names to include
-  // in issued assertions. Keys are Cavalier token claims; values are SAML attribute names.
+  // attribute_map maps Schematic claim names to SAML attribute names to include
+  // in issued assertions. Keys are Schematic token claims; values are SAML attribute names.
   map<string, string> attribute_map = 6;
 
   // want_signed_authn_request indicates whether this SP requires signed AuthnRequests.
@@ -159,7 +159,7 @@ message SpConfig {
 service Inbound {
 
   // MintAcsTokens accepts an inbound SAML assertion from an external IDP,
-  // verifies it, and mints Cavalier tokens.
+  // verifies it, and mints Schematic tokens.
   // This is the POST endpoint that external IDPs redirect users to.
   // The SAMLResponse form field contains the base64-encoded signed XML.
   rpc MintAcsTokens(AcsRequest) returns (AcsResponse) {
@@ -177,7 +177,7 @@ service Inbound {
 
 service Outbound {
 
-  // MintAssertion accepts a valid Cavalier JWT and produces a signed SAML
+  // MintAssertion accepts a valid Schematic JWT and produces a signed SAML
   // assertion addressed to the named SP. The caller redirects the user to
   // the SP's ACS URL with this assertion as the SAMLResponse POST body.
   //
@@ -229,12 +229,12 @@ message AcsRequest {
   bool noop = 201;
 }
 
-// AcsResponse contains the minted Cavalier tokens.
+// AcsResponse contains the minted Schematic tokens.
 message AcsResponse {
-  // access_token is the short-lived Cavalier access token.
+  // access_token is the short-lived Schematic access token.
   string access_token = 1;
 
-  // refresh_token is the long-lived Cavalier refresh token.
+  // refresh_token is the long-lived Schematic refresh token.
   string refresh_token = 2;
 
   // relay_state is the original relay_state passed in, for client use.

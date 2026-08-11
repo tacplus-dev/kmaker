@@ -27,12 +27,12 @@ import (
 
 	"github.com/pelletier/go-toml/v2"
 	argus "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/argus"
+	echo "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/echo"
 	eventbus "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/eventbus"
 	gateway "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gateway"
 	graphdb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/graphdb"
 	kmaker "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
 	letsencrypt "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/letsencrypt"
-	msggateway "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/msggateway"
 	oauth "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/oauth"
 	opa "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/opa"
 	operator "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/operator"
@@ -60,13 +60,13 @@ type servicesJSON struct {
 	EventbusConfig    json.RawMessage `json:"eventbus_config,omitempty"`
 	TimedbConfig      json.RawMessage `json:"timedb_config,omitempty"`
 	OauthConfig       json.RawMessage `json:"oauth_config,omitempty"`
-	MsggatewayConfig  json.RawMessage `json:"msggateway_config,omitempty"`
 	OpaConfig         json.RawMessage `json:"opa_config,omitempty"`
 	StratumConfig     json.RawMessage `json:"stratum_config,omitempty"`
 	ArgusConfig       json.RawMessage `json:"argus_config,omitempty"`
 	SamlConfig        json.RawMessage `json:"saml_config,omitempty"`
 	OperatorConfig    json.RawMessage `json:"operator_config,omitempty"`
 	KmakerConfig      json.RawMessage `json:"kmaker_config,omitempty"`
+	EchoConfig        json.RawMessage `json:"echo_config,omitempty"`
 }
 
 // ServicesToJSON converts Services to JSON bytes.
@@ -126,13 +126,6 @@ func ServicesToJSON(v *Services) ([]byte, error) {
 			data, _ := oauth.ConfigToJSON(v.OauthConfig)
 			return data
 		}(),
-		MsggatewayConfig: func() json.RawMessage {
-			if v.MsggatewayConfig == nil {
-				return nil
-			}
-			data, _ := msggateway.ConfigToJSON(v.MsggatewayConfig)
-			return data
-		}(),
 		OpaConfig: func() json.RawMessage {
 			if v.OpaConfig == nil {
 				return nil
@@ -173,6 +166,13 @@ func ServicesToJSON(v *Services) ([]byte, error) {
 				return nil
 			}
 			data, _ := kmaker.ConfigToJSON(v.KmakerConfig)
+			return data
+		}(),
+		EchoConfig: func() json.RawMessage {
+			if v.EchoConfig == nil {
+				return nil
+			}
+			data, _ := echo.ConfigToJSON(v.EchoConfig)
 			return data
 		}(),
 	}
@@ -236,13 +236,6 @@ func ServicesToJSONPretty(v *Services) ([]byte, error) {
 			data, _ := oauth.ConfigToJSON(v.OauthConfig)
 			return data
 		}(),
-		MsggatewayConfig: func() json.RawMessage {
-			if v.MsggatewayConfig == nil {
-				return nil
-			}
-			data, _ := msggateway.ConfigToJSON(v.MsggatewayConfig)
-			return data
-		}(),
 		OpaConfig: func() json.RawMessage {
 			if v.OpaConfig == nil {
 				return nil
@@ -283,6 +276,13 @@ func ServicesToJSONPretty(v *Services) ([]byte, error) {
 				return nil
 			}
 			data, _ := kmaker.ConfigToJSON(v.KmakerConfig)
+			return data
+		}(),
+		EchoConfig: func() json.RawMessage {
+			if v.EchoConfig == nil {
+				return nil
+			}
+			data, _ := echo.ConfigToJSON(v.EchoConfig)
 			return data
 		}(),
 	}
@@ -398,13 +398,6 @@ func ServicesFromJSON(data []byte) (*Services, error) {
 			result.OauthConfig = parsed
 		}
 	}
-	// Parse message field: MsggatewayConfig
-	if len(raw.MsggatewayConfig) > 0 {
-		parsed, err := msggateway.ConfigFromJSON(raw.MsggatewayConfig)
-		if err == nil {
-			result.MsggatewayConfig = parsed
-		}
-	}
 	// Parse message field: OpaConfig
 	if len(raw.OpaConfig) > 0 {
 		parsed, err := opa.ConfigFromJSON(raw.OpaConfig)
@@ -445,6 +438,13 @@ func ServicesFromJSON(data []byte) (*Services, error) {
 		parsed, err := kmaker.ConfigFromJSON(raw.KmakerConfig)
 		if err == nil {
 			result.KmakerConfig = parsed
+		}
+	}
+	// Parse message field: EchoConfig
+	if len(raw.EchoConfig) > 0 {
+		parsed, err := echo.ConfigFromJSON(raw.EchoConfig)
+		if err == nil {
+			result.EchoConfig = parsed
 		}
 	}
 	return result, nil
@@ -563,11 +563,6 @@ func ServicesToEnvVar(v *Services) map[string]string {
 			result[k] = val
 		}
 	}
-	if v.MsggatewayConfig != nil {
-		for k, val := range msggateway.ConfigToEnvVar(v.MsggatewayConfig) {
-			result[k] = val
-		}
-	}
 	if v.OpaConfig != nil {
 		for k, val := range opa.ConfigToEnvVar(v.OpaConfig) {
 			result[k] = val
@@ -595,6 +590,11 @@ func ServicesToEnvVar(v *Services) map[string]string {
 	}
 	if v.KmakerConfig != nil {
 		for k, val := range kmaker.ConfigToEnvVar(v.KmakerConfig) {
+			result[k] = val
+		}
+	}
+	if v.EchoConfig != nil {
+		for k, val := range echo.ConfigToEnvVar(v.EchoConfig) {
 			result[k] = val
 		}
 	}
@@ -639,11 +639,6 @@ func ServicesFromEnvVar(env map[string]string) (*Services, error) {
 	} else if sub != nil {
 		result.OauthConfig = sub
 	}
-	if sub, err := msggateway.ConfigFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.MsggatewayConfig = sub
-	}
 	if sub, err := opa.ConfigFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
@@ -673,6 +668,11 @@ func ServicesFromEnvVar(env map[string]string) (*Services, error) {
 		return nil, err
 	} else if sub != nil {
 		result.KmakerConfig = sub
+	}
+	if sub, err := echo.ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.EchoConfig = sub
 	}
 	return result, nil
 }
@@ -745,13 +745,6 @@ func ValidateServicesWithDepth(m *Services, depth int) error {
 		}
 	}
 
-	// Validate MsggatewayConfig nested message
-	if m.MsggatewayConfig != nil {
-		if err := msggateway.ValidateConfigWithDepth(m.MsggatewayConfig, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field MsggatewayConfig validation failed")
-		}
-	}
-
 	// Validate OpaConfig nested message
 	if m.OpaConfig != nil {
 		if err := opa.ValidateConfigWithDepth(m.OpaConfig, depth+1); err != nil {
@@ -791,6 +784,13 @@ func ValidateServicesWithDepth(m *Services, depth int) error {
 	if m.KmakerConfig != nil {
 		if err := kmaker.ValidateConfigWithDepth(m.KmakerConfig, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field KmakerConfig validation failed")
+		}
+	}
+
+	// Validate EchoConfig nested message
+	if m.EchoConfig != nil {
+		if err := echo.ValidateConfigWithDepth(m.EchoConfig, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field EchoConfig validation failed")
 		}
 	}
 
@@ -844,9 +844,6 @@ func MergeServices(dst, src *Services) {
 	if dst.OauthConfig == nil {
 		dst.OauthConfig = src.OauthConfig
 	}
-	if dst.MsggatewayConfig == nil {
-		dst.MsggatewayConfig = src.MsggatewayConfig
-	}
 	if dst.OpaConfig == nil {
 		dst.OpaConfig = src.OpaConfig
 	}
@@ -864,5 +861,8 @@ func MergeServices(dst, src *Services) {
 	}
 	if dst.KmakerConfig == nil {
 		dst.KmakerConfig = src.KmakerConfig
+	}
+	if dst.EchoConfig == nil {
+		dst.EchoConfig = src.EchoConfig
 	}
 }
