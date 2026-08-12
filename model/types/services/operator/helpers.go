@@ -598,21 +598,22 @@ func TLSConfigToTOML(v *TLSConfig) ([]byte, error) {
 // TopologyJSON represents Topology in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type topologyJSON struct {
-	KernelNodes   int32  `json:"kernel_nodes,omitempty"`
-	SentinelNodes int32  `json:"sentinel_nodes,omitempty"`
-	EventbusNodes int32  `json:"eventbus_nodes,omitempty"`
-	GatewayNodes  int32  `json:"gateway_nodes,omitempty"`
-	OauthNodes    int32  `json:"oauth_nodes,omitempty"`
-	OpaNodes      int32  `json:"opa_nodes,omitempty"`
-	TimedbNodes   int32  `json:"timedb_nodes,omitempty"`
-	GraphdbNodes  int32  `json:"graphdb_nodes,omitempty"`
-	ArgusNodes    int32  `json:"argus_nodes,omitempty"`
-	StratumNodes  int32  `json:"stratum_nodes,omitempty"`
-	SamlNodes     int32  `json:"saml_nodes,omitempty"`
-	KmakerNodes   int32  `json:"kmaker_nodes,omitempty"`
-	EchoNodes     int32  `json:"echo_nodes,omitempty"`
-	TraceId       string `json:"trace_id,omitempty"`
-	Noop          bool   `json:"noop,omitempty"`
+	KernelNodes   int32            `json:"kernel_nodes,omitempty"`
+	SentinelNodes int32            `json:"sentinel_nodes,omitempty"`
+	EventbusNodes int32            `json:"eventbus_nodes,omitempty"`
+	GatewayNodes  int32            `json:"gateway_nodes,omitempty"`
+	OauthNodes    int32            `json:"oauth_nodes,omitempty"`
+	OpaNodes      int32            `json:"opa_nodes,omitempty"`
+	TimedbNodes   int32            `json:"timedb_nodes,omitempty"`
+	GraphdbNodes  int32            `json:"graphdb_nodes,omitempty"`
+	ArgusNodes    int32            `json:"argus_nodes,omitempty"`
+	StratumNodes  int32            `json:"stratum_nodes,omitempty"`
+	SamlNodes     int32            `json:"saml_nodes,omitempty"`
+	KmakerNodes   int32            `json:"kmaker_nodes,omitempty"`
+	EchoNodes     int32            `json:"echo_nodes,omitempty"`
+	AppServices   map[string]int32 `json:"app_services,omitempty"`
+	TraceId       string           `json:"trace_id,omitempty"`
+	Noop          bool             `json:"noop,omitempty"`
 }
 
 // TopologyToJSON converts Topology to JSON bytes.
@@ -636,6 +637,7 @@ func TopologyToJSON(v *Topology) ([]byte, error) {
 		SamlNodes:     v.SamlNodes,
 		KmakerNodes:   v.KmakerNodes,
 		EchoNodes:     v.EchoNodes,
+		AppServices:   v.AppServices,
 		TraceId:       v.TraceId,
 		Noop:          v.Noop,
 	}
@@ -663,6 +665,7 @@ func TopologyToJSONPretty(v *Topology) ([]byte, error) {
 		SamlNodes:     v.SamlNodes,
 		KmakerNodes:   v.KmakerNodes,
 		EchoNodes:     v.EchoNodes,
+		AppServices:   v.AppServices,
 		TraceId:       v.TraceId,
 		Noop:          v.Noop,
 	}
@@ -742,6 +745,7 @@ func TopologyFromJSON(data []byte) (*Topology, error) {
 	result.SamlNodes = raw.SamlNodes
 	result.KmakerNodes = raw.KmakerNodes
 	result.EchoNodes = raw.EchoNodes
+	result.AppServices = raw.AppServices
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -2554,6 +2558,18 @@ func ValidateTopologyWithDepth(m *Topology, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
+	// Validate AppServices (assert_max_size: 64)
+	if len(m.AppServices) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field AppServices exceeds max size of 64, got: %d", len(m.AppServices))
+	}
+
+	// Validate AppServices keys (default max size: 32768 bytes)
+	for key := range m.AppServices {
+		if len(key) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field AppServices key exceeds max size of 32768 bytes, got: %d", len(key))
+		}
+	}
+
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
@@ -2876,6 +2892,7 @@ const (
 // ============================================================
 const (
 	MaxSizeTlsconfigTraceId           int = 32768
+	MaxSizeTopologyAppServices        int = 64
 	MaxSizeTopologyTraceId            int = 32768
 	MaxSizeOptionalservicesTraceId    int = 32768
 	MaxSizePkiNodeTls                 int = 1024
@@ -3230,6 +3247,9 @@ func MergeTopology(dst, src *Topology) {
 	}
 	if dst.EchoNodes == 0 {
 		dst.EchoNodes = src.EchoNodes
+	}
+	if len(dst.AppServices) == 0 {
+		dst.AppServices = src.AppServices
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

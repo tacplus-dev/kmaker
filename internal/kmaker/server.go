@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/grpcserver"
+	loggerchassis "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/logger"
 	kmakergrpc "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/s2sm/grpc/servers/services/kmaker"
 	pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
 	"go.uber.org/zap"
@@ -20,7 +21,20 @@ import (
 )
 
 func Run(args []string) error {
-	logger, err := zap.NewProduction()
+	// The chassis logger, not a raw zap production logger.
+	//
+	// Every other service logs through the chassis, which wraps the sink in a
+	// redactor so a credential cannot reach the log through a structured FIELD —
+	// message-level scrubbing alone does not catch those. kmaker built its logger
+	// straight from zap and had no redaction of any kind, which is the
+	// worst service in the fleet to leave uncovered: it holds the signing CA and
+	// mints keys, so its error paths are the ones most likely to carry key
+	// material. It is hand-written rather than generated, which is how it slipped
+	// past the sweep that fixed the generated services.
+	//
+	// Installed before the config is read so early failures are redacted too, then
+	// re-installed from the service's own logger config once that is available.
+	logger, err := loggerchassis.InstallFromConfig(nil)
 	if err != nil {
 		return fmt.Errorf("init logger: %w", err)
 	}
@@ -37,6 +51,18 @@ func Run(args []string) error {
 	// the `> 0` guard below skips, and the plaintext probe never binds — the
 	// exact failure kernel hit for the same reason.
 	pb.ConfigDefaults(cfg)
+
+	// Re-install now that the service's own logger config (level, format, output
+	// paths) is known and its defaults are applied. Redaction is unconditional in
+	// the chassis, so this changes verbosity and shape, never whether credentials
+	// are scrubbed.
+	if configured, err := loggerchassis.InstallFromConfig(cfg.GetLogger()); err != nil {
+		zap.L().Warn("keeping the bootstrap logger; configured logger failed to install",
+			zap.Error(err))
+	} else {
+		zap.ReplaceGlobals(configured)
+		logger = configured
+	}
 
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()

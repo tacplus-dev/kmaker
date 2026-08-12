@@ -124,6 +124,22 @@ message Topology {
   // Defaults to 1 rather than 3: the sample service is stateless and exists to
   // be poked at, so a second replica proves nothing and costs a pod.
   int32 echo_nodes = 17;
+
+  // app_services declares replica counts for services that are NOT part of the
+  // platform: an application's own services, defined in the application's proto
+  // repo and merged into the build.
+  //
+  // Every field above is a PLATFORM service with a fixed field number. That is
+  // fine for the platform, whose service set is what "the platform" means — but
+  // it made the platform unable to host anything else. An application could not
+  // declare a service without editing this file, and proto3 gives no way to add
+  // a field to a message from another repo, so "schematic is reusable" was not
+  // true: echo, a sample service, had to take field 17 here to be deployable.
+  //
+  // Keyed by service name, so an app adds a service by naming it in its own
+  // config and this file never changes. Presence with a count > 0 IS the
+  // enablement — an app service needs no parallel optional_services flag.
+  map<string, int32> app_services = 18;
   string trace_id = 200;
   bool noop = 201;
 }

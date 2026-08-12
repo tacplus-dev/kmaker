@@ -330,9 +330,24 @@ type Topology struct {
 	// echo_nodes is used when optional_services.echo = true.
 	// Defaults to 1 rather than 3: the sample service is stateless and exists to
 	// be poked at, so a second replica proves nothing and costs a pod.
-	EchoNodes     int32  `protobuf:"varint,17,opt,name=echo_nodes,json=echoNodes,proto3" json:"echo_nodes,omitempty"`
-	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	EchoNodes int32 `protobuf:"varint,17,opt,name=echo_nodes,json=echoNodes,proto3" json:"echo_nodes,omitempty"`
+	// app_services declares replica counts for services that are NOT part of the
+	// platform: an application's own services, defined in the application's proto
+	// repo and merged into the build.
+	//
+	// Every field above is a PLATFORM service with a fixed field number. That is
+	// fine for the platform, whose service set is what "the platform" means — but
+	// it made the platform unable to host anything else. An application could not
+	// declare a service without editing this file, and proto3 gives no way to add
+	// a field to a message from another repo, so "schematic is reusable" was not
+	// true: echo, a sample service, had to take field 17 here to be deployable.
+	//
+	// Keyed by service name, so an app adds a service by naming it in its own
+	// config and this file never changes. Presence with a count > 0 IS the
+	// enablement — an app service needs no parallel optional_services flag.
+	AppServices   map[string]int32 `protobuf:"bytes,18,rep,name=app_services,json=appServices,proto3" json:"app_services,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	TraceId       string           `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool             `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -456,6 +471,13 @@ func (x *Topology) GetEchoNodes() int32 {
 		return x.EchoNodes
 	}
 	return 0
+}
+
+func (x *Topology) GetAppServices() map[string]int32 {
+	if x != nil {
+		return x.AppServices
+	}
+	return nil
 }
 
 func (x *Topology) GetTraceId() string {
@@ -1054,7 +1076,7 @@ const file_services_operator_proto_rawDesc = "" +
 	"\vletsencrypt\x18\x01 \x01(\bR\vletsencrypt\x12#\n" +
 	"\x02ca\x18\x02 \x01(\v2\x13.x509.X509CertChainR\x02ca\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xde\x04\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xec\x05\n" +
 	"\bTopology\x12'\n" +
 	"\fkernel_nodes\x18\x01 \x01(\x05B\x04\x90\xa8\x1d\x03R\vkernelNodes\x12+\n" +
 	"\x0esentinel_nodes\x18\x02 \x01(\x05B\x04\x90\xa8\x1d\x03R\rsentinelNodes\x12+\n" +
@@ -1072,9 +1094,13 @@ const file_services_operator_proto_rawDesc = "" +
 	"saml_nodes\x18\r \x01(\x05B\x04\x90\xa8\x1d\x03R\tsamlNodes\x12'\n" +
 	"\fkmaker_nodes\x18\x10 \x01(\x05B\x04\x90\xa8\x1d\x03R\vkmakerNodes\x12#\n" +
 	"\n" +
-	"echo_nodes\x18\x11 \x01(\x05B\x04\x90\xa8\x1d\x01R\techoNodes\x12\x1a\n" +
+	"echo_nodes\x18\x11 \x01(\x05B\x04\x90\xa8\x1d\x01R\techoNodes\x12L\n" +
+	"\fapp_services\x18\x12 \x03(\v2#.operator.Topology.AppServicesEntryB\x04\xb8\xa8\x1d@R\vappServices\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopJ\x04\b\x06\x10\aR\x10msggateway_nodes\"\xef\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\x1a>\n" +
+	"\x10AppServicesEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01J\x04\b\x06\x10\aR\x10msggateway_nodes\"\xef\x01\n" +
 	"\x10OptionalServices\x12\x12\n" +
 	"\x04saml\x18\x06 \x01(\bR\x04saml\x12\x1a\n" +
 	"\x05oauth\x18\a \x01(\bB\x04\xa0\xa8\x1d\x01R\x05oauth\x12 \n" +
@@ -1165,7 +1191,7 @@ func file_services_operator_proto_rawDescGZIP() []byte {
 }
 
 var file_services_operator_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_services_operator_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_services_operator_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_services_operator_proto_goTypes = []any{
 	(OperatorMode)(0),                    // 0: operator.OperatorMode
 	(TypeID)(0),                          // 1: operator.TypeID
@@ -1177,41 +1203,43 @@ var file_services_operator_proto_goTypes = []any{
 	(*Config)(nil),                       // 7: operator.Config
 	(*OperatorConfigState)(nil),          // 8: operator.OperatorConfigState
 	(*MapEmpty)(nil),                     // 9: operator.MapEmpty
-	(*x509.X509CertChain)(nil),           // 10: x509.X509CertChain
-	(*credentials.CredPair)(nil),         // 11: credentials.CredPair
-	(*oauth.ClusterOAuthConfig)(nil),     // 12: oauth.ClusterOAuthConfig
-	(*kmaker.Config)(nil),                // 13: kmaker.Config
-	(*trace.TraceRequest)(nil),           // 14: trace.TraceRequest
+	nil,                                  // 10: operator.Topology.AppServicesEntry
+	(*x509.X509CertChain)(nil),           // 11: x509.X509CertChain
+	(*credentials.CredPair)(nil),         // 12: credentials.CredPair
+	(*oauth.ClusterOAuthConfig)(nil),     // 13: oauth.ClusterOAuthConfig
+	(*kmaker.Config)(nil),                // 14: kmaker.Config
+	(*trace.TraceRequest)(nil),           // 15: trace.TraceRequest
 }
 var file_services_operator_proto_depIdxs = []int32{
-	10, // 0: operator.TLSConfig.ca:type_name -> x509.X509CertChain
-	10, // 1: operator.PKI.root_ca:type_name -> x509.X509CertChain
-	10, // 2: operator.PKI.cluster_ca:type_name -> x509.X509CertChain
-	10, // 3: operator.PKI.node_tls:type_name -> x509.X509CertChain
-	10, // 4: operator.PKI.node_signing_ca:type_name -> x509.X509CertChain
-	10, // 5: operator.PKI.edge_tls:type_name -> x509.X509CertChain
-	10, // 6: operator.PKI.edge_signing_ca:type_name -> x509.X509CertChain
-	10, // 7: operator.PKI.kmaker_signing_ca:type_name -> x509.X509CertChain
-	0,  // 8: operator.Config.mode:type_name -> operator.OperatorMode
-	4,  // 9: operator.Config.topology:type_name -> operator.Topology
-	3,  // 10: operator.Config.tls:type_name -> operator.TLSConfig
-	6,  // 11: operator.Config.pki:type_name -> operator.PKI
-	5,  // 12: operator.Config.optional_services:type_name -> operator.OptionalServices
-	11, // 13: operator.Config.root_cred_pairs:type_name -> credentials.CredPair
-	12, // 14: operator.Config.cluster_oauth:type_name -> oauth.ClusterOAuthConfig
-	13, // 15: operator.Config.kmaker:type_name -> kmaker.Config
-	7,  // 16: operator.OperatorConfigState.config:type_name -> operator.Config
-	14, // 17: operator.OperatorConfigStateService.GetConfig:input_type -> trace.TraceRequest
-	7,  // 18: operator.OperatorConfigStateService.SetConfig:input_type -> operator.Config
-	14, // 19: operator.OperatorConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	7,  // 20: operator.OperatorConfigStateService.GetConfig:output_type -> operator.Config
-	7,  // 21: operator.OperatorConfigStateService.SetConfig:output_type -> operator.Config
-	7,  // 22: operator.OperatorConfigStateService.WatchConfig:output_type -> operator.Config
-	20, // [20:23] is the sub-list for method output_type
-	17, // [17:20] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	11, // 0: operator.TLSConfig.ca:type_name -> x509.X509CertChain
+	10, // 1: operator.Topology.app_services:type_name -> operator.Topology.AppServicesEntry
+	11, // 2: operator.PKI.root_ca:type_name -> x509.X509CertChain
+	11, // 3: operator.PKI.cluster_ca:type_name -> x509.X509CertChain
+	11, // 4: operator.PKI.node_tls:type_name -> x509.X509CertChain
+	11, // 5: operator.PKI.node_signing_ca:type_name -> x509.X509CertChain
+	11, // 6: operator.PKI.edge_tls:type_name -> x509.X509CertChain
+	11, // 7: operator.PKI.edge_signing_ca:type_name -> x509.X509CertChain
+	11, // 8: operator.PKI.kmaker_signing_ca:type_name -> x509.X509CertChain
+	0,  // 9: operator.Config.mode:type_name -> operator.OperatorMode
+	4,  // 10: operator.Config.topology:type_name -> operator.Topology
+	3,  // 11: operator.Config.tls:type_name -> operator.TLSConfig
+	6,  // 12: operator.Config.pki:type_name -> operator.PKI
+	5,  // 13: operator.Config.optional_services:type_name -> operator.OptionalServices
+	12, // 14: operator.Config.root_cred_pairs:type_name -> credentials.CredPair
+	13, // 15: operator.Config.cluster_oauth:type_name -> oauth.ClusterOAuthConfig
+	14, // 16: operator.Config.kmaker:type_name -> kmaker.Config
+	7,  // 17: operator.OperatorConfigState.config:type_name -> operator.Config
+	15, // 18: operator.OperatorConfigStateService.GetConfig:input_type -> trace.TraceRequest
+	7,  // 19: operator.OperatorConfigStateService.SetConfig:input_type -> operator.Config
+	15, // 20: operator.OperatorConfigStateService.WatchConfig:input_type -> trace.TraceRequest
+	7,  // 21: operator.OperatorConfigStateService.GetConfig:output_type -> operator.Config
+	7,  // 22: operator.OperatorConfigStateService.SetConfig:output_type -> operator.Config
+	7,  // 23: operator.OperatorConfigStateService.WatchConfig:output_type -> operator.Config
+	21, // [21:24] is the sub-list for method output_type
+	18, // [18:21] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_services_operator_proto_init() }
@@ -1225,7 +1253,7 @@ func file_services_operator_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_services_operator_proto_rawDesc), len(file_services_operator_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   7,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
