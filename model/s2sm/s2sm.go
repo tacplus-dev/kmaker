@@ -320,7 +320,7 @@ func New() (*ServiceManager, error) {
 	zap.L().Info("ServiceManager initialized",
 		zap.String("service", "kmaker"),
 		zap.String("tacplus_version", "v1.2.248"),
-		zap.String("tacplus_sha", "c8a76cd6-local"),
+		zap.String("tacplus_sha", "982b54c0-local"),
 		zap.String("proto_version", ""),
 		zap.String("proto_sha", ""),
 	)
@@ -738,6 +738,12 @@ func (sm *ServiceManager) Run(h Handler) error {
 		if healthCtl != nil {
 			healthCtl.SetReady(true)
 		}
+		// Credential health is a chassis FLOOR, not a service concern: a service must
+		// not be able to report itself healthy while its credentials are being rejected
+		// and re-minting is not helping. Readiness previously stayed Ready through a
+		// total auth outage because the probe only asked whether the process listened.
+		hr.SetDegradedProbe(service_im.CredentialsDegraded)
+
 		// Bridge ongoing health evaluation to the gRPC health endpoint: a handler
 		// reporting UNHEALTHY flips the endpoint to NOT_SERVING so k8s removes the
 		// pod from load-balancer rotation. Recovery flips it back to SERVING.

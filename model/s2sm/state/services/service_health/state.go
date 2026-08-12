@@ -9,6 +9,7 @@ package service_health
 
 import (
 	"context"
+	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/service_im"
 	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/servicemanager"
 	types "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kernel"
 	healthreport_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/healthreport"
@@ -230,6 +231,11 @@ func (c *StateClient) watchInstancesLoop() {
 			if c.ctx.Err() == nil {
 				zap.L().Warn("WatchInstances failed to start, retrying",
 					zap.Error(err))
+				// A rejected credential must invalidate the token cache, or this
+				// loop presents the same dead token forever: the cache is keyed on
+				// expiry, and an authority restart invalidates a token that has
+				// NOT expired.
+				service_im.NoteIfCredentialRejection(err)
 				c.recordWatchRetrying("WatchInstances", false, attempt+1, err.Error(), err)
 			}
 			if !c.sleepBeforeWatchRetry(attempt) {
@@ -263,10 +269,18 @@ func (c *StateClient) receiveInstancesUpdates(stream types.ServiceHealthStateSer
 			if c.ctx.Err() == nil {
 				zap.L().Warn("WatchInstances stream ended unexpectedly",
 					zap.Error(err))
+				// The rejection lands HERE, not on stream creation: grpc-go
+				// returns a server-streaming call as soon as headers are
+				// written, so the server's UNAUTHENTICATED arrives on the
+				// first Recv. Classifying only the start error left the
+				// cache never invalidated on the one path that matters.
+				service_im.NoteIfCredentialRejection(err)
 			}
 			return received
 		}
 		received = true
+		// A DELIVERED message proves the server accepted the credential.
+		service_im.NoteCredentialAccepted()
 		c.recordWatchHealthy("WatchInstances", true)
 		if len(msg.Entries) > maxEntriesInstances {
 			zap.L().Error("WatchInstances snapshot exceeds max collection size — implement paging for large collections",
