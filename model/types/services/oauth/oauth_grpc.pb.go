@@ -437,7 +437,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type OauthConfigStateServiceClient interface {
 	// Singleton: Config
 	GetConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*Config, error)
@@ -499,7 +499,7 @@ type OauthConfigStateService_WatchConfigClient = grpc.ServerStreamingClient[Conf
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type OauthConfigStateServiceServer interface {
 	// Singleton: Config
 	GetConfig(context.Context, *trace.TraceRequest) (*Config, error)

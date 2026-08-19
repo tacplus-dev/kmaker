@@ -58,7 +58,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type GraphdbStateServiceClient interface {
 	// Collection: Nodes
 	GetNodes(ctx context.Context, in *NodesGetRequest, opts ...grpc.CallOption) (*NodesValueResponse, error)
@@ -250,7 +250,7 @@ type GraphdbStateService_WatchQueryNodesClient = grpc.ServerStreamingClient[Node
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type GraphdbStateServiceServer interface {
 	// Collection: Nodes
 	GetNodes(context.Context, *NodesGetRequest) (*NodesValueResponse, error)
@@ -662,7 +662,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type GraphdbConfigStateServiceClient interface {
 	// Singleton: Config
 	GetConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*Config, error)
@@ -724,7 +724,7 @@ type GraphdbConfigStateService_WatchConfigClient = grpc.ServerStreamingClient[Co
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type GraphdbConfigStateServiceServer interface {
 	// Singleton: Config
 	GetConfig(context.Context, *trace.TraceRequest) (*Config, error)

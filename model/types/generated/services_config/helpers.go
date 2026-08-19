@@ -27,7 +27,6 @@ import (
 
 	"github.com/pelletier/go-toml/v2"
 	argus "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/argus"
-	echo "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/echo"
 	eventbus "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/eventbus"
 	gateway "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gateway"
 	graphdb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/graphdb"
@@ -66,7 +65,6 @@ type servicesJSON struct {
 	SamlConfig        json.RawMessage `json:"saml_config,omitempty"`
 	OperatorConfig    json.RawMessage `json:"operator_config,omitempty"`
 	KmakerConfig      json.RawMessage `json:"kmaker_config,omitempty"`
-	EchoConfig        json.RawMessage `json:"echo_config,omitempty"`
 }
 
 // ServicesToJSON converts Services to JSON bytes.
@@ -166,13 +164,6 @@ func ServicesToJSON(v *Services) ([]byte, error) {
 				return nil
 			}
 			data, _ := kmaker.ConfigToJSON(v.KmakerConfig)
-			return data
-		}(),
-		EchoConfig: func() json.RawMessage {
-			if v.EchoConfig == nil {
-				return nil
-			}
-			data, _ := echo.ConfigToJSON(v.EchoConfig)
 			return data
 		}(),
 	}
@@ -276,13 +267,6 @@ func ServicesToJSONPretty(v *Services) ([]byte, error) {
 				return nil
 			}
 			data, _ := kmaker.ConfigToJSON(v.KmakerConfig)
-			return data
-		}(),
-		EchoConfig: func() json.RawMessage {
-			if v.EchoConfig == nil {
-				return nil
-			}
-			data, _ := echo.ConfigToJSON(v.EchoConfig)
 			return data
 		}(),
 	}
@@ -440,13 +424,6 @@ func ServicesFromJSON(data []byte) (*Services, error) {
 			result.KmakerConfig = parsed
 		}
 	}
-	// Parse message field: EchoConfig
-	if len(raw.EchoConfig) > 0 {
-		parsed, err := echo.ConfigFromJSON(raw.EchoConfig)
-		if err == nil {
-			result.EchoConfig = parsed
-		}
-	}
 	return result, nil
 }
 
@@ -593,11 +570,6 @@ func ServicesToEnvVar(v *Services) map[string]string {
 			result[k] = val
 		}
 	}
-	if v.EchoConfig != nil {
-		for k, val := range echo.ConfigToEnvVar(v.EchoConfig) {
-			result[k] = val
-		}
-	}
 	return result
 }
 
@@ -668,11 +640,6 @@ func ServicesFromEnvVar(env map[string]string) (*Services, error) {
 		return nil, err
 	} else if sub != nil {
 		result.KmakerConfig = sub
-	}
-	if sub, err := echo.ConfigFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.EchoConfig = sub
 	}
 	return result, nil
 }
@@ -787,13 +754,6 @@ func ValidateServicesWithDepth(m *Services, depth int) error {
 		}
 	}
 
-	// Validate EchoConfig nested message
-	if m.EchoConfig != nil {
-		if err := echo.ValidateConfigWithDepth(m.EchoConfig, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field EchoConfig validation failed")
-		}
-	}
-
 	return nil
 }
 
@@ -861,8 +821,5 @@ func MergeServices(dst, src *Services) {
 	}
 	if dst.KmakerConfig == nil {
 		dst.KmakerConfig = src.KmakerConfig
-	}
-	if dst.EchoConfig == nil {
-		dst.EchoConfig = src.EchoConfig
 	}
 }

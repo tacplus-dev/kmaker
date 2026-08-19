@@ -1175,7 +1175,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type IdentityStateServiceClient interface {
 	// Singleton: Fqdn
 	GetFqdn(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*IdentityFqdn, error)
@@ -1410,7 +1410,7 @@ type IdentityStateService_WatchQueryVerifyingKeysClient = grpc.ServerStreamingCl
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type IdentityStateServiceServer interface {
 	// Singleton: Fqdn
 	GetFqdn(context.Context, *trace.TraceRequest) (*IdentityFqdn, error)
@@ -1906,7 +1906,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type TrustedCaStateServiceClient interface {
 	// Collection: TrustedCas
 	GetTrustedCas(ctx context.Context, in *TrustedCasGetRequest, opts ...grpc.CallOption) (*TrustedCasValueResponse, error)
@@ -2098,7 +2098,7 @@ type TrustedCaStateService_WatchQueryTrustedCasClient = grpc.ServerStreamingClie
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type TrustedCaStateServiceServer interface {
 	// Collection: TrustedCas
 	GetTrustedCas(context.Context, *TrustedCasGetRequest) (*TrustedCasValueResponse, error)
@@ -2697,7 +2697,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type ClusterStateServiceClient interface {
 	// Singleton: ClusterInfo
 	GetClusterInfo(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*hazelcast.AdminClusterInfo, error)
@@ -5075,7 +5075,7 @@ func (c *clusterStateServiceClient) ReloadConfig(ctx context.Context, in *AdminR
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type ClusterStateServiceServer interface {
 	// Singleton: ClusterInfo
 	GetClusterInfo(context.Context, *trace.TraceRequest) (*hazelcast.AdminClusterInfo, error)
@@ -9929,7 +9929,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type ServiceHealthStateServiceClient interface {
 	// Collection (instance-keyed): Instances
 	SetInstances(ctx context.Context, in *healthreport.ServiceInstanceHealth, opts ...grpc.CallOption) (*MapEmpty, error)
@@ -10066,7 +10066,7 @@ type ServiceHealthStateService_WatchQueryInstancesClient = grpc.ServerStreamingC
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type ServiceHealthStateServiceServer interface {
 	// Collection (instance-keyed): Instances
 	SetInstances(context.Context, *healthreport.ServiceInstanceHealth) (*MapEmpty, error)
@@ -10374,7 +10374,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type WorkloadStateServiceClient interface {
 	// Collection: Localities
 	GetLocalities(ctx context.Context, in *LocalitiesGetRequest, opts ...grpc.CallOption) (*LocalitiesValueResponse, error)
@@ -10739,7 +10739,7 @@ type WorkloadStateService_WatchQueryRevocationsClient = grpc.ServerStreamingClie
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type WorkloadStateServiceServer interface {
 	// Collection: Localities
 	GetLocalities(context.Context, *LocalitiesGetRequest) (*LocalitiesValueResponse, error)
@@ -11529,7 +11529,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type CaStateServiceClient interface {
 	// Collection: CaCerts
 	GetCaCerts(ctx context.Context, in *CaCertsGetRequest, opts ...grpc.CallOption) (*CaCertsValueResponse, error)
@@ -11894,7 +11894,7 @@ type CaStateService_WatchQueryServiceCasClient = grpc.ServerStreamingClient[Serv
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type CaStateServiceServer interface {
 	// Collection: CaCerts
 	GetCaCerts(context.Context, *CaCertsGetRequest) (*CaCertsValueResponse, error)
@@ -12698,7 +12698,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type ConfigStateServiceClient interface {
 	// Collection: Tenants
 	GetTenants(ctx context.Context, in *TenantsGetRequest, opts ...grpc.CallOption) (*TenantsValueResponse, error)
@@ -13236,7 +13236,7 @@ type ConfigStateService_WatchQueryProjectConfigsClient = grpc.ServerStreamingCli
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type ConfigStateServiceServer interface {
 	// Collection: Tenants
 	GetTenants(context.Context, *TenantsGetRequest) (*TenantsValueResponse, error)

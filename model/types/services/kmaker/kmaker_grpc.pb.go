@@ -154,7 +154,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type KmakerConfigStateServiceClient interface {
 	// Singleton: Config
 	GetConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*Config, error)
@@ -216,7 +216,7 @@ type KmakerConfigStateService_WatchConfigClient = grpc.ServerStreamingClient[Con
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type KmakerConfigStateServiceServer interface {
 	// Singleton: Config
 	GetConfig(context.Context, *trace.TraceRequest) (*Config, error)

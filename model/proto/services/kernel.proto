@@ -1201,7 +1201,7 @@ message CollectionQuery {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service IdentityStateService {
 	// Singleton: Fqdn
 	rpc GetFqdn(trace.TraceRequest) returns (IdentityFqdn);
@@ -1288,7 +1288,7 @@ message VerifyingKeysQueryResponse {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service TrustedCaStateService {
 	// Collection: TrustedCas
 	rpc GetTrustedCas(TrustedCasGetRequest) returns (TrustedCasValueResponse);
@@ -1371,7 +1371,7 @@ message TrustedCasQueryResponse {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service ClusterStateService {
 	// Singleton: ClusterInfo
 	rpc GetClusterInfo(trace.TraceRequest) returns (hazelcast.AdminClusterInfo);
@@ -2378,7 +2378,7 @@ message MutationRatesQueryResponse {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service ServiceHealthStateService {
 	// Collection (instance-keyed): Instances
 	rpc SetInstances(healthreport.ServiceInstanceHealth) returns (MapEmpty);
@@ -2445,7 +2445,7 @@ message InstancesQueryResponse {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service WorkloadStateService {
 	// Collection: Localities
 	rpc GetLocalities(LocalitiesGetRequest) returns (LocalitiesValueResponse);
@@ -2604,7 +2604,7 @@ message RevocationsQueryResponse {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service CaStateService {
 	// Collection: CaCerts
 	rpc GetCaCerts(CaCertsGetRequest) returns (CaCertsValueResponse);
@@ -2763,7 +2763,7 @@ message ServiceCasQueryResponse {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service ConfigStateService {
 	// Collection: Tenants
 	rpc GetTenants(TenantsGetRequest) returns (TenantsValueResponse);

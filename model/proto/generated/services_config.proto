@@ -19,7 +19,6 @@ import "services/argus.proto";
 import "services/saml.proto";
 import "services/operator.proto";
 import "services/kmaker.proto";
-import "services/echo.proto";
 
 message Services {
   sentinel.Config sentinel_config = 5;
@@ -35,5 +34,4 @@ message Services {
   samlsvc.Config saml_config = 38;
   operator.Config operator_config = 47;
   kmaker.Config kmaker_config = 49;
-  echo.Config echo_config = 50;
 }

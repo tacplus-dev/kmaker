@@ -330,7 +330,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type GatewayConfigStateServiceClient interface {
 	// Singleton: Config
 	GetConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*Config, error)
@@ -392,7 +392,7 @@ type GatewayConfigStateService_WatchConfigClient = grpc.ServerStreamingClient[Co
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type GatewayConfigStateServiceServer interface {
 	// Singleton: Config
 	GetConfig(context.Context, *trace.TraceRequest) (*Config, error)

@@ -47,7 +47,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type LetsEncryptStateServiceClient interface {
 	// Singleton: CertData
 	GetCertData(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*LetsEncryptCertData, error)
@@ -109,7 +109,7 @@ type LetsEncryptStateService_WatchCertDataClient = grpc.ServerStreamingClient[Le
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type LetsEncryptStateServiceServer interface {
 	// Singleton: CertData
 	GetCertData(context.Context, *trace.TraceRequest) (*LetsEncryptCertData, error)
@@ -242,7 +242,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type LetsencryptConfigStateServiceClient interface {
 	// Singleton: Config
 	GetConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*Config, error)
@@ -304,7 +304,7 @@ type LetsencryptConfigStateService_WatchConfigClient = grpc.ServerStreamingClien
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type LetsencryptConfigStateServiceServer interface {
 	// Singleton: Config
 	GetConfig(context.Context, *trace.TraceRequest) (*Config, error)

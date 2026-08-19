@@ -1304,7 +1304,7 @@ func (x *TimeDbNode) GetNoop() bool {
 type TimeDbState struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// nodes is the collection of registered TimeDB instances.
-	// Keyed by node_id, evicted after 120s if not refreshed.
+	// Keyed by node_id. Stale entries are not evicted (tacplus rejects eviction_ttl_seconds; see spec.proto).
 	Nodes         []*TimeDbNode `protobuf:"bytes,1,rep,name=nodes,proto3" json:"nodes,omitempty"`
 	TraceId       string        `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool          `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
@@ -5480,9 +5480,9 @@ const file_services_timedb_proto_rawDesc = "" +
 	".host.HostB\x04\x88\xa6\x1d\x01R\bendpoint\x12\"\n" +
 	"\rstarted_at_ms\x18\x04 \x01(\x03R\vstartedAtMs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x82\x01\n" +
-	"\vTimeDbState\x122\n" +
-	"\x05nodes\x18\x01 \x03(\v2\x12.timedb.TimeDbNodeB\bȶ\x18x\xb8\xa8\x1d R\x05nodes\x12\x1a\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"~\n" +
+	"\vTimeDbState\x12.\n" +
+	"\x05nodes\x18\x01 \x03(\v2\x12.timedb.TimeDbNodeB\x04\xb8\xa8\x1d R\x05nodes\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0e\x9a\xa8\x1d\n" +
 	"\x1a\x06kernel \x01\"\xe5\x05\n" +

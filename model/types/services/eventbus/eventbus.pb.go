@@ -2530,7 +2530,7 @@ func (x *EventbusNode) GetNoop() bool {
 type EventbusState struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// nodes is the collection of registered eventbus instances.
-	// Keyed by node_id, evicted after 120s if not refreshed.
+	// Keyed by node_id. Stale entries are not evicted (tacplus rejects eviction_ttl_seconds; see spec.proto).
 	Nodes         []*EventbusNode `protobuf:"bytes,1,rep,name=nodes,proto3" json:"nodes,omitempty"`
 	TraceId       string          `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool            `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
@@ -4031,9 +4031,9 @@ const file_services_eventbus_proto_rawDesc = "" +
 	"\bendpoint\x18\x03 \x01(\v2\n" +
 	".host.HostB\x04\x88\xa6\x1d\x01R\bendpoint\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x88\x01\n" +
-	"\rEventbusState\x126\n" +
-	"\x05nodes\x18\x01 \x03(\v2\x16.eventbus.EventbusNodeB\bȶ\x18x\xb8\xa8\x1d R\x05nodes\x12\x1a\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x84\x01\n" +
+	"\rEventbusState\x122\n" +
+	"\x05nodes\x18\x01 \x03(\v2\x16.eventbus.EventbusNodeB\x04\xb8\xa8\x1d R\x05nodes\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0e\x9a\xa8\x1d\n" +
 	"\x1a\x06kernel \x02\"\x9b\x01\n" +

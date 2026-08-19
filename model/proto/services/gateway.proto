@@ -144,7 +144,7 @@ message GatewayConfigState {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service GatewayConfigStateService {
 	// Singleton: Config
 	rpc GetConfig(trace.TraceRequest) returns (Config);

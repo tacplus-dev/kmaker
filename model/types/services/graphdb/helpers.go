@@ -7145,6 +7145,11 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
+	// Validate Mode (assert_required)
+	if m.Mode == 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Mode is required")
+	}
+
 	// Validate ZeroCount (assert_ge: 1)
 	if m.ZeroCount < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ZeroCount must be >= 1, got: %v", m.ZeroCount)
@@ -7185,6 +7190,11 @@ func ValidateGraphdbNodeWithDepth(m *GraphdbNode, depth int) error {
 	// Validate NodeId (assert_required)
 	if m.NodeId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field NodeId is required")
+	}
+
+	// Validate Mode (assert_required)
+	if m.Mode == 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Mode is required")
 	}
 
 	// Validate Endpoint (assert_required)

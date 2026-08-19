@@ -58,7 +58,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type TimeDbStateServiceClient interface {
 	// Collection: Nodes
 	GetNodes(ctx context.Context, in *NodesGetRequest, opts ...grpc.CallOption) (*NodesValueResponse, error)
@@ -250,7 +250,7 @@ type TimeDbStateService_WatchQueryNodesClient = grpc.ServerStreamingClient[Nodes
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type TimeDbStateServiceServer interface {
 	// Collection: Nodes
 	GetNodes(context.Context, *NodesGetRequest) (*NodesValueResponse, error)
@@ -662,7 +662,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type TimedbConfigStateServiceClient interface {
 	// Singleton: Config
 	GetConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*Config, error)
@@ -724,7 +724,7 @@ type TimedbConfigStateService_WatchConfigClient = grpc.ServerStreamingClient[Con
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type TimedbConfigStateServiceServer interface {
 	// Singleton: Config
 	GetConfig(context.Context, *trace.TraceRequest) (*Config, error)

@@ -49,7 +49,6 @@ type AccountingMethod struct {
 	Oauth         services.OauthRPCs     `protobuf:"varint,21,opt,name=oauth,proto3,enum=services.OauthRPCs" json:"oauth,omitempty"`
 	Argus         services.ArgusRPCs     `protobuf:"varint,35,opt,name=argus,proto3,enum=services.ArgusRPCs" json:"argus,omitempty"`
 	Saml          services.SamlRPCs      `protobuf:"varint,38,opt,name=saml,proto3,enum=services.SamlRPCs" json:"saml,omitempty"`
-	Echo          services.EchoRPCs      `protobuf:"varint,50,opt,name=echo,proto3,enum=services.EchoRPCs" json:"echo,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -133,18 +132,11 @@ func (x *AccountingMethod) GetSaml() services.SamlRPCs {
 	return services.SamlRPCs(0)
 }
 
-func (x *AccountingMethod) GetEcho() services.EchoRPCs {
-	if x != nil {
-		return x.Echo
-	}
-	return services.EchoRPCs(0)
-}
-
 var File_generated_accounting_method_proto protoreflect.FileDescriptor
 
 const file_generated_accounting_method_proto_rawDesc = "" +
 	"\n" +
-	"!generated/accounting_method.proto\x12\x11accounting_method\x1a\x18generated/services.proto\"\xff\x02\n" +
+	"!generated/accounting_method.proto\x12\x11accounting_method\x1a\x18generated/services.proto\"\xd7\x02\n" +
 	"\x10AccountingMethod\x122\n" +
 	"\bsentinel\x18\x05 \x01(\x0e2\x16.services.SentinelRPCsR\bsentinel\x12/\n" +
 	"\agateway\x18\a \x01(\x0e2\x15.services.GatewayRPCsR\agateway\x12,\n" +
@@ -152,8 +144,7 @@ const file_generated_accounting_method_proto_rawDesc = "" +
 	"\beventbus\x18\x12 \x01(\x0e2\x16.services.EventbusRPCsR\beventbus\x12)\n" +
 	"\x05oauth\x18\x15 \x01(\x0e2\x13.services.OauthRPCsR\x05oauth\x12)\n" +
 	"\x05argus\x18# \x01(\x0e2\x13.services.ArgusRPCsR\x05argus\x12&\n" +
-	"\x04saml\x18& \x01(\x0e2\x12.services.SamlRPCsR\x04saml\x12&\n" +
-	"\x04echo\x182 \x01(\x0e2\x12.services.EchoRPCsR\x04echoBjZhgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/accounting_methodb\x06proto3"
+	"\x04saml\x18& \x01(\x0e2\x12.services.SamlRPCsR\x04samlBjZhgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/accounting_methodb\x06proto3"
 
 var (
 	file_generated_accounting_method_proto_rawDescOnce sync.Once
@@ -177,7 +168,6 @@ var file_generated_accounting_method_proto_goTypes = []any{
 	(services.OauthRPCs)(0),    // 5: services.OauthRPCs
 	(services.ArgusRPCs)(0),    // 6: services.ArgusRPCs
 	(services.SamlRPCs)(0),     // 7: services.SamlRPCs
-	(services.EchoRPCs)(0),     // 8: services.EchoRPCs
 }
 var file_generated_accounting_method_proto_depIdxs = []int32{
 	1, // 0: accounting_method.AccountingMethod.sentinel:type_name -> services.SentinelRPCs
@@ -187,12 +177,11 @@ var file_generated_accounting_method_proto_depIdxs = []int32{
 	5, // 4: accounting_method.AccountingMethod.oauth:type_name -> services.OauthRPCs
 	6, // 5: accounting_method.AccountingMethod.argus:type_name -> services.ArgusRPCs
 	7, // 6: accounting_method.AccountingMethod.saml:type_name -> services.SamlRPCs
-	8, // 7: accounting_method.AccountingMethod.echo:type_name -> services.EchoRPCs
-	8, // [8:8] is the sub-list for method output_type
-	8, // [8:8] is the sub-list for method input_type
-	8, // [8:8] is the sub-list for extension type_name
-	8, // [8:8] is the sub-list for extension extendee
-	0, // [0:8] is the sub-list for field type_name
+	7, // [7:7] is the sub-list for method output_type
+	7, // [7:7] is the sub-list for method input_type
+	7, // [7:7] is the sub-list for extension type_name
+	7, // [7:7] is the sub-list for extension extendee
+	0, // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_generated_accounting_method_proto_init() }

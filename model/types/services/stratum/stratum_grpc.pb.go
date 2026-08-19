@@ -41,7 +41,7 @@ const _ = grpc.SupportPackageIsVersion9
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type StratumStateServiceClient interface {
 }
 
@@ -60,7 +60,7 @@ func NewStratumStateServiceClient(cc grpc.ClientConnInterface) StratumStateServi
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type StratumStateServiceServer interface {
 	mustEmbedUnimplementedStratumStateServiceServer()
 }
@@ -117,7 +117,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type StratumConfigStateServiceClient interface {
 	// Singleton: Config
 	GetConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*Config, error)
@@ -179,7 +179,7 @@ type StratumConfigStateService_WatchConfigClient = grpc.ServerStreamingClient[Co
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type StratumConfigStateServiceServer interface {
 	// Singleton: Config
 	GetConfig(context.Context, *trace.TraceRequest) (*Config, error)
@@ -311,7 +311,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// tacplus:generated-service
+// tacplus:generated-service recordmap
 type RecordMapClient interface {
 	OpenAgentEventQuery(ctx context.Context, in *OpenAgentEventQueryRequest, opts ...grpc.CallOption) (*QueryHandle, error)
 	CountAgentEvent(ctx context.Context, in *QueryHandle, opts ...grpc.CallOption) (*RecordCount, error)
@@ -382,7 +382,7 @@ func (c *recordMapClient) CloseAgentEvent(ctx context.Context, in *QueryHandle, 
 // All implementations must embed UnimplementedRecordMapServer
 // for forward compatibility.
 //
-// tacplus:generated-service
+// tacplus:generated-service recordmap
 type RecordMapServer interface {
 	OpenAgentEventQuery(context.Context, *OpenAgentEventQueryRequest) (*QueryHandle, error)
 	CountAgentEvent(context.Context, *QueryHandle) (*RecordCount, error)

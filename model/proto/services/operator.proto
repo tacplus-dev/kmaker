@@ -310,7 +310,7 @@ message OperatorConfigState {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service OperatorConfigStateService {
 	// Singleton: Config
 	rpc GetConfig(trace.TraceRequest) returns (Config);

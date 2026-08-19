@@ -123,7 +123,7 @@ message LetsencryptConfigState {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service LetsEncryptStateService {
 	// Singleton: CertData
 	rpc GetCertData(trace.TraceRequest) returns (LetsEncryptCertData);
@@ -134,7 +134,7 @@ service LetsEncryptStateService {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service LetsencryptConfigStateService {
 	// Singleton: Config
 	rpc GetConfig(trace.TraceRequest) returns (Config);

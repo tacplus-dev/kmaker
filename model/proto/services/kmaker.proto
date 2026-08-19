@@ -128,7 +128,7 @@ message KmakerConfigState {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service KmakerConfigStateService {
 	// Singleton: Config
 	rpc GetConfig(trace.TraceRequest) returns (Config);

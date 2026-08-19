@@ -65,7 +65,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type OpaStateServiceClient interface {
 	// Singleton: EntitlementsPolicy
 	GetEntitlementsPolicy(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*opalib.OpaPolicy, error)
@@ -343,7 +343,7 @@ type OpaStateService_WatchQueryTenantEntitlementsPoliciesClient = grpc.ServerStr
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type OpaStateServiceServer interface {
 	// Singleton: EntitlementsPolicy
 	GetEntitlementsPolicy(context.Context, *trace.TraceRequest) (*opalib.OpaPolicy, error)
@@ -901,7 +901,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type OpaConfigStateServiceClient interface {
 	// Singleton: Config
 	GetConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*Config, error)
@@ -963,7 +963,7 @@ type OpaConfigStateService_WatchConfigClient = grpc.ServerStreamingClient[Config
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type OpaConfigStateServiceServer interface {
 	// Singleton: Config
 	GetConfig(context.Context, *trace.TraceRequest) (*Config, error)

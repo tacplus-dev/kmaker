@@ -869,14 +869,14 @@ message ArgusConfigState {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service ArgusStateService {
 }
 
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service ArgusConfigStateService {
 	// Singleton: Config
 	rpc GetConfig(trace.TraceRequest) returns (Config);

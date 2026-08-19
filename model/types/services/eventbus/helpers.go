@@ -10882,6 +10882,11 @@ func ValidateEventbusNodeWithDepth(m *EventbusNode, depth int) error {
 	if m.NodeId < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field NodeId must be >= 0, got: %v", m.NodeId)
 	}
+	// Validate Role (assert_required)
+	if m.Role == 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Role is required")
+	}
+
 	// Validate Endpoint (assert_required)
 	if m.Endpoint == nil {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Endpoint is required")

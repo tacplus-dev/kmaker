@@ -1499,7 +1499,7 @@ var Argus_ServiceDesc = grpc.ServiceDesc{
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type ArgusStateServiceClient interface {
 }
 
@@ -1518,7 +1518,7 @@ func NewArgusStateServiceClient(cc grpc.ClientConnInterface) ArgusStateServiceCl
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type ArgusStateServiceServer interface {
 	mustEmbedUnimplementedArgusStateServiceServer()
 }
@@ -1575,7 +1575,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type ArgusConfigStateServiceClient interface {
 	// Singleton: Config
 	GetConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*Config, error)
@@ -1637,7 +1637,7 @@ type ArgusConfigStateService_WatchConfigClient = grpc.ServerStreamingClient[Conf
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type ArgusConfigStateServiceServer interface {
 	// Singleton: Config
 	GetConfig(context.Context, *trace.TraceRequest) (*Config, error)

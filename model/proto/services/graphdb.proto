@@ -89,7 +89,7 @@ message GraphdbNode {
 message GraphdbState {
 
   // nodes is the collection of registered graphdb instances.
-  // Keyed by node_id, evicted after 120s if not refreshed.
+  // Keyed by node_id. Stale entries are not evicted (tacplus rejects eviction_ttl_seconds; see spec.proto).
   repeated GraphdbNode nodes = 1;
   string trace_id = 200;
   bool noop = 201;
@@ -320,7 +320,7 @@ message CollectionQuery {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service GraphdbStateService {
 	// Collection: Nodes
 	rpc GetNodes(NodesGetRequest) returns (NodesValueResponse);
@@ -403,7 +403,7 @@ message NodesQueryResponse {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service GraphdbConfigStateService {
 	// Singleton: Config
 	rpc GetConfig(trace.TraceRequest) returns (Config);

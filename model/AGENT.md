@@ -5,9 +5,9 @@ This file is embedded in `registry.json` and describes how to navigate it.
 ## Overview
 
 This registry describes a tacplus-generated service mesh with:
-- **932** message types across **61** packages
-- **582** RPCs across **55** gRPC services
-- **54** state boundaries
+- **927** message types across **60** packages
+- **578** RPCs across **53** gRPC services
+- **53** state boundaries
 
 ## Structure
 
@@ -484,8 +484,6 @@ Each `RpcInfo` carries:
 - **ClusterStateService**
 - **ConfigStateService**
 - **Dashboard**
-- **Echo**
-- **EchoConfigStateService**
 - **EventbusConfigStateService**
 - **EventbusStateService**
 - **GatewayConfigStateService**
@@ -541,7 +539,6 @@ Each `RpcInfo` carries:
 - `generated/services_config`
 - `generated/tenant_config`
 - `services/argus`
-- `services/echo`
 - `services/eventbus`
 - `services/gateway`
 - `services/graphdb`

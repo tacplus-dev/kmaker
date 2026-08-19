@@ -14494,6 +14494,11 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 	if m.DataCount < 1 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field DataCount must be >= 1, got: %v", m.DataCount)
 	}
+	// Validate Mode (assert_required)
+	if m.Mode == 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Mode is required")
+	}
+
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
@@ -14526,6 +14531,11 @@ func ValidateTimeDbNodeWithDepth(m *TimeDbNode, depth int) error {
 	// Validate NodeId (assert_required)
 	if m.NodeId == "" {
 		return protoerrors.NewErrMissingInvalidData(nil, "field NodeId is required")
+	}
+
+	// Validate Mode (assert_required)
+	if m.Mode == 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Mode is required")
 	}
 
 	// Validate Endpoint (assert_required)

@@ -23,7 +23,6 @@ package services_config
 
 import (
 	argus "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/argus"
-	echo "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/echo"
 	eventbus "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/eventbus"
 	gateway "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gateway"
 	graphdb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/graphdb"
@@ -65,7 +64,6 @@ type Services struct {
 	SamlConfig        *samlsvc.Config        `protobuf:"bytes,38,opt,name=saml_config,json=samlConfig,proto3" json:"saml_config,omitempty"`
 	OperatorConfig    *operator.Config       `protobuf:"bytes,47,opt,name=operator_config,json=operatorConfig,proto3" json:"operator_config,omitempty"`
 	KmakerConfig      *kmaker.Config         `protobuf:"bytes,49,opt,name=kmaker_config,json=kmakerConfig,proto3" json:"kmaker_config,omitempty"`
-	EchoConfig        *echo.Config           `protobuf:"bytes,50,opt,name=echo_config,json=echoConfig,proto3" json:"echo_config,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -191,18 +189,11 @@ func (x *Services) GetKmakerConfig() *kmaker.Config {
 	return nil
 }
 
-func (x *Services) GetEchoConfig() *echo.Config {
-	if x != nil {
-		return x.EchoConfig
-	}
-	return nil
-}
-
 var File_generated_services_config_proto protoreflect.FileDescriptor
 
 const file_generated_services_config_proto_rawDesc = "" +
 	"\n" +
-	"\x1fgenerated/services_config.proto\x12\x0fservices_config\x1a\x17services/sentinel.proto\x1a\x16services/gateway.proto\x1a\x1aservices/letsencrypt.proto\x1a\x16services/graphdb.proto\x1a\x17services/eventbus.proto\x1a\x15services/timedb.proto\x1a\x14services/oauth.proto\x1a\x12services/opa.proto\x1a\x16services/stratum.proto\x1a\x14services/argus.proto\x1a\x13services/saml.proto\x1a\x17services/operator.proto\x1a\x15services/kmaker.proto\x1a\x13services/echo.proto\"\x82\x06\n" +
+	"\x1fgenerated/services_config.proto\x12\x0fservices_config\x1a\x17services/sentinel.proto\x1a\x16services/gateway.proto\x1a\x1aservices/letsencrypt.proto\x1a\x16services/graphdb.proto\x1a\x17services/eventbus.proto\x1a\x15services/timedb.proto\x1a\x14services/oauth.proto\x1a\x12services/opa.proto\x1a\x16services/stratum.proto\x1a\x14services/argus.proto\x1a\x13services/saml.proto\x1a\x17services/operator.proto\x1a\x15services/kmaker.proto\"\xd3\x05\n" +
 	"\bServices\x129\n" +
 	"\x0fsentinel_config\x18\x05 \x01(\v2\x10.sentinel.ConfigR\x0esentinelConfig\x126\n" +
 	"\x0egateway_config\x18\a \x01(\v2\x0f.gateway.ConfigR\rgatewayConfig\x12B\n" +
@@ -218,9 +209,7 @@ const file_generated_services_config_proto_rawDesc = "" +
 	"\vsaml_config\x18& \x01(\v2\x0f.samlsvc.ConfigR\n" +
 	"samlConfig\x129\n" +
 	"\x0foperator_config\x18/ \x01(\v2\x10.operator.ConfigR\x0eoperatorConfig\x123\n" +
-	"\rkmaker_config\x181 \x01(\v2\x0e.kmaker.ConfigR\fkmakerConfig\x12-\n" +
-	"\vecho_config\x182 \x01(\v2\f.echo.ConfigR\n" +
-	"echoConfigBhZfgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/services_configb\x06proto3"
+	"\rkmaker_config\x181 \x01(\v2\x0e.kmaker.ConfigR\fkmakerConfigBhZfgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/services_configb\x06proto3"
 
 var (
 	file_generated_services_config_proto_rawDescOnce sync.Once
@@ -250,7 +239,6 @@ var file_generated_services_config_proto_goTypes = []any{
 	(*samlsvc.Config)(nil),     // 11: samlsvc.Config
 	(*operator.Config)(nil),    // 12: operator.Config
 	(*kmaker.Config)(nil),      // 13: kmaker.Config
-	(*echo.Config)(nil),        // 14: echo.Config
 }
 var file_generated_services_config_proto_depIdxs = []int32{
 	1,  // 0: services_config.Services.sentinel_config:type_name -> sentinel.Config
@@ -266,12 +254,11 @@ var file_generated_services_config_proto_depIdxs = []int32{
 	11, // 10: services_config.Services.saml_config:type_name -> samlsvc.Config
 	12, // 11: services_config.Services.operator_config:type_name -> operator.Config
 	13, // 12: services_config.Services.kmaker_config:type_name -> kmaker.Config
-	14, // 13: services_config.Services.echo_config:type_name -> echo.Config
-	14, // [14:14] is the sub-list for method output_type
-	14, // [14:14] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	13, // [13:13] is the sub-list for method output_type
+	13, // [13:13] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_generated_services_config_proto_init() }

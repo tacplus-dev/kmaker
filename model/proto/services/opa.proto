@@ -187,7 +187,7 @@ message CollectionQuery {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service OpaStateService {
 	// Singleton: EntitlementsPolicy
 	rpc GetEntitlementsPolicy(trace.TraceRequest) returns (opalib.OpaPolicy);
@@ -278,7 +278,7 @@ message TenantEntitlementsPoliciesQueryResponse {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service OpaConfigStateService {
 	// Singleton: Config
 	rpc GetConfig(trace.TraceRequest) returns (Config);

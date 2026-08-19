@@ -13,7 +13,6 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
-	"strings"
 	"sync"
 	"syscall"
 	"time"
@@ -161,10 +160,15 @@ func isPermanentIdentityInitError(err error) bool {
 	}
 	// A missing spiffe_trust_domain is a permanent misconfiguration — classify it
 	// by typed sentinel (errors.Is), not by message-substring matching (NEW-21).
-	if errors.Is(err, servicemanager.ErrMissingTrustDomain) {
+	// BOTH init steps can raise it, and identity runs first, so a deployment with
+	// no trust domain hits the service_im sentinel before the servicemanager one.
+	if errors.Is(err, service_im.ErrMissingTrustDomain) || errors.Is(err, servicemanager.ErrMissingTrustDomain) {
 		return true
 	}
-	return strings.Contains(err.Error(), "service token minter is not configured")
+	// A build with no token exchanger has no way to mint a service token, so the
+	// identity chassis refuses at construction. Same rule: classify by typed
+	// sentinel (errors.Is), not by message-substring matching (NEW-21 leg b).
+	return errors.Is(err, service_im.ErrTokenMinterNotConfigured)
 }
 
 // New creates a ServiceManager: loads config, creates the
@@ -319,10 +323,10 @@ func New() (*ServiceManager, error) {
 
 	zap.L().Info("ServiceManager initialized",
 		zap.String("service", "kmaker"),
-		zap.String("tacplus_version", "v1.2.248"),
-		zap.String("tacplus_sha", "982b54c0-local"),
+		zap.String("tacplus_version", "0.0.0"),
+		zap.String("tacplus_sha", "local"),
 		zap.String("proto_version", ""),
-		zap.String("proto_sha", ""),
+		zap.String("proto_sha", "e2c2eb0e731ed532b82111ec5ff075bf01fff422"),
 	)
 
 	return &ServiceManager{
@@ -682,7 +686,8 @@ func (sm *ServiceManager) Run(h Handler) error {
 	}
 	// Resolve the serving certificate per handshake so ManageCert renewals
 	// hot-reload without a restart (PC-L-10).
-	srv.SetCertProvider(sm.sc.TLSCertChain, sm.sc.TLSPrivateKey)
+	srv.SetCertProvider(sm.sc.TLSCertMaterial)
+	srv.SetCertDegradeReporter(sm.reportTLSDegraded)
 
 	// healthCtl is the gRPC server whose grpc.health.v1 readiness status is flipped
 	// to SERVING once bootstrap completes (see SetReady below). It stays NOT_SERVING
@@ -703,13 +708,13 @@ func (sm *ServiceManager) Run(h Handler) error {
 	metrics := buildMetricsProvider(sm.cfg.GetListenAddress())
 	// Health identity is the full location-bearing service SPIFFE ID, built by
 	// this service's own manager from runtime config via the canonical helper.
-	spiffeId := ""
-	if td := sm.cfg.GetSpiffeTrustDomain(); td != "" {
-		id, idErr := wrapperSpiffe.ServiceSpiffeID(td, sm.cfg.GetLocationPath(), "kmaker")
-		if idErr != nil {
-			return fmt.Errorf("building service SPIFFE identity: %w", idErr)
-		}
-		spiffeId = id
+	// No empty-trust-domain tolerance: NewServiceManager already refused an empty
+	// spiffe_trust_domain at construction (ErrMissingTrustDomain), so Run() cannot
+	// be reached with one, and ServiceSpiffeID rejects it too. Publishing an empty
+	// health identity instead of failing would be the fail-open shape (NEW-21).
+	spiffeId, idErr := wrapperSpiffe.ServiceSpiffeID(sm.cfg.GetSpiffeTrustDomain(), sm.cfg.GetLocationPath(), "kmaker")
+	if idErr != nil {
+		return fmt.Errorf("building service SPIFFE identity: %w", idErr)
 	}
 	hr := healthreporter.New(&healthPublisherAdapter{stub: healthStub}, metrics, zap.L(), spiffeId)
 	hr.SetStatus(healthreporter.StatusHealthy)

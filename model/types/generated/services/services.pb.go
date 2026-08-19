@@ -54,7 +54,6 @@ const (
 	ServiceName_SERVICE_NAME_STRATUM     ServiceName = 34
 	ServiceName_SERVICE_NAME_ARGUS       ServiceName = 35
 	ServiceName_SERVICE_NAME_KMAKER      ServiceName = 49
-	ServiceName_SERVICE_NAME_ECHO        ServiceName = 50
 	ServiceName_SERVICE_NAME_SAMLSVC     ServiceName = 51
 	ServiceName_SERVICE_NAME_ANY         ServiceName = 99 // wildcard: allow any service
 )
@@ -75,7 +74,6 @@ var (
 		34: "SERVICE_NAME_STRATUM",
 		35: "SERVICE_NAME_ARGUS",
 		49: "SERVICE_NAME_KMAKER",
-		50: "SERVICE_NAME_ECHO",
 		51: "SERVICE_NAME_SAMLSVC",
 		99: "SERVICE_NAME_ANY",
 	}
@@ -93,7 +91,6 @@ var (
 		"SERVICE_NAME_STRATUM":     34,
 		"SERVICE_NAME_ARGUS":       35,
 		"SERVICE_NAME_KMAKER":      49,
-		"SERVICE_NAME_ECHO":        50,
 		"SERVICE_NAME_SAMLSVC":     51,
 		"SERVICE_NAME_ANY":         99,
 	}
@@ -667,55 +664,6 @@ func (SamlRPCs) EnumDescriptor() ([]byte, []int) {
 	return file_generated_services_proto_rawDescGZIP(), []int{7}
 }
 
-type EchoRPCs int32
-
-const (
-	EchoRPCs_ECHO_RPCS_UNSPECIFIED EchoRPCs = 0
-	EchoRPCs_ECHO_RPCS_PING        EchoRPCs = 1
-	EchoRPCs_ECHO_RPCS_ANY         EchoRPCs = 99 // wildcard: allow any RPC
-)
-
-// Enum value maps for EchoRPCs.
-var (
-	EchoRPCs_name = map[int32]string{
-		0:  "ECHO_RPCS_UNSPECIFIED",
-		1:  "ECHO_RPCS_PING",
-		99: "ECHO_RPCS_ANY",
-	}
-	EchoRPCs_value = map[string]int32{
-		"ECHO_RPCS_UNSPECIFIED": 0,
-		"ECHO_RPCS_PING":        1,
-		"ECHO_RPCS_ANY":         99,
-	}
-)
-
-func (x EchoRPCs) Enum() *EchoRPCs {
-	p := new(EchoRPCs)
-	*p = x
-	return p
-}
-
-func (x EchoRPCs) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (EchoRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[8].Descriptor()
-}
-
-func (EchoRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[8]
-}
-
-func (x EchoRPCs) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use EchoRPCs.Descriptor instead.
-func (EchoRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{8}
-}
-
 // agentsensor (vservice, hosted by eventbus)
 type AgentsensorRPCs int32
 
@@ -753,11 +701,11 @@ func (x AgentsensorRPCs) String() string {
 }
 
 func (AgentsensorRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[9].Descriptor()
+	return file_generated_services_proto_enumTypes[8].Descriptor()
 }
 
 func (AgentsensorRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[9]
+	return &file_generated_services_proto_enumTypes[8]
 }
 
 func (x AgentsensorRPCs) Number() protoreflect.EnumNumber {
@@ -766,14 +714,14 @@ func (x AgentsensorRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use AgentsensorRPCs.Descriptor instead.
 func (AgentsensorRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{9}
+	return file_generated_services_proto_rawDescGZIP(), []int{8}
 }
 
 var File_generated_services_proto protoreflect.FileDescriptor
 
 const file_generated_services_proto_rawDesc = "" +
 	"\n" +
-	"\x18generated/services.proto\x12\bservices*\xa5\x03\n" +
+	"\x18generated/services.proto\x12\bservices*\x8e\x03\n" +
 	"\vServiceName\x12\x1c\n" +
 	"\x18SERVICE_NAME_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15SERVICE_NAME_SENTINEL\x10\x05\x12\x18\n" +
@@ -787,8 +735,7 @@ const file_generated_services_proto_rawDesc = "" +
 	"\x10SERVICE_NAME_OPA\x10\x1d\x12\x18\n" +
 	"\x14SERVICE_NAME_STRATUM\x10\"\x12\x16\n" +
 	"\x12SERVICE_NAME_ARGUS\x10#\x12\x17\n" +
-	"\x13SERVICE_NAME_KMAKER\x101\x12\x15\n" +
-	"\x11SERVICE_NAME_ECHO\x102\x12\x18\n" +
+	"\x13SERVICE_NAME_KMAKER\x101\x12\x18\n" +
 	"\x14SERVICE_NAME_SAMLSVC\x103\x12\x14\n" +
 	"\x10SERVICE_NAME_ANY\x10c*\xdf\x03\n" +
 	"\fSentinelRPCs\x12\x1d\n" +
@@ -888,11 +835,7 @@ const file_generated_services_proto_rawDesc = "" +
 	"\x1aSAML_RPCS_GET_IDP_METADATA\x10\x05\x12\x1d\n" +
 	"\x19SAML_RPCS_GET_SP_METADATA\x10\x06\x12 \n" +
 	"\x1cSAML_RPCS_GET_IDP_DESCRIPTOR\x10\a\x12\x11\n" +
-	"\rSAML_RPCS_ANY\x10c*L\n" +
-	"\bEchoRPCs\x12\x19\n" +
-	"\x15ECHO_RPCS_UNSPECIFIED\x10\x00\x12\x12\n" +
-	"\x0eECHO_RPCS_PING\x10\x01\x12\x11\n" +
-	"\rECHO_RPCS_ANY\x10c*\xdd\x01\n" +
+	"\rSAML_RPCS_ANY\x10c*\xdd\x01\n" +
 	"\x0fAgentsensorRPCs\x12 \n" +
 	"\x1cAGENTSENSOR_RPCS_UNSPECIFIED\x10\x00\x12E\n" +
 	"AAGENTSENSOR_RPCS_PUBLISH_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM\x10\x01\x12G\n" +
@@ -911,7 +854,7 @@ func file_generated_services_proto_rawDescGZIP() []byte {
 	return file_generated_services_proto_rawDescData
 }
 
-var file_generated_services_proto_enumTypes = make([]protoimpl.EnumInfo, 10)
+var file_generated_services_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
 var file_generated_services_proto_goTypes = []any{
 	(ServiceName)(0),     // 0: services.ServiceName
 	(SentinelRPCs)(0),    // 1: services.SentinelRPCs
@@ -921,8 +864,7 @@ var file_generated_services_proto_goTypes = []any{
 	(OauthRPCs)(0),       // 5: services.OauthRPCs
 	(ArgusRPCs)(0),       // 6: services.ArgusRPCs
 	(SamlRPCs)(0),        // 7: services.SamlRPCs
-	(EchoRPCs)(0),        // 8: services.EchoRPCs
-	(AgentsensorRPCs)(0), // 9: services.AgentsensorRPCs
+	(AgentsensorRPCs)(0), // 8: services.AgentsensorRPCs
 }
 var file_generated_services_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -942,7 +884,7 @@ func file_generated_services_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_generated_services_proto_rawDesc), len(file_generated_services_proto_rawDesc)),
-			NumEnums:      10,
+			NumEnums:      9,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,

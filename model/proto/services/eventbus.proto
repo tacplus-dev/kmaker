@@ -390,7 +390,7 @@ message EventbusNode {
 message EventbusState {
 
   // nodes is the collection of registered eventbus instances.
-  // Keyed by node_id, evicted after 120s if not refreshed.
+  // Keyed by node_id. Stale entries are not evicted (tacplus rejects eviction_ttl_seconds; see spec.proto).
   repeated EventbusNode nodes = 1;
   string trace_id = 200;
   bool noop = 201;
@@ -468,7 +468,7 @@ message CollectionQuery {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service EventbusStateService {
 	// Collection: Nodes
 	rpc GetNodes(NodesGetRequest) returns (NodesValueResponse);
@@ -551,7 +551,7 @@ message NodesQueryResponse {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service EventbusConfigStateService {
 	// Singleton: Config
 	rpc GetConfig(trace.TraceRequest) returns (Config);

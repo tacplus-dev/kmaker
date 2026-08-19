@@ -121,14 +121,14 @@ message StratumConfigState {
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service StratumStateService {
 }
 
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 service StratumConfigStateService {
 	// Singleton: Config
 	rpc GetConfig(trace.TraceRequest) returns (Config);
@@ -205,7 +205,7 @@ message PullAgentEventResponse {
   bool noop = 201;
 }
 
-// tacplus:generated-service
+// tacplus:generated-service recordmap
 service RecordMap {
 
   rpc OpenAgentEventQuery(OpenAgentEventQueryRequest) returns (QueryHandle);

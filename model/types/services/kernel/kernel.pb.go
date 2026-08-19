@@ -23838,33 +23838,33 @@ const file_services_kernel_proto_rawDesc = "" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\x1a?\n" +
 	"\x11CustomClaimsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xd0\v\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xa0\v\n" +
 	"\aCluster\x12>\n" +
 	"\fcluster_info\x18\x01 \x01(\v2\x1b.hazelcast.AdminClusterInfoR\vclusterInfo\x12D\n" +
-	"\x0ecluster_health\x18\x02 \x01(\v2\x1d.hazelcast.AdminClusterHealthR\rclusterHealth\x12H\n" +
-	"\fnode_metrics\x18\x03 \x03(\v2\x1b.hazelcast.AdminNodeMetricsB\bȶ\x18x\xb8\xa8\x1d R\vnodeMetrics\x12B\n" +
+	"\x0ecluster_health\x18\x02 \x01(\v2\x1d.hazelcast.AdminClusterHealthR\rclusterHealth\x12D\n" +
+	"\fnode_metrics\x18\x03 \x03(\v2\x1b.hazelcast.AdminNodeMetricsB\x04\xb8\xa8\x1d R\vnodeMetrics\x12>\n" +
 	"\n" +
-	"grpc_stats\x18\x04 \x03(\v2\x19.hazelcast.AdminGrpcStatsB\bȶ\x18x\xb8\xa8\x1d R\tgrpcStats\x12Z\n" +
-	"\x12persistence_status\x18\x05 \x03(\v2!.hazelcast.AdminPersistenceStatusB\bȶ\x18x\xb8\xa8\x1d R\x11persistenceStatus\x12K\n" +
-	"\rnetwork_stats\x18\x06 \x03(\v2\x1c.hazelcast.AdminNetworkStatsB\bȶ\x18x\xb8\xa8\x1d R\fnetworkStats\x12E\n" +
-	"\vthread_info\x18\a \x03(\v2\x1a.hazelcast.AdminThreadInfoB\bȶ\x18x\xb8\xa8\x1d R\n" +
-	"threadInfo\x12U\n" +
-	"\x11token_cache_stats\x18\b \x03(\v2\x1f.hazelcast.AdminTokenCacheStatsB\bȶ\x18x\xb8\xa8\x1d R\x0ftokenCacheStats\x12@\n" +
-	"\tmap_stats\x18\t \x03(\v2\x18.hazelcast.AdminMapStatsB\tȶ\x18x\xb8\xa8\x1d\x80\bR\bmapStats\x12I\n" +
+	"grpc_stats\x18\x04 \x03(\v2\x19.hazelcast.AdminGrpcStatsB\x04\xb8\xa8\x1d R\tgrpcStats\x12V\n" +
+	"\x12persistence_status\x18\x05 \x03(\v2!.hazelcast.AdminPersistenceStatusB\x04\xb8\xa8\x1d R\x11persistenceStatus\x12G\n" +
+	"\rnetwork_stats\x18\x06 \x03(\v2\x1c.hazelcast.AdminNetworkStatsB\x04\xb8\xa8\x1d R\fnetworkStats\x12A\n" +
+	"\vthread_info\x18\a \x03(\v2\x1a.hazelcast.AdminThreadInfoB\x04\xb8\xa8\x1d R\n" +
+	"threadInfo\x12Q\n" +
+	"\x11token_cache_stats\x18\b \x03(\v2\x1f.hazelcast.AdminTokenCacheStatsB\x04\xb8\xa8\x1d R\x0ftokenCacheStats\x12<\n" +
+	"\tmap_stats\x18\t \x03(\v2\x18.hazelcast.AdminMapStatsB\x05\xb8\xa8\x1d\x80\bR\bmapStats\x12I\n" +
 	"\rset_log_level\x18\n" +
 	" \x01(\v2\x1f.kernel.AdminSetLogLevelRequestB\x04\x80\xb7\x18\x01R\vsetLogLevel\x12>\n" +
 	"\vconfig_dump\x18\v \x01(\v2\x17.kernel.AdminConfigDumpB\x04\xe8\xb5\x18\x01R\n" +
 	"configDump\x12[\n" +
 	"\rreload_config\x18\f \x01(\v2 .kernel.AdminReloadConfigRequestB\x14\x80\xb7\x18\x01\xa2\xb7\x18\forchestratorR\freloadConfig\x12,\n" +
 	"\x06config\x18\r \x01(\v2\x0e.kernel.ConfigB\x04\xe8\xb5\x18\x01R\x06config\x12G\n" +
-	"\x0egraph_registry\x18\x0f \x03(\v2\x19.hazelcast.AdminGraphInfoB\x05\xb8\xa8\x1d\x80\bR\rgraphRegistry\x12]\n" +
-	"\x13service_connections\x18\x10 \x03(\v2!.hazelcast.AdminServiceConnectionB\tȶ\x18x\xb8\xa8\x1d\x80\x02R\x12serviceConnections\x12F\n" +
-	"\vqueue_stats\x18\x11 \x03(\v2\x1a.hazelcast.AdminQueueStatsB\tȶ\x18x\xb8\xa8\x1d\x80\bR\n" +
-	"queueStats\x12F\n" +
-	"\vtopic_stats\x18\x12 \x03(\v2\x1a.hazelcast.AdminTopicStatsB\tȶ\x18x\xb8\xa8\x1d\x80\bR\n" +
-	"topicStats\x12I\n" +
-	"\fwatch_health\x18\x13 \x03(\v2\x1b.hazelcast.AdminWatchHealthB\tȶ\x18<\xb8\xa8\x1d\x80\bR\vwatchHealth\x12N\n" +
-	"\x0emutation_rates\x18\x14 \x03(\v2\x1c.hazelcast.AdminMutationRateB\tȶ\x18x\xb8\xa8\x1d\x80\bR\rmutationRates\x12\x1a\n" +
+	"\x0egraph_registry\x18\x0f \x03(\v2\x19.hazelcast.AdminGraphInfoB\x05\xb8\xa8\x1d\x80\bR\rgraphRegistry\x12Y\n" +
+	"\x13service_connections\x18\x10 \x03(\v2!.hazelcast.AdminServiceConnectionB\x05\xb8\xa8\x1d\x80\x02R\x12serviceConnections\x12B\n" +
+	"\vqueue_stats\x18\x11 \x03(\v2\x1a.hazelcast.AdminQueueStatsB\x05\xb8\xa8\x1d\x80\bR\n" +
+	"queueStats\x12B\n" +
+	"\vtopic_stats\x18\x12 \x03(\v2\x1a.hazelcast.AdminTopicStatsB\x05\xb8\xa8\x1d\x80\bR\n" +
+	"topicStats\x12E\n" +
+	"\fwatch_health\x18\x13 \x03(\v2\x1b.hazelcast.AdminWatchHealthB\x05\xb8\xa8\x1d\x80\bR\vwatchHealth\x12J\n" +
+	"\x0emutation_rates\x18\x14 \x03(\v2\x1c.hazelcast.AdminMutationRateB\x05\xb8\xa8\x1d\x80\bR\rmutationRates\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0e\x9a\xa8\x1d\n" +
 	"\x1a\x06kernel(\x01\"\x87\x01\n" +
@@ -23879,9 +23879,9 @@ const file_services_kernel_proto_rawDesc = "" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"B\n" +
 	"\x0fAdminConfigDump\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xa2\x01\n" +
-	"\rServiceHealth\x12P\n" +
-	"\tinstances\x18\x01 \x03(\v2#.healthreport.ServiceInstanceHealthB\rȶ\x18\x1e\x90\xb7\x18\x01\xb8\xa8\x1d\x80\x02R\tinstances\x12\x1a\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9e\x01\n" +
+	"\rServiceHealth\x12L\n" +
+	"\tinstances\x18\x01 \x03(\v2#.healthreport.ServiceInstanceHealthB\t\x90\xb7\x18\x01\xb8\xa8\x1d\x80\x02R\tinstances\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0e\x9a\xa8\x1d\n" +
 	"\x1a\x06kernel(\x01\"p\n" +
@@ -23901,12 +23901,12 @@ const file_services_kernel_proto_rawDesc = "" +
 	"revoked_by\x18\x02 \x01(\tB\t\x88\xa6\x1d\x01\xb8\xa8\x1d\x80\x04R\trevokedBy\x12(\n" +
 	"\rrevoked_at_ms\x18\x03 \x01(\x03B\x04\xb0\xa7\x1d\x00R\vrevokedAtMs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe0\x01\n" +
-	"\rWorkloadState\x12C\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xd6\x01\n" +
+	"\rWorkloadState\x12?\n" +
 	"\n" +
-	"localities\x18\x01 \x03(\v2\x18.kernel.WorkloadLocalityB\tȶ\x18x\xb8\xa8\x1d\x80\bR\n" +
-	"localities\x12I\n" +
-	"\vrevocations\x18\x02 \x03(\v2\x1a.kernel.WorkloadRevocationB\vȶ\x18\x80\xa3\x05\xb8\xa8\x1d\x80 R\vrevocations\x12\x1a\n" +
+	"localities\x18\x01 \x03(\v2\x18.kernel.WorkloadLocalityB\x05\xb8\xa8\x1d\x80\bR\n" +
+	"localities\x12C\n" +
+	"\vrevocations\x18\x02 \x03(\v2\x1a.kernel.WorkloadRevocationB\x05\xb8\xa8\x1d\x80 R\vrevocations\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0e\x9a\xa8\x1d\n" +
 	"\x1a\x06kernel(\x01\"\xb0\x01\n" +

@@ -536,7 +536,7 @@ var Dashboard_ServiceDesc = grpc.ServiceDesc{
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type SentinelStateServiceClient interface {
 }
 
@@ -555,7 +555,7 @@ func NewSentinelStateServiceClient(cc grpc.ClientConnInterface) SentinelStateSer
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type SentinelStateServiceServer interface {
 	mustEmbedUnimplementedSentinelStateServiceServer()
 }
@@ -612,7 +612,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type SentinelConfigStateServiceClient interface {
 	// Singleton: Config
 	GetConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*Config, error)
@@ -674,7 +674,7 @@ type SentinelConfigStateService_WatchConfigClient = grpc.ServerStreamingClient[C
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type SentinelConfigStateServiceServer interface {
 	// Singleton: Config
 	GetConfig(context.Context, *trace.TraceRequest) (*Config, error)

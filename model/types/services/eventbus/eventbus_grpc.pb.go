@@ -596,7 +596,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type EventbusStateServiceClient interface {
 	// Collection: Nodes
 	GetNodes(ctx context.Context, in *NodesGetRequest, opts ...grpc.CallOption) (*NodesValueResponse, error)
@@ -788,7 +788,7 @@ type EventbusStateService_WatchQueryNodesClient = grpc.ServerStreamingClient[Nod
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type EventbusStateServiceServer interface {
 	// Collection: Nodes
 	GetNodes(context.Context, *NodesGetRequest) (*NodesValueResponse, error)
@@ -1200,7 +1200,7 @@ const (
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type EventbusConfigStateServiceClient interface {
 	// Singleton: Config
 	GetConfig(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*Config, error)
@@ -1262,7 +1262,7 @@ type EventbusConfigStateService_WatchConfigClient = grpc.ServerStreamingClient[C
 // ============================================================================
 // Auto-generated State Service (tacplus)
 // ============================================================================
-// tacplus:generated-service
+// tacplus:generated-service state
 type EventbusConfigStateServiceServer interface {
 	// Singleton: Config
 	GetConfig(context.Context, *trace.TraceRequest) (*Config, error)
