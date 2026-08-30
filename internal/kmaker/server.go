@@ -3,9 +3,12 @@ package kmaker
 import (
 	"context"
 	"crypto/tls"
+	"errors"
 	"fmt"
 	"net"
+	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -99,18 +102,9 @@ func Run(args []string) error {
 	}
 	defer lis.Close()
 
-	opts := []grpc.ServerOption{}
-	if cfg.GetTls() != nil && len(cfg.GetTls().GetChain()) > 0 && cfg.GetTls().GetKey() != nil {
-		cert, err := TLSCertificateFromChain(cfg.GetTls())
-		if err != nil {
-			return fmt.Errorf("kmaker serving tls: %w", err)
-		}
-		opts = append(opts, grpc.Creds(credentials.NewTLS(&tls.Config{
-			Certificates: []tls.Certificate{cert},
-			MinVersion:   tls.VersionTLS12,
-		})))
-	} else {
-		zap.L().Warn("kmaker starting without serving TLS; this is intended only for local/dev bootstrap")
+	opts, err := ServingTLSOptions(cfg)
+	if err != nil {
+		return err
 	}
 
 	server := grpc.NewServer(opts...)
@@ -156,4 +150,50 @@ func Run(args []string) error {
 		<-stopped
 	}
 	return nil
+}
+
+// AllowPlaintextEnv is the sole escape hatch that lets kmaker serve plaintext
+// gRPC. It must be set to "true" explicitly; any other value (including unset)
+// is a refusal.
+//
+// There is no dev bypass anywhere else in the fleet to copy: every other Go
+// service serves through the generated chassis (model/chassis/grpcserver),
+// whose Listen() refuses unconditionally with "TLS certificate and key are
+// required — plaintext gRPC is not permitted". kmaker builds its own
+// grpc.Server rather than using the chassis, which is how it kept a
+// warn-and-continue path. The env var name follows kmaker's existing
+// KMAKER_-prefixed runtime toggles (see KMAKER_KUBE_API_URL).
+const AllowPlaintextEnv = "KMAKER_ALLOW_PLAINTEXT"
+
+// ErrTLSRequired is returned when kmaker is asked to start with no serving TLS
+// material and without the explicit plaintext opt-in.
+var ErrTLSRequired = errors.New(
+	"kmaker: TLS certificate and key are required — plaintext gRPC is not permitted; " +
+		"set " + AllowPlaintextEnv + "=true for local/dev bootstrap only")
+
+// ServingTLSOptions builds the gRPC server options for the main listener.
+//
+// A config regression that drops the tls section (e.g. a ConfigState reseed)
+// must stop kmaker, not silently downgrade it to plaintext: kmaker holds the
+// signing CA and mints keys, so its wire is the last one in the fleet that may
+// go clear. The health probe listener is unaffected — kubelet probes are
+// plaintext-only by design and serve nothing but grpc.health.v1.
+func ServingTLSOptions(cfg *pb.Config) ([]grpc.ServerOption, error) {
+	if cfg.GetTls() != nil && len(cfg.GetTls().GetChain()) > 0 && cfg.GetTls().GetKey() != nil {
+		cert, err := TLSCertificateFromChain(cfg.GetTls())
+		if err != nil {
+			return nil, fmt.Errorf("kmaker serving tls: %w", err)
+		}
+		return []grpc.ServerOption{grpc.Creds(credentials.NewTLS(&tls.Config{
+			Certificates: []tls.Certificate{cert},
+			MinVersion:   tls.VersionTLS12,
+		}))}, nil
+	}
+	if !strings.EqualFold(os.Getenv(AllowPlaintextEnv), "true") {
+		return nil, ErrTLSRequired
+	}
+	zap.L().Warn("kmaker starting without serving TLS",
+		zap.String("reason", AllowPlaintextEnv+"=true"),
+		zap.String("scope", "local/dev bootstrap only"))
+	return []grpc.ServerOption{}, nil
 }
