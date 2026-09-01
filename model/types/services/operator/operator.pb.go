@@ -317,9 +317,6 @@ type Topology struct {
 	// oauth_nodes is used when optional_services.oauth = true (default).
 	OauthNodes   int32 `protobuf:"varint,5,opt,name=oauth_nodes,json=oauthNodes,proto3" json:"oauth_nodes,omitempty"`
 	OpaNodes     int32 `protobuf:"varint,7,opt,name=opa_nodes,json=opaNodes,proto3" json:"opa_nodes,omitempty"`
-	TimedbNodes  int32 `protobuf:"varint,8,opt,name=timedb_nodes,json=timedbNodes,proto3" json:"timedb_nodes,omitempty"`
-	GraphdbNodes int32 `protobuf:"varint,9,opt,name=graphdb_nodes,json=graphdbNodes,proto3" json:"graphdb_nodes,omitempty"`
-	ArgusNodes   int32 `protobuf:"varint,11,opt,name=argus_nodes,json=argusNodes,proto3" json:"argus_nodes,omitempty"`
 	StratumNodes int32 `protobuf:"varint,12,opt,name=stratum_nodes,json=stratumNodes,proto3" json:"stratum_nodes,omitempty"`
 	// saml_nodes is used when optional_services.saml = true.
 	SamlNodes int32 `protobuf:"varint,13,opt,name=saml_nodes,json=samlNodes,proto3" json:"saml_nodes,omitempty"`
@@ -420,27 +417,6 @@ func (x *Topology) GetOauthNodes() int32 {
 func (x *Topology) GetOpaNodes() int32 {
 	if x != nil {
 		return x.OpaNodes
-	}
-	return 0
-}
-
-func (x *Topology) GetTimedbNodes() int32 {
-	if x != nil {
-		return x.TimedbNodes
-	}
-	return 0
-}
-
-func (x *Topology) GetGraphdbNodes() int32 {
-	if x != nil {
-		return x.GraphdbNodes
-	}
-	return 0
-}
-
-func (x *Topology) GetArgusNodes() int32 {
-	if x != nil {
-		return x.ArgusNodes
 	}
 	return 0
 }
@@ -1076,7 +1052,7 @@ const file_services_operator_proto_rawDesc = "" +
 	"\vletsencrypt\x18\x01 \x01(\bR\vletsencrypt\x12#\n" +
 	"\x02ca\x18\x02 \x01(\v2\x13.x509.X509CertChainR\x02ca\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xec\x05\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xad\x05\n" +
 	"\bTopology\x12'\n" +
 	"\fkernel_nodes\x18\x01 \x01(\x05B\x04\x90\xa8\x1d\x03R\vkernelNodes\x12+\n" +
 	"\x0esentinel_nodes\x18\x02 \x01(\x05B\x04\x90\xa8\x1d\x03R\rsentinelNodes\x12+\n" +
@@ -1084,11 +1060,7 @@ const file_services_operator_proto_rawDesc = "" +
 	"\rgateway_nodes\x18\x04 \x01(\x05R\fgatewayNodes\x12%\n" +
 	"\voauth_nodes\x18\x05 \x01(\x05B\x04\x90\xa8\x1d\x03R\n" +
 	"oauthNodes\x12!\n" +
-	"\topa_nodes\x18\a \x01(\x05B\x04\x90\xa8\x1d\x03R\bopaNodes\x12'\n" +
-	"\ftimedb_nodes\x18\b \x01(\x05B\x04\x90\xa8\x1d\x03R\vtimedbNodes\x12)\n" +
-	"\rgraphdb_nodes\x18\t \x01(\x05B\x04\x90\xa8\x1d\x03R\fgraphdbNodes\x12%\n" +
-	"\vargus_nodes\x18\v \x01(\x05B\x04\x90\xa8\x1d\x03R\n" +
-	"argusNodes\x12)\n" +
+	"\topa_nodes\x18\a \x01(\x05B\x04\x90\xa8\x1d\x03R\bopaNodes\x12)\n" +
 	"\rstratum_nodes\x18\f \x01(\x05B\x04\x90\xa8\x1d\x03R\fstratumNodes\x12#\n" +
 	"\n" +
 	"saml_nodes\x18\r \x01(\x05B\x04\x90\xa8\x1d\x03R\tsamlNodes\x12'\n" +
@@ -1100,7 +1072,8 @@ const file_services_operator_proto_rawDesc = "" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\x1a>\n" +
 	"\x10AppServicesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01J\x04\b\x06\x10\aR\x10msggateway_nodes\"\xef\x01\n" +
+	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01J\x04\b\x06\x10\aJ\x04\b\b\x10\tJ\x04\b\t\x10\n" +
+	"J\x04\b\v\x10\fR\x10msggateway_nodesR\ftimedb_nodesR\rgraphdb_nodesR\vargus_nodes\"\xef\x01\n" +
 	"\x10OptionalServices\x12\x12\n" +
 	"\x04saml\x18\x06 \x01(\bR\x04saml\x12\x1a\n" +
 	"\x05oauth\x18\a \x01(\bB\x04\xa0\xa8\x1d\x01R\x05oauth\x12 \n" +
@@ -1143,12 +1116,12 @@ const file_services_operator_proto_rawDesc = "" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0eҨ\x1d\n" +
 	"\n" +
-	"\boperator\"\x9b\x01\n" +
+	"\boperator\"\x99\x01\n" +
 	"\x13OperatorConfigState\x12.\n" +
 	"\x06config\x18\x01 \x01(\v2\x10.operator.ConfigB\x04\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:#\x9a\xa8\x1d\x1f\n" +
-	"\x13OperatorConfigState\x1a\beventbus\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:!\x9a\xa8\x1d\x1d\n" +
+	"\x13OperatorConfigState\x1a\x06kernel\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*1\n" +
@@ -1172,11 +1145,13 @@ const file_services_operator_proto_rawDesc = "" +
 	"2OPERATOR_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x123\n" +
 	"/OPERATOR_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x123\n" +
 	"/OPERATOR_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x125\n" +
-	"1OPERATOR_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xbf\x01\n" +
+	"1OPERATOR_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xc9\x01\n" +
 	"\x1aOperatorConfigStateService\x122\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x10.operator.Config\x12/\n" +
 	"\tSetConfig\x12\x10.operator.Config\x1a\x10.operator.Config\x126\n" +
-	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x10.operator.Config0\x01\x1a\x04\xea\x97\"\x00B`Z^gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/operatorb\x06proto3"
+	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x10.operator.Config0\x01\x1a\x0e\xea\x97\"\n" +
+	"\n" +
+	"\boperatorB`Z^gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/operatorb\x06proto3"
 
 var (
 	file_services_operator_proto_rawDescOnce sync.Once

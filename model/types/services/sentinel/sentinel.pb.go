@@ -1365,12 +1365,12 @@ const file_services_sentinel_proto_rawDesc = "" +
 	"\x11token_cache_stats\x18\b \x03(\v2\x1f.hazelcast.AdminTokenCacheStatsB\x04\xb8\xa8\x1d R\x0ftokenCacheStats\x12<\n" +
 	"\tmap_stats\x18\t \x03(\v2\x18.hazelcast.AdminMapStatsB\x05\xb8\xa8\x1d\x80\bR\bmapStats\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9b\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x99\x01\n" +
 	"\x13SentinelConfigState\x12.\n" +
 	"\x06config\x18\x01 \x01(\v2\x10.sentinel.ConfigB\x04\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:#\x9a\xa8\x1d\x1f\n" +
-	"\x13SentinelConfigState\x1a\beventbus\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:!\x9a\xa8\x1d\x1d\n" +
+	"\x13SentinelConfigState\x1a\x06kernel\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\xef\x03\n" +
@@ -1427,12 +1427,16 @@ const file_services_sentinel_proto_rawDesc = "" +
 	"\x13ListTokenCacheStats\x12\x1e.sentinel.DashboardPageRequest\x1a!.sentinel.TokenCacheStatsResponse\"\x11\xf2\x88'\r\b\x03\x12\anode_id( \x12^\n" +
 	"\fListMapStats\x12\x1e.sentinel.DashboardPageRequest\x1a\x1a.sentinel.MapStatsResponse\"\x12\xf2\x88'\x0e\b\x03\x12\bmap_name(d\x12B\n" +
 	"\fGetDashboard\x12\x13.trace.TraceRequest\x1a\x1b.sentinel.DashboardResponse\"\x00\x12V\n" +
-	"\x12SubscribeDashboard\x12\x1f.sentinel.WatchDashboardRequest\x1a\x1b.sentinel.DashboardResponse\"\x000\x01\x1a\x06\xf2\x97\"\x02\x18\x012\x1c\n" +
-	"\x14SentinelStateService\x1a\x04\xea\x97\"\x002\xbf\x01\n" +
+	"\x12SubscribeDashboard\x12\x1f.sentinel.WatchDashboardRequest\x1a\x1b.sentinel.DashboardResponse\"\x000\x01\x1a\x06\xf2\x97\"\x02\x18\x012&\n" +
+	"\x14SentinelStateService\x1a\x0e\xea\x97\"\n" +
+	"\n" +
+	"\bsentinel2\xc9\x01\n" +
 	"\x1aSentinelConfigStateService\x122\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x10.sentinel.Config\x12/\n" +
 	"\tSetConfig\x12\x10.sentinel.Config\x1a\x10.sentinel.Config\x126\n" +
-	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x10.sentinel.Config0\x01\x1a\x04\xea\x97\"\x00B\x8d\x01\x92\xb5\x18\x11\n" +
+	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x10.sentinel.Config0\x01\x1a\x0e\xea\x97\"\n" +
+	"\n" +
+	"\bsentinelB\x8d\x01\x92\xb5\x18\x11\n" +
 	"\fDEFAULT_PORT\x10\xfbAڵ\x18\x00\xe2\xb5\x18\x10\n" +
 	"\x0ekernel.ClusterZ^gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/sentinelb\x06proto3"
 

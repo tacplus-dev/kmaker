@@ -25,7 +25,6 @@ import (
 	healthreport "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/healthreport"
 	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
 	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
-	agentsensor "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/vservices/agentsensor"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -40,58 +39,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type RecordChangeType int32
-
-const (
-	RecordChangeType_RECORD_CHANGE_TYPE_UNSPECIFIED RecordChangeType = 0
-	RecordChangeType_RECORD_CHANGE_TYPE_ADD         RecordChangeType = 1
-	RecordChangeType_RECORD_CHANGE_TYPE_MODIFY      RecordChangeType = 2
-	RecordChangeType_RECORD_CHANGE_TYPE_DELETE      RecordChangeType = 3
-)
-
-// Enum value maps for RecordChangeType.
-var (
-	RecordChangeType_name = map[int32]string{
-		0: "RECORD_CHANGE_TYPE_UNSPECIFIED",
-		1: "RECORD_CHANGE_TYPE_ADD",
-		2: "RECORD_CHANGE_TYPE_MODIFY",
-		3: "RECORD_CHANGE_TYPE_DELETE",
-	}
-	RecordChangeType_value = map[string]int32{
-		"RECORD_CHANGE_TYPE_UNSPECIFIED": 0,
-		"RECORD_CHANGE_TYPE_ADD":         1,
-		"RECORD_CHANGE_TYPE_MODIFY":      2,
-		"RECORD_CHANGE_TYPE_DELETE":      3,
-	}
-)
-
-func (x RecordChangeType) Enum() *RecordChangeType {
-	p := new(RecordChangeType)
-	*p = x
-	return p
-}
-
-func (x RecordChangeType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (RecordChangeType) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_stratum_proto_enumTypes[0].Descriptor()
-}
-
-func (RecordChangeType) Type() protoreflect.EnumType {
-	return &file_services_stratum_proto_enumTypes[0]
-}
-
-func (x RecordChangeType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use RecordChangeType.Descriptor instead.
-func (RecordChangeType) EnumDescriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{0}
-}
-
 // ============================================================================
 // Generated Proto Registry IDs
 // Auto-injected by tacplus for shared type/RPC identifiers.
@@ -99,55 +46,31 @@ func (RecordChangeType) EnumDescriptor() ([]byte, []int) {
 type TypeID int32
 
 const (
-	TypeID_TYPE_ID_UNSPECIFIED                    TypeID = 0
-	TypeID_TYPE_ID_CONFIG                         TypeID = 1
-	TypeID_TYPE_ID_STRATUM_STATE                  TypeID = 2
-	TypeID_TYPE_ID_STRATUM_SERVICE_HEALTH         TypeID = 3
-	TypeID_TYPE_ID_STRATUM_CONFIG_STATE           TypeID = 4
-	TypeID_TYPE_ID_MAP_EMPTY                      TypeID = 5
-	TypeID_TYPE_ID_QUERY_HANDLE                   TypeID = 6
-	TypeID_TYPE_ID_QUERY_STATS                    TypeID = 7
-	TypeID_TYPE_ID_RECORD_COUNT                   TypeID = 8
-	TypeID_TYPE_ID_OPEN_AGENT_EVENT_QUERY_REQUEST TypeID = 9
-	TypeID_TYPE_ID_SAMPLE_AGENT_EVENT_REQUEST     TypeID = 10
-	TypeID_TYPE_ID_SAMPLE_AGENT_EVENT_RESPONSE    TypeID = 11
-	TypeID_TYPE_ID_PULL_AGENT_EVENT_REQUEST       TypeID = 12
-	TypeID_TYPE_ID_PULL_AGENT_EVENT_RESPONSE      TypeID = 13
+	TypeID_TYPE_ID_UNSPECIFIED            TypeID = 0
+	TypeID_TYPE_ID_CONFIG                 TypeID = 1
+	TypeID_TYPE_ID_STRATUM_STATE          TypeID = 2
+	TypeID_TYPE_ID_STRATUM_SERVICE_HEALTH TypeID = 3
+	TypeID_TYPE_ID_STRATUM_CONFIG_STATE   TypeID = 4
+	TypeID_TYPE_ID_MAP_EMPTY              TypeID = 5
 )
 
 // Enum value maps for TypeID.
 var (
 	TypeID_name = map[int32]string{
-		0:  "TYPE_ID_UNSPECIFIED",
-		1:  "TYPE_ID_CONFIG",
-		2:  "TYPE_ID_STRATUM_STATE",
-		3:  "TYPE_ID_STRATUM_SERVICE_HEALTH",
-		4:  "TYPE_ID_STRATUM_CONFIG_STATE",
-		5:  "TYPE_ID_MAP_EMPTY",
-		6:  "TYPE_ID_QUERY_HANDLE",
-		7:  "TYPE_ID_QUERY_STATS",
-		8:  "TYPE_ID_RECORD_COUNT",
-		9:  "TYPE_ID_OPEN_AGENT_EVENT_QUERY_REQUEST",
-		10: "TYPE_ID_SAMPLE_AGENT_EVENT_REQUEST",
-		11: "TYPE_ID_SAMPLE_AGENT_EVENT_RESPONSE",
-		12: "TYPE_ID_PULL_AGENT_EVENT_REQUEST",
-		13: "TYPE_ID_PULL_AGENT_EVENT_RESPONSE",
+		0: "TYPE_ID_UNSPECIFIED",
+		1: "TYPE_ID_CONFIG",
+		2: "TYPE_ID_STRATUM_STATE",
+		3: "TYPE_ID_STRATUM_SERVICE_HEALTH",
+		4: "TYPE_ID_STRATUM_CONFIG_STATE",
+		5: "TYPE_ID_MAP_EMPTY",
 	}
 	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":                    0,
-		"TYPE_ID_CONFIG":                         1,
-		"TYPE_ID_STRATUM_STATE":                  2,
-		"TYPE_ID_STRATUM_SERVICE_HEALTH":         3,
-		"TYPE_ID_STRATUM_CONFIG_STATE":           4,
-		"TYPE_ID_MAP_EMPTY":                      5,
-		"TYPE_ID_QUERY_HANDLE":                   6,
-		"TYPE_ID_QUERY_STATS":                    7,
-		"TYPE_ID_RECORD_COUNT":                   8,
-		"TYPE_ID_OPEN_AGENT_EVENT_QUERY_REQUEST": 9,
-		"TYPE_ID_SAMPLE_AGENT_EVENT_REQUEST":     10,
-		"TYPE_ID_SAMPLE_AGENT_EVENT_RESPONSE":    11,
-		"TYPE_ID_PULL_AGENT_EVENT_REQUEST":       12,
-		"TYPE_ID_PULL_AGENT_EVENT_RESPONSE":      13,
+		"TYPE_ID_UNSPECIFIED":            0,
+		"TYPE_ID_CONFIG":                 1,
+		"TYPE_ID_STRATUM_STATE":          2,
+		"TYPE_ID_STRATUM_SERVICE_HEALTH": 3,
+		"TYPE_ID_STRATUM_CONFIG_STATE":   4,
+		"TYPE_ID_MAP_EMPTY":              5,
 	}
 )
 
@@ -162,11 +85,11 @@ func (x TypeID) String() string {
 }
 
 func (TypeID) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_stratum_proto_enumTypes[1].Descriptor()
+	return file_services_stratum_proto_enumTypes[0].Descriptor()
 }
 
 func (TypeID) Type() protoreflect.EnumType {
-	return &file_services_stratum_proto_enumTypes[1]
+	return &file_services_stratum_proto_enumTypes[0]
 }
 
 func (x TypeID) Number() protoreflect.EnumNumber {
@@ -175,7 +98,7 @@ func (x TypeID) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use TypeID.Descriptor instead.
 func (TypeID) EnumDescriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{1}
+	return file_services_stratum_proto_rawDescGZIP(), []int{0}
 }
 
 type StratumConfigStateServiceRpcId int32
@@ -223,11 +146,11 @@ func (x StratumConfigStateServiceRpcId) String() string {
 }
 
 func (StratumConfigStateServiceRpcId) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_stratum_proto_enumTypes[2].Descriptor()
+	return file_services_stratum_proto_enumTypes[1].Descriptor()
 }
 
 func (StratumConfigStateServiceRpcId) Type() protoreflect.EnumType {
-	return &file_services_stratum_proto_enumTypes[2]
+	return &file_services_stratum_proto_enumTypes[1]
 }
 
 func (x StratumConfigStateServiceRpcId) Number() protoreflect.EnumNumber {
@@ -236,74 +159,7 @@ func (x StratumConfigStateServiceRpcId) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StratumConfigStateServiceRpcId.Descriptor instead.
 func (StratumConfigStateServiceRpcId) EnumDescriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{2}
-}
-
-type RecordMapRpcId int32
-
-const (
-	RecordMapRpcId_RECORD_MAP_RPC_ID_UNSPECIFIED            RecordMapRpcId = 0
-	RecordMapRpcId_RECORD_MAP_RPC_ID_ALL_ACCESSORS          RecordMapRpcId = 1
-	RecordMapRpcId_RECORD_MAP_RPC_ID_ALL_MUTATORS           RecordMapRpcId = 2
-	RecordMapRpcId_RECORD_MAP_RPC_ID_ALL_EXECUTORS          RecordMapRpcId = 3
-	RecordMapRpcId_RECORD_MAP_RPC_ID_OPEN_AGENT_EVENT_QUERY RecordMapRpcId = 4
-	RecordMapRpcId_RECORD_MAP_RPC_ID_COUNT_AGENT_EVENT      RecordMapRpcId = 5
-	RecordMapRpcId_RECORD_MAP_RPC_ID_SAMPLE_AGENT_EVENT     RecordMapRpcId = 6
-	RecordMapRpcId_RECORD_MAP_RPC_ID_PULL_AGENT_EVENT       RecordMapRpcId = 7
-	RecordMapRpcId_RECORD_MAP_RPC_ID_CLOSE_AGENT_EVENT      RecordMapRpcId = 8
-)
-
-// Enum value maps for RecordMapRpcId.
-var (
-	RecordMapRpcId_name = map[int32]string{
-		0: "RECORD_MAP_RPC_ID_UNSPECIFIED",
-		1: "RECORD_MAP_RPC_ID_ALL_ACCESSORS",
-		2: "RECORD_MAP_RPC_ID_ALL_MUTATORS",
-		3: "RECORD_MAP_RPC_ID_ALL_EXECUTORS",
-		4: "RECORD_MAP_RPC_ID_OPEN_AGENT_EVENT_QUERY",
-		5: "RECORD_MAP_RPC_ID_COUNT_AGENT_EVENT",
-		6: "RECORD_MAP_RPC_ID_SAMPLE_AGENT_EVENT",
-		7: "RECORD_MAP_RPC_ID_PULL_AGENT_EVENT",
-		8: "RECORD_MAP_RPC_ID_CLOSE_AGENT_EVENT",
-	}
-	RecordMapRpcId_value = map[string]int32{
-		"RECORD_MAP_RPC_ID_UNSPECIFIED":            0,
-		"RECORD_MAP_RPC_ID_ALL_ACCESSORS":          1,
-		"RECORD_MAP_RPC_ID_ALL_MUTATORS":           2,
-		"RECORD_MAP_RPC_ID_ALL_EXECUTORS":          3,
-		"RECORD_MAP_RPC_ID_OPEN_AGENT_EVENT_QUERY": 4,
-		"RECORD_MAP_RPC_ID_COUNT_AGENT_EVENT":      5,
-		"RECORD_MAP_RPC_ID_SAMPLE_AGENT_EVENT":     6,
-		"RECORD_MAP_RPC_ID_PULL_AGENT_EVENT":       7,
-		"RECORD_MAP_RPC_ID_CLOSE_AGENT_EVENT":      8,
-	}
-)
-
-func (x RecordMapRpcId) Enum() *RecordMapRpcId {
-	p := new(RecordMapRpcId)
-	*p = x
-	return p
-}
-
-func (x RecordMapRpcId) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (RecordMapRpcId) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_stratum_proto_enumTypes[3].Descriptor()
-}
-
-func (RecordMapRpcId) Type() protoreflect.EnumType {
-	return &file_services_stratum_proto_enumTypes[3]
-}
-
-func (x RecordMapRpcId) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use RecordMapRpcId.Descriptor instead.
-func (RecordMapRpcId) EnumDescriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{3}
+	return file_services_stratum_proto_rawDescGZIP(), []int{1}
 }
 
 type Config struct {
@@ -684,547 +540,11 @@ func (x *MapEmpty) GetNoop() bool {
 	return false
 }
 
-type QueryHandle struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	QueryId       string                 `protobuf:"bytes,1,opt,name=query_id,json=queryId,proto3" json:"query_id,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *QueryHandle) Reset() {
-	*x = QueryHandle{}
-	mi := &file_services_stratum_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *QueryHandle) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*QueryHandle) ProtoMessage() {}
-
-func (x *QueryHandle) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use QueryHandle.ProtoReflect.Descriptor instead.
-func (*QueryHandle) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *QueryHandle) GetQueryId() string {
-	if x != nil {
-		return x.QueryId
-	}
-	return ""
-}
-
-func (x *QueryHandle) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *QueryHandle) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type QueryStats struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	QueryId       string                 `protobuf:"bytes,1,opt,name=query_id,json=queryId,proto3" json:"query_id,omitempty"`
-	Size          int64                  `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *QueryStats) Reset() {
-	*x = QueryStats{}
-	mi := &file_services_stratum_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *QueryStats) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*QueryStats) ProtoMessage() {}
-
-func (x *QueryStats) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use QueryStats.ProtoReflect.Descriptor instead.
-func (*QueryStats) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *QueryStats) GetQueryId() string {
-	if x != nil {
-		return x.QueryId
-	}
-	return ""
-}
-
-func (x *QueryStats) GetSize() int64 {
-	if x != nil {
-		return x.Size
-	}
-	return 0
-}
-
-func (x *QueryStats) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *QueryStats) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type RecordCount struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Count         int64                  `protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RecordCount) Reset() {
-	*x = RecordCount{}
-	mi := &file_services_stratum_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RecordCount) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RecordCount) ProtoMessage() {}
-
-func (x *RecordCount) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RecordCount.ProtoReflect.Descriptor instead.
-func (*RecordCount) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *RecordCount) GetCount() int64 {
-	if x != nil {
-		return x.Count
-	}
-	return 0
-}
-
-func (x *RecordCount) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *RecordCount) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type OpenAgentEventQueryRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Standing      bool                   `protobuf:"varint,1,opt,name=standing,proto3" json:"standing,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *OpenAgentEventQueryRequest) Reset() {
-	*x = OpenAgentEventQueryRequest{}
-	mi := &file_services_stratum_proto_msgTypes[8]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *OpenAgentEventQueryRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*OpenAgentEventQueryRequest) ProtoMessage() {}
-
-func (x *OpenAgentEventQueryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[8]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use OpenAgentEventQueryRequest.ProtoReflect.Descriptor instead.
-func (*OpenAgentEventQueryRequest) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *OpenAgentEventQueryRequest) GetStanding() bool {
-	if x != nil {
-		return x.Standing
-	}
-	return false
-}
-
-func (x *OpenAgentEventQueryRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *OpenAgentEventQueryRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type SampleAgentEventRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	QueryId       string                 `protobuf:"bytes,1,opt,name=query_id,json=queryId,proto3" json:"query_id,omitempty"`
-	N             int32                  `protobuf:"varint,2,opt,name=n,proto3" json:"n,omitempty"`
-	Seed          uint64                 `protobuf:"varint,3,opt,name=seed,proto3" json:"seed,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SampleAgentEventRequest) Reset() {
-	*x = SampleAgentEventRequest{}
-	mi := &file_services_stratum_proto_msgTypes[9]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SampleAgentEventRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SampleAgentEventRequest) ProtoMessage() {}
-
-func (x *SampleAgentEventRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[9]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SampleAgentEventRequest.ProtoReflect.Descriptor instead.
-func (*SampleAgentEventRequest) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *SampleAgentEventRequest) GetQueryId() string {
-	if x != nil {
-		return x.QueryId
-	}
-	return ""
-}
-
-func (x *SampleAgentEventRequest) GetN() int32 {
-	if x != nil {
-		return x.N
-	}
-	return 0
-}
-
-func (x *SampleAgentEventRequest) GetSeed() uint64 {
-	if x != nil {
-		return x.Seed
-	}
-	return 0
-}
-
-func (x *SampleAgentEventRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *SampleAgentEventRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type SampleAgentEventResponse struct {
-	state         protoimpl.MessageState    `protogen:"open.v1"`
-	Items         []*agentsensor.AgentEvent `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
-	TraceId       string                    `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                      `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SampleAgentEventResponse) Reset() {
-	*x = SampleAgentEventResponse{}
-	mi := &file_services_stratum_proto_msgTypes[10]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SampleAgentEventResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SampleAgentEventResponse) ProtoMessage() {}
-
-func (x *SampleAgentEventResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[10]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SampleAgentEventResponse.ProtoReflect.Descriptor instead.
-func (*SampleAgentEventResponse) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *SampleAgentEventResponse) GetItems() []*agentsensor.AgentEvent {
-	if x != nil {
-		return x.Items
-	}
-	return nil
-}
-
-func (x *SampleAgentEventResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *SampleAgentEventResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type PullAgentEventRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	QueryId       string                 `protobuf:"bytes,1,opt,name=query_id,json=queryId,proto3" json:"query_id,omitempty"`
-	PageSize      int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	PageToken     string                 `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
-	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PullAgentEventRequest) Reset() {
-	*x = PullAgentEventRequest{}
-	mi := &file_services_stratum_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PullAgentEventRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PullAgentEventRequest) ProtoMessage() {}
-
-func (x *PullAgentEventRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[11]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PullAgentEventRequest.ProtoReflect.Descriptor instead.
-func (*PullAgentEventRequest) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *PullAgentEventRequest) GetQueryId() string {
-	if x != nil {
-		return x.QueryId
-	}
-	return ""
-}
-
-func (x *PullAgentEventRequest) GetPageSize() int32 {
-	if x != nil {
-		return x.PageSize
-	}
-	return 0
-}
-
-func (x *PullAgentEventRequest) GetPageToken() string {
-	if x != nil {
-		return x.PageToken
-	}
-	return ""
-}
-
-func (x *PullAgentEventRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *PullAgentEventRequest) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
-type PullAgentEventResponse struct {
-	state         protoimpl.MessageState    `protogen:"open.v1"`
-	Items         []*agentsensor.AgentEvent `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
-	NextPageToken string                    `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
-	TotalCount    int64                     `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
-	TraceId       string                    `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                      `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PullAgentEventResponse) Reset() {
-	*x = PullAgentEventResponse{}
-	mi := &file_services_stratum_proto_msgTypes[12]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PullAgentEventResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PullAgentEventResponse) ProtoMessage() {}
-
-func (x *PullAgentEventResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_services_stratum_proto_msgTypes[12]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PullAgentEventResponse.ProtoReflect.Descriptor instead.
-func (*PullAgentEventResponse) Descriptor() ([]byte, []int) {
-	return file_services_stratum_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *PullAgentEventResponse) GetItems() []*agentsensor.AgentEvent {
-	if x != nil {
-		return x.Items
-	}
-	return nil
-}
-
-func (x *PullAgentEventResponse) GetNextPageToken() string {
-	if x != nil {
-		return x.NextPageToken
-	}
-	return ""
-}
-
-func (x *PullAgentEventResponse) GetTotalCount() int64 {
-	if x != nil {
-		return x.TotalCount
-	}
-	return 0
-}
-
-func (x *PullAgentEventResponse) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *PullAgentEventResponse) GetNoop() bool {
-	if x != nil {
-		return x.Noop
-	}
-	return false
-}
-
 var File_services_stratum_proto protoreflect.FileDescriptor
 
 const file_services_stratum_proto_rawDesc = "" +
 	"\n" +
-	"\x16services/stratum.proto\x12\astratum\x1a\x0esys/spec.proto\x1a\x16sys/healthreport.proto\x1a\x0fsys/trace.proto\x1a\x1cvservices/agent-sensor.proto\"\xa5\x03\n" +
+	"\x16services/stratum.proto\x12\astratum\x1a\x0esys/spec.proto\x1a\x16sys/healthreport.proto\x1a\x0fsys/trace.proto\"\xa5\x03\n" +
 	"\x06Config\x12:\n" +
 	"\x13hazelcast_memory_mb\x18\x01 \x01(\x05B\n" +
 	"\xb0\xa7\x1d\x80\x02\x90\xa8\x1d\x80\x10R\x11hazelcastMemoryMb\x12:\n" +
@@ -1250,78 +570,22 @@ const file_services_stratum_proto_rawDesc = "" +
 	"\vactive_maps\x18\x06 \x01(\x05R\n" +
 	"activeMaps\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x04\x82\xaa\x1d\x00\"\x98\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x04\x82\xaa\x1d\x00\"\x96\x01\n" +
 	"\x12StratumConfigState\x12-\n" +
 	"\x06config\x18\x01 \x01(\v2\x0f.stratum.ConfigB\x04\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\"\x9a\xa8\x1d\x1e\n" +
-	"\x12StratumConfigState\x1a\beventbus\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop: \x9a\xa8\x1d\x1c\n" +
+	"\x12StratumConfigState\x1a\x06kernel\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"Y\n" +
-	"\vQueryHandle\x12\x19\n" +
-	"\bquery_id\x18\x01 \x01(\tR\aqueryId\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"l\n" +
-	"\n" +
-	"QueryStats\x12\x19\n" +
-	"\bquery_id\x18\x01 \x01(\tR\aqueryId\x12\x12\n" +
-	"\x04size\x18\x02 \x01(\x03R\x04size\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"T\n" +
-	"\vRecordCount\x12\x14\n" +
-	"\x05count\x18\x01 \x01(\x03R\x05count\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"i\n" +
-	"\x1aOpenAgentEventQueryRequest\x12\x1a\n" +
-	"\bstanding\x18\x01 \x01(\bR\bstanding\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x87\x01\n" +
-	"\x17SampleAgentEventRequest\x12\x19\n" +
-	"\bquery_id\x18\x01 \x01(\tR\aqueryId\x12\f\n" +
-	"\x01n\x18\x02 \x01(\x05R\x01n\x12\x12\n" +
-	"\x04seed\x18\x03 \x01(\x04R\x04seed\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"z\n" +
-	"\x18SampleAgentEventResponse\x12-\n" +
-	"\x05items\x18\x01 \x03(\v2\x17.agentsensor.AgentEventR\x05items\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9f\x01\n" +
-	"\x15PullAgentEventRequest\x12\x19\n" +
-	"\bquery_id\x18\x01 \x01(\tR\aqueryId\x12\x1b\n" +
-	"\tpage_size\x18\x02 \x01(\x05R\bpageSize\x12\x1d\n" +
-	"\n" +
-	"page_token\x18\x03 \x01(\tR\tpageToken\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc1\x01\n" +
-	"\x16PullAgentEventResponse\x12-\n" +
-	"\x05items\x18\x01 \x03(\v2\x17.agentsensor.AgentEventR\x05items\x12&\n" +
-	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1f\n" +
-	"\vtotal_count\x18\x03 \x01(\x03R\n" +
-	"totalCount\x12\x1a\n" +
-	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\x90\x01\n" +
-	"\x10RecordChangeType\x12\"\n" +
-	"\x1eRECORD_CHANGE_TYPE_UNSPECIFIED\x10\x00\x12\x1a\n" +
-	"\x16RECORD_CHANGE_TYPE_ADD\x10\x01\x12\x1d\n" +
-	"\x19RECORD_CHANGE_TYPE_MODIFY\x10\x02\x12\x1d\n" +
-	"\x19RECORD_CHANGE_TYPE_DELETE\x10\x03*\xc4\x03\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\xad\x01\n" +
 	"\x06TypeID\x12\x17\n" +
 	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eTYPE_ID_CONFIG\x10\x01\x12\x19\n" +
 	"\x15TYPE_ID_STRATUM_STATE\x10\x02\x12\"\n" +
 	"\x1eTYPE_ID_STRATUM_SERVICE_HEALTH\x10\x03\x12 \n" +
 	"\x1cTYPE_ID_STRATUM_CONFIG_STATE\x10\x04\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10\x05\x12\x18\n" +
-	"\x14TYPE_ID_QUERY_HANDLE\x10\x06\x12\x17\n" +
-	"\x13TYPE_ID_QUERY_STATS\x10\a\x12\x18\n" +
-	"\x14TYPE_ID_RECORD_COUNT\x10\b\x12*\n" +
-	"&TYPE_ID_OPEN_AGENT_EVENT_QUERY_REQUEST\x10\t\x12&\n" +
-	"\"TYPE_ID_SAMPLE_AGENT_EVENT_REQUEST\x10\n" +
-	"\x12'\n" +
-	"#TYPE_ID_SAMPLE_AGENT_EVENT_RESPONSE\x10\v\x12$\n" +
-	" TYPE_ID_PULL_AGENT_EVENT_REQUEST\x10\f\x12%\n" +
-	"!TYPE_ID_PULL_AGENT_EVENT_RESPONSE\x10\r*\x97\x03\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x10\x05*\x97\x03\n" +
 	"\x1eStratumConfigStateServiceRpcId\x123\n" +
 	"/STRATUM_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x125\n" +
 	"1STRATUM_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x124\n" +
@@ -1329,32 +593,15 @@ const file_services_stratum_proto_rawDesc = "" +
 	"1STRATUM_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x122\n" +
 	".STRATUM_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x122\n" +
 	".STRATUM_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x124\n" +
-	"0STRATUM_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x06*\xf3\x02\n" +
-	"\x0eRecordMapRpcId\x12!\n" +
-	"\x1dRECORD_MAP_RPC_ID_UNSPECIFIED\x10\x00\x12#\n" +
-	"\x1fRECORD_MAP_RPC_ID_ALL_ACCESSORS\x10\x01\x12\"\n" +
-	"\x1eRECORD_MAP_RPC_ID_ALL_MUTATORS\x10\x02\x12#\n" +
-	"\x1fRECORD_MAP_RPC_ID_ALL_EXECUTORS\x10\x03\x12,\n" +
-	"(RECORD_MAP_RPC_ID_OPEN_AGENT_EVENT_QUERY\x10\x04\x12'\n" +
-	"#RECORD_MAP_RPC_ID_COUNT_AGENT_EVENT\x10\x05\x12(\n" +
-	"$RECORD_MAP_RPC_ID_SAMPLE_AGENT_EVENT\x10\x06\x12&\n" +
-	"\"RECORD_MAP_RPC_ID_PULL_AGENT_EVENT\x10\a\x12'\n" +
-	"#RECORD_MAP_RPC_ID_CLOSE_AGENT_EVENT\x10\b2\x1b\n" +
-	"\x13StratumStateService\x1a\x04\xea\x97\"\x002\xba\x01\n" +
+	"0STRATUM_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062$\n" +
+	"\x13StratumStateService\x1a\r\xea\x97\"\t\n" +
+	"\astratum2\xc3\x01\n" +
 	"\x19StratumConfigStateService\x121\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x0f.stratum.Config\x12-\n" +
 	"\tSetConfig\x12\x0f.stratum.Config\x1a\x0f.stratum.Config\x125\n" +
-	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x0f.stratum.Config0\x01\x1a\x04\xea\x97\"\x002\xa7\x03\n" +
-	"\tRecordMap\x12P\n" +
-	"\x13OpenAgentEventQuery\x12#.stratum.OpenAgentEventQueryRequest\x1a\x14.stratum.QueryHandle\x12=\n" +
-	"\x0fCountAgentEvent\x12\x14.stratum.QueryHandle\x1a\x14.stratum.RecordCount\x12W\n" +
-	"\x10SampleAgentEvent\x12 .stratum.SampleAgentEventRequest\x1a!.stratum.SampleAgentEventResponse\x12e\n" +
-	"\x0ePullAgentEvent\x12\x1e.stratum.PullAgentEventRequest\x1a\x1f.stratum.PullAgentEventResponse\"\x12\xf2\x88'\x0e\b\x03\x12\bevent_id(d\x12<\n" +
-	"\x0fCloseAgentEvent\x12\x14.stratum.QueryHandle\x1a\x13.stratum.QueryStats\x1a\v\xea\x97\"\a\n" +
-	"\x05argusB\xb7\x01\x92\xb5\x18\x11\n" +
-	"\fDEFAULT_PORT\x10\xfbAڵ\x18\x00\x92\xb6\x18\x19\n" +
-	"\x17agentsensor.TimedbQuery\x92\xb6\x18\x1a\n" +
-	"\x18agentsensor.GraphdbQuery\xba\xb6\x18\x00Z]gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/stratumb\x06proto3"
+	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x0f.stratum.Config0\x01\x1a\r\xea\x97\"\t\n" +
+	"\astratumB|\x92\xb5\x18\x11\n" +
+	"\fDEFAULT_PORT\x10\xfbAڵ\x18\x00\xba\xb6\x18\x00Z]gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/stratumb\x06proto3"
 
 var (
 	file_services_stratum_proto_rawDescOnce sync.Once
@@ -1368,56 +615,33 @@ func file_services_stratum_proto_rawDescGZIP() []byte {
 	return file_services_stratum_proto_rawDescData
 }
 
-var file_services_stratum_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_services_stratum_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_services_stratum_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_services_stratum_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_services_stratum_proto_goTypes = []any{
-	(RecordChangeType)(0),                      // 0: stratum.RecordChangeType
-	(TypeID)(0),                                // 1: stratum.TypeID
-	(StratumConfigStateServiceRpcId)(0),        // 2: stratum.StratumConfigStateServiceRpcId
-	(RecordMapRpcId)(0),                        // 3: stratum.RecordMapRpcId
-	(*Config)(nil),                             // 4: stratum.Config
-	(*StratumState)(nil),                       // 5: stratum.StratumState
-	(*StratumServiceHealth)(nil),               // 6: stratum.StratumServiceHealth
-	(*StratumConfigState)(nil),                 // 7: stratum.StratumConfigState
-	(*MapEmpty)(nil),                           // 8: stratum.MapEmpty
-	(*QueryHandle)(nil),                        // 9: stratum.QueryHandle
-	(*QueryStats)(nil),                         // 10: stratum.QueryStats
-	(*RecordCount)(nil),                        // 11: stratum.RecordCount
-	(*OpenAgentEventQueryRequest)(nil),         // 12: stratum.OpenAgentEventQueryRequest
-	(*SampleAgentEventRequest)(nil),            // 13: stratum.SampleAgentEventRequest
-	(*SampleAgentEventResponse)(nil),           // 14: stratum.SampleAgentEventResponse
-	(*PullAgentEventRequest)(nil),              // 15: stratum.PullAgentEventRequest
-	(*PullAgentEventResponse)(nil),             // 16: stratum.PullAgentEventResponse
-	(*healthreport.ServiceInstanceHealth)(nil), // 17: healthreport.ServiceInstanceHealth
-	(*agentsensor.AgentEvent)(nil),             // 18: agentsensor.AgentEvent
-	(*trace.TraceRequest)(nil),                 // 19: trace.TraceRequest
+	(TypeID)(0),                                // 0: stratum.TypeID
+	(StratumConfigStateServiceRpcId)(0),        // 1: stratum.StratumConfigStateServiceRpcId
+	(*Config)(nil),                             // 2: stratum.Config
+	(*StratumState)(nil),                       // 3: stratum.StratumState
+	(*StratumServiceHealth)(nil),               // 4: stratum.StratumServiceHealth
+	(*StratumConfigState)(nil),                 // 5: stratum.StratumConfigState
+	(*MapEmpty)(nil),                           // 6: stratum.MapEmpty
+	(*healthreport.ServiceInstanceHealth)(nil), // 7: healthreport.ServiceInstanceHealth
+	(*trace.TraceRequest)(nil),                 // 8: trace.TraceRequest
 }
 var file_services_stratum_proto_depIdxs = []int32{
-	17, // 0: stratum.StratumServiceHealth.base:type_name -> healthreport.ServiceInstanceHealth
-	4,  // 1: stratum.StratumConfigState.config:type_name -> stratum.Config
-	18, // 2: stratum.SampleAgentEventResponse.items:type_name -> agentsensor.AgentEvent
-	18, // 3: stratum.PullAgentEventResponse.items:type_name -> agentsensor.AgentEvent
-	19, // 4: stratum.StratumConfigStateService.GetConfig:input_type -> trace.TraceRequest
-	4,  // 5: stratum.StratumConfigStateService.SetConfig:input_type -> stratum.Config
-	19, // 6: stratum.StratumConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	12, // 7: stratum.RecordMap.OpenAgentEventQuery:input_type -> stratum.OpenAgentEventQueryRequest
-	9,  // 8: stratum.RecordMap.CountAgentEvent:input_type -> stratum.QueryHandle
-	13, // 9: stratum.RecordMap.SampleAgentEvent:input_type -> stratum.SampleAgentEventRequest
-	15, // 10: stratum.RecordMap.PullAgentEvent:input_type -> stratum.PullAgentEventRequest
-	9,  // 11: stratum.RecordMap.CloseAgentEvent:input_type -> stratum.QueryHandle
-	4,  // 12: stratum.StratumConfigStateService.GetConfig:output_type -> stratum.Config
-	4,  // 13: stratum.StratumConfigStateService.SetConfig:output_type -> stratum.Config
-	4,  // 14: stratum.StratumConfigStateService.WatchConfig:output_type -> stratum.Config
-	9,  // 15: stratum.RecordMap.OpenAgentEventQuery:output_type -> stratum.QueryHandle
-	11, // 16: stratum.RecordMap.CountAgentEvent:output_type -> stratum.RecordCount
-	14, // 17: stratum.RecordMap.SampleAgentEvent:output_type -> stratum.SampleAgentEventResponse
-	16, // 18: stratum.RecordMap.PullAgentEvent:output_type -> stratum.PullAgentEventResponse
-	10, // 19: stratum.RecordMap.CloseAgentEvent:output_type -> stratum.QueryStats
-	12, // [12:20] is the sub-list for method output_type
-	4,  // [4:12] is the sub-list for method input_type
-	4,  // [4:4] is the sub-list for extension type_name
-	4,  // [4:4] is the sub-list for extension extendee
-	0,  // [0:4] is the sub-list for field type_name
+	7, // 0: stratum.StratumServiceHealth.base:type_name -> healthreport.ServiceInstanceHealth
+	2, // 1: stratum.StratumConfigState.config:type_name -> stratum.Config
+	8, // 2: stratum.StratumConfigStateService.GetConfig:input_type -> trace.TraceRequest
+	2, // 3: stratum.StratumConfigStateService.SetConfig:input_type -> stratum.Config
+	8, // 4: stratum.StratumConfigStateService.WatchConfig:input_type -> trace.TraceRequest
+	2, // 5: stratum.StratumConfigStateService.GetConfig:output_type -> stratum.Config
+	2, // 6: stratum.StratumConfigStateService.SetConfig:output_type -> stratum.Config
+	2, // 7: stratum.StratumConfigStateService.WatchConfig:output_type -> stratum.Config
+	5, // [5:8] is the sub-list for method output_type
+	2, // [2:5] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_services_stratum_proto_init() }
@@ -1430,10 +654,10 @@ func file_services_stratum_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_services_stratum_proto_rawDesc), len(file_services_stratum_proto_rawDesc)),
-			NumEnums:      4,
-			NumMessages:   13,
+			NumEnums:      2,
+			NumMessages:   5,
 			NumExtensions: 0,
-			NumServices:   3,
+			NumServices:   2,
 		},
 		GoTypes:           file_services_stratum_proto_goTypes,
 		DependencyIndexes: file_services_stratum_proto_depIdxs,

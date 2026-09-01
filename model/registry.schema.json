@@ -27,6 +27,12 @@
         "is_config": {
           "type": "boolean"
         },
+        "label": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
         "persistence": {
           "type": "boolean"
         },
@@ -44,9 +50,6 @@
           "type": "string"
         },
         "state_root": {
-          "type": "string"
-        },
-        "tag": {
           "type": "string"
         },
         "type_fqn": {
@@ -173,6 +176,12 @@
         "package": {
           "type": "string"
         },
+        "routing_alias_packages": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
         "rpc": {
           "type": "string"
         },
@@ -245,7 +254,7 @@
           },
           "type": "array"
         },
-        "broker_tag": {
+        "broker_label": {
           "type": "string"
         },
         "event_type_fqn": {
@@ -287,7 +296,7 @@
           },
           "type": "array"
         },
-        "broker_tag": {
+        "broker_label": {
           "type": "string"
         },
         "event_type_fqn": {
@@ -412,23 +421,13 @@
           },
           "type": "array"
         },
-        "graph_edge": {
+        "filter_mode": {
+          "enum": [
+            "QUERY_OP_UNSPECIFIED",
+            "QUERY_OP_EQ",
+            "QUERY_OP_RANGE"
+          ],
           "type": "string"
-        },
-        "graph_field_index": {
-          "type": "string"
-        },
-        "graph_index": {
-          "type": "string"
-        },
-        "graph_mode": {
-          "type": "string"
-        },
-        "graph_reverse": {
-          "type": "boolean"
-        },
-        "graph_upsert": {
-          "type": "boolean"
         },
         "map_key_type": {
           "type": "string"
@@ -499,48 +498,6 @@
             "TYPE_KIND_MESSAGE",
             "TYPE_KIND_MAP"
           ],
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "GraphProjectionFieldInfo": {
-      "description": "tacplus.GraphProjectionFieldInfo",
-      "properties": {
-        "as": {
-          "type": "string"
-        },
-        "edge": {
-          "type": "string"
-        },
-        "include": {
-          "type": "boolean"
-        },
-        "index": {
-          "type": "string"
-        },
-        "source": {
-          "type": "string"
-        },
-        "upsert": {
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "GraphProjectionInfo": {
-      "description": "tacplus.GraphProjectionInfo",
-      "properties": {
-        "field": {
-          "items": {
-            "$ref": "#/$defs/GraphProjectionFieldInfo"
-          },
-          "type": "array"
-        },
-        "name": {
-          "type": "string"
-        },
-        "xid": {
           "type": "string"
         }
       },
@@ -785,6 +742,15 @@
         "input_type": {
           "type": "string"
         },
+        "mcp": {
+          "type": "boolean"
+        },
+        "mcp_session_carrier": {
+          "type": "boolean"
+        },
+        "mcp_tool_name": {
+          "type": "string"
+        },
         "method_pattern": {
           "type": "string"
         },
@@ -924,13 +890,23 @@
         "description": {
           "type": "string"
         },
-        "event_tag": {
+        "event_label": {
           "type": "string"
         },
         "grpc_service": {
           "type": "string"
         },
-        "host_tag": {
+        "host_label": {
+          "type": "string"
+        },
+        "mcp": {
+          "type": "boolean"
+        },
+        "mcp_exposure": {
+          "enum": [
+            "RPC_EXPOSURE_INTERNAL",
+            "RPC_EXPOSURE_EXTERNAL"
+          ],
           "type": "string"
         },
         "name": {
@@ -982,8 +958,8 @@
       },
       "type": "object"
     },
-    "TimeseriesProjectionFieldInfo": {
-      "description": "tacplus.TimeseriesProjectionFieldInfo",
+    "TransformationFieldInfo": {
+      "description": "tacplus.TransformationFieldInfo",
       "properties": {
         "as": {
           "type": "string"
@@ -1008,23 +984,20 @@
       },
       "type": "object"
     },
-    "TimeseriesProjectionInfo": {
-      "description": "tacplus.TimeseriesProjectionInfo",
+    "TransformationInfo": {
+      "description": "tacplus.TransformationInfo",
       "properties": {
         "dedup": {
           "$ref": "#/$defs/DedupPolicyInfo"
         },
         "field": {
           "items": {
-            "$ref": "#/$defs/TimeseriesProjectionFieldInfo"
+            "$ref": "#/$defs/TransformationFieldInfo"
           },
           "type": "array"
         },
         "name": {
           "type": "string"
-        },
-        "retention": {
-          "$ref": "#/$defs/RetentionPolicyInfo"
         },
         "when": {
           "type": "string"
@@ -1057,21 +1030,6 @@
         "fqn": {
           "type": "string"
         },
-        "graph_projections": {
-          "items": {
-            "$ref": "#/$defs/GraphProjectionInfo"
-          },
-          "type": "array"
-        },
-        "graph_type": {
-          "type": "string"
-        },
-        "graph_type_source": {
-          "type": "string"
-        },
-        "graph_xid_field": {
-          "type": "string"
-        },
         "name": {
           "type": "string"
         },
@@ -1084,35 +1042,38 @@
         "record_owner": {
           "type": "string"
         },
+        "record_retention": {
+          "$ref": "#/$defs/RetentionPolicyInfo"
+        },
         "schema_json": {
           "type": "string"
         },
         "service_store": {
           "type": "boolean"
         },
-        "service_store_name": {
-          "type": "string"
+        "service_store_label": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
         },
-        "service_store_tag": {
+        "service_store_name": {
           "type": "string"
         },
         "timeseries_dedup": {
           "$ref": "#/$defs/DedupPolicyInfo"
-        },
-        "timeseries_projections": {
-          "items": {
-            "$ref": "#/$defs/TimeseriesProjectionInfo"
-          },
-          "type": "array"
-        },
-        "timeseries_retention": {
-          "$ref": "#/$defs/RetentionPolicyInfo"
         },
         "timeseries_table_name": {
           "type": "string"
         },
         "timeseries_table_source": {
           "type": "string"
+        },
+        "transformations": {
+          "items": {
+            "$ref": "#/$defs/TransformationInfo"
+          },
+          "type": "array"
         }
       },
       "type": "object"

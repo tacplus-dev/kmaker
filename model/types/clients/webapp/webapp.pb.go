@@ -40,13 +40,12 @@ var File_clients_webapp_proto protoreflect.FileDescriptor
 
 const file_clients_webapp_proto_rawDesc = "" +
 	"\n" +
-	"\x14clients/webapp.proto\x12\x06webapp\x1a\x0esys/spec.protoB\xd4\x01ڵ\x18\b\n" +
+	"\x14clients/webapp.proto\x12\x06webapp\x1a\x0esys/spec.protoB\xc3\x01ڵ\x18\b\n" +
 	"\x06webapp\xa2\xb6\x18\f\n" +
 	"\n" +
 	"oauth.Auth\xa2\xb6\x18\x0e\n" +
 	"\fgateway.Mint\xa2\xb6\x18\x14\n" +
-	"\x12sentinel.Dashboard\xa2\xb6\x18\r\n" +
-	"\vargus.Argus\xa2\xb6\x18\v\n" +
+	"\x12sentinel.Dashboard\xa2\xb6\x18\v\n" +
 	"\techo.Echo\xa2\xb6\x18\r\n" +
 	"\vtasks.TasksZ[gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/clients/webappb\x06proto3"
 

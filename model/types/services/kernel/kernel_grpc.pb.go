@@ -41,14 +41,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Mint_MintServiceToken_FullMethodName  = "/kernel.Mint/MintServiceToken"
-	Mint_MintUserToken_FullMethodName     = "/kernel.Mint/MintUserToken"
-	Mint_MintToken_FullMethodName         = "/kernel.Mint/MintToken"
-	Mint_MintExternalToken_FullMethodName = "/kernel.Mint/MintExternalToken"
-	Mint_MintClientToken_FullMethodName   = "/kernel.Mint/MintClientToken"
-	Mint_MintX509Cert_FullMethodName      = "/kernel.Mint/MintX509Cert"
-	Mint_MintWorkload_FullMethodName      = "/kernel.Mint/MintWorkload"
-	Mint_RevokeWorkload_FullMethodName    = "/kernel.Mint/RevokeWorkload"
+	Mint_MintServiceToken_FullMethodName   = "/kernel.Mint/MintServiceToken"
+	Mint_MintUserToken_FullMethodName      = "/kernel.Mint/MintUserToken"
+	Mint_MintDelegatedToken_FullMethodName = "/kernel.Mint/MintDelegatedToken"
+	Mint_MintToken_FullMethodName          = "/kernel.Mint/MintToken"
+	Mint_MintExternalToken_FullMethodName  = "/kernel.Mint/MintExternalToken"
+	Mint_MintClientToken_FullMethodName    = "/kernel.Mint/MintClientToken"
+	Mint_MintX509Cert_FullMethodName       = "/kernel.Mint/MintX509Cert"
+	Mint_MintWorkload_FullMethodName       = "/kernel.Mint/MintWorkload"
+	Mint_RevokeWorkload_FullMethodName     = "/kernel.Mint/RevokeWorkload"
+	Mint_RevokeGrant_FullMethodName        = "/kernel.Mint/RevokeGrant"
 )
 
 // MintClient is the client API for Mint service.
@@ -83,6 +85,20 @@ type MintClient interface {
 	// identity (the broker attests the claims; kernel trusts azp). Restricted to
 	// auth brokers. Signs Ed25519.
 	MintUserToken(ctx context.Context, in *tokenrequest.MintUserTokenRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error)
+	// MintDelegatedToken — standing delegation (Grant) mint. A delegate presents
+	// its OWN kernel-issued S2S bearer token (verified identity) plus a Grant id
+	// it holds. Kernel looks up the Grant, confirms the caller's verified identity
+	// equals grant.delegate_name, replays grant.claims into OPA fresh via the same
+	// EvalEntitlement path MintUserToken uses, intersects the result with
+	// grant.authorized_scope, and mints a short-lived access-only token: sub =
+	// grant.subject, act = grant.delegate_name, azp = kernel (AZP_KERNEL — kernel
+	// mints this directly, not on a broker's attestation). No refresh/offline
+	// token is issued; the delegate re-mints per use from the same Grant id.
+	// auth_services: ["*"] because any registered delegate may hold a grant (not
+	// just oauth/saml); the identity check that matters is grant.delegate_name,
+	// done inside the handler, exactly as doMintUserToken checks the caller
+	// against a Delegate today.
+	MintDelegatedToken(ctx context.Context, in *tokenrequest.MintDelegatedTokenRequest, opts ...grpc.CallOption) (*tokenrequest.MintDelegatedTokenResponse, error)
 	// MintToken — exchange (RT→AT→ST). The caller presents a kernel-signed token;
 	// kernel VERIFIES it and mints the next tier per the 3-tier rules (a refresh
 	// can't directly mint a service token, etc.). service_auds mints AT + N ST in
@@ -131,6 +147,20 @@ type MintClient interface {
 	// ancestor in the SPIFFE path) can revoke. The revocation is recorded in
 	// WorkloadState and checked on refresh.
 	RevokeWorkload(ctx context.Context, in *WorkloadRevokeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// RevokeGrant revokes a standing delegation (Grant) at runtime. Only a party
+	// to the grant may revoke it: the user it acts for (caller sub ==
+	// grant.subject) or the delegate holding it (caller identity ==
+	// grant.delegate_name) — both are withdrawing authority they already hold,
+	// so neither needs a broader authorization model, exactly as RevokeWorkload
+	// restricts revocation to the identity's own ancestor. The grant record is
+	// marked (revoked_at_ms), not deleted, and the write is persisted to the
+	// kernel disk snapshot so it survives a restart. Every mint from the grant
+	// and every exchange of a token already minted from it is denied from that
+	// moment on.
+	// auth_services: ["*"] for the same reason MintDelegatedToken uses it — any
+	// registered delegate may hold a grant; the identity check that matters is
+	// done inside the handler against the grant record itself.
+	RevokeGrant(ctx context.Context, in *GrantRevokeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type mintClient struct {
@@ -155,6 +185,16 @@ func (c *mintClient) MintUserToken(ctx context.Context, in *tokenrequest.MintUse
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(tokenrequest.TokenMintResponse)
 	err := c.cc.Invoke(ctx, Mint_MintUserToken_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mintClient) MintDelegatedToken(ctx context.Context, in *tokenrequest.MintDelegatedTokenRequest, opts ...grpc.CallOption) (*tokenrequest.MintDelegatedTokenResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(tokenrequest.MintDelegatedTokenResponse)
+	err := c.cc.Invoke(ctx, Mint_MintDelegatedToken_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -221,6 +261,16 @@ func (c *mintClient) RevokeWorkload(ctx context.Context, in *WorkloadRevokeReque
 	return out, nil
 }
 
+func (c *mintClient) RevokeGrant(ctx context.Context, in *GrantRevokeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Mint_RevokeGrant_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MintServer is the server API for Mint service.
 // All implementations must embed UnimplementedMintServer
 // for forward compatibility.
@@ -253,6 +303,20 @@ type MintServer interface {
 	// identity (the broker attests the claims; kernel trusts azp). Restricted to
 	// auth brokers. Signs Ed25519.
 	MintUserToken(context.Context, *tokenrequest.MintUserTokenRequest) (*tokenrequest.TokenMintResponse, error)
+	// MintDelegatedToken — standing delegation (Grant) mint. A delegate presents
+	// its OWN kernel-issued S2S bearer token (verified identity) plus a Grant id
+	// it holds. Kernel looks up the Grant, confirms the caller's verified identity
+	// equals grant.delegate_name, replays grant.claims into OPA fresh via the same
+	// EvalEntitlement path MintUserToken uses, intersects the result with
+	// grant.authorized_scope, and mints a short-lived access-only token: sub =
+	// grant.subject, act = grant.delegate_name, azp = kernel (AZP_KERNEL — kernel
+	// mints this directly, not on a broker's attestation). No refresh/offline
+	// token is issued; the delegate re-mints per use from the same Grant id.
+	// auth_services: ["*"] because any registered delegate may hold a grant (not
+	// just oauth/saml); the identity check that matters is grant.delegate_name,
+	// done inside the handler, exactly as doMintUserToken checks the caller
+	// against a Delegate today.
+	MintDelegatedToken(context.Context, *tokenrequest.MintDelegatedTokenRequest) (*tokenrequest.MintDelegatedTokenResponse, error)
 	// MintToken — exchange (RT→AT→ST). The caller presents a kernel-signed token;
 	// kernel VERIFIES it and mints the next tier per the 3-tier rules (a refresh
 	// can't directly mint a service token, etc.). service_auds mints AT + N ST in
@@ -301,6 +365,20 @@ type MintServer interface {
 	// ancestor in the SPIFFE path) can revoke. The revocation is recorded in
 	// WorkloadState and checked on refresh.
 	RevokeWorkload(context.Context, *WorkloadRevokeRequest) (*emptypb.Empty, error)
+	// RevokeGrant revokes a standing delegation (Grant) at runtime. Only a party
+	// to the grant may revoke it: the user it acts for (caller sub ==
+	// grant.subject) or the delegate holding it (caller identity ==
+	// grant.delegate_name) — both are withdrawing authority they already hold,
+	// so neither needs a broader authorization model, exactly as RevokeWorkload
+	// restricts revocation to the identity's own ancestor. The grant record is
+	// marked (revoked_at_ms), not deleted, and the write is persisted to the
+	// kernel disk snapshot so it survives a restart. Every mint from the grant
+	// and every exchange of a token already minted from it is denied from that
+	// moment on.
+	// auth_services: ["*"] for the same reason MintDelegatedToken uses it — any
+	// registered delegate may hold a grant; the identity check that matters is
+	// done inside the handler against the grant record itself.
+	RevokeGrant(context.Context, *GrantRevokeRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedMintServer()
 }
 
@@ -316,6 +394,9 @@ func (UnimplementedMintServer) MintServiceToken(context.Context, *tokenrequest.M
 }
 func (UnimplementedMintServer) MintUserToken(context.Context, *tokenrequest.MintUserTokenRequest) (*tokenrequest.TokenMintResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method MintUserToken not implemented")
+}
+func (UnimplementedMintServer) MintDelegatedToken(context.Context, *tokenrequest.MintDelegatedTokenRequest) (*tokenrequest.MintDelegatedTokenResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MintDelegatedToken not implemented")
 }
 func (UnimplementedMintServer) MintToken(context.Context, *tokenrequest.TokenMintRequest) (*tokenrequest.TokenMintResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method MintToken not implemented")
@@ -334,6 +415,9 @@ func (UnimplementedMintServer) MintWorkload(context.Context, *tokenrequest.Workl
 }
 func (UnimplementedMintServer) RevokeWorkload(context.Context, *WorkloadRevokeRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method RevokeWorkload not implemented")
+}
+func (UnimplementedMintServer) RevokeGrant(context.Context, *GrantRevokeRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method RevokeGrant not implemented")
 }
 func (UnimplementedMintServer) mustEmbedUnimplementedMintServer() {}
 func (UnimplementedMintServer) testEmbeddedByValue()              {}
@@ -388,6 +472,24 @@ func _Mint_MintUserToken_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MintServer).MintUserToken(ctx, req.(*tokenrequest.MintUserTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Mint_MintDelegatedToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(tokenrequest.MintDelegatedTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MintServer).MintDelegatedToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Mint_MintDelegatedToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MintServer).MintDelegatedToken(ctx, req.(*tokenrequest.MintDelegatedTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -500,6 +602,24 @@ func _Mint_RevokeWorkload_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Mint_RevokeGrant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GrantRevokeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MintServer).RevokeGrant(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Mint_RevokeGrant_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MintServer).RevokeGrant(ctx, req.(*GrantRevokeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Mint_ServiceDesc is the grpc.ServiceDesc for Mint service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -514,6 +634,10 @@ var Mint_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "MintUserToken",
 			Handler:    _Mint_MintUserToken_Handler,
+		},
+		{
+			MethodName: "MintDelegatedToken",
+			Handler:    _Mint_MintDelegatedToken_Handler,
 		},
 		{
 			MethodName: "MintToken",
@@ -538,6 +662,218 @@ var Mint_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RevokeWorkload",
 			Handler:    _Mint_RevokeWorkload_Handler,
+		},
+		{
+			MethodName: "RevokeGrant",
+			Handler:    _Mint_RevokeGrant_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "services/kernel.proto",
+}
+
+const (
+	FencedLock_Acquire_FullMethodName = "/kernel.FencedLock/Acquire"
+	FencedLock_Release_FullMethodName = "/kernel.FencedLock/Release"
+)
+
+// FencedLockClient is the client API for FencedLock service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// ============================================================================
+// FencedLock — the platform's only distributed mutual-exclusion primitive
+// ============================================================================
+//
+// Kernel is the one service that embeds Apache Ratis; every other service that
+// needs a lock calls this s2s surface rather than running its own Raft group
+// (decisions/kernel-convergent-only-plus-fenced-lock-2026-08-31.md). This is
+// deliberately NOT a state boundary: kernel state is CONVERGENT-only, and
+// mutual exclusion is a different concern from how a map replicates — the
+// conflation of the two is what produced the unreal CONSISTENCY_ATOMIC mode
+// that was deleted before this was written.
+//
+// A fencing token is the Raft log index of the granting Acquire. It is
+// therefore strictly monotonic across the whole lock service, never reused,
+// and never decreases across leader changes. A resource owner stores the
+// highest token it has seen and rejects any write carrying a lower one: that,
+// not the lock itself, is what makes a paused/partitioned stale holder safe.
+// A lock with no fencing token only narrows the race window; it does not close
+// it.
+type FencedLockClient interface {
+	// Acquire attempts to take the lock named by key on behalf of holder_id.
+	// Non-blocking: a key already held by a DIFFERENT holder returns
+	// granted = false rather than parking the call. Re-acquiring a key the same
+	// holder_id already holds is idempotent and returns the token it already
+	// has, so a retried Acquire after a lost response does not deadlock the
+	// holder against itself.
+	// auth_services: ["*"] — any service identity may take a lock; the key
+	// namespace is the caller's to partition (callers key by their own identity
+	// plus a discriminator), exactly as any service may mint its own token.
+	Acquire(ctx context.Context, in *FencedLockAcquireRequest, opts ...grpc.CallOption) (*FencedLockAcquireResponse, error)
+	// Release drops the lock named by key. The caller must present the
+	// fencing_token it was granted; a token that is not the current one releases
+	// nothing and returns ok = false. That is the stale-holder case — a holder
+	// that lost the lock (or never had it) must not be able to release the
+	// holder that has it now.
+	Release(ctx context.Context, in *FencedLockReleaseRequest, opts ...grpc.CallOption) (*FencedLockReleaseResponse, error)
+}
+
+type fencedLockClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewFencedLockClient(cc grpc.ClientConnInterface) FencedLockClient {
+	return &fencedLockClient{cc}
+}
+
+func (c *fencedLockClient) Acquire(ctx context.Context, in *FencedLockAcquireRequest, opts ...grpc.CallOption) (*FencedLockAcquireResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FencedLockAcquireResponse)
+	err := c.cc.Invoke(ctx, FencedLock_Acquire_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fencedLockClient) Release(ctx context.Context, in *FencedLockReleaseRequest, opts ...grpc.CallOption) (*FencedLockReleaseResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FencedLockReleaseResponse)
+	err := c.cc.Invoke(ctx, FencedLock_Release_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// FencedLockServer is the server API for FencedLock service.
+// All implementations must embed UnimplementedFencedLockServer
+// for forward compatibility.
+//
+// ============================================================================
+// FencedLock — the platform's only distributed mutual-exclusion primitive
+// ============================================================================
+//
+// Kernel is the one service that embeds Apache Ratis; every other service that
+// needs a lock calls this s2s surface rather than running its own Raft group
+// (decisions/kernel-convergent-only-plus-fenced-lock-2026-08-31.md). This is
+// deliberately NOT a state boundary: kernel state is CONVERGENT-only, and
+// mutual exclusion is a different concern from how a map replicates — the
+// conflation of the two is what produced the unreal CONSISTENCY_ATOMIC mode
+// that was deleted before this was written.
+//
+// A fencing token is the Raft log index of the granting Acquire. It is
+// therefore strictly monotonic across the whole lock service, never reused,
+// and never decreases across leader changes. A resource owner stores the
+// highest token it has seen and rejects any write carrying a lower one: that,
+// not the lock itself, is what makes a paused/partitioned stale holder safe.
+// A lock with no fencing token only narrows the race window; it does not close
+// it.
+type FencedLockServer interface {
+	// Acquire attempts to take the lock named by key on behalf of holder_id.
+	// Non-blocking: a key already held by a DIFFERENT holder returns
+	// granted = false rather than parking the call. Re-acquiring a key the same
+	// holder_id already holds is idempotent and returns the token it already
+	// has, so a retried Acquire after a lost response does not deadlock the
+	// holder against itself.
+	// auth_services: ["*"] — any service identity may take a lock; the key
+	// namespace is the caller's to partition (callers key by their own identity
+	// plus a discriminator), exactly as any service may mint its own token.
+	Acquire(context.Context, *FencedLockAcquireRequest) (*FencedLockAcquireResponse, error)
+	// Release drops the lock named by key. The caller must present the
+	// fencing_token it was granted; a token that is not the current one releases
+	// nothing and returns ok = false. That is the stale-holder case — a holder
+	// that lost the lock (or never had it) must not be able to release the
+	// holder that has it now.
+	Release(context.Context, *FencedLockReleaseRequest) (*FencedLockReleaseResponse, error)
+	mustEmbedUnimplementedFencedLockServer()
+}
+
+// UnimplementedFencedLockServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedFencedLockServer struct{}
+
+func (UnimplementedFencedLockServer) Acquire(context.Context, *FencedLockAcquireRequest) (*FencedLockAcquireResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Acquire not implemented")
+}
+func (UnimplementedFencedLockServer) Release(context.Context, *FencedLockReleaseRequest) (*FencedLockReleaseResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Release not implemented")
+}
+func (UnimplementedFencedLockServer) mustEmbedUnimplementedFencedLockServer() {}
+func (UnimplementedFencedLockServer) testEmbeddedByValue()                    {}
+
+// UnsafeFencedLockServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to FencedLockServer will
+// result in compilation errors.
+type UnsafeFencedLockServer interface {
+	mustEmbedUnimplementedFencedLockServer()
+}
+
+func RegisterFencedLockServer(s grpc.ServiceRegistrar, srv FencedLockServer) {
+	// If the following call panics, it indicates UnimplementedFencedLockServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&FencedLock_ServiceDesc, srv)
+}
+
+func _FencedLock_Acquire_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FencedLockAcquireRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FencedLockServer).Acquire(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FencedLock_Acquire_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FencedLockServer).Acquire(ctx, req.(*FencedLockAcquireRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FencedLock_Release_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FencedLockReleaseRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FencedLockServer).Release(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FencedLock_Release_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FencedLockServer).Release(ctx, req.(*FencedLockReleaseRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// FencedLock_ServiceDesc is the grpc.ServiceDesc for FencedLock service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var FencedLock_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kernel.FencedLock",
+	HandlerType: (*FencedLockServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Acquire",
+			Handler:    _FencedLock_Acquire_Handler,
+		},
+		{
+			MethodName: "Release",
+			Handler:    _FencedLock_Release_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

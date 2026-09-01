@@ -40,9 +40,10 @@ import (
 // TokenEntitlementsJSON represents TokenEntitlements in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type tokenentitlementsJSON struct {
-	Grants     []string `json:"grants,omitempty"`
-	DataGrants []string `json:"data_grants,omitempty"`
-	Azp        []string `json:"azp,omitempty"`
+	Grants         []string `json:"grants,omitempty"`
+	DataGrants     []string `json:"data_grants,omitempty"`
+	PrincipalScope string   `json:"principal_scope,omitempty"`
+	Azp            []string `json:"azp,omitempty"`
 }
 
 // TokenEntitlementsToJSON converts TokenEntitlements to JSON bytes.
@@ -53,9 +54,10 @@ func TokenEntitlementsToJSON(v *TokenEntitlements) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := tokenentitlementsJSON{
-		Grants:     v.Grants,
-		DataGrants: v.DataGrants,
-		Azp:        v.Azp,
+		Grants:         v.Grants,
+		DataGrants:     v.DataGrants,
+		PrincipalScope: v.PrincipalScope,
+		Azp:            v.Azp,
 	}
 	return json.Marshal(helper)
 }
@@ -68,9 +70,10 @@ func TokenEntitlementsToJSONPretty(v *TokenEntitlements) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := tokenentitlementsJSON{
-		Grants:     v.Grants,
-		DataGrants: v.DataGrants,
-		Azp:        v.Azp,
+		Grants:         v.Grants,
+		DataGrants:     v.DataGrants,
+		PrincipalScope: v.PrincipalScope,
+		Azp:            v.Azp,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -137,6 +140,7 @@ func TokenEntitlementsFromJSON(data []byte) (*TokenEntitlements, error) {
 	result := &TokenEntitlements{}
 	result.Grants = raw.Grants
 	result.DataGrants = raw.DataGrants
+	result.PrincipalScope = raw.PrincipalScope
 	result.Azp = raw.Azp
 	return result, nil
 }
@@ -225,6 +229,7 @@ func TokenEntitlementsToEnvVar(v *TokenEntitlements) map[string]string {
 	if len(v.DataGrants) > 0 {
 		result["PROTO_GENERATED_ENTITLEMENTS_TOKEN_ENTITLEMENTS_DATA_GRANTS"] = strings.Join(v.DataGrants, ",")
 	}
+	result["PROTO_GENERATED_ENTITLEMENTS_TOKEN_ENTITLEMENTS_PRINCIPAL_SCOPE"] = v.PrincipalScope
 	if len(v.Azp) > 0 {
 		result["PROTO_GENERATED_ENTITLEMENTS_TOKEN_ENTITLEMENTS_AZP"] = strings.Join(v.Azp, ",")
 	}
@@ -239,6 +244,9 @@ func TokenEntitlementsFromEnvVar(env map[string]string) (*TokenEntitlements, err
 	}
 	if val, ok := env["PROTO_GENERATED_ENTITLEMENTS_TOKEN_ENTITLEMENTS_DATA_GRANTS"]; ok && val != "" {
 		result.DataGrants = strings.Split(val, ",")
+	}
+	if val, ok := env["PROTO_GENERATED_ENTITLEMENTS_TOKEN_ENTITLEMENTS_PRINCIPAL_SCOPE"]; ok && val != "" {
+		result.PrincipalScope = val
 	}
 	if val, ok := env["PROTO_GENERATED_ENTITLEMENTS_TOKEN_ENTITLEMENTS_AZP"]; ok && val != "" {
 		result.Azp = strings.Split(val, ",")
@@ -301,6 +309,11 @@ func ValidateTokenEntitlementsWithDepth(m *TokenEntitlements, depth int) error {
 		}
 	}
 
+	// Validate PrincipalScope (default max size: 32768 bytes)
+	if len(m.PrincipalScope) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PrincipalScope exceeds max size of 32768 bytes, got: %d", len(m.PrincipalScope))
+	}
+
 	return nil
 }
 
@@ -308,9 +321,10 @@ func ValidateTokenEntitlementsWithDepth(m *TokenEntitlements, depth int) error {
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizeTokenentitlementsGrants     int = 1024
-	MaxSizeTokenentitlementsDataGrants int = 1024
-	MaxSizeTokenentitlementsAzp        int = 1024
+	MaxSizeTokenentitlementsGrants         int = 1024
+	MaxSizeTokenentitlementsDataGrants     int = 1024
+	MaxSizeTokenentitlementsPrincipalScope int = 32768
+	MaxSizeTokenentitlementsAzp            int = 1024
 )
 
 // ============================================================
@@ -344,6 +358,9 @@ func MergeTokenEntitlements(dst, src *TokenEntitlements) {
 	}
 	if len(dst.DataGrants) == 0 {
 		dst.DataGrants = src.DataGrants
+	}
+	if dst.PrincipalScope == "" {
+		dst.PrincipalScope = src.PrincipalScope
 	}
 	if len(dst.Azp) == 0 {
 		dst.Azp = src.Azp

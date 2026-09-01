@@ -46,15 +46,16 @@ const (
 	ServiceName_SERVICE_NAME_GATEWAY     ServiceName = 7
 	ServiceName_SERVICE_NAME_KERNEL      ServiceName = 8
 	ServiceName_SERVICE_NAME_LETSENCRYPT ServiceName = 9
-	ServiceName_SERVICE_NAME_GRAPHDB     ServiceName = 13
 	ServiceName_SERVICE_NAME_EVENTBUS    ServiceName = 18
-	ServiceName_SERVICE_NAME_TIMEDB      ServiceName = 20
 	ServiceName_SERVICE_NAME_OAUTH       ServiceName = 21
 	ServiceName_SERVICE_NAME_OPA         ServiceName = 29
 	ServiceName_SERVICE_NAME_STRATUM     ServiceName = 34
-	ServiceName_SERVICE_NAME_ARGUS       ServiceName = 35
 	ServiceName_SERVICE_NAME_KMAKER      ServiceName = 49
 	ServiceName_SERVICE_NAME_SAMLSVC     ServiceName = 51
+	ServiceName_SERVICE_NAME_MESSAGING   ServiceName = 53
+	ServiceName_SERVICE_NAME_SCOTTYAGENT ServiceName = 54
+	ServiceName_SERVICE_NAME_MAILBOX     ServiceName = 55
+	ServiceName_SERVICE_NAME_SCOTTY      ServiceName = 70
 	ServiceName_SERVICE_NAME_ANY         ServiceName = 99 // wildcard: allow any service
 )
 
@@ -66,15 +67,16 @@ var (
 		7:  "SERVICE_NAME_GATEWAY",
 		8:  "SERVICE_NAME_KERNEL",
 		9:  "SERVICE_NAME_LETSENCRYPT",
-		13: "SERVICE_NAME_GRAPHDB",
 		18: "SERVICE_NAME_EVENTBUS",
-		20: "SERVICE_NAME_TIMEDB",
 		21: "SERVICE_NAME_OAUTH",
 		29: "SERVICE_NAME_OPA",
 		34: "SERVICE_NAME_STRATUM",
-		35: "SERVICE_NAME_ARGUS",
 		49: "SERVICE_NAME_KMAKER",
 		51: "SERVICE_NAME_SAMLSVC",
+		53: "SERVICE_NAME_MESSAGING",
+		54: "SERVICE_NAME_SCOTTYAGENT",
+		55: "SERVICE_NAME_MAILBOX",
+		70: "SERVICE_NAME_SCOTTY",
 		99: "SERVICE_NAME_ANY",
 	}
 	ServiceName_value = map[string]int32{
@@ -83,15 +85,16 @@ var (
 		"SERVICE_NAME_GATEWAY":     7,
 		"SERVICE_NAME_KERNEL":      8,
 		"SERVICE_NAME_LETSENCRYPT": 9,
-		"SERVICE_NAME_GRAPHDB":     13,
 		"SERVICE_NAME_EVENTBUS":    18,
-		"SERVICE_NAME_TIMEDB":      20,
 		"SERVICE_NAME_OAUTH":       21,
 		"SERVICE_NAME_OPA":         29,
 		"SERVICE_NAME_STRATUM":     34,
-		"SERVICE_NAME_ARGUS":       35,
 		"SERVICE_NAME_KMAKER":      49,
 		"SERVICE_NAME_SAMLSVC":     51,
+		"SERVICE_NAME_MESSAGING":   53,
+		"SERVICE_NAME_SCOTTYAGENT": 54,
+		"SERVICE_NAME_MAILBOX":     55,
+		"SERVICE_NAME_SCOTTY":      70,
 		"SERVICE_NAME_ANY":         99,
 	}
 )
@@ -449,154 +452,6 @@ func (OauthRPCs) EnumDescriptor() ([]byte, []int) {
 	return file_generated_services_proto_rawDescGZIP(), []int{5}
 }
 
-type ArgusRPCs int32
-
-const (
-	ArgusRPCs_ARGUS_RPCS_UNSPECIFIED                  ArgusRPCs = 0
-	ArgusRPCs_ARGUS_RPCS_GET_DASHBOARD                ArgusRPCs = 1
-	ArgusRPCs_ARGUS_RPCS_LIST_ACTIVE_SESSIONS         ArgusRPCs = 2
-	ArgusRPCs_ARGUS_RPCS_GET_SESSION_DETAIL           ArgusRPCs = 3
-	ArgusRPCs_ARGUS_RPCS_GET_USER_ACTIVITY            ArgusRPCs = 4
-	ArgusRPCs_ARGUS_RPCS_LIST_SESSION_SEARCH_RESULTS  ArgusRPCs = 5
-	ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_LIVE_SESSIONS      ArgusRPCs = 6
-	ArgusRPCs_ARGUS_RPCS_GET_SCRATCHPAD               ArgusRPCs = 7
-	ArgusRPCs_ARGUS_RPCS_UPDATE_SCRATCHPAD            ArgusRPCs = 8
-	ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPAD            ArgusRPCs = 9
-	ArgusRPCs_ARGUS_RPCS_LIST_SCRATCHPADS             ArgusRPCs = 10
-	ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPADS           ArgusRPCs = 11
-	ArgusRPCs_ARGUS_RPCS_GET_SUPERVISOR_CONTEXT       ArgusRPCs = 12
-	ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_DASHBOARD          ArgusRPCs = 13
-	ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SESSION_DETAIL     ArgusRPCs = 14
-	ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_ACTIVITY      ArgusRPCs = 15
-	ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SUPERVISOR_CONTEXT ArgusRPCs = 16
-	ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_LIST    ArgusRPCs = 17
-	ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_READ    ArgusRPCs = 18
-	ArgusRPCs_ARGUS_RPCS_LIST_USERS                   ArgusRPCs = 19
-	ArgusRPCs_ARGUS_RPCS_GET_USER_PROFILE             ArgusRPCs = 20
-	ArgusRPCs_ARGUS_RPCS_GET_USER_TOKEN_STATS         ArgusRPCs = 21
-	ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_PROFILE       ArgusRPCs = 22
-	ArgusRPCs_ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY    ArgusRPCs = 23
-	ArgusRPCs_ARGUS_RPCS_LIST_FILE_ACTIVITY           ArgusRPCs = 24
-	ArgusRPCs_ARGUS_RPCS_LIST_SESSION_TIMELINE        ArgusRPCs = 25
-	ArgusRPCs_ARGUS_RPCS_GET_AGENT_TREE               ArgusRPCs = 26
-	ArgusRPCs_ARGUS_RPCS_GET_SYSTEM_STATS             ArgusRPCs = 27
-	ArgusRPCs_ARGUS_RPCS_LIST_TOOL_LEADERBOARD        ArgusRPCs = 28
-	ArgusRPCs_ARGUS_RPCS_LIST_MODEL_USAGE             ArgusRPCs = 29
-	ArgusRPCs_ARGUS_RPCS_LIST_ACTIVITY_TIMESERIES     ArgusRPCs = 30
-	ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SYSTEM_STATS       ArgusRPCs = 31
-	ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_TOOL_LEADERBOARD   ArgusRPCs = 32
-	ArgusRPCs_ARGUS_RPCS_LIST_EVENT_SEARCH_RESULTS    ArgusRPCs = 33
-	ArgusRPCs_ARGUS_RPCS_LIST_FILE_PATH_MATCHES       ArgusRPCs = 34
-	ArgusRPCs_ARGUS_RPCS_ANY                          ArgusRPCs = 99 // wildcard: allow any RPC
-)
-
-// Enum value maps for ArgusRPCs.
-var (
-	ArgusRPCs_name = map[int32]string{
-		0:  "ARGUS_RPCS_UNSPECIFIED",
-		1:  "ARGUS_RPCS_GET_DASHBOARD",
-		2:  "ARGUS_RPCS_LIST_ACTIVE_SESSIONS",
-		3:  "ARGUS_RPCS_GET_SESSION_DETAIL",
-		4:  "ARGUS_RPCS_GET_USER_ACTIVITY",
-		5:  "ARGUS_RPCS_LIST_SESSION_SEARCH_RESULTS",
-		6:  "ARGUS_RPCS_SUBSCRIBE_LIVE_SESSIONS",
-		7:  "ARGUS_RPCS_GET_SCRATCHPAD",
-		8:  "ARGUS_RPCS_UPDATE_SCRATCHPAD",
-		9:  "ARGUS_RPCS_DELETE_SCRATCHPAD",
-		10: "ARGUS_RPCS_LIST_SCRATCHPADS",
-		11: "ARGUS_RPCS_DELETE_SCRATCHPADS",
-		12: "ARGUS_RPCS_GET_SUPERVISOR_CONTEXT",
-		13: "ARGUS_RPCS_SUBSCRIBE_DASHBOARD",
-		14: "ARGUS_RPCS_SUBSCRIBE_SESSION_DETAIL",
-		15: "ARGUS_RPCS_SUBSCRIBE_USER_ACTIVITY",
-		16: "ARGUS_RPCS_SUBSCRIBE_SUPERVISOR_CONTEXT",
-		17: "ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_LIST",
-		18: "ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_READ",
-		19: "ARGUS_RPCS_LIST_USERS",
-		20: "ARGUS_RPCS_GET_USER_PROFILE",
-		21: "ARGUS_RPCS_GET_USER_TOKEN_STATS",
-		22: "ARGUS_RPCS_SUBSCRIBE_USER_PROFILE",
-		23: "ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY",
-		24: "ARGUS_RPCS_LIST_FILE_ACTIVITY",
-		25: "ARGUS_RPCS_LIST_SESSION_TIMELINE",
-		26: "ARGUS_RPCS_GET_AGENT_TREE",
-		27: "ARGUS_RPCS_GET_SYSTEM_STATS",
-		28: "ARGUS_RPCS_LIST_TOOL_LEADERBOARD",
-		29: "ARGUS_RPCS_LIST_MODEL_USAGE",
-		30: "ARGUS_RPCS_LIST_ACTIVITY_TIMESERIES",
-		31: "ARGUS_RPCS_SUBSCRIBE_SYSTEM_STATS",
-		32: "ARGUS_RPCS_SUBSCRIBE_TOOL_LEADERBOARD",
-		33: "ARGUS_RPCS_LIST_EVENT_SEARCH_RESULTS",
-		34: "ARGUS_RPCS_LIST_FILE_PATH_MATCHES",
-		99: "ARGUS_RPCS_ANY",
-	}
-	ArgusRPCs_value = map[string]int32{
-		"ARGUS_RPCS_UNSPECIFIED":                  0,
-		"ARGUS_RPCS_GET_DASHBOARD":                1,
-		"ARGUS_RPCS_LIST_ACTIVE_SESSIONS":         2,
-		"ARGUS_RPCS_GET_SESSION_DETAIL":           3,
-		"ARGUS_RPCS_GET_USER_ACTIVITY":            4,
-		"ARGUS_RPCS_LIST_SESSION_SEARCH_RESULTS":  5,
-		"ARGUS_RPCS_SUBSCRIBE_LIVE_SESSIONS":      6,
-		"ARGUS_RPCS_GET_SCRATCHPAD":               7,
-		"ARGUS_RPCS_UPDATE_SCRATCHPAD":            8,
-		"ARGUS_RPCS_DELETE_SCRATCHPAD":            9,
-		"ARGUS_RPCS_LIST_SCRATCHPADS":             10,
-		"ARGUS_RPCS_DELETE_SCRATCHPADS":           11,
-		"ARGUS_RPCS_GET_SUPERVISOR_CONTEXT":       12,
-		"ARGUS_RPCS_SUBSCRIBE_DASHBOARD":          13,
-		"ARGUS_RPCS_SUBSCRIBE_SESSION_DETAIL":     14,
-		"ARGUS_RPCS_SUBSCRIBE_USER_ACTIVITY":      15,
-		"ARGUS_RPCS_SUBSCRIBE_SUPERVISOR_CONTEXT": 16,
-		"ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_LIST":    17,
-		"ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_READ":    18,
-		"ARGUS_RPCS_LIST_USERS":                   19,
-		"ARGUS_RPCS_GET_USER_PROFILE":             20,
-		"ARGUS_RPCS_GET_USER_TOKEN_STATS":         21,
-		"ARGUS_RPCS_SUBSCRIBE_USER_PROFILE":       22,
-		"ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY":    23,
-		"ARGUS_RPCS_LIST_FILE_ACTIVITY":           24,
-		"ARGUS_RPCS_LIST_SESSION_TIMELINE":        25,
-		"ARGUS_RPCS_GET_AGENT_TREE":               26,
-		"ARGUS_RPCS_GET_SYSTEM_STATS":             27,
-		"ARGUS_RPCS_LIST_TOOL_LEADERBOARD":        28,
-		"ARGUS_RPCS_LIST_MODEL_USAGE":             29,
-		"ARGUS_RPCS_LIST_ACTIVITY_TIMESERIES":     30,
-		"ARGUS_RPCS_SUBSCRIBE_SYSTEM_STATS":       31,
-		"ARGUS_RPCS_SUBSCRIBE_TOOL_LEADERBOARD":   32,
-		"ARGUS_RPCS_LIST_EVENT_SEARCH_RESULTS":    33,
-		"ARGUS_RPCS_LIST_FILE_PATH_MATCHES":       34,
-		"ARGUS_RPCS_ANY":                          99,
-	}
-)
-
-func (x ArgusRPCs) Enum() *ArgusRPCs {
-	p := new(ArgusRPCs)
-	*p = x
-	return p
-}
-
-func (x ArgusRPCs) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ArgusRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[6].Descriptor()
-}
-
-func (ArgusRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[6]
-}
-
-func (x ArgusRPCs) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use ArgusRPCs.Descriptor instead.
-func (ArgusRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{6}
-}
-
 type SamlRPCs int32
 
 const (
@@ -648,11 +503,11 @@ func (x SamlRPCs) String() string {
 }
 
 func (SamlRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[7].Descriptor()
+	return file_generated_services_proto_enumTypes[6].Descriptor()
 }
 
 func (SamlRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[7]
+	return &file_generated_services_proto_enumTypes[6]
 }
 
 func (x SamlRPCs) Number() protoreflect.EnumNumber {
@@ -661,7 +516,248 @@ func (x SamlRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SamlRPCs.Descriptor instead.
 func (SamlRPCs) EnumDescriptor() ([]byte, []int) {
+	return file_generated_services_proto_rawDescGZIP(), []int{6}
+}
+
+type MessagingRPCs int32
+
+const (
+	MessagingRPCs_MESSAGING_RPCS_UNSPECIFIED  MessagingRPCs = 0
+	MessagingRPCs_MESSAGING_RPCS_SEND_MESSAGE MessagingRPCs = 1
+	MessagingRPCs_MESSAGING_RPCS_ANY          MessagingRPCs = 99 // wildcard: allow any RPC
+)
+
+// Enum value maps for MessagingRPCs.
+var (
+	MessagingRPCs_name = map[int32]string{
+		0:  "MESSAGING_RPCS_UNSPECIFIED",
+		1:  "MESSAGING_RPCS_SEND_MESSAGE",
+		99: "MESSAGING_RPCS_ANY",
+	}
+	MessagingRPCs_value = map[string]int32{
+		"MESSAGING_RPCS_UNSPECIFIED":  0,
+		"MESSAGING_RPCS_SEND_MESSAGE": 1,
+		"MESSAGING_RPCS_ANY":          99,
+	}
+)
+
+func (x MessagingRPCs) Enum() *MessagingRPCs {
+	p := new(MessagingRPCs)
+	*p = x
+	return p
+}
+
+func (x MessagingRPCs) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (MessagingRPCs) Descriptor() protoreflect.EnumDescriptor {
+	return file_generated_services_proto_enumTypes[7].Descriptor()
+}
+
+func (MessagingRPCs) Type() protoreflect.EnumType {
+	return &file_generated_services_proto_enumTypes[7]
+}
+
+func (x MessagingRPCs) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use MessagingRPCs.Descriptor instead.
+func (MessagingRPCs) EnumDescriptor() ([]byte, []int) {
 	return file_generated_services_proto_rawDescGZIP(), []int{7}
+}
+
+type ScottyagentRPCs int32
+
+const (
+	ScottyagentRPCs_SCOTTYAGENT_RPCS_UNSPECIFIED                     ScottyagentRPCs = 0
+	ScottyagentRPCs_SCOTTYAGENT_RPCS_LIST_MY_AGENT_STATE             ScottyagentRPCs = 1
+	ScottyagentRPCs_SCOTTYAGENT_RPCS_BROKER_SCOTTY_AGENT_MCP_SESSION ScottyagentRPCs = 2
+	ScottyagentRPCs_SCOTTYAGENT_RPCS_ANY                             ScottyagentRPCs = 99 // wildcard: allow any RPC
+)
+
+// Enum value maps for ScottyagentRPCs.
+var (
+	ScottyagentRPCs_name = map[int32]string{
+		0:  "SCOTTYAGENT_RPCS_UNSPECIFIED",
+		1:  "SCOTTYAGENT_RPCS_LIST_MY_AGENT_STATE",
+		2:  "SCOTTYAGENT_RPCS_BROKER_SCOTTY_AGENT_MCP_SESSION",
+		99: "SCOTTYAGENT_RPCS_ANY",
+	}
+	ScottyagentRPCs_value = map[string]int32{
+		"SCOTTYAGENT_RPCS_UNSPECIFIED":                     0,
+		"SCOTTYAGENT_RPCS_LIST_MY_AGENT_STATE":             1,
+		"SCOTTYAGENT_RPCS_BROKER_SCOTTY_AGENT_MCP_SESSION": 2,
+		"SCOTTYAGENT_RPCS_ANY":                             99,
+	}
+)
+
+func (x ScottyagentRPCs) Enum() *ScottyagentRPCs {
+	p := new(ScottyagentRPCs)
+	*p = x
+	return p
+}
+
+func (x ScottyagentRPCs) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ScottyagentRPCs) Descriptor() protoreflect.EnumDescriptor {
+	return file_generated_services_proto_enumTypes[8].Descriptor()
+}
+
+func (ScottyagentRPCs) Type() protoreflect.EnumType {
+	return &file_generated_services_proto_enumTypes[8]
+}
+
+func (x ScottyagentRPCs) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ScottyagentRPCs.Descriptor instead.
+func (ScottyagentRPCs) EnumDescriptor() ([]byte, []int) {
+	return file_generated_services_proto_rawDescGZIP(), []int{8}
+}
+
+type MailboxRPCs int32
+
+const (
+	MailboxRPCs_MAILBOX_RPCS_UNSPECIFIED      MailboxRPCs = 0
+	MailboxRPCs_MAILBOX_RPCS_LIST_HELD_MAIL   MailboxRPCs = 1
+	MailboxRPCs_MAILBOX_RPCS_UPDATE_HELD_MAIL MailboxRPCs = 2
+	MailboxRPCs_MAILBOX_RPCS_ANY              MailboxRPCs = 99 // wildcard: allow any RPC
+)
+
+// Enum value maps for MailboxRPCs.
+var (
+	MailboxRPCs_name = map[int32]string{
+		0:  "MAILBOX_RPCS_UNSPECIFIED",
+		1:  "MAILBOX_RPCS_LIST_HELD_MAIL",
+		2:  "MAILBOX_RPCS_UPDATE_HELD_MAIL",
+		99: "MAILBOX_RPCS_ANY",
+	}
+	MailboxRPCs_value = map[string]int32{
+		"MAILBOX_RPCS_UNSPECIFIED":      0,
+		"MAILBOX_RPCS_LIST_HELD_MAIL":   1,
+		"MAILBOX_RPCS_UPDATE_HELD_MAIL": 2,
+		"MAILBOX_RPCS_ANY":              99,
+	}
+)
+
+func (x MailboxRPCs) Enum() *MailboxRPCs {
+	p := new(MailboxRPCs)
+	*p = x
+	return p
+}
+
+func (x MailboxRPCs) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (MailboxRPCs) Descriptor() protoreflect.EnumDescriptor {
+	return file_generated_services_proto_enumTypes[9].Descriptor()
+}
+
+func (MailboxRPCs) Type() protoreflect.EnumType {
+	return &file_generated_services_proto_enumTypes[9]
+}
+
+func (x MailboxRPCs) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use MailboxRPCs.Descriptor instead.
+func (MailboxRPCs) EnumDescriptor() ([]byte, []int) {
+	return file_generated_services_proto_rawDescGZIP(), []int{9}
+}
+
+type ScottyRPCs int32
+
+const (
+	ScottyRPCs_SCOTTY_RPCS_UNSPECIFIED               ScottyRPCs = 0
+	ScottyRPCs_SCOTTY_RPCS_CREATE_HUMAN              ScottyRPCs = 1
+	ScottyRPCs_SCOTTY_RPCS_GET_HUMAN                 ScottyRPCs = 2
+	ScottyRPCs_SCOTTY_RPCS_LIST_HUMANS               ScottyRPCs = 3
+	ScottyRPCs_SCOTTY_RPCS_CREATE_POLICY_VERSION     ScottyRPCs = 4
+	ScottyRPCs_SCOTTY_RPCS_LIST_POLICY_VERSIONS      ScottyRPCs = 5
+	ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET             ScottyRPCs = 6
+	ScottyRPCs_SCOTTY_RPCS_GET_TICKET                ScottyRPCs = 7
+	ScottyRPCs_SCOTTY_RPCS_LIST_TICKETS              ScottyRPCs = 8
+	ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET_ADVICE      ScottyRPCs = 9
+	ScottyRPCs_SCOTTY_RPCS_LIST_TICKET_ADVICE        ScottyRPCs = 10
+	ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET_DECISION    ScottyRPCs = 11
+	ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET_COMMENT     ScottyRPCs = 12
+	ScottyRPCs_SCOTTY_RPCS_GET_MY_TICKET_AUDIT       ScottyRPCs = 13
+	ScottyRPCs_SCOTTY_RPCS_BROKER_SCOTTY_MCP_SESSION ScottyRPCs = 14
+	ScottyRPCs_SCOTTY_RPCS_ANY                       ScottyRPCs = 99 // wildcard: allow any RPC
+)
+
+// Enum value maps for ScottyRPCs.
+var (
+	ScottyRPCs_name = map[int32]string{
+		0:  "SCOTTY_RPCS_UNSPECIFIED",
+		1:  "SCOTTY_RPCS_CREATE_HUMAN",
+		2:  "SCOTTY_RPCS_GET_HUMAN",
+		3:  "SCOTTY_RPCS_LIST_HUMANS",
+		4:  "SCOTTY_RPCS_CREATE_POLICY_VERSION",
+		5:  "SCOTTY_RPCS_LIST_POLICY_VERSIONS",
+		6:  "SCOTTY_RPCS_CREATE_TICKET",
+		7:  "SCOTTY_RPCS_GET_TICKET",
+		8:  "SCOTTY_RPCS_LIST_TICKETS",
+		9:  "SCOTTY_RPCS_CREATE_TICKET_ADVICE",
+		10: "SCOTTY_RPCS_LIST_TICKET_ADVICE",
+		11: "SCOTTY_RPCS_CREATE_TICKET_DECISION",
+		12: "SCOTTY_RPCS_CREATE_TICKET_COMMENT",
+		13: "SCOTTY_RPCS_GET_MY_TICKET_AUDIT",
+		14: "SCOTTY_RPCS_BROKER_SCOTTY_MCP_SESSION",
+		99: "SCOTTY_RPCS_ANY",
+	}
+	ScottyRPCs_value = map[string]int32{
+		"SCOTTY_RPCS_UNSPECIFIED":               0,
+		"SCOTTY_RPCS_CREATE_HUMAN":              1,
+		"SCOTTY_RPCS_GET_HUMAN":                 2,
+		"SCOTTY_RPCS_LIST_HUMANS":               3,
+		"SCOTTY_RPCS_CREATE_POLICY_VERSION":     4,
+		"SCOTTY_RPCS_LIST_POLICY_VERSIONS":      5,
+		"SCOTTY_RPCS_CREATE_TICKET":             6,
+		"SCOTTY_RPCS_GET_TICKET":                7,
+		"SCOTTY_RPCS_LIST_TICKETS":              8,
+		"SCOTTY_RPCS_CREATE_TICKET_ADVICE":      9,
+		"SCOTTY_RPCS_LIST_TICKET_ADVICE":        10,
+		"SCOTTY_RPCS_CREATE_TICKET_DECISION":    11,
+		"SCOTTY_RPCS_CREATE_TICKET_COMMENT":     12,
+		"SCOTTY_RPCS_GET_MY_TICKET_AUDIT":       13,
+		"SCOTTY_RPCS_BROKER_SCOTTY_MCP_SESSION": 14,
+		"SCOTTY_RPCS_ANY":                       99,
+	}
+)
+
+func (x ScottyRPCs) Enum() *ScottyRPCs {
+	p := new(ScottyRPCs)
+	*p = x
+	return p
+}
+
+func (x ScottyRPCs) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ScottyRPCs) Descriptor() protoreflect.EnumDescriptor {
+	return file_generated_services_proto_enumTypes[10].Descriptor()
+}
+
+func (ScottyRPCs) Type() protoreflect.EnumType {
+	return &file_generated_services_proto_enumTypes[10]
+}
+
+func (x ScottyRPCs) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ScottyRPCs.Descriptor instead.
+func (ScottyRPCs) EnumDescriptor() ([]byte, []int) {
+	return file_generated_services_proto_rawDescGZIP(), []int{10}
 }
 
 // agentsensor (vservice, hosted by eventbus)
@@ -701,11 +797,11 @@ func (x AgentsensorRPCs) String() string {
 }
 
 func (AgentsensorRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[8].Descriptor()
+	return file_generated_services_proto_enumTypes[11].Descriptor()
 }
 
 func (AgentsensorRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[8]
+	return &file_generated_services_proto_enumTypes[11]
 }
 
 func (x AgentsensorRPCs) Number() protoreflect.EnumNumber {
@@ -714,29 +810,77 @@ func (x AgentsensorRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use AgentsensorRPCs.Descriptor instead.
 func (AgentsensorRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{8}
+	return file_generated_services_proto_rawDescGZIP(), []int{11}
+}
+
+// query (trait, hosted by stratum)
+type QueryRPCs int32
+
+const (
+	QueryRPCs_QUERY_RPCS_UNSPECIFIED QueryRPCs = 0
+	QueryRPCs_QUERY_RPCS_ANY         QueryRPCs = 99 // wildcard: allow any RPC
+)
+
+// Enum value maps for QueryRPCs.
+var (
+	QueryRPCs_name = map[int32]string{
+		0:  "QUERY_RPCS_UNSPECIFIED",
+		99: "QUERY_RPCS_ANY",
+	}
+	QueryRPCs_value = map[string]int32{
+		"QUERY_RPCS_UNSPECIFIED": 0,
+		"QUERY_RPCS_ANY":         99,
+	}
+)
+
+func (x QueryRPCs) Enum() *QueryRPCs {
+	p := new(QueryRPCs)
+	*p = x
+	return p
+}
+
+func (x QueryRPCs) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (QueryRPCs) Descriptor() protoreflect.EnumDescriptor {
+	return file_generated_services_proto_enumTypes[12].Descriptor()
+}
+
+func (QueryRPCs) Type() protoreflect.EnumType {
+	return &file_generated_services_proto_enumTypes[12]
+}
+
+func (x QueryRPCs) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use QueryRPCs.Descriptor instead.
+func (QueryRPCs) EnumDescriptor() ([]byte, []int) {
+	return file_generated_services_proto_rawDescGZIP(), []int{12}
 }
 
 var File_generated_services_proto protoreflect.FileDescriptor
 
 const file_generated_services_proto_rawDesc = "" +
 	"\n" +
-	"\x18generated/services.proto\x12\bservices*\x8e\x03\n" +
+	"\x18generated/services.proto\x12\bservices*\xb0\x03\n" +
 	"\vServiceName\x12\x1c\n" +
 	"\x18SERVICE_NAME_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15SERVICE_NAME_SENTINEL\x10\x05\x12\x18\n" +
 	"\x14SERVICE_NAME_GATEWAY\x10\a\x12\x17\n" +
 	"\x13SERVICE_NAME_KERNEL\x10\b\x12\x1c\n" +
-	"\x18SERVICE_NAME_LETSENCRYPT\x10\t\x12\x18\n" +
-	"\x14SERVICE_NAME_GRAPHDB\x10\r\x12\x19\n" +
-	"\x15SERVICE_NAME_EVENTBUS\x10\x12\x12\x17\n" +
-	"\x13SERVICE_NAME_TIMEDB\x10\x14\x12\x16\n" +
+	"\x18SERVICE_NAME_LETSENCRYPT\x10\t\x12\x19\n" +
+	"\x15SERVICE_NAME_EVENTBUS\x10\x12\x12\x16\n" +
 	"\x12SERVICE_NAME_OAUTH\x10\x15\x12\x14\n" +
 	"\x10SERVICE_NAME_OPA\x10\x1d\x12\x18\n" +
-	"\x14SERVICE_NAME_STRATUM\x10\"\x12\x16\n" +
-	"\x12SERVICE_NAME_ARGUS\x10#\x12\x17\n" +
+	"\x14SERVICE_NAME_STRATUM\x10\"\x12\x17\n" +
 	"\x13SERVICE_NAME_KMAKER\x101\x12\x18\n" +
-	"\x14SERVICE_NAME_SAMLSVC\x103\x12\x14\n" +
+	"\x14SERVICE_NAME_SAMLSVC\x103\x12\x1a\n" +
+	"\x16SERVICE_NAME_MESSAGING\x105\x12\x1c\n" +
+	"\x18SERVICE_NAME_SCOTTYAGENT\x106\x12\x18\n" +
+	"\x14SERVICE_NAME_MAILBOX\x107\x12\x17\n" +
+	"\x13SERVICE_NAME_SCOTTY\x10F\x12\x14\n" +
 	"\x10SERVICE_NAME_ANY\x10c*\xdf\x03\n" +
 	"\fSentinelRPCs\x12\x1d\n" +
 	"\x19SENTINEL_RPCS_UNSPECIFIED\x10\x00\x12\"\n" +
@@ -786,46 +930,7 @@ const file_generated_services_proto_rawDesc = "" +
 	"\x1fOAUTH_RPCS_MINT_CALLBACK_TOKENS\x10\x04\x12\x1d\n" +
 	"\x19OAUTH_RPCS_REVOKE_SESSION\x10\x05\x12\x1e\n" +
 	"\x1aOAUTH_RPCS_BROKER_CLI_AUTH\x10\x06\x12\x12\n" +
-	"\x0eOAUTH_RPCS_ANY\x10c*\xa9\n" +
-	"\n" +
-	"\tArgusRPCs\x12\x1a\n" +
-	"\x16ARGUS_RPCS_UNSPECIFIED\x10\x00\x12\x1c\n" +
-	"\x18ARGUS_RPCS_GET_DASHBOARD\x10\x01\x12#\n" +
-	"\x1fARGUS_RPCS_LIST_ACTIVE_SESSIONS\x10\x02\x12!\n" +
-	"\x1dARGUS_RPCS_GET_SESSION_DETAIL\x10\x03\x12 \n" +
-	"\x1cARGUS_RPCS_GET_USER_ACTIVITY\x10\x04\x12*\n" +
-	"&ARGUS_RPCS_LIST_SESSION_SEARCH_RESULTS\x10\x05\x12&\n" +
-	"\"ARGUS_RPCS_SUBSCRIBE_LIVE_SESSIONS\x10\x06\x12\x1d\n" +
-	"\x19ARGUS_RPCS_GET_SCRATCHPAD\x10\a\x12 \n" +
-	"\x1cARGUS_RPCS_UPDATE_SCRATCHPAD\x10\b\x12 \n" +
-	"\x1cARGUS_RPCS_DELETE_SCRATCHPAD\x10\t\x12\x1f\n" +
-	"\x1bARGUS_RPCS_LIST_SCRATCHPADS\x10\n" +
-	"\x12!\n" +
-	"\x1dARGUS_RPCS_DELETE_SCRATCHPADS\x10\v\x12%\n" +
-	"!ARGUS_RPCS_GET_SUPERVISOR_CONTEXT\x10\f\x12\"\n" +
-	"\x1eARGUS_RPCS_SUBSCRIBE_DASHBOARD\x10\r\x12'\n" +
-	"#ARGUS_RPCS_SUBSCRIBE_SESSION_DETAIL\x10\x0e\x12&\n" +
-	"\"ARGUS_RPCS_SUBSCRIBE_USER_ACTIVITY\x10\x0f\x12+\n" +
-	"'ARGUS_RPCS_SUBSCRIBE_SUPERVISOR_CONTEXT\x10\x10\x12(\n" +
-	"$ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_LIST\x10\x11\x12(\n" +
-	"$ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_READ\x10\x12\x12\x19\n" +
-	"\x15ARGUS_RPCS_LIST_USERS\x10\x13\x12\x1f\n" +
-	"\x1bARGUS_RPCS_GET_USER_PROFILE\x10\x14\x12#\n" +
-	"\x1fARGUS_RPCS_GET_USER_TOKEN_STATS\x10\x15\x12%\n" +
-	"!ARGUS_RPCS_SUBSCRIBE_USER_PROFILE\x10\x16\x12(\n" +
-	"$ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY\x10\x17\x12!\n" +
-	"\x1dARGUS_RPCS_LIST_FILE_ACTIVITY\x10\x18\x12$\n" +
-	" ARGUS_RPCS_LIST_SESSION_TIMELINE\x10\x19\x12\x1d\n" +
-	"\x19ARGUS_RPCS_GET_AGENT_TREE\x10\x1a\x12\x1f\n" +
-	"\x1bARGUS_RPCS_GET_SYSTEM_STATS\x10\x1b\x12$\n" +
-	" ARGUS_RPCS_LIST_TOOL_LEADERBOARD\x10\x1c\x12\x1f\n" +
-	"\x1bARGUS_RPCS_LIST_MODEL_USAGE\x10\x1d\x12'\n" +
-	"#ARGUS_RPCS_LIST_ACTIVITY_TIMESERIES\x10\x1e\x12%\n" +
-	"!ARGUS_RPCS_SUBSCRIBE_SYSTEM_STATS\x10\x1f\x12)\n" +
-	"%ARGUS_RPCS_SUBSCRIBE_TOOL_LEADERBOARD\x10 \x12(\n" +
-	"$ARGUS_RPCS_LIST_EVENT_SEARCH_RESULTS\x10!\x12%\n" +
-	"!ARGUS_RPCS_LIST_FILE_PATH_MATCHES\x10\"\x12\x12\n" +
-	"\x0eARGUS_RPCS_ANY\x10c*\x88\x02\n" +
+	"\x0eOAUTH_RPCS_ANY\x10c*\x88\x02\n" +
 	"\bSamlRPCs\x12\x19\n" +
 	"\x15SAML_RPCS_UNSPECIFIED\x10\x00\x12\x1d\n" +
 	"\x19SAML_RPCS_MINT_ACS_TOKENS\x10\x01\x12\x17\n" +
@@ -835,12 +940,48 @@ const file_generated_services_proto_rawDesc = "" +
 	"\x1aSAML_RPCS_GET_IDP_METADATA\x10\x05\x12\x1d\n" +
 	"\x19SAML_RPCS_GET_SP_METADATA\x10\x06\x12 \n" +
 	"\x1cSAML_RPCS_GET_IDP_DESCRIPTOR\x10\a\x12\x11\n" +
-	"\rSAML_RPCS_ANY\x10c*\xdd\x01\n" +
+	"\rSAML_RPCS_ANY\x10c*h\n" +
+	"\rMessagingRPCs\x12\x1e\n" +
+	"\x1aMESSAGING_RPCS_UNSPECIFIED\x10\x00\x12\x1f\n" +
+	"\x1bMESSAGING_RPCS_SEND_MESSAGE\x10\x01\x12\x16\n" +
+	"\x12MESSAGING_RPCS_ANY\x10c*\xad\x01\n" +
+	"\x0fScottyagentRPCs\x12 \n" +
+	"\x1cSCOTTYAGENT_RPCS_UNSPECIFIED\x10\x00\x12(\n" +
+	"$SCOTTYAGENT_RPCS_LIST_MY_AGENT_STATE\x10\x01\x124\n" +
+	"0SCOTTYAGENT_RPCS_BROKER_SCOTTY_AGENT_MCP_SESSION\x10\x02\x12\x18\n" +
+	"\x14SCOTTYAGENT_RPCS_ANY\x10c*\x85\x01\n" +
+	"\vMailboxRPCs\x12\x1c\n" +
+	"\x18MAILBOX_RPCS_UNSPECIFIED\x10\x00\x12\x1f\n" +
+	"\x1bMAILBOX_RPCS_LIST_HELD_MAIL\x10\x01\x12!\n" +
+	"\x1dMAILBOX_RPCS_UPDATE_HELD_MAIL\x10\x02\x12\x14\n" +
+	"\x10MAILBOX_RPCS_ANY\x10c*\xa3\x04\n" +
+	"\n" +
+	"ScottyRPCs\x12\x1b\n" +
+	"\x17SCOTTY_RPCS_UNSPECIFIED\x10\x00\x12\x1c\n" +
+	"\x18SCOTTY_RPCS_CREATE_HUMAN\x10\x01\x12\x19\n" +
+	"\x15SCOTTY_RPCS_GET_HUMAN\x10\x02\x12\x1b\n" +
+	"\x17SCOTTY_RPCS_LIST_HUMANS\x10\x03\x12%\n" +
+	"!SCOTTY_RPCS_CREATE_POLICY_VERSION\x10\x04\x12$\n" +
+	" SCOTTY_RPCS_LIST_POLICY_VERSIONS\x10\x05\x12\x1d\n" +
+	"\x19SCOTTY_RPCS_CREATE_TICKET\x10\x06\x12\x1a\n" +
+	"\x16SCOTTY_RPCS_GET_TICKET\x10\a\x12\x1c\n" +
+	"\x18SCOTTY_RPCS_LIST_TICKETS\x10\b\x12$\n" +
+	" SCOTTY_RPCS_CREATE_TICKET_ADVICE\x10\t\x12\"\n" +
+	"\x1eSCOTTY_RPCS_LIST_TICKET_ADVICE\x10\n" +
+	"\x12&\n" +
+	"\"SCOTTY_RPCS_CREATE_TICKET_DECISION\x10\v\x12%\n" +
+	"!SCOTTY_RPCS_CREATE_TICKET_COMMENT\x10\f\x12#\n" +
+	"\x1fSCOTTY_RPCS_GET_MY_TICKET_AUDIT\x10\r\x12)\n" +
+	"%SCOTTY_RPCS_BROKER_SCOTTY_MCP_SESSION\x10\x0e\x12\x13\n" +
+	"\x0fSCOTTY_RPCS_ANY\x10c*\xdd\x01\n" +
 	"\x0fAgentsensorRPCs\x12 \n" +
 	"\x1cAGENTSENSOR_RPCS_UNSPECIFIED\x10\x00\x12E\n" +
 	"AAGENTSENSOR_RPCS_PUBLISH_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM\x10\x01\x12G\n" +
 	"CAGENTSENSOR_RPCS_SUBSCRIBE_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM\x10\x02\x12\x18\n" +
-	"\x14AGENTSENSOR_RPCS_ANY\x10cBaZ_gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/servicesb\x06proto3"
+	"\x14AGENTSENSOR_RPCS_ANY\x10c*;\n" +
+	"\tQueryRPCs\x12\x1a\n" +
+	"\x16QUERY_RPCS_UNSPECIFIED\x10\x00\x12\x12\n" +
+	"\x0eQUERY_RPCS_ANY\x10cBaZ_gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/servicesb\x06proto3"
 
 var (
 	file_generated_services_proto_rawDescOnce sync.Once
@@ -854,7 +995,7 @@ func file_generated_services_proto_rawDescGZIP() []byte {
 	return file_generated_services_proto_rawDescData
 }
 
-var file_generated_services_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
+var file_generated_services_proto_enumTypes = make([]protoimpl.EnumInfo, 13)
 var file_generated_services_proto_goTypes = []any{
 	(ServiceName)(0),     // 0: services.ServiceName
 	(SentinelRPCs)(0),    // 1: services.SentinelRPCs
@@ -862,9 +1003,13 @@ var file_generated_services_proto_goTypes = []any{
 	(KernelRPCs)(0),      // 3: services.KernelRPCs
 	(EventbusRPCs)(0),    // 4: services.EventbusRPCs
 	(OauthRPCs)(0),       // 5: services.OauthRPCs
-	(ArgusRPCs)(0),       // 6: services.ArgusRPCs
-	(SamlRPCs)(0),        // 7: services.SamlRPCs
-	(AgentsensorRPCs)(0), // 8: services.AgentsensorRPCs
+	(SamlRPCs)(0),        // 6: services.SamlRPCs
+	(MessagingRPCs)(0),   // 7: services.MessagingRPCs
+	(ScottyagentRPCs)(0), // 8: services.ScottyagentRPCs
+	(MailboxRPCs)(0),     // 9: services.MailboxRPCs
+	(ScottyRPCs)(0),      // 10: services.ScottyRPCs
+	(AgentsensorRPCs)(0), // 11: services.AgentsensorRPCs
+	(QueryRPCs)(0),       // 12: services.QueryRPCs
 }
 var file_generated_services_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -884,7 +1029,7 @@ func file_generated_services_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_generated_services_proto_rawDesc), len(file_generated_services_proto_rawDesc)),
-			NumEnums:      9,
+			NumEnums:      13,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,

@@ -559,6 +559,10 @@ func TypeIDValues() []TypeID {
 		TypeID_TYPE_ID_IDENTITY_FQDN,
 		TypeID_TYPE_ID_SIGNING_KEY_RECORD,
 		TypeID_TYPE_ID_TRUSTED_CA,
+		TypeID_TYPE_ID_FENCED_LOCK_ACQUIRE_REQUEST,
+		TypeID_TYPE_ID_FENCED_LOCK_ACQUIRE_RESPONSE,
+		TypeID_TYPE_ID_FENCED_LOCK_RELEASE_REQUEST,
+		TypeID_TYPE_ID_FENCED_LOCK_RELEASE_RESPONSE,
 		TypeID_TYPE_ID_CLI_TOKEN_BROKER_REQUEST,
 		TypeID_TYPE_ID_CLI_TOKEN_BROKER_RESPONSE,
 		TypeID_TYPE_ID_CLI_TOKEN_BROKER_REGISTER,
@@ -585,6 +589,8 @@ func TypeIDValues() []TypeID {
 		TypeID_TYPE_ID_PROJECT_CONFIG,
 		TypeID_TYPE_ID_PROJECT_CONFIG_ENTRY,
 		TypeID_TYPE_ID_CONFIG_STATE,
+		TypeID_TYPE_ID_GRANT,
+		TypeID_TYPE_ID_GRANT_REVOKE_REQUEST,
 		TypeID_TYPE_ID_KERNEL_DISK_STATE,
 		TypeID_TYPE_ID_CREATE_TENANT_REQUEST,
 		TypeID_TYPE_ID_DELETE_TENANT_REQUEST,
@@ -885,7 +891,7 @@ func TypeIDValues() []TypeID {
 
 // TypeIDStringValues returns all valid TypeID names as strings
 func TypeIDStringValues() []string {
-	return []string{"config", "identity", "identity-fqdn", "signing-key-record", "trusted-ca", "cli-token-broker-request", "cli-token-broker-response", "cli-token-broker-register", "cli-token-broker-register-nonce", "cli-token-broker-complete-nonce", "cli-token-broker-token-delivery", "cli-token-broker-error", "cloud-identity-matcher", "kubernetes-service-account-matcher", "delegate", "cluster", "admin-set-log-level-request", "admin-reload-config-request", "admin-config-dump", "service-health", "workload-revoke-request", "workload-locality", "workload-revocation", "workload-state", "ca", "constraints", "tenant", "tenant-config-entry", "project-config", "project-config-entry", "config-state", "kernel-disk-state", "create-tenant-request", "delete-tenant-request", "delete-tenant-response", "list-tenants-request", "list-tenants-response", "get-tenant-config-request", "set-tenant-config-request", "get-project-config-request", "set-project-config-request", "project-namespace", "list-projects-request", "list-projects-response", "delete-project-request", "delete-project-response", "query-value", "predicate", "predicate-group", "sort-field", "collection-query", "verifying-keys-get-request", "verifying-keys-put-request", "verifying-keys-get-all-request", "verifying-keys-keys-request", "verifying-keys-size-request", "verifying-keys-clear-request", "verifying-keys-value-response", "verifying-keys-entries-response", "verifying-keys-keys-response", "verifying-keys-size-response", "verifying-keys-query-request", "verifying-keys-query-response", "trusted-cas-get-request", "trusted-cas-put-request", "trusted-cas-get-all-request", "trusted-cas-keys-request", "trusted-cas-size-request", "trusted-cas-clear-request", "trusted-cas-value-response", "trusted-cas-entries-response", "trusted-cas-keys-response", "trusted-cas-size-response", "trusted-cas-query-request", "trusted-cas-query-response", "node-metrics-get-request", "node-metrics-put-request", "node-metrics-get-all-request", "node-metrics-keys-request", "node-metrics-size-request", "node-metrics-clear-request", "node-metrics-value-response", "node-metrics-entries-response", "node-metrics-keys-response", "node-metrics-size-response", "node-metrics-query-request", "node-metrics-query-response", "grpc-stats-get-request", "grpc-stats-put-request", "grpc-stats-get-all-request", "grpc-stats-keys-request", "grpc-stats-size-request", "grpc-stats-clear-request", "grpc-stats-value-response", "grpc-stats-entries-response", "grpc-stats-keys-response", "grpc-stats-size-response", "grpc-stats-query-request", "grpc-stats-query-response", "persistence-status-get-request", "persistence-status-put-request", "persistence-status-get-all-request", "persistence-status-keys-request", "persistence-status-size-request", "persistence-status-clear-request", "persistence-status-value-response", "persistence-status-entries-response", "persistence-status-keys-response", "persistence-status-size-response", "persistence-status-query-request", "persistence-status-query-response", "network-stats-get-request", "network-stats-put-request", "network-stats-get-all-request", "network-stats-keys-request", "network-stats-size-request", "network-stats-clear-request", "network-stats-value-response", "network-stats-entries-response", "network-stats-keys-response", "network-stats-size-response", "network-stats-query-request", "network-stats-query-response", "thread-info-get-request", "thread-info-put-request", "thread-info-get-all-request", "thread-info-keys-request", "thread-info-size-request", "thread-info-clear-request", "thread-info-value-response", "thread-info-entries-response", "thread-info-keys-response", "thread-info-size-response", "thread-info-query-request", "thread-info-query-response", "token-cache-stats-get-request", "token-cache-stats-put-request", "token-cache-stats-get-all-request", "token-cache-stats-keys-request", "token-cache-stats-size-request", "token-cache-stats-clear-request", "token-cache-stats-value-response", "token-cache-stats-entries-response", "token-cache-stats-keys-response", "token-cache-stats-size-response", "token-cache-stats-query-request", "token-cache-stats-query-response", "map-stats-get-request", "map-stats-put-request", "map-stats-get-all-request", "map-stats-keys-request", "map-stats-size-request", "map-stats-clear-request", "map-stats-value-response", "map-stats-entries-response", "map-stats-keys-response", "map-stats-size-response", "map-stats-query-request", "map-stats-query-response", "graph-registry-get-request", "graph-registry-put-request", "graph-registry-get-all-request", "graph-registry-keys-request", "graph-registry-size-request", "graph-registry-clear-request", "graph-registry-value-response", "graph-registry-entries-response", "graph-registry-keys-response", "graph-registry-size-response", "graph-registry-query-request", "graph-registry-query-response", "service-connections-get-request", "service-connections-put-request", "service-connections-get-all-request", "service-connections-keys-request", "service-connections-size-request", "service-connections-clear-request", "service-connections-value-response", "service-connections-entries-response", "service-connections-keys-response", "service-connections-size-response", "service-connections-query-request", "service-connections-query-response", "queue-stats-get-request", "queue-stats-put-request", "queue-stats-get-all-request", "queue-stats-keys-request", "queue-stats-size-request", "queue-stats-clear-request", "queue-stats-value-response", "queue-stats-entries-response", "queue-stats-keys-response", "queue-stats-size-response", "queue-stats-query-request", "queue-stats-query-response", "topic-stats-get-request", "topic-stats-put-request", "topic-stats-get-all-request", "topic-stats-keys-request", "topic-stats-size-request", "topic-stats-clear-request", "topic-stats-value-response", "topic-stats-entries-response", "topic-stats-keys-response", "topic-stats-size-response", "topic-stats-query-request", "topic-stats-query-response", "watch-health-get-request", "watch-health-put-request", "watch-health-get-all-request", "watch-health-keys-request", "watch-health-size-request", "watch-health-clear-request", "watch-health-value-response", "watch-health-entries-response", "watch-health-keys-response", "watch-health-size-response", "watch-health-query-request", "watch-health-query-response", "mutation-rates-get-request", "mutation-rates-put-request", "mutation-rates-get-all-request", "mutation-rates-keys-request", "mutation-rates-size-request", "mutation-rates-clear-request", "mutation-rates-value-response", "mutation-rates-entries-response", "mutation-rates-keys-response", "mutation-rates-size-response", "mutation-rates-query-request", "mutation-rates-query-response", "instances-get-request", "instances-get-all-request", "instances-keys-request", "instances-size-request", "instances-value-response", "instances-entries-response", "instances-keys-response", "instances-size-response", "instances-query-request", "instances-query-response", "localities-get-request", "localities-put-request", "localities-get-all-request", "localities-keys-request", "localities-size-request", "localities-clear-request", "localities-value-response", "localities-entries-response", "localities-keys-response", "localities-size-response", "localities-query-request", "localities-query-response", "revocations-get-request", "revocations-put-request", "revocations-get-all-request", "revocations-keys-request", "revocations-size-request", "revocations-clear-request", "revocations-value-response", "revocations-entries-response", "revocations-keys-response", "revocations-size-response", "revocations-query-request", "revocations-query-response", "ca-certs-get-request", "ca-certs-put-request", "ca-certs-get-all-request", "ca-certs-keys-request", "ca-certs-size-request", "ca-certs-clear-request", "ca-certs-value-response", "ca-certs-entries-response", "ca-certs-keys-response", "ca-certs-size-response", "ca-certs-query-request", "ca-certs-query-response", "service-cas-get-request", "service-cas-put-request", "service-cas-get-all-request", "service-cas-keys-request", "service-cas-size-request", "service-cas-clear-request", "service-cas-value-response", "service-cas-entries-response", "service-cas-keys-response", "service-cas-size-response", "service-cas-query-request", "service-cas-query-response", "tenants-get-request", "tenants-put-request", "tenants-get-all-request", "tenants-keys-request", "tenants-size-request", "tenants-clear-request", "tenants-value-response", "tenants-entries-response", "tenants-keys-response", "tenants-size-response", "tenants-query-request", "tenants-query-response", "tenant-configs-get-request", "tenant-configs-put-request", "tenant-configs-get-all-request", "tenant-configs-keys-request", "tenant-configs-size-request", "tenant-configs-clear-request", "tenant-configs-value-response", "tenant-configs-entries-response", "tenant-configs-keys-response", "tenant-configs-size-response", "tenant-configs-query-request", "tenant-configs-query-response", "project-configs-get-request", "project-configs-put-request", "project-configs-get-all-request", "project-configs-keys-request", "project-configs-size-request", "project-configs-clear-request", "project-configs-value-response", "project-configs-entries-response", "project-configs-keys-response", "project-configs-size-response", "project-configs-query-request", "project-configs-query-response", "map-empty"}
+	return []string{"config", "identity", "identity-fqdn", "signing-key-record", "trusted-ca", "fenced-lock-acquire-request", "fenced-lock-acquire-response", "fenced-lock-release-request", "fenced-lock-release-response", "cli-token-broker-request", "cli-token-broker-response", "cli-token-broker-register", "cli-token-broker-register-nonce", "cli-token-broker-complete-nonce", "cli-token-broker-token-delivery", "cli-token-broker-error", "cloud-identity-matcher", "kubernetes-service-account-matcher", "delegate", "cluster", "admin-set-log-level-request", "admin-reload-config-request", "admin-config-dump", "service-health", "workload-revoke-request", "workload-locality", "workload-revocation", "workload-state", "ca", "constraints", "tenant", "tenant-config-entry", "project-config", "project-config-entry", "config-state", "grant", "grant-revoke-request", "kernel-disk-state", "create-tenant-request", "delete-tenant-request", "delete-tenant-response", "list-tenants-request", "list-tenants-response", "get-tenant-config-request", "set-tenant-config-request", "get-project-config-request", "set-project-config-request", "project-namespace", "list-projects-request", "list-projects-response", "delete-project-request", "delete-project-response", "query-value", "predicate", "predicate-group", "sort-field", "collection-query", "verifying-keys-get-request", "verifying-keys-put-request", "verifying-keys-get-all-request", "verifying-keys-keys-request", "verifying-keys-size-request", "verifying-keys-clear-request", "verifying-keys-value-response", "verifying-keys-entries-response", "verifying-keys-keys-response", "verifying-keys-size-response", "verifying-keys-query-request", "verifying-keys-query-response", "trusted-cas-get-request", "trusted-cas-put-request", "trusted-cas-get-all-request", "trusted-cas-keys-request", "trusted-cas-size-request", "trusted-cas-clear-request", "trusted-cas-value-response", "trusted-cas-entries-response", "trusted-cas-keys-response", "trusted-cas-size-response", "trusted-cas-query-request", "trusted-cas-query-response", "node-metrics-get-request", "node-metrics-put-request", "node-metrics-get-all-request", "node-metrics-keys-request", "node-metrics-size-request", "node-metrics-clear-request", "node-metrics-value-response", "node-metrics-entries-response", "node-metrics-keys-response", "node-metrics-size-response", "node-metrics-query-request", "node-metrics-query-response", "grpc-stats-get-request", "grpc-stats-put-request", "grpc-stats-get-all-request", "grpc-stats-keys-request", "grpc-stats-size-request", "grpc-stats-clear-request", "grpc-stats-value-response", "grpc-stats-entries-response", "grpc-stats-keys-response", "grpc-stats-size-response", "grpc-stats-query-request", "grpc-stats-query-response", "persistence-status-get-request", "persistence-status-put-request", "persistence-status-get-all-request", "persistence-status-keys-request", "persistence-status-size-request", "persistence-status-clear-request", "persistence-status-value-response", "persistence-status-entries-response", "persistence-status-keys-response", "persistence-status-size-response", "persistence-status-query-request", "persistence-status-query-response", "network-stats-get-request", "network-stats-put-request", "network-stats-get-all-request", "network-stats-keys-request", "network-stats-size-request", "network-stats-clear-request", "network-stats-value-response", "network-stats-entries-response", "network-stats-keys-response", "network-stats-size-response", "network-stats-query-request", "network-stats-query-response", "thread-info-get-request", "thread-info-put-request", "thread-info-get-all-request", "thread-info-keys-request", "thread-info-size-request", "thread-info-clear-request", "thread-info-value-response", "thread-info-entries-response", "thread-info-keys-response", "thread-info-size-response", "thread-info-query-request", "thread-info-query-response", "token-cache-stats-get-request", "token-cache-stats-put-request", "token-cache-stats-get-all-request", "token-cache-stats-keys-request", "token-cache-stats-size-request", "token-cache-stats-clear-request", "token-cache-stats-value-response", "token-cache-stats-entries-response", "token-cache-stats-keys-response", "token-cache-stats-size-response", "token-cache-stats-query-request", "token-cache-stats-query-response", "map-stats-get-request", "map-stats-put-request", "map-stats-get-all-request", "map-stats-keys-request", "map-stats-size-request", "map-stats-clear-request", "map-stats-value-response", "map-stats-entries-response", "map-stats-keys-response", "map-stats-size-response", "map-stats-query-request", "map-stats-query-response", "graph-registry-get-request", "graph-registry-put-request", "graph-registry-get-all-request", "graph-registry-keys-request", "graph-registry-size-request", "graph-registry-clear-request", "graph-registry-value-response", "graph-registry-entries-response", "graph-registry-keys-response", "graph-registry-size-response", "graph-registry-query-request", "graph-registry-query-response", "service-connections-get-request", "service-connections-put-request", "service-connections-get-all-request", "service-connections-keys-request", "service-connections-size-request", "service-connections-clear-request", "service-connections-value-response", "service-connections-entries-response", "service-connections-keys-response", "service-connections-size-response", "service-connections-query-request", "service-connections-query-response", "queue-stats-get-request", "queue-stats-put-request", "queue-stats-get-all-request", "queue-stats-keys-request", "queue-stats-size-request", "queue-stats-clear-request", "queue-stats-value-response", "queue-stats-entries-response", "queue-stats-keys-response", "queue-stats-size-response", "queue-stats-query-request", "queue-stats-query-response", "topic-stats-get-request", "topic-stats-put-request", "topic-stats-get-all-request", "topic-stats-keys-request", "topic-stats-size-request", "topic-stats-clear-request", "topic-stats-value-response", "topic-stats-entries-response", "topic-stats-keys-response", "topic-stats-size-response", "topic-stats-query-request", "topic-stats-query-response", "watch-health-get-request", "watch-health-put-request", "watch-health-get-all-request", "watch-health-keys-request", "watch-health-size-request", "watch-health-clear-request", "watch-health-value-response", "watch-health-entries-response", "watch-health-keys-response", "watch-health-size-response", "watch-health-query-request", "watch-health-query-response", "mutation-rates-get-request", "mutation-rates-put-request", "mutation-rates-get-all-request", "mutation-rates-keys-request", "mutation-rates-size-request", "mutation-rates-clear-request", "mutation-rates-value-response", "mutation-rates-entries-response", "mutation-rates-keys-response", "mutation-rates-size-response", "mutation-rates-query-request", "mutation-rates-query-response", "instances-get-request", "instances-get-all-request", "instances-keys-request", "instances-size-request", "instances-value-response", "instances-entries-response", "instances-keys-response", "instances-size-response", "instances-query-request", "instances-query-response", "localities-get-request", "localities-put-request", "localities-get-all-request", "localities-keys-request", "localities-size-request", "localities-clear-request", "localities-value-response", "localities-entries-response", "localities-keys-response", "localities-size-response", "localities-query-request", "localities-query-response", "revocations-get-request", "revocations-put-request", "revocations-get-all-request", "revocations-keys-request", "revocations-size-request", "revocations-clear-request", "revocations-value-response", "revocations-entries-response", "revocations-keys-response", "revocations-size-response", "revocations-query-request", "revocations-query-response", "ca-certs-get-request", "ca-certs-put-request", "ca-certs-get-all-request", "ca-certs-keys-request", "ca-certs-size-request", "ca-certs-clear-request", "ca-certs-value-response", "ca-certs-entries-response", "ca-certs-keys-response", "ca-certs-size-response", "ca-certs-query-request", "ca-certs-query-response", "service-cas-get-request", "service-cas-put-request", "service-cas-get-all-request", "service-cas-keys-request", "service-cas-size-request", "service-cas-clear-request", "service-cas-value-response", "service-cas-entries-response", "service-cas-keys-response", "service-cas-size-response", "service-cas-query-request", "service-cas-query-response", "tenants-get-request", "tenants-put-request", "tenants-get-all-request", "tenants-keys-request", "tenants-size-request", "tenants-clear-request", "tenants-value-response", "tenants-entries-response", "tenants-keys-response", "tenants-size-response", "tenants-query-request", "tenants-query-response", "tenant-configs-get-request", "tenant-configs-put-request", "tenant-configs-get-all-request", "tenant-configs-keys-request", "tenant-configs-size-request", "tenant-configs-clear-request", "tenant-configs-value-response", "tenant-configs-entries-response", "tenant-configs-keys-response", "tenant-configs-size-response", "tenant-configs-query-request", "tenant-configs-query-response", "project-configs-get-request", "project-configs-put-request", "project-configs-get-all-request", "project-configs-keys-request", "project-configs-size-request", "project-configs-clear-request", "project-configs-value-response", "project-configs-entries-response", "project-configs-keys-response", "project-configs-size-response", "project-configs-query-request", "project-configs-query-response", "map-empty"}
 }
 
 // ParseTypeID converts a string to a TypeID enum value
@@ -906,6 +912,14 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_SIGNING_KEY_RECORD, nil
 	case "trusted-ca", "type-id-trusted-ca":
 		return TypeID_TYPE_ID_TRUSTED_CA, nil
+	case "fenced-lock-acquire-request", "type-id-fenced-lock-acquire-request":
+		return TypeID_TYPE_ID_FENCED_LOCK_ACQUIRE_REQUEST, nil
+	case "fenced-lock-acquire-response", "type-id-fenced-lock-acquire-response":
+		return TypeID_TYPE_ID_FENCED_LOCK_ACQUIRE_RESPONSE, nil
+	case "fenced-lock-release-request", "type-id-fenced-lock-release-request":
+		return TypeID_TYPE_ID_FENCED_LOCK_RELEASE_REQUEST, nil
+	case "fenced-lock-release-response", "type-id-fenced-lock-release-response":
+		return TypeID_TYPE_ID_FENCED_LOCK_RELEASE_RESPONSE, nil
 	case "cli-token-broker-request", "type-id-cli-token-broker-request":
 		return TypeID_TYPE_ID_CLI_TOKEN_BROKER_REQUEST, nil
 	case "cli-token-broker-response", "type-id-cli-token-broker-response":
@@ -958,6 +972,10 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_PROJECT_CONFIG_ENTRY, nil
 	case "config-state", "type-id-config-state":
 		return TypeID_TYPE_ID_CONFIG_STATE, nil
+	case "grant", "type-id-grant":
+		return TypeID_TYPE_ID_GRANT, nil
+	case "grant-revoke-request", "type-id-grant-revoke-request":
+		return TypeID_TYPE_ID_GRANT_REVOKE_REQUEST, nil
 	case "kernel-disk-state", "type-id-kernel-disk-state":
 		return TypeID_TYPE_ID_KERNEL_DISK_STATE, nil
 	case "create-tenant-request", "type-id-create-tenant-request":
@@ -1588,6 +1606,14 @@ func TypeIDToString(v TypeID) string {
 		return "signing-key-record"
 	case TypeID_TYPE_ID_TRUSTED_CA:
 		return "trusted-ca"
+	case TypeID_TYPE_ID_FENCED_LOCK_ACQUIRE_REQUEST:
+		return "fenced-lock-acquire-request"
+	case TypeID_TYPE_ID_FENCED_LOCK_ACQUIRE_RESPONSE:
+		return "fenced-lock-acquire-response"
+	case TypeID_TYPE_ID_FENCED_LOCK_RELEASE_REQUEST:
+		return "fenced-lock-release-request"
+	case TypeID_TYPE_ID_FENCED_LOCK_RELEASE_RESPONSE:
+		return "fenced-lock-release-response"
 	case TypeID_TYPE_ID_CLI_TOKEN_BROKER_REQUEST:
 		return "cli-token-broker-request"
 	case TypeID_TYPE_ID_CLI_TOKEN_BROKER_RESPONSE:
@@ -1640,6 +1666,10 @@ func TypeIDToString(v TypeID) string {
 		return "project-config-entry"
 	case TypeID_TYPE_ID_CONFIG_STATE:
 		return "config-state"
+	case TypeID_TYPE_ID_GRANT:
+		return "grant"
+	case TypeID_TYPE_ID_GRANT_REVOKE_REQUEST:
+		return "grant-revoke-request"
 	case TypeID_TYPE_ID_KERNEL_DISK_STATE:
 		return "kernel-disk-state"
 	case TypeID_TYPE_ID_CREATE_TENANT_REQUEST:
@@ -2262,6 +2292,14 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_SIGNING_KEY_RECORD
 	case "trusted-ca", "type-id-trusted-ca":
 		return TypeID_TYPE_ID_TRUSTED_CA
+	case "fenced-lock-acquire-request", "type-id-fenced-lock-acquire-request":
+		return TypeID_TYPE_ID_FENCED_LOCK_ACQUIRE_REQUEST
+	case "fenced-lock-acquire-response", "type-id-fenced-lock-acquire-response":
+		return TypeID_TYPE_ID_FENCED_LOCK_ACQUIRE_RESPONSE
+	case "fenced-lock-release-request", "type-id-fenced-lock-release-request":
+		return TypeID_TYPE_ID_FENCED_LOCK_RELEASE_REQUEST
+	case "fenced-lock-release-response", "type-id-fenced-lock-release-response":
+		return TypeID_TYPE_ID_FENCED_LOCK_RELEASE_RESPONSE
 	case "cli-token-broker-request", "type-id-cli-token-broker-request":
 		return TypeID_TYPE_ID_CLI_TOKEN_BROKER_REQUEST
 	case "cli-token-broker-response", "type-id-cli-token-broker-response":
@@ -2314,6 +2352,10 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_PROJECT_CONFIG_ENTRY
 	case "config-state", "type-id-config-state":
 		return TypeID_TYPE_ID_CONFIG_STATE
+	case "grant", "type-id-grant":
+		return TypeID_TYPE_ID_GRANT
+	case "grant-revoke-request", "type-id-grant-revoke-request":
+		return TypeID_TYPE_ID_GRANT_REVOKE_REQUEST
 	case "kernel-disk-state", "type-id-kernel-disk-state":
 		return TypeID_TYPE_ID_KERNEL_DISK_STATE
 	case "create-tenant-request", "type-id-create-tenant-request":
@@ -2924,6 +2966,14 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_SIGNING_KEY_RECORD"
 	case TypeID_TYPE_ID_TRUSTED_CA:
 		return "TYPE_ID_TRUSTED_CA"
+	case TypeID_TYPE_ID_FENCED_LOCK_ACQUIRE_REQUEST:
+		return "TYPE_ID_FENCED_LOCK_ACQUIRE_REQUEST"
+	case TypeID_TYPE_ID_FENCED_LOCK_ACQUIRE_RESPONSE:
+		return "TYPE_ID_FENCED_LOCK_ACQUIRE_RESPONSE"
+	case TypeID_TYPE_ID_FENCED_LOCK_RELEASE_REQUEST:
+		return "TYPE_ID_FENCED_LOCK_RELEASE_REQUEST"
+	case TypeID_TYPE_ID_FENCED_LOCK_RELEASE_RESPONSE:
+		return "TYPE_ID_FENCED_LOCK_RELEASE_RESPONSE"
 	case TypeID_TYPE_ID_CLI_TOKEN_BROKER_REQUEST:
 		return "TYPE_ID_CLI_TOKEN_BROKER_REQUEST"
 	case TypeID_TYPE_ID_CLI_TOKEN_BROKER_RESPONSE:
@@ -2976,6 +3026,10 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_PROJECT_CONFIG_ENTRY"
 	case TypeID_TYPE_ID_CONFIG_STATE:
 		return "TYPE_ID_CONFIG_STATE"
+	case TypeID_TYPE_ID_GRANT:
+		return "TYPE_ID_GRANT"
+	case TypeID_TYPE_ID_GRANT_REVOKE_REQUEST:
+		return "TYPE_ID_GRANT_REVOKE_REQUEST"
 	case TypeID_TYPE_ID_KERNEL_DISK_STATE:
 		return "TYPE_ID_KERNEL_DISK_STATE"
 	case TypeID_TYPE_ID_CREATE_TENANT_REQUEST:
@@ -3579,18 +3633,20 @@ func MintRpcIdValues() []MintRpcId {
 		MintRpcId_MINT_RPC_ID_ALL_EXECUTORS,
 		MintRpcId_MINT_RPC_ID_MINT_SERVICE_TOKEN,
 		MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN,
+		MintRpcId_MINT_RPC_ID_MINT_DELEGATED_TOKEN,
 		MintRpcId_MINT_RPC_ID_MINT_TOKEN,
 		MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_TOKEN,
 		MintRpcId_MINT_RPC_ID_MINT_CLIENT_TOKEN,
 		MintRpcId_MINT_RPC_ID_MINT_X509_CERT,
 		MintRpcId_MINT_RPC_ID_MINT_WORKLOAD,
 		MintRpcId_MINT_RPC_ID_REVOKE_WORKLOAD,
+		MintRpcId_MINT_RPC_ID_REVOKE_GRANT,
 	}
 }
 
 // MintRpcIdStringValues returns all valid MintRpcId names as strings
 func MintRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "mint-service-token", "mint-user-token", "mint-token", "mint-external-token", "mint-client-token", "mint-x509-cert", "mint-workload", "revoke-workload"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "mint-service-token", "mint-user-token", "mint-delegated-token", "mint-token", "mint-external-token", "mint-client-token", "mint-x509-cert", "mint-workload", "revoke-workload", "revoke-grant"}
 }
 
 // ParseMintRpcId converts a string to a MintRpcId enum value
@@ -3611,6 +3667,8 @@ func ParseMintRpcId(s string) (MintRpcId, error) {
 		return MintRpcId_MINT_RPC_ID_MINT_SERVICE_TOKEN, nil
 	case "mint-user-token", "mint-rpc-id-mint-user-token":
 		return MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN, nil
+	case "mint-delegated-token", "mint-rpc-id-mint-delegated-token":
+		return MintRpcId_MINT_RPC_ID_MINT_DELEGATED_TOKEN, nil
 	case "mint-token", "mint-rpc-id-mint-token":
 		return MintRpcId_MINT_RPC_ID_MINT_TOKEN, nil
 	case "mint-external-token", "mint-rpc-id-mint-external-token":
@@ -3623,6 +3681,8 @@ func ParseMintRpcId(s string) (MintRpcId, error) {
 		return MintRpcId_MINT_RPC_ID_MINT_WORKLOAD, nil
 	case "revoke-workload", "mint-rpc-id-revoke-workload":
 		return MintRpcId_MINT_RPC_ID_REVOKE_WORKLOAD, nil
+	case "revoke-grant", "mint-rpc-id-revoke-grant":
+		return MintRpcId_MINT_RPC_ID_REVOKE_GRANT, nil
 	default:
 		return MintRpcId_MINT_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid mintrpcid %s, expecting one of: %v", s, MintRpcIdStringValues())
 	}
@@ -3663,6 +3723,8 @@ func MintRpcIdToString(v MintRpcId) string {
 		return "mint-service-token"
 	case MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN:
 		return "mint-user-token"
+	case MintRpcId_MINT_RPC_ID_MINT_DELEGATED_TOKEN:
+		return "mint-delegated-token"
 	case MintRpcId_MINT_RPC_ID_MINT_TOKEN:
 		return "mint-token"
 	case MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_TOKEN:
@@ -3675,6 +3737,8 @@ func MintRpcIdToString(v MintRpcId) string {
 		return "mint-workload"
 	case MintRpcId_MINT_RPC_ID_REVOKE_WORKLOAD:
 		return "revoke-workload"
+	case MintRpcId_MINT_RPC_ID_REVOKE_GRANT:
+		return "revoke-grant"
 	default:
 		return ""
 	}
@@ -3707,6 +3771,8 @@ func ParseMintRpcIdLiberal(s string) MintRpcId {
 		return MintRpcId_MINT_RPC_ID_MINT_SERVICE_TOKEN
 	case "mint-user-token", "mint-rpc-id-mint-user-token":
 		return MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN
+	case "mint-delegated-token", "mint-rpc-id-mint-delegated-token":
+		return MintRpcId_MINT_RPC_ID_MINT_DELEGATED_TOKEN
 	case "mint-token", "mint-rpc-id-mint-token":
 		return MintRpcId_MINT_RPC_ID_MINT_TOKEN
 	case "mint-external-token", "mint-rpc-id-mint-external-token":
@@ -3719,6 +3785,8 @@ func ParseMintRpcIdLiberal(s string) MintRpcId {
 		return MintRpcId_MINT_RPC_ID_MINT_WORKLOAD
 	case "revoke-workload", "mint-rpc-id-revoke-workload":
 		return MintRpcId_MINT_RPC_ID_REVOKE_WORKLOAD
+	case "revoke-grant", "mint-rpc-id-revoke-grant":
+		return MintRpcId_MINT_RPC_ID_REVOKE_GRANT
 	default:
 		return MintRpcId_MINT_RPC_ID_UNSPECIFIED
 	}
@@ -3739,6 +3807,8 @@ func MintRpcIdToSpecName(v MintRpcId) string {
 		return "MINT_RPC_ID_MINT_SERVICE_TOKEN"
 	case MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN:
 		return "MINT_RPC_ID_MINT_USER_TOKEN"
+	case MintRpcId_MINT_RPC_ID_MINT_DELEGATED_TOKEN:
+		return "MINT_RPC_ID_MINT_DELEGATED_TOKEN"
 	case MintRpcId_MINT_RPC_ID_MINT_TOKEN:
 		return "MINT_RPC_ID_MINT_TOKEN"
 	case MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_TOKEN:
@@ -3751,6 +3821,139 @@ func MintRpcIdToSpecName(v MintRpcId) string {
 		return "MINT_RPC_ID_MINT_WORKLOAD"
 	case MintRpcId_MINT_RPC_ID_REVOKE_WORKLOAD:
 		return "MINT_RPC_ID_REVOKE_WORKLOAD"
+	case MintRpcId_MINT_RPC_ID_REVOKE_GRANT:
+		return "MINT_RPC_ID_REVOKE_GRANT"
+	default:
+		return ""
+	}
+}
+
+// FencedLockRpcIdValues returns all valid FencedLockRpcId values (excluding UNDEFINED)
+func FencedLockRpcIdValues() []FencedLockRpcId {
+	return []FencedLockRpcId{
+		FencedLockRpcId_FENCED_LOCK_RPC_ID_ALL_ACCESSORS,
+		FencedLockRpcId_FENCED_LOCK_RPC_ID_ALL_MUTATORS,
+		FencedLockRpcId_FENCED_LOCK_RPC_ID_ALL_EXECUTORS,
+		FencedLockRpcId_FENCED_LOCK_RPC_ID_ACQUIRE,
+		FencedLockRpcId_FENCED_LOCK_RPC_ID_RELEASE,
+	}
+}
+
+// FencedLockRpcIdStringValues returns all valid FencedLockRpcId names as strings
+func FencedLockRpcIdStringValues() []string {
+	return []string{"all-accessors", "all-mutators", "all-executors", "acquire", "release"}
+}
+
+// ParseFencedLockRpcId converts a string to a FencedLockRpcId enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseFencedLockRpcId(s string) (FencedLockRpcId, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return FencedLockRpcId_FENCED_LOCK_RPC_ID_UNSPECIFIED, nil
+	case "all-accessors", "fenced-lock-rpc-id-all-accessors":
+		return FencedLockRpcId_FENCED_LOCK_RPC_ID_ALL_ACCESSORS, nil
+	case "all-mutators", "fenced-lock-rpc-id-all-mutators":
+		return FencedLockRpcId_FENCED_LOCK_RPC_ID_ALL_MUTATORS, nil
+	case "all-executors", "fenced-lock-rpc-id-all-executors":
+		return FencedLockRpcId_FENCED_LOCK_RPC_ID_ALL_EXECUTORS, nil
+	case "acquire", "fenced-lock-rpc-id-acquire":
+		return FencedLockRpcId_FENCED_LOCK_RPC_ID_ACQUIRE, nil
+	case "release", "fenced-lock-rpc-id-release":
+		return FencedLockRpcId_FENCED_LOCK_RPC_ID_RELEASE, nil
+	default:
+		return FencedLockRpcId_FENCED_LOCK_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid fencedlockrpcid %s, expecting one of: %v", s, FencedLockRpcIdStringValues())
+	}
+}
+
+// ParseFencedLockRpcIds converts a comma-separated string to a slice of FencedLockRpcId enum values
+// Returns an error if any value is invalid
+func ParseFencedLockRpcIds(s string) ([]FencedLockRpcId, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]FencedLockRpcId, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseFencedLockRpcId(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// FencedLockRpcIdToString converts a FencedLockRpcId to its lowercase string representation
+func FencedLockRpcIdToString(v FencedLockRpcId) string {
+	switch v {
+	case FencedLockRpcId_FENCED_LOCK_RPC_ID_ALL_ACCESSORS:
+		return "all-accessors"
+	case FencedLockRpcId_FENCED_LOCK_RPC_ID_ALL_MUTATORS:
+		return "all-mutators"
+	case FencedLockRpcId_FENCED_LOCK_RPC_ID_ALL_EXECUTORS:
+		return "all-executors"
+	case FencedLockRpcId_FENCED_LOCK_RPC_ID_ACQUIRE:
+		return "acquire"
+	case FencedLockRpcId_FENCED_LOCK_RPC_ID_RELEASE:
+		return "release"
+	default:
+		return ""
+	}
+}
+
+// ParseFencedLockRpcIdLiberal parses a FencedLockRpcId liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseFencedLockRpcIdLiberal(s string) FencedLockRpcId {
+	if s == "" {
+		return FencedLockRpcId_FENCED_LOCK_RPC_ID_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return FencedLockRpcId(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "all-accessors", "fenced-lock-rpc-id-all-accessors":
+		return FencedLockRpcId_FENCED_LOCK_RPC_ID_ALL_ACCESSORS
+	case "all-mutators", "fenced-lock-rpc-id-all-mutators":
+		return FencedLockRpcId_FENCED_LOCK_RPC_ID_ALL_MUTATORS
+	case "all-executors", "fenced-lock-rpc-id-all-executors":
+		return FencedLockRpcId_FENCED_LOCK_RPC_ID_ALL_EXECUTORS
+	case "acquire", "fenced-lock-rpc-id-acquire":
+		return FencedLockRpcId_FENCED_LOCK_RPC_ID_ACQUIRE
+	case "release", "fenced-lock-rpc-id-release":
+		return FencedLockRpcId_FENCED_LOCK_RPC_ID_RELEASE
+	default:
+		return FencedLockRpcId_FENCED_LOCK_RPC_ID_UNSPECIFIED
+	}
+}
+
+// FencedLockRpcIdToSpecName converts a FencedLockRpcId to its canonical protobuf spec name
+func FencedLockRpcIdToSpecName(v FencedLockRpcId) string {
+	switch v {
+	case FencedLockRpcId_FENCED_LOCK_RPC_ID_UNSPECIFIED:
+		return "FENCED_LOCK_RPC_ID_UNSPECIFIED"
+	case FencedLockRpcId_FENCED_LOCK_RPC_ID_ALL_ACCESSORS:
+		return "FENCED_LOCK_RPC_ID_ALL_ACCESSORS"
+	case FencedLockRpcId_FENCED_LOCK_RPC_ID_ALL_MUTATORS:
+		return "FENCED_LOCK_RPC_ID_ALL_MUTATORS"
+	case FencedLockRpcId_FENCED_LOCK_RPC_ID_ALL_EXECUTORS:
+		return "FENCED_LOCK_RPC_ID_ALL_EXECUTORS"
+	case FencedLockRpcId_FENCED_LOCK_RPC_ID_ACQUIRE:
+		return "FENCED_LOCK_RPC_ID_ACQUIRE"
+	case FencedLockRpcId_FENCED_LOCK_RPC_ID_RELEASE:
+		return "FENCED_LOCK_RPC_ID_RELEASE"
 	default:
 		return ""
 	}
@@ -7853,6 +8056,8 @@ type configJSON struct {
 	SpiffeTrustDomain           string            `json:"spiffe_trust_domain,omitempty"`
 	LocationPath                string            `json:"location_path,omitempty"`
 	HealthProbePort             int32             `json:"health_probe_port,omitempty"`
+	Grants                      []json.RawMessage `json:"grants,omitempty"`
+	RatisListener               json.RawMessage   `json:"ratis_listener,omitempty"`
 	TraceId                     string            `json:"trace_id,omitempty"`
 	Noop                        bool              `json:"noop,omitempty"`
 }
@@ -8009,8 +8214,29 @@ func ConfigToJSON(v *Config) ([]byte, error) {
 		SpiffeTrustDomain: v.SpiffeTrustDomain,
 		LocationPath:      v.LocationPath,
 		HealthProbePort:   v.HealthProbePort,
-		TraceId:           v.TraceId,
-		Noop:              v.Noop,
+		Grants: func() []json.RawMessage {
+			if len(v.Grants) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Grants))
+			for _, item := range v.Grants {
+				if item != nil {
+					if data, err := GrantToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		RatisListener: func() json.RawMessage {
+			if v.RatisListener == nil {
+				return nil
+			}
+			data, _ := host.HostToJSON(v.RatisListener)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -8167,8 +8393,29 @@ func ConfigToJSONPretty(v *Config) ([]byte, error) {
 		SpiffeTrustDomain: v.SpiffeTrustDomain,
 		LocationPath:      v.LocationPath,
 		HealthProbePort:   v.HealthProbePort,
-		TraceId:           v.TraceId,
-		Noop:              v.Noop,
+		Grants: func() []json.RawMessage {
+			if len(v.Grants) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Grants))
+			for _, item := range v.Grants {
+				if item != nil {
+					if data, err := GrantToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		RatisListener: func() json.RawMessage {
+			if v.RatisListener == nil {
+				return nil
+			}
+			data, _ := host.HostToJSON(v.RatisListener)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -8372,6 +8619,25 @@ func ConfigFromJSON(data []byte) (*Config, error) {
 	result.SpiffeTrustDomain = raw.SpiffeTrustDomain
 	result.LocationPath = raw.LocationPath
 	result.HealthProbePort = raw.HealthProbePort
+	// Parse repeated message field: Grants
+	if len(raw.Grants) > 0 {
+		result.Grants = make([]*Grant, 0, len(raw.Grants))
+		for _, itemJSON := range raw.Grants {
+			if len(itemJSON) > 0 {
+				parsed, err := GrantFromJSON(itemJSON)
+				if err == nil {
+					result.Grants = append(result.Grants, parsed)
+				}
+			}
+		}
+	}
+	// Parse message field: RatisListener
+	if len(raw.RatisListener) > 0 {
+		parsed, err := host.HostFromJSON(raw.RatisListener)
+		if err == nil {
+			result.RatisListener = parsed
+		}
+	}
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -9118,6 +9384,594 @@ func TrustedCaToTOML(v *TrustedCa) ([]byte, error) {
 	}
 	// Convert to JSON first
 	jsonData, err := TrustedCaToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// FencedLockAcquireRequestJSON represents FencedLockAcquireRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type fencedlockacquirerequestJSON struct {
+	Key      string `json:"key,omitempty"`
+	HolderId string `json:"holder_id,omitempty"`
+	TraceId  string `json:"trace_id,omitempty"`
+	Noop     bool   `json:"noop,omitempty"`
+}
+
+// FencedLockAcquireRequestToJSON converts FencedLockAcquireRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func FencedLockAcquireRequestToJSON(v *FencedLockAcquireRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fencedlockacquirerequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := fencedlockacquirerequestJSON{
+		Key:      v.Key,
+		HolderId: v.HolderId,
+		TraceId:  v.TraceId,
+		Noop:     v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// FencedLockAcquireRequestToJSONPretty converts FencedLockAcquireRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func FencedLockAcquireRequestToJSONPretty(v *FencedLockAcquireRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fencedlockacquirerequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := fencedlockacquirerequestJSON{
+		Key:      v.Key,
+		HolderId: v.HolderId,
+		TraceId:  v.TraceId,
+		Noop:     v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// FencedLockAcquireRequestFromBytes creates FencedLockAcquireRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func FencedLockAcquireRequestFromBytes(data []byte) (*FencedLockAcquireRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := FencedLockAcquireRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := FencedLockAcquireRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := FencedLockAcquireRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &FencedLockAcquireRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse FencedLockAcquireRequest: unsupported format or invalid data")
+}
+
+// FencedLockAcquireRequestFromJSON creates FencedLockAcquireRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func FencedLockAcquireRequestFromJSON(data []byte) (*FencedLockAcquireRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw fencedlockacquirerequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &FencedLockAcquireRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &FencedLockAcquireRequest{}
+	result.Key = raw.Key
+	result.HolderId = raw.HolderId
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// FencedLockAcquireRequestToYAML converts FencedLockAcquireRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func FencedLockAcquireRequestToYAML(v *FencedLockAcquireRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fencedlockacquirerequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := FencedLockAcquireRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// FencedLockAcquireRequestToTOML converts FencedLockAcquireRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func FencedLockAcquireRequestToTOML(v *FencedLockAcquireRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fencedlockacquirerequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := FencedLockAcquireRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// FencedLockAcquireResponseJSON represents FencedLockAcquireResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type fencedlockacquireresponseJSON struct {
+	Granted      bool   `json:"granted,omitempty"`
+	FencingToken int64  `json:"fencing_token,omitempty"`
+	TraceId      string `json:"trace_id,omitempty"`
+	Noop         bool   `json:"noop,omitempty"`
+}
+
+// FencedLockAcquireResponseToJSON converts FencedLockAcquireResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func FencedLockAcquireResponseToJSON(v *FencedLockAcquireResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fencedlockacquireresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := fencedlockacquireresponseJSON{
+		Granted:      v.Granted,
+		FencingToken: v.FencingToken,
+		TraceId:      v.TraceId,
+		Noop:         v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// FencedLockAcquireResponseToJSONPretty converts FencedLockAcquireResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func FencedLockAcquireResponseToJSONPretty(v *FencedLockAcquireResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fencedlockacquireresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := fencedlockacquireresponseJSON{
+		Granted:      v.Granted,
+		FencingToken: v.FencingToken,
+		TraceId:      v.TraceId,
+		Noop:         v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// FencedLockAcquireResponseFromBytes creates FencedLockAcquireResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func FencedLockAcquireResponseFromBytes(data []byte) (*FencedLockAcquireResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := FencedLockAcquireResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := FencedLockAcquireResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := FencedLockAcquireResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &FencedLockAcquireResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse FencedLockAcquireResponse: unsupported format or invalid data")
+}
+
+// FencedLockAcquireResponseFromJSON creates FencedLockAcquireResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func FencedLockAcquireResponseFromJSON(data []byte) (*FencedLockAcquireResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw fencedlockacquireresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &FencedLockAcquireResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &FencedLockAcquireResponse{}
+	result.Granted = raw.Granted
+	result.FencingToken = raw.FencingToken
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// FencedLockAcquireResponseToYAML converts FencedLockAcquireResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func FencedLockAcquireResponseToYAML(v *FencedLockAcquireResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fencedlockacquireresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := FencedLockAcquireResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// FencedLockAcquireResponseToTOML converts FencedLockAcquireResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func FencedLockAcquireResponseToTOML(v *FencedLockAcquireResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fencedlockacquireresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := FencedLockAcquireResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// FencedLockReleaseRequestJSON represents FencedLockReleaseRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type fencedlockreleaserequestJSON struct {
+	Key          string `json:"key,omitempty"`
+	FencingToken int64  `json:"fencing_token,omitempty"`
+	TraceId      string `json:"trace_id,omitempty"`
+	Noop         bool   `json:"noop,omitempty"`
+}
+
+// FencedLockReleaseRequestToJSON converts FencedLockReleaseRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func FencedLockReleaseRequestToJSON(v *FencedLockReleaseRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fencedlockreleaserequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := fencedlockreleaserequestJSON{
+		Key:          v.Key,
+		FencingToken: v.FencingToken,
+		TraceId:      v.TraceId,
+		Noop:         v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// FencedLockReleaseRequestToJSONPretty converts FencedLockReleaseRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func FencedLockReleaseRequestToJSONPretty(v *FencedLockReleaseRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fencedlockreleaserequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := fencedlockreleaserequestJSON{
+		Key:          v.Key,
+		FencingToken: v.FencingToken,
+		TraceId:      v.TraceId,
+		Noop:         v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// FencedLockReleaseRequestFromBytes creates FencedLockReleaseRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func FencedLockReleaseRequestFromBytes(data []byte) (*FencedLockReleaseRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := FencedLockReleaseRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := FencedLockReleaseRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := FencedLockReleaseRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &FencedLockReleaseRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse FencedLockReleaseRequest: unsupported format or invalid data")
+}
+
+// FencedLockReleaseRequestFromJSON creates FencedLockReleaseRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func FencedLockReleaseRequestFromJSON(data []byte) (*FencedLockReleaseRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw fencedlockreleaserequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &FencedLockReleaseRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &FencedLockReleaseRequest{}
+	result.Key = raw.Key
+	result.FencingToken = raw.FencingToken
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// FencedLockReleaseRequestToYAML converts FencedLockReleaseRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func FencedLockReleaseRequestToYAML(v *FencedLockReleaseRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fencedlockreleaserequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := FencedLockReleaseRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// FencedLockReleaseRequestToTOML converts FencedLockReleaseRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func FencedLockReleaseRequestToTOML(v *FencedLockReleaseRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fencedlockreleaserequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := FencedLockReleaseRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// FencedLockReleaseResponseJSON represents FencedLockReleaseResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type fencedlockreleaseresponseJSON struct {
+	Ok      bool   `json:"ok,omitempty"`
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// FencedLockReleaseResponseToJSON converts FencedLockReleaseResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func FencedLockReleaseResponseToJSON(v *FencedLockReleaseResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fencedlockreleaseresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := fencedlockreleaseresponseJSON{
+		Ok:      v.Ok,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// FencedLockReleaseResponseToJSONPretty converts FencedLockReleaseResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func FencedLockReleaseResponseToJSONPretty(v *FencedLockReleaseResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fencedlockreleaseresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := fencedlockreleaseresponseJSON{
+		Ok:      v.Ok,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// FencedLockReleaseResponseFromBytes creates FencedLockReleaseResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func FencedLockReleaseResponseFromBytes(data []byte) (*FencedLockReleaseResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := FencedLockReleaseResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := FencedLockReleaseResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := FencedLockReleaseResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &FencedLockReleaseResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse FencedLockReleaseResponse: unsupported format or invalid data")
+}
+
+// FencedLockReleaseResponseFromJSON creates FencedLockReleaseResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func FencedLockReleaseResponseFromJSON(data []byte) (*FencedLockReleaseResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw fencedlockreleaseresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &FencedLockReleaseResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &FencedLockReleaseResponse{}
+	result.Ok = raw.Ok
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// FencedLockReleaseResponseToYAML converts FencedLockReleaseResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func FencedLockReleaseResponseToYAML(v *FencedLockReleaseResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fencedlockreleaseresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := FencedLockReleaseResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// FencedLockReleaseResponseToTOML converts FencedLockReleaseResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func FencedLockReleaseResponseToTOML(v *FencedLockReleaseResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "fencedlockreleaseresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := FencedLockReleaseResponseToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -14265,6 +15119,358 @@ func ConfigStateToTOML(v *ConfigState) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
+// GrantJSON represents Grant in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type grantJSON struct {
+	Id              string          `json:"id,omitempty"`
+	DelegateName    string          `json:"delegate_name,omitempty"`
+	Subject         string          `json:"subject,omitempty"`
+	AuthorizedScope json.RawMessage `json:"authorized_scope,omitempty"`
+	Claims          json.RawMessage `json:"claims,omitempty"`
+	CreatedAtMs     int64           `json:"created_at_ms,omitempty"`
+	ExpiresAtMs     int64           `json:"expires_at_ms,omitempty"`
+	RevokedAtMs     int64           `json:"revoked_at_ms,omitempty"`
+	TraceId         string          `json:"trace_id,omitempty"`
+	Noop            bool            `json:"noop,omitempty"`
+}
+
+// GrantToJSON converts Grant to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func GrantToJSON(v *Grant) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "grant is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := grantJSON{
+		Id:           v.Id,
+		DelegateName: v.DelegateName,
+		Subject:      v.Subject,
+		AuthorizedScope: func() json.RawMessage {
+			if v.AuthorizedScope == nil {
+				return nil
+			}
+			data, _ := entitlements.TokenEntitlementsToJSON(v.AuthorizedScope)
+			return data
+		}(),
+		Claims: func() json.RawMessage {
+			if v.Claims == nil {
+				return nil
+			}
+			data, _ := protojson.Marshal(v.Claims)
+			return data
+		}(),
+		CreatedAtMs: v.CreatedAtMs,
+		ExpiresAtMs: v.ExpiresAtMs,
+		RevokedAtMs: v.RevokedAtMs,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// GrantToJSONPretty converts Grant to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func GrantToJSONPretty(v *Grant) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "grant is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := grantJSON{
+		Id:           v.Id,
+		DelegateName: v.DelegateName,
+		Subject:      v.Subject,
+		AuthorizedScope: func() json.RawMessage {
+			if v.AuthorizedScope == nil {
+				return nil
+			}
+			data, _ := entitlements.TokenEntitlementsToJSON(v.AuthorizedScope)
+			return data
+		}(),
+		Claims: func() json.RawMessage {
+			if v.Claims == nil {
+				return nil
+			}
+			data, _ := protojson.Marshal(v.Claims)
+			return data
+		}(),
+		CreatedAtMs: v.CreatedAtMs,
+		ExpiresAtMs: v.ExpiresAtMs,
+		RevokedAtMs: v.RevokedAtMs,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// GrantFromBytes creates Grant from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func GrantFromBytes(data []byte) (*Grant, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := GrantFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := GrantFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := GrantFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &Grant{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse Grant: unsupported format or invalid data")
+}
+
+// GrantFromJSON creates Grant from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func GrantFromJSON(data []byte) (*Grant, error) {
+	// Unmarshal into helper struct with string enums
+	var raw grantJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &Grant{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &Grant{}
+	result.Id = raw.Id
+	result.DelegateName = raw.DelegateName
+	result.Subject = raw.Subject
+	// Parse message field: AuthorizedScope
+	if len(raw.AuthorizedScope) > 0 {
+		parsed, err := entitlements.TokenEntitlementsFromJSON(raw.AuthorizedScope)
+		if err == nil {
+			result.AuthorizedScope = parsed
+		}
+	}
+	// Parse well-known type: Claims
+	if len(raw.Claims) > 0 {
+		result.Claims = &structpb.Struct{}
+		if err := protojson.Unmarshal(raw.Claims, result.Claims); err != nil {
+			result.Claims = nil
+		}
+	}
+	result.CreatedAtMs = raw.CreatedAtMs
+	result.ExpiresAtMs = raw.ExpiresAtMs
+	result.RevokedAtMs = raw.RevokedAtMs
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// GrantToYAML converts Grant to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func GrantToYAML(v *Grant) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "grant is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := GrantToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// GrantToTOML converts Grant to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func GrantToTOML(v *Grant) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "grant is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := GrantToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// GrantRevokeRequestJSON represents GrantRevokeRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type grantrevokerequestJSON struct {
+	GrantId string `json:"grant_id,omitempty"`
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// GrantRevokeRequestToJSON converts GrantRevokeRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func GrantRevokeRequestToJSON(v *GrantRevokeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "grantrevokerequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := grantrevokerequestJSON{
+		GrantId: v.GrantId,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// GrantRevokeRequestToJSONPretty converts GrantRevokeRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func GrantRevokeRequestToJSONPretty(v *GrantRevokeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "grantrevokerequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := grantrevokerequestJSON{
+		GrantId: v.GrantId,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// GrantRevokeRequestFromBytes creates GrantRevokeRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func GrantRevokeRequestFromBytes(data []byte) (*GrantRevokeRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := GrantRevokeRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := GrantRevokeRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := GrantRevokeRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &GrantRevokeRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse GrantRevokeRequest: unsupported format or invalid data")
+}
+
+// GrantRevokeRequestFromJSON creates GrantRevokeRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func GrantRevokeRequestFromJSON(data []byte) (*GrantRevokeRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw grantrevokerequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &GrantRevokeRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &GrantRevokeRequest{}
+	result.GrantId = raw.GrantId
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// GrantRevokeRequestToYAML converts GrantRevokeRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func GrantRevokeRequestToYAML(v *GrantRevokeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "grantrevokerequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := GrantRevokeRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// GrantRevokeRequestToTOML converts GrantRevokeRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func GrantRevokeRequestToTOML(v *GrantRevokeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "grantrevokerequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := GrantRevokeRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
 // KernelDiskStateJSON represents KernelDiskState in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type kerneldiskstateJSON struct {
@@ -14276,6 +15482,7 @@ type kerneldiskstateJSON struct {
 	TenantConfigs       []json.RawMessage `json:"tenant_configs,omitempty"`
 	ProjectConfigs      []json.RawMessage `json:"project_configs,omitempty"`
 	WorkloadRevocations []json.RawMessage `json:"workload_revocations,omitempty"`
+	Grants              []json.RawMessage `json:"grants,omitempty"`
 	TraceId             string            `json:"trace_id,omitempty"`
 	Noop                bool              `json:"noop,omitempty"`
 }
@@ -14394,6 +15601,20 @@ func KernelDiskStateToJSON(v *KernelDiskState) ([]byte, error) {
 			for _, item := range v.WorkloadRevocations {
 				if item != nil {
 					if data, err := WorkloadRevocationToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		Grants: func() []json.RawMessage {
+			if len(v.Grants) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Grants))
+			for _, item := range v.Grants {
+				if item != nil {
+					if data, err := GrantToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -14520,6 +15741,20 @@ func KernelDiskStateToJSONPretty(v *KernelDiskState) ([]byte, error) {
 			for _, item := range v.WorkloadRevocations {
 				if item != nil {
 					if data, err := WorkloadRevocationToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		Grants: func() []json.RawMessage {
+			if len(v.Grants) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Grants))
+			for _, item := range v.Grants {
+				if item != nil {
+					if data, err := GrantToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -14684,6 +15919,18 @@ func KernelDiskStateFromJSON(data []byte) (*KernelDiskState, error) {
 				parsed, err := WorkloadRevocationFromJSON(itemJSON)
 				if err == nil {
 					result.WorkloadRevocations = append(result.WorkloadRevocations, parsed)
+				}
+			}
+		}
+	}
+	// Parse repeated message field: Grants
+	if len(raw.Grants) > 0 {
+		result.Grants = make([]*Grant, 0, len(raw.Grants))
+		for _, itemJSON := range raw.Grants {
+			if len(itemJSON) > 0 {
+				parsed, err := GrantFromJSON(itemJSON)
+				if err == nil {
+					result.Grants = append(result.Grants, parsed)
 				}
 			}
 		}
@@ -60553,6 +61800,11 @@ func ConfigToEnvVar(v *Config) map[string]string {
 	result["PROTO_SERVICES_KERNEL_CONFIG_SPIFFE_TRUST_DOMAIN"] = v.SpiffeTrustDomain
 	result["PROTO_SERVICES_KERNEL_CONFIG_LOCATION_PATH"] = v.LocationPath
 	result["PROTO_SERVICES_KERNEL_CONFIG_HEALTH_PROBE_PORT"] = strconv.FormatInt(int64(v.HealthProbePort), 10)
+	if v.RatisListener != nil {
+		for k, val := range host.HostToEnvVar(v.RatisListener) {
+			result[k] = val
+		}
+	}
 	result["PROTO_SERVICES_KERNEL_CONFIG_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_KERNEL_CONFIG_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -60703,6 +61955,11 @@ func ConfigFromEnvVar(env map[string]string) (*Config, error) {
 		}
 		result.HealthProbePort = int32(parsed)
 	}
+	if sub, err := host.HostFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.RatisListener = sub
+	}
 	if val, ok := env["PROTO_SERVICES_KERNEL_CONFIG_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
 	}
@@ -60849,6 +62106,158 @@ func TrustedCaFromEnvVar(env map[string]string) (*TrustedCa, error) {
 		result.TraceId = val
 	}
 	if val, ok := env["PROTO_SERVICES_KERNEL_TRUSTED_CA_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// FencedLockAcquireRequestToEnvVar converts FencedLockAcquireRequest to environment variable key-value pairs.
+func FencedLockAcquireRequestToEnvVar(v *FencedLockAcquireRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_FENCED_LOCK_ACQUIRE_REQUEST_KEY"] = v.Key
+	result["PROTO_SERVICES_KERNEL_FENCED_LOCK_ACQUIRE_REQUEST_HOLDER_ID"] = v.HolderId
+	result["PROTO_SERVICES_KERNEL_FENCED_LOCK_ACQUIRE_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_FENCED_LOCK_ACQUIRE_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// FencedLockAcquireRequestFromEnvVar creates FencedLockAcquireRequest from environment variable key-value pairs.
+func FencedLockAcquireRequestFromEnvVar(env map[string]string) (*FencedLockAcquireRequest, error) {
+	result := &FencedLockAcquireRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_FENCED_LOCK_ACQUIRE_REQUEST_KEY"]; ok && val != "" {
+		result.Key = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_FENCED_LOCK_ACQUIRE_REQUEST_HOLDER_ID"]; ok && val != "" {
+		result.HolderId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_FENCED_LOCK_ACQUIRE_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_FENCED_LOCK_ACQUIRE_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// FencedLockAcquireResponseToEnvVar converts FencedLockAcquireResponse to environment variable key-value pairs.
+func FencedLockAcquireResponseToEnvVar(v *FencedLockAcquireResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_FENCED_LOCK_ACQUIRE_RESPONSE_GRANTED"] = strconv.FormatBool(v.Granted)
+	result["PROTO_SERVICES_KERNEL_FENCED_LOCK_ACQUIRE_RESPONSE_FENCING_TOKEN"] = strconv.FormatInt(v.FencingToken, 10)
+	result["PROTO_SERVICES_KERNEL_FENCED_LOCK_ACQUIRE_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_FENCED_LOCK_ACQUIRE_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// FencedLockAcquireResponseFromEnvVar creates FencedLockAcquireResponse from environment variable key-value pairs.
+func FencedLockAcquireResponseFromEnvVar(env map[string]string) (*FencedLockAcquireResponse, error) {
+	result := &FencedLockAcquireResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_FENCED_LOCK_ACQUIRE_RESPONSE_GRANTED"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Granted = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_FENCED_LOCK_ACQUIRE_RESPONSE_FENCING_TOKEN"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.FencingToken = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_FENCED_LOCK_ACQUIRE_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_FENCED_LOCK_ACQUIRE_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// FencedLockReleaseRequestToEnvVar converts FencedLockReleaseRequest to environment variable key-value pairs.
+func FencedLockReleaseRequestToEnvVar(v *FencedLockReleaseRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_FENCED_LOCK_RELEASE_REQUEST_KEY"] = v.Key
+	result["PROTO_SERVICES_KERNEL_FENCED_LOCK_RELEASE_REQUEST_FENCING_TOKEN"] = strconv.FormatInt(v.FencingToken, 10)
+	result["PROTO_SERVICES_KERNEL_FENCED_LOCK_RELEASE_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_FENCED_LOCK_RELEASE_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// FencedLockReleaseRequestFromEnvVar creates FencedLockReleaseRequest from environment variable key-value pairs.
+func FencedLockReleaseRequestFromEnvVar(env map[string]string) (*FencedLockReleaseRequest, error) {
+	result := &FencedLockReleaseRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_FENCED_LOCK_RELEASE_REQUEST_KEY"]; ok && val != "" {
+		result.Key = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_FENCED_LOCK_RELEASE_REQUEST_FENCING_TOKEN"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.FencingToken = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_FENCED_LOCK_RELEASE_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_FENCED_LOCK_RELEASE_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// FencedLockReleaseResponseToEnvVar converts FencedLockReleaseResponse to environment variable key-value pairs.
+func FencedLockReleaseResponseToEnvVar(v *FencedLockReleaseResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_FENCED_LOCK_RELEASE_RESPONSE_OK"] = strconv.FormatBool(v.Ok)
+	result["PROTO_SERVICES_KERNEL_FENCED_LOCK_RELEASE_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_FENCED_LOCK_RELEASE_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// FencedLockReleaseResponseFromEnvVar creates FencedLockReleaseResponse from environment variable key-value pairs.
+func FencedLockReleaseResponseFromEnvVar(env map[string]string) (*FencedLockReleaseResponse, error) {
+	result := &FencedLockReleaseResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_FENCED_LOCK_RELEASE_RESPONSE_OK"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Ok = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_FENCED_LOCK_RELEASE_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_FENCED_LOCK_RELEASE_RESPONSE_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -61797,6 +63206,110 @@ func ConfigStateFromEnvVar(env map[string]string) (*ConfigState, error) {
 		result.TraceId = val
 	}
 	if val, ok := env["PROTO_SERVICES_KERNEL_CONFIG_STATE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// GrantToEnvVar converts Grant to environment variable key-value pairs.
+func GrantToEnvVar(v *Grant) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_GRANT_ID"] = v.Id
+	result["PROTO_SERVICES_KERNEL_GRANT_DELEGATE_NAME"] = v.DelegateName
+	result["PROTO_SERVICES_KERNEL_GRANT_SUBJECT"] = v.Subject
+	if v.AuthorizedScope != nil {
+		for k, val := range entitlements.TokenEntitlementsToEnvVar(v.AuthorizedScope) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_KERNEL_GRANT_CREATED_AT_MS"] = strconv.FormatInt(v.CreatedAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_GRANT_EXPIRES_AT_MS"] = strconv.FormatInt(v.ExpiresAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_GRANT_REVOKED_AT_MS"] = strconv.FormatInt(v.RevokedAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_GRANT_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_GRANT_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// GrantFromEnvVar creates Grant from environment variable key-value pairs.
+func GrantFromEnvVar(env map[string]string) (*Grant, error) {
+	result := &Grant{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_GRANT_ID"]; ok && val != "" {
+		result.Id = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_GRANT_DELEGATE_NAME"]; ok && val != "" {
+		result.DelegateName = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_GRANT_SUBJECT"]; ok && val != "" {
+		result.Subject = val
+	}
+	if sub, err := entitlements.TokenEntitlementsFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.AuthorizedScope = sub
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_GRANT_CREATED_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.CreatedAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_GRANT_EXPIRES_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.ExpiresAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_GRANT_REVOKED_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.RevokedAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_GRANT_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_GRANT_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// GrantRevokeRequestToEnvVar converts GrantRevokeRequest to environment variable key-value pairs.
+func GrantRevokeRequestToEnvVar(v *GrantRevokeRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_GRANT_REVOKE_REQUEST_GRANT_ID"] = v.GrantId
+	result["PROTO_SERVICES_KERNEL_GRANT_REVOKE_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_GRANT_REVOKE_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// GrantRevokeRequestFromEnvVar creates GrantRevokeRequest from environment variable key-value pairs.
+func GrantRevokeRequestFromEnvVar(env map[string]string) (*GrantRevokeRequest, error) {
+	result := &GrantRevokeRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_GRANT_REVOKE_REQUEST_GRANT_ID"]; ok && val != "" {
+		result.GrantId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_GRANT_REVOKE_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_GRANT_REVOKE_REQUEST_NOOP"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
 			return nil, err
@@ -71822,6 +73335,11 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field LocationPath exceeds max size of 256 bytes, got: %d", len(m.LocationPath))
 	}
 
+	// Validate Grants (assert_max_size: 4096)
+	if len(m.Grants) > 4096 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Grants exceeds max size of 4096, got: %d", len(m.Grants))
+	}
+
 	// Validate ClusterName (default max size: 32768 bytes)
 	if len(m.ClusterName) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ClusterName exceeds max size of 32768 bytes, got: %d", len(m.ClusterName))
@@ -71940,6 +73458,20 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 	for i, val := range m.RootCredPairs {
 		if err := credentials.ValidateCredPairWithDepth(val, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field RootCredPairs[%d] validation failed", i)
+		}
+	}
+
+	// Validate Grants nested messages
+	for i, val := range m.Grants {
+		if err := ValidateGrantWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Grants[%d] validation failed", i)
+		}
+	}
+
+	// Validate RatisListener nested message
+	if m.RatisListener != nil {
+		if err := host.ValidateHostWithDepth(m.RatisListener, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field RatisListener validation failed")
 		}
 	}
 
@@ -72087,6 +73619,136 @@ func ValidateTrustedCaWithDepth(m *TrustedCa, depth int) error {
 		if err := x509.ValidateX509CertWithDepth(val, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field TrustedCas[%d] validation failed", i)
 		}
+	}
+
+	return nil
+}
+
+// ValidateFencedLockAcquireRequest validates all fields in FencedLockAcquireRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateFencedLockAcquireRequest(m *FencedLockAcquireRequest) error {
+	return ValidateFencedLockAcquireRequestWithDepth(m, 0)
+}
+
+// ValidateFencedLockAcquireRequestWithDepth validates FencedLockAcquireRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateFencedLockAcquireRequestWithDepth(m *FencedLockAcquireRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Key (assert_max_size: 512 bytes)
+	if len(m.Key) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key exceeds max size of 512 bytes, got: %d", len(m.Key))
+	}
+
+	// Validate Key (assert_required)
+	if m.Key == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key is required")
+	}
+
+	// Validate HolderId (assert_max_size: 512 bytes)
+	if len(m.HolderId) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field HolderId exceeds max size of 512 bytes, got: %d", len(m.HolderId))
+	}
+
+	// Validate HolderId (assert_required)
+	if m.HolderId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field HolderId is required")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateFencedLockAcquireResponse validates all fields in FencedLockAcquireResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateFencedLockAcquireResponse(m *FencedLockAcquireResponse) error {
+	return ValidateFencedLockAcquireResponseWithDepth(m, 0)
+}
+
+// ValidateFencedLockAcquireResponseWithDepth validates FencedLockAcquireResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateFencedLockAcquireResponseWithDepth(m *FencedLockAcquireResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateFencedLockReleaseRequest validates all fields in FencedLockReleaseRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateFencedLockReleaseRequest(m *FencedLockReleaseRequest) error {
+	return ValidateFencedLockReleaseRequestWithDepth(m, 0)
+}
+
+// ValidateFencedLockReleaseRequestWithDepth validates FencedLockReleaseRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateFencedLockReleaseRequestWithDepth(m *FencedLockReleaseRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Key (assert_max_size: 512 bytes)
+	if len(m.Key) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key exceeds max size of 512 bytes, got: %d", len(m.Key))
+	}
+
+	// Validate Key (assert_required)
+	if m.Key == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key is required")
+	}
+
+	// Validate FencingToken (assert_gt: 0)
+	if m.FencingToken <= 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field FencingToken must be > 0, got: %v", m.FencingToken)
+	}
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateFencedLockReleaseResponse validates all fields in FencedLockReleaseResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateFencedLockReleaseResponse(m *FencedLockReleaseResponse) error {
+	return ValidateFencedLockReleaseResponseWithDepth(m, 0)
+}
+
+// ValidateFencedLockReleaseResponseWithDepth validates FencedLockReleaseResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateFencedLockReleaseResponseWithDepth(m *FencedLockReleaseResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
 	}
 
 	return nil
@@ -73361,6 +75023,113 @@ func ValidateConfigStateWithDepth(m *ConfigState, depth int) error {
 	return nil
 }
 
+// ValidateGrant validates all fields in Grant according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateGrant(m *Grant) error {
+	return ValidateGrantWithDepth(m, 0)
+}
+
+// ValidateGrantWithDepth validates Grant and carries nested-message depth across
+// generated package boundaries.
+func ValidateGrantWithDepth(m *Grant, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Id (assert_required)
+	if m.Id == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Id is required")
+	}
+
+	// Validate DelegateName (assert_max_size: 512 bytes)
+	if len(m.DelegateName) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field DelegateName exceeds max size of 512 bytes, got: %d", len(m.DelegateName))
+	}
+
+	// Validate DelegateName (assert_required)
+	if m.DelegateName == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field DelegateName is required")
+	}
+
+	// Validate Subject (assert_max_size: 512 bytes)
+	if len(m.Subject) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Subject exceeds max size of 512 bytes, got: %d", len(m.Subject))
+	}
+
+	// Validate Subject (assert_required)
+	if m.Subject == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Subject is required")
+	}
+
+	// Validate CreatedAtMs (assert_ge: 0)
+	if m.CreatedAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CreatedAtMs must be >= 0, got: %v", m.CreatedAtMs)
+	}
+	// Validate ExpiresAtMs (assert_ge: 0)
+	if m.ExpiresAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ExpiresAtMs must be >= 0, got: %v", m.ExpiresAtMs)
+	}
+	// Validate RevokedAtMs (assert_ge: 0)
+	if m.RevokedAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RevokedAtMs must be >= 0, got: %v", m.RevokedAtMs)
+	}
+	// Validate Id (default max size: 32768 bytes)
+	if len(m.Id) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Id exceeds max size of 32768 bytes, got: %d", len(m.Id))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate AuthorizedScope nested message
+	if m.AuthorizedScope != nil {
+		if err := entitlements.ValidateTokenEntitlementsWithDepth(m.AuthorizedScope, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field AuthorizedScope validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidateGrantRevokeRequest validates all fields in GrantRevokeRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateGrantRevokeRequest(m *GrantRevokeRequest) error {
+	return ValidateGrantRevokeRequestWithDepth(m, 0)
+}
+
+// ValidateGrantRevokeRequestWithDepth validates GrantRevokeRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateGrantRevokeRequestWithDepth(m *GrantRevokeRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate GrantId (assert_max_size: 512 bytes)
+	if len(m.GrantId) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field GrantId exceeds max size of 512 bytes, got: %d", len(m.GrantId))
+	}
+
+	// Validate GrantId (assert_required)
+	if m.GrantId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field GrantId is required")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
 // ValidateKernelDiskState validates all fields in KernelDiskState according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateKernelDiskState(m *KernelDiskState) error {
@@ -73415,6 +75184,11 @@ func ValidateKernelDiskStateWithDepth(m *KernelDiskState, depth int) error {
 	// Validate WorkloadRevocations (assert_max_size: 4096)
 	if len(m.WorkloadRevocations) > 4096 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field WorkloadRevocations exceeds max size of 4096, got: %d", len(m.WorkloadRevocations))
+	}
+
+	// Validate Grants (assert_max_size: 4096)
+	if len(m.Grants) > 4096 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Grants exceeds max size of 4096, got: %d", len(m.Grants))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -73475,6 +75249,13 @@ func ValidateKernelDiskStateWithDepth(m *KernelDiskState, depth int) error {
 	for i, val := range m.WorkloadRevocations {
 		if err := ValidateWorkloadRevocationWithDepth(val, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field WorkloadRevocations[%d] validation failed", i)
+		}
+	}
+
+	// Validate Grants nested messages
+	for i, val := range m.Grants {
+		if err := ValidateGrantWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Grants[%d] validation failed", i)
 		}
 	}
 
@@ -82520,6 +84301,7 @@ const (
 	DefaultOfflineTokenLifetimeSeconds int64  = 7776000
 	DefaultSpiffeTrustDomain           string = "local.dev"
 	DefaultHealthProbePort             int64  = 8444
+	DefaultRatisListenerPort           int64  = 5002
 )
 
 // ============================================================
@@ -82537,6 +84319,7 @@ const (
 	MaxSizeConfigRootCredPairs                                     int = 64
 	MaxSizeConfigSpiffeTrustDomain                                 int = 256
 	MaxSizeConfigLocationPath                                      int = 256
+	MaxSizeConfigGrants                                            int = 4096
 	MaxSizeConfigTraceId                                           int = 32768
 	MaxSizeIdentityVerifyingKeys                                   int = 16
 	MaxSizeIdentityTraceId                                         int = 32768
@@ -82545,6 +84328,13 @@ const (
 	MaxSizeSigningkeyrecordTraceId                                 int = 32768
 	MaxSizeTrustedcaTrustedCas                                     int = 16
 	MaxSizeTrustedcaTraceId                                        int = 32768
+	MaxSizeFencedlockacquirerequestKey                             int = 512
+	MaxSizeFencedlockacquirerequestHolderId                        int = 512
+	MaxSizeFencedlockacquirerequestTraceId                         int = 32768
+	MaxSizeFencedlockacquireresponseTraceId                        int = 32768
+	MaxSizeFencedlockreleaserequestKey                             int = 512
+	MaxSizeFencedlockreleaserequestTraceId                         int = 32768
+	MaxSizeFencedlockreleaseresponseTraceId                        int = 32768
 	MaxSizeClitokenbrokerrequestTraceId                            int = 32768
 	MaxSizeClitokenbrokerresponseTraceId                           int = 32768
 	MaxSizeClitokenbrokerregisterInstanceId                        int = 32768
@@ -82618,6 +84408,12 @@ const (
 	MaxSizeConfigstateTenantConfigs                                int = 4096
 	MaxSizeConfigstateProjectConfigs                               int = 4096
 	MaxSizeConfigstateTraceId                                      int = 32768
+	MaxSizeGrantId                                                 int = 32768
+	MaxSizeGrantDelegateName                                       int = 512
+	MaxSizeGrantSubject                                            int = 512
+	MaxSizeGrantTraceId                                            int = 32768
+	MaxSizeGrantrevokerequestGrantId                               int = 512
+	MaxSizeGrantrevokerequestTraceId                               int = 32768
 	MaxSizeKerneldiskstateSigningKeys                              int = 8
 	MaxSizeKerneldiskstateVerifyingKeys                            int = 32
 	MaxSizeKerneldiskstateCaCerts                                  int = 16
@@ -82626,6 +84422,7 @@ const (
 	MaxSizeKerneldiskstateTenantConfigs                            int = 4096
 	MaxSizeKerneldiskstateProjectConfigs                           int = 4096
 	MaxSizeKerneldiskstateWorkloadRevocations                      int = 4096
+	MaxSizeKerneldiskstateGrants                                   int = 4096
 	MaxSizeKerneldiskstateTraceId                                  int = 32768
 	MaxSizeCreatetenantrequestTenantNamespace                      int = 256
 	MaxSizeCreatetenantrequestTraceId                              int = 32768
@@ -83110,6 +84907,9 @@ func ConfigDefaults(v *Config) {
 	if v.HazelcastListener == nil {
 		v.HazelcastListener = &host.Host{Host: "0.0.0.0", Port: 5001}
 	}
+	if v.RatisListener == nil {
+		v.RatisListener = &host.Host{Host: "0.0.0.0", Port: 5002}
+	}
 }
 
 // ============================================================
@@ -83147,6 +84947,46 @@ func SigningKeyRecordDefaults(v *SigningKeyRecord) {
 // ============================================================
 // TrustedCaDefaults applies field-level default values to zero-valued fields.
 func TrustedCaDefaults(v *TrustedCa) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: FencedLockAcquireRequest
+// ============================================================
+// FencedLockAcquireRequestDefaults applies field-level default values to zero-valued fields.
+func FencedLockAcquireRequestDefaults(v *FencedLockAcquireRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: FencedLockAcquireResponse
+// ============================================================
+// FencedLockAcquireResponseDefaults applies field-level default values to zero-valued fields.
+func FencedLockAcquireResponseDefaults(v *FencedLockAcquireResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: FencedLockReleaseRequest
+// ============================================================
+// FencedLockReleaseRequestDefaults applies field-level default values to zero-valued fields.
+func FencedLockReleaseRequestDefaults(v *FencedLockReleaseRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: FencedLockReleaseResponse
+// ============================================================
+// FencedLockReleaseResponseDefaults applies field-level default values to zero-valued fields.
+func FencedLockReleaseResponseDefaults(v *FencedLockReleaseResponse) {
 	if v == nil {
 		return
 	}
@@ -83410,6 +85250,26 @@ func ProjectConfigEntryDefaults(v *ProjectConfigEntry) {
 // ============================================================
 // ConfigStateDefaults applies field-level default values to zero-valued fields.
 func ConfigStateDefaults(v *ConfigState) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: Grant
+// ============================================================
+// GrantDefaults applies field-level default values to zero-valued fields.
+func GrantDefaults(v *Grant) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: GrantRevokeRequest
+// ============================================================
+// GrantRevokeRequestDefaults applies field-level default values to zero-valued fields.
+func GrantRevokeRequestDefaults(v *GrantRevokeRequest) {
 	if v == nil {
 		return
 	}
@@ -86419,6 +88279,9 @@ func ConfigUndefaults(v *Config) {
 	if v.HazelcastListener != nil && v.HazelcastListener.Host == "0.0.0.0" && v.HazelcastListener.Port == 5001 {
 		v.HazelcastListener = nil
 	}
+	if v.RatisListener != nil && v.RatisListener.Host == "0.0.0.0" && v.RatisListener.Port == 5002 {
+		v.RatisListener = nil
+	}
 }
 
 // ============================================================
@@ -86460,6 +88323,50 @@ func SigningKeyRecordUndefaults(v *SigningKeyRecord) {
 // TrustedCaUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
 func TrustedCaUndefaults(v *TrustedCa) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: FencedLockAcquireRequest
+// ============================================================
+// FencedLockAcquireRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func FencedLockAcquireRequestUndefaults(v *FencedLockAcquireRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: FencedLockAcquireResponse
+// ============================================================
+// FencedLockAcquireResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func FencedLockAcquireResponseUndefaults(v *FencedLockAcquireResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: FencedLockReleaseRequest
+// ============================================================
+// FencedLockReleaseRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func FencedLockReleaseRequestUndefaults(v *FencedLockReleaseRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: FencedLockReleaseResponse
+// ============================================================
+// FencedLockReleaseResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func FencedLockReleaseResponseUndefaults(v *FencedLockReleaseResponse) {
 	if v == nil {
 		return
 	}
@@ -86749,6 +88656,28 @@ func ProjectConfigEntryUndefaults(v *ProjectConfigEntry) {
 // ConfigStateUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
 func ConfigStateUndefaults(v *ConfigState) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: Grant
+// ============================================================
+// GrantUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func GrantUndefaults(v *Grant) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: GrantRevokeRequest
+// ============================================================
+// GrantRevokeRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func GrantRevokeRequestUndefaults(v *GrantRevokeRequest) {
 	if v == nil {
 		return
 	}
@@ -90097,6 +92026,12 @@ func MergeConfig(dst, src *Config) {
 	if dst.HealthProbePort == 0 {
 		dst.HealthProbePort = src.HealthProbePort
 	}
+	if len(dst.Grants) == 0 {
+		dst.Grants = src.Grants
+	}
+	if dst.RatisListener == nil {
+		dst.RatisListener = src.RatisListener
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -90168,6 +92103,79 @@ func MergeSigningKeyRecord(dst, src *SigningKeyRecord) {
 func MergeTrustedCa(dst, src *TrustedCa) {
 	if len(dst.TrustedCas) == 0 {
 		dst.TrustedCas = src.TrustedCas
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: FencedLockAcquireRequest
+// ============================================================
+// MergeFencedLockAcquireRequest fills zero-valued fields in dst from src.
+func MergeFencedLockAcquireRequest(dst, src *FencedLockAcquireRequest) {
+	if dst.Key == "" {
+		dst.Key = src.Key
+	}
+	if dst.HolderId == "" {
+		dst.HolderId = src.HolderId
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: FencedLockAcquireResponse
+// ============================================================
+// MergeFencedLockAcquireResponse fills zero-valued fields in dst from src.
+func MergeFencedLockAcquireResponse(dst, src *FencedLockAcquireResponse) {
+	if !dst.Granted {
+		dst.Granted = src.Granted
+	}
+	if dst.FencingToken == 0 {
+		dst.FencingToken = src.FencingToken
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: FencedLockReleaseRequest
+// ============================================================
+// MergeFencedLockReleaseRequest fills zero-valued fields in dst from src.
+func MergeFencedLockReleaseRequest(dst, src *FencedLockReleaseRequest) {
+	if dst.Key == "" {
+		dst.Key = src.Key
+	}
+	if dst.FencingToken == 0 {
+		dst.FencingToken = src.FencingToken
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: FencedLockReleaseResponse
+// ============================================================
+// MergeFencedLockReleaseResponse fills zero-valued fields in dst from src.
+func MergeFencedLockReleaseResponse(dst, src *FencedLockReleaseResponse) {
+	if !dst.Ok {
+		dst.Ok = src.Ok
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -90729,6 +92737,59 @@ func MergeConfigState(dst, src *ConfigState) {
 }
 
 // ============================================================
+// Merge: Grant
+// ============================================================
+// MergeGrant fills zero-valued fields in dst from src.
+func MergeGrant(dst, src *Grant) {
+	if dst.Id == "" {
+		dst.Id = src.Id
+	}
+	if dst.DelegateName == "" {
+		dst.DelegateName = src.DelegateName
+	}
+	if dst.Subject == "" {
+		dst.Subject = src.Subject
+	}
+	if dst.AuthorizedScope == nil {
+		dst.AuthorizedScope = src.AuthorizedScope
+	}
+	if dst.Claims == nil {
+		dst.Claims = src.Claims
+	}
+	if dst.CreatedAtMs == 0 {
+		dst.CreatedAtMs = src.CreatedAtMs
+	}
+	if dst.ExpiresAtMs == 0 {
+		dst.ExpiresAtMs = src.ExpiresAtMs
+	}
+	if dst.RevokedAtMs == 0 {
+		dst.RevokedAtMs = src.RevokedAtMs
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: GrantRevokeRequest
+// ============================================================
+// MergeGrantRevokeRequest fills zero-valued fields in dst from src.
+func MergeGrantRevokeRequest(dst, src *GrantRevokeRequest) {
+	if dst.GrantId == "" {
+		dst.GrantId = src.GrantId
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
 // Merge: KernelDiskState
 // ============================================================
 // MergeKernelDiskState fills zero-valued fields in dst from src.
@@ -90756,6 +92817,9 @@ func MergeKernelDiskState(dst, src *KernelDiskState) {
 	}
 	if len(dst.WorkloadRevocations) == 0 {
 		dst.WorkloadRevocations = src.WorkloadRevocations
+	}
+	if len(dst.Grants) == 0 {
+		dst.Grants = src.Grants
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

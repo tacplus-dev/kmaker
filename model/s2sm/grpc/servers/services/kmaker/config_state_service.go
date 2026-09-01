@@ -22,6 +22,7 @@ import (
 	"go.uber.org/zap"
 
 	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/am"
+	grpcserver "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/grpcserver"
 	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/servicemanager"
 
 	trace_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
@@ -460,4 +461,12 @@ func (p *KmakerConfigStateService) WatchConfig(req *trace_pb.TraceRequest, strea
 			zap.String("request_id", requestID))
 	}
 	return p.handler.WatchConfig(caller, KmakerConfigStateServiceValidatingServerStreamingServer[types.Config]{ServerStreamingServer: stream, validate: types.ValidateConfig})
+}
+
+// RegisterKmakerConfigStateServiceMethodAuth registers per-method auth_services patterns with the Authorizer.
+// Called by ServiceManager after creating the Authorizer.
+func RegisterKmakerConfigStateServiceMethodAuth(auth grpcserver.Authorizer) {
+	auth.SetMethodAuth("GetConfig", []string{"kmaker"})
+	auth.SetMethodAuth("SetConfig", []string{"kmaker"})
+	auth.SetMethodAuth("WatchConfig", []string{"kmaker"})
 }

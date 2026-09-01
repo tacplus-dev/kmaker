@@ -40,13 +40,16 @@ import (
 // AccountingMethodJSON represents AccountingMethod in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type accountingmethodJSON struct {
-	Sentinel string `json:"sentinel,omitempty"`
-	Gateway  string `json:"gateway,omitempty"`
-	Kernel   string `json:"kernel,omitempty"`
-	Eventbus string `json:"eventbus,omitempty"`
-	Oauth    string `json:"oauth,omitempty"`
-	Argus    string `json:"argus,omitempty"`
-	Saml     string `json:"saml,omitempty"`
+	Sentinel    string `json:"sentinel,omitempty"`
+	Gateway     string `json:"gateway,omitempty"`
+	Kernel      string `json:"kernel,omitempty"`
+	Eventbus    string `json:"eventbus,omitempty"`
+	Oauth       string `json:"oauth,omitempty"`
+	Saml        string `json:"saml,omitempty"`
+	Messaging   string `json:"messaging,omitempty"`
+	Scottyagent string `json:"scottyagent,omitempty"`
+	Mailbox     string `json:"mailbox,omitempty"`
+	Scotty      string `json:"scotty,omitempty"`
 }
 
 // AccountingMethodToJSON converts AccountingMethod to JSON bytes.
@@ -57,13 +60,16 @@ func AccountingMethodToJSON(v *AccountingMethod) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := accountingmethodJSON{
-		Sentinel: services.SentinelRPCsToString(v.Sentinel),
-		Gateway:  services.GatewayRPCsToString(v.Gateway),
-		Kernel:   services.KernelRPCsToString(v.Kernel),
-		Eventbus: services.EventbusRPCsToString(v.Eventbus),
-		Oauth:    services.OauthRPCsToString(v.Oauth),
-		Argus:    services.ArgusRPCsToString(v.Argus),
-		Saml:     services.SamlRPCsToString(v.Saml),
+		Sentinel:    services.SentinelRPCsToString(v.Sentinel),
+		Gateway:     services.GatewayRPCsToString(v.Gateway),
+		Kernel:      services.KernelRPCsToString(v.Kernel),
+		Eventbus:    services.EventbusRPCsToString(v.Eventbus),
+		Oauth:       services.OauthRPCsToString(v.Oauth),
+		Saml:        services.SamlRPCsToString(v.Saml),
+		Messaging:   services.MessagingRPCsToString(v.Messaging),
+		Scottyagent: services.ScottyagentRPCsToString(v.Scottyagent),
+		Mailbox:     services.MailboxRPCsToString(v.Mailbox),
+		Scotty:      services.ScottyRPCsToString(v.Scotty),
 	}
 	return json.Marshal(helper)
 }
@@ -76,13 +82,16 @@ func AccountingMethodToJSONPretty(v *AccountingMethod) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := accountingmethodJSON{
-		Sentinel: services.SentinelRPCsToString(v.Sentinel),
-		Gateway:  services.GatewayRPCsToString(v.Gateway),
-		Kernel:   services.KernelRPCsToString(v.Kernel),
-		Eventbus: services.EventbusRPCsToString(v.Eventbus),
-		Oauth:    services.OauthRPCsToString(v.Oauth),
-		Argus:    services.ArgusRPCsToString(v.Argus),
-		Saml:     services.SamlRPCsToString(v.Saml),
+		Sentinel:    services.SentinelRPCsToString(v.Sentinel),
+		Gateway:     services.GatewayRPCsToString(v.Gateway),
+		Kernel:      services.KernelRPCsToString(v.Kernel),
+		Eventbus:    services.EventbusRPCsToString(v.Eventbus),
+		Oauth:       services.OauthRPCsToString(v.Oauth),
+		Saml:        services.SamlRPCsToString(v.Saml),
+		Messaging:   services.MessagingRPCsToString(v.Messaging),
+		Scottyagent: services.ScottyagentRPCsToString(v.Scottyagent),
+		Mailbox:     services.MailboxRPCsToString(v.Mailbox),
+		Scotty:      services.ScottyRPCsToString(v.Scotty),
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -177,16 +186,34 @@ func AccountingMethodFromJSON(data []byte) (*AccountingMethod, error) {
 			result.Oauth = parsed
 		}
 	}
-	// Parse enum field: Argus
-	if raw.Argus != "" {
-		if parsed, err := services.ParseArgusRPCs(raw.Argus); err == nil {
-			result.Argus = parsed
-		}
-	}
 	// Parse enum field: Saml
 	if raw.Saml != "" {
 		if parsed, err := services.ParseSamlRPCs(raw.Saml); err == nil {
 			result.Saml = parsed
+		}
+	}
+	// Parse enum field: Messaging
+	if raw.Messaging != "" {
+		if parsed, err := services.ParseMessagingRPCs(raw.Messaging); err == nil {
+			result.Messaging = parsed
+		}
+	}
+	// Parse enum field: Scottyagent
+	if raw.Scottyagent != "" {
+		if parsed, err := services.ParseScottyagentRPCs(raw.Scottyagent); err == nil {
+			result.Scottyagent = parsed
+		}
+	}
+	// Parse enum field: Mailbox
+	if raw.Mailbox != "" {
+		if parsed, err := services.ParseMailboxRPCs(raw.Mailbox); err == nil {
+			result.Mailbox = parsed
+		}
+	}
+	// Parse enum field: Scotty
+	if raw.Scotty != "" {
+		if parsed, err := services.ParseScottyRPCs(raw.Scotty); err == nil {
+			result.Scotty = parsed
 		}
 	}
 	return result, nil
@@ -275,8 +302,11 @@ func AccountingMethodToEnvVar(v *AccountingMethod) map[string]string {
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_KERNEL"] = services.KernelRPCsToString(v.Kernel)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_EVENTBUS"] = services.EventbusRPCsToString(v.Eventbus)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_OAUTH"] = services.OauthRPCsToString(v.Oauth)
-	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_ARGUS"] = services.ArgusRPCsToString(v.Argus)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SAML"] = services.SamlRPCsToString(v.Saml)
+	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_MESSAGING"] = services.MessagingRPCsToString(v.Messaging)
+	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SCOTTYAGENT"] = services.ScottyagentRPCsToString(v.Scottyagent)
+	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_MAILBOX"] = services.MailboxRPCsToString(v.Mailbox)
+	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SCOTTY"] = services.ScottyRPCsToString(v.Scotty)
 	return result
 }
 
@@ -318,19 +348,40 @@ func AccountingMethodFromEnvVar(env map[string]string) (*AccountingMethod, error
 		}
 		result.Oauth = parsed
 	}
-	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_ARGUS"]; ok && val != "" {
-		parsed, err := services.ParseArgusRPCs(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Argus = parsed
-	}
 	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SAML"]; ok && val != "" {
 		parsed, err := services.ParseSamlRPCs(val)
 		if err != nil {
 			return nil, err
 		}
 		result.Saml = parsed
+	}
+	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_MESSAGING"]; ok && val != "" {
+		parsed, err := services.ParseMessagingRPCs(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Messaging = parsed
+	}
+	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SCOTTYAGENT"]; ok && val != "" {
+		parsed, err := services.ParseScottyagentRPCs(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Scottyagent = parsed
+	}
+	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_MAILBOX"]; ok && val != "" {
+		parsed, err := services.ParseMailboxRPCs(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Mailbox = parsed
+	}
+	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SCOTTY"]; ok && val != "" {
+		parsed, err := services.ParseScottyRPCs(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Scotty = parsed
 	}
 	return result, nil
 }
@@ -379,14 +430,29 @@ func ValidateAccountingMethodWithDepth(m *AccountingMethod, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Oauth has unknown enum value %d", int32(m.Oauth))
 	}
 
-	// Validate Argus enum value is known
-	if _, ok := services.ArgusRPCs_name[int32(m.Argus)]; !ok {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Argus has unknown enum value %d", int32(m.Argus))
-	}
-
 	// Validate Saml enum value is known
 	if _, ok := services.SamlRPCs_name[int32(m.Saml)]; !ok {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Saml has unknown enum value %d", int32(m.Saml))
+	}
+
+	// Validate Messaging enum value is known
+	if _, ok := services.MessagingRPCs_name[int32(m.Messaging)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Messaging has unknown enum value %d", int32(m.Messaging))
+	}
+
+	// Validate Scottyagent enum value is known
+	if _, ok := services.ScottyagentRPCs_name[int32(m.Scottyagent)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Scottyagent has unknown enum value %d", int32(m.Scottyagent))
+	}
+
+	// Validate Mailbox enum value is known
+	if _, ok := services.MailboxRPCs_name[int32(m.Mailbox)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Mailbox has unknown enum value %d", int32(m.Mailbox))
+	}
+
+	// Validate Scotty enum value is known
+	if _, ok := services.ScottyRPCs_name[int32(m.Scotty)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Scotty has unknown enum value %d", int32(m.Scotty))
 	}
 
 	return nil
@@ -433,10 +499,19 @@ func MergeAccountingMethod(dst, src *AccountingMethod) {
 	if dst.Oauth == 0 {
 		dst.Oauth = src.Oauth
 	}
-	if dst.Argus == 0 {
-		dst.Argus = src.Argus
-	}
 	if dst.Saml == 0 {
 		dst.Saml = src.Saml
+	}
+	if dst.Messaging == 0 {
+		dst.Messaging = src.Messaging
+	}
+	if dst.Scottyagent == 0 {
+		dst.Scottyagent = src.Scottyagent
+	}
+	if dst.Mailbox == 0 {
+		dst.Mailbox = src.Mailbox
+	}
+	if dst.Scotty == 0 {
+		dst.Scotty = src.Scotty
 	}
 }

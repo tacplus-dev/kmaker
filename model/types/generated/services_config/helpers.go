@@ -26,19 +26,20 @@ import (
 	"encoding/json"
 
 	"github.com/pelletier/go-toml/v2"
-	argus "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/argus"
 	eventbus "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/eventbus"
 	gateway "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gateway"
-	graphdb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/graphdb"
 	kmaker "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
 	letsencrypt "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/letsencrypt"
+	mailbox "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/mailbox"
+	messaging "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/messaging"
 	oauth "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/oauth"
 	opa "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/opa"
 	operator "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/operator"
 	samlsvc "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/samlsvc"
+	scotty "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/scotty"
+	scottyagent "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/scottyagent"
 	sentinel "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/sentinel"
 	stratum "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/stratum"
-	timedb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/timedb"
 	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/errors"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
@@ -55,16 +56,17 @@ type servicesJSON struct {
 	SentinelConfig    json.RawMessage `json:"sentinel_config,omitempty"`
 	GatewayConfig     json.RawMessage `json:"gateway_config,omitempty"`
 	LetsencryptConfig json.RawMessage `json:"letsencrypt_config,omitempty"`
-	GraphdbConfig     json.RawMessage `json:"graphdb_config,omitempty"`
 	EventbusConfig    json.RawMessage `json:"eventbus_config,omitempty"`
-	TimedbConfig      json.RawMessage `json:"timedb_config,omitempty"`
 	OauthConfig       json.RawMessage `json:"oauth_config,omitempty"`
 	OpaConfig         json.RawMessage `json:"opa_config,omitempty"`
 	StratumConfig     json.RawMessage `json:"stratum_config,omitempty"`
-	ArgusConfig       json.RawMessage `json:"argus_config,omitempty"`
 	SamlConfig        json.RawMessage `json:"saml_config,omitempty"`
 	OperatorConfig    json.RawMessage `json:"operator_config,omitempty"`
 	KmakerConfig      json.RawMessage `json:"kmaker_config,omitempty"`
+	MessagingConfig   json.RawMessage `json:"messaging_config,omitempty"`
+	ScottyagentConfig json.RawMessage `json:"scottyagent_config,omitempty"`
+	MailboxConfig     json.RawMessage `json:"mailbox_config,omitempty"`
+	ScottyConfig      json.RawMessage `json:"scotty_config,omitempty"`
 }
 
 // ServicesToJSON converts Services to JSON bytes.
@@ -96,25 +98,11 @@ func ServicesToJSON(v *Services) ([]byte, error) {
 			data, _ := letsencrypt.ConfigToJSON(v.LetsencryptConfig)
 			return data
 		}(),
-		GraphdbConfig: func() json.RawMessage {
-			if v.GraphdbConfig == nil {
-				return nil
-			}
-			data, _ := graphdb.ConfigToJSON(v.GraphdbConfig)
-			return data
-		}(),
 		EventbusConfig: func() json.RawMessage {
 			if v.EventbusConfig == nil {
 				return nil
 			}
 			data, _ := eventbus.ConfigToJSON(v.EventbusConfig)
-			return data
-		}(),
-		TimedbConfig: func() json.RawMessage {
-			if v.TimedbConfig == nil {
-				return nil
-			}
-			data, _ := timedb.ConfigToJSON(v.TimedbConfig)
 			return data
 		}(),
 		OauthConfig: func() json.RawMessage {
@@ -138,13 +126,6 @@ func ServicesToJSON(v *Services) ([]byte, error) {
 			data, _ := stratum.ConfigToJSON(v.StratumConfig)
 			return data
 		}(),
-		ArgusConfig: func() json.RawMessage {
-			if v.ArgusConfig == nil {
-				return nil
-			}
-			data, _ := argus.ConfigToJSON(v.ArgusConfig)
-			return data
-		}(),
 		SamlConfig: func() json.RawMessage {
 			if v.SamlConfig == nil {
 				return nil
@@ -164,6 +145,34 @@ func ServicesToJSON(v *Services) ([]byte, error) {
 				return nil
 			}
 			data, _ := kmaker.ConfigToJSON(v.KmakerConfig)
+			return data
+		}(),
+		MessagingConfig: func() json.RawMessage {
+			if v.MessagingConfig == nil {
+				return nil
+			}
+			data, _ := messaging.ConfigToJSON(v.MessagingConfig)
+			return data
+		}(),
+		ScottyagentConfig: func() json.RawMessage {
+			if v.ScottyagentConfig == nil {
+				return nil
+			}
+			data, _ := scottyagent.ConfigToJSON(v.ScottyagentConfig)
+			return data
+		}(),
+		MailboxConfig: func() json.RawMessage {
+			if v.MailboxConfig == nil {
+				return nil
+			}
+			data, _ := mailbox.ConfigToJSON(v.MailboxConfig)
+			return data
+		}(),
+		ScottyConfig: func() json.RawMessage {
+			if v.ScottyConfig == nil {
+				return nil
+			}
+			data, _ := scotty.ConfigToJSON(v.ScottyConfig)
 			return data
 		}(),
 	}
@@ -199,25 +208,11 @@ func ServicesToJSONPretty(v *Services) ([]byte, error) {
 			data, _ := letsencrypt.ConfigToJSON(v.LetsencryptConfig)
 			return data
 		}(),
-		GraphdbConfig: func() json.RawMessage {
-			if v.GraphdbConfig == nil {
-				return nil
-			}
-			data, _ := graphdb.ConfigToJSON(v.GraphdbConfig)
-			return data
-		}(),
 		EventbusConfig: func() json.RawMessage {
 			if v.EventbusConfig == nil {
 				return nil
 			}
 			data, _ := eventbus.ConfigToJSON(v.EventbusConfig)
-			return data
-		}(),
-		TimedbConfig: func() json.RawMessage {
-			if v.TimedbConfig == nil {
-				return nil
-			}
-			data, _ := timedb.ConfigToJSON(v.TimedbConfig)
 			return data
 		}(),
 		OauthConfig: func() json.RawMessage {
@@ -241,13 +236,6 @@ func ServicesToJSONPretty(v *Services) ([]byte, error) {
 			data, _ := stratum.ConfigToJSON(v.StratumConfig)
 			return data
 		}(),
-		ArgusConfig: func() json.RawMessage {
-			if v.ArgusConfig == nil {
-				return nil
-			}
-			data, _ := argus.ConfigToJSON(v.ArgusConfig)
-			return data
-		}(),
 		SamlConfig: func() json.RawMessage {
 			if v.SamlConfig == nil {
 				return nil
@@ -267,6 +255,34 @@ func ServicesToJSONPretty(v *Services) ([]byte, error) {
 				return nil
 			}
 			data, _ := kmaker.ConfigToJSON(v.KmakerConfig)
+			return data
+		}(),
+		MessagingConfig: func() json.RawMessage {
+			if v.MessagingConfig == nil {
+				return nil
+			}
+			data, _ := messaging.ConfigToJSON(v.MessagingConfig)
+			return data
+		}(),
+		ScottyagentConfig: func() json.RawMessage {
+			if v.ScottyagentConfig == nil {
+				return nil
+			}
+			data, _ := scottyagent.ConfigToJSON(v.ScottyagentConfig)
+			return data
+		}(),
+		MailboxConfig: func() json.RawMessage {
+			if v.MailboxConfig == nil {
+				return nil
+			}
+			data, _ := mailbox.ConfigToJSON(v.MailboxConfig)
+			return data
+		}(),
+		ScottyConfig: func() json.RawMessage {
+			if v.ScottyConfig == nil {
+				return nil
+			}
+			data, _ := scotty.ConfigToJSON(v.ScottyConfig)
 			return data
 		}(),
 	}
@@ -354,25 +370,11 @@ func ServicesFromJSON(data []byte) (*Services, error) {
 			result.LetsencryptConfig = parsed
 		}
 	}
-	// Parse message field: GraphdbConfig
-	if len(raw.GraphdbConfig) > 0 {
-		parsed, err := graphdb.ConfigFromJSON(raw.GraphdbConfig)
-		if err == nil {
-			result.GraphdbConfig = parsed
-		}
-	}
 	// Parse message field: EventbusConfig
 	if len(raw.EventbusConfig) > 0 {
 		parsed, err := eventbus.ConfigFromJSON(raw.EventbusConfig)
 		if err == nil {
 			result.EventbusConfig = parsed
-		}
-	}
-	// Parse message field: TimedbConfig
-	if len(raw.TimedbConfig) > 0 {
-		parsed, err := timedb.ConfigFromJSON(raw.TimedbConfig)
-		if err == nil {
-			result.TimedbConfig = parsed
 		}
 	}
 	// Parse message field: OauthConfig
@@ -396,13 +398,6 @@ func ServicesFromJSON(data []byte) (*Services, error) {
 			result.StratumConfig = parsed
 		}
 	}
-	// Parse message field: ArgusConfig
-	if len(raw.ArgusConfig) > 0 {
-		parsed, err := argus.ConfigFromJSON(raw.ArgusConfig)
-		if err == nil {
-			result.ArgusConfig = parsed
-		}
-	}
 	// Parse message field: SamlConfig
 	if len(raw.SamlConfig) > 0 {
 		parsed, err := samlsvc.ConfigFromJSON(raw.SamlConfig)
@@ -422,6 +417,34 @@ func ServicesFromJSON(data []byte) (*Services, error) {
 		parsed, err := kmaker.ConfigFromJSON(raw.KmakerConfig)
 		if err == nil {
 			result.KmakerConfig = parsed
+		}
+	}
+	// Parse message field: MessagingConfig
+	if len(raw.MessagingConfig) > 0 {
+		parsed, err := messaging.ConfigFromJSON(raw.MessagingConfig)
+		if err == nil {
+			result.MessagingConfig = parsed
+		}
+	}
+	// Parse message field: ScottyagentConfig
+	if len(raw.ScottyagentConfig) > 0 {
+		parsed, err := scottyagent.ConfigFromJSON(raw.ScottyagentConfig)
+		if err == nil {
+			result.ScottyagentConfig = parsed
+		}
+	}
+	// Parse message field: MailboxConfig
+	if len(raw.MailboxConfig) > 0 {
+		parsed, err := mailbox.ConfigFromJSON(raw.MailboxConfig)
+		if err == nil {
+			result.MailboxConfig = parsed
+		}
+	}
+	// Parse message field: ScottyConfig
+	if len(raw.ScottyConfig) > 0 {
+		parsed, err := scotty.ConfigFromJSON(raw.ScottyConfig)
+		if err == nil {
+			result.ScottyConfig = parsed
 		}
 	}
 	return result, nil
@@ -520,18 +543,8 @@ func ServicesToEnvVar(v *Services) map[string]string {
 			result[k] = val
 		}
 	}
-	if v.GraphdbConfig != nil {
-		for k, val := range graphdb.ConfigToEnvVar(v.GraphdbConfig) {
-			result[k] = val
-		}
-	}
 	if v.EventbusConfig != nil {
 		for k, val := range eventbus.ConfigToEnvVar(v.EventbusConfig) {
-			result[k] = val
-		}
-	}
-	if v.TimedbConfig != nil {
-		for k, val := range timedb.ConfigToEnvVar(v.TimedbConfig) {
 			result[k] = val
 		}
 	}
@@ -550,11 +563,6 @@ func ServicesToEnvVar(v *Services) map[string]string {
 			result[k] = val
 		}
 	}
-	if v.ArgusConfig != nil {
-		for k, val := range argus.ConfigToEnvVar(v.ArgusConfig) {
-			result[k] = val
-		}
-	}
 	if v.SamlConfig != nil {
 		for k, val := range samlsvc.ConfigToEnvVar(v.SamlConfig) {
 			result[k] = val
@@ -567,6 +575,26 @@ func ServicesToEnvVar(v *Services) map[string]string {
 	}
 	if v.KmakerConfig != nil {
 		for k, val := range kmaker.ConfigToEnvVar(v.KmakerConfig) {
+			result[k] = val
+		}
+	}
+	if v.MessagingConfig != nil {
+		for k, val := range messaging.ConfigToEnvVar(v.MessagingConfig) {
+			result[k] = val
+		}
+	}
+	if v.ScottyagentConfig != nil {
+		for k, val := range scottyagent.ConfigToEnvVar(v.ScottyagentConfig) {
+			result[k] = val
+		}
+	}
+	if v.MailboxConfig != nil {
+		for k, val := range mailbox.ConfigToEnvVar(v.MailboxConfig) {
+			result[k] = val
+		}
+	}
+	if v.ScottyConfig != nil {
+		for k, val := range scotty.ConfigToEnvVar(v.ScottyConfig) {
 			result[k] = val
 		}
 	}
@@ -591,20 +619,10 @@ func ServicesFromEnvVar(env map[string]string) (*Services, error) {
 	} else if sub != nil {
 		result.LetsencryptConfig = sub
 	}
-	if sub, err := graphdb.ConfigFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.GraphdbConfig = sub
-	}
 	if sub, err := eventbus.ConfigFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.EventbusConfig = sub
-	}
-	if sub, err := timedb.ConfigFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.TimedbConfig = sub
 	}
 	if sub, err := oauth.ConfigFromEnvVar(env); err != nil {
 		return nil, err
@@ -621,11 +639,6 @@ func ServicesFromEnvVar(env map[string]string) (*Services, error) {
 	} else if sub != nil {
 		result.StratumConfig = sub
 	}
-	if sub, err := argus.ConfigFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.ArgusConfig = sub
-	}
 	if sub, err := samlsvc.ConfigFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
@@ -640,6 +653,26 @@ func ServicesFromEnvVar(env map[string]string) (*Services, error) {
 		return nil, err
 	} else if sub != nil {
 		result.KmakerConfig = sub
+	}
+	if sub, err := messaging.ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.MessagingConfig = sub
+	}
+	if sub, err := scottyagent.ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.ScottyagentConfig = sub
+	}
+	if sub, err := mailbox.ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.MailboxConfig = sub
+	}
+	if sub, err := scotty.ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.ScottyConfig = sub
 	}
 	return result, nil
 }
@@ -684,24 +717,10 @@ func ValidateServicesWithDepth(m *Services, depth int) error {
 		}
 	}
 
-	// Validate GraphdbConfig nested message
-	if m.GraphdbConfig != nil {
-		if err := graphdb.ValidateConfigWithDepth(m.GraphdbConfig, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field GraphdbConfig validation failed")
-		}
-	}
-
 	// Validate EventbusConfig nested message
 	if m.EventbusConfig != nil {
 		if err := eventbus.ValidateConfigWithDepth(m.EventbusConfig, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field EventbusConfig validation failed")
-		}
-	}
-
-	// Validate TimedbConfig nested message
-	if m.TimedbConfig != nil {
-		if err := timedb.ValidateConfigWithDepth(m.TimedbConfig, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field TimedbConfig validation failed")
 		}
 	}
 
@@ -726,13 +745,6 @@ func ValidateServicesWithDepth(m *Services, depth int) error {
 		}
 	}
 
-	// Validate ArgusConfig nested message
-	if m.ArgusConfig != nil {
-		if err := argus.ValidateConfigWithDepth(m.ArgusConfig, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field ArgusConfig validation failed")
-		}
-	}
-
 	// Validate SamlConfig nested message
 	if m.SamlConfig != nil {
 		if err := samlsvc.ValidateConfigWithDepth(m.SamlConfig, depth+1); err != nil {
@@ -751,6 +763,34 @@ func ValidateServicesWithDepth(m *Services, depth int) error {
 	if m.KmakerConfig != nil {
 		if err := kmaker.ValidateConfigWithDepth(m.KmakerConfig, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field KmakerConfig validation failed")
+		}
+	}
+
+	// Validate MessagingConfig nested message
+	if m.MessagingConfig != nil {
+		if err := messaging.ValidateConfigWithDepth(m.MessagingConfig, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field MessagingConfig validation failed")
+		}
+	}
+
+	// Validate ScottyagentConfig nested message
+	if m.ScottyagentConfig != nil {
+		if err := scottyagent.ValidateConfigWithDepth(m.ScottyagentConfig, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field ScottyagentConfig validation failed")
+		}
+	}
+
+	// Validate MailboxConfig nested message
+	if m.MailboxConfig != nil {
+		if err := mailbox.ValidateConfigWithDepth(m.MailboxConfig, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field MailboxConfig validation failed")
+		}
+	}
+
+	// Validate ScottyConfig nested message
+	if m.ScottyConfig != nil {
+		if err := scotty.ValidateConfigWithDepth(m.ScottyConfig, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field ScottyConfig validation failed")
 		}
 	}
 
@@ -792,14 +832,8 @@ func MergeServices(dst, src *Services) {
 	if dst.LetsencryptConfig == nil {
 		dst.LetsencryptConfig = src.LetsencryptConfig
 	}
-	if dst.GraphdbConfig == nil {
-		dst.GraphdbConfig = src.GraphdbConfig
-	}
 	if dst.EventbusConfig == nil {
 		dst.EventbusConfig = src.EventbusConfig
-	}
-	if dst.TimedbConfig == nil {
-		dst.TimedbConfig = src.TimedbConfig
 	}
 	if dst.OauthConfig == nil {
 		dst.OauthConfig = src.OauthConfig
@@ -810,9 +844,6 @@ func MergeServices(dst, src *Services) {
 	if dst.StratumConfig == nil {
 		dst.StratumConfig = src.StratumConfig
 	}
-	if dst.ArgusConfig == nil {
-		dst.ArgusConfig = src.ArgusConfig
-	}
 	if dst.SamlConfig == nil {
 		dst.SamlConfig = src.SamlConfig
 	}
@@ -821,5 +852,17 @@ func MergeServices(dst, src *Services) {
 	}
 	if dst.KmakerConfig == nil {
 		dst.KmakerConfig = src.KmakerConfig
+	}
+	if dst.MessagingConfig == nil {
+		dst.MessagingConfig = src.MessagingConfig
+	}
+	if dst.ScottyagentConfig == nil {
+		dst.ScottyagentConfig = src.ScottyagentConfig
+	}
+	if dst.MailboxConfig == nil {
+		dst.MailboxConfig = src.MailboxConfig
+	}
+	if dst.ScottyConfig == nil {
+		dst.ScottyConfig = src.ScottyConfig
 	}
 }

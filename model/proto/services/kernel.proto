@@ -51,6 +51,10 @@ import "generated/services_config.proto";
 import "generated/tenant_config.proto";
 import "sys/trace.proto";
 
+// config_store: kernel hosts every service's auto-injected <Service>ConfigState
+// (PLAN.md:205 — service config is kernel-held). Declared explicitly so routing
+// never depends on which store sorts first.
+
 // Import OPA entitlement evaluation for C2S token minting.
 // Kernel calls OPA to resolve IDP claims → TokenEntitlements
 // during MintUserToken (C2S delegation). S2S minting never uses OPA.
@@ -235,6 +239,20 @@ message Config {
   // so this field must be on Kernel.Config (not only on Grpcconfig.Config).
   // Default matches the platform-wide health probe port.
   int32 health_probe_port = 35;
+
+  // grants seeds the standing delegation Grant catalog at boot, loaded into
+  // the live grants store the same way delegates (above) are — there is no
+  // runtime grant-creation RPC yet, so this is the only way a Grant exists
+  // today.
+  repeated Grant grants = 36;
+
+  // ratis_listener is the bind address for the embedded Apache Ratis peer
+  // group that backs the FencedLock service. Kernel is the only service in the
+  // fleet that runs Ratis. Peers are derived from `members` above (same hosts,
+  // this port) so lock membership tracks cluster membership and there is no
+  // second topology to keep in sync. Default port 5002 — the next one after
+  // hazelcast_listener's 5001.
+  host.Host ratis_listener = 37;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -251,7 +269,10 @@ message Config {
 //   1. Direct exchange: delegate presents cred_pair JWT or cloud proof → token/cert
 //   2. Delegation: broker (oauth, K8S) authenticates via header, mints on behalf
 //
-// Access: RW for kernel, RO for any service that needs to verify tokens.
+// Access: RW for kernel, RO for every service that declares a
+// (spec.state_imports) of kernel.Identity. Enforced at run time by the
+// generated SecurityAuthenticator.checkAccess on every state RPC — services
+// that only need to verify tokens read the public JWKS view instead.
 message Identity {
 
   // Verification keys — kernel's public keys, rotated periodically.
@@ -287,8 +308,9 @@ message SigningKeyRecord {
 }
 
 // TrustedCa stores trusted CA certificates for TLS verification.
-// Installed from Config.trusted_cas on each config load.
-// Services read these (RO) to verify TLS connections.
+// Installed from Config.trusted_cas on each config load and delivered to
+// services inside ServiceConfigState; no service declares a state_import of
+// this root, so the state RPCs are RW/RO for kernel only.
 message TrustedCa {
 
   repeated x509.X509Cert trusted_cas = 1;
@@ -337,6 +359,23 @@ service Mint {
   // identity (the broker attests the claims; kernel trusts azp). Restricted to
   // auth brokers. Signs Ed25519.
   rpc MintUserToken(tokenrequest.MintUserTokenRequest) returns (tokenrequest.TokenMintResponse) {
+  }
+
+  // MintDelegatedToken — standing delegation (Grant) mint. A delegate presents
+  // its OWN kernel-issued S2S bearer token (verified identity) plus a Grant id
+  // it holds. Kernel looks up the Grant, confirms the caller's verified identity
+  // equals grant.delegate_name, replays grant.claims into OPA fresh via the same
+  // EvalEntitlement path MintUserToken uses, intersects the result with
+  // grant.authorized_scope, and mints a short-lived access-only token: sub =
+  // grant.subject, act = grant.delegate_name, azp = kernel (AZP_KERNEL — kernel
+  // mints this directly, not on a broker's attestation). No refresh/offline
+  // token is issued; the delegate re-mints per use from the same Grant id.
+  // auth_services: ["*"] because any registered delegate may hold a grant (not
+  // just oauth/saml); the identity check that matters is grant.delegate_name,
+  // done inside the handler, exactly as doMintUserToken checks the caller
+  // against a Delegate today.
+  rpc MintDelegatedToken(tokenrequest.MintDelegatedTokenRequest)
+      returns (tokenrequest.MintDelegatedTokenResponse) {
   }
 
   // MintToken — exchange (RT→AT→ST). The caller presents a kernel-signed token;
@@ -405,6 +444,107 @@ service Mint {
   // WorkloadState and checked on refresh.
   rpc RevokeWorkload(WorkloadRevokeRequest) returns (google.protobuf.Empty) {
   }
+
+  // RevokeGrant revokes a standing delegation (Grant) at runtime. Only a party
+  // to the grant may revoke it: the user it acts for (caller sub ==
+  // grant.subject) or the delegate holding it (caller identity ==
+  // grant.delegate_name) — both are withdrawing authority they already hold,
+  // so neither needs a broader authorization model, exactly as RevokeWorkload
+  // restricts revocation to the identity's own ancestor. The grant record is
+  // marked (revoked_at_ms), not deleted, and the write is persisted to the
+  // kernel disk snapshot so it survives a restart. Every mint from the grant
+  // and every exchange of a token already minted from it is denied from that
+  // moment on.
+  // auth_services: ["*"] for the same reason MintDelegatedToken uses it — any
+  // registered delegate may hold a grant; the identity check that matters is
+  // done inside the handler against the grant record itself.
+  rpc RevokeGrant(GrantRevokeRequest) returns (google.protobuf.Empty) {
+  }
+}
+
+// ============================================================================
+// FencedLock — the platform's only distributed mutual-exclusion primitive
+// ============================================================================
+//
+// Kernel is the one service that embeds Apache Ratis; every other service that
+// needs a lock calls this s2s surface rather than running its own Raft group
+// (decisions/kernel-convergent-only-plus-fenced-lock-2026-08-31.md). This is
+// deliberately NOT a state boundary: kernel state is CONVERGENT-only, and
+// mutual exclusion is a different concern from how a map replicates — the
+// conflation of the two is what produced the unreal CONSISTENCY_ATOMIC mode
+// that was deleted before this was written.
+//
+// A fencing token is the Raft log index of the granting Acquire. It is
+// therefore strictly monotonic across the whole lock service, never reused,
+// and never decreases across leader changes. A resource owner stores the
+// highest token it has seen and rejects any write carrying a lower one: that,
+// not the lock itself, is what makes a paused/partitioned stale holder safe.
+// A lock with no fencing token only narrows the race window; it does not close
+// it.
+service FencedLock {
+
+  // Acquire attempts to take the lock named by key on behalf of holder_id.
+  // Non-blocking: a key already held by a DIFFERENT holder returns
+  // granted = false rather than parking the call. Re-acquiring a key the same
+  // holder_id already holds is idempotent and returns the token it already
+  // has, so a retried Acquire after a lost response does not deadlock the
+  // holder against itself.
+  // auth_services: ["*"] — any service identity may take a lock; the key
+  // namespace is the caller's to partition (callers key by their own identity
+  // plus a discriminator), exactly as any service may mint its own token.
+  rpc Acquire(FencedLockAcquireRequest) returns (FencedLockAcquireResponse) {
+  }
+
+  // Release drops the lock named by key. The caller must present the
+  // fencing_token it was granted; a token that is not the current one releases
+  // nothing and returns ok = false. That is the stale-holder case — a holder
+  // that lost the lock (or never had it) must not be able to release the
+  // holder that has it now.
+  rpc Release(FencedLockReleaseRequest) returns (FencedLockReleaseResponse) {
+  }
+}
+
+// FencedLockAcquireRequest names the lock and who is taking it.
+message FencedLockAcquireRequest {
+  // key is the lock's name. Opaque to kernel; callers partition the namespace
+  // themselves (e.g. "<caller spiffe>/scotty/<user>").
+  string key = 1;
+  // holder_id identifies the acquiring party well enough to distinguish it
+  // from any other contender and to make a retried Acquire idempotent. Caller
+  // supplied; kernel compares it for equality and nothing else.
+  string holder_id = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
+// FencedLockAcquireResponse reports whether the lock was taken.
+message FencedLockAcquireResponse {
+  // granted is false when the key is currently held by a different holder_id.
+  bool granted = 1;
+  // fencing_token is the Raft log index of the granting Acquire, and is 0 when
+  // granted is false. Strictly increasing across every grant of every key.
+  int64 fencing_token = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
+// FencedLockReleaseRequest drops a held lock.
+message FencedLockReleaseRequest {
+  string key = 1;
+  // fencing_token must be the token the current holder was granted.
+  int64 fencing_token = 2;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
+// FencedLockReleaseResponse reports whether the release took effect.
+message FencedLockReleaseResponse {
+  // ok is false when the key is unheld or held under a different token — the
+  // stale-holder case. It is not an error: a stale holder learning it no
+  // longer holds the lock is the expected outcome, not a failure to serve.
+  bool ok = 1;
+  string trace_id = 200;
+  bool noop = 201;
 }
 
 // ============================================================================
@@ -935,6 +1075,88 @@ message ConfigState {
 }
 
 // ============================================================================
+// Standing delegation grants
+// ============================================================================
+
+// Grant is a standing delegation: a user authorizes a delegate (an intermediary
+// service, e.g. an agent acting on a schedule) to act on their behalf later,
+// asynchronously. Kernel
+// stores the GRANT, never a minted token — the delegate holds only `id`.
+//
+// On use the delegate presents its own S2S identity plus `id`; kernel replays
+// `claims` into OPA fresh (the same EntitlementEvalInput shape
+// `IdentityServiceImpl.buildClaimsStruct` already builds from a token payload),
+// intersects the result with `authorized_scope`, and mints a short-lived token
+// (sub=subject, act=delegate_name, azp=kernel — kernel mints Grant tokens
+// directly, so azp is always the closed-enum `kernel` value; the delegate name
+// goes on the `act` claim instead). Fresh OPA gives "cannot exceed the user's
+// current authority"; the recorded scope gives "the user downscoped it". Nothing
+// is snapshotted that can go stale except the claims themselves — which catches
+// policy changes, never IDP changes.
+//
+// This message is carried in KernelDiskState and mutated at runtime by
+// Mint.RevokeGrant (revoked_at_ms) only; there is no create/list RPC yet — the
+// catalog is still seeded from Config.grants at boot.
+//
+// PROVISIONAL: this field set is a prerequisite storage layer built ahead of,
+// not instead of, the design conversation with the maintainer. What is settled:
+// id, delegate_name, subject, authorized_scope, claims, created_at_ms,
+// expires_at_ms, revoked_at_ms. NOT settled: how the system learns a user's IDP
+// claims changed or the user was deleted — claim-provenance and epoch are still
+// open and may add fields here.
+message Grant {
+  // id is the opaque grant identifier the delegate holds and presents. Unique
+  // across the cluster.
+  string id = 1;
+
+  // delegate_name is the Delegate.name of the intermediary holding this grant.
+  // It becomes the minted token's act claim (azp on a Grant mint is always
+  // kernel — see the message comment above).
+  string delegate_name = 2;
+
+  // subject is the user this grant acts for — the sub of the token that will be
+  // minted, and the identity whose claims were recorded below.
+  string subject = 3;
+
+  // authorized_scope is the per-service scope the user recorded at consent time.
+  // Every mint intersects the fresh OPA result with this, so the grant can only
+  // ever narrow the user's live authority, never widen it.
+  entitlements.TokenEntitlements authorized_scope = 4;
+
+  // claims are the user's IDP claims as captured at consent time, in the same
+  // google.protobuf.Struct shape that userentitlements.EntitlementEvalInput.claims
+  // takes, so they can be replayed into OPA verbatim.
+  google.protobuf.Struct claims = 5;
+
+  // created_at_ms is the consent time, epoch milliseconds.
+  int64 created_at_ms = 6;
+
+  // expires_at_ms is when the grant itself stops being usable, epoch
+  // milliseconds. 0 means no expiry (revocation only).
+  int64 expires_at_ms = 7;
+
+  // revoked_at_ms is when the grant was revoked via Mint.RevokeGrant, epoch
+  // milliseconds. 0 means not revoked. A revoked grant is MARKED, never
+  // deleted, so the record remains as an audit trail of the delegation that
+  // existed and when it was withdrawn. Every mint from the grant and every
+  // later exchange of a token minted from it is denied once this is set
+  // (IdentityServiceImpl.assertGrantStillActive), so revocation kills
+  // already-minted derived tokens within one request.
+  int64 revoked_at_ms = 8;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
+// GrantRevokeRequest revokes a standing delegation by its opaque grant id.
+// Only a party to the grant (its subject or its delegate) may revoke it.
+message GrantRevokeRequest {
+  // grant_id is the Grant.id to revoke.
+  string grant_id = 1;
+  string trace_id = 200;
+  bool noop = 201;
+}
+
+// ============================================================================
 // Kernel disk persistence (UC1 whole-state snapshot)
 // ============================================================================
 //
@@ -976,6 +1198,11 @@ message KernelDiskState {
   // workload_revocations are revoked workload identities (WorkloadState.revocations);
   // checked on refresh. Localities are ephemeral and not persisted.
   repeated WorkloadRevocation workload_revocations = 8;
+
+  // grants are standing delegation grants (see Grant). Durable state lives in
+  // kernel so one snapshot restores the whole control plane; the gating service
+  // that consumes them stays stateless.
+  repeated Grant grants = 9;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -3011,327 +3238,333 @@ enum TypeID {
   TYPE_ID_IDENTITY_FQDN = 3;
   TYPE_ID_SIGNING_KEY_RECORD = 4;
   TYPE_ID_TRUSTED_CA = 5;
-  TYPE_ID_CLI_TOKEN_BROKER_REQUEST = 6;
-  TYPE_ID_CLI_TOKEN_BROKER_RESPONSE = 7;
-  TYPE_ID_CLI_TOKEN_BROKER_REGISTER = 8;
-  TYPE_ID_CLI_TOKEN_BROKER_REGISTER_NONCE = 9;
-  TYPE_ID_CLI_TOKEN_BROKER_COMPLETE_NONCE = 10;
-  TYPE_ID_CLI_TOKEN_BROKER_TOKEN_DELIVERY = 11;
-  TYPE_ID_CLI_TOKEN_BROKER_ERROR = 12;
-  TYPE_ID_CLOUD_IDENTITY_MATCHER = 13;
-  TYPE_ID_KUBERNETES_SERVICE_ACCOUNT_MATCHER = 14;
-  TYPE_ID_DELEGATE = 15;
-  TYPE_ID_CLUSTER = 16;
-  TYPE_ID_ADMIN_SET_LOG_LEVEL_REQUEST = 17;
-  TYPE_ID_ADMIN_RELOAD_CONFIG_REQUEST = 18;
-  TYPE_ID_ADMIN_CONFIG_DUMP = 19;
-  TYPE_ID_SERVICE_HEALTH = 20;
-  TYPE_ID_WORKLOAD_REVOKE_REQUEST = 21;
-  TYPE_ID_WORKLOAD_LOCALITY = 22;
-  TYPE_ID_WORKLOAD_REVOCATION = 23;
-  TYPE_ID_WORKLOAD_STATE = 24;
-  TYPE_ID_CA = 25;
-  TYPE_ID_CONSTRAINTS = 26;
-  TYPE_ID_TENANT = 27;
-  TYPE_ID_TENANT_CONFIG_ENTRY = 28;
-  TYPE_ID_PROJECT_CONFIG = 29;
-  TYPE_ID_PROJECT_CONFIG_ENTRY = 30;
-  TYPE_ID_CONFIG_STATE = 31;
-  TYPE_ID_KERNEL_DISK_STATE = 32;
-  TYPE_ID_CREATE_TENANT_REQUEST = 33;
-  TYPE_ID_DELETE_TENANT_REQUEST = 34;
-  TYPE_ID_DELETE_TENANT_RESPONSE = 35;
-  TYPE_ID_LIST_TENANTS_REQUEST = 36;
-  TYPE_ID_LIST_TENANTS_RESPONSE = 37;
-  TYPE_ID_GET_TENANT_CONFIG_REQUEST = 38;
-  TYPE_ID_SET_TENANT_CONFIG_REQUEST = 39;
-  TYPE_ID_GET_PROJECT_CONFIG_REQUEST = 40;
-  TYPE_ID_SET_PROJECT_CONFIG_REQUEST = 41;
-  TYPE_ID_PROJECT_NAMESPACE = 42;
-  TYPE_ID_LIST_PROJECTS_REQUEST = 43;
-  TYPE_ID_LIST_PROJECTS_RESPONSE = 44;
-  TYPE_ID_DELETE_PROJECT_REQUEST = 45;
-  TYPE_ID_DELETE_PROJECT_RESPONSE = 46;
-  TYPE_ID_QUERY_VALUE = 47;
-  TYPE_ID_PREDICATE = 48;
-  TYPE_ID_PREDICATE_GROUP = 49;
-  TYPE_ID_SORT_FIELD = 50;
-  TYPE_ID_COLLECTION_QUERY = 51;
-  TYPE_ID_VERIFYING_KEYS_GET_REQUEST = 52;
-  TYPE_ID_VERIFYING_KEYS_PUT_REQUEST = 53;
-  TYPE_ID_VERIFYING_KEYS_GET_ALL_REQUEST = 54;
-  TYPE_ID_VERIFYING_KEYS_KEYS_REQUEST = 55;
-  TYPE_ID_VERIFYING_KEYS_SIZE_REQUEST = 56;
-  TYPE_ID_VERIFYING_KEYS_CLEAR_REQUEST = 57;
-  TYPE_ID_VERIFYING_KEYS_VALUE_RESPONSE = 58;
-  TYPE_ID_VERIFYING_KEYS_ENTRIES_RESPONSE = 59;
-  TYPE_ID_VERIFYING_KEYS_KEYS_RESPONSE = 60;
-  TYPE_ID_VERIFYING_KEYS_SIZE_RESPONSE = 61;
-  TYPE_ID_VERIFYING_KEYS_QUERY_REQUEST = 62;
-  TYPE_ID_VERIFYING_KEYS_QUERY_RESPONSE = 63;
-  TYPE_ID_TRUSTED_CAS_GET_REQUEST = 64;
-  TYPE_ID_TRUSTED_CAS_PUT_REQUEST = 65;
-  TYPE_ID_TRUSTED_CAS_GET_ALL_REQUEST = 66;
-  TYPE_ID_TRUSTED_CAS_KEYS_REQUEST = 67;
-  TYPE_ID_TRUSTED_CAS_SIZE_REQUEST = 68;
-  TYPE_ID_TRUSTED_CAS_CLEAR_REQUEST = 69;
-  TYPE_ID_TRUSTED_CAS_VALUE_RESPONSE = 70;
-  TYPE_ID_TRUSTED_CAS_ENTRIES_RESPONSE = 71;
-  TYPE_ID_TRUSTED_CAS_KEYS_RESPONSE = 72;
-  TYPE_ID_TRUSTED_CAS_SIZE_RESPONSE = 73;
-  TYPE_ID_TRUSTED_CAS_QUERY_REQUEST = 74;
-  TYPE_ID_TRUSTED_CAS_QUERY_RESPONSE = 75;
-  TYPE_ID_NODE_METRICS_GET_REQUEST = 76;
-  TYPE_ID_NODE_METRICS_PUT_REQUEST = 77;
-  TYPE_ID_NODE_METRICS_GET_ALL_REQUEST = 78;
-  TYPE_ID_NODE_METRICS_KEYS_REQUEST = 79;
-  TYPE_ID_NODE_METRICS_SIZE_REQUEST = 80;
-  TYPE_ID_NODE_METRICS_CLEAR_REQUEST = 81;
-  TYPE_ID_NODE_METRICS_VALUE_RESPONSE = 82;
-  TYPE_ID_NODE_METRICS_ENTRIES_RESPONSE = 83;
-  TYPE_ID_NODE_METRICS_KEYS_RESPONSE = 84;
-  TYPE_ID_NODE_METRICS_SIZE_RESPONSE = 85;
-  TYPE_ID_NODE_METRICS_QUERY_REQUEST = 86;
-  TYPE_ID_NODE_METRICS_QUERY_RESPONSE = 87;
-  TYPE_ID_GRPC_STATS_GET_REQUEST = 88;
-  TYPE_ID_GRPC_STATS_PUT_REQUEST = 89;
-  TYPE_ID_GRPC_STATS_GET_ALL_REQUEST = 90;
-  TYPE_ID_GRPC_STATS_KEYS_REQUEST = 91;
-  TYPE_ID_GRPC_STATS_SIZE_REQUEST = 92;
-  TYPE_ID_GRPC_STATS_CLEAR_REQUEST = 93;
-  TYPE_ID_GRPC_STATS_VALUE_RESPONSE = 94;
-  TYPE_ID_GRPC_STATS_ENTRIES_RESPONSE = 95;
-  TYPE_ID_GRPC_STATS_KEYS_RESPONSE = 96;
-  TYPE_ID_GRPC_STATS_SIZE_RESPONSE = 97;
-  TYPE_ID_GRPC_STATS_QUERY_REQUEST = 98;
-  TYPE_ID_GRPC_STATS_QUERY_RESPONSE = 99;
-  TYPE_ID_PERSISTENCE_STATUS_GET_REQUEST = 100;
-  TYPE_ID_PERSISTENCE_STATUS_PUT_REQUEST = 101;
-  TYPE_ID_PERSISTENCE_STATUS_GET_ALL_REQUEST = 102;
-  TYPE_ID_PERSISTENCE_STATUS_KEYS_REQUEST = 103;
-  TYPE_ID_PERSISTENCE_STATUS_SIZE_REQUEST = 104;
-  TYPE_ID_PERSISTENCE_STATUS_CLEAR_REQUEST = 105;
-  TYPE_ID_PERSISTENCE_STATUS_VALUE_RESPONSE = 106;
-  TYPE_ID_PERSISTENCE_STATUS_ENTRIES_RESPONSE = 107;
-  TYPE_ID_PERSISTENCE_STATUS_KEYS_RESPONSE = 108;
-  TYPE_ID_PERSISTENCE_STATUS_SIZE_RESPONSE = 109;
-  TYPE_ID_PERSISTENCE_STATUS_QUERY_REQUEST = 110;
-  TYPE_ID_PERSISTENCE_STATUS_QUERY_RESPONSE = 111;
-  TYPE_ID_NETWORK_STATS_GET_REQUEST = 112;
-  TYPE_ID_NETWORK_STATS_PUT_REQUEST = 113;
-  TYPE_ID_NETWORK_STATS_GET_ALL_REQUEST = 114;
-  TYPE_ID_NETWORK_STATS_KEYS_REQUEST = 115;
-  TYPE_ID_NETWORK_STATS_SIZE_REQUEST = 116;
-  TYPE_ID_NETWORK_STATS_CLEAR_REQUEST = 117;
-  TYPE_ID_NETWORK_STATS_VALUE_RESPONSE = 118;
-  TYPE_ID_NETWORK_STATS_ENTRIES_RESPONSE = 119;
-  TYPE_ID_NETWORK_STATS_KEYS_RESPONSE = 120;
-  TYPE_ID_NETWORK_STATS_SIZE_RESPONSE = 121;
-  TYPE_ID_NETWORK_STATS_QUERY_REQUEST = 122;
-  TYPE_ID_NETWORK_STATS_QUERY_RESPONSE = 123;
-  TYPE_ID_THREAD_INFO_GET_REQUEST = 124;
-  TYPE_ID_THREAD_INFO_PUT_REQUEST = 125;
-  TYPE_ID_THREAD_INFO_GET_ALL_REQUEST = 126;
-  TYPE_ID_THREAD_INFO_KEYS_REQUEST = 127;
-  TYPE_ID_THREAD_INFO_SIZE_REQUEST = 128;
-  TYPE_ID_THREAD_INFO_CLEAR_REQUEST = 129;
-  TYPE_ID_THREAD_INFO_VALUE_RESPONSE = 130;
-  TYPE_ID_THREAD_INFO_ENTRIES_RESPONSE = 131;
-  TYPE_ID_THREAD_INFO_KEYS_RESPONSE = 132;
-  TYPE_ID_THREAD_INFO_SIZE_RESPONSE = 133;
-  TYPE_ID_THREAD_INFO_QUERY_REQUEST = 134;
-  TYPE_ID_THREAD_INFO_QUERY_RESPONSE = 135;
-  TYPE_ID_TOKEN_CACHE_STATS_GET_REQUEST = 136;
-  TYPE_ID_TOKEN_CACHE_STATS_PUT_REQUEST = 137;
-  TYPE_ID_TOKEN_CACHE_STATS_GET_ALL_REQUEST = 138;
-  TYPE_ID_TOKEN_CACHE_STATS_KEYS_REQUEST = 139;
-  TYPE_ID_TOKEN_CACHE_STATS_SIZE_REQUEST = 140;
-  TYPE_ID_TOKEN_CACHE_STATS_CLEAR_REQUEST = 141;
-  TYPE_ID_TOKEN_CACHE_STATS_VALUE_RESPONSE = 142;
-  TYPE_ID_TOKEN_CACHE_STATS_ENTRIES_RESPONSE = 143;
-  TYPE_ID_TOKEN_CACHE_STATS_KEYS_RESPONSE = 144;
-  TYPE_ID_TOKEN_CACHE_STATS_SIZE_RESPONSE = 145;
-  TYPE_ID_TOKEN_CACHE_STATS_QUERY_REQUEST = 146;
-  TYPE_ID_TOKEN_CACHE_STATS_QUERY_RESPONSE = 147;
-  TYPE_ID_MAP_STATS_GET_REQUEST = 148;
-  TYPE_ID_MAP_STATS_PUT_REQUEST = 149;
-  TYPE_ID_MAP_STATS_GET_ALL_REQUEST = 150;
-  TYPE_ID_MAP_STATS_KEYS_REQUEST = 151;
-  TYPE_ID_MAP_STATS_SIZE_REQUEST = 152;
-  TYPE_ID_MAP_STATS_CLEAR_REQUEST = 153;
-  TYPE_ID_MAP_STATS_VALUE_RESPONSE = 154;
-  TYPE_ID_MAP_STATS_ENTRIES_RESPONSE = 155;
-  TYPE_ID_MAP_STATS_KEYS_RESPONSE = 156;
-  TYPE_ID_MAP_STATS_SIZE_RESPONSE = 157;
-  TYPE_ID_MAP_STATS_QUERY_REQUEST = 158;
-  TYPE_ID_MAP_STATS_QUERY_RESPONSE = 159;
-  TYPE_ID_GRAPH_REGISTRY_GET_REQUEST = 160;
-  TYPE_ID_GRAPH_REGISTRY_PUT_REQUEST = 161;
-  TYPE_ID_GRAPH_REGISTRY_GET_ALL_REQUEST = 162;
-  TYPE_ID_GRAPH_REGISTRY_KEYS_REQUEST = 163;
-  TYPE_ID_GRAPH_REGISTRY_SIZE_REQUEST = 164;
-  TYPE_ID_GRAPH_REGISTRY_CLEAR_REQUEST = 165;
-  TYPE_ID_GRAPH_REGISTRY_VALUE_RESPONSE = 166;
-  TYPE_ID_GRAPH_REGISTRY_ENTRIES_RESPONSE = 167;
-  TYPE_ID_GRAPH_REGISTRY_KEYS_RESPONSE = 168;
-  TYPE_ID_GRAPH_REGISTRY_SIZE_RESPONSE = 169;
-  TYPE_ID_GRAPH_REGISTRY_QUERY_REQUEST = 170;
-  TYPE_ID_GRAPH_REGISTRY_QUERY_RESPONSE = 171;
-  TYPE_ID_SERVICE_CONNECTIONS_GET_REQUEST = 172;
-  TYPE_ID_SERVICE_CONNECTIONS_PUT_REQUEST = 173;
-  TYPE_ID_SERVICE_CONNECTIONS_GET_ALL_REQUEST = 174;
-  TYPE_ID_SERVICE_CONNECTIONS_KEYS_REQUEST = 175;
-  TYPE_ID_SERVICE_CONNECTIONS_SIZE_REQUEST = 176;
-  TYPE_ID_SERVICE_CONNECTIONS_CLEAR_REQUEST = 177;
-  TYPE_ID_SERVICE_CONNECTIONS_VALUE_RESPONSE = 178;
-  TYPE_ID_SERVICE_CONNECTIONS_ENTRIES_RESPONSE = 179;
-  TYPE_ID_SERVICE_CONNECTIONS_KEYS_RESPONSE = 180;
-  TYPE_ID_SERVICE_CONNECTIONS_SIZE_RESPONSE = 181;
-  TYPE_ID_SERVICE_CONNECTIONS_QUERY_REQUEST = 182;
-  TYPE_ID_SERVICE_CONNECTIONS_QUERY_RESPONSE = 183;
-  TYPE_ID_QUEUE_STATS_GET_REQUEST = 184;
-  TYPE_ID_QUEUE_STATS_PUT_REQUEST = 185;
-  TYPE_ID_QUEUE_STATS_GET_ALL_REQUEST = 186;
-  TYPE_ID_QUEUE_STATS_KEYS_REQUEST = 187;
-  TYPE_ID_QUEUE_STATS_SIZE_REQUEST = 188;
-  TYPE_ID_QUEUE_STATS_CLEAR_REQUEST = 189;
-  TYPE_ID_QUEUE_STATS_VALUE_RESPONSE = 190;
-  TYPE_ID_QUEUE_STATS_ENTRIES_RESPONSE = 191;
-  TYPE_ID_QUEUE_STATS_KEYS_RESPONSE = 192;
-  TYPE_ID_QUEUE_STATS_SIZE_RESPONSE = 193;
-  TYPE_ID_QUEUE_STATS_QUERY_REQUEST = 194;
-  TYPE_ID_QUEUE_STATS_QUERY_RESPONSE = 195;
-  TYPE_ID_TOPIC_STATS_GET_REQUEST = 196;
-  TYPE_ID_TOPIC_STATS_PUT_REQUEST = 197;
-  TYPE_ID_TOPIC_STATS_GET_ALL_REQUEST = 198;
-  TYPE_ID_TOPIC_STATS_KEYS_REQUEST = 199;
-  TYPE_ID_TOPIC_STATS_SIZE_REQUEST = 200;
-  TYPE_ID_TOPIC_STATS_CLEAR_REQUEST = 201;
-  TYPE_ID_TOPIC_STATS_VALUE_RESPONSE = 202;
-  TYPE_ID_TOPIC_STATS_ENTRIES_RESPONSE = 203;
-  TYPE_ID_TOPIC_STATS_KEYS_RESPONSE = 204;
-  TYPE_ID_TOPIC_STATS_SIZE_RESPONSE = 205;
-  TYPE_ID_TOPIC_STATS_QUERY_REQUEST = 206;
-  TYPE_ID_TOPIC_STATS_QUERY_RESPONSE = 207;
-  TYPE_ID_WATCH_HEALTH_GET_REQUEST = 208;
-  TYPE_ID_WATCH_HEALTH_PUT_REQUEST = 209;
-  TYPE_ID_WATCH_HEALTH_GET_ALL_REQUEST = 210;
-  TYPE_ID_WATCH_HEALTH_KEYS_REQUEST = 211;
-  TYPE_ID_WATCH_HEALTH_SIZE_REQUEST = 212;
-  TYPE_ID_WATCH_HEALTH_CLEAR_REQUEST = 213;
-  TYPE_ID_WATCH_HEALTH_VALUE_RESPONSE = 214;
-  TYPE_ID_WATCH_HEALTH_ENTRIES_RESPONSE = 215;
-  TYPE_ID_WATCH_HEALTH_KEYS_RESPONSE = 216;
-  TYPE_ID_WATCH_HEALTH_SIZE_RESPONSE = 217;
-  TYPE_ID_WATCH_HEALTH_QUERY_REQUEST = 218;
-  TYPE_ID_WATCH_HEALTH_QUERY_RESPONSE = 219;
-  TYPE_ID_MUTATION_RATES_GET_REQUEST = 220;
-  TYPE_ID_MUTATION_RATES_PUT_REQUEST = 221;
-  TYPE_ID_MUTATION_RATES_GET_ALL_REQUEST = 222;
-  TYPE_ID_MUTATION_RATES_KEYS_REQUEST = 223;
-  TYPE_ID_MUTATION_RATES_SIZE_REQUEST = 224;
-  TYPE_ID_MUTATION_RATES_CLEAR_REQUEST = 225;
-  TYPE_ID_MUTATION_RATES_VALUE_RESPONSE = 226;
-  TYPE_ID_MUTATION_RATES_ENTRIES_RESPONSE = 227;
-  TYPE_ID_MUTATION_RATES_KEYS_RESPONSE = 228;
-  TYPE_ID_MUTATION_RATES_SIZE_RESPONSE = 229;
-  TYPE_ID_MUTATION_RATES_QUERY_REQUEST = 230;
-  TYPE_ID_MUTATION_RATES_QUERY_RESPONSE = 231;
-  TYPE_ID_INSTANCES_GET_REQUEST = 232;
-  TYPE_ID_INSTANCES_GET_ALL_REQUEST = 233;
-  TYPE_ID_INSTANCES_KEYS_REQUEST = 234;
-  TYPE_ID_INSTANCES_SIZE_REQUEST = 235;
-  TYPE_ID_INSTANCES_VALUE_RESPONSE = 236;
-  TYPE_ID_INSTANCES_ENTRIES_RESPONSE = 237;
-  TYPE_ID_INSTANCES_KEYS_RESPONSE = 238;
-  TYPE_ID_INSTANCES_SIZE_RESPONSE = 239;
-  TYPE_ID_INSTANCES_QUERY_REQUEST = 240;
-  TYPE_ID_INSTANCES_QUERY_RESPONSE = 241;
-  TYPE_ID_LOCALITIES_GET_REQUEST = 242;
-  TYPE_ID_LOCALITIES_PUT_REQUEST = 243;
-  TYPE_ID_LOCALITIES_GET_ALL_REQUEST = 244;
-  TYPE_ID_LOCALITIES_KEYS_REQUEST = 245;
-  TYPE_ID_LOCALITIES_SIZE_REQUEST = 246;
-  TYPE_ID_LOCALITIES_CLEAR_REQUEST = 247;
-  TYPE_ID_LOCALITIES_VALUE_RESPONSE = 248;
-  TYPE_ID_LOCALITIES_ENTRIES_RESPONSE = 249;
-  TYPE_ID_LOCALITIES_KEYS_RESPONSE = 250;
-  TYPE_ID_LOCALITIES_SIZE_RESPONSE = 251;
-  TYPE_ID_LOCALITIES_QUERY_REQUEST = 252;
-  TYPE_ID_LOCALITIES_QUERY_RESPONSE = 253;
-  TYPE_ID_REVOCATIONS_GET_REQUEST = 254;
-  TYPE_ID_REVOCATIONS_PUT_REQUEST = 255;
-  TYPE_ID_REVOCATIONS_GET_ALL_REQUEST = 256;
-  TYPE_ID_REVOCATIONS_KEYS_REQUEST = 257;
-  TYPE_ID_REVOCATIONS_SIZE_REQUEST = 258;
-  TYPE_ID_REVOCATIONS_CLEAR_REQUEST = 259;
-  TYPE_ID_REVOCATIONS_VALUE_RESPONSE = 260;
-  TYPE_ID_REVOCATIONS_ENTRIES_RESPONSE = 261;
-  TYPE_ID_REVOCATIONS_KEYS_RESPONSE = 262;
-  TYPE_ID_REVOCATIONS_SIZE_RESPONSE = 263;
-  TYPE_ID_REVOCATIONS_QUERY_REQUEST = 264;
-  TYPE_ID_REVOCATIONS_QUERY_RESPONSE = 265;
-  TYPE_ID_CA_CERTS_GET_REQUEST = 266;
-  TYPE_ID_CA_CERTS_PUT_REQUEST = 267;
-  TYPE_ID_CA_CERTS_GET_ALL_REQUEST = 268;
-  TYPE_ID_CA_CERTS_KEYS_REQUEST = 269;
-  TYPE_ID_CA_CERTS_SIZE_REQUEST = 270;
-  TYPE_ID_CA_CERTS_CLEAR_REQUEST = 271;
-  TYPE_ID_CA_CERTS_VALUE_RESPONSE = 272;
-  TYPE_ID_CA_CERTS_ENTRIES_RESPONSE = 273;
-  TYPE_ID_CA_CERTS_KEYS_RESPONSE = 274;
-  TYPE_ID_CA_CERTS_SIZE_RESPONSE = 275;
-  TYPE_ID_CA_CERTS_QUERY_REQUEST = 276;
-  TYPE_ID_CA_CERTS_QUERY_RESPONSE = 277;
-  TYPE_ID_SERVICE_CAS_GET_REQUEST = 278;
-  TYPE_ID_SERVICE_CAS_PUT_REQUEST = 279;
-  TYPE_ID_SERVICE_CAS_GET_ALL_REQUEST = 280;
-  TYPE_ID_SERVICE_CAS_KEYS_REQUEST = 281;
-  TYPE_ID_SERVICE_CAS_SIZE_REQUEST = 282;
-  TYPE_ID_SERVICE_CAS_CLEAR_REQUEST = 283;
-  TYPE_ID_SERVICE_CAS_VALUE_RESPONSE = 284;
-  TYPE_ID_SERVICE_CAS_ENTRIES_RESPONSE = 285;
-  TYPE_ID_SERVICE_CAS_KEYS_RESPONSE = 286;
-  TYPE_ID_SERVICE_CAS_SIZE_RESPONSE = 287;
-  TYPE_ID_SERVICE_CAS_QUERY_REQUEST = 288;
-  TYPE_ID_SERVICE_CAS_QUERY_RESPONSE = 289;
-  TYPE_ID_TENANTS_GET_REQUEST = 290;
-  TYPE_ID_TENANTS_PUT_REQUEST = 291;
-  TYPE_ID_TENANTS_GET_ALL_REQUEST = 292;
-  TYPE_ID_TENANTS_KEYS_REQUEST = 293;
-  TYPE_ID_TENANTS_SIZE_REQUEST = 294;
-  TYPE_ID_TENANTS_CLEAR_REQUEST = 295;
-  TYPE_ID_TENANTS_VALUE_RESPONSE = 296;
-  TYPE_ID_TENANTS_ENTRIES_RESPONSE = 297;
-  TYPE_ID_TENANTS_KEYS_RESPONSE = 298;
-  TYPE_ID_TENANTS_SIZE_RESPONSE = 299;
-  TYPE_ID_TENANTS_QUERY_REQUEST = 300;
-  TYPE_ID_TENANTS_QUERY_RESPONSE = 301;
-  TYPE_ID_TENANT_CONFIGS_GET_REQUEST = 302;
-  TYPE_ID_TENANT_CONFIGS_PUT_REQUEST = 303;
-  TYPE_ID_TENANT_CONFIGS_GET_ALL_REQUEST = 304;
-  TYPE_ID_TENANT_CONFIGS_KEYS_REQUEST = 305;
-  TYPE_ID_TENANT_CONFIGS_SIZE_REQUEST = 306;
-  TYPE_ID_TENANT_CONFIGS_CLEAR_REQUEST = 307;
-  TYPE_ID_TENANT_CONFIGS_VALUE_RESPONSE = 308;
-  TYPE_ID_TENANT_CONFIGS_ENTRIES_RESPONSE = 309;
-  TYPE_ID_TENANT_CONFIGS_KEYS_RESPONSE = 310;
-  TYPE_ID_TENANT_CONFIGS_SIZE_RESPONSE = 311;
-  TYPE_ID_TENANT_CONFIGS_QUERY_REQUEST = 312;
-  TYPE_ID_TENANT_CONFIGS_QUERY_RESPONSE = 313;
-  TYPE_ID_PROJECT_CONFIGS_GET_REQUEST = 314;
-  TYPE_ID_PROJECT_CONFIGS_PUT_REQUEST = 315;
-  TYPE_ID_PROJECT_CONFIGS_GET_ALL_REQUEST = 316;
-  TYPE_ID_PROJECT_CONFIGS_KEYS_REQUEST = 317;
-  TYPE_ID_PROJECT_CONFIGS_SIZE_REQUEST = 318;
-  TYPE_ID_PROJECT_CONFIGS_CLEAR_REQUEST = 319;
-  TYPE_ID_PROJECT_CONFIGS_VALUE_RESPONSE = 320;
-  TYPE_ID_PROJECT_CONFIGS_ENTRIES_RESPONSE = 321;
-  TYPE_ID_PROJECT_CONFIGS_KEYS_RESPONSE = 322;
-  TYPE_ID_PROJECT_CONFIGS_SIZE_RESPONSE = 323;
-  TYPE_ID_PROJECT_CONFIGS_QUERY_REQUEST = 324;
-  TYPE_ID_PROJECT_CONFIGS_QUERY_RESPONSE = 325;
-  TYPE_ID_MAP_EMPTY = 326;
+  TYPE_ID_FENCED_LOCK_ACQUIRE_REQUEST = 6;
+  TYPE_ID_FENCED_LOCK_ACQUIRE_RESPONSE = 7;
+  TYPE_ID_FENCED_LOCK_RELEASE_REQUEST = 8;
+  TYPE_ID_FENCED_LOCK_RELEASE_RESPONSE = 9;
+  TYPE_ID_CLI_TOKEN_BROKER_REQUEST = 10;
+  TYPE_ID_CLI_TOKEN_BROKER_RESPONSE = 11;
+  TYPE_ID_CLI_TOKEN_BROKER_REGISTER = 12;
+  TYPE_ID_CLI_TOKEN_BROKER_REGISTER_NONCE = 13;
+  TYPE_ID_CLI_TOKEN_BROKER_COMPLETE_NONCE = 14;
+  TYPE_ID_CLI_TOKEN_BROKER_TOKEN_DELIVERY = 15;
+  TYPE_ID_CLI_TOKEN_BROKER_ERROR = 16;
+  TYPE_ID_CLOUD_IDENTITY_MATCHER = 17;
+  TYPE_ID_KUBERNETES_SERVICE_ACCOUNT_MATCHER = 18;
+  TYPE_ID_DELEGATE = 19;
+  TYPE_ID_CLUSTER = 20;
+  TYPE_ID_ADMIN_SET_LOG_LEVEL_REQUEST = 21;
+  TYPE_ID_ADMIN_RELOAD_CONFIG_REQUEST = 22;
+  TYPE_ID_ADMIN_CONFIG_DUMP = 23;
+  TYPE_ID_SERVICE_HEALTH = 24;
+  TYPE_ID_WORKLOAD_REVOKE_REQUEST = 25;
+  TYPE_ID_WORKLOAD_LOCALITY = 26;
+  TYPE_ID_WORKLOAD_REVOCATION = 27;
+  TYPE_ID_WORKLOAD_STATE = 28;
+  TYPE_ID_CA = 29;
+  TYPE_ID_CONSTRAINTS = 30;
+  TYPE_ID_TENANT = 31;
+  TYPE_ID_TENANT_CONFIG_ENTRY = 32;
+  TYPE_ID_PROJECT_CONFIG = 33;
+  TYPE_ID_PROJECT_CONFIG_ENTRY = 34;
+  TYPE_ID_CONFIG_STATE = 35;
+  TYPE_ID_GRANT = 36;
+  TYPE_ID_GRANT_REVOKE_REQUEST = 37;
+  TYPE_ID_KERNEL_DISK_STATE = 38;
+  TYPE_ID_CREATE_TENANT_REQUEST = 39;
+  TYPE_ID_DELETE_TENANT_REQUEST = 40;
+  TYPE_ID_DELETE_TENANT_RESPONSE = 41;
+  TYPE_ID_LIST_TENANTS_REQUEST = 42;
+  TYPE_ID_LIST_TENANTS_RESPONSE = 43;
+  TYPE_ID_GET_TENANT_CONFIG_REQUEST = 44;
+  TYPE_ID_SET_TENANT_CONFIG_REQUEST = 45;
+  TYPE_ID_GET_PROJECT_CONFIG_REQUEST = 46;
+  TYPE_ID_SET_PROJECT_CONFIG_REQUEST = 47;
+  TYPE_ID_PROJECT_NAMESPACE = 48;
+  TYPE_ID_LIST_PROJECTS_REQUEST = 49;
+  TYPE_ID_LIST_PROJECTS_RESPONSE = 50;
+  TYPE_ID_DELETE_PROJECT_REQUEST = 51;
+  TYPE_ID_DELETE_PROJECT_RESPONSE = 52;
+  TYPE_ID_QUERY_VALUE = 53;
+  TYPE_ID_PREDICATE = 54;
+  TYPE_ID_PREDICATE_GROUP = 55;
+  TYPE_ID_SORT_FIELD = 56;
+  TYPE_ID_COLLECTION_QUERY = 57;
+  TYPE_ID_VERIFYING_KEYS_GET_REQUEST = 58;
+  TYPE_ID_VERIFYING_KEYS_PUT_REQUEST = 59;
+  TYPE_ID_VERIFYING_KEYS_GET_ALL_REQUEST = 60;
+  TYPE_ID_VERIFYING_KEYS_KEYS_REQUEST = 61;
+  TYPE_ID_VERIFYING_KEYS_SIZE_REQUEST = 62;
+  TYPE_ID_VERIFYING_KEYS_CLEAR_REQUEST = 63;
+  TYPE_ID_VERIFYING_KEYS_VALUE_RESPONSE = 64;
+  TYPE_ID_VERIFYING_KEYS_ENTRIES_RESPONSE = 65;
+  TYPE_ID_VERIFYING_KEYS_KEYS_RESPONSE = 66;
+  TYPE_ID_VERIFYING_KEYS_SIZE_RESPONSE = 67;
+  TYPE_ID_VERIFYING_KEYS_QUERY_REQUEST = 68;
+  TYPE_ID_VERIFYING_KEYS_QUERY_RESPONSE = 69;
+  TYPE_ID_TRUSTED_CAS_GET_REQUEST = 70;
+  TYPE_ID_TRUSTED_CAS_PUT_REQUEST = 71;
+  TYPE_ID_TRUSTED_CAS_GET_ALL_REQUEST = 72;
+  TYPE_ID_TRUSTED_CAS_KEYS_REQUEST = 73;
+  TYPE_ID_TRUSTED_CAS_SIZE_REQUEST = 74;
+  TYPE_ID_TRUSTED_CAS_CLEAR_REQUEST = 75;
+  TYPE_ID_TRUSTED_CAS_VALUE_RESPONSE = 76;
+  TYPE_ID_TRUSTED_CAS_ENTRIES_RESPONSE = 77;
+  TYPE_ID_TRUSTED_CAS_KEYS_RESPONSE = 78;
+  TYPE_ID_TRUSTED_CAS_SIZE_RESPONSE = 79;
+  TYPE_ID_TRUSTED_CAS_QUERY_REQUEST = 80;
+  TYPE_ID_TRUSTED_CAS_QUERY_RESPONSE = 81;
+  TYPE_ID_NODE_METRICS_GET_REQUEST = 82;
+  TYPE_ID_NODE_METRICS_PUT_REQUEST = 83;
+  TYPE_ID_NODE_METRICS_GET_ALL_REQUEST = 84;
+  TYPE_ID_NODE_METRICS_KEYS_REQUEST = 85;
+  TYPE_ID_NODE_METRICS_SIZE_REQUEST = 86;
+  TYPE_ID_NODE_METRICS_CLEAR_REQUEST = 87;
+  TYPE_ID_NODE_METRICS_VALUE_RESPONSE = 88;
+  TYPE_ID_NODE_METRICS_ENTRIES_RESPONSE = 89;
+  TYPE_ID_NODE_METRICS_KEYS_RESPONSE = 90;
+  TYPE_ID_NODE_METRICS_SIZE_RESPONSE = 91;
+  TYPE_ID_NODE_METRICS_QUERY_REQUEST = 92;
+  TYPE_ID_NODE_METRICS_QUERY_RESPONSE = 93;
+  TYPE_ID_GRPC_STATS_GET_REQUEST = 94;
+  TYPE_ID_GRPC_STATS_PUT_REQUEST = 95;
+  TYPE_ID_GRPC_STATS_GET_ALL_REQUEST = 96;
+  TYPE_ID_GRPC_STATS_KEYS_REQUEST = 97;
+  TYPE_ID_GRPC_STATS_SIZE_REQUEST = 98;
+  TYPE_ID_GRPC_STATS_CLEAR_REQUEST = 99;
+  TYPE_ID_GRPC_STATS_VALUE_RESPONSE = 100;
+  TYPE_ID_GRPC_STATS_ENTRIES_RESPONSE = 101;
+  TYPE_ID_GRPC_STATS_KEYS_RESPONSE = 102;
+  TYPE_ID_GRPC_STATS_SIZE_RESPONSE = 103;
+  TYPE_ID_GRPC_STATS_QUERY_REQUEST = 104;
+  TYPE_ID_GRPC_STATS_QUERY_RESPONSE = 105;
+  TYPE_ID_PERSISTENCE_STATUS_GET_REQUEST = 106;
+  TYPE_ID_PERSISTENCE_STATUS_PUT_REQUEST = 107;
+  TYPE_ID_PERSISTENCE_STATUS_GET_ALL_REQUEST = 108;
+  TYPE_ID_PERSISTENCE_STATUS_KEYS_REQUEST = 109;
+  TYPE_ID_PERSISTENCE_STATUS_SIZE_REQUEST = 110;
+  TYPE_ID_PERSISTENCE_STATUS_CLEAR_REQUEST = 111;
+  TYPE_ID_PERSISTENCE_STATUS_VALUE_RESPONSE = 112;
+  TYPE_ID_PERSISTENCE_STATUS_ENTRIES_RESPONSE = 113;
+  TYPE_ID_PERSISTENCE_STATUS_KEYS_RESPONSE = 114;
+  TYPE_ID_PERSISTENCE_STATUS_SIZE_RESPONSE = 115;
+  TYPE_ID_PERSISTENCE_STATUS_QUERY_REQUEST = 116;
+  TYPE_ID_PERSISTENCE_STATUS_QUERY_RESPONSE = 117;
+  TYPE_ID_NETWORK_STATS_GET_REQUEST = 118;
+  TYPE_ID_NETWORK_STATS_PUT_REQUEST = 119;
+  TYPE_ID_NETWORK_STATS_GET_ALL_REQUEST = 120;
+  TYPE_ID_NETWORK_STATS_KEYS_REQUEST = 121;
+  TYPE_ID_NETWORK_STATS_SIZE_REQUEST = 122;
+  TYPE_ID_NETWORK_STATS_CLEAR_REQUEST = 123;
+  TYPE_ID_NETWORK_STATS_VALUE_RESPONSE = 124;
+  TYPE_ID_NETWORK_STATS_ENTRIES_RESPONSE = 125;
+  TYPE_ID_NETWORK_STATS_KEYS_RESPONSE = 126;
+  TYPE_ID_NETWORK_STATS_SIZE_RESPONSE = 127;
+  TYPE_ID_NETWORK_STATS_QUERY_REQUEST = 128;
+  TYPE_ID_NETWORK_STATS_QUERY_RESPONSE = 129;
+  TYPE_ID_THREAD_INFO_GET_REQUEST = 130;
+  TYPE_ID_THREAD_INFO_PUT_REQUEST = 131;
+  TYPE_ID_THREAD_INFO_GET_ALL_REQUEST = 132;
+  TYPE_ID_THREAD_INFO_KEYS_REQUEST = 133;
+  TYPE_ID_THREAD_INFO_SIZE_REQUEST = 134;
+  TYPE_ID_THREAD_INFO_CLEAR_REQUEST = 135;
+  TYPE_ID_THREAD_INFO_VALUE_RESPONSE = 136;
+  TYPE_ID_THREAD_INFO_ENTRIES_RESPONSE = 137;
+  TYPE_ID_THREAD_INFO_KEYS_RESPONSE = 138;
+  TYPE_ID_THREAD_INFO_SIZE_RESPONSE = 139;
+  TYPE_ID_THREAD_INFO_QUERY_REQUEST = 140;
+  TYPE_ID_THREAD_INFO_QUERY_RESPONSE = 141;
+  TYPE_ID_TOKEN_CACHE_STATS_GET_REQUEST = 142;
+  TYPE_ID_TOKEN_CACHE_STATS_PUT_REQUEST = 143;
+  TYPE_ID_TOKEN_CACHE_STATS_GET_ALL_REQUEST = 144;
+  TYPE_ID_TOKEN_CACHE_STATS_KEYS_REQUEST = 145;
+  TYPE_ID_TOKEN_CACHE_STATS_SIZE_REQUEST = 146;
+  TYPE_ID_TOKEN_CACHE_STATS_CLEAR_REQUEST = 147;
+  TYPE_ID_TOKEN_CACHE_STATS_VALUE_RESPONSE = 148;
+  TYPE_ID_TOKEN_CACHE_STATS_ENTRIES_RESPONSE = 149;
+  TYPE_ID_TOKEN_CACHE_STATS_KEYS_RESPONSE = 150;
+  TYPE_ID_TOKEN_CACHE_STATS_SIZE_RESPONSE = 151;
+  TYPE_ID_TOKEN_CACHE_STATS_QUERY_REQUEST = 152;
+  TYPE_ID_TOKEN_CACHE_STATS_QUERY_RESPONSE = 153;
+  TYPE_ID_MAP_STATS_GET_REQUEST = 154;
+  TYPE_ID_MAP_STATS_PUT_REQUEST = 155;
+  TYPE_ID_MAP_STATS_GET_ALL_REQUEST = 156;
+  TYPE_ID_MAP_STATS_KEYS_REQUEST = 157;
+  TYPE_ID_MAP_STATS_SIZE_REQUEST = 158;
+  TYPE_ID_MAP_STATS_CLEAR_REQUEST = 159;
+  TYPE_ID_MAP_STATS_VALUE_RESPONSE = 160;
+  TYPE_ID_MAP_STATS_ENTRIES_RESPONSE = 161;
+  TYPE_ID_MAP_STATS_KEYS_RESPONSE = 162;
+  TYPE_ID_MAP_STATS_SIZE_RESPONSE = 163;
+  TYPE_ID_MAP_STATS_QUERY_REQUEST = 164;
+  TYPE_ID_MAP_STATS_QUERY_RESPONSE = 165;
+  TYPE_ID_GRAPH_REGISTRY_GET_REQUEST = 166;
+  TYPE_ID_GRAPH_REGISTRY_PUT_REQUEST = 167;
+  TYPE_ID_GRAPH_REGISTRY_GET_ALL_REQUEST = 168;
+  TYPE_ID_GRAPH_REGISTRY_KEYS_REQUEST = 169;
+  TYPE_ID_GRAPH_REGISTRY_SIZE_REQUEST = 170;
+  TYPE_ID_GRAPH_REGISTRY_CLEAR_REQUEST = 171;
+  TYPE_ID_GRAPH_REGISTRY_VALUE_RESPONSE = 172;
+  TYPE_ID_GRAPH_REGISTRY_ENTRIES_RESPONSE = 173;
+  TYPE_ID_GRAPH_REGISTRY_KEYS_RESPONSE = 174;
+  TYPE_ID_GRAPH_REGISTRY_SIZE_RESPONSE = 175;
+  TYPE_ID_GRAPH_REGISTRY_QUERY_REQUEST = 176;
+  TYPE_ID_GRAPH_REGISTRY_QUERY_RESPONSE = 177;
+  TYPE_ID_SERVICE_CONNECTIONS_GET_REQUEST = 178;
+  TYPE_ID_SERVICE_CONNECTIONS_PUT_REQUEST = 179;
+  TYPE_ID_SERVICE_CONNECTIONS_GET_ALL_REQUEST = 180;
+  TYPE_ID_SERVICE_CONNECTIONS_KEYS_REQUEST = 181;
+  TYPE_ID_SERVICE_CONNECTIONS_SIZE_REQUEST = 182;
+  TYPE_ID_SERVICE_CONNECTIONS_CLEAR_REQUEST = 183;
+  TYPE_ID_SERVICE_CONNECTIONS_VALUE_RESPONSE = 184;
+  TYPE_ID_SERVICE_CONNECTIONS_ENTRIES_RESPONSE = 185;
+  TYPE_ID_SERVICE_CONNECTIONS_KEYS_RESPONSE = 186;
+  TYPE_ID_SERVICE_CONNECTIONS_SIZE_RESPONSE = 187;
+  TYPE_ID_SERVICE_CONNECTIONS_QUERY_REQUEST = 188;
+  TYPE_ID_SERVICE_CONNECTIONS_QUERY_RESPONSE = 189;
+  TYPE_ID_QUEUE_STATS_GET_REQUEST = 190;
+  TYPE_ID_QUEUE_STATS_PUT_REQUEST = 191;
+  TYPE_ID_QUEUE_STATS_GET_ALL_REQUEST = 192;
+  TYPE_ID_QUEUE_STATS_KEYS_REQUEST = 193;
+  TYPE_ID_QUEUE_STATS_SIZE_REQUEST = 194;
+  TYPE_ID_QUEUE_STATS_CLEAR_REQUEST = 195;
+  TYPE_ID_QUEUE_STATS_VALUE_RESPONSE = 196;
+  TYPE_ID_QUEUE_STATS_ENTRIES_RESPONSE = 197;
+  TYPE_ID_QUEUE_STATS_KEYS_RESPONSE = 198;
+  TYPE_ID_QUEUE_STATS_SIZE_RESPONSE = 199;
+  TYPE_ID_QUEUE_STATS_QUERY_REQUEST = 200;
+  TYPE_ID_QUEUE_STATS_QUERY_RESPONSE = 201;
+  TYPE_ID_TOPIC_STATS_GET_REQUEST = 202;
+  TYPE_ID_TOPIC_STATS_PUT_REQUEST = 203;
+  TYPE_ID_TOPIC_STATS_GET_ALL_REQUEST = 204;
+  TYPE_ID_TOPIC_STATS_KEYS_REQUEST = 205;
+  TYPE_ID_TOPIC_STATS_SIZE_REQUEST = 206;
+  TYPE_ID_TOPIC_STATS_CLEAR_REQUEST = 207;
+  TYPE_ID_TOPIC_STATS_VALUE_RESPONSE = 208;
+  TYPE_ID_TOPIC_STATS_ENTRIES_RESPONSE = 209;
+  TYPE_ID_TOPIC_STATS_KEYS_RESPONSE = 210;
+  TYPE_ID_TOPIC_STATS_SIZE_RESPONSE = 211;
+  TYPE_ID_TOPIC_STATS_QUERY_REQUEST = 212;
+  TYPE_ID_TOPIC_STATS_QUERY_RESPONSE = 213;
+  TYPE_ID_WATCH_HEALTH_GET_REQUEST = 214;
+  TYPE_ID_WATCH_HEALTH_PUT_REQUEST = 215;
+  TYPE_ID_WATCH_HEALTH_GET_ALL_REQUEST = 216;
+  TYPE_ID_WATCH_HEALTH_KEYS_REQUEST = 217;
+  TYPE_ID_WATCH_HEALTH_SIZE_REQUEST = 218;
+  TYPE_ID_WATCH_HEALTH_CLEAR_REQUEST = 219;
+  TYPE_ID_WATCH_HEALTH_VALUE_RESPONSE = 220;
+  TYPE_ID_WATCH_HEALTH_ENTRIES_RESPONSE = 221;
+  TYPE_ID_WATCH_HEALTH_KEYS_RESPONSE = 222;
+  TYPE_ID_WATCH_HEALTH_SIZE_RESPONSE = 223;
+  TYPE_ID_WATCH_HEALTH_QUERY_REQUEST = 224;
+  TYPE_ID_WATCH_HEALTH_QUERY_RESPONSE = 225;
+  TYPE_ID_MUTATION_RATES_GET_REQUEST = 226;
+  TYPE_ID_MUTATION_RATES_PUT_REQUEST = 227;
+  TYPE_ID_MUTATION_RATES_GET_ALL_REQUEST = 228;
+  TYPE_ID_MUTATION_RATES_KEYS_REQUEST = 229;
+  TYPE_ID_MUTATION_RATES_SIZE_REQUEST = 230;
+  TYPE_ID_MUTATION_RATES_CLEAR_REQUEST = 231;
+  TYPE_ID_MUTATION_RATES_VALUE_RESPONSE = 232;
+  TYPE_ID_MUTATION_RATES_ENTRIES_RESPONSE = 233;
+  TYPE_ID_MUTATION_RATES_KEYS_RESPONSE = 234;
+  TYPE_ID_MUTATION_RATES_SIZE_RESPONSE = 235;
+  TYPE_ID_MUTATION_RATES_QUERY_REQUEST = 236;
+  TYPE_ID_MUTATION_RATES_QUERY_RESPONSE = 237;
+  TYPE_ID_INSTANCES_GET_REQUEST = 238;
+  TYPE_ID_INSTANCES_GET_ALL_REQUEST = 239;
+  TYPE_ID_INSTANCES_KEYS_REQUEST = 240;
+  TYPE_ID_INSTANCES_SIZE_REQUEST = 241;
+  TYPE_ID_INSTANCES_VALUE_RESPONSE = 242;
+  TYPE_ID_INSTANCES_ENTRIES_RESPONSE = 243;
+  TYPE_ID_INSTANCES_KEYS_RESPONSE = 244;
+  TYPE_ID_INSTANCES_SIZE_RESPONSE = 245;
+  TYPE_ID_INSTANCES_QUERY_REQUEST = 246;
+  TYPE_ID_INSTANCES_QUERY_RESPONSE = 247;
+  TYPE_ID_LOCALITIES_GET_REQUEST = 248;
+  TYPE_ID_LOCALITIES_PUT_REQUEST = 249;
+  TYPE_ID_LOCALITIES_GET_ALL_REQUEST = 250;
+  TYPE_ID_LOCALITIES_KEYS_REQUEST = 251;
+  TYPE_ID_LOCALITIES_SIZE_REQUEST = 252;
+  TYPE_ID_LOCALITIES_CLEAR_REQUEST = 253;
+  TYPE_ID_LOCALITIES_VALUE_RESPONSE = 254;
+  TYPE_ID_LOCALITIES_ENTRIES_RESPONSE = 255;
+  TYPE_ID_LOCALITIES_KEYS_RESPONSE = 256;
+  TYPE_ID_LOCALITIES_SIZE_RESPONSE = 257;
+  TYPE_ID_LOCALITIES_QUERY_REQUEST = 258;
+  TYPE_ID_LOCALITIES_QUERY_RESPONSE = 259;
+  TYPE_ID_REVOCATIONS_GET_REQUEST = 260;
+  TYPE_ID_REVOCATIONS_PUT_REQUEST = 261;
+  TYPE_ID_REVOCATIONS_GET_ALL_REQUEST = 262;
+  TYPE_ID_REVOCATIONS_KEYS_REQUEST = 263;
+  TYPE_ID_REVOCATIONS_SIZE_REQUEST = 264;
+  TYPE_ID_REVOCATIONS_CLEAR_REQUEST = 265;
+  TYPE_ID_REVOCATIONS_VALUE_RESPONSE = 266;
+  TYPE_ID_REVOCATIONS_ENTRIES_RESPONSE = 267;
+  TYPE_ID_REVOCATIONS_KEYS_RESPONSE = 268;
+  TYPE_ID_REVOCATIONS_SIZE_RESPONSE = 269;
+  TYPE_ID_REVOCATIONS_QUERY_REQUEST = 270;
+  TYPE_ID_REVOCATIONS_QUERY_RESPONSE = 271;
+  TYPE_ID_CA_CERTS_GET_REQUEST = 272;
+  TYPE_ID_CA_CERTS_PUT_REQUEST = 273;
+  TYPE_ID_CA_CERTS_GET_ALL_REQUEST = 274;
+  TYPE_ID_CA_CERTS_KEYS_REQUEST = 275;
+  TYPE_ID_CA_CERTS_SIZE_REQUEST = 276;
+  TYPE_ID_CA_CERTS_CLEAR_REQUEST = 277;
+  TYPE_ID_CA_CERTS_VALUE_RESPONSE = 278;
+  TYPE_ID_CA_CERTS_ENTRIES_RESPONSE = 279;
+  TYPE_ID_CA_CERTS_KEYS_RESPONSE = 280;
+  TYPE_ID_CA_CERTS_SIZE_RESPONSE = 281;
+  TYPE_ID_CA_CERTS_QUERY_REQUEST = 282;
+  TYPE_ID_CA_CERTS_QUERY_RESPONSE = 283;
+  TYPE_ID_SERVICE_CAS_GET_REQUEST = 284;
+  TYPE_ID_SERVICE_CAS_PUT_REQUEST = 285;
+  TYPE_ID_SERVICE_CAS_GET_ALL_REQUEST = 286;
+  TYPE_ID_SERVICE_CAS_KEYS_REQUEST = 287;
+  TYPE_ID_SERVICE_CAS_SIZE_REQUEST = 288;
+  TYPE_ID_SERVICE_CAS_CLEAR_REQUEST = 289;
+  TYPE_ID_SERVICE_CAS_VALUE_RESPONSE = 290;
+  TYPE_ID_SERVICE_CAS_ENTRIES_RESPONSE = 291;
+  TYPE_ID_SERVICE_CAS_KEYS_RESPONSE = 292;
+  TYPE_ID_SERVICE_CAS_SIZE_RESPONSE = 293;
+  TYPE_ID_SERVICE_CAS_QUERY_REQUEST = 294;
+  TYPE_ID_SERVICE_CAS_QUERY_RESPONSE = 295;
+  TYPE_ID_TENANTS_GET_REQUEST = 296;
+  TYPE_ID_TENANTS_PUT_REQUEST = 297;
+  TYPE_ID_TENANTS_GET_ALL_REQUEST = 298;
+  TYPE_ID_TENANTS_KEYS_REQUEST = 299;
+  TYPE_ID_TENANTS_SIZE_REQUEST = 300;
+  TYPE_ID_TENANTS_CLEAR_REQUEST = 301;
+  TYPE_ID_TENANTS_VALUE_RESPONSE = 302;
+  TYPE_ID_TENANTS_ENTRIES_RESPONSE = 303;
+  TYPE_ID_TENANTS_KEYS_RESPONSE = 304;
+  TYPE_ID_TENANTS_SIZE_RESPONSE = 305;
+  TYPE_ID_TENANTS_QUERY_REQUEST = 306;
+  TYPE_ID_TENANTS_QUERY_RESPONSE = 307;
+  TYPE_ID_TENANT_CONFIGS_GET_REQUEST = 308;
+  TYPE_ID_TENANT_CONFIGS_PUT_REQUEST = 309;
+  TYPE_ID_TENANT_CONFIGS_GET_ALL_REQUEST = 310;
+  TYPE_ID_TENANT_CONFIGS_KEYS_REQUEST = 311;
+  TYPE_ID_TENANT_CONFIGS_SIZE_REQUEST = 312;
+  TYPE_ID_TENANT_CONFIGS_CLEAR_REQUEST = 313;
+  TYPE_ID_TENANT_CONFIGS_VALUE_RESPONSE = 314;
+  TYPE_ID_TENANT_CONFIGS_ENTRIES_RESPONSE = 315;
+  TYPE_ID_TENANT_CONFIGS_KEYS_RESPONSE = 316;
+  TYPE_ID_TENANT_CONFIGS_SIZE_RESPONSE = 317;
+  TYPE_ID_TENANT_CONFIGS_QUERY_REQUEST = 318;
+  TYPE_ID_TENANT_CONFIGS_QUERY_RESPONSE = 319;
+  TYPE_ID_PROJECT_CONFIGS_GET_REQUEST = 320;
+  TYPE_ID_PROJECT_CONFIGS_PUT_REQUEST = 321;
+  TYPE_ID_PROJECT_CONFIGS_GET_ALL_REQUEST = 322;
+  TYPE_ID_PROJECT_CONFIGS_KEYS_REQUEST = 323;
+  TYPE_ID_PROJECT_CONFIGS_SIZE_REQUEST = 324;
+  TYPE_ID_PROJECT_CONFIGS_CLEAR_REQUEST = 325;
+  TYPE_ID_PROJECT_CONFIGS_VALUE_RESPONSE = 326;
+  TYPE_ID_PROJECT_CONFIGS_ENTRIES_RESPONSE = 327;
+  TYPE_ID_PROJECT_CONFIGS_KEYS_RESPONSE = 328;
+  TYPE_ID_PROJECT_CONFIGS_SIZE_RESPONSE = 329;
+  TYPE_ID_PROJECT_CONFIGS_QUERY_REQUEST = 330;
+  TYPE_ID_PROJECT_CONFIGS_QUERY_RESPONSE = 331;
+  TYPE_ID_MAP_EMPTY = 332;
 }
 
 enum MintRpcId {
@@ -3341,12 +3574,23 @@ enum MintRpcId {
   MINT_RPC_ID_ALL_EXECUTORS = 3;
   MINT_RPC_ID_MINT_SERVICE_TOKEN = 4;
   MINT_RPC_ID_MINT_USER_TOKEN = 5;
-  MINT_RPC_ID_MINT_TOKEN = 6;
-  MINT_RPC_ID_MINT_EXTERNAL_TOKEN = 7;
-  MINT_RPC_ID_MINT_CLIENT_TOKEN = 8;
-  MINT_RPC_ID_MINT_X509_CERT = 9;
-  MINT_RPC_ID_MINT_WORKLOAD = 10;
-  MINT_RPC_ID_REVOKE_WORKLOAD = 11;
+  MINT_RPC_ID_MINT_DELEGATED_TOKEN = 6;
+  MINT_RPC_ID_MINT_TOKEN = 7;
+  MINT_RPC_ID_MINT_EXTERNAL_TOKEN = 8;
+  MINT_RPC_ID_MINT_CLIENT_TOKEN = 9;
+  MINT_RPC_ID_MINT_X509_CERT = 10;
+  MINT_RPC_ID_MINT_WORKLOAD = 11;
+  MINT_RPC_ID_REVOKE_WORKLOAD = 12;
+  MINT_RPC_ID_REVOKE_GRANT = 13;
+}
+
+enum FencedLockRpcId {
+  FENCED_LOCK_RPC_ID_UNSPECIFIED = 0;
+  FENCED_LOCK_RPC_ID_ALL_ACCESSORS = 1;
+  FENCED_LOCK_RPC_ID_ALL_MUTATORS = 2;
+  FENCED_LOCK_RPC_ID_ALL_EXECUTORS = 3;
+  FENCED_LOCK_RPC_ID_ACQUIRE = 4;
+  FENCED_LOCK_RPC_ID_RELEASE = 5;
 }
 
 enum CliTokenBrokerRpcId {

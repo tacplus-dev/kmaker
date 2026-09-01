@@ -42,9 +42,12 @@ option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/k
 import "sys/spec.proto";
 import "sys/healthreport.proto";
 import "sys/trace.proto";
-import "vservices/agent-sensor.proto";
 
-// Stratum federates into TimeDB and Dgraph for projection queries.
+// Stratum used to declare s2s clients against agentsensor.TimedbQuery and
+// agentsensor.GraphdbQuery to federate projection queries into timedb and
+// graphdb. Both went to the boneyard 2026-08-25 (BIG GOAL 3, first move #1) and
+// the federation model was already superseded by the 2026-08-23 "client calls,
+// NOT federation" ruling. Stratum now reaches no other store.
 
 // Stratum subscribes to EventBus and ingests SensorEvents into the hot store.
 
@@ -141,81 +144,6 @@ message MapEmpty {
   bool noop = 201;
 }
 
-// Auto-generated record query plane from spec.record annotations (tacplus)
-
-message QueryHandle {
-  string query_id = 1;
-  string trace_id = 200;
-  bool noop = 201;
-}
-
-message QueryStats {
-  string query_id = 1;
-  int64 size = 2;
-  string trace_id = 200;
-  bool noop = 201;
-}
-
-message RecordCount {
-  int64 count = 1;
-  string trace_id = 200;
-  bool noop = 201;
-}
-
-enum RecordChangeType {
-  RECORD_CHANGE_TYPE_UNSPECIFIED = 0;
-  RECORD_CHANGE_TYPE_ADD = 1;
-  RECORD_CHANGE_TYPE_MODIFY = 2;
-  RECORD_CHANGE_TYPE_DELETE = 3;
-}
-
-message OpenAgentEventQueryRequest {
-  bool standing = 1;
-  string trace_id = 200;
-  bool noop = 201;
-}
-
-message SampleAgentEventRequest {
-  string query_id = 1;
-  int32 n = 2;
-  uint64 seed = 3;
-  string trace_id = 200;
-  bool noop = 201;
-}
-
-message SampleAgentEventResponse {
-  repeated agentsensor.AgentEvent items = 1;
-  string trace_id = 200;
-  bool noop = 201;
-}
-
-message PullAgentEventRequest {
-  string query_id = 1;
-  int32 page_size = 2;
-  string page_token = 3;
-  string trace_id = 200;
-  bool noop = 201;
-}
-
-message PullAgentEventResponse {
-  repeated agentsensor.AgentEvent items = 1;
-  string next_page_token = 2;
-  int64 total_count = 3;
-  string trace_id = 200;
-  bool noop = 201;
-}
-
-// tacplus:generated-service recordmap
-service RecordMap {
-
-  rpc OpenAgentEventQuery(OpenAgentEventQueryRequest) returns (QueryHandle);
-  rpc CountAgentEvent(QueryHandle) returns (RecordCount);
-  rpc SampleAgentEvent(SampleAgentEventRequest) returns (SampleAgentEventResponse);
-  rpc PullAgentEvent(PullAgentEventRequest) returns (PullAgentEventResponse) {
-  }
-  rpc CloseAgentEvent(QueryHandle) returns (QueryStats);
-}
-
 // ============================================================================
 // Generated Proto Registry IDs
 // Auto-injected by tacplus for shared type/RPC identifiers.
@@ -227,14 +155,6 @@ enum TypeID {
   TYPE_ID_STRATUM_SERVICE_HEALTH = 3;
   TYPE_ID_STRATUM_CONFIG_STATE = 4;
   TYPE_ID_MAP_EMPTY = 5;
-  TYPE_ID_QUERY_HANDLE = 6;
-  TYPE_ID_QUERY_STATS = 7;
-  TYPE_ID_RECORD_COUNT = 8;
-  TYPE_ID_OPEN_AGENT_EVENT_QUERY_REQUEST = 9;
-  TYPE_ID_SAMPLE_AGENT_EVENT_REQUEST = 10;
-  TYPE_ID_SAMPLE_AGENT_EVENT_RESPONSE = 11;
-  TYPE_ID_PULL_AGENT_EVENT_REQUEST = 12;
-  TYPE_ID_PULL_AGENT_EVENT_RESPONSE = 13;
 }
 
 enum StratumConfigStateServiceRpcId {
@@ -245,16 +165,4 @@ enum StratumConfigStateServiceRpcId {
   STRATUM_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG = 4;
   STRATUM_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG = 5;
   STRATUM_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG = 6;
-}
-
-enum RecordMapRpcId {
-  RECORD_MAP_RPC_ID_UNSPECIFIED = 0;
-  RECORD_MAP_RPC_ID_ALL_ACCESSORS = 1;
-  RECORD_MAP_RPC_ID_ALL_MUTATORS = 2;
-  RECORD_MAP_RPC_ID_ALL_EXECUTORS = 3;
-  RECORD_MAP_RPC_ID_OPEN_AGENT_EVENT_QUERY = 4;
-  RECORD_MAP_RPC_ID_COUNT_AGENT_EVENT = 5;
-  RECORD_MAP_RPC_ID_SAMPLE_AGENT_EVENT = 6;
-  RECORD_MAP_RPC_ID_PULL_AGENT_EVENT = 7;
-  RECORD_MAP_RPC_ID_CLOSE_AGENT_EVENT = 8;
 }

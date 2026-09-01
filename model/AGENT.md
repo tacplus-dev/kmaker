@@ -5,9 +5,9 @@ This file is embedded in `registry.json` and describes how to navigate it.
 ## Overview
 
 This registry describes a tacplus-generated service mesh with:
-- **927** message types across **60** packages
-- **578** RPCs across **53** gRPC services
-- **53** state boundaries
+- **1063** message types across **65** packages
+- **743** RPCs across **61** gRPC services
+- **66** state boundaries
 
 ## Structure
 
@@ -62,7 +62,7 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `boundary_callers` — repeated string
 - `rpcs` — repeated string
 - `is_config` — bool
-- `tag` — string
+- `label` — repeated string
 - `graph_type` — string
 - `auto_tls_key_type` — string
 - `collected_health` — bool
@@ -81,7 +81,7 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `actor_message` — string
 - `topic_ref` — string
 - `event_type_fqn` — string
-- `broker_tag` — string
+- `broker_label` — string
 - `rpc_stem` — string
 - `auth_model` — string
 - `auth_services` — repeated string
@@ -95,7 +95,7 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `actor_message` — string
 - `topic_ref` — string
 - `event_type_fqn` — string
-- `broker_tag` — string
+- `broker_label` — string
 - `rpc_stem` — string
 - `auth_model` — string
 - `auth_services` — repeated string
@@ -139,13 +139,7 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `enum_values` — repeated tacplus.EnumValueInfo
 - `map_key_type` — string
 - `map_value_type` — string
-- `graph_index` — string
 - `projection_source` — string
-- `graph_edge` — string
-- `graph_mode` — string
-- `graph_field_index` — string
-- `graph_upsert` — bool
-- `graph_reverse` — bool
 - `timeseries_order_key` — int32
 - `timeseries_partition_key` — bool
 - `oneof` — bool
@@ -155,6 +149,7 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `constraint_infos` — repeated tacplus.FieldConstraintInfo
 - `timeseries_cardinality_hint` — spec.CardinalityHint
 - `data_entitlement_mode` — spec.RedactMode
+- `filter_mode` — spec.QueryOp
 
 
 ### TypeInfo
@@ -164,39 +159,20 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `description` — string
 - `schema_json` — string
 - `fields` — repeated tacplus.FieldInfo
-- `graph_type` — string
-- `graph_xid_field` — string
-- `graph_type_source` — string
 - `timeseries_table_name` — string
 - `timeseries_table_source` — string
 - `record_key` — string
 - `record_owner` — string
-- `graph_projections` — repeated tacplus.GraphProjectionInfo
-- `timeseries_projections` — repeated tacplus.TimeseriesProjectionInfo
+- `transformations` — repeated tacplus.TransformationInfo
 - `service_store` — bool
 - `service_store_name` — string
-- `service_store_tag` — string
-- `timeseries_retention` — tacplus.RetentionPolicyInfo
+- `service_store_label` — repeated string
 - `timeseries_dedup` — tacplus.DedupPolicyInfo
 - `data_entitlement_default` — spec.RedactMode
+- `record_retention` — tacplus.RetentionPolicyInfo
 
 
-### GraphProjectionFieldInfo
-- `source` — string
-- `as` — string
-- `index` — string
-- `edge` — string
-- `include` — bool
-- `upsert` — bool
-
-
-### GraphProjectionInfo
-- `name` — string
-- `xid` — string
-- `field` — repeated tacplus.GraphProjectionFieldInfo
-
-
-### TimeseriesProjectionFieldInfo
+### TransformationFieldInfo
 - `source` — string
 - `as` — string
 - `order_key` — int32
@@ -215,11 +191,10 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `version_field` — string
 
 
-### TimeseriesProjectionInfo
+### TransformationInfo
 - `name` — string
 - `when` — string
-- `field` — repeated tacplus.TimeseriesProjectionFieldInfo
-- `retention` — tacplus.RetentionPolicyInfo
+- `field` — repeated tacplus.TransformationFieldInfo
 - `dedup` — tacplus.DedupPolicyInfo
 
 
@@ -286,6 +261,9 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `verb_status` — string
 - `folded_to_verb` — string
 - `surfaces` — repeated tacplus.RpcSurfaceInfo
+- `mcp` — bool
+- `mcp_tool_name` — string
+- `mcp_session_carrier` — bool
 
 
 ### EnumInfo
@@ -302,11 +280,13 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `grpc_service` — string
 - `rpcs` — repeated tacplus.RpcInfo
 - `boundaries` — repeated string
-- `event_tag` — string
+- `event_label` — string
 - `smb` — bool
 - `smb_authority` — bool
 - `smb_root` — spec.SmbRoot
-- `host_tag` — string
+- `host_label` — string
+- `mcp` — bool
+- `mcp_exposure` — spec.RpcExposure
 
 
 ### VServiceInfo
@@ -331,6 +311,7 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `rpc` — string
 - `capability_scope` — string
 - `expands_to` — repeated string
+- `routing_alias_packages` — repeated string
 
 
 ### BuildInfo
@@ -393,7 +374,7 @@ derived from proto annotations and compiler default bounds. Prefer
 `constraint_infos` over parsing the legacy prose strings in `constraints`.
 
 Durable `service_store` messages are surfaced in metadata:
-- `TypeInfo.service_store` / `service_store_name` / `service_store_tag`
+- `TypeInfo.service_store` / `service_store_name` / `service_store_label`
 - `FieldInfo.store_key` — the key field for a service_store value
 - `FieldInfo.quorum_write` — field writes require quorum acknowledgement
 
@@ -401,7 +382,7 @@ Durable `service_store` messages are surfaced in metadata:
 
 `PackageNode.vservices` lists file-level `(spec.vservice)` identities with
 `name`, `id`, and declaring `package`. Hosted vservice RPC surfaces expose their
-hosting tag on `ServiceInfo.host_tag`.
+hosting label on `ServiceInfo.host_label`.
 
 ## Client Dependencies
 
@@ -415,7 +396,7 @@ Each edge includes `source_package`, `surface_kind`, `service`,
 `PackageNode.event_publishes` and `PackageNode.event_watches` list validated
 actor bindings from `(spec.event_publish)` and `(spec.event_watch)`. Each entry
 includes the actor package/message, canonical `topic_ref`, resolved
-`event_type_fqn`, broker tag, RPC stem, and derived auth shape.
+`event_type_fqn`, broker label, RPC stem, and derived auth shape.
 
 ## RPC Surfaces
 
@@ -473,10 +454,11 @@ Each `RpcInfo` carries:
 
 ## Services
 
+- **AccountingRecordBusStateService**
 - **Admin**
+- **AgentCycleBusStateService**
 - **AgentEventBusStateService**
-- **Argus**
-- **ArgusConfigStateService**
+- **AgentSessionStateBusStateService**
 - **Auth**
 - **CaStateService**
 - **CliTokenBroker**
@@ -486,10 +468,8 @@ Each `RpcInfo` carries:
 - **Dashboard**
 - **EventbusConfigStateService**
 - **EventbusStateService**
+- **FencedLock**
 - **GatewayConfigStateService**
-- **GraphdbConfigStateService**
-- **GraphdbQuery**
-- **GraphdbStateService**
 - **IdentityStateService**
 - **Inbound**
 - **JwkVerifyingKeysViewService**
@@ -497,6 +477,13 @@ Each `RpcInfo` carries:
 - **KmakerConfigStateService**
 - **LetsEncryptStateService**
 - **LetsencryptConfigStateService**
+- **Mailbox**
+- **MailboxConfigStateService**
+- **MailboxEntryBusStateService**
+- **MailboxStateService**
+- **MessageBusStateService**
+- **Messaging**
+- **MessagingConfigStateService**
 - **Metadata**
 - **Mint**
 - **OauthConfigStateService**
@@ -507,20 +494,22 @@ Each `RpcInfo` carries:
 - **Outbound**
 - **PublicJwksViewService**
 - **RecordMap**
+- **RecordQuery**
 - **SamlConfigStateService**
+- **Scotty**
+- **ScottyActivityBusStateService**
+- **ScottyAgent**
+- **ScottyConfigStateService**
+- **ScottyStateService**
+- **ScottyagentConfigStateService**
+- **ScottyagentStateService**
 - **SentinelConfigStateService**
 - **ServiceConfigStateService**
 - **ServiceHealthStateService**
 - **Session**
 - **SmbCertService**
 - **StratumConfigStateService**
-- **StratumQuery**
 - **TenantAdmin**
-- **TimeDbStateService**
-- **TimedbConfigStateService**
-- **TimedbQuery**
-- **TimeseriesGroupCounts**
-- **TimeseriesQuery**
 - **TlsCertService**
 - **TraceEventBusStateService**
 - **TraceSession**
@@ -529,6 +518,7 @@ Each `RpcInfo` carries:
 
 ## Packages
 
+- `clients/schematicctl`
 - `common/credentials`
 - `common/hazelcast`
 - `generated/accounting_method`
@@ -538,20 +528,21 @@ Each `RpcInfo` carries:
 - `generated/services`
 - `generated/services_config`
 - `generated/tenant_config`
-- `services/argus`
 - `services/eventbus`
 - `services/gateway`
-- `services/graphdb`
 - `services/kernel`
 - `services/kmaker`
 - `services/letsencrypt`
+- `services/mailbox`
+- `services/messaging`
 - `services/oauth`
 - `services/opa`
 - `services/operator`
 - `services/saml`
+- `services/scotty`
+- `services/scottyagent`
 - `services/sentinel`
 - `services/stratum`
-- `services/timedb`
 - `sys/accounting`
 - `sys/alpn`
 - `sys/cloudidentity`
@@ -571,6 +562,7 @@ Each `RpcInfo` carries:
 - `sys/jwkview`
 - `sys/key`
 - `sys/logger`
+- `sys/mcp`
 - `sys/opalib`
 - `sys/outputformat`
 - `sys/publicjwksview`
@@ -586,9 +578,11 @@ Each `RpcInfo` carries:
 - `sys/tokenrequest`
 - `sys/trace`
 - `sys/x509`
+- `vservices/accounting-record`
 - `vservices/agent-sensor`
 - `vservices/entitlements`
 - `vservices/proxy-policy`
+- `vservices/query`
 
 ## Documentation
 

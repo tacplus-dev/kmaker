@@ -50,6 +50,16 @@ type TokenEntitlements struct {
 	// Stamped by OPA at token-exchange time alongside grants — an identity property,
 	// never a request parameter.
 	DataGrants []string `protobuf:"bytes,2,rep,name=data_grants,json=dataGrants,proto3" json:"data_grants,omitempty"`
+	// principal_scope is how wide the caller's authority over PRINCIPALS is, as a
+	// spec.PrincipalScope enum VALUE NAME (e.g. "PRINCIPAL_SCOPE_ANY"). It is the
+	// claim the generated (spec.owner_default) guard reads to tell an owner acting
+	// on its own row from a principal whose authority is wider than itself.
+	// Absent, empty, PRINCIPAL_SCOPE_UNSPECIFIED and PRINCIPAL_SCOPE_SELF_ONLY all
+	// mean self-scoped: the guard fails closed, so a policy that stamps nothing
+	// leaves every caller exactly as narrow as it is today.
+	// Stamped by OPA at token-exchange time alongside grants — an identity
+	// property, never a request parameter.
+	PrincipalScope string `protobuf:"bytes,3,opt,name=principal_scope,json=principalScope,proto3" json:"principal_scope,omitempty"`
 	// azp restricts these entitlements to tokens with a matching authorized party.
 	// Empty = entitlements apply regardless of azp.
 	Azp           []string `protobuf:"bytes,100,rep,name=azp,proto3" json:"azp,omitempty"`
@@ -101,6 +111,13 @@ func (x *TokenEntitlements) GetDataGrants() []string {
 	return nil
 }
 
+func (x *TokenEntitlements) GetPrincipalScope() string {
+	if x != nil {
+		return x.PrincipalScope
+	}
+	return ""
+}
+
 func (x *TokenEntitlements) GetAzp() []string {
 	if x != nil {
 		return x.Azp
@@ -112,11 +129,12 @@ var File_generated_entitlements_proto protoreflect.FileDescriptor
 
 const file_generated_entitlements_proto_rawDesc = "" +
 	"\n" +
-	"\x1cgenerated/entitlements.proto\x12\fentitlements\"^\n" +
+	"\x1cgenerated/entitlements.proto\x12\fentitlements\"\x87\x01\n" +
 	"\x11TokenEntitlements\x12\x16\n" +
 	"\x06grants\x18\x01 \x03(\tR\x06grants\x12\x1f\n" +
 	"\vdata_grants\x18\x02 \x03(\tR\n" +
-	"dataGrants\x12\x10\n" +
+	"dataGrants\x12'\n" +
+	"\x0fprincipal_scope\x18\x03 \x01(\tR\x0eprincipalScope\x12\x10\n" +
 	"\x03azp\x18d \x03(\tR\x03azpBeZcgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/entitlementsb\x06proto3"
 
 var (

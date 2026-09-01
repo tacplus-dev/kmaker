@@ -2122,12 +2122,12 @@ const file_services_opa_proto_rawDesc = "" +
 	"\x13entitlements_policy\x18\x01 \x01(\v2\x11.opalib.OpaPolicyR\x12entitlementsPolicy\x124\n" +
 	"\fproxy_policy\x18\x02 \x01(\v2\x11.opalib.OpaPolicyR\vproxyPolicy\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\vڪ\x1d\a\b\x01\x12\x03opa\"\x8c\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\vڪ\x1d\a\b\x01\x12\x03opa\"\x8a\x01\n" +
 	"\x0eOpaConfigState\x12)\n" +
 	"\x06config\x18\x01 \x01(\v2\v.opa.ConfigB\x04\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x1e\x9a\xa8\x1d\x1a\n" +
-	"\x0eOpaConfigState\x1a\beventbus\"\xd0\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x1c\x9a\xa8\x1d\x18\n" +
+	"\x0eOpaConfigState\x1a\x06kernel\"\xd0\x01\n" +
 	"\n" +
 	"QueryValue\x12#\n" +
 	"\fstring_value\x18\x01 \x01(\tH\x00R\vstringValue\x12\x1d\n" +
@@ -2303,7 +2303,7 @@ const file_services_opa_proto_rawDesc = "" +
 	"-OPA_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x12.\n" +
 	"*OPA_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x12.\n" +
 	"*OPA_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x120\n" +
-	",OPA_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\x84\x10\n" +
+	",OPA_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\x89\x10\n" +
 	"\x0fOpaStateService\x12?\n" +
 	"\x15GetEntitlementsPolicy\x12\x13.trace.TraceRequest\x1a\x11.opalib.OpaPolicy\x12=\n" +
 	"\x15SetEntitlementsPolicy\x12\x11.opalib.OpaPolicy\x1a\x11.opalib.OpaPolicy\x12C\n" +
@@ -2324,11 +2324,13 @@ const file_services_opa_proto_rawDesc = "" +
 	"%PutIfAbsentTenantEntitlementsPolicies\x12).opa.TenantEntitlementsPoliciesPutRequest\x1a,.opa.TenantEntitlementsPoliciesValueResponse\x12h\n" +
 	"\x1fWatchTenantEntitlementsPolicies\x12\x13.trace.TraceRequest\x1a..opa.TenantEntitlementsPoliciesEntriesResponse0\x01\x12|\n" +
 	"\x1fQueryTenantEntitlementsPolicies\x12+.opa.TenantEntitlementsPoliciesQueryRequest\x1a,.opa.TenantEntitlementsPoliciesQueryResponse\x12\x83\x01\n" +
-	"$WatchQueryTenantEntitlementsPolicies\x12+.opa.TenantEntitlementsPoliciesQueryRequest\x1a,.opa.TenantEntitlementsPoliciesQueryResponse0\x01\x1a\x04\xea\x97\"\x002\xa6\x01\n" +
+	"$WatchQueryTenantEntitlementsPolicies\x12+.opa.TenantEntitlementsPoliciesQueryRequest\x1a,.opa.TenantEntitlementsPoliciesQueryResponse0\x01\x1a\t\xea\x97\"\x05\n" +
+	"\x03opa2\xab\x01\n" +
 	"\x15OpaConfigStateService\x12-\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\v.opa.Config\x12%\n" +
 	"\tSetConfig\x12\v.opa.Config\x1a\v.opa.Config\x121\n" +
-	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\v.opa.Config0\x01\x1a\x04\xea\x97\"\x00Bt\x92\xb5\x18\x11\n" +
+	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\v.opa.Config0\x01\x1a\t\xea\x97\"\x05\n" +
+	"\x03opaBt\x92\xb5\x18\x11\n" +
 	"\fDEFAULT_PORT\x10\xfbAڵ\x18\x00ZYgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/opab\x06proto3"
 
 var (

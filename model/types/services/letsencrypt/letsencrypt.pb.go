@@ -720,12 +720,12 @@ const file_services_letsencrypt_proto_rawDesc = "" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\x1aX\n" +
 	"\rChildrenEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x121\n" +
-	"\x05value\x18\x02 \x01(\v2\x1b.letsencrypt.CertMagicStateR\x05value:\x028\x01\"\xa4\x01\n" +
+	"\x05value\x18\x02 \x01(\v2\x1b.letsencrypt.CertMagicStateR\x05value:\x028\x01\"\xa2\x01\n" +
 	"\x16LetsencryptConfigState\x121\n" +
 	"\x06config\x18\x01 \x01(\v2\x13.letsencrypt.ConfigB\x04\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:&\x9a\xa8\x1d\"\n" +
-	"\x16LetsencryptConfigState\x1a\beventbus\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:$\x9a\xa8\x1d \n" +
+	"\x16LetsencryptConfigState\x1a\x06kernel\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\xd4\x01\n" +
@@ -752,15 +752,18 @@ const file_services_letsencrypt_proto_rawDesc = "" +
 	"5LETSENCRYPT_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x126\n" +
 	"2LETSENCRYPT_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x126\n" +
 	"2LETSENCRYPT_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x128\n" +
-	"4LETSENCRYPT_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\x82\x02\n" +
+	"4LETSENCRYPT_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\x98\x02\n" +
 	"\x17LetsEncryptStateService\x12D\n" +
 	"\vGetCertData\x12\x13.trace.TraceRequest\x1a .letsencrypt.LetsEncryptCertData\x12Q\n" +
 	"\vSetCertData\x12 .letsencrypt.LetsEncryptCertData\x1a .letsencrypt.LetsEncryptCertData\x12H\n" +
-	"\rWatchCertData\x12\x13.trace.TraceRequest\x1a .letsencrypt.LetsEncryptCertData0\x01\x1a\x04\xea\x97\"\x002\xce\x01\n" +
+	"\rWatchCertData\x12\x13.trace.TraceRequest\x1a .letsencrypt.LetsEncryptCertData0\x01\x1a\x1a\xea\x97\"\x16\n" +
+	"\vletsencrypt\n" +
+	"\agateway2\xdb\x01\n" +
 	"\x1dLetsencryptConfigStateService\x125\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x13.letsencrypt.Config\x125\n" +
 	"\tSetConfig\x12\x13.letsencrypt.Config\x1a\x13.letsencrypt.Config\x129\n" +
-	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x13.letsencrypt.Config0\x01\x1a\x04\xea\x97\"\x00B|ڵ\x18\x00\xe2\xb5\x18\x11\n" +
+	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x13.letsencrypt.Config0\x01\x1a\x11\xea\x97\"\r\n" +
+	"\vletsencryptB|ڵ\x18\x00\xe2\xb5\x18\x11\n" +
 	"\x0fkernel.IdentityZagitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/letsencryptb\x06proto3"
 
 var (

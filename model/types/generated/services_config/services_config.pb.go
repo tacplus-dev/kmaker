@@ -22,19 +22,20 @@
 package services_config
 
 import (
-	argus "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/argus"
 	eventbus "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/eventbus"
 	gateway "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gateway"
-	graphdb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/graphdb"
 	kmaker "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
 	letsencrypt "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/letsencrypt"
+	mailbox "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/mailbox"
+	messaging "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/messaging"
 	oauth "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/oauth"
 	opa "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/opa"
 	operator "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/operator"
 	samlsvc "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/samlsvc"
+	scotty "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/scotty"
+	scottyagent "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/scottyagent"
 	sentinel "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/sentinel"
 	stratum "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/stratum"
-	timedb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/timedb"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -54,16 +55,17 @@ type Services struct {
 	SentinelConfig    *sentinel.Config       `protobuf:"bytes,5,opt,name=sentinel_config,json=sentinelConfig,proto3" json:"sentinel_config,omitempty"`
 	GatewayConfig     *gateway.Config        `protobuf:"bytes,7,opt,name=gateway_config,json=gatewayConfig,proto3" json:"gateway_config,omitempty"`
 	LetsencryptConfig *letsencrypt.Config    `protobuf:"bytes,9,opt,name=letsencrypt_config,json=letsencryptConfig,proto3" json:"letsencrypt_config,omitempty"`
-	GraphdbConfig     *graphdb.Config        `protobuf:"bytes,13,opt,name=graphdb_config,json=graphdbConfig,proto3" json:"graphdb_config,omitempty"`
 	EventbusConfig    *eventbus.Config       `protobuf:"bytes,18,opt,name=eventbus_config,json=eventbusConfig,proto3" json:"eventbus_config,omitempty"`
-	TimedbConfig      *timedb.Config         `protobuf:"bytes,20,opt,name=timedb_config,json=timedbConfig,proto3" json:"timedb_config,omitempty"`
 	OauthConfig       *oauth.Config          `protobuf:"bytes,21,opt,name=oauth_config,json=oauthConfig,proto3" json:"oauth_config,omitempty"`
 	OpaConfig         *opa.Config            `protobuf:"bytes,29,opt,name=opa_config,json=opaConfig,proto3" json:"opa_config,omitempty"`
 	StratumConfig     *stratum.Config        `protobuf:"bytes,34,opt,name=stratum_config,json=stratumConfig,proto3" json:"stratum_config,omitempty"`
-	ArgusConfig       *argus.Config          `protobuf:"bytes,35,opt,name=argus_config,json=argusConfig,proto3" json:"argus_config,omitempty"`
 	SamlConfig        *samlsvc.Config        `protobuf:"bytes,38,opt,name=saml_config,json=samlConfig,proto3" json:"saml_config,omitempty"`
 	OperatorConfig    *operator.Config       `protobuf:"bytes,47,opt,name=operator_config,json=operatorConfig,proto3" json:"operator_config,omitempty"`
 	KmakerConfig      *kmaker.Config         `protobuf:"bytes,49,opt,name=kmaker_config,json=kmakerConfig,proto3" json:"kmaker_config,omitempty"`
+	MessagingConfig   *messaging.Config      `protobuf:"bytes,53,opt,name=messaging_config,json=messagingConfig,proto3" json:"messaging_config,omitempty"`
+	ScottyagentConfig *scottyagent.Config    `protobuf:"bytes,54,opt,name=scottyagent_config,json=scottyagentConfig,proto3" json:"scottyagent_config,omitempty"`
+	MailboxConfig     *mailbox.Config        `protobuf:"bytes,55,opt,name=mailbox_config,json=mailboxConfig,proto3" json:"mailbox_config,omitempty"`
+	ScottyConfig      *scotty.Config         `protobuf:"bytes,70,opt,name=scotty_config,json=scottyConfig,proto3" json:"scotty_config,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -119,23 +121,9 @@ func (x *Services) GetLetsencryptConfig() *letsencrypt.Config {
 	return nil
 }
 
-func (x *Services) GetGraphdbConfig() *graphdb.Config {
-	if x != nil {
-		return x.GraphdbConfig
-	}
-	return nil
-}
-
 func (x *Services) GetEventbusConfig() *eventbus.Config {
 	if x != nil {
 		return x.EventbusConfig
-	}
-	return nil
-}
-
-func (x *Services) GetTimedbConfig() *timedb.Config {
-	if x != nil {
-		return x.TimedbConfig
 	}
 	return nil
 }
@@ -161,13 +149,6 @@ func (x *Services) GetStratumConfig() *stratum.Config {
 	return nil
 }
 
-func (x *Services) GetArgusConfig() *argus.Config {
-	if x != nil {
-		return x.ArgusConfig
-	}
-	return nil
-}
-
 func (x *Services) GetSamlConfig() *samlsvc.Config {
 	if x != nil {
 		return x.SamlConfig
@@ -189,27 +170,56 @@ func (x *Services) GetKmakerConfig() *kmaker.Config {
 	return nil
 }
 
+func (x *Services) GetMessagingConfig() *messaging.Config {
+	if x != nil {
+		return x.MessagingConfig
+	}
+	return nil
+}
+
+func (x *Services) GetScottyagentConfig() *scottyagent.Config {
+	if x != nil {
+		return x.ScottyagentConfig
+	}
+	return nil
+}
+
+func (x *Services) GetMailboxConfig() *mailbox.Config {
+	if x != nil {
+		return x.MailboxConfig
+	}
+	return nil
+}
+
+func (x *Services) GetScottyConfig() *scotty.Config {
+	if x != nil {
+		return x.ScottyConfig
+	}
+	return nil
+}
+
 var File_generated_services_config_proto protoreflect.FileDescriptor
 
 const file_generated_services_config_proto_rawDesc = "" +
 	"\n" +
-	"\x1fgenerated/services_config.proto\x12\x0fservices_config\x1a\x17services/sentinel.proto\x1a\x16services/gateway.proto\x1a\x1aservices/letsencrypt.proto\x1a\x16services/graphdb.proto\x1a\x17services/eventbus.proto\x1a\x15services/timedb.proto\x1a\x14services/oauth.proto\x1a\x12services/opa.proto\x1a\x16services/stratum.proto\x1a\x14services/argus.proto\x1a\x13services/saml.proto\x1a\x17services/operator.proto\x1a\x15services/kmaker.proto\"\xd3\x05\n" +
+	"\x1fgenerated/services_config.proto\x12\x0fservices_config\x1a\x17services/sentinel.proto\x1a\x16services/gateway.proto\x1a\x1aservices/letsencrypt.proto\x1a\x17services/eventbus.proto\x1a\x14services/oauth.proto\x1a\x12services/opa.proto\x1a\x16services/stratum.proto\x1a\x13services/saml.proto\x1a\x17services/operator.proto\x1a\x15services/kmaker.proto\x1a\x18services/messaging.proto\x1a\x1aservices/scottyagent.proto\x1a\x16services/mailbox.proto\x1a\x15services/scotty.proto\"\xa3\x06\n" +
 	"\bServices\x129\n" +
 	"\x0fsentinel_config\x18\x05 \x01(\v2\x10.sentinel.ConfigR\x0esentinelConfig\x126\n" +
 	"\x0egateway_config\x18\a \x01(\v2\x0f.gateway.ConfigR\rgatewayConfig\x12B\n" +
-	"\x12letsencrypt_config\x18\t \x01(\v2\x13.letsencrypt.ConfigR\x11letsencryptConfig\x126\n" +
-	"\x0egraphdb_config\x18\r \x01(\v2\x0f.graphdb.ConfigR\rgraphdbConfig\x129\n" +
-	"\x0feventbus_config\x18\x12 \x01(\v2\x10.eventbus.ConfigR\x0eeventbusConfig\x123\n" +
-	"\rtimedb_config\x18\x14 \x01(\v2\x0e.timedb.ConfigR\ftimedbConfig\x120\n" +
+	"\x12letsencrypt_config\x18\t \x01(\v2\x13.letsencrypt.ConfigR\x11letsencryptConfig\x129\n" +
+	"\x0feventbus_config\x18\x12 \x01(\v2\x10.eventbus.ConfigR\x0eeventbusConfig\x120\n" +
 	"\foauth_config\x18\x15 \x01(\v2\r.oauth.ConfigR\voauthConfig\x12*\n" +
 	"\n" +
 	"opa_config\x18\x1d \x01(\v2\v.opa.ConfigR\topaConfig\x126\n" +
 	"\x0estratum_config\x18\" \x01(\v2\x0f.stratum.ConfigR\rstratumConfig\x120\n" +
-	"\fargus_config\x18# \x01(\v2\r.argus.ConfigR\vargusConfig\x120\n" +
 	"\vsaml_config\x18& \x01(\v2\x0f.samlsvc.ConfigR\n" +
 	"samlConfig\x129\n" +
 	"\x0foperator_config\x18/ \x01(\v2\x10.operator.ConfigR\x0eoperatorConfig\x123\n" +
-	"\rkmaker_config\x181 \x01(\v2\x0e.kmaker.ConfigR\fkmakerConfigBhZfgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/services_configb\x06proto3"
+	"\rkmaker_config\x181 \x01(\v2\x0e.kmaker.ConfigR\fkmakerConfig\x12<\n" +
+	"\x10messaging_config\x185 \x01(\v2\x11.messaging.ConfigR\x0fmessagingConfig\x12B\n" +
+	"\x12scottyagent_config\x186 \x01(\v2\x13.scottyagent.ConfigR\x11scottyagentConfig\x126\n" +
+	"\x0emailbox_config\x187 \x01(\v2\x0f.mailbox.ConfigR\rmailboxConfig\x123\n" +
+	"\rscotty_config\x18F \x01(\v2\x0e.scotty.ConfigR\fscottyConfigBhZfgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/services_configb\x06proto3"
 
 var (
 	file_generated_services_config_proto_rawDescOnce sync.Once
@@ -229,36 +239,38 @@ var file_generated_services_config_proto_goTypes = []any{
 	(*sentinel.Config)(nil),    // 1: sentinel.Config
 	(*gateway.Config)(nil),     // 2: gateway.Config
 	(*letsencrypt.Config)(nil), // 3: letsencrypt.Config
-	(*graphdb.Config)(nil),     // 4: graphdb.Config
-	(*eventbus.Config)(nil),    // 5: eventbus.Config
-	(*timedb.Config)(nil),      // 6: timedb.Config
-	(*oauth.Config)(nil),       // 7: oauth.Config
-	(*opa.Config)(nil),         // 8: opa.Config
-	(*stratum.Config)(nil),     // 9: stratum.Config
-	(*argus.Config)(nil),       // 10: argus.Config
-	(*samlsvc.Config)(nil),     // 11: samlsvc.Config
-	(*operator.Config)(nil),    // 12: operator.Config
-	(*kmaker.Config)(nil),      // 13: kmaker.Config
+	(*eventbus.Config)(nil),    // 4: eventbus.Config
+	(*oauth.Config)(nil),       // 5: oauth.Config
+	(*opa.Config)(nil),         // 6: opa.Config
+	(*stratum.Config)(nil),     // 7: stratum.Config
+	(*samlsvc.Config)(nil),     // 8: samlsvc.Config
+	(*operator.Config)(nil),    // 9: operator.Config
+	(*kmaker.Config)(nil),      // 10: kmaker.Config
+	(*messaging.Config)(nil),   // 11: messaging.Config
+	(*scottyagent.Config)(nil), // 12: scottyagent.Config
+	(*mailbox.Config)(nil),     // 13: mailbox.Config
+	(*scotty.Config)(nil),      // 14: scotty.Config
 }
 var file_generated_services_config_proto_depIdxs = []int32{
 	1,  // 0: services_config.Services.sentinel_config:type_name -> sentinel.Config
 	2,  // 1: services_config.Services.gateway_config:type_name -> gateway.Config
 	3,  // 2: services_config.Services.letsencrypt_config:type_name -> letsencrypt.Config
-	4,  // 3: services_config.Services.graphdb_config:type_name -> graphdb.Config
-	5,  // 4: services_config.Services.eventbus_config:type_name -> eventbus.Config
-	6,  // 5: services_config.Services.timedb_config:type_name -> timedb.Config
-	7,  // 6: services_config.Services.oauth_config:type_name -> oauth.Config
-	8,  // 7: services_config.Services.opa_config:type_name -> opa.Config
-	9,  // 8: services_config.Services.stratum_config:type_name -> stratum.Config
-	10, // 9: services_config.Services.argus_config:type_name -> argus.Config
-	11, // 10: services_config.Services.saml_config:type_name -> samlsvc.Config
-	12, // 11: services_config.Services.operator_config:type_name -> operator.Config
-	13, // 12: services_config.Services.kmaker_config:type_name -> kmaker.Config
-	13, // [13:13] is the sub-list for method output_type
-	13, // [13:13] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	4,  // 3: services_config.Services.eventbus_config:type_name -> eventbus.Config
+	5,  // 4: services_config.Services.oauth_config:type_name -> oauth.Config
+	6,  // 5: services_config.Services.opa_config:type_name -> opa.Config
+	7,  // 6: services_config.Services.stratum_config:type_name -> stratum.Config
+	8,  // 7: services_config.Services.saml_config:type_name -> samlsvc.Config
+	9,  // 8: services_config.Services.operator_config:type_name -> operator.Config
+	10, // 9: services_config.Services.kmaker_config:type_name -> kmaker.Config
+	11, // 10: services_config.Services.messaging_config:type_name -> messaging.Config
+	12, // 11: services_config.Services.scottyagent_config:type_name -> scottyagent.Config
+	13, // 12: services_config.Services.mailbox_config:type_name -> mailbox.Config
+	14, // 13: services_config.Services.scotty_config:type_name -> scotty.Config
+	14, // [14:14] is the sub-list for method output_type
+	14, // [14:14] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_generated_services_config_proto_init() }

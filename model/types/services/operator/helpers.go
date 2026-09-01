@@ -604,9 +604,6 @@ type topologyJSON struct {
 	GatewayNodes  int32            `json:"gateway_nodes,omitempty"`
 	OauthNodes    int32            `json:"oauth_nodes,omitempty"`
 	OpaNodes      int32            `json:"opa_nodes,omitempty"`
-	TimedbNodes   int32            `json:"timedb_nodes,omitempty"`
-	GraphdbNodes  int32            `json:"graphdb_nodes,omitempty"`
-	ArgusNodes    int32            `json:"argus_nodes,omitempty"`
 	StratumNodes  int32            `json:"stratum_nodes,omitempty"`
 	SamlNodes     int32            `json:"saml_nodes,omitempty"`
 	KmakerNodes   int32            `json:"kmaker_nodes,omitempty"`
@@ -630,9 +627,6 @@ func TopologyToJSON(v *Topology) ([]byte, error) {
 		GatewayNodes:  v.GatewayNodes,
 		OauthNodes:    v.OauthNodes,
 		OpaNodes:      v.OpaNodes,
-		TimedbNodes:   v.TimedbNodes,
-		GraphdbNodes:  v.GraphdbNodes,
-		ArgusNodes:    v.ArgusNodes,
 		StratumNodes:  v.StratumNodes,
 		SamlNodes:     v.SamlNodes,
 		KmakerNodes:   v.KmakerNodes,
@@ -658,9 +652,6 @@ func TopologyToJSONPretty(v *Topology) ([]byte, error) {
 		GatewayNodes:  v.GatewayNodes,
 		OauthNodes:    v.OauthNodes,
 		OpaNodes:      v.OpaNodes,
-		TimedbNodes:   v.TimedbNodes,
-		GraphdbNodes:  v.GraphdbNodes,
-		ArgusNodes:    v.ArgusNodes,
 		StratumNodes:  v.StratumNodes,
 		SamlNodes:     v.SamlNodes,
 		KmakerNodes:   v.KmakerNodes,
@@ -738,9 +729,6 @@ func TopologyFromJSON(data []byte) (*Topology, error) {
 	result.GatewayNodes = raw.GatewayNodes
 	result.OauthNodes = raw.OauthNodes
 	result.OpaNodes = raw.OpaNodes
-	result.TimedbNodes = raw.TimedbNodes
-	result.GraphdbNodes = raw.GraphdbNodes
-	result.ArgusNodes = raw.ArgusNodes
 	result.StratumNodes = raw.StratumNodes
 	result.SamlNodes = raw.SamlNodes
 	result.KmakerNodes = raw.KmakerNodes
@@ -2066,9 +2054,6 @@ func TopologyToEnvVar(v *Topology) map[string]string {
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_GATEWAY_NODES"] = strconv.FormatInt(int64(v.GatewayNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_OAUTH_NODES"] = strconv.FormatInt(int64(v.OauthNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_OPA_NODES"] = strconv.FormatInt(int64(v.OpaNodes), 10)
-	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_TIMEDB_NODES"] = strconv.FormatInt(int64(v.TimedbNodes), 10)
-	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_GRAPHDB_NODES"] = strconv.FormatInt(int64(v.GraphdbNodes), 10)
-	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_ARGUS_NODES"] = strconv.FormatInt(int64(v.ArgusNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_STRATUM_NODES"] = strconv.FormatInt(int64(v.StratumNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_SAML_NODES"] = strconv.FormatInt(int64(v.SamlNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_KMAKER_NODES"] = strconv.FormatInt(int64(v.KmakerNodes), 10)
@@ -2122,27 +2107,6 @@ func TopologyFromEnvVar(env map[string]string) (*Topology, error) {
 			return nil, err
 		}
 		result.OpaNodes = int32(parsed)
-	}
-	if val, ok := env["PROTO_SERVICES_OPERATOR_TOPOLOGY_TIMEDB_NODES"]; ok && val != "" {
-		parsed, err := strconv.ParseInt(val, 10, 32)
-		if err != nil {
-			return nil, err
-		}
-		result.TimedbNodes = int32(parsed)
-	}
-	if val, ok := env["PROTO_SERVICES_OPERATOR_TOPOLOGY_GRAPHDB_NODES"]; ok && val != "" {
-		parsed, err := strconv.ParseInt(val, 10, 32)
-		if err != nil {
-			return nil, err
-		}
-		result.GraphdbNodes = int32(parsed)
-	}
-	if val, ok := env["PROTO_SERVICES_OPERATOR_TOPOLOGY_ARGUS_NODES"]; ok && val != "" {
-		parsed, err := strconv.ParseInt(val, 10, 32)
-		if err != nil {
-			return nil, err
-		}
-		result.ArgusNodes = int32(parsed)
 	}
 	if val, ok := env["PROTO_SERVICES_OPERATOR_TOPOLOGY_STRATUM_NODES"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 32)
@@ -2872,9 +2836,6 @@ const (
 	DefaultEventbusNodes int64  = 3
 	DefaultOauthNodes    int64  = 3
 	DefaultOpaNodes      int64  = 3
-	DefaultTimedbNodes   int64  = 3
-	DefaultGraphdbNodes  int64  = 3
-	DefaultArgusNodes    int64  = 3
 	DefaultStratumNodes  int64  = 3
 	DefaultSamlNodes     int64  = 3
 	DefaultKmakerNodes   int64  = 3
@@ -2944,15 +2905,6 @@ func TopologyDefaults(v *Topology) {
 	}
 	if v.OpaNodes == 0 {
 		v.OpaNodes = int32(DefaultOpaNodes)
-	}
-	if v.TimedbNodes == 0 {
-		v.TimedbNodes = int32(DefaultTimedbNodes)
-	}
-	if v.GraphdbNodes == 0 {
-		v.GraphdbNodes = int32(DefaultGraphdbNodes)
-	}
-	if v.ArgusNodes == 0 {
-		v.ArgusNodes = int32(DefaultArgusNodes)
 	}
 	if v.StratumNodes == 0 {
 		v.StratumNodes = int32(DefaultStratumNodes)
@@ -3079,15 +3031,6 @@ func TopologyUndefaults(v *Topology) {
 	}
 	if v.OpaNodes == int32(DefaultOpaNodes) {
 		v.OpaNodes = 0
-	}
-	if v.TimedbNodes == int32(DefaultTimedbNodes) {
-		v.TimedbNodes = 0
-	}
-	if v.GraphdbNodes == int32(DefaultGraphdbNodes) {
-		v.GraphdbNodes = 0
-	}
-	if v.ArgusNodes == int32(DefaultArgusNodes) {
-		v.ArgusNodes = 0
 	}
 	if v.StratumNodes == int32(DefaultStratumNodes) {
 		v.StratumNodes = 0
@@ -3226,15 +3169,6 @@ func MergeTopology(dst, src *Topology) {
 	}
 	if dst.OpaNodes == 0 {
 		dst.OpaNodes = src.OpaNodes
-	}
-	if dst.TimedbNodes == 0 {
-		dst.TimedbNodes = src.TimedbNodes
-	}
-	if dst.GraphdbNodes == 0 {
-		dst.GraphdbNodes = src.GraphdbNodes
-	}
-	if dst.ArgusNodes == 0 {
-		dst.ArgusNodes = src.ArgusNodes
 	}
 	if dst.StratumNodes == 0 {
 		dst.StratumNodes = src.StratumNodes

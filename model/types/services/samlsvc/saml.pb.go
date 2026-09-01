@@ -1843,12 +1843,12 @@ const file_services_saml_proto_rawDesc = "" +
 	"\x15GetDescriptorResponse\x12G\n" +
 	"\x11entity_descriptor\x18\x01 \x01(\v2\x1a.saml.SamlEntityDescriptorR\x10entityDescriptor\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x92\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x90\x01\n" +
 	"\x0fSamlConfigState\x12-\n" +
 	"\x06config\x18\x01 \x01(\v2\x0f.samlsvc.ConfigB\x04\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x1f\x9a\xa8\x1d\x1b\n" +
-	"\x0fSamlConfigState\x1a\beventbus\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x1d\x9a\xa8\x1d\x19\n" +
+	"\x0fSamlConfigState\x1a\x06kernel\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\xb9\x04\n" +
@@ -1902,24 +1902,25 @@ const file_services_saml_proto_rawDesc = "" +
 	".SAML_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x12/\n" +
 	"+SAML_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x12/\n" +
 	"+SAML_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x121\n" +
-	"-SAML_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xa7\x01\n" +
-	"\aInbound\x12B\n" +
-	"\rMintAcsTokens\x12\x13.samlsvc.AcsRequest\x1a\x14.samlsvc.AcsResponse\"\x06\xea\x88'\x02\b\x01\x12R\n" +
-	"\tAuthorize\x12\x1d.samlsvc.SamlAuthorizeRequest\x1a\x1e.samlsvc.SamlAuthorizeResponse\"\x06\xea\x88'\x02\b\x01\x1a\x04\xf2\x97\"\x002\xc7\x01\n" +
-	"\bOutbound\x12V\n" +
-	"\rMintAssertion\x12\x1d.samlsvc.MintAssertionRequest\x1a\x1e.samlsvc.MintAssertionResponse\"\x06\xea\x88'\x02\x10\x01\x12]\n" +
-	"\aListSPs\x12\x17.samlsvc.ListSPsRequest\x1a\x18.samlsvc.ListSPsResponse\"\x1fʈ'\x03\n" +
-	"\x01\x01\xea\x88'\x02\b\x01\xf2\x88'\x0e\b\x01\x12\bsp_index\x18\x10\x1a\x04\xf2\x97\"\x002\x96\x02\n" +
-	"\bMetadata\x12T\n" +
-	"\x0eGetIdpMetadata\x12\x18.samlsvc.MetadataRequest\x1a\x19.samlsvc.MetadataResponse\"\rʈ'\x03\n" +
-	"\x01\x01\xea\x88'\x02\b\x01\x12S\n" +
-	"\rGetSpMetadata\x12\x18.samlsvc.MetadataRequest\x1a\x19.samlsvc.MetadataResponse\"\rʈ'\x03\n" +
-	"\x01\x01\xea\x88'\x02\b\x01\x12Y\n" +
-	"\x10GetIdpDescriptor\x12\x1d.samlsvc.GetDescriptorRequest\x1a\x1e.samlsvc.GetDescriptorResponse\"\x06\xea\x88'\x02\x10\x01\x1a\x04\xf2\x97\"\x002\xb7\x01\n" +
+	"-SAML_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xb1\x01\n" +
+	"\aInbound\x12G\n" +
+	"\rMintAcsTokens\x12\x13.samlsvc.AcsRequest\x1a\x14.samlsvc.AcsResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x04\x12W\n" +
+	"\tAuthorize\x12\x1d.samlsvc.SamlAuthorizeRequest\x1a\x1e.samlsvc.SamlAuthorizeResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x1a\x04\xf2\x97\"\x002\xd1\x01\n" +
+	"\bOutbound\x12[\n" +
+	"\rMintAssertion\x12\x1d.samlsvc.MintAssertionRequest\x1a\x1e.samlsvc.MintAssertionResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x02\x12b\n" +
+	"\aListSPs\x12\x17.samlsvc.ListSPsRequest\x1a\x18.samlsvc.ListSPsResponse\"$ʈ'\x03\n" +
+	"\x01\x01\xf2\x88'\x0e\b\x01\x12\bsp_index\x18\x10\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x1a\x04\xf2\x97\"\x002\xa5\x02\n" +
+	"\bMetadata\x12Y\n" +
+	"\x0eGetIdpMetadata\x12\x18.samlsvc.MetadataRequest\x1a\x19.samlsvc.MetadataResponse\"\x12ʈ'\x03\n" +
+	"\x01\x01\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x12X\n" +
+	"\rGetSpMetadata\x12\x18.samlsvc.MetadataRequest\x1a\x19.samlsvc.MetadataResponse\"\x12ʈ'\x03\n" +
+	"\x01\x01\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x12^\n" +
+	"\x10GetIdpDescriptor\x12\x1d.samlsvc.GetDescriptorRequest\x1a\x1e.samlsvc.GetDescriptorResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x02\x1a\x04\xf2\x97\"\x002\xc0\x01\n" +
 	"\x16SamlConfigStateService\x121\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x0f.samlsvc.Config\x12-\n" +
 	"\tSetConfig\x12\x0f.samlsvc.Config\x1a\x0f.samlsvc.Config\x125\n" +
-	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x0f.samlsvc.Config0\x01\x1a\x04\xea\x97\"\x00B\x89\x01\x92\xb5\x18\x11\n" +
+	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x0f.samlsvc.Config0\x01\x1a\r\xea\x97\"\t\n" +
+	"\asamlsvcB\x89\x01\x92\xb5\x18\x11\n" +
 	"\fDEFAULT_PORT\x10\xfbAڵ\x18\x00\x92\xb6\x18\r\n" +
 	"\vkernel.MintZ]gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/samlsvcb\x06proto3"
 

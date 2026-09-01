@@ -103,7 +103,7 @@ func (TypeID) EnumDescriptor() ([]byte, []int) {
 // Example grants:
 //
 //	spiffe://local/dev/_cluster/services/sentinel   — full sentinel access
-//	spiffe://local/dev/_cluster/services/argus/*    — any argus RPC
+//	spiffe://local/dev/_cluster/services/stratum/*  — any stratum RPC
 //	spiffe://local/dev/_models/anthropic/claude-*   — LLM model scoping
 //
 // A tenant's own subtree (spiffe://<prefix>/<tenant_name>/...) is implicitly

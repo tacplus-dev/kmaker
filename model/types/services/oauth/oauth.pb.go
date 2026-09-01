@@ -2236,12 +2236,12 @@ const file_services_oauth_proto_rawDesc = "" +
 	"\tproviders\x18\x01 \x03(\v2\x14.oauth.OAuthProviderB\x04\xb8\xa8\x1d\x10R\tproviders\x12@\n" +
 	"\x0eclaim_matchers\x18\x02 \x03(\v2\x13.oauth.ClaimMatcherB\x04\xb8\xa8\x1d R\rclaimMatchers\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\rڪ\x1d\t\b\x01\x12\x05oauth\"\x92\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\rڪ\x1d\t\b\x01\x12\x05oauth\"\x90\x01\n" +
 	"\x10OauthConfigState\x12+\n" +
 	"\x06config\x18\x01 \x01(\v2\r.oauth.ConfigB\x04\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop: \x9a\xa8\x1d\x1c\n" +
-	"\x10OauthConfigState\x1a\beventbus\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x1e\x9a\xa8\x1d\x1a\n" +
+	"\x10OauthConfigState\x1a\x06kernel\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\xaa\x05\n" +
@@ -2292,20 +2292,21 @@ const file_services_oauth_proto_rawDesc = "" +
 	"/OAUTH_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x120\n" +
 	",OAUTH_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x120\n" +
 	",OAUTH_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x122\n" +
-	".OAUTH_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062[\n" +
-	"\aSession\x12J\n" +
-	"\rBrokerSession\x12\x15.oauth.SessionRequest\x1a\x16.oauth.SessionResponse\"\x06\xea\x88'\x02\b\x01(\x010\x01\x1a\x04\xf2\x97\"\x002\xac\x03\n" +
-	"\x04Auth\x12i\n" +
-	"\rListProviders\x12\x13.trace.TraceRequest\x1a\x1c.oauth.ListProvidersResponse\"%ʈ'\x03\n" +
-	"\x01\x01\xea\x88'\x02\b\x01\xf2\x88'\x14\b\x01\x12\x0eprovider_index\x18\x10\x12F\n" +
-	"\tAuthorize\x12\x17.oauth.AuthorizeRequest\x1a\x18.oauth.AuthorizeResponse\"\x06\xea\x88'\x02\b\x01\x12M\n" +
-	"\x12MintCallbackTokens\x12\x16.oauth.CallbackRequest\x1a\x17.oauth.CallbackResponse\"\x06\xea\x88'\x02\b\x01\x12D\n" +
-	"\rRevokeSession\x12\x14.oauth.LogoutRequest\x1a\x15.oauth.LogoutResponse\"\x06\xea\x88'\x02\b\x01\x12V\n" +
-	"\rBrokerCliAuth\x12\x1d.oauth.CompleteCliAuthRequest\x1a\x1e.oauth.CompleteCliAuthResponse\"\x06\xea\x88'\x02\x10\x01\x1a\x04\xf2\x97\"\x002\xb0\x01\n" +
+	".OAUTH_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062`\n" +
+	"\aSession\x12O\n" +
+	"\rBrokerSession\x12\x15.oauth.SessionRequest\x1a\x16.oauth.SessionResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01(\x010\x01\x1a\x04\xf2\x97\"\x002\xc5\x03\n" +
+	"\x04Auth\x12n\n" +
+	"\rListProviders\x12\x13.trace.TraceRequest\x1a\x1c.oauth.ListProvidersResponse\"*ʈ'\x03\n" +
+	"\x01\x01\xf2\x88'\x14\b\x01\x12\x0eprovider_index\x18\x10\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x12K\n" +
+	"\tAuthorize\x12\x17.oauth.AuthorizeRequest\x1a\x18.oauth.AuthorizeResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x12R\n" +
+	"\x12MintCallbackTokens\x12\x16.oauth.CallbackRequest\x1a\x17.oauth.CallbackResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x04\x12I\n" +
+	"\rRevokeSession\x12\x14.oauth.LogoutRequest\x1a\x15.oauth.LogoutResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x12[\n" +
+	"\rBrokerCliAuth\x12\x1d.oauth.CompleteCliAuthRequest\x1a\x1e.oauth.CompleteCliAuthResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x02\x1a\x04\xf2\x97\"\x002\xb7\x01\n" +
 	"\x17OauthConfigStateService\x12/\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\r.oauth.Config\x12)\n" +
 	"\tSetConfig\x12\r.oauth.Config\x1a\r.oauth.Config\x123\n" +
-	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\r.oauth.Config0\x01\x1a\x04\xea\x97\"\x00B\xb7\x01\x92\xb5\x18\x11\n" +
+	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\r.oauth.Config0\x01\x1a\v\xea\x97\"\a\n" +
+	"\x05oauthB\xb7\x01\x92\xb5\x18\x11\n" +
 	"\fDEFAULT_PORT\x10\xfbAڵ\x18\x00\xe2\xb5\x18\x11\n" +
 	"\x0fkernel.Identity\x92\xb6\x18\r\n" +
 	"\vkernel.Mint\x92\xb6\x18\x17\n" +

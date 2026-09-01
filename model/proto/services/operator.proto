@@ -104,12 +104,21 @@ message Topology {
   reserved "msggateway_nodes";
 
   int32 opa_nodes   = 7;
-  int32 timedb_nodes     = 8;
-  int32 graphdb_nodes    = 9;
 
-  // On hold — leave at 0 to disable.
+  // 8 held timedb_nodes and 9 held graphdb_nodes. Both services went to the
+  // boneyard 2026-08-25 (BIG GOAL 3, first move #1) — out of the fleet build,
+  // protos deleted — so the topology cannot ask for replicas of them. Same
+  // treatment as msggateway above: reserved, not silently reused.
+  reserved 8, 9;
+  reserved "timedb_nodes", "graphdb_nodes";
 
-  int32 argus_nodes      = 11;
+  // 11 held argus_nodes. argus was removed from the fleet build 2026-08-20 and
+  // its proto, service and client were deleted 2026-09-01 (BIG GOAL 8 phase 2
+  // item 9), so the topology cannot ask for replicas of it. Same treatment as
+  // timedb/graphdb above: reserved, not silently reused.
+  reserved 11;
+  reserved "argus_nodes";
+
   int32 stratum_nodes    = 12;
 
   // saml_nodes is used when optional_services.saml = true.

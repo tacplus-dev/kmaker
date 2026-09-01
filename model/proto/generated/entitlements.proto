@@ -18,6 +18,16 @@ message TokenEntitlements {
   // Stamped by OPA at token-exchange time alongside grants — an identity property,
   // never a request parameter.
   repeated string data_grants = 2;
+  // principal_scope is how wide the caller's authority over PRINCIPALS is, as a
+  // spec.PrincipalScope enum VALUE NAME (e.g. "PRINCIPAL_SCOPE_ANY"). It is the
+  // claim the generated (spec.owner_default) guard reads to tell an owner acting
+  // on its own row from a principal whose authority is wider than itself.
+  // Absent, empty, PRINCIPAL_SCOPE_UNSPECIFIED and PRINCIPAL_SCOPE_SELF_ONLY all
+  // mean self-scoped: the guard fails closed, so a policy that stamps nothing
+  // leaves every caller exactly as narrow as it is today.
+  // Stamped by OPA at token-exchange time alongside grants — an identity
+  // property, never a request parameter.
+  string principal_scope = 3;
   // azp restricts these entitlements to tokens with a matching authorized party.
   // Empty = entitlements apply regardless of azp.
   repeated string azp = 100;

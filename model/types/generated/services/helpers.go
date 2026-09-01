@@ -38,22 +38,23 @@ func ServiceNameValues() []ServiceName {
 		ServiceName_SERVICE_NAME_GATEWAY,
 		ServiceName_SERVICE_NAME_KERNEL,
 		ServiceName_SERVICE_NAME_LETSENCRYPT,
-		ServiceName_SERVICE_NAME_GRAPHDB,
 		ServiceName_SERVICE_NAME_EVENTBUS,
-		ServiceName_SERVICE_NAME_TIMEDB,
 		ServiceName_SERVICE_NAME_OAUTH,
 		ServiceName_SERVICE_NAME_OPA,
 		ServiceName_SERVICE_NAME_STRATUM,
-		ServiceName_SERVICE_NAME_ARGUS,
 		ServiceName_SERVICE_NAME_KMAKER,
 		ServiceName_SERVICE_NAME_SAMLSVC,
+		ServiceName_SERVICE_NAME_MESSAGING,
+		ServiceName_SERVICE_NAME_SCOTTYAGENT,
+		ServiceName_SERVICE_NAME_MAILBOX,
+		ServiceName_SERVICE_NAME_SCOTTY,
 		ServiceName_SERVICE_NAME_ANY,
 	}
 }
 
 // ServiceNameStringValues returns all valid ServiceName names as strings
 func ServiceNameStringValues() []string {
-	return []string{"sentinel", "gateway", "kernel", "letsencrypt", "graphdb", "eventbus", "timedb", "oauth", "opa", "stratum", "argus", "kmaker", "samlsvc", "any"}
+	return []string{"sentinel", "gateway", "kernel", "letsencrypt", "eventbus", "oauth", "opa", "stratum", "kmaker", "samlsvc", "messaging", "scottyagent", "mailbox", "scotty", "any"}
 }
 
 // ParseServiceName converts a string to a ServiceName enum value
@@ -72,24 +73,26 @@ func ParseServiceName(s string) (ServiceName, error) {
 		return ServiceName_SERVICE_NAME_KERNEL, nil
 	case "letsencrypt", "service-name-letsencrypt":
 		return ServiceName_SERVICE_NAME_LETSENCRYPT, nil
-	case "graphdb", "service-name-graphdb":
-		return ServiceName_SERVICE_NAME_GRAPHDB, nil
 	case "eventbus", "service-name-eventbus":
 		return ServiceName_SERVICE_NAME_EVENTBUS, nil
-	case "timedb", "service-name-timedb":
-		return ServiceName_SERVICE_NAME_TIMEDB, nil
 	case "oauth", "service-name-oauth":
 		return ServiceName_SERVICE_NAME_OAUTH, nil
 	case "opa", "service-name-opa":
 		return ServiceName_SERVICE_NAME_OPA, nil
 	case "stratum", "service-name-stratum":
 		return ServiceName_SERVICE_NAME_STRATUM, nil
-	case "argus", "service-name-argus":
-		return ServiceName_SERVICE_NAME_ARGUS, nil
 	case "kmaker", "service-name-kmaker":
 		return ServiceName_SERVICE_NAME_KMAKER, nil
 	case "samlsvc", "service-name-samlsvc":
 		return ServiceName_SERVICE_NAME_SAMLSVC, nil
+	case "messaging", "service-name-messaging":
+		return ServiceName_SERVICE_NAME_MESSAGING, nil
+	case "scottyagent", "service-name-scottyagent":
+		return ServiceName_SERVICE_NAME_SCOTTYAGENT, nil
+	case "mailbox", "service-name-mailbox":
+		return ServiceName_SERVICE_NAME_MAILBOX, nil
+	case "scotty", "service-name-scotty":
+		return ServiceName_SERVICE_NAME_SCOTTY, nil
 	case "any", "service-name-any":
 		return ServiceName_SERVICE_NAME_ANY, nil
 	default:
@@ -130,24 +133,26 @@ func ServiceNameToString(v ServiceName) string {
 		return "kernel"
 	case ServiceName_SERVICE_NAME_LETSENCRYPT:
 		return "letsencrypt"
-	case ServiceName_SERVICE_NAME_GRAPHDB:
-		return "graphdb"
 	case ServiceName_SERVICE_NAME_EVENTBUS:
 		return "eventbus"
-	case ServiceName_SERVICE_NAME_TIMEDB:
-		return "timedb"
 	case ServiceName_SERVICE_NAME_OAUTH:
 		return "oauth"
 	case ServiceName_SERVICE_NAME_OPA:
 		return "opa"
 	case ServiceName_SERVICE_NAME_STRATUM:
 		return "stratum"
-	case ServiceName_SERVICE_NAME_ARGUS:
-		return "argus"
 	case ServiceName_SERVICE_NAME_KMAKER:
 		return "kmaker"
 	case ServiceName_SERVICE_NAME_SAMLSVC:
 		return "samlsvc"
+	case ServiceName_SERVICE_NAME_MESSAGING:
+		return "messaging"
+	case ServiceName_SERVICE_NAME_SCOTTYAGENT:
+		return "scottyagent"
+	case ServiceName_SERVICE_NAME_MAILBOX:
+		return "mailbox"
+	case ServiceName_SERVICE_NAME_SCOTTY:
+		return "scotty"
 	case ServiceName_SERVICE_NAME_ANY:
 		return "any"
 	default:
@@ -180,24 +185,26 @@ func ParseServiceNameLiberal(s string) ServiceName {
 		return ServiceName_SERVICE_NAME_KERNEL
 	case "letsencrypt", "service-name-letsencrypt":
 		return ServiceName_SERVICE_NAME_LETSENCRYPT
-	case "graphdb", "service-name-graphdb":
-		return ServiceName_SERVICE_NAME_GRAPHDB
 	case "eventbus", "service-name-eventbus":
 		return ServiceName_SERVICE_NAME_EVENTBUS
-	case "timedb", "service-name-timedb":
-		return ServiceName_SERVICE_NAME_TIMEDB
 	case "oauth", "service-name-oauth":
 		return ServiceName_SERVICE_NAME_OAUTH
 	case "opa", "service-name-opa":
 		return ServiceName_SERVICE_NAME_OPA
 	case "stratum", "service-name-stratum":
 		return ServiceName_SERVICE_NAME_STRATUM
-	case "argus", "service-name-argus":
-		return ServiceName_SERVICE_NAME_ARGUS
 	case "kmaker", "service-name-kmaker":
 		return ServiceName_SERVICE_NAME_KMAKER
 	case "samlsvc", "service-name-samlsvc":
 		return ServiceName_SERVICE_NAME_SAMLSVC
+	case "messaging", "service-name-messaging":
+		return ServiceName_SERVICE_NAME_MESSAGING
+	case "scottyagent", "service-name-scottyagent":
+		return ServiceName_SERVICE_NAME_SCOTTYAGENT
+	case "mailbox", "service-name-mailbox":
+		return ServiceName_SERVICE_NAME_MAILBOX
+	case "scotty", "service-name-scotty":
+		return ServiceName_SERVICE_NAME_SCOTTY
 	case "any", "service-name-any":
 		return ServiceName_SERVICE_NAME_ANY
 	default:
@@ -218,24 +225,26 @@ func ServiceNameToSpecName(v ServiceName) string {
 		return "SERVICE_NAME_KERNEL"
 	case ServiceName_SERVICE_NAME_LETSENCRYPT:
 		return "SERVICE_NAME_LETSENCRYPT"
-	case ServiceName_SERVICE_NAME_GRAPHDB:
-		return "SERVICE_NAME_GRAPHDB"
 	case ServiceName_SERVICE_NAME_EVENTBUS:
 		return "SERVICE_NAME_EVENTBUS"
-	case ServiceName_SERVICE_NAME_TIMEDB:
-		return "SERVICE_NAME_TIMEDB"
 	case ServiceName_SERVICE_NAME_OAUTH:
 		return "SERVICE_NAME_OAUTH"
 	case ServiceName_SERVICE_NAME_OPA:
 		return "SERVICE_NAME_OPA"
 	case ServiceName_SERVICE_NAME_STRATUM:
 		return "SERVICE_NAME_STRATUM"
-	case ServiceName_SERVICE_NAME_ARGUS:
-		return "SERVICE_NAME_ARGUS"
 	case ServiceName_SERVICE_NAME_KMAKER:
 		return "SERVICE_NAME_KMAKER"
 	case ServiceName_SERVICE_NAME_SAMLSVC:
 		return "SERVICE_NAME_SAMLSVC"
+	case ServiceName_SERVICE_NAME_MESSAGING:
+		return "SERVICE_NAME_MESSAGING"
+	case ServiceName_SERVICE_NAME_SCOTTYAGENT:
+		return "SERVICE_NAME_SCOTTYAGENT"
+	case ServiceName_SERVICE_NAME_MAILBOX:
+		return "SERVICE_NAME_MAILBOX"
+	case ServiceName_SERVICE_NAME_SCOTTY:
+		return "SERVICE_NAME_SCOTTY"
 	case ServiceName_SERVICE_NAME_ANY:
 		return "SERVICE_NAME_ANY"
 	default:
@@ -1006,407 +1015,6 @@ func OauthRPCsToSpecName(v OauthRPCs) string {
 	}
 }
 
-// ArgusRPCsValues returns all valid ArgusRPCs values (excluding UNDEFINED)
-func ArgusRPCsValues() []ArgusRPCs {
-	return []ArgusRPCs{
-		ArgusRPCs_ARGUS_RPCS_GET_DASHBOARD,
-		ArgusRPCs_ARGUS_RPCS_LIST_ACTIVE_SESSIONS,
-		ArgusRPCs_ARGUS_RPCS_GET_SESSION_DETAIL,
-		ArgusRPCs_ARGUS_RPCS_GET_USER_ACTIVITY,
-		ArgusRPCs_ARGUS_RPCS_LIST_SESSION_SEARCH_RESULTS,
-		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_LIVE_SESSIONS,
-		ArgusRPCs_ARGUS_RPCS_GET_SCRATCHPAD,
-		ArgusRPCs_ARGUS_RPCS_UPDATE_SCRATCHPAD,
-		ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPAD,
-		ArgusRPCs_ARGUS_RPCS_LIST_SCRATCHPADS,
-		ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPADS,
-		ArgusRPCs_ARGUS_RPCS_GET_SUPERVISOR_CONTEXT,
-		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_DASHBOARD,
-		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SESSION_DETAIL,
-		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_ACTIVITY,
-		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SUPERVISOR_CONTEXT,
-		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_LIST,
-		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_READ,
-		ArgusRPCs_ARGUS_RPCS_LIST_USERS,
-		ArgusRPCs_ARGUS_RPCS_GET_USER_PROFILE,
-		ArgusRPCs_ARGUS_RPCS_GET_USER_TOKEN_STATS,
-		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_PROFILE,
-		ArgusRPCs_ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY,
-		ArgusRPCs_ARGUS_RPCS_LIST_FILE_ACTIVITY,
-		ArgusRPCs_ARGUS_RPCS_LIST_SESSION_TIMELINE,
-		ArgusRPCs_ARGUS_RPCS_GET_AGENT_TREE,
-		ArgusRPCs_ARGUS_RPCS_GET_SYSTEM_STATS,
-		ArgusRPCs_ARGUS_RPCS_LIST_TOOL_LEADERBOARD,
-		ArgusRPCs_ARGUS_RPCS_LIST_MODEL_USAGE,
-		ArgusRPCs_ARGUS_RPCS_LIST_ACTIVITY_TIMESERIES,
-		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SYSTEM_STATS,
-		ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_TOOL_LEADERBOARD,
-		ArgusRPCs_ARGUS_RPCS_LIST_EVENT_SEARCH_RESULTS,
-		ArgusRPCs_ARGUS_RPCS_LIST_FILE_PATH_MATCHES,
-		ArgusRPCs_ARGUS_RPCS_ANY,
-	}
-}
-
-// ArgusRPCsStringValues returns all valid ArgusRPCs names as strings
-func ArgusRPCsStringValues() []string {
-	return []string{"argus-rpcs-get-dashboard", "argus-rpcs-list-active-sessions", "argus-rpcs-get-session-detail", "argus-rpcs-get-user-activity", "argus-rpcs-list-session-search-results", "argus-rpcs-subscribe-live-sessions", "argus-rpcs-get-scratchpad", "argus-rpcs-update-scratchpad", "argus-rpcs-delete-scratchpad", "argus-rpcs-list-scratchpads", "argus-rpcs-delete-scratchpads", "argus-rpcs-get-supervisor-context", "argus-rpcs-subscribe-dashboard", "argus-rpcs-subscribe-session-detail", "argus-rpcs-subscribe-user-activity", "argus-rpcs-subscribe-supervisor-context", "argus-rpcs-subscribe-scratchpad-list", "argus-rpcs-subscribe-scratchpad-read", "argus-rpcs-list-users", "argus-rpcs-get-user-profile", "argus-rpcs-get-user-token-stats", "argus-rpcs-subscribe-user-profile", "argus-rpcs-list-user-commit-activity", "argus-rpcs-list-file-activity", "argus-rpcs-list-session-timeline", "argus-rpcs-get-agent-tree", "argus-rpcs-get-system-stats", "argus-rpcs-list-tool-leaderboard", "argus-rpcs-list-model-usage", "argus-rpcs-list-activity-timeseries", "argus-rpcs-subscribe-system-stats", "argus-rpcs-subscribe-tool-leaderboard", "argus-rpcs-list-event-search-results", "argus-rpcs-list-file-path-matches", "argus-rpcs-any"}
-}
-
-// ParseArgusRPCs converts a string to a ArgusRPCs enum value
-// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseArgusRPCs(s string) (ArgusRPCs, error) {
-	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
-	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
-	switch normalized {
-	case "":
-		return ArgusRPCs_ARGUS_RPCS_UNSPECIFIED, nil
-	case "argus-rpcs-get-dashboard":
-		return ArgusRPCs_ARGUS_RPCS_GET_DASHBOARD, nil
-	case "argus-rpcs-list-active-sessions":
-		return ArgusRPCs_ARGUS_RPCS_LIST_ACTIVE_SESSIONS, nil
-	case "argus-rpcs-get-session-detail":
-		return ArgusRPCs_ARGUS_RPCS_GET_SESSION_DETAIL, nil
-	case "argus-rpcs-get-user-activity":
-		return ArgusRPCs_ARGUS_RPCS_GET_USER_ACTIVITY, nil
-	case "argus-rpcs-list-session-search-results":
-		return ArgusRPCs_ARGUS_RPCS_LIST_SESSION_SEARCH_RESULTS, nil
-	case "argus-rpcs-subscribe-live-sessions":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_LIVE_SESSIONS, nil
-	case "argus-rpcs-get-scratchpad":
-		return ArgusRPCs_ARGUS_RPCS_GET_SCRATCHPAD, nil
-	case "argus-rpcs-update-scratchpad":
-		return ArgusRPCs_ARGUS_RPCS_UPDATE_SCRATCHPAD, nil
-	case "argus-rpcs-delete-scratchpad":
-		return ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPAD, nil
-	case "argus-rpcs-list-scratchpads":
-		return ArgusRPCs_ARGUS_RPCS_LIST_SCRATCHPADS, nil
-	case "argus-rpcs-delete-scratchpads":
-		return ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPADS, nil
-	case "argus-rpcs-get-supervisor-context":
-		return ArgusRPCs_ARGUS_RPCS_GET_SUPERVISOR_CONTEXT, nil
-	case "argus-rpcs-subscribe-dashboard":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_DASHBOARD, nil
-	case "argus-rpcs-subscribe-session-detail":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SESSION_DETAIL, nil
-	case "argus-rpcs-subscribe-user-activity":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_ACTIVITY, nil
-	case "argus-rpcs-subscribe-supervisor-context":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SUPERVISOR_CONTEXT, nil
-	case "argus-rpcs-subscribe-scratchpad-list":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_LIST, nil
-	case "argus-rpcs-subscribe-scratchpad-read":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_READ, nil
-	case "argus-rpcs-list-users":
-		return ArgusRPCs_ARGUS_RPCS_LIST_USERS, nil
-	case "argus-rpcs-get-user-profile":
-		return ArgusRPCs_ARGUS_RPCS_GET_USER_PROFILE, nil
-	case "argus-rpcs-get-user-token-stats":
-		return ArgusRPCs_ARGUS_RPCS_GET_USER_TOKEN_STATS, nil
-	case "argus-rpcs-subscribe-user-profile":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_PROFILE, nil
-	case "argus-rpcs-list-user-commit-activity":
-		return ArgusRPCs_ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY, nil
-	case "argus-rpcs-list-file-activity":
-		return ArgusRPCs_ARGUS_RPCS_LIST_FILE_ACTIVITY, nil
-	case "argus-rpcs-list-session-timeline":
-		return ArgusRPCs_ARGUS_RPCS_LIST_SESSION_TIMELINE, nil
-	case "argus-rpcs-get-agent-tree":
-		return ArgusRPCs_ARGUS_RPCS_GET_AGENT_TREE, nil
-	case "argus-rpcs-get-system-stats":
-		return ArgusRPCs_ARGUS_RPCS_GET_SYSTEM_STATS, nil
-	case "argus-rpcs-list-tool-leaderboard":
-		return ArgusRPCs_ARGUS_RPCS_LIST_TOOL_LEADERBOARD, nil
-	case "argus-rpcs-list-model-usage":
-		return ArgusRPCs_ARGUS_RPCS_LIST_MODEL_USAGE, nil
-	case "argus-rpcs-list-activity-timeseries":
-		return ArgusRPCs_ARGUS_RPCS_LIST_ACTIVITY_TIMESERIES, nil
-	case "argus-rpcs-subscribe-system-stats":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SYSTEM_STATS, nil
-	case "argus-rpcs-subscribe-tool-leaderboard":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_TOOL_LEADERBOARD, nil
-	case "argus-rpcs-list-event-search-results":
-		return ArgusRPCs_ARGUS_RPCS_LIST_EVENT_SEARCH_RESULTS, nil
-	case "argus-rpcs-list-file-path-matches":
-		return ArgusRPCs_ARGUS_RPCS_LIST_FILE_PATH_MATCHES, nil
-	case "argus-rpcs-any":
-		return ArgusRPCs_ARGUS_RPCS_ANY, nil
-	default:
-		return ArgusRPCs_ARGUS_RPCS_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid argusrpcs %s, expecting one of: %v", s, ArgusRPCsStringValues())
-	}
-}
-
-// ParseArgusRPCss converts a comma-separated string to a slice of ArgusRPCs enum values
-// Returns an error if any value is invalid
-func ParseArgusRPCss(s string) ([]ArgusRPCs, error) {
-	if s == "" {
-		return nil, nil
-	}
-	parts := strings.Split(s, ",")
-	result := make([]ArgusRPCs, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed == "" {
-			continue
-		}
-		val, err := ParseArgusRPCs(trimmed)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, val)
-	}
-	return result, nil
-}
-
-// ArgusRPCsToString converts a ArgusRPCs to its lowercase string representation
-func ArgusRPCsToString(v ArgusRPCs) string {
-	switch v {
-	case ArgusRPCs_ARGUS_RPCS_GET_DASHBOARD:
-		return "argus-rpcs-get-dashboard"
-	case ArgusRPCs_ARGUS_RPCS_LIST_ACTIVE_SESSIONS:
-		return "argus-rpcs-list-active-sessions"
-	case ArgusRPCs_ARGUS_RPCS_GET_SESSION_DETAIL:
-		return "argus-rpcs-get-session-detail"
-	case ArgusRPCs_ARGUS_RPCS_GET_USER_ACTIVITY:
-		return "argus-rpcs-get-user-activity"
-	case ArgusRPCs_ARGUS_RPCS_LIST_SESSION_SEARCH_RESULTS:
-		return "argus-rpcs-list-session-search-results"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_LIVE_SESSIONS:
-		return "argus-rpcs-subscribe-live-sessions"
-	case ArgusRPCs_ARGUS_RPCS_GET_SCRATCHPAD:
-		return "argus-rpcs-get-scratchpad"
-	case ArgusRPCs_ARGUS_RPCS_UPDATE_SCRATCHPAD:
-		return "argus-rpcs-update-scratchpad"
-	case ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPAD:
-		return "argus-rpcs-delete-scratchpad"
-	case ArgusRPCs_ARGUS_RPCS_LIST_SCRATCHPADS:
-		return "argus-rpcs-list-scratchpads"
-	case ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPADS:
-		return "argus-rpcs-delete-scratchpads"
-	case ArgusRPCs_ARGUS_RPCS_GET_SUPERVISOR_CONTEXT:
-		return "argus-rpcs-get-supervisor-context"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_DASHBOARD:
-		return "argus-rpcs-subscribe-dashboard"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SESSION_DETAIL:
-		return "argus-rpcs-subscribe-session-detail"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_ACTIVITY:
-		return "argus-rpcs-subscribe-user-activity"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SUPERVISOR_CONTEXT:
-		return "argus-rpcs-subscribe-supervisor-context"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_LIST:
-		return "argus-rpcs-subscribe-scratchpad-list"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_READ:
-		return "argus-rpcs-subscribe-scratchpad-read"
-	case ArgusRPCs_ARGUS_RPCS_LIST_USERS:
-		return "argus-rpcs-list-users"
-	case ArgusRPCs_ARGUS_RPCS_GET_USER_PROFILE:
-		return "argus-rpcs-get-user-profile"
-	case ArgusRPCs_ARGUS_RPCS_GET_USER_TOKEN_STATS:
-		return "argus-rpcs-get-user-token-stats"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_PROFILE:
-		return "argus-rpcs-subscribe-user-profile"
-	case ArgusRPCs_ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY:
-		return "argus-rpcs-list-user-commit-activity"
-	case ArgusRPCs_ARGUS_RPCS_LIST_FILE_ACTIVITY:
-		return "argus-rpcs-list-file-activity"
-	case ArgusRPCs_ARGUS_RPCS_LIST_SESSION_TIMELINE:
-		return "argus-rpcs-list-session-timeline"
-	case ArgusRPCs_ARGUS_RPCS_GET_AGENT_TREE:
-		return "argus-rpcs-get-agent-tree"
-	case ArgusRPCs_ARGUS_RPCS_GET_SYSTEM_STATS:
-		return "argus-rpcs-get-system-stats"
-	case ArgusRPCs_ARGUS_RPCS_LIST_TOOL_LEADERBOARD:
-		return "argus-rpcs-list-tool-leaderboard"
-	case ArgusRPCs_ARGUS_RPCS_LIST_MODEL_USAGE:
-		return "argus-rpcs-list-model-usage"
-	case ArgusRPCs_ARGUS_RPCS_LIST_ACTIVITY_TIMESERIES:
-		return "argus-rpcs-list-activity-timeseries"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SYSTEM_STATS:
-		return "argus-rpcs-subscribe-system-stats"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_TOOL_LEADERBOARD:
-		return "argus-rpcs-subscribe-tool-leaderboard"
-	case ArgusRPCs_ARGUS_RPCS_LIST_EVENT_SEARCH_RESULTS:
-		return "argus-rpcs-list-event-search-results"
-	case ArgusRPCs_ARGUS_RPCS_LIST_FILE_PATH_MATCHES:
-		return "argus-rpcs-list-file-path-matches"
-	case ArgusRPCs_ARGUS_RPCS_ANY:
-		return "argus-rpcs-any"
-	default:
-		return ""
-	}
-}
-
-// ParseArgusRPCsLiberal parses a ArgusRPCs liberally, accepting:
-// - Integer values (as string or int)
-// - Enum names in any case
-// - RFC-compliant JSON names
-func ParseArgusRPCsLiberal(s string) ArgusRPCs {
-	if s == "" {
-		return ArgusRPCs_ARGUS_RPCS_UNSPECIFIED
-	}
-	// Try parsing as integer
-	if num, err := strconv.Atoi(s); err == nil {
-		return ArgusRPCs(num)
-	}
-	// Normalize and try parsing
-	normalized := strings.ToLower(strings.TrimSpace(s))
-	normalized = strings.ReplaceAll(normalized, "_", "-")
-	normalized = strings.ReplaceAll(normalized, " ", "-")
-	switch normalized {
-	case "argus-rpcs-get-dashboard":
-		return ArgusRPCs_ARGUS_RPCS_GET_DASHBOARD
-	case "argus-rpcs-list-active-sessions":
-		return ArgusRPCs_ARGUS_RPCS_LIST_ACTIVE_SESSIONS
-	case "argus-rpcs-get-session-detail":
-		return ArgusRPCs_ARGUS_RPCS_GET_SESSION_DETAIL
-	case "argus-rpcs-get-user-activity":
-		return ArgusRPCs_ARGUS_RPCS_GET_USER_ACTIVITY
-	case "argus-rpcs-list-session-search-results":
-		return ArgusRPCs_ARGUS_RPCS_LIST_SESSION_SEARCH_RESULTS
-	case "argus-rpcs-subscribe-live-sessions":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_LIVE_SESSIONS
-	case "argus-rpcs-get-scratchpad":
-		return ArgusRPCs_ARGUS_RPCS_GET_SCRATCHPAD
-	case "argus-rpcs-update-scratchpad":
-		return ArgusRPCs_ARGUS_RPCS_UPDATE_SCRATCHPAD
-	case "argus-rpcs-delete-scratchpad":
-		return ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPAD
-	case "argus-rpcs-list-scratchpads":
-		return ArgusRPCs_ARGUS_RPCS_LIST_SCRATCHPADS
-	case "argus-rpcs-delete-scratchpads":
-		return ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPADS
-	case "argus-rpcs-get-supervisor-context":
-		return ArgusRPCs_ARGUS_RPCS_GET_SUPERVISOR_CONTEXT
-	case "argus-rpcs-subscribe-dashboard":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_DASHBOARD
-	case "argus-rpcs-subscribe-session-detail":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SESSION_DETAIL
-	case "argus-rpcs-subscribe-user-activity":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_ACTIVITY
-	case "argus-rpcs-subscribe-supervisor-context":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SUPERVISOR_CONTEXT
-	case "argus-rpcs-subscribe-scratchpad-list":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_LIST
-	case "argus-rpcs-subscribe-scratchpad-read":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_READ
-	case "argus-rpcs-list-users":
-		return ArgusRPCs_ARGUS_RPCS_LIST_USERS
-	case "argus-rpcs-get-user-profile":
-		return ArgusRPCs_ARGUS_RPCS_GET_USER_PROFILE
-	case "argus-rpcs-get-user-token-stats":
-		return ArgusRPCs_ARGUS_RPCS_GET_USER_TOKEN_STATS
-	case "argus-rpcs-subscribe-user-profile":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_PROFILE
-	case "argus-rpcs-list-user-commit-activity":
-		return ArgusRPCs_ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY
-	case "argus-rpcs-list-file-activity":
-		return ArgusRPCs_ARGUS_RPCS_LIST_FILE_ACTIVITY
-	case "argus-rpcs-list-session-timeline":
-		return ArgusRPCs_ARGUS_RPCS_LIST_SESSION_TIMELINE
-	case "argus-rpcs-get-agent-tree":
-		return ArgusRPCs_ARGUS_RPCS_GET_AGENT_TREE
-	case "argus-rpcs-get-system-stats":
-		return ArgusRPCs_ARGUS_RPCS_GET_SYSTEM_STATS
-	case "argus-rpcs-list-tool-leaderboard":
-		return ArgusRPCs_ARGUS_RPCS_LIST_TOOL_LEADERBOARD
-	case "argus-rpcs-list-model-usage":
-		return ArgusRPCs_ARGUS_RPCS_LIST_MODEL_USAGE
-	case "argus-rpcs-list-activity-timeseries":
-		return ArgusRPCs_ARGUS_RPCS_LIST_ACTIVITY_TIMESERIES
-	case "argus-rpcs-subscribe-system-stats":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SYSTEM_STATS
-	case "argus-rpcs-subscribe-tool-leaderboard":
-		return ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_TOOL_LEADERBOARD
-	case "argus-rpcs-list-event-search-results":
-		return ArgusRPCs_ARGUS_RPCS_LIST_EVENT_SEARCH_RESULTS
-	case "argus-rpcs-list-file-path-matches":
-		return ArgusRPCs_ARGUS_RPCS_LIST_FILE_PATH_MATCHES
-	case "argus-rpcs-any":
-		return ArgusRPCs_ARGUS_RPCS_ANY
-	default:
-		return ArgusRPCs_ARGUS_RPCS_UNSPECIFIED
-	}
-}
-
-// ArgusRPCsToSpecName converts a ArgusRPCs to its canonical protobuf spec name
-func ArgusRPCsToSpecName(v ArgusRPCs) string {
-	switch v {
-	case ArgusRPCs_ARGUS_RPCS_UNSPECIFIED:
-		return "ARGUS_RPCS_UNSPECIFIED"
-	case ArgusRPCs_ARGUS_RPCS_GET_DASHBOARD:
-		return "ARGUS_RPCS_GET_DASHBOARD"
-	case ArgusRPCs_ARGUS_RPCS_LIST_ACTIVE_SESSIONS:
-		return "ARGUS_RPCS_LIST_ACTIVE_SESSIONS"
-	case ArgusRPCs_ARGUS_RPCS_GET_SESSION_DETAIL:
-		return "ARGUS_RPCS_GET_SESSION_DETAIL"
-	case ArgusRPCs_ARGUS_RPCS_GET_USER_ACTIVITY:
-		return "ARGUS_RPCS_GET_USER_ACTIVITY"
-	case ArgusRPCs_ARGUS_RPCS_LIST_SESSION_SEARCH_RESULTS:
-		return "ARGUS_RPCS_LIST_SESSION_SEARCH_RESULTS"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_LIVE_SESSIONS:
-		return "ARGUS_RPCS_SUBSCRIBE_LIVE_SESSIONS"
-	case ArgusRPCs_ARGUS_RPCS_GET_SCRATCHPAD:
-		return "ARGUS_RPCS_GET_SCRATCHPAD"
-	case ArgusRPCs_ARGUS_RPCS_UPDATE_SCRATCHPAD:
-		return "ARGUS_RPCS_UPDATE_SCRATCHPAD"
-	case ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPAD:
-		return "ARGUS_RPCS_DELETE_SCRATCHPAD"
-	case ArgusRPCs_ARGUS_RPCS_LIST_SCRATCHPADS:
-		return "ARGUS_RPCS_LIST_SCRATCHPADS"
-	case ArgusRPCs_ARGUS_RPCS_DELETE_SCRATCHPADS:
-		return "ARGUS_RPCS_DELETE_SCRATCHPADS"
-	case ArgusRPCs_ARGUS_RPCS_GET_SUPERVISOR_CONTEXT:
-		return "ARGUS_RPCS_GET_SUPERVISOR_CONTEXT"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_DASHBOARD:
-		return "ARGUS_RPCS_SUBSCRIBE_DASHBOARD"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SESSION_DETAIL:
-		return "ARGUS_RPCS_SUBSCRIBE_SESSION_DETAIL"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_ACTIVITY:
-		return "ARGUS_RPCS_SUBSCRIBE_USER_ACTIVITY"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SUPERVISOR_CONTEXT:
-		return "ARGUS_RPCS_SUBSCRIBE_SUPERVISOR_CONTEXT"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_LIST:
-		return "ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_LIST"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_READ:
-		return "ARGUS_RPCS_SUBSCRIBE_SCRATCHPAD_READ"
-	case ArgusRPCs_ARGUS_RPCS_LIST_USERS:
-		return "ARGUS_RPCS_LIST_USERS"
-	case ArgusRPCs_ARGUS_RPCS_GET_USER_PROFILE:
-		return "ARGUS_RPCS_GET_USER_PROFILE"
-	case ArgusRPCs_ARGUS_RPCS_GET_USER_TOKEN_STATS:
-		return "ARGUS_RPCS_GET_USER_TOKEN_STATS"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_USER_PROFILE:
-		return "ARGUS_RPCS_SUBSCRIBE_USER_PROFILE"
-	case ArgusRPCs_ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY:
-		return "ARGUS_RPCS_LIST_USER_COMMIT_ACTIVITY"
-	case ArgusRPCs_ARGUS_RPCS_LIST_FILE_ACTIVITY:
-		return "ARGUS_RPCS_LIST_FILE_ACTIVITY"
-	case ArgusRPCs_ARGUS_RPCS_LIST_SESSION_TIMELINE:
-		return "ARGUS_RPCS_LIST_SESSION_TIMELINE"
-	case ArgusRPCs_ARGUS_RPCS_GET_AGENT_TREE:
-		return "ARGUS_RPCS_GET_AGENT_TREE"
-	case ArgusRPCs_ARGUS_RPCS_GET_SYSTEM_STATS:
-		return "ARGUS_RPCS_GET_SYSTEM_STATS"
-	case ArgusRPCs_ARGUS_RPCS_LIST_TOOL_LEADERBOARD:
-		return "ARGUS_RPCS_LIST_TOOL_LEADERBOARD"
-	case ArgusRPCs_ARGUS_RPCS_LIST_MODEL_USAGE:
-		return "ARGUS_RPCS_LIST_MODEL_USAGE"
-	case ArgusRPCs_ARGUS_RPCS_LIST_ACTIVITY_TIMESERIES:
-		return "ARGUS_RPCS_LIST_ACTIVITY_TIMESERIES"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_SYSTEM_STATS:
-		return "ARGUS_RPCS_SUBSCRIBE_SYSTEM_STATS"
-	case ArgusRPCs_ARGUS_RPCS_SUBSCRIBE_TOOL_LEADERBOARD:
-		return "ARGUS_RPCS_SUBSCRIBE_TOOL_LEADERBOARD"
-	case ArgusRPCs_ARGUS_RPCS_LIST_EVENT_SEARCH_RESULTS:
-		return "ARGUS_RPCS_LIST_EVENT_SEARCH_RESULTS"
-	case ArgusRPCs_ARGUS_RPCS_LIST_FILE_PATH_MATCHES:
-		return "ARGUS_RPCS_LIST_FILE_PATH_MATCHES"
-	case ArgusRPCs_ARGUS_RPCS_ANY:
-		return "ARGUS_RPCS_ANY"
-	default:
-		return ""
-	}
-}
-
 // SamlRPCsValues returns all valid SamlRPCs values (excluding UNDEFINED)
 func SamlRPCsValues() []SamlRPCs {
 	return []SamlRPCs{
@@ -1565,6 +1173,557 @@ func SamlRPCsToSpecName(v SamlRPCs) string {
 	}
 }
 
+// MessagingRPCsValues returns all valid MessagingRPCs values (excluding UNDEFINED)
+func MessagingRPCsValues() []MessagingRPCs {
+	return []MessagingRPCs{
+		MessagingRPCs_MESSAGING_RPCS_SEND_MESSAGE,
+		MessagingRPCs_MESSAGING_RPCS_ANY,
+	}
+}
+
+// MessagingRPCsStringValues returns all valid MessagingRPCs names as strings
+func MessagingRPCsStringValues() []string {
+	return []string{"messaging-rpcs-send-message", "messaging-rpcs-any"}
+}
+
+// ParseMessagingRPCs converts a string to a MessagingRPCs enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseMessagingRPCs(s string) (MessagingRPCs, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return MessagingRPCs_MESSAGING_RPCS_UNSPECIFIED, nil
+	case "messaging-rpcs-send-message":
+		return MessagingRPCs_MESSAGING_RPCS_SEND_MESSAGE, nil
+	case "messaging-rpcs-any":
+		return MessagingRPCs_MESSAGING_RPCS_ANY, nil
+	default:
+		return MessagingRPCs_MESSAGING_RPCS_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid messagingrpcs %s, expecting one of: %v", s, MessagingRPCsStringValues())
+	}
+}
+
+// ParseMessagingRPCss converts a comma-separated string to a slice of MessagingRPCs enum values
+// Returns an error if any value is invalid
+func ParseMessagingRPCss(s string) ([]MessagingRPCs, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]MessagingRPCs, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseMessagingRPCs(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// MessagingRPCsToString converts a MessagingRPCs to its lowercase string representation
+func MessagingRPCsToString(v MessagingRPCs) string {
+	switch v {
+	case MessagingRPCs_MESSAGING_RPCS_SEND_MESSAGE:
+		return "messaging-rpcs-send-message"
+	case MessagingRPCs_MESSAGING_RPCS_ANY:
+		return "messaging-rpcs-any"
+	default:
+		return ""
+	}
+}
+
+// ParseMessagingRPCsLiberal parses a MessagingRPCs liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseMessagingRPCsLiberal(s string) MessagingRPCs {
+	if s == "" {
+		return MessagingRPCs_MESSAGING_RPCS_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return MessagingRPCs(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "messaging-rpcs-send-message":
+		return MessagingRPCs_MESSAGING_RPCS_SEND_MESSAGE
+	case "messaging-rpcs-any":
+		return MessagingRPCs_MESSAGING_RPCS_ANY
+	default:
+		return MessagingRPCs_MESSAGING_RPCS_UNSPECIFIED
+	}
+}
+
+// MessagingRPCsToSpecName converts a MessagingRPCs to its canonical protobuf spec name
+func MessagingRPCsToSpecName(v MessagingRPCs) string {
+	switch v {
+	case MessagingRPCs_MESSAGING_RPCS_UNSPECIFIED:
+		return "MESSAGING_RPCS_UNSPECIFIED"
+	case MessagingRPCs_MESSAGING_RPCS_SEND_MESSAGE:
+		return "MESSAGING_RPCS_SEND_MESSAGE"
+	case MessagingRPCs_MESSAGING_RPCS_ANY:
+		return "MESSAGING_RPCS_ANY"
+	default:
+		return ""
+	}
+}
+
+// ScottyagentRPCsValues returns all valid ScottyagentRPCs values (excluding UNDEFINED)
+func ScottyagentRPCsValues() []ScottyagentRPCs {
+	return []ScottyagentRPCs{
+		ScottyagentRPCs_SCOTTYAGENT_RPCS_LIST_MY_AGENT_STATE,
+		ScottyagentRPCs_SCOTTYAGENT_RPCS_BROKER_SCOTTY_AGENT_MCP_SESSION,
+		ScottyagentRPCs_SCOTTYAGENT_RPCS_ANY,
+	}
+}
+
+// ScottyagentRPCsStringValues returns all valid ScottyagentRPCs names as strings
+func ScottyagentRPCsStringValues() []string {
+	return []string{"scottyagent-rpcs-list-my-agent-state", "scottyagent-rpcs-broker-scotty-agent-mcp-session", "scottyagent-rpcs-any"}
+}
+
+// ParseScottyagentRPCs converts a string to a ScottyagentRPCs enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseScottyagentRPCs(s string) (ScottyagentRPCs, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return ScottyagentRPCs_SCOTTYAGENT_RPCS_UNSPECIFIED, nil
+	case "scottyagent-rpcs-list-my-agent-state":
+		return ScottyagentRPCs_SCOTTYAGENT_RPCS_LIST_MY_AGENT_STATE, nil
+	case "scottyagent-rpcs-broker-scotty-agent-mcp-session":
+		return ScottyagentRPCs_SCOTTYAGENT_RPCS_BROKER_SCOTTY_AGENT_MCP_SESSION, nil
+	case "scottyagent-rpcs-any":
+		return ScottyagentRPCs_SCOTTYAGENT_RPCS_ANY, nil
+	default:
+		return ScottyagentRPCs_SCOTTYAGENT_RPCS_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid scottyagentrpcs %s, expecting one of: %v", s, ScottyagentRPCsStringValues())
+	}
+}
+
+// ParseScottyagentRPCss converts a comma-separated string to a slice of ScottyagentRPCs enum values
+// Returns an error if any value is invalid
+func ParseScottyagentRPCss(s string) ([]ScottyagentRPCs, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]ScottyagentRPCs, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseScottyagentRPCs(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// ScottyagentRPCsToString converts a ScottyagentRPCs to its lowercase string representation
+func ScottyagentRPCsToString(v ScottyagentRPCs) string {
+	switch v {
+	case ScottyagentRPCs_SCOTTYAGENT_RPCS_LIST_MY_AGENT_STATE:
+		return "scottyagent-rpcs-list-my-agent-state"
+	case ScottyagentRPCs_SCOTTYAGENT_RPCS_BROKER_SCOTTY_AGENT_MCP_SESSION:
+		return "scottyagent-rpcs-broker-scotty-agent-mcp-session"
+	case ScottyagentRPCs_SCOTTYAGENT_RPCS_ANY:
+		return "scottyagent-rpcs-any"
+	default:
+		return ""
+	}
+}
+
+// ParseScottyagentRPCsLiberal parses a ScottyagentRPCs liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseScottyagentRPCsLiberal(s string) ScottyagentRPCs {
+	if s == "" {
+		return ScottyagentRPCs_SCOTTYAGENT_RPCS_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return ScottyagentRPCs(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "scottyagent-rpcs-list-my-agent-state":
+		return ScottyagentRPCs_SCOTTYAGENT_RPCS_LIST_MY_AGENT_STATE
+	case "scottyagent-rpcs-broker-scotty-agent-mcp-session":
+		return ScottyagentRPCs_SCOTTYAGENT_RPCS_BROKER_SCOTTY_AGENT_MCP_SESSION
+	case "scottyagent-rpcs-any":
+		return ScottyagentRPCs_SCOTTYAGENT_RPCS_ANY
+	default:
+		return ScottyagentRPCs_SCOTTYAGENT_RPCS_UNSPECIFIED
+	}
+}
+
+// ScottyagentRPCsToSpecName converts a ScottyagentRPCs to its canonical protobuf spec name
+func ScottyagentRPCsToSpecName(v ScottyagentRPCs) string {
+	switch v {
+	case ScottyagentRPCs_SCOTTYAGENT_RPCS_UNSPECIFIED:
+		return "SCOTTYAGENT_RPCS_UNSPECIFIED"
+	case ScottyagentRPCs_SCOTTYAGENT_RPCS_LIST_MY_AGENT_STATE:
+		return "SCOTTYAGENT_RPCS_LIST_MY_AGENT_STATE"
+	case ScottyagentRPCs_SCOTTYAGENT_RPCS_BROKER_SCOTTY_AGENT_MCP_SESSION:
+		return "SCOTTYAGENT_RPCS_BROKER_SCOTTY_AGENT_MCP_SESSION"
+	case ScottyagentRPCs_SCOTTYAGENT_RPCS_ANY:
+		return "SCOTTYAGENT_RPCS_ANY"
+	default:
+		return ""
+	}
+}
+
+// MailboxRPCsValues returns all valid MailboxRPCs values (excluding UNDEFINED)
+func MailboxRPCsValues() []MailboxRPCs {
+	return []MailboxRPCs{
+		MailboxRPCs_MAILBOX_RPCS_LIST_HELD_MAIL,
+		MailboxRPCs_MAILBOX_RPCS_UPDATE_HELD_MAIL,
+		MailboxRPCs_MAILBOX_RPCS_ANY,
+	}
+}
+
+// MailboxRPCsStringValues returns all valid MailboxRPCs names as strings
+func MailboxRPCsStringValues() []string {
+	return []string{"mailbox-rpcs-list-held-mail", "mailbox-rpcs-update-held-mail", "mailbox-rpcs-any"}
+}
+
+// ParseMailboxRPCs converts a string to a MailboxRPCs enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseMailboxRPCs(s string) (MailboxRPCs, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return MailboxRPCs_MAILBOX_RPCS_UNSPECIFIED, nil
+	case "mailbox-rpcs-list-held-mail":
+		return MailboxRPCs_MAILBOX_RPCS_LIST_HELD_MAIL, nil
+	case "mailbox-rpcs-update-held-mail":
+		return MailboxRPCs_MAILBOX_RPCS_UPDATE_HELD_MAIL, nil
+	case "mailbox-rpcs-any":
+		return MailboxRPCs_MAILBOX_RPCS_ANY, nil
+	default:
+		return MailboxRPCs_MAILBOX_RPCS_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid mailboxrpcs %s, expecting one of: %v", s, MailboxRPCsStringValues())
+	}
+}
+
+// ParseMailboxRPCss converts a comma-separated string to a slice of MailboxRPCs enum values
+// Returns an error if any value is invalid
+func ParseMailboxRPCss(s string) ([]MailboxRPCs, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]MailboxRPCs, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseMailboxRPCs(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// MailboxRPCsToString converts a MailboxRPCs to its lowercase string representation
+func MailboxRPCsToString(v MailboxRPCs) string {
+	switch v {
+	case MailboxRPCs_MAILBOX_RPCS_LIST_HELD_MAIL:
+		return "mailbox-rpcs-list-held-mail"
+	case MailboxRPCs_MAILBOX_RPCS_UPDATE_HELD_MAIL:
+		return "mailbox-rpcs-update-held-mail"
+	case MailboxRPCs_MAILBOX_RPCS_ANY:
+		return "mailbox-rpcs-any"
+	default:
+		return ""
+	}
+}
+
+// ParseMailboxRPCsLiberal parses a MailboxRPCs liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseMailboxRPCsLiberal(s string) MailboxRPCs {
+	if s == "" {
+		return MailboxRPCs_MAILBOX_RPCS_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return MailboxRPCs(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "mailbox-rpcs-list-held-mail":
+		return MailboxRPCs_MAILBOX_RPCS_LIST_HELD_MAIL
+	case "mailbox-rpcs-update-held-mail":
+		return MailboxRPCs_MAILBOX_RPCS_UPDATE_HELD_MAIL
+	case "mailbox-rpcs-any":
+		return MailboxRPCs_MAILBOX_RPCS_ANY
+	default:
+		return MailboxRPCs_MAILBOX_RPCS_UNSPECIFIED
+	}
+}
+
+// MailboxRPCsToSpecName converts a MailboxRPCs to its canonical protobuf spec name
+func MailboxRPCsToSpecName(v MailboxRPCs) string {
+	switch v {
+	case MailboxRPCs_MAILBOX_RPCS_UNSPECIFIED:
+		return "MAILBOX_RPCS_UNSPECIFIED"
+	case MailboxRPCs_MAILBOX_RPCS_LIST_HELD_MAIL:
+		return "MAILBOX_RPCS_LIST_HELD_MAIL"
+	case MailboxRPCs_MAILBOX_RPCS_UPDATE_HELD_MAIL:
+		return "MAILBOX_RPCS_UPDATE_HELD_MAIL"
+	case MailboxRPCs_MAILBOX_RPCS_ANY:
+		return "MAILBOX_RPCS_ANY"
+	default:
+		return ""
+	}
+}
+
+// ScottyRPCsValues returns all valid ScottyRPCs values (excluding UNDEFINED)
+func ScottyRPCsValues() []ScottyRPCs {
+	return []ScottyRPCs{
+		ScottyRPCs_SCOTTY_RPCS_CREATE_HUMAN,
+		ScottyRPCs_SCOTTY_RPCS_GET_HUMAN,
+		ScottyRPCs_SCOTTY_RPCS_LIST_HUMANS,
+		ScottyRPCs_SCOTTY_RPCS_CREATE_POLICY_VERSION,
+		ScottyRPCs_SCOTTY_RPCS_LIST_POLICY_VERSIONS,
+		ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET,
+		ScottyRPCs_SCOTTY_RPCS_GET_TICKET,
+		ScottyRPCs_SCOTTY_RPCS_LIST_TICKETS,
+		ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET_ADVICE,
+		ScottyRPCs_SCOTTY_RPCS_LIST_TICKET_ADVICE,
+		ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET_DECISION,
+		ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET_COMMENT,
+		ScottyRPCs_SCOTTY_RPCS_GET_MY_TICKET_AUDIT,
+		ScottyRPCs_SCOTTY_RPCS_BROKER_SCOTTY_MCP_SESSION,
+		ScottyRPCs_SCOTTY_RPCS_ANY,
+	}
+}
+
+// ScottyRPCsStringValues returns all valid ScottyRPCs names as strings
+func ScottyRPCsStringValues() []string {
+	return []string{"scotty-rpcs-create-human", "scotty-rpcs-get-human", "scotty-rpcs-list-humans", "scotty-rpcs-create-policy-version", "scotty-rpcs-list-policy-versions", "scotty-rpcs-create-ticket", "scotty-rpcs-get-ticket", "scotty-rpcs-list-tickets", "scotty-rpcs-create-ticket-advice", "scotty-rpcs-list-ticket-advice", "scotty-rpcs-create-ticket-decision", "scotty-rpcs-create-ticket-comment", "scotty-rpcs-get-my-ticket-audit", "scotty-rpcs-broker-scotty-mcp-session", "scotty-rpcs-any"}
+}
+
+// ParseScottyRPCs converts a string to a ScottyRPCs enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseScottyRPCs(s string) (ScottyRPCs, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return ScottyRPCs_SCOTTY_RPCS_UNSPECIFIED, nil
+	case "scotty-rpcs-create-human":
+		return ScottyRPCs_SCOTTY_RPCS_CREATE_HUMAN, nil
+	case "scotty-rpcs-get-human":
+		return ScottyRPCs_SCOTTY_RPCS_GET_HUMAN, nil
+	case "scotty-rpcs-list-humans":
+		return ScottyRPCs_SCOTTY_RPCS_LIST_HUMANS, nil
+	case "scotty-rpcs-create-policy-version":
+		return ScottyRPCs_SCOTTY_RPCS_CREATE_POLICY_VERSION, nil
+	case "scotty-rpcs-list-policy-versions":
+		return ScottyRPCs_SCOTTY_RPCS_LIST_POLICY_VERSIONS, nil
+	case "scotty-rpcs-create-ticket":
+		return ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET, nil
+	case "scotty-rpcs-get-ticket":
+		return ScottyRPCs_SCOTTY_RPCS_GET_TICKET, nil
+	case "scotty-rpcs-list-tickets":
+		return ScottyRPCs_SCOTTY_RPCS_LIST_TICKETS, nil
+	case "scotty-rpcs-create-ticket-advice":
+		return ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET_ADVICE, nil
+	case "scotty-rpcs-list-ticket-advice":
+		return ScottyRPCs_SCOTTY_RPCS_LIST_TICKET_ADVICE, nil
+	case "scotty-rpcs-create-ticket-decision":
+		return ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET_DECISION, nil
+	case "scotty-rpcs-create-ticket-comment":
+		return ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET_COMMENT, nil
+	case "scotty-rpcs-get-my-ticket-audit":
+		return ScottyRPCs_SCOTTY_RPCS_GET_MY_TICKET_AUDIT, nil
+	case "scotty-rpcs-broker-scotty-mcp-session":
+		return ScottyRPCs_SCOTTY_RPCS_BROKER_SCOTTY_MCP_SESSION, nil
+	case "scotty-rpcs-any":
+		return ScottyRPCs_SCOTTY_RPCS_ANY, nil
+	default:
+		return ScottyRPCs_SCOTTY_RPCS_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid scottyrpcs %s, expecting one of: %v", s, ScottyRPCsStringValues())
+	}
+}
+
+// ParseScottyRPCss converts a comma-separated string to a slice of ScottyRPCs enum values
+// Returns an error if any value is invalid
+func ParseScottyRPCss(s string) ([]ScottyRPCs, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]ScottyRPCs, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseScottyRPCs(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// ScottyRPCsToString converts a ScottyRPCs to its lowercase string representation
+func ScottyRPCsToString(v ScottyRPCs) string {
+	switch v {
+	case ScottyRPCs_SCOTTY_RPCS_CREATE_HUMAN:
+		return "scotty-rpcs-create-human"
+	case ScottyRPCs_SCOTTY_RPCS_GET_HUMAN:
+		return "scotty-rpcs-get-human"
+	case ScottyRPCs_SCOTTY_RPCS_LIST_HUMANS:
+		return "scotty-rpcs-list-humans"
+	case ScottyRPCs_SCOTTY_RPCS_CREATE_POLICY_VERSION:
+		return "scotty-rpcs-create-policy-version"
+	case ScottyRPCs_SCOTTY_RPCS_LIST_POLICY_VERSIONS:
+		return "scotty-rpcs-list-policy-versions"
+	case ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET:
+		return "scotty-rpcs-create-ticket"
+	case ScottyRPCs_SCOTTY_RPCS_GET_TICKET:
+		return "scotty-rpcs-get-ticket"
+	case ScottyRPCs_SCOTTY_RPCS_LIST_TICKETS:
+		return "scotty-rpcs-list-tickets"
+	case ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET_ADVICE:
+		return "scotty-rpcs-create-ticket-advice"
+	case ScottyRPCs_SCOTTY_RPCS_LIST_TICKET_ADVICE:
+		return "scotty-rpcs-list-ticket-advice"
+	case ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET_DECISION:
+		return "scotty-rpcs-create-ticket-decision"
+	case ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET_COMMENT:
+		return "scotty-rpcs-create-ticket-comment"
+	case ScottyRPCs_SCOTTY_RPCS_GET_MY_TICKET_AUDIT:
+		return "scotty-rpcs-get-my-ticket-audit"
+	case ScottyRPCs_SCOTTY_RPCS_BROKER_SCOTTY_MCP_SESSION:
+		return "scotty-rpcs-broker-scotty-mcp-session"
+	case ScottyRPCs_SCOTTY_RPCS_ANY:
+		return "scotty-rpcs-any"
+	default:
+		return ""
+	}
+}
+
+// ParseScottyRPCsLiberal parses a ScottyRPCs liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseScottyRPCsLiberal(s string) ScottyRPCs {
+	if s == "" {
+		return ScottyRPCs_SCOTTY_RPCS_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return ScottyRPCs(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "scotty-rpcs-create-human":
+		return ScottyRPCs_SCOTTY_RPCS_CREATE_HUMAN
+	case "scotty-rpcs-get-human":
+		return ScottyRPCs_SCOTTY_RPCS_GET_HUMAN
+	case "scotty-rpcs-list-humans":
+		return ScottyRPCs_SCOTTY_RPCS_LIST_HUMANS
+	case "scotty-rpcs-create-policy-version":
+		return ScottyRPCs_SCOTTY_RPCS_CREATE_POLICY_VERSION
+	case "scotty-rpcs-list-policy-versions":
+		return ScottyRPCs_SCOTTY_RPCS_LIST_POLICY_VERSIONS
+	case "scotty-rpcs-create-ticket":
+		return ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET
+	case "scotty-rpcs-get-ticket":
+		return ScottyRPCs_SCOTTY_RPCS_GET_TICKET
+	case "scotty-rpcs-list-tickets":
+		return ScottyRPCs_SCOTTY_RPCS_LIST_TICKETS
+	case "scotty-rpcs-create-ticket-advice":
+		return ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET_ADVICE
+	case "scotty-rpcs-list-ticket-advice":
+		return ScottyRPCs_SCOTTY_RPCS_LIST_TICKET_ADVICE
+	case "scotty-rpcs-create-ticket-decision":
+		return ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET_DECISION
+	case "scotty-rpcs-create-ticket-comment":
+		return ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET_COMMENT
+	case "scotty-rpcs-get-my-ticket-audit":
+		return ScottyRPCs_SCOTTY_RPCS_GET_MY_TICKET_AUDIT
+	case "scotty-rpcs-broker-scotty-mcp-session":
+		return ScottyRPCs_SCOTTY_RPCS_BROKER_SCOTTY_MCP_SESSION
+	case "scotty-rpcs-any":
+		return ScottyRPCs_SCOTTY_RPCS_ANY
+	default:
+		return ScottyRPCs_SCOTTY_RPCS_UNSPECIFIED
+	}
+}
+
+// ScottyRPCsToSpecName converts a ScottyRPCs to its canonical protobuf spec name
+func ScottyRPCsToSpecName(v ScottyRPCs) string {
+	switch v {
+	case ScottyRPCs_SCOTTY_RPCS_UNSPECIFIED:
+		return "SCOTTY_RPCS_UNSPECIFIED"
+	case ScottyRPCs_SCOTTY_RPCS_CREATE_HUMAN:
+		return "SCOTTY_RPCS_CREATE_HUMAN"
+	case ScottyRPCs_SCOTTY_RPCS_GET_HUMAN:
+		return "SCOTTY_RPCS_GET_HUMAN"
+	case ScottyRPCs_SCOTTY_RPCS_LIST_HUMANS:
+		return "SCOTTY_RPCS_LIST_HUMANS"
+	case ScottyRPCs_SCOTTY_RPCS_CREATE_POLICY_VERSION:
+		return "SCOTTY_RPCS_CREATE_POLICY_VERSION"
+	case ScottyRPCs_SCOTTY_RPCS_LIST_POLICY_VERSIONS:
+		return "SCOTTY_RPCS_LIST_POLICY_VERSIONS"
+	case ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET:
+		return "SCOTTY_RPCS_CREATE_TICKET"
+	case ScottyRPCs_SCOTTY_RPCS_GET_TICKET:
+		return "SCOTTY_RPCS_GET_TICKET"
+	case ScottyRPCs_SCOTTY_RPCS_LIST_TICKETS:
+		return "SCOTTY_RPCS_LIST_TICKETS"
+	case ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET_ADVICE:
+		return "SCOTTY_RPCS_CREATE_TICKET_ADVICE"
+	case ScottyRPCs_SCOTTY_RPCS_LIST_TICKET_ADVICE:
+		return "SCOTTY_RPCS_LIST_TICKET_ADVICE"
+	case ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET_DECISION:
+		return "SCOTTY_RPCS_CREATE_TICKET_DECISION"
+	case ScottyRPCs_SCOTTY_RPCS_CREATE_TICKET_COMMENT:
+		return "SCOTTY_RPCS_CREATE_TICKET_COMMENT"
+	case ScottyRPCs_SCOTTY_RPCS_GET_MY_TICKET_AUDIT:
+		return "SCOTTY_RPCS_GET_MY_TICKET_AUDIT"
+	case ScottyRPCs_SCOTTY_RPCS_BROKER_SCOTTY_MCP_SESSION:
+		return "SCOTTY_RPCS_BROKER_SCOTTY_MCP_SESSION"
+	case ScottyRPCs_SCOTTY_RPCS_ANY:
+		return "SCOTTY_RPCS_ANY"
+	default:
+		return ""
+	}
+}
+
 // AgentsensorRPCsValues returns all valid AgentsensorRPCs values (excluding UNDEFINED)
 func AgentsensorRPCsValues() []AgentsensorRPCs {
 	return []AgentsensorRPCs{
@@ -1673,6 +1832,101 @@ func AgentsensorRPCsToSpecName(v AgentsensorRPCs) string {
 		return "AGENTSENSOR_RPCS_SUBSCRIBE_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM"
 	case AgentsensorRPCs_AGENTSENSOR_RPCS_ANY:
 		return "AGENTSENSOR_RPCS_ANY"
+	default:
+		return ""
+	}
+}
+
+// QueryRPCsValues returns all valid QueryRPCs values (excluding UNDEFINED)
+func QueryRPCsValues() []QueryRPCs {
+	return []QueryRPCs{
+		QueryRPCs_QUERY_RPCS_ANY,
+	}
+}
+
+// QueryRPCsStringValues returns all valid QueryRPCs names as strings
+func QueryRPCsStringValues() []string {
+	return []string{"query-rpcs-any"}
+}
+
+// ParseQueryRPCs converts a string to a QueryRPCs enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseQueryRPCs(s string) (QueryRPCs, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return QueryRPCs_QUERY_RPCS_UNSPECIFIED, nil
+	case "query-rpcs-any":
+		return QueryRPCs_QUERY_RPCS_ANY, nil
+	default:
+		return QueryRPCs_QUERY_RPCS_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid queryrpcs %s, expecting one of: %v", s, QueryRPCsStringValues())
+	}
+}
+
+// ParseQueryRPCss converts a comma-separated string to a slice of QueryRPCs enum values
+// Returns an error if any value is invalid
+func ParseQueryRPCss(s string) ([]QueryRPCs, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]QueryRPCs, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseQueryRPCs(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// QueryRPCsToString converts a QueryRPCs to its lowercase string representation
+func QueryRPCsToString(v QueryRPCs) string {
+	switch v {
+	case QueryRPCs_QUERY_RPCS_ANY:
+		return "query-rpcs-any"
+	default:
+		return ""
+	}
+}
+
+// ParseQueryRPCsLiberal parses a QueryRPCs liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseQueryRPCsLiberal(s string) QueryRPCs {
+	if s == "" {
+		return QueryRPCs_QUERY_RPCS_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return QueryRPCs(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "query-rpcs-any":
+		return QueryRPCs_QUERY_RPCS_ANY
+	default:
+		return QueryRPCs_QUERY_RPCS_UNSPECIFIED
+	}
+}
+
+// QueryRPCsToSpecName converts a QueryRPCs to its canonical protobuf spec name
+func QueryRPCsToSpecName(v QueryRPCs) string {
+	switch v {
+	case QueryRPCs_QUERY_RPCS_UNSPECIFIED:
+		return "QUERY_RPCS_UNSPECIFIED"
+	case QueryRPCs_QUERY_RPCS_ANY:
+		return "QUERY_RPCS_ANY"
 	default:
 		return ""
 	}

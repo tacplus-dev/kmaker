@@ -4036,12 +4036,12 @@ const file_services_eventbus_proto_rawDesc = "" +
 	"\x05nodes\x18\x01 \x03(\v2\x16.eventbus.EventbusNodeB\x04\xb8\xa8\x1d R\x05nodes\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0e\x9a\xa8\x1d\n" +
-	"\x1a\x06kernel \x02\"\x9b\x01\n" +
+	"\x1a\x06kernel \x02\"\x99\x01\n" +
 	"\x13EventbusConfigState\x12.\n" +
 	"\x06config\x18\x01 \x01(\v2\x10.eventbus.ConfigB\x04\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:#\x9a\xa8\x1d\x1f\n" +
-	"\x13EventbusConfigState\x1a\beventbus\"\xd0\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:!\x9a\xa8\x1d\x1d\n" +
+	"\x13EventbusConfigState\x1a\x06kernel\"\xd0\x01\n" +
 	"\n" +
 	"QueryValue\x12#\n" +
 	"\fstring_value\x18\x01 \x01(\tH\x00R\vstringValue\x12\x1d\n" +
@@ -4271,9 +4271,9 @@ const file_services_eventbus_proto_rawDesc = "" +
 	"\x19ResetConsumerGroupOffsets\x12*.eventbus.ResetConsumerGroupOffsetsRequest\x1a\x16.google.protobuf.Empty\x12M\n" +
 	"\x13DeleteConsumerGroup\x12\x1e.eventbus.ConsumerGroupRequest\x1a\x16.google.protobuf.Empty\x12H\n" +
 	"\x10GetClusterHealth\x12\x13.trace.TraceRequest\x1a\x1f.eventbus.ClusterHealthResponse\x1a\a\xea\x97\"\x03\n" +
-	"\x01*2X\n" +
-	"\fTraceSession\x12B\n" +
-	"\x0eSubscribeTrace\x12\x13.trace.TraceRequest\x1a\x11.trace.TraceEvent\"\x06\xea\x88'\x02\b\x010\x01\x1a\x04\xf2\x97\"\x002\xf9\a\n" +
+	"\x01*2]\n" +
+	"\fTraceSession\x12G\n" +
+	"\x0eSubscribeTrace\x12\x13.trace.TraceRequest\x1a\x11.trace.TraceEvent\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x010\x01\x1a\x04\xf2\x97\"\x002\x83\b\n" +
 	"\x14EventbusStateService\x12C\n" +
 	"\bGetNodes\x12\x19.eventbus.NodesGetRequest\x1a\x1c.eventbus.NodesValueResponse\x12C\n" +
 	"\bPutNodes\x12\x19.eventbus.NodesPutRequest\x1a\x1c.eventbus.NodesValueResponse\x129\n" +
@@ -4291,11 +4291,15 @@ const file_services_eventbus_proto_rawDesc = "" +
 	"WatchNodes\x12\x13.trace.TraceRequest\x1a\x1e.eventbus.NodesEntriesResponse0\x01\x12G\n" +
 	"\n" +
 	"QueryNodes\x12\x1b.eventbus.NodesQueryRequest\x1a\x1c.eventbus.NodesQueryResponse\x12N\n" +
-	"\x0fWatchQueryNodes\x12\x1b.eventbus.NodesQueryRequest\x1a\x1c.eventbus.NodesQueryResponse0\x01\x1a\x04\xea\x97\"\x002\xbf\x01\n" +
+	"\x0fWatchQueryNodes\x12\x1b.eventbus.NodesQueryRequest\x1a\x1c.eventbus.NodesQueryResponse0\x01\x1a\x0e\xea\x97\"\n" +
+	"\n" +
+	"\beventbus2\xc9\x01\n" +
 	"\x1aEventbusConfigStateService\x122\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x10.eventbus.Config\x12/\n" +
 	"\tSetConfig\x12\x10.eventbus.Config\x1a\x10.eventbus.Config\x126\n" +
-	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x10.eventbus.Config0\x01\x1a\x04\xea\x97\"\x00Bwڵ\x18\x02\x18\x01\x92\xb6\x18\r\n" +
+	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x10.eventbus.Config0\x01\x1a\x0e\xea\x97\"\n" +
+	"\n" +
+	"\beventbusBwڵ\x18\x02\x18\x01\x92\xb6\x18\r\n" +
 	"\vkernel.MintZ^gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/eventbusb\x06proto3"
 
 var (

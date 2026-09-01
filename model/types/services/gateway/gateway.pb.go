@@ -648,12 +648,12 @@ const file_services_gateway_proto_rawDesc = "" +
 	"\x10PublicCaResponse\x12*\n" +
 	"\x05certs\x18\x01 \x03(\v2\x0e.x509.X509CertB\x04\xb8\xa8\x1d\x10R\x05certs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x98\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x96\x01\n" +
 	"\x12GatewayConfigState\x12-\n" +
 	"\x06config\x18\x01 \x01(\v2\x0f.gateway.ConfigB\x04\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\"\x9a\xa8\x1d\x1e\n" +
-	"\x12GatewayConfigState\x1a\beventbus\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop: \x9a\xa8\x1d\x1c\n" +
+	"\x12GatewayConfigState\x1a\x06kernel\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*y\n" +
@@ -684,22 +684,24 @@ const file_services_gateway_proto_rawDesc = "" +
 	"1GATEWAY_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x122\n" +
 	".GATEWAY_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x122\n" +
 	".GATEWAY_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x124\n" +
-	"0GATEWAY_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xe5\x03\n" +
-	"\x04Mint\x12s\n" +
-	"\x0fGetOpenIdConfig\x12\x13.trace.TraceRequest\x1a\x18.jwk.OpenIdConfiguration\"1\u0088' .well-known/openid-configurationʈ'\x03\n" +
-	"\x01\x01\xea\x88'\x02\b\x01\x12_\n" +
-	"\bListJwks\x12\x13.trace.TraceRequest\x1a\t.jwk.Jwks\"3\u0088'\x15.well-known/jwks.jsonʈ'\x03\n" +
-	"\x01\x01\xea\x88'\x02\b\x01\xf2\x88'\t\b\x01\x12\x03kid\x18\x10\x12T\n" +
-	"\tMintToken\x12\x1e.tokenrequest.TokenMintRequest\x1a\x1f.tokenrequest.TokenMintResponse\"\x06\xea\x88'\x02\b\x01\x12J\n" +
-	"\fMintX509Cert\x12\x1d.tokenrequest.X509MintRequest\x1a\x13.x509.X509CertChain\"\x06\xea\x88'\x02\b\x01\x12Y\n" +
-	"\fListPublicCa\x12\x13.trace.TraceRequest\x1a\x19.gateway.PublicCaResponse\"\x19ʈ'\x03\n" +
-	"\x01\x01\xea\x88'\x02\b\x01\xf2\x88'\b\b\x01\x12\x02id\x18\x10\x1a\n" +
-	"\xf2\x97\"\x00\x82\x98\"\x02\b\x012\xba\x01\n" +
+	"0GATEWAY_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xfe\x03\n" +
+	"\x04Mint\x12x\n" +
+	"\x0fGetOpenIdConfig\x12\x13.trace.TraceRequest\x1a\x18.jwk.OpenIdConfiguration\"6\u0088' .well-known/openid-configurationʈ'\x03\n" +
+	"\x01\x01\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x12d\n" +
+	"\bListJwks\x12\x13.trace.TraceRequest\x1a\t.jwk.Jwks\"8\u0088'\x15.well-known/jwks.jsonʈ'\x03\n" +
+	"\x01\x01\xf2\x88'\t\b\x01\x12\x03kid\x18\x10\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x12Y\n" +
+	"\tMintToken\x12\x1e.tokenrequest.TokenMintRequest\x1a\x1f.tokenrequest.TokenMintResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x04\x12O\n" +
+	"\fMintX509Cert\x12\x1d.tokenrequest.X509MintRequest\x1a\x13.x509.X509CertChain\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x04\x12^\n" +
+	"\fListPublicCa\x12\x13.trace.TraceRequest\x1a\x19.gateway.PublicCaResponse\"\x1eʈ'\x03\n" +
+	"\x01\x01\xf2\x88'\b\b\x01\x12\x02id\x18\x10\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x1a\n" +
+	"\xf2\x97\"\x00\x82\x98\"\x02\b\x012\xc3\x01\n" +
 	"\x19GatewayConfigStateService\x121\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x0f.gateway.Config\x12-\n" +
 	"\tSetConfig\x12\x0f.gateway.Config\x1a\x0f.gateway.Config\x125\n" +
-	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x0f.gateway.Config0\x01\x1a\x04\xea\x97\"\x00B\x9a\x01ڵ\x18\x04 \x01(\x01\xe2\xb5\x18\x1e\n" +
-	"\x1cletsencrypt.LetsEncryptState\x92\xb6\x18\r\n" +
+	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x0f.gateway.Config0\x01\x1a\r\xea\x97\"\t\n" +
+	"\agatewayB\xa9\x01ڵ\x18\x04 \x01(\x01\xe2\xb5\x18\x1e\n" +
+	"\x1cletsencrypt.LetsEncryptState\xe2\xb5\x18\v\n" +
+	"\tkernel.Ca\x92\xb6\x18\r\n" +
 	"\vkernel.MintZ]gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gatewayb\x06proto3"
 
 var (

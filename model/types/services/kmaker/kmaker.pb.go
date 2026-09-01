@@ -699,12 +699,12 @@ const file_services_kmaker_proto_rawDesc = "" +
 	"\vinstance_id\x18\x05 \x01(\tB\x05\xb8\xa8\x1d\x80\x02R\n" +
 	"instanceId\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x95\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x93\x01\n" +
 	"\x11KmakerConfigState\x12,\n" +
 	"\x06config\x18\x01 \x01(\v2\x0e.kmaker.ConfigB\x04\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:!\x9a\xa8\x1d\x1d\n" +
-	"\x11KmakerConfigState\x1a\beventbus\";\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x1f\x9a\xa8\x1d\x1b\n" +
+	"\x11KmakerConfigState\x1a\x06kernel\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\xb7\x01\n" +
@@ -728,13 +728,14 @@ const file_services_kmaker_proto_rawDesc = "" +
 	"0KMAKER_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x121\n" +
 	"-KMAKER_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x121\n" +
 	"-KMAKER_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x123\n" +
-	"/KMAKER_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\\\n" +
-	"\x06Kmaker\x12L\n" +
-	"\x0eMintKernelCert\x12\x1d.kmaker.MintKernelCertRequest\x1a\x13.x509.X509CertChain\"\x06\xe2\x88'\x02\x10\x01\x1a\x04\xea\x97\"\x002\xb5\x01\n" +
+	"/KMAKER_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062_\n" +
+	"\x06Kmaker\x12O\n" +
+	"\x0eMintKernelCert\x12\x1d.kmaker.MintKernelCertRequest\x1a\x13.x509.X509CertChain\"\t\xfa\x88'\x05\b\x02\x1a\x01\x04\x1a\x04\xea\x97\"\x002\xbd\x01\n" +
 	"\x18KmakerConfigStateService\x120\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x0e.kmaker.Config\x12+\n" +
 	"\tSetConfig\x12\x0e.kmaker.Config\x1a\x0e.kmaker.Config\x124\n" +
-	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x0e.kmaker.Config0\x01\x1a\x04\xea\x97\"\x00B\x7f\x92\xb5\x18\x11\n" +
+	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x0e.kmaker.Config0\x01\x1a\f\xea\x97\"\b\n" +
+	"\x06kmakerB\x7f\x92\xb5\x18\x11\n" +
 	"\fDEFAULT_PORT\x10\xfbAڵ\x18\b\n" +
 	"\x06kmakerZ\\gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmakerb\x06proto3"
 

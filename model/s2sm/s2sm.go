@@ -43,6 +43,9 @@ import (
 
 	smgrpc "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/s2sm/grpc"
 
+	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/am"
+	accountingrecord_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/vservices/accountingrecord"
+
 	grpcconfig_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/grpcconfig"
 	trace_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
 	"google.golang.org/grpc/metadata"
@@ -326,7 +329,7 @@ func New() (*ServiceManager, error) {
 		zap.String("tacplus_version", "0.0.0"),
 		zap.String("tacplus_sha", "local"),
 		zap.String("proto_version", ""),
-		zap.String("proto_sha", "e2c2eb0e731ed532b82111ec5ff075bf01fff422"),
+		zap.String("proto_sha", ""),
 	)
 
 	return &ServiceManager{
@@ -373,7 +376,7 @@ func (sm *ServiceManager) TokenProviderFunc() func() (string, error) {
 // Authorize validates that the caller in ctx is permitted to invoke fullMethod
 // with the given request. Returns a gRPC status error on denial.
 // Always available — services that disable auth in proto simply won't call it,
-// but it remains available for ad-hoc use in hand-written code (e.g. a graph store S2S).
+// but it remains available for ad-hoc use in hand-written code (e.g. a store S2S).
 func (sm *ServiceManager) Authorize(ctx context.Context, fullMethod string, req any) error {
 	return sm.authorizeFunc(ctx, fullMethod, req)
 }
@@ -664,9 +667,34 @@ func (sm *ServiceManager) Run(h Handler) error {
 	}
 	wrapperKmakerConfigState.SetInstanceId(sm.sc.InstanceID())
 	wrapperKmakerConfigState.SetAnonymizeHmacKey(sm.cfg.GetAnonymizeHmacKey())
+	kmaker_fe.RegisterKmakerConfigStateServiceMethodAuth(sm.auth)
 
 	wrapperKmaker.SetTracePublisher(tracePublish)
 	wrapperKmakerConfigState.SetTracePublisher(tracePublish)
+
+	// Wire the durable accounting emitter to every wrapper. The wrapper emit
+	// sites already exist on both the success and the error path of every
+	// accounted RPC; without this the slot is nil and accounting produces
+	// neither a record nor a log line.
+	//
+	// The channel send is BLOCKING, not select-with-default like the trace
+	// publisher above — see EventBusSink's send contract in chassis/am. The
+	// queue is deeper than the trace queue for the same reason: a brief
+	// publisher stall should absorb, not drop.
+	const accountingQueueDepth = 1024
+	accountingCh := make(chan *accountingrecord_pb.AccountingRecord, accountingQueueDepth)
+	sm.tasks.Go(func(taskCtx context.Context) {
+		accountingrecordAccountingRecordBusStreamPublishLoop(taskCtx,
+			func(ctx context.Context) (grpc.ClientConnInterface, error) {
+				return sm.resolveServiceCtx(ctx, "eventbus")
+			},
+			func() (string, error) { return sm.identity.GetTokenFor("eventbus") },
+			accountingCh)
+	})
+	accountingSourceID := "kmaker" + "-" + sm.sc.InstanceID()
+	accountingEmitter := am.NewEmitter(accountingSourceID, am.NewEventBusSink(accountingCh, accountingSourceID, sm.ctx.Done()))
+	wrapperKmaker.SetEmitter(accountingEmitter)
+	wrapperKmakerConfigState.SetEmitter(accountingEmitter)
 
 	mw := &multiWrapper{
 		impls: []grpcserver.ServiceImplementation{
@@ -953,6 +981,115 @@ func tracePublishStream(ctx context.Context, conn grpc.ClientConnInterface, tp f
 	sendClosed = true
 	if err := stream.RecvMsg(&tracePublishAck{}); err != nil {
 		return fmt.Errorf("receive trace publish ack: %w", err)
+	}
+	return nil
+}
+
+// accountingrecordAccountingRecordBusStreamPublishLoop drains AccountingRecord accounting records into EventBus.
+// Each record stays pending until the broker acknowledges it, so
+// stream/re-resolution failures do not discard already-accepted records —
+// the durable-sink send contract (EventBusSink.Emit) is what makes this the
+// non-dropping path, not this loop.
+func accountingrecordAccountingRecordBusStreamPublishLoop(ctx context.Context, resolve func(context.Context) (grpc.ClientConnInterface, error), tp func() (string, error), ch <-chan *accountingrecord_pb.AccountingRecord) {
+	const minBackoff = 3 * time.Second
+	const maxBackoff = 30 * time.Second
+	backoff := minBackoff
+	var pending *accountingrecord_pb.AccountingRecord
+
+	for ctx.Err() == nil {
+		if pending == nil {
+			select {
+			case event, ok := <-ch:
+				if !ok {
+					return
+				}
+				pending = event
+			case <-ctx.Done():
+				return
+			}
+		}
+		conn, err := resolve(ctx)
+		if err != nil {
+			if ctx.Err() != nil {
+				return
+			}
+			zap.L().Warn("accounting publisher failed to resolve EventBus broker, retrying",
+				zap.String("publisher", "accountingrecord.AccountingRecordBus.stream publisher"),
+				zap.String("service", "eventbus"),
+				zap.Error(err), zap.Duration("backoff", backoff))
+			select {
+			case <-time.After(backoff):
+			case <-ctx.Done():
+				return
+			}
+			if backoff < maxBackoff {
+				backoff *= 2
+				if backoff > maxBackoff {
+					backoff = maxBackoff
+				}
+			}
+			continue
+		}
+		if err := accountingrecordAccountingRecordBusStreamPublishStream(ctx, conn, tp, pending); err != nil {
+			if ctx.Err() != nil {
+				return
+			}
+			zap.L().Warn("accounting EventBus publisher stream failed, reconnecting",
+				zap.String("publisher", "accountingrecord.AccountingRecordBus.stream publisher"),
+				zap.Error(err), zap.Duration("backoff", backoff))
+			select {
+			case <-time.After(backoff):
+			case <-ctx.Done():
+				return
+			}
+			if backoff < maxBackoff {
+				backoff *= 2
+				if backoff > maxBackoff {
+					backoff = maxBackoff
+				}
+			}
+			continue
+		}
+		pending = nil
+		backoff = minBackoff
+	}
+}
+
+// accountingrecordAccountingRecordBusStreamPublishStream publishes one AccountingRecord accounting record and
+// returns only after the EventBus stream sends an ack. The caller keeps the
+// record pending on error.
+func accountingrecordAccountingRecordBusStreamPublishStream(ctx context.Context, conn grpc.ClientConnInterface, tp func() (string, error), event *accountingrecord_pb.AccountingRecord) error {
+	token, err := tp()
+	if err != nil {
+		return fmt.Errorf("token for accountingrecord.AccountingRecordBus.stream publisher: %w", err)
+	}
+	authCtx := metadata.AppendToOutgoingContext(ctx, "authorization", "Bearer "+token)
+
+	sd := &grpc.StreamDesc{
+		StreamName:    "PublishAccountingrecordAccountingRecordBusStream",
+		ServerStreams: true,
+		ClientStreams: true,
+	}
+	stream, err := conn.NewStream(authCtx, sd, "/accountingrecord.AccountingRecordBusStateService/PublishToStream")
+	if err != nil {
+		return fmt.Errorf("open accountingrecord.AccountingRecordBus.stream publisher stream: %w", err)
+	}
+	sendClosed := false
+	defer func() {
+		if !sendClosed {
+			_ = stream.CloseSend()
+		}
+	}()
+
+	if err := stream.SendMsg(event); err != nil {
+		return fmt.Errorf("send accountingrecord.AccountingRecordBus.stream publisher event: %w", err)
+	}
+	if err := stream.CloseSend(); err != nil {
+		return fmt.Errorf("close accountingrecord.AccountingRecordBus.stream publisher send stream: %w", err)
+	}
+	sendClosed = true
+	if err := stream.RecvMsg(&tracePublishAck{}); err != nil {
+		return fmt.Errorf("receive accountingrecord.AccountingRecordBus.stream publisher ack: %w", err)
 	}
 	return nil
 }

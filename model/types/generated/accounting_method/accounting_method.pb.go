@@ -41,14 +41,17 @@ const (
 // Only one field will be set — the rest default to 0 (UNSPECIFIED)
 // and are not encoded by proto3, so there is no overhead.
 type AccountingMethod struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Sentinel      services.SentinelRPCs  `protobuf:"varint,5,opt,name=sentinel,proto3,enum=services.SentinelRPCs" json:"sentinel,omitempty"`
-	Gateway       services.GatewayRPCs   `protobuf:"varint,7,opt,name=gateway,proto3,enum=services.GatewayRPCs" json:"gateway,omitempty"`
-	Kernel        services.KernelRPCs    `protobuf:"varint,8,opt,name=kernel,proto3,enum=services.KernelRPCs" json:"kernel,omitempty"`
-	Eventbus      services.EventbusRPCs  `protobuf:"varint,18,opt,name=eventbus,proto3,enum=services.EventbusRPCs" json:"eventbus,omitempty"`
-	Oauth         services.OauthRPCs     `protobuf:"varint,21,opt,name=oauth,proto3,enum=services.OauthRPCs" json:"oauth,omitempty"`
-	Argus         services.ArgusRPCs     `protobuf:"varint,35,opt,name=argus,proto3,enum=services.ArgusRPCs" json:"argus,omitempty"`
-	Saml          services.SamlRPCs      `protobuf:"varint,38,opt,name=saml,proto3,enum=services.SamlRPCs" json:"saml,omitempty"`
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Sentinel      services.SentinelRPCs    `protobuf:"varint,5,opt,name=sentinel,proto3,enum=services.SentinelRPCs" json:"sentinel,omitempty"`
+	Gateway       services.GatewayRPCs     `protobuf:"varint,7,opt,name=gateway,proto3,enum=services.GatewayRPCs" json:"gateway,omitempty"`
+	Kernel        services.KernelRPCs      `protobuf:"varint,8,opt,name=kernel,proto3,enum=services.KernelRPCs" json:"kernel,omitempty"`
+	Eventbus      services.EventbusRPCs    `protobuf:"varint,18,opt,name=eventbus,proto3,enum=services.EventbusRPCs" json:"eventbus,omitempty"`
+	Oauth         services.OauthRPCs       `protobuf:"varint,21,opt,name=oauth,proto3,enum=services.OauthRPCs" json:"oauth,omitempty"`
+	Saml          services.SamlRPCs        `protobuf:"varint,38,opt,name=saml,proto3,enum=services.SamlRPCs" json:"saml,omitempty"`
+	Messaging     services.MessagingRPCs   `protobuf:"varint,53,opt,name=messaging,proto3,enum=services.MessagingRPCs" json:"messaging,omitempty"`
+	Scottyagent   services.ScottyagentRPCs `protobuf:"varint,54,opt,name=scottyagent,proto3,enum=services.ScottyagentRPCs" json:"scottyagent,omitempty"`
+	Mailbox       services.MailboxRPCs     `protobuf:"varint,55,opt,name=mailbox,proto3,enum=services.MailboxRPCs" json:"mailbox,omitempty"`
+	Scotty        services.ScottyRPCs      `protobuf:"varint,70,opt,name=scotty,proto3,enum=services.ScottyRPCs" json:"scotty,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -118,13 +121,6 @@ func (x *AccountingMethod) GetOauth() services.OauthRPCs {
 	return services.OauthRPCs(0)
 }
 
-func (x *AccountingMethod) GetArgus() services.ArgusRPCs {
-	if x != nil {
-		return x.Argus
-	}
-	return services.ArgusRPCs(0)
-}
-
 func (x *AccountingMethod) GetSaml() services.SamlRPCs {
 	if x != nil {
 		return x.Saml
@@ -132,19 +128,50 @@ func (x *AccountingMethod) GetSaml() services.SamlRPCs {
 	return services.SamlRPCs(0)
 }
 
+func (x *AccountingMethod) GetMessaging() services.MessagingRPCs {
+	if x != nil {
+		return x.Messaging
+	}
+	return services.MessagingRPCs(0)
+}
+
+func (x *AccountingMethod) GetScottyagent() services.ScottyagentRPCs {
+	if x != nil {
+		return x.Scottyagent
+	}
+	return services.ScottyagentRPCs(0)
+}
+
+func (x *AccountingMethod) GetMailbox() services.MailboxRPCs {
+	if x != nil {
+		return x.Mailbox
+	}
+	return services.MailboxRPCs(0)
+}
+
+func (x *AccountingMethod) GetScotty() services.ScottyRPCs {
+	if x != nil {
+		return x.Scotty
+	}
+	return services.ScottyRPCs(0)
+}
+
 var File_generated_accounting_method_proto protoreflect.FileDescriptor
 
 const file_generated_accounting_method_proto_rawDesc = "" +
 	"\n" +
-	"!generated/accounting_method.proto\x12\x11accounting_method\x1a\x18generated/services.proto\"\xd7\x02\n" +
+	"!generated/accounting_method.proto\x12\x11accounting_method\x1a\x18generated/services.proto\"\xff\x03\n" +
 	"\x10AccountingMethod\x122\n" +
 	"\bsentinel\x18\x05 \x01(\x0e2\x16.services.SentinelRPCsR\bsentinel\x12/\n" +
 	"\agateway\x18\a \x01(\x0e2\x15.services.GatewayRPCsR\agateway\x12,\n" +
 	"\x06kernel\x18\b \x01(\x0e2\x14.services.KernelRPCsR\x06kernel\x122\n" +
 	"\beventbus\x18\x12 \x01(\x0e2\x16.services.EventbusRPCsR\beventbus\x12)\n" +
-	"\x05oauth\x18\x15 \x01(\x0e2\x13.services.OauthRPCsR\x05oauth\x12)\n" +
-	"\x05argus\x18# \x01(\x0e2\x13.services.ArgusRPCsR\x05argus\x12&\n" +
-	"\x04saml\x18& \x01(\x0e2\x12.services.SamlRPCsR\x04samlBjZhgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/accounting_methodb\x06proto3"
+	"\x05oauth\x18\x15 \x01(\x0e2\x13.services.OauthRPCsR\x05oauth\x12&\n" +
+	"\x04saml\x18& \x01(\x0e2\x12.services.SamlRPCsR\x04saml\x125\n" +
+	"\tmessaging\x185 \x01(\x0e2\x17.services.MessagingRPCsR\tmessaging\x12;\n" +
+	"\vscottyagent\x186 \x01(\x0e2\x19.services.ScottyagentRPCsR\vscottyagent\x12/\n" +
+	"\amailbox\x187 \x01(\x0e2\x15.services.MailboxRPCsR\amailbox\x12,\n" +
+	"\x06scotty\x18F \x01(\x0e2\x14.services.ScottyRPCsR\x06scottyBjZhgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/accounting_methodb\x06proto3"
 
 var (
 	file_generated_accounting_method_proto_rawDescOnce sync.Once
@@ -160,28 +187,34 @@ func file_generated_accounting_method_proto_rawDescGZIP() []byte {
 
 var file_generated_accounting_method_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_generated_accounting_method_proto_goTypes = []any{
-	(*AccountingMethod)(nil),   // 0: accounting_method.AccountingMethod
-	(services.SentinelRPCs)(0), // 1: services.SentinelRPCs
-	(services.GatewayRPCs)(0),  // 2: services.GatewayRPCs
-	(services.KernelRPCs)(0),   // 3: services.KernelRPCs
-	(services.EventbusRPCs)(0), // 4: services.EventbusRPCs
-	(services.OauthRPCs)(0),    // 5: services.OauthRPCs
-	(services.ArgusRPCs)(0),    // 6: services.ArgusRPCs
-	(services.SamlRPCs)(0),     // 7: services.SamlRPCs
+	(*AccountingMethod)(nil),      // 0: accounting_method.AccountingMethod
+	(services.SentinelRPCs)(0),    // 1: services.SentinelRPCs
+	(services.GatewayRPCs)(0),     // 2: services.GatewayRPCs
+	(services.KernelRPCs)(0),      // 3: services.KernelRPCs
+	(services.EventbusRPCs)(0),    // 4: services.EventbusRPCs
+	(services.OauthRPCs)(0),       // 5: services.OauthRPCs
+	(services.SamlRPCs)(0),        // 6: services.SamlRPCs
+	(services.MessagingRPCs)(0),   // 7: services.MessagingRPCs
+	(services.ScottyagentRPCs)(0), // 8: services.ScottyagentRPCs
+	(services.MailboxRPCs)(0),     // 9: services.MailboxRPCs
+	(services.ScottyRPCs)(0),      // 10: services.ScottyRPCs
 }
 var file_generated_accounting_method_proto_depIdxs = []int32{
-	1, // 0: accounting_method.AccountingMethod.sentinel:type_name -> services.SentinelRPCs
-	2, // 1: accounting_method.AccountingMethod.gateway:type_name -> services.GatewayRPCs
-	3, // 2: accounting_method.AccountingMethod.kernel:type_name -> services.KernelRPCs
-	4, // 3: accounting_method.AccountingMethod.eventbus:type_name -> services.EventbusRPCs
-	5, // 4: accounting_method.AccountingMethod.oauth:type_name -> services.OauthRPCs
-	6, // 5: accounting_method.AccountingMethod.argus:type_name -> services.ArgusRPCs
-	7, // 6: accounting_method.AccountingMethod.saml:type_name -> services.SamlRPCs
-	7, // [7:7] is the sub-list for method output_type
-	7, // [7:7] is the sub-list for method input_type
-	7, // [7:7] is the sub-list for extension type_name
-	7, // [7:7] is the sub-list for extension extendee
-	0, // [0:7] is the sub-list for field type_name
+	1,  // 0: accounting_method.AccountingMethod.sentinel:type_name -> services.SentinelRPCs
+	2,  // 1: accounting_method.AccountingMethod.gateway:type_name -> services.GatewayRPCs
+	3,  // 2: accounting_method.AccountingMethod.kernel:type_name -> services.KernelRPCs
+	4,  // 3: accounting_method.AccountingMethod.eventbus:type_name -> services.EventbusRPCs
+	5,  // 4: accounting_method.AccountingMethod.oauth:type_name -> services.OauthRPCs
+	6,  // 5: accounting_method.AccountingMethod.saml:type_name -> services.SamlRPCs
+	7,  // 6: accounting_method.AccountingMethod.messaging:type_name -> services.MessagingRPCs
+	8,  // 7: accounting_method.AccountingMethod.scottyagent:type_name -> services.ScottyagentRPCs
+	9,  // 8: accounting_method.AccountingMethod.mailbox:type_name -> services.MailboxRPCs
+	10, // 9: accounting_method.AccountingMethod.scotty:type_name -> services.ScottyRPCs
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_generated_accounting_method_proto_init() }
