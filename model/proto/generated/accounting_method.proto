@@ -20,5 +20,6 @@ message AccountingMethod {
   services.MessagingRPCs messaging = 53;
   services.ScottyagentRPCs scottyagent = 54;
   services.MailboxRPCs mailbox = 55;
+  services.LlmsettingsRPCs llmsettings = 56;
   services.ScottyRPCs scotty = 70;
 }

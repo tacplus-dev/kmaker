@@ -30,6 +30,7 @@ import (
 	gateway "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gateway"
 	kmaker "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
 	letsencrypt "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/letsencrypt"
+	llmsettings "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/llmsettings"
 	mailbox "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/mailbox"
 	messaging "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/messaging"
 	oauth "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/oauth"
@@ -66,6 +67,7 @@ type servicesJSON struct {
 	MessagingConfig   json.RawMessage `json:"messaging_config,omitempty"`
 	ScottyagentConfig json.RawMessage `json:"scottyagent_config,omitempty"`
 	MailboxConfig     json.RawMessage `json:"mailbox_config,omitempty"`
+	LlmsettingsConfig json.RawMessage `json:"llmsettings_config,omitempty"`
 	ScottyConfig      json.RawMessage `json:"scotty_config,omitempty"`
 }
 
@@ -166,6 +168,13 @@ func ServicesToJSON(v *Services) ([]byte, error) {
 				return nil
 			}
 			data, _ := mailbox.ConfigToJSON(v.MailboxConfig)
+			return data
+		}(),
+		LlmsettingsConfig: func() json.RawMessage {
+			if v.LlmsettingsConfig == nil {
+				return nil
+			}
+			data, _ := llmsettings.ConfigToJSON(v.LlmsettingsConfig)
 			return data
 		}(),
 		ScottyConfig: func() json.RawMessage {
@@ -276,6 +285,13 @@ func ServicesToJSONPretty(v *Services) ([]byte, error) {
 				return nil
 			}
 			data, _ := mailbox.ConfigToJSON(v.MailboxConfig)
+			return data
+		}(),
+		LlmsettingsConfig: func() json.RawMessage {
+			if v.LlmsettingsConfig == nil {
+				return nil
+			}
+			data, _ := llmsettings.ConfigToJSON(v.LlmsettingsConfig)
 			return data
 		}(),
 		ScottyConfig: func() json.RawMessage {
@@ -440,6 +456,13 @@ func ServicesFromJSON(data []byte) (*Services, error) {
 			result.MailboxConfig = parsed
 		}
 	}
+	// Parse message field: LlmsettingsConfig
+	if len(raw.LlmsettingsConfig) > 0 {
+		parsed, err := llmsettings.ConfigFromJSON(raw.LlmsettingsConfig)
+		if err == nil {
+			result.LlmsettingsConfig = parsed
+		}
+	}
 	// Parse message field: ScottyConfig
 	if len(raw.ScottyConfig) > 0 {
 		parsed, err := scotty.ConfigFromJSON(raw.ScottyConfig)
@@ -593,6 +616,11 @@ func ServicesToEnvVar(v *Services) map[string]string {
 			result[k] = val
 		}
 	}
+	if v.LlmsettingsConfig != nil {
+		for k, val := range llmsettings.ConfigToEnvVar(v.LlmsettingsConfig) {
+			result[k] = val
+		}
+	}
 	if v.ScottyConfig != nil {
 		for k, val := range scotty.ConfigToEnvVar(v.ScottyConfig) {
 			result[k] = val
@@ -668,6 +696,11 @@ func ServicesFromEnvVar(env map[string]string) (*Services, error) {
 		return nil, err
 	} else if sub != nil {
 		result.MailboxConfig = sub
+	}
+	if sub, err := llmsettings.ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.LlmsettingsConfig = sub
 	}
 	if sub, err := scotty.ConfigFromEnvVar(env); err != nil {
 		return nil, err
@@ -787,6 +820,13 @@ func ValidateServicesWithDepth(m *Services, depth int) error {
 		}
 	}
 
+	// Validate LlmsettingsConfig nested message
+	if m.LlmsettingsConfig != nil {
+		if err := llmsettings.ValidateConfigWithDepth(m.LlmsettingsConfig, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field LlmsettingsConfig validation failed")
+		}
+	}
+
 	// Validate ScottyConfig nested message
 	if m.ScottyConfig != nil {
 		if err := scotty.ValidateConfigWithDepth(m.ScottyConfig, depth+1); err != nil {
@@ -861,6 +901,9 @@ func MergeServices(dst, src *Services) {
 	}
 	if dst.MailboxConfig == nil {
 		dst.MailboxConfig = src.MailboxConfig
+	}
+	if dst.LlmsettingsConfig == nil {
+		dst.LlmsettingsConfig = src.LlmsettingsConfig
 	}
 	if dst.ScottyConfig == nil {
 		dst.ScottyConfig = src.ScottyConfig

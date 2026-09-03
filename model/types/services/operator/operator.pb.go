@@ -759,11 +759,21 @@ type Config struct {
 	// kmaker owns cluster bootstrap certificate signing for kernel. Operator
 	// renders this into kmaker's mounted runtime config and owns the Secret that
 	// carries kmaker.Config.signing_ca.
-	Kmaker        *kmaker.Config `protobuf:"bytes,19,opt,name=kmaker,proto3" json:"kmaker,omitempty"`
-	TraceId       string         `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool           `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Kmaker *kmaker.Config `protobuf:"bytes,19,opt,name=kmaker,proto3" json:"kmaker,omitempty"`
+	// llm_credential is a shared secret (e.g. an Anthropic API key) fanned out
+	// into the generated bootstrap config of every app service named in
+	// llm_credential_services, under the YAML key "llm_credential" — so it is
+	// configured once here rather than duplicated per app service. The
+	// receiving app service's own Config must declare a matching field. Keep
+	// this out of version control — store in crypto.yaml.
+	LlmCredential string `protobuf:"bytes,20,opt,name=llm_credential,json=llmCredential,proto3" json:"llm_credential,omitempty"`
+	// llm_credential_services names the app services (by AppServiceNames key)
+	// that should receive llm_credential in their generated bootstrap config.
+	LlmCredentialServices []string `protobuf:"bytes,21,rep,name=llm_credential_services,json=llmCredentialServices,proto3" json:"llm_credential_services,omitempty"`
+	TraceId               string   `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop                  bool     `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *Config) Reset() {
@@ -911,6 +921,20 @@ func (x *Config) GetClusterOauth() *oauth.ClusterOAuthConfig {
 func (x *Config) GetKmaker() *kmaker.Config {
 	if x != nil {
 		return x.Kmaker
+	}
+	return nil
+}
+
+func (x *Config) GetLlmCredential() string {
+	if x != nil {
+		return x.LlmCredential
+	}
+	return ""
+}
+
+func (x *Config) GetLlmCredentialServices() []string {
+	if x != nil {
+		return x.LlmCredentialServices
 	}
 	return nil
 }
@@ -1091,7 +1115,7 @@ const file_services_operator_proto_rawDesc = "" +
 	"\x0fedge_signing_ca\x18\x06 \x03(\v2\x13.x509.X509CertChainB\x05\xb8\xa8\x1d\x80\bR\redgeSigningCa\x12?\n" +
 	"\x11kmaker_signing_ca\x18\a \x01(\v2\x13.x509.X509CertChainR\x0fkmakerSigningCa\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x95\x06\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xfa\x06\n" +
 	"\x06Config\x12*\n" +
 	"\x04mode\x18\x01 \x01(\x0e2\x16.operator.OperatorModeR\x04mode\x12\x12\n" +
 	"\x04fqdn\x18\x03 \x01(\tR\x04fqdn\x12\x19\n" +
@@ -1112,7 +1136,9 @@ const file_services_operator_proto_rawDesc = "" +
 	"\rspiffe_prefix\x18\x0f \x01(\tB\r\x8a\xa8\x1d\tlocal/devR\fspiffePrefix\x12C\n" +
 	"\x0froot_cred_pairs\x18\x12 \x03(\v2\x15.credentials.CredPairB\x04\xb8\xa8\x1d@R\rrootCredPairs\x12>\n" +
 	"\rcluster_oauth\x18\x11 \x01(\v2\x19.oauth.ClusterOAuthConfigR\fclusterOauth\x12&\n" +
-	"\x06kmaker\x18\x13 \x01(\v2\x0e.kmaker.ConfigR\x06kmaker\x12\x1a\n" +
+	"\x06kmaker\x18\x13 \x01(\v2\x0e.kmaker.ConfigR\x06kmaker\x12%\n" +
+	"\x0ellm_credential\x18\x14 \x01(\tR\rllmCredential\x12<\n" +
+	"\x17llm_credential_services\x18\x15 \x03(\tB\x04\xb8\xa8\x1d@R\x15llmCredentialServices\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0eҨ\x1d\n" +
 	"\n" +

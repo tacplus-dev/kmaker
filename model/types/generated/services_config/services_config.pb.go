@@ -26,6 +26,7 @@ import (
 	gateway "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gateway"
 	kmaker "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
 	letsencrypt "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/letsencrypt"
+	llmsettings "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/llmsettings"
 	mailbox "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/mailbox"
 	messaging "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/messaging"
 	oauth "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/oauth"
@@ -65,6 +66,7 @@ type Services struct {
 	MessagingConfig   *messaging.Config      `protobuf:"bytes,53,opt,name=messaging_config,json=messagingConfig,proto3" json:"messaging_config,omitempty"`
 	ScottyagentConfig *scottyagent.Config    `protobuf:"bytes,54,opt,name=scottyagent_config,json=scottyagentConfig,proto3" json:"scottyagent_config,omitempty"`
 	MailboxConfig     *mailbox.Config        `protobuf:"bytes,55,opt,name=mailbox_config,json=mailboxConfig,proto3" json:"mailbox_config,omitempty"`
+	LlmsettingsConfig *llmsettings.Config    `protobuf:"bytes,56,opt,name=llmsettings_config,json=llmsettingsConfig,proto3" json:"llmsettings_config,omitempty"`
 	ScottyConfig      *scotty.Config         `protobuf:"bytes,70,opt,name=scotty_config,json=scottyConfig,proto3" json:"scotty_config,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
@@ -191,6 +193,13 @@ func (x *Services) GetMailboxConfig() *mailbox.Config {
 	return nil
 }
 
+func (x *Services) GetLlmsettingsConfig() *llmsettings.Config {
+	if x != nil {
+		return x.LlmsettingsConfig
+	}
+	return nil
+}
+
 func (x *Services) GetScottyConfig() *scotty.Config {
 	if x != nil {
 		return x.ScottyConfig
@@ -202,7 +211,7 @@ var File_generated_services_config_proto protoreflect.FileDescriptor
 
 const file_generated_services_config_proto_rawDesc = "" +
 	"\n" +
-	"\x1fgenerated/services_config.proto\x12\x0fservices_config\x1a\x17services/sentinel.proto\x1a\x16services/gateway.proto\x1a\x1aservices/letsencrypt.proto\x1a\x17services/eventbus.proto\x1a\x14services/oauth.proto\x1a\x12services/opa.proto\x1a\x16services/stratum.proto\x1a\x13services/saml.proto\x1a\x17services/operator.proto\x1a\x15services/kmaker.proto\x1a\x18services/messaging.proto\x1a\x1aservices/scottyagent.proto\x1a\x16services/mailbox.proto\x1a\x15services/scotty.proto\"\xa3\x06\n" +
+	"\x1fgenerated/services_config.proto\x12\x0fservices_config\x1a\x17services/sentinel.proto\x1a\x16services/gateway.proto\x1a\x1aservices/letsencrypt.proto\x1a\x17services/eventbus.proto\x1a\x14services/oauth.proto\x1a\x12services/opa.proto\x1a\x16services/stratum.proto\x1a\x13services/saml.proto\x1a\x17services/operator.proto\x1a\x15services/kmaker.proto\x1a\x18services/messaging.proto\x1a\x1aservices/scottyagent.proto\x1a\x16services/mailbox.proto\x1a\x1aservices/llmsettings.proto\x1a\x15services/scotty.proto\"\xe7\x06\n" +
 	"\bServices\x129\n" +
 	"\x0fsentinel_config\x18\x05 \x01(\v2\x10.sentinel.ConfigR\x0esentinelConfig\x126\n" +
 	"\x0egateway_config\x18\a \x01(\v2\x0f.gateway.ConfigR\rgatewayConfig\x12B\n" +
@@ -218,7 +227,8 @@ const file_generated_services_config_proto_rawDesc = "" +
 	"\rkmaker_config\x181 \x01(\v2\x0e.kmaker.ConfigR\fkmakerConfig\x12<\n" +
 	"\x10messaging_config\x185 \x01(\v2\x11.messaging.ConfigR\x0fmessagingConfig\x12B\n" +
 	"\x12scottyagent_config\x186 \x01(\v2\x13.scottyagent.ConfigR\x11scottyagentConfig\x126\n" +
-	"\x0emailbox_config\x187 \x01(\v2\x0f.mailbox.ConfigR\rmailboxConfig\x123\n" +
+	"\x0emailbox_config\x187 \x01(\v2\x0f.mailbox.ConfigR\rmailboxConfig\x12B\n" +
+	"\x12llmsettings_config\x188 \x01(\v2\x13.llmsettings.ConfigR\x11llmsettingsConfig\x123\n" +
 	"\rscotty_config\x18F \x01(\v2\x0e.scotty.ConfigR\fscottyConfigBhZfgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/services_configb\x06proto3"
 
 var (
@@ -249,7 +259,8 @@ var file_generated_services_config_proto_goTypes = []any{
 	(*messaging.Config)(nil),   // 11: messaging.Config
 	(*scottyagent.Config)(nil), // 12: scottyagent.Config
 	(*mailbox.Config)(nil),     // 13: mailbox.Config
-	(*scotty.Config)(nil),      // 14: scotty.Config
+	(*llmsettings.Config)(nil), // 14: llmsettings.Config
+	(*scotty.Config)(nil),      // 15: scotty.Config
 }
 var file_generated_services_config_proto_depIdxs = []int32{
 	1,  // 0: services_config.Services.sentinel_config:type_name -> sentinel.Config
@@ -265,12 +276,13 @@ var file_generated_services_config_proto_depIdxs = []int32{
 	11, // 10: services_config.Services.messaging_config:type_name -> messaging.Config
 	12, // 11: services_config.Services.scottyagent_config:type_name -> scottyagent.Config
 	13, // 12: services_config.Services.mailbox_config:type_name -> mailbox.Config
-	14, // 13: services_config.Services.scotty_config:type_name -> scotty.Config
-	14, // [14:14] is the sub-list for method output_type
-	14, // [14:14] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	14, // 13: services_config.Services.llmsettings_config:type_name -> llmsettings.Config
+	15, // 14: services_config.Services.scotty_config:type_name -> scotty.Config
+	15, // [15:15] is the sub-list for method output_type
+	15, // [15:15] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_generated_services_config_proto_init() }

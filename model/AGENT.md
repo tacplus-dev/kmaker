@@ -5,9 +5,9 @@ This file is embedded in `registry.json` and describes how to navigate it.
 ## Overview
 
 This registry describes a tacplus-generated service mesh with:
-- **1063** message types across **65** packages
-- **743** RPCs across **61** gRPC services
-- **66** state boundaries
+- **1099** message types across **66** packages
+- **708** RPCs across **64** gRPC services
+- **68** state boundaries
 
 ## Structure
 
@@ -477,6 +477,9 @@ Each `RpcInfo` carries:
 - **KmakerConfigStateService**
 - **LetsEncryptStateService**
 - **LetsencryptConfigStateService**
+- **LlmSettings**
+- **LlmSettingsStateService**
+- **LlmsettingsConfigStateService**
 - **Mailbox**
 - **MailboxConfigStateService**
 - **MailboxEntryBusStateService**
@@ -494,12 +497,12 @@ Each `RpcInfo` carries:
 - **Outbound**
 - **PublicJwksViewService**
 - **RecordMap**
-- **RecordQuery**
 - **SamlConfigStateService**
 - **Scotty**
 - **ScottyActivityBusStateService**
 - **ScottyAgent**
 - **ScottyConfigStateService**
+- **ScottyRecords**
 - **ScottyStateService**
 - **ScottyagentConfigStateService**
 - **ScottyagentStateService**
@@ -533,6 +536,7 @@ Each `RpcInfo` carries:
 - `services/kernel`
 - `services/kmaker`
 - `services/letsencrypt`
+- `services/llmsettings`
 - `services/mailbox`
 - `services/messaging`
 - `services/oauth`

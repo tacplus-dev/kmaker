@@ -49,6 +49,7 @@ type accountingmethodJSON struct {
 	Messaging   string `json:"messaging,omitempty"`
 	Scottyagent string `json:"scottyagent,omitempty"`
 	Mailbox     string `json:"mailbox,omitempty"`
+	Llmsettings string `json:"llmsettings,omitempty"`
 	Scotty      string `json:"scotty,omitempty"`
 }
 
@@ -69,6 +70,7 @@ func AccountingMethodToJSON(v *AccountingMethod) ([]byte, error) {
 		Messaging:   services.MessagingRPCsToString(v.Messaging),
 		Scottyagent: services.ScottyagentRPCsToString(v.Scottyagent),
 		Mailbox:     services.MailboxRPCsToString(v.Mailbox),
+		Llmsettings: services.LlmsettingsRPCsToString(v.Llmsettings),
 		Scotty:      services.ScottyRPCsToString(v.Scotty),
 	}
 	return json.Marshal(helper)
@@ -91,6 +93,7 @@ func AccountingMethodToJSONPretty(v *AccountingMethod) ([]byte, error) {
 		Messaging:   services.MessagingRPCsToString(v.Messaging),
 		Scottyagent: services.ScottyagentRPCsToString(v.Scottyagent),
 		Mailbox:     services.MailboxRPCsToString(v.Mailbox),
+		Llmsettings: services.LlmsettingsRPCsToString(v.Llmsettings),
 		Scotty:      services.ScottyRPCsToString(v.Scotty),
 	}
 	return json.MarshalIndent(helper, "", "  ")
@@ -210,6 +213,12 @@ func AccountingMethodFromJSON(data []byte) (*AccountingMethod, error) {
 			result.Mailbox = parsed
 		}
 	}
+	// Parse enum field: Llmsettings
+	if raw.Llmsettings != "" {
+		if parsed, err := services.ParseLlmsettingsRPCs(raw.Llmsettings); err == nil {
+			result.Llmsettings = parsed
+		}
+	}
 	// Parse enum field: Scotty
 	if raw.Scotty != "" {
 		if parsed, err := services.ParseScottyRPCs(raw.Scotty); err == nil {
@@ -306,6 +315,7 @@ func AccountingMethodToEnvVar(v *AccountingMethod) map[string]string {
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_MESSAGING"] = services.MessagingRPCsToString(v.Messaging)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SCOTTYAGENT"] = services.ScottyagentRPCsToString(v.Scottyagent)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_MAILBOX"] = services.MailboxRPCsToString(v.Mailbox)
+	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_LLMSETTINGS"] = services.LlmsettingsRPCsToString(v.Llmsettings)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SCOTTY"] = services.ScottyRPCsToString(v.Scotty)
 	return result
 }
@@ -375,6 +385,13 @@ func AccountingMethodFromEnvVar(env map[string]string) (*AccountingMethod, error
 			return nil, err
 		}
 		result.Mailbox = parsed
+	}
+	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_LLMSETTINGS"]; ok && val != "" {
+		parsed, err := services.ParseLlmsettingsRPCs(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Llmsettings = parsed
 	}
 	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SCOTTY"]; ok && val != "" {
 		parsed, err := services.ParseScottyRPCs(val)
@@ -450,6 +467,11 @@ func ValidateAccountingMethodWithDepth(m *AccountingMethod, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Mailbox has unknown enum value %d", int32(m.Mailbox))
 	}
 
+	// Validate Llmsettings enum value is known
+	if _, ok := services.LlmsettingsRPCs_name[int32(m.Llmsettings)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Llmsettings has unknown enum value %d", int32(m.Llmsettings))
+	}
+
 	// Validate Scotty enum value is known
 	if _, ok := services.ScottyRPCs_name[int32(m.Scotty)]; !ok {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Scotty has unknown enum value %d", int32(m.Scotty))
@@ -510,6 +532,9 @@ func MergeAccountingMethod(dst, src *AccountingMethod) {
 	}
 	if dst.Mailbox == 0 {
 		dst.Mailbox = src.Mailbox
+	}
+	if dst.Llmsettings == 0 {
+		dst.Llmsettings = src.Llmsettings
 	}
 	if dst.Scotty == 0 {
 		dst.Scotty = src.Scotty

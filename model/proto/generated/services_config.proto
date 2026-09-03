@@ -19,6 +19,7 @@ import "services/kmaker.proto";
 import "services/messaging.proto";
 import "services/scottyagent.proto";
 import "services/mailbox.proto";
+import "services/llmsettings.proto";
 import "services/scotty.proto";
 
 message Services {
@@ -35,5 +36,6 @@ message Services {
   messaging.Config messaging_config = 53;
   scottyagent.Config scottyagent_config = 54;
   mailbox.Config mailbox_config = 55;
+  llmsettings.Config llmsettings_config = 56;
   scotty.Config scotty_config = 70;
 }

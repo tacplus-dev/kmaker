@@ -33,3 +33,18 @@ option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/k
 
 // W2S client dependencies — tacplus generates typed TypeScript HTTP clients
 // for each of these services, accessible from the browser via gRPC-over-REST.
+//
+// PLATFORM SERVICES ONLY. An application's own services are declared in that
+// application's proto repo, in its own clients/webapp-<app>.proto, and reach
+// this package through the same --src merge every other proto uses. Two reasons
+// this file may not name them:
+//
+//   1. The platform is app-agnostic. `echo.Echo` and `tasks.Tasks` were listed
+//      here, which is the same rule scotty/build.sh states as "NOTHING UNDER
+//      schematic/platform MENTIONS SCOTTY".
+//   2. It did not merely offend the rule, it made the webapp ungenerable for
+//      any fleet but testapp's. `tacplus build --src platform --src scotty`
+//      fails with `grpc_w2s_client: no proto file found for package "echo"`,
+//      because the cluster hosts one app fleet at a time and echo's proto is
+//      not in a scotty build. With the app half moved out, each fleet's webapp
+//      generates from platform + that app.

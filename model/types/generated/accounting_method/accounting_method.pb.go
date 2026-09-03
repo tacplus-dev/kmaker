@@ -51,6 +51,7 @@ type AccountingMethod struct {
 	Messaging     services.MessagingRPCs   `protobuf:"varint,53,opt,name=messaging,proto3,enum=services.MessagingRPCs" json:"messaging,omitempty"`
 	Scottyagent   services.ScottyagentRPCs `protobuf:"varint,54,opt,name=scottyagent,proto3,enum=services.ScottyagentRPCs" json:"scottyagent,omitempty"`
 	Mailbox       services.MailboxRPCs     `protobuf:"varint,55,opt,name=mailbox,proto3,enum=services.MailboxRPCs" json:"mailbox,omitempty"`
+	Llmsettings   services.LlmsettingsRPCs `protobuf:"varint,56,opt,name=llmsettings,proto3,enum=services.LlmsettingsRPCs" json:"llmsettings,omitempty"`
 	Scotty        services.ScottyRPCs      `protobuf:"varint,70,opt,name=scotty,proto3,enum=services.ScottyRPCs" json:"scotty,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -149,6 +150,13 @@ func (x *AccountingMethod) GetMailbox() services.MailboxRPCs {
 	return services.MailboxRPCs(0)
 }
 
+func (x *AccountingMethod) GetLlmsettings() services.LlmsettingsRPCs {
+	if x != nil {
+		return x.Llmsettings
+	}
+	return services.LlmsettingsRPCs(0)
+}
+
 func (x *AccountingMethod) GetScotty() services.ScottyRPCs {
 	if x != nil {
 		return x.Scotty
@@ -160,7 +168,7 @@ var File_generated_accounting_method_proto protoreflect.FileDescriptor
 
 const file_generated_accounting_method_proto_rawDesc = "" +
 	"\n" +
-	"!generated/accounting_method.proto\x12\x11accounting_method\x1a\x18generated/services.proto\"\xff\x03\n" +
+	"!generated/accounting_method.proto\x12\x11accounting_method\x1a\x18generated/services.proto\"\xbc\x04\n" +
 	"\x10AccountingMethod\x122\n" +
 	"\bsentinel\x18\x05 \x01(\x0e2\x16.services.SentinelRPCsR\bsentinel\x12/\n" +
 	"\agateway\x18\a \x01(\x0e2\x15.services.GatewayRPCsR\agateway\x12,\n" +
@@ -170,7 +178,8 @@ const file_generated_accounting_method_proto_rawDesc = "" +
 	"\x04saml\x18& \x01(\x0e2\x12.services.SamlRPCsR\x04saml\x125\n" +
 	"\tmessaging\x185 \x01(\x0e2\x17.services.MessagingRPCsR\tmessaging\x12;\n" +
 	"\vscottyagent\x186 \x01(\x0e2\x19.services.ScottyagentRPCsR\vscottyagent\x12/\n" +
-	"\amailbox\x187 \x01(\x0e2\x15.services.MailboxRPCsR\amailbox\x12,\n" +
+	"\amailbox\x187 \x01(\x0e2\x15.services.MailboxRPCsR\amailbox\x12;\n" +
+	"\vllmsettings\x188 \x01(\x0e2\x19.services.LlmsettingsRPCsR\vllmsettings\x12,\n" +
 	"\x06scotty\x18F \x01(\x0e2\x14.services.ScottyRPCsR\x06scottyBjZhgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/accounting_methodb\x06proto3"
 
 var (
@@ -197,7 +206,8 @@ var file_generated_accounting_method_proto_goTypes = []any{
 	(services.MessagingRPCs)(0),   // 7: services.MessagingRPCs
 	(services.ScottyagentRPCs)(0), // 8: services.ScottyagentRPCs
 	(services.MailboxRPCs)(0),     // 9: services.MailboxRPCs
-	(services.ScottyRPCs)(0),      // 10: services.ScottyRPCs
+	(services.LlmsettingsRPCs)(0), // 10: services.LlmsettingsRPCs
+	(services.ScottyRPCs)(0),      // 11: services.ScottyRPCs
 }
 var file_generated_accounting_method_proto_depIdxs = []int32{
 	1,  // 0: accounting_method.AccountingMethod.sentinel:type_name -> services.SentinelRPCs
@@ -209,12 +219,13 @@ var file_generated_accounting_method_proto_depIdxs = []int32{
 	7,  // 6: accounting_method.AccountingMethod.messaging:type_name -> services.MessagingRPCs
 	8,  // 7: accounting_method.AccountingMethod.scottyagent:type_name -> services.ScottyagentRPCs
 	9,  // 8: accounting_method.AccountingMethod.mailbox:type_name -> services.MailboxRPCs
-	10, // 9: accounting_method.AccountingMethod.scotty:type_name -> services.ScottyRPCs
-	10, // [10:10] is the sub-list for method output_type
-	10, // [10:10] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	10, // 9: accounting_method.AccountingMethod.llmsettings:type_name -> services.LlmsettingsRPCs
+	11, // 10: accounting_method.AccountingMethod.scotty:type_name -> services.ScottyRPCs
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_generated_accounting_method_proto_init() }

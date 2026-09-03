@@ -47,6 +47,7 @@ func ServiceNameValues() []ServiceName {
 		ServiceName_SERVICE_NAME_MESSAGING,
 		ServiceName_SERVICE_NAME_SCOTTYAGENT,
 		ServiceName_SERVICE_NAME_MAILBOX,
+		ServiceName_SERVICE_NAME_LLMSETTINGS,
 		ServiceName_SERVICE_NAME_SCOTTY,
 		ServiceName_SERVICE_NAME_ANY,
 	}
@@ -54,7 +55,7 @@ func ServiceNameValues() []ServiceName {
 
 // ServiceNameStringValues returns all valid ServiceName names as strings
 func ServiceNameStringValues() []string {
-	return []string{"sentinel", "gateway", "kernel", "letsencrypt", "eventbus", "oauth", "opa", "stratum", "kmaker", "samlsvc", "messaging", "scottyagent", "mailbox", "scotty", "any"}
+	return []string{"sentinel", "gateway", "kernel", "letsencrypt", "eventbus", "oauth", "opa", "stratum", "kmaker", "samlsvc", "messaging", "scottyagent", "mailbox", "llmsettings", "scotty", "any"}
 }
 
 // ParseServiceName converts a string to a ServiceName enum value
@@ -91,6 +92,8 @@ func ParseServiceName(s string) (ServiceName, error) {
 		return ServiceName_SERVICE_NAME_SCOTTYAGENT, nil
 	case "mailbox", "service-name-mailbox":
 		return ServiceName_SERVICE_NAME_MAILBOX, nil
+	case "llmsettings", "service-name-llmsettings":
+		return ServiceName_SERVICE_NAME_LLMSETTINGS, nil
 	case "scotty", "service-name-scotty":
 		return ServiceName_SERVICE_NAME_SCOTTY, nil
 	case "any", "service-name-any":
@@ -151,6 +154,8 @@ func ServiceNameToString(v ServiceName) string {
 		return "scottyagent"
 	case ServiceName_SERVICE_NAME_MAILBOX:
 		return "mailbox"
+	case ServiceName_SERVICE_NAME_LLMSETTINGS:
+		return "llmsettings"
 	case ServiceName_SERVICE_NAME_SCOTTY:
 		return "scotty"
 	case ServiceName_SERVICE_NAME_ANY:
@@ -203,6 +208,8 @@ func ParseServiceNameLiberal(s string) ServiceName {
 		return ServiceName_SERVICE_NAME_SCOTTYAGENT
 	case "mailbox", "service-name-mailbox":
 		return ServiceName_SERVICE_NAME_MAILBOX
+	case "llmsettings", "service-name-llmsettings":
+		return ServiceName_SERVICE_NAME_LLMSETTINGS
 	case "scotty", "service-name-scotty":
 		return ServiceName_SERVICE_NAME_SCOTTY
 	case "any", "service-name-any":
@@ -243,6 +250,8 @@ func ServiceNameToSpecName(v ServiceName) string {
 		return "SERVICE_NAME_SCOTTYAGENT"
 	case ServiceName_SERVICE_NAME_MAILBOX:
 		return "SERVICE_NAME_MAILBOX"
+	case ServiceName_SERVICE_NAME_LLMSETTINGS:
+		return "SERVICE_NAME_LLMSETTINGS"
 	case ServiceName_SERVICE_NAME_SCOTTY:
 		return "SERVICE_NAME_SCOTTY"
 	case ServiceName_SERVICE_NAME_ANY:
@@ -1498,6 +1507,119 @@ func MailboxRPCsToSpecName(v MailboxRPCs) string {
 		return "MAILBOX_RPCS_UPDATE_HELD_MAIL"
 	case MailboxRPCs_MAILBOX_RPCS_ANY:
 		return "MAILBOX_RPCS_ANY"
+	default:
+		return ""
+	}
+}
+
+// LlmsettingsRPCsValues returns all valid LlmsettingsRPCs values (excluding UNDEFINED)
+func LlmsettingsRPCsValues() []LlmsettingsRPCs {
+	return []LlmsettingsRPCs{
+		LlmsettingsRPCs_LLMSETTINGS_RPCS_LIST_MY_LLM_SETTINGS,
+		LlmsettingsRPCs_LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS,
+		LlmsettingsRPCs_LLMSETTINGS_RPCS_ANY,
+	}
+}
+
+// LlmsettingsRPCsStringValues returns all valid LlmsettingsRPCs names as strings
+func LlmsettingsRPCsStringValues() []string {
+	return []string{"llmsettings-rpcs-list-my-llm-settings", "llmsettings-rpcs-update-llm-settings", "llmsettings-rpcs-any"}
+}
+
+// ParseLlmsettingsRPCs converts a string to a LlmsettingsRPCs enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseLlmsettingsRPCs(s string) (LlmsettingsRPCs, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return LlmsettingsRPCs_LLMSETTINGS_RPCS_UNSPECIFIED, nil
+	case "llmsettings-rpcs-list-my-llm-settings":
+		return LlmsettingsRPCs_LLMSETTINGS_RPCS_LIST_MY_LLM_SETTINGS, nil
+	case "llmsettings-rpcs-update-llm-settings":
+		return LlmsettingsRPCs_LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS, nil
+	case "llmsettings-rpcs-any":
+		return LlmsettingsRPCs_LLMSETTINGS_RPCS_ANY, nil
+	default:
+		return LlmsettingsRPCs_LLMSETTINGS_RPCS_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid llmsettingsrpcs %s, expecting one of: %v", s, LlmsettingsRPCsStringValues())
+	}
+}
+
+// ParseLlmsettingsRPCss converts a comma-separated string to a slice of LlmsettingsRPCs enum values
+// Returns an error if any value is invalid
+func ParseLlmsettingsRPCss(s string) ([]LlmsettingsRPCs, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]LlmsettingsRPCs, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseLlmsettingsRPCs(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// LlmsettingsRPCsToString converts a LlmsettingsRPCs to its lowercase string representation
+func LlmsettingsRPCsToString(v LlmsettingsRPCs) string {
+	switch v {
+	case LlmsettingsRPCs_LLMSETTINGS_RPCS_LIST_MY_LLM_SETTINGS:
+		return "llmsettings-rpcs-list-my-llm-settings"
+	case LlmsettingsRPCs_LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS:
+		return "llmsettings-rpcs-update-llm-settings"
+	case LlmsettingsRPCs_LLMSETTINGS_RPCS_ANY:
+		return "llmsettings-rpcs-any"
+	default:
+		return ""
+	}
+}
+
+// ParseLlmsettingsRPCsLiberal parses a LlmsettingsRPCs liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseLlmsettingsRPCsLiberal(s string) LlmsettingsRPCs {
+	if s == "" {
+		return LlmsettingsRPCs_LLMSETTINGS_RPCS_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return LlmsettingsRPCs(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "llmsettings-rpcs-list-my-llm-settings":
+		return LlmsettingsRPCs_LLMSETTINGS_RPCS_LIST_MY_LLM_SETTINGS
+	case "llmsettings-rpcs-update-llm-settings":
+		return LlmsettingsRPCs_LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS
+	case "llmsettings-rpcs-any":
+		return LlmsettingsRPCs_LLMSETTINGS_RPCS_ANY
+	default:
+		return LlmsettingsRPCs_LLMSETTINGS_RPCS_UNSPECIFIED
+	}
+}
+
+// LlmsettingsRPCsToSpecName converts a LlmsettingsRPCs to its canonical protobuf spec name
+func LlmsettingsRPCsToSpecName(v LlmsettingsRPCs) string {
+	switch v {
+	case LlmsettingsRPCs_LLMSETTINGS_RPCS_UNSPECIFIED:
+		return "LLMSETTINGS_RPCS_UNSPECIFIED"
+	case LlmsettingsRPCs_LLMSETTINGS_RPCS_LIST_MY_LLM_SETTINGS:
+		return "LLMSETTINGS_RPCS_LIST_MY_LLM_SETTINGS"
+	case LlmsettingsRPCs_LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS:
+		return "LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS"
+	case LlmsettingsRPCs_LLMSETTINGS_RPCS_ANY:
+		return "LLMSETTINGS_RPCS_ANY"
 	default:
 		return ""
 	}

@@ -1308,25 +1308,27 @@ func PKIToTOML(v *PKI) ([]byte, error) {
 // ConfigJSON represents Config in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type configJSON struct {
-	Mode                string            `json:"mode,omitempty"`
-	Fqdn                string            `json:"fqdn,omitempty"`
-	Port                int32             `json:"port,omitempty"`
-	Namespace           string            `json:"namespace,omitempty"`
-	Topology            json.RawMessage   `json:"topology,omitempty"`
-	Tls                 json.RawMessage   `json:"tls,omitempty"`
-	Pki                 json.RawMessage   `json:"pki,omitempty"`
-	OptionalServices    json.RawMessage   `json:"optional_services,omitempty"`
-	OutputDir           string            `json:"output_dir,omitempty"`
-	WebRoot             string            `json:"web_root,omitempty"`
-	Patch               int32             `json:"patch,omitempty"`
-	Dev                 bool              `json:"dev,omitempty"`
-	GitlabRegistryToken string            `json:"gitlab_registry_token,omitempty"`
-	SpiffePrefix        string            `json:"spiffe_prefix,omitempty"`
-	RootCredPairs       []json.RawMessage `json:"root_cred_pairs,omitempty"`
-	ClusterOauth        json.RawMessage   `json:"cluster_oauth,omitempty"`
-	Kmaker              json.RawMessage   `json:"kmaker,omitempty"`
-	TraceId             string            `json:"trace_id,omitempty"`
-	Noop                bool              `json:"noop,omitempty"`
+	Mode                  string            `json:"mode,omitempty"`
+	Fqdn                  string            `json:"fqdn,omitempty"`
+	Port                  int32             `json:"port,omitempty"`
+	Namespace             string            `json:"namespace,omitempty"`
+	Topology              json.RawMessage   `json:"topology,omitempty"`
+	Tls                   json.RawMessage   `json:"tls,omitempty"`
+	Pki                   json.RawMessage   `json:"pki,omitempty"`
+	OptionalServices      json.RawMessage   `json:"optional_services,omitempty"`
+	OutputDir             string            `json:"output_dir,omitempty"`
+	WebRoot               string            `json:"web_root,omitempty"`
+	Patch                 int32             `json:"patch,omitempty"`
+	Dev                   bool              `json:"dev,omitempty"`
+	GitlabRegistryToken   string            `json:"gitlab_registry_token,omitempty"`
+	SpiffePrefix          string            `json:"spiffe_prefix,omitempty"`
+	RootCredPairs         []json.RawMessage `json:"root_cred_pairs,omitempty"`
+	ClusterOauth          json.RawMessage   `json:"cluster_oauth,omitempty"`
+	Kmaker                json.RawMessage   `json:"kmaker,omitempty"`
+	LlmCredential         string            `json:"llm_credential,omitempty"`
+	LlmCredentialServices []string          `json:"llm_credential_services,omitempty"`
+	TraceId               string            `json:"trace_id,omitempty"`
+	Noop                  bool              `json:"noop,omitempty"`
 }
 
 // ConfigToJSON converts Config to JSON bytes.
@@ -1403,8 +1405,10 @@ func ConfigToJSON(v *Config) ([]byte, error) {
 			data, _ := kmaker.ConfigToJSON(v.Kmaker)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		LlmCredential:         v.LlmCredential,
+		LlmCredentialServices: v.LlmCredentialServices,
+		TraceId:               v.TraceId,
+		Noop:                  v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -1483,8 +1487,10 @@ func ConfigToJSONPretty(v *Config) ([]byte, error) {
 			data, _ := kmaker.ConfigToJSON(v.Kmaker)
 			return data
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		LlmCredential:         v.LlmCredential,
+		LlmCredentialServices: v.LlmCredentialServices,
+		TraceId:               v.TraceId,
+		Noop:                  v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1618,6 +1624,8 @@ func ConfigFromJSON(data []byte) (*Config, error) {
 			result.Kmaker = parsed
 		}
 	}
+	result.LlmCredential = raw.LlmCredential
+	result.LlmCredentialServices = raw.LlmCredentialServices
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -2311,6 +2319,10 @@ func ConfigToEnvVar(v *Config) map[string]string {
 			result[k] = val
 		}
 	}
+	result["PROTO_SERVICES_OPERATOR_CONFIG_LLM_CREDENTIAL"] = v.LlmCredential
+	if len(v.LlmCredentialServices) > 0 {
+		result["PROTO_SERVICES_OPERATOR_CONFIG_LLM_CREDENTIAL_SERVICES"] = strings.Join(v.LlmCredentialServices, ",")
+	}
 	result["PROTO_SERVICES_OPERATOR_CONFIG_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_OPERATOR_CONFIG_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -2394,6 +2406,12 @@ func ConfigFromEnvVar(env map[string]string) (*Config, error) {
 		return nil, err
 	} else if sub != nil {
 		result.Kmaker = sub
+	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_CONFIG_LLM_CREDENTIAL"]; ok && val != "" {
+		result.LlmCredential = val
+	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_CONFIG_LLM_CREDENTIAL_SERVICES"]; ok && val != "" {
+		result.LlmCredentialServices = strings.Split(val, ",")
 	}
 	if val, ok := env["PROTO_SERVICES_OPERATOR_CONFIG_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -2680,6 +2698,18 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field RootCredPairs exceeds max size of 64, got: %d", len(m.RootCredPairs))
 	}
 
+	// Validate LlmCredentialServices (assert_max_size: 64)
+	if len(m.LlmCredentialServices) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field LlmCredentialServices exceeds max size of 64, got: %d", len(m.LlmCredentialServices))
+	}
+
+	// Validate LlmCredentialServices elements (default max size: 32768 bytes)
+	for i, val := range m.LlmCredentialServices {
+		if len(val) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field LlmCredentialServices[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
+		}
+	}
+
 	// Validate Fqdn (default max size: 32768 bytes)
 	if len(m.Fqdn) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Fqdn exceeds max size of 32768 bytes, got: %d", len(m.Fqdn))
@@ -2708,6 +2738,11 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 	// Validate SpiffePrefix (default max size: 32768 bytes)
 	if len(m.SpiffePrefix) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffePrefix exceeds max size of 32768 bytes, got: %d", len(m.SpiffePrefix))
+	}
+
+	// Validate LlmCredential (default max size: 32768 bytes)
+	if len(m.LlmCredential) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field LlmCredential exceeds max size of 32768 bytes, got: %d", len(m.LlmCredential))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -2852,25 +2887,27 @@ const (
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizeTlsconfigTraceId           int = 32768
-	MaxSizeTopologyAppServices        int = 64
-	MaxSizeTopologyTraceId            int = 32768
-	MaxSizeOptionalservicesTraceId    int = 32768
-	MaxSizePkiNodeTls                 int = 1024
-	MaxSizePkiNodeSigningCa           int = 1024
-	MaxSizePkiEdgeTls                 int = 1024
-	MaxSizePkiEdgeSigningCa           int = 1024
-	MaxSizePkiTraceId                 int = 32768
-	MaxSizeConfigFqdn                 int = 32768
-	MaxSizeConfigNamespace            int = 32768
-	MaxSizeConfigOutputDir            int = 32768
-	MaxSizeConfigWebRoot              int = 32768
-	MaxSizeConfigGitlabRegistryToken  int = 32768
-	MaxSizeConfigSpiffePrefix         int = 32768
-	MaxSizeConfigRootCredPairs        int = 64
-	MaxSizeConfigTraceId              int = 32768
-	MaxSizeOperatorconfigstateTraceId int = 32768
-	MaxSizeMapemptyTraceId            int = 32768
+	MaxSizeTlsconfigTraceId            int = 32768
+	MaxSizeTopologyAppServices         int = 64
+	MaxSizeTopologyTraceId             int = 32768
+	MaxSizeOptionalservicesTraceId     int = 32768
+	MaxSizePkiNodeTls                  int = 1024
+	MaxSizePkiNodeSigningCa            int = 1024
+	MaxSizePkiEdgeTls                  int = 1024
+	MaxSizePkiEdgeSigningCa            int = 1024
+	MaxSizePkiTraceId                  int = 32768
+	MaxSizeConfigFqdn                  int = 32768
+	MaxSizeConfigNamespace             int = 32768
+	MaxSizeConfigOutputDir             int = 32768
+	MaxSizeConfigWebRoot               int = 32768
+	MaxSizeConfigGitlabRegistryToken   int = 32768
+	MaxSizeConfigSpiffePrefix          int = 32768
+	MaxSizeConfigRootCredPairs         int = 64
+	MaxSizeConfigLlmCredential         int = 32768
+	MaxSizeConfigLlmCredentialServices int = 64
+	MaxSizeConfigTraceId               int = 32768
+	MaxSizeOperatorconfigstateTraceId  int = 32768
+	MaxSizeMapemptyTraceId             int = 32768
 )
 
 // ============================================================
@@ -3315,6 +3352,12 @@ func MergeConfig(dst, src *Config) {
 	}
 	if dst.Kmaker == nil {
 		dst.Kmaker = src.Kmaker
+	}
+	if dst.LlmCredential == "" {
+		dst.LlmCredential = src.LlmCredential
+	}
+	if len(dst.LlmCredentialServices) == 0 {
+		dst.LlmCredentialServices = src.LlmCredentialServices
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

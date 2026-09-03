@@ -1,26 +1,28 @@
 {
-  "binary_hash": "e7e6c88ad44c368e3398fc6adf888cefb56cf484f2a1ac2477511cf55e81920d",
+  "binary_hash": "550b4391ba5c9a1440b87cc55d54cb89e6e919f61cf76874e02032ddf61c5c8e",
   "config_hash": "f4e55388a98ff0ddfb8fdd3382b4f5336242392ab1361788db9e108251512905",
-  "structure_hash": "e557d1364aa9f3df45bb285452867f6cb5843c7cd1b443408915ff0ce7c7bc95",
+  "structure_hash": "95e195be0f4276e60d059d7cf406fbadc41c5fe650c532b23cc78d7cecfc2518",
   "files": {
     "clients/schematicctl.proto": "41956682235a3723105bdcd7166fea50919be9eba68e292102a0152de6f83a8c",
-    "clients/webapp.proto": "7971ccabdfdd7bef35e4e2a15afbe8d9d49e4b209ae8a7c49cdff1e4b0c49bb8",
+    "clients/webapp-scotty.proto": "bbf346b14004e3119a6f45c1d66473c4f9c91d726585b327613ce744d9c7297d",
+    "clients/webapp.proto": "8a4884639c8eafa72526223f8b81d96a638d253f3b24b57b7919b228bc639487",
     "common/credentials.proto": "9c2669455ca4da8a7172e6943274a939669abebf2cd522306fe422c79be39e97",
     "common/hazelcast.proto": "6be73e56ac52a6d89eb8d9237fb318027be7e0bad6a95f4462a36d8cfe7cc5a6",
     "dependencies.yaml": "613c3d7251e63ffcd8ed02ad0ebda829e5d6d48d40ccde85ef813b22652f1f23",
-    "registry.yaml": "e7e431a00cdc45a8f21b50f64b8e7b49c76222761ca2318213ef813039d42f72",
+    "registry.yaml": "1751bb6f6b66d48b066be54f117bb063987459edb211dfececa6287f1bb07636",
     "services/eventbus.proto": "3c813bb3d6a6217c388185fdb46f3a93b8c9360fdb00c7f70dd9d2ac8ae261d1",
     "services/gateway.proto": "421add336b834476b722ab0ac13533d7829d7ab7c1d9081a2735448b398cb8e3",
     "services/kernel.proto": "36ceb54ecc67621df0bb7443ba06331bd528d739b69ed9ab0052da100613813f",
     "services/kmaker.proto": "0a4a498537c7a1ef9001fa9fae805c5ce15b69c0e391357d621fed16e6898cdc",
     "services/letsencrypt.proto": "5a85b630249aaf214043106c90d7006f472232d4e456834ae7056d0914e6088b",
+    "services/llmsettings.proto": "0ac5f63a34d3bf42f4aee033f91d200b53812b13a2ea13439fe81289d9441fff",
     "services/mailbox.proto": "3655081594d1291126bd29785a435360d7f3959a2a2ab9cf7e9cdabd4cd2658e",
     "services/messaging.proto": "4a95bd771a1fb5b4e978c271e6184567ed0e6e37f6da59cd7af848b615564af9",
     "services/oauth.proto": "eab0226d0ff979c24d32f216517c1a8558b5e60eb0b876c1c4fac11fb6d636a6",
     "services/opa.proto": "24c98773fddca5878d63ed654b2e18cc3a6a077ecf29b3e35c9f899e21f4490b",
-    "services/operator.proto": "9b48c5fc8f25fd091a187ead5661a6dc37af590d1fdfb1187bbb48d8f8c55084",
+    "services/operator.proto": "c8e0ab4fe1a143aa5bea6f9f56886a3eabecbb0241b456f31578e9f468763d08",
     "services/saml.proto": "dca22453bb2912efd7cea4b8cc7433d960204eef97c60b0df5173cebc3aebdd2",
-    "services/scotty.proto": "2a8843158ad0b1953dd7aeb84c5e63554bfa22aec171da46d9e1b5128755d883",
+    "services/scotty.proto": "55f43400fe2c0b89e0862b553d01aee9c0047343dae0b71ff1f4dc2ed86592f0",
     "services/scottyagent.proto": "b8d8e0a52a27bc43bb1182cb91506182890896b1336ce37ca6e44c7fc5a22bba",
     "services/sentinel.proto": "109c868822997553f5a65f38fbf11e009405ae98d681df758998bf58fc7b3b19",
     "services/stratum.proto": "0e2e201ca923825a3a1dcabdfbb3954d065bb7673b12e74c909c5ce3876f92db",
@@ -28,7 +30,7 @@
     "vservices/agent-sensor.proto": "1c3b6f3907a5db57f15a88bdfe471cce27c19333d369a70702cd19b0c610a3bb",
     "vservices/entitlements.proto": "629d6299347f2bcd11572b1ee7fb1624e58e7249ddcff648ea46eeb6bbfb1448",
     "vservices/proxy-policy.proto": "8f61c010f02b4623730c019b6360ed581cdb04ce3333494b3a6fc145c60b4473",
-    "vservices/query.proto": "e045859cd3fb2eca50c01422ac438f950c3641a6356f78178c48b1de533e36af"
+    "vservices/query.proto": "ccae0379e76028a5823a67bfcfbcb97fcadd2a52a440cd63a9a37ba9dd7a6eec"
   },
   "src_hash": "e1507a5a98469292e8221a020755fb2a25a3c7b815d5c0136f28a90cf432c37f"
 }
