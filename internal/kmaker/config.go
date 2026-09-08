@@ -12,7 +12,7 @@ import (
 const (
 	defaultListenHost            = "0.0.0.0"
 	defaultListenPort      int32 = 8443
-	defaultSpiffePrefix          = "local/dev"
+	defaultSpiffePrefix          = "local.dev"
 	defaultTokenAudience         = "kmaker"
 	defaultCertLifetime          = int64(86400)
 	defaultKernelNamespace       = "schematic"
