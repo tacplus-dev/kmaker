@@ -81,7 +81,7 @@ func (h *Handler) MintKernelCert(ctx context.Context, _ *servicemanager.Caller, 
 		return nil, err
 	}
 
-	chain, err := h.signer.MintKernelCertificate(signReq)
+	chain, err := h.signer.MintKernelCertificate(signReq, sa.Namespace)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "sign kernel certificate: %v", err)
 	}

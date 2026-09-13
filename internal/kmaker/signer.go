@@ -2,7 +2,11 @@ package kmaker
 
 import (
 	"crypto"
+	"crypto/ecdsa"
+	"crypto/ed25519"
+	"crypto/elliptic"
 	"crypto/rand"
+	"crypto/rsa"
 	"crypto/tls"
 	stdx509 "crypto/x509"
 	"crypto/x509/pkix"
@@ -14,10 +18,16 @@ import (
 	"strings"
 	"time"
 
+	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/spiffe"
 	keypb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/key"
 	x509pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/x509"
 	pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
 )
+
+// minSubjectRSAKeyBits is the smallest RSA subject key kmaker will sign. It
+// matches the floor the platform key chassis already enforces, which rejects an
+// RSA key whose modulus is under 256 bytes (model/chassis/key/key.go).
+const minSubjectRSAKeyBits = 2048
 
 type Signer struct {
 	caCert       *stdx509.Certificate
@@ -45,6 +55,14 @@ func NewSigner(cfg *pb.Config) (*Signer, error) {
 	if err != nil {
 		return nil, fmt.Errorf("parse signing_ca key: %w", err)
 	}
+	if err := validateSigningCA(caCert, caKey); err != nil {
+		return nil, err
+	}
+
+	spiffePrefix, err := normalizeSpiffePrefix(cfg.GetSpiffePrefix())
+	if err != nil {
+		return nil, fmt.Errorf("invalid spiffe_prefix: %w", err)
+	}
 
 	lifetime := time.Duration(cfg.GetKernelCertLifetimeSeconds()) * time.Second
 	if lifetime <= 0 {
@@ -55,18 +73,21 @@ func NewSigner(cfg *pb.Config) (*Signer, error) {
 		caCert:       caCert,
 		caKey:        caKey,
 		caChain:      cfg.GetSigningCa().GetChain(),
-		spiffePrefix: normalizeSpiffePrefix(cfg.GetSpiffePrefix()),
+		spiffePrefix: spiffePrefix,
 		certLifetime: lifetime,
 	}, nil
 }
 
-func (s *Signer) MintKernelCertificate(req *pb.MintKernelCertRequest) (*x509pb.X509CertChain, error) {
+func (s *Signer) MintKernelCertificate(req *pb.MintKernelCertRequest, podNamespace string) (*x509pb.X509CertChain, error) {
 	if req.GetCertRequest() == nil {
 		return nil, fmt.Errorf("cert_request is required")
 	}
 	certReq := req.GetCertRequest()
 	pub, err := parsePublicKeyProto(certReq.GetKey())
 	if err != nil {
+		return nil, err
+	}
+	if err := validateSubjectPublicKey(pub); err != nil {
 		return nil, err
 	}
 
@@ -97,8 +118,14 @@ func (s *Signer) MintKernelCertificate(req *pb.MintKernelCertRequest) (*x509pb.X
 	if req.GetInstanceId() == "" {
 		return nil, fmt.Errorf("kernel certificate instance_id must be derived before signing")
 	}
+	if podNamespace == "" {
+		return nil, fmt.Errorf("kernel certificate pod namespace must be derived before signing")
+	}
+	if req.GetPodUid() == "" {
+		return nil, fmt.Errorf("kernel certificate pod_uid must be derived before signing")
+	}
 
-	uriSANs, err := s.kernelURISANs(nil, req.GetInstanceId())
+	uriSANs, err := s.kernelURISANs(nil, podNamespace, req.GetInstanceId(), req.GetPodUid())
 	if err != nil {
 		return nil, err
 	}
@@ -147,7 +174,12 @@ func (s *Signer) MintKernelCertificate(req *pb.MintKernelCertRequest) (*x509pb.X
 	return out, nil
 }
 
-func (s *Signer) kernelURISANs(requested []string, instanceID string) ([]*url.URL, error) {
+// kernelURISANs builds the issued URI SANs: the collective kernel identity plus
+// the per-instance identity. The instance path carries the Kubernetes namespace
+// and the pod UID alongside the pod name so that a recycled pod (same name, new
+// UID) and two same-named pods in different namespaces never share one instance
+// identity for the lifetime of a certificate.
+func (s *Signer) kernelURISANs(requested []string, podNamespace, instanceID, podUID string) ([]*url.URL, error) {
 	base := s.kernelBaseURI()
 	seen := map[string]struct{}{base: {}}
 	for _, raw := range requested {
@@ -160,10 +192,12 @@ func (s *Signer) kernelURISANs(requested []string, instanceID string) ([]*url.UR
 		seen[raw] = struct{}{}
 	}
 	if instanceID != "" {
-		if !safePathSegment(instanceID) {
-			return nil, fmt.Errorf("instance_id %q is not a safe SPIFFE path segment", instanceID)
+		for _, segment := range []string{podNamespace, instanceID, podUID} {
+			if !safePathSegment(segment) {
+				return nil, fmt.Errorf("kernel instance segment %q is not a safe SPIFFE path segment", segment)
+			}
 		}
-		seen[base+"/"+instanceID] = struct{}{}
+		seen[base+"/"+podNamespace+"/"+instanceID+"/"+podUID] = struct{}{}
 	}
 
 	out := make([]*url.URL, 0, len(seen))
@@ -179,6 +213,49 @@ func (s *Signer) kernelURISANs(requested []string, instanceID string) ([]*url.UR
 
 func (s *Signer) kernelBaseURI() string {
 	return "spiffe://" + s.spiffePrefix + "/kernel"
+}
+
+// validateSigningCA fails startup on a misconfigured signing CA: a certificate
+// that is not a CA, or a private key that does not belong to it. Without this
+// kmaker starts healthy and then either fails every mint or issues leaves that
+// fail chain verification at every peer.
+func validateSigningCA(caCert *stdx509.Certificate, caKey crypto.Signer) error {
+	if !caCert.BasicConstraintsValid || !caCert.IsCA {
+		return fmt.Errorf("signing_ca certificate %q is not a CA certificate", caCert.Subject.CommonName)
+	}
+	type equaler interface {
+		Equal(crypto.PublicKey) bool
+	}
+	certPub, ok := caCert.PublicKey.(equaler)
+	if !ok {
+		return fmt.Errorf("signing_ca certificate %q has an unsupported public key type %T", caCert.Subject.CommonName, caCert.PublicKey)
+	}
+	if !certPub.Equal(caKey.Public()) {
+		return fmt.Errorf("signing_ca private key does not match the signing_ca certificate %q", caCert.Subject.CommonName)
+	}
+	return nil
+}
+
+// validateSubjectPublicKey enforces a minimum subject key strength. Every issued
+// certificate carries the shared kernel SAN, so a weak subject key would hold
+// the collective kernel identity, not just one pod's.
+func validateSubjectPublicKey(pub any) error {
+	switch key := pub.(type) {
+	case *rsa.PublicKey:
+		if bits := key.N.BitLen(); bits < minSubjectRSAKeyBits {
+			return fmt.Errorf("subject RSA key of %d bits is below the %d-bit minimum", bits, minSubjectRSAKeyBits)
+		}
+	case *ecdsa.PublicKey:
+		switch key.Curve {
+		case elliptic.P256(), elliptic.P384(), elliptic.P521():
+		default:
+			return fmt.Errorf("subject EC key uses unsupported curve %q", key.Curve.Params().Name)
+		}
+	case ed25519.PublicKey:
+	default:
+		return fmt.Errorf("subject key type %T is not supported", pub)
+	}
+	return nil
 }
 
 func (s *Signer) notAfter(now time.Time, requestedExp int64) (time.Time, error) {
@@ -374,14 +451,17 @@ func safePathSegment(v string) bool {
 	return true
 }
 
-func normalizeSpiffePrefix(prefix string) string {
+// normalizeSpiffePrefix validates the configured prefix as a SPIFFE trust
+// domain. The proto documents it as the URI authority, so a value carrying a
+// path separator ("local/dev") is rejected rather than silently minting under a
+// different trust domain than the operator intended.
+func normalizeSpiffePrefix(prefix string) (string, error) {
 	prefix = strings.TrimSpace(prefix)
 	prefix = strings.TrimPrefix(prefix, "spiffe://")
-	prefix = strings.Trim(prefix, "/")
 	if prefix == "" {
-		return defaultSpiffePrefix
+		prefix = defaultSpiffePrefix
 	}
-	return prefix
+	return spiffe.NormalizeTrustDomain(prefix)
 }
 
 func mapKeyUsage(v x509pb.X509KeyUsage) stdx509.KeyUsage {

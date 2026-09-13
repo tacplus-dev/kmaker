@@ -21,7 +21,7 @@ config.
 | `cluster_name` | - | Logical Schematic cluster name |
 | `listener` | `0.0.0.0:8443` | gRPC bind address |
 | `signing_ca` | - | Cluster signing CA chain and private key |
-| `spiffe_prefix` | `local/dev` | Prefix for `spiffe://<prefix>/kernel` |
+| `spiffe_prefix` | `local.dev` | SPIFFE trust domain (URI authority, no `/`) for `spiffe://<prefix>/kernel` |
 | `token_audience` | `kmaker` | Required Kubernetes token audience |
 | `kernel_service_accounts` | `schematic/kernel` | Service accounts allowed to request kernel certs |
 | `kernel_cert_lifetime_seconds` | `86400` | Maximum issued cert lifetime |

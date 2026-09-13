@@ -85,8 +85,8 @@ func TestHandlerSignsKernelCert(t *testing.T) {
 	if err != nil {
 		t.Fatalf("parse leaf: %v", err)
 	}
-	assertURI(t, leaf.URIs, "spiffe://local/dev/kernel")
-	assertURI(t, leaf.URIs, "spiffe://local/dev/kernel/kernel-0")
+	assertURI(t, leaf.URIs, "spiffe://local.dev/kernel")
+	assertURI(t, leaf.URIs, "spiffe://local.dev/kernel/schematic/kernel-0/pod-uid-0")
 	if leaf.IsCA {
 		t.Fatal("expected leaf certificate")
 	}
@@ -129,7 +129,7 @@ func TestHandlerRejectsCallerSuppliedKernelIdentity(t *testing.T) {
 		{
 			name: "uri san",
 			mutate: func(req *pb.MintKernelCertRequest) {
-				req.CertRequest.UriSans = []string{"spiffe://local/dev/kernel/kernel-0"}
+				req.CertRequest.UriSans = []string{"spiffe://local.dev/kernel/schematic/kernel-0/pod-uid-0"}
 			},
 		},
 		{
@@ -199,7 +199,7 @@ func TestHandlerAllowsCallerMetadataMatchingTokenBoundPod(t *testing.T) {
 	if err != nil {
 		t.Fatalf("parse leaf: %v", err)
 	}
-	assertURI(t, leaf.URIs, "spiffe://local/dev/kernel/kernel-0")
+	assertURI(t, leaf.URIs, "spiffe://local.dev/kernel/schematic/kernel-0/pod-uid-0")
 }
 
 func TestHandlerRejectsCallerMetadataMismatchingTokenBoundPod(t *testing.T) {
@@ -374,8 +374,8 @@ func TestSignerRejectsOutOfScopeURISAN(t *testing.T) {
 	req := &pb.MintKernelCertRequest{
 		CertRequest: testCertRequest(t, false),
 	}
-	req.CertRequest.UriSans = []string{"spiffe://local/dev/oauth"}
-	if _, err := signer.MintKernelCertificate(req); err == nil {
+	req.CertRequest.UriSans = []string{"spiffe://local.dev/oauth"}
+	if _, err := signer.MintKernelCertificate(req, "schematic"); err == nil {
 		t.Fatal("expected out-of-scope URI SAN to fail")
 	}
 }
@@ -390,7 +390,7 @@ func TestSignerRejectsKernelCA(t *testing.T) {
 		InstanceId:  "kernel-ca-0",
 		CertRequest: testCertRequest(t, true),
 	}
-	if _, err := signer.MintKernelCertificate(req); err == nil {
+	if _, err := signer.MintKernelCertificate(req, "schematic"); err == nil {
 		t.Fatal("expected CA request to fail")
 	}
 }
@@ -422,7 +422,7 @@ func testConfig(t *testing.T) *pb.Config {
 	}
 	cfg := &pb.Config{
 		ClusterName:               "test",
-		SpiffePrefix:              "local/dev",
+		SpiffePrefix:              "local.dev",
 		TokenAudience:             "kmaker",
 		KernelCertLifetimeSeconds: 3600,
 		KernelServiceAccounts:     []*pb.KernelServiceAccount{{Namespace: "schematic", Name: "kernel"}},
