@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -22,7 +22,7 @@
 package hazelcast
 
 import (
-	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
+	_ "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/spec"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
@@ -1567,10 +1567,10 @@ func (x *AdminCpuMetrics) GetNoop() bool {
 	return false
 }
 
-// AdminDiskMetrics captures disk usage for the persistence directory.
+// AdminDiskMetrics captures disk usage for a node's on-disk directory.
 type AdminDiskMetrics struct {
 	state                protoimpl.MessageState `protogen:"open.v1"`
-	PersistenceDir       string                 `protobuf:"bytes,1,opt,name=persistence_dir,json=persistenceDir,proto3" json:"persistence_dir,omitempty"`
+	DiskDir              string                 `protobuf:"bytes,1,opt,name=disk_dir,json=diskDir,proto3" json:"disk_dir,omitempty"`
 	TotalBytes           int64                  `protobuf:"varint,2,opt,name=total_bytes,json=totalBytes,proto3" json:"total_bytes,omitempty"`
 	UsableBytes          int64                  `protobuf:"varint,3,opt,name=usable_bytes,json=usableBytes,proto3" json:"usable_bytes,omitempty"`
 	UsedBytes            int64                  `protobuf:"varint,4,opt,name=used_bytes,json=usedBytes,proto3" json:"used_bytes,omitempty"`
@@ -1611,9 +1611,9 @@ func (*AdminDiskMetrics) Descriptor() ([]byte, []int) {
 	return file_common_hazelcast_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *AdminDiskMetrics) GetPersistenceDir() string {
+func (x *AdminDiskMetrics) GetDiskDir() string {
 	if x != nil {
-		return x.PersistenceDir
+		return x.DiskDir
 	}
 	return ""
 }
@@ -2172,7 +2172,7 @@ type AdminPersistenceStatus struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
 	NodeId             string                 `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
 	Enabled            bool                   `protobuf:"varint,2,opt,name=enabled,proto3" json:"enabled,omitempty"`
-	PersistenceDir     string                 `protobuf:"bytes,3,opt,name=persistence_dir,json=persistenceDir,proto3" json:"persistence_dir,omitempty"`
+	DiskDir            string                 `protobuf:"bytes,3,opt,name=disk_dir,json=diskDir,proto3" json:"disk_dir,omitempty"`
 	RedoLogEntryCount  int64                  `protobuf:"varint,4,opt,name=redo_log_entry_count,json=redoLogEntryCount,proto3" json:"redo_log_entry_count,omitempty"`
 	RedoLogSizeBytes   int64                  `protobuf:"varint,5,opt,name=redo_log_size_bytes,json=redoLogSizeBytes,proto3" json:"redo_log_size_bytes,omitempty"`
 	LastDumpTimeMs     int64                  `protobuf:"varint,6,opt,name=last_dump_time_ms,json=lastDumpTimeMs,proto3" json:"last_dump_time_ms,omitempty"`
@@ -2229,9 +2229,9 @@ func (x *AdminPersistenceStatus) GetEnabled() bool {
 	return false
 }
 
-func (x *AdminPersistenceStatus) GetPersistenceDir() string {
+func (x *AdminPersistenceStatus) GetDiskDir() string {
 	if x != nil {
-		return x.PersistenceDir
+		return x.DiskDir
 	}
 	return ""
 }
@@ -4349,9 +4349,9 @@ const file_common_hazelcast_proto_rawDesc = "" +
 	"\x13system_load_average\x18\x04 \x01(\x01R\x11systemLoadAverage\x12\x1b\n" +
 	"\tuptime_ms\x18\x05 \x01(\x03R\buptimeMs\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x85\x02\n" +
-	"\x10AdminDiskMetrics\x12'\n" +
-	"\x0fpersistence_dir\x18\x01 \x01(\tR\x0epersistenceDir\x12\x1f\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xf7\x01\n" +
+	"\x10AdminDiskMetrics\x12\x19\n" +
+	"\bdisk_dir\x18\x01 \x01(\tR\adiskDir\x12\x1f\n" +
 	"\vtotal_bytes\x18\x02 \x01(\x03R\n" +
 	"totalBytes\x12!\n" +
 	"\fusable_bytes\x18\x03 \x01(\x03R\vusableBytes\x12\x1d\n" +
@@ -4422,11 +4422,11 @@ const file_common_hazelcast_proto_rawDesc = "" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\x1aB\n" +
 	"\x14PerMethodCountsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x03R\x05value:\x028\x01\"\xab\x03\n" +
+	"\x05value\x18\x02 \x01(\x03R\x05value:\x028\x01\"\x9d\x03\n" +
 	"\x16AdminPersistenceStatus\x12\x1d\n" +
 	"\anode_id\x18\x01 \x01(\tB\x04е\x18\x01R\x06nodeId\x12\x18\n" +
-	"\aenabled\x18\x02 \x01(\bR\aenabled\x12'\n" +
-	"\x0fpersistence_dir\x18\x03 \x01(\tR\x0epersistenceDir\x12/\n" +
+	"\aenabled\x18\x02 \x01(\bR\aenabled\x12\x19\n" +
+	"\bdisk_dir\x18\x03 \x01(\tR\adiskDir\x12/\n" +
 	"\x14redo_log_entry_count\x18\x04 \x01(\x03R\x11redoLogEntryCount\x12-\n" +
 	"\x13redo_log_size_bytes\x18\x05 \x01(\x03R\x10redoLogSizeBytes\x12)\n" +
 	"\x11last_dump_time_ms\x18\x06 \x01(\x03R\x0elastDumpTimeMs\x121\n" +
@@ -4733,7 +4733,7 @@ const file_common_hazelcast_proto_rawDesc = "" +
 	"\x19TYPE_ID_ADMIN_TOPIC_STATS\x10\x1d\x12\"\n" +
 	"\x1eTYPE_ID_ADMIN_TOPIC_SUBSCRIBER\x10\x1e\x12\x1e\n" +
 	"\x1aTYPE_ID_ADMIN_WATCH_HEALTH\x10\x1f\x12\x1f\n" +
-	"\x1bTYPE_ID_ADMIN_MUTATION_RATE\x10 B_Z]gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/common/hazelcastb\x06proto3"
+	"\x1bTYPE_ID_ADMIN_MUTATION_RATE\x10 BTZRgitlab.com/seabeam/schematic/platform/services/kmaker/model/types/common/hazelcastb\x06proto3"
 
 var (
 	file_common_hazelcast_proto_rawDescOnce sync.Once

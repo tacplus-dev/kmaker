@@ -3,7 +3,7 @@
 syntax = "proto3";
 
 package project_config;
-option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/project_config";
+option go_package = "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/project_config";
 
 // Stub — will be replaced by GenerateProjectConfig.
 message ProjectConfig {}

@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -22,12 +22,12 @@
 package operator
 
 import (
-	credentials "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/common/credentials"
-	kmaker "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
-	oauth "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/oauth"
-	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
-	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
-	x509 "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/x509"
+	credentials "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/common/credentials"
+	kmaker "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker"
+	oauth "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/oauth"
+	_ "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/spec"
+	trace "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
+	x509 "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -234,9 +234,14 @@ type TLSConfig struct {
 	Letsencrypt bool `protobuf:"varint,1,opt,name=letsencrypt,proto3" json:"letsencrypt,omitempty"`
 	// Custom CA chain for edge TLS certificates.
 	// Required when letsencrypt = false. Ignored when letsencrypt = true.
-	Ca            *x509.X509CertChain `protobuf:"bytes,2,opt,name=ca,proto3" json:"ca,omitempty"`
-	TraceId       string              `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool                `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	Ca *x509.X509CertChain `protobuf:"bytes,2,opt,name=ca,proto3" json:"ca,omitempty"`
+	// email is the ACME account registration address, rendered into the
+	// letsencrypt service's config as lets_encrypt_email. Let's Encrypt sends
+	// certificate expiry notices there. Empty leaves the letsencrypt service on
+	// its own "admin@<fqdn>" default. Ignored when letsencrypt = false.
+	Email         string `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -285,6 +290,13 @@ func (x *TLSConfig) GetCa() *x509.X509CertChain {
 	return nil
 }
 
+func (x *TLSConfig) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
 func (x *TLSConfig) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -315,9 +327,30 @@ type Topology struct {
 	// scale to one replica per gateway node.
 	GatewayNodes int32 `protobuf:"varint,4,opt,name=gateway_nodes,json=gatewayNodes,proto3" json:"gateway_nodes,omitempty"`
 	// oauth_nodes is used when optional_services.oauth = true (default).
-	OauthNodes   int32 `protobuf:"varint,5,opt,name=oauth_nodes,json=oauthNodes,proto3" json:"oauth_nodes,omitempty"`
-	OpaNodes     int32 `protobuf:"varint,7,opt,name=opa_nodes,json=opaNodes,proto3" json:"opa_nodes,omitempty"`
+	OauthNodes int32 `protobuf:"varint,5,opt,name=oauth_nodes,json=oauthNodes,proto3" json:"oauth_nodes,omitempty"`
+	OpaNodes   int32 `protobuf:"varint,7,opt,name=opa_nodes,json=opaNodes,proto3" json:"opa_nodes,omitempty"`
+	// stratum_nodes is the number of WRITER members: the StatefulSet with volumes.
+	// A writer holds partitions like any member AND persists every write — its redo
+	// log, its record index, its share of the daily checkpoint — so this is the
+	// count that decides durability. It is counted for min_durable_copies and for
+	// the hot-restore barrier, and it is meant to be fairly static (2 or 3).
 	StratumNodes int32 `protobuf:"varint,12,opt,name=stratum_nodes,json=stratumNodes,proto3" json:"stratum_nodes,omitempty"`
+	// stratum_search_nodes is the number of SEARCH members: a second, volume-less
+	// workload joining the same Hazelcast cluster with the member attribute
+	// stratum.role=search.
+	//
+	// A search member holds partitions (primaries and backups) and answers the
+	// parallel scatter-gather a predicate query is, and does nothing else: no
+	// volume, no redo log, no record index, no checkpoint. It is never a durable
+	// copy and never a restore contributor, so a search member that leaves loses
+	// nothing durable and scaling this number up or down changes query throughput
+	// and nothing about durability.
+	//
+	// Defaults to 0: query throughput is a thing a deployment asks for. Raising
+	// this is NOT a way to raise durability — min_durable_copies counts writers
+	// (stratum_nodes) only, and a cluster with fewer writers than the floor refuses
+	// writes however many search members are running.
+	StratumSearchNodes int32 `protobuf:"varint,22,opt,name=stratum_search_nodes,json=stratumSearchNodes,proto3" json:"stratum_search_nodes,omitempty"`
 	// saml_nodes is used when optional_services.saml = true.
 	SamlNodes int32 `protobuf:"varint,13,opt,name=saml_nodes,json=samlNodes,proto3" json:"saml_nodes,omitempty"`
 	// kmaker_nodes is the number of bootstrap certificate authority replicas.
@@ -328,6 +361,30 @@ type Topology struct {
 	// Defaults to 1 rather than 3: the sample service is stateless and exists to
 	// be poked at, so a second replica proves nothing and costs a pod.
 	EchoNodes int32 `protobuf:"varint,17,opt,name=echo_nodes,json=echoNodes,proto3" json:"echo_nodes,omitempty"`
+	// messaging_nodes is used when optional_services.messaging = true.
+	// Defaults to 1: the service is stateless mediation over eventbus, so a
+	// second replica buys availability, not throughput, and a cluster that wants
+	// it says so.
+	MessagingNodes int32 `protobuf:"varint,19,opt,name=messaging_nodes,json=messagingNodes,proto3" json:"messaging_nodes,omitempty"`
+	// mailbox_nodes is used when optional_services.mailbox = true.
+	// Defaults to 1 for the same reason as messaging_nodes.
+	MailboxNodes int32 `protobuf:"varint,20,opt,name=mailbox_nodes,json=mailboxNodes,proto3" json:"mailbox_nodes,omitempty"`
+	// personalauth_nodes is used when optional_services.personalauth = true.
+	// Defaults to 3, not 1: this is the login path for PERSONAL principals, so a
+	// single replica makes every device registration and every device login
+	// unavailable for the length of a rollout. Same reasoning, and the same
+	// count, as oauth_nodes.
+	PersonalauthNodes int32 `protobuf:"varint,21,opt,name=personalauth_nodes,json=personalauthNodes,proto3" json:"personalauth_nodes,omitempty"`
+	// blobstore_nodes is used when optional_services.blobstore = true.
+	//
+	// DEFAULTS TO 2, AND 2 IS THE ONLY SUPPORTED VALUE. blobstore is a mirrored
+	// PAIR: an upload is acked only when both pods have the bytes fsynced, and each
+	// pod streams to exactly one peer (blob-store-2026-09-25.md R2). The service
+	// refuses to start if the peer list it is given does not reduce to one peer, so a
+	// 1 or a 3 here is a cluster that will not come up rather than a cluster that
+	// quietly degrades. It is a field rather than a constant only so that the
+	// rendering path is uniform with every other service's.
+	BlobstoreNodes int32 `protobuf:"varint,23,opt,name=blobstore_nodes,json=blobstoreNodes,proto3" json:"blobstore_nodes,omitempty"`
 	// app_services declares replica counts for services that are NOT part of the
 	// platform: an application's own services, defined in the application's proto
 	// repo and merged into the build.
@@ -428,6 +485,13 @@ func (x *Topology) GetStratumNodes() int32 {
 	return 0
 }
 
+func (x *Topology) GetStratumSearchNodes() int32 {
+	if x != nil {
+		return x.StratumSearchNodes
+	}
+	return 0
+}
+
 func (x *Topology) GetSamlNodes() int32 {
 	if x != nil {
 		return x.SamlNodes
@@ -445,6 +509,34 @@ func (x *Topology) GetKmakerNodes() int32 {
 func (x *Topology) GetEchoNodes() int32 {
 	if x != nil {
 		return x.EchoNodes
+	}
+	return 0
+}
+
+func (x *Topology) GetMessagingNodes() int32 {
+	if x != nil {
+		return x.MessagingNodes
+	}
+	return 0
+}
+
+func (x *Topology) GetMailboxNodes() int32 {
+	if x != nil {
+		return x.MailboxNodes
+	}
+	return 0
+}
+
+func (x *Topology) GetPersonalauthNodes() int32 {
+	if x != nil {
+		return x.PersonalauthNodes
+	}
+	return 0
+}
+
+func (x *Topology) GetBlobstoreNodes() int32 {
+	if x != nil {
+		return x.BlobstoreNodes
 	}
 	return 0
 }
@@ -485,7 +577,28 @@ type OptionalServices struct {
 	// Echo sample service — echo_nodes replicas when enabled.
 	// Disabled by default: it is a diagnostic/reference service, not something a
 	// production cluster should carry.
-	Echo          bool   `protobuf:"varint,9,opt,name=echo,proto3" json:"echo,omitempty"`
+	Echo bool `protobuf:"varint,9,opt,name=echo,proto3" json:"echo,omitempty"`
+	// Messaging — the platform's message primitive (messaging.proto).
+	// messaging_nodes replicas when enabled. Disabled by default: it is a
+	// primitive an application opts into, not something every cluster carries.
+	Messaging bool `protobuf:"varint,10,opt,name=messaging,proto3" json:"messaging,omitempty"`
+	// Mailbox — pull delivery and eviction eligibility over messaging's
+	// deliveries (mailbox.proto). mailbox_nodes replicas when enabled.
+	// Disabled by default; requires messaging.
+	Mailbox bool `protobuf:"varint,11,opt,name=mailbox,proto3" json:"mailbox,omitempty"`
+	// personalauth — the login broker for PERSONAL principals (personalauth.proto).
+	// Today one arm: DEVICE, a device-held key registering and logging itself in.
+	// personalauth_nodes replicas when enabled. Disabled by default: a cluster
+	// whose people all arrive through a tenant IdP has no use for it.
+	Personalauth bool `protobuf:"varint,12,opt,name=personalauth,proto3" json:"personalauth,omitempty"`
+	// blobstore — the platform's binary blob primitive (blobstore.proto): a
+	// two-pod mirror of content-addressed files, with its metadata in stratum
+	// records. blobstore_nodes replicas when enabled, which is 2.
+	//
+	// Disabled by default, and enabling it costs two PersistentVolumeClaims, so a
+	// cluster whose services declare no volume groups should leave it off — with no
+	// group declared it would accept no upload anyway ("no group, no upload").
+	Blobstore     bool   `protobuf:"varint,13,opt,name=blobstore,proto3" json:"blobstore,omitempty"`
 	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -546,6 +659,34 @@ func (x *OptionalServices) GetKeycloak() bool {
 func (x *OptionalServices) GetEcho() bool {
 	if x != nil {
 		return x.Echo
+	}
+	return false
+}
+
+func (x *OptionalServices) GetMessaging() bool {
+	if x != nil {
+		return x.Messaging
+	}
+	return false
+}
+
+func (x *OptionalServices) GetMailbox() bool {
+	if x != nil {
+		return x.Mailbox
+	}
+	return false
+}
+
+func (x *OptionalServices) GetPersonalauth() bool {
+	if x != nil {
+		return x.Personalauth
+	}
+	return false
+}
+
+func (x *OptionalServices) GetBlobstore() bool {
+	if x != nil {
+		return x.Blobstore
 	}
 	return false
 }
@@ -738,12 +879,14 @@ type Config struct {
 	// "gitlab-registry" docker-registry Secret in the schematic namespace as part of
 	// the generated Helm chart. Keep this out of version control — store in crypto.yaml.
 	GitlabRegistryToken string `protobuf:"bytes,14,opt,name=gitlab_registry_token,json=gitlabRegistryToken,proto3" json:"gitlab_registry_token,omitempty"`
-	// SPIFFE trust-domain prefix for identity URIs. Every workload identity is
-	// formed as `spiffe://${spiffe_prefix}/${service_name}` — this powers token
-	// subject claims, mTLS URI SANs, and (post-B-end-state) SPIFFE-aware client
-	// cert verification. Operator propagates this value to kernel's bootstrap
-	// AND to every service configmap so all components agree on the trust
-	// domain at boot, without a runtime SCS round-trip.
+	// SPIFFE trust domain for identity URIs: the URI authority, so it must not
+	// contain '/'. Workload identities are formed as
+	// `spiffe://${spiffe_prefix}/system/services/${service_name}` — this powers
+	// token subject claims, mTLS URI SANs, and (post-B-end-state) SPIFFE-aware
+	// client cert verification. Operator propagates this value to kernel's
+	// bootstrap AND to every service configmap so all components agree on the
+	// trust domain at boot, without a runtime SCS round-trip. Must equal
+	// kernel.Config.spiffe_trust_domain.
 	SpiffePrefix string `protobuf:"bytes,15,opt,name=spiffe_prefix,json=spiffePrefix,proto3" json:"spiffe_prefix,omitempty"`
 	// root_cred_pairs are the bootstrap admin credentials, loaded from
 	// operator.yaml. The operator renders them into kernel's Helm-deployed config
@@ -770,10 +913,43 @@ type Config struct {
 	// llm_credential_services names the app services (by AppServiceNames key)
 	// that should receive llm_credential in their generated bootstrap config.
 	LlmCredentialServices []string `protobuf:"bytes,21,rep,name=llm_credential_services,json=llmCredentialServices,proto3" json:"llm_credential_services,omitempty"`
-	TraceId               string   `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop                  bool     `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields         protoimpl.UnknownFields
-	sizeCache             protoimpl.SizeCache
+	// tenants names the tenants this cluster hosts, e.g. ["acme", "beta"]. Each
+	// entry is a bare tenant name; the canonical authorization namespace is
+	// "/tenants/<name>" (see kernel.Delegate.tenant_namespace).
+	//
+	// The operator is the single source of truth for the tenant list, the same
+	// way it is for app_services: nothing queries kernel to discover tenants and
+	// no second config file lists them. For every service that registry.json
+	// marks (spec.service).tenant_owned, the operator deploys one Deployment +
+	// ServiceAccount named "<svc>-<tenant>" per entry here, and writes one kernel
+	// delegate named <svc> with tenant_namespace "/tenants/<name>" for each.
+	// Services NOT marked tenant_owned ignore this field entirely and keep their
+	// single shared instance.
+	//
+	// This does NOT tell a service its own tenant. Tenant identity is derived
+	// only from the SPIFFE ID in the caller's token at runtime, never from
+	// config a service can read.
+	Tenants []string `protobuf:"bytes,22,rep,name=tenants,proto3" json:"tenants,omitempty"`
+	// external_ip pins the cluster's external LoadBalancer Service to a
+	// pre-reserved static external address (e.g. a GCP regional compute
+	// address). It is rendered as spec.loadBalancerIP on the gateway's
+	// "<gateway>-lb" Service — the ONE externally-exposed Service there is,
+	// carrying TCP/443 and TCP/80 together.
+	//
+	// Both ports are on the one Service on purpose: fqdn's public A record
+	// resolves to this address, and ACME HTTP-01 validation connects to port 80
+	// on that same name. The gateway answers on 80 and proxies challenge
+	// requests to the letsencrypt service in-cluster, so letsencrypt needs no
+	// external address of its own.
+	//
+	// Leave empty to let the provider assign an ephemeral address per Service —
+	// fine for local and dev clusters, but then the address changes on every
+	// re-render and any DNS record pointing at it goes stale.
+	ExternalIp    string `protobuf:"bytes,23,opt,name=external_ip,json=externalIp,proto3" json:"external_ip,omitempty"`
+	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Config) Reset() {
@@ -939,6 +1115,20 @@ func (x *Config) GetLlmCredentialServices() []string {
 	return nil
 }
 
+func (x *Config) GetTenants() []string {
+	if x != nil {
+		return x.Tenants
+	}
+	return nil
+}
+
+func (x *Config) GetExternalIp() string {
+	if x != nil {
+		return x.ExternalIp
+	}
+	return ""
+}
+
 func (x *Config) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -1071,12 +1261,13 @@ var File_services_operator_proto protoreflect.FileDescriptor
 
 const file_services_operator_proto_rawDesc = "" +
 	"\n" +
-	"\x17services/operator.proto\x12\boperator\x1a\x0esys/spec.proto\x1a\x0esys/x509.proto\x1a\x18common/credentials.proto\x1a\x14services/oauth.proto\x1a\x15services/kmaker.proto\x1a\x0fsys/trace.proto\"\x83\x01\n" +
+	"\x17services/operator.proto\x12\boperator\x1a\x0esys/spec.proto\x1a\x0esys/x509.proto\x1a\x18common/credentials.proto\x1a\x14services/oauth.proto\x1a\x15services/kmaker.proto\x1a\x0fsys/trace.proto\"\x99\x01\n" +
 	"\tTLSConfig\x12 \n" +
 	"\vletsencrypt\x18\x01 \x01(\bR\vletsencrypt\x12#\n" +
-	"\x02ca\x18\x02 \x01(\v2\x13.x509.X509CertChainR\x02ca\x12\x1a\n" +
+	"\x02ca\x18\x02 \x01(\v2\x13.x509.X509CertChainR\x02ca\x12\x14\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xad\x05\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9d\a\n" +
 	"\bTopology\x12'\n" +
 	"\fkernel_nodes\x18\x01 \x01(\x05B\x04\x90\xa8\x1d\x03R\vkernelNodes\x12+\n" +
 	"\x0esentinel_nodes\x18\x02 \x01(\x05B\x04\x90\xa8\x1d\x03R\rsentinelNodes\x12+\n" +
@@ -1085,26 +1276,36 @@ const file_services_operator_proto_rawDesc = "" +
 	"\voauth_nodes\x18\x05 \x01(\x05B\x04\x90\xa8\x1d\x03R\n" +
 	"oauthNodes\x12!\n" +
 	"\topa_nodes\x18\a \x01(\x05B\x04\x90\xa8\x1d\x03R\bopaNodes\x12)\n" +
-	"\rstratum_nodes\x18\f \x01(\x05B\x04\x90\xa8\x1d\x03R\fstratumNodes\x12#\n" +
+	"\rstratum_nodes\x18\f \x01(\x05B\x04\x90\xa8\x1d\x03R\fstratumNodes\x120\n" +
+	"\x14stratum_search_nodes\x18\x16 \x01(\x05R\x12stratumSearchNodes\x12#\n" +
 	"\n" +
 	"saml_nodes\x18\r \x01(\x05B\x04\x90\xa8\x1d\x03R\tsamlNodes\x12'\n" +
 	"\fkmaker_nodes\x18\x10 \x01(\x05B\x04\x90\xa8\x1d\x03R\vkmakerNodes\x12#\n" +
 	"\n" +
-	"echo_nodes\x18\x11 \x01(\x05B\x04\x90\xa8\x1d\x01R\techoNodes\x12L\n" +
+	"echo_nodes\x18\x11 \x01(\x05B\x04\x90\xa8\x1d\x01R\techoNodes\x12-\n" +
+	"\x0fmessaging_nodes\x18\x13 \x01(\x05B\x04\x90\xa8\x1d\x01R\x0emessagingNodes\x12)\n" +
+	"\rmailbox_nodes\x18\x14 \x01(\x05B\x04\x90\xa8\x1d\x01R\fmailboxNodes\x123\n" +
+	"\x12personalauth_nodes\x18\x15 \x01(\x05B\x04\x90\xa8\x1d\x03R\x11personalauthNodes\x12-\n" +
+	"\x0fblobstore_nodes\x18\x17 \x01(\x05B\x04\x90\xa8\x1d\x02R\x0eblobstoreNodes\x12L\n" +
 	"\fapp_services\x18\x12 \x03(\v2#.operator.Topology.AppServicesEntryB\x04\xb8\xa8\x1d@R\vappServices\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\x1a>\n" +
 	"\x10AppServicesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01J\x04\b\x06\x10\aJ\x04\b\b\x10\tJ\x04\b\t\x10\n" +
-	"J\x04\b\v\x10\fR\x10msggateway_nodesR\ftimedb_nodesR\rgraphdb_nodesR\vargus_nodes\"\xef\x01\n" +
+	"J\x04\b\v\x10\fR\x10msggateway_nodesR\ftimedb_nodesR\rgraphdb_nodesR\vargus_nodes\"\xe9\x02\n" +
 	"\x10OptionalServices\x12\x12\n" +
 	"\x04saml\x18\x06 \x01(\bR\x04saml\x12\x1a\n" +
 	"\x05oauth\x18\a \x01(\bB\x04\xa0\xa8\x1d\x01R\x05oauth\x12 \n" +
 	"\bkeycloak\x18\b \x01(\bB\x04\xa0\xa8\x1d\x01R\bkeycloak\x12\x12\n" +
-	"\x04echo\x18\t \x01(\bR\x04echo\x12\x1a\n" +
+	"\x04echo\x18\t \x01(\bR\x04echo\x12\x1c\n" +
+	"\tmessaging\x18\n" +
+	" \x01(\bR\tmessaging\x12\x18\n" +
+	"\amailbox\x18\v \x01(\bR\amailbox\x12\"\n" +
+	"\fpersonalauth\x18\f \x01(\bR\fpersonalauth\x12\x1c\n" +
+	"\tblobstore\x18\r \x01(\bR\tblobstore\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopJ\x04\b\x01\x10\x02J\x04\b\x02\x10\x03J\x04\b\x03\x10\x04J\x04\b\x04\x10\x05J\x04\b\x05\x10\x06R\tanthropicR\x06openaiR\x06gitlabR\x06githubR\x03mcp\"\xcf\x03\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopJ\x04\b\x01\x10\x02J\x04\b\x02\x10\x03J\x04\b\x03\x10\x04J\x04\b\x04\x10\x05J\x04\b\x05\x10\x06R\tanthropicR\x06openaiR\x06gitlabR\x06githubR\x03mcp\"\xea\x03\n" +
 	"\x03PKI\x12,\n" +
 	"\aroot_ca\x18\x01 \x01(\v2\x13.x509.X509CertChainR\x06rootCa\x122\n" +
 	"\n" +
@@ -1115,7 +1316,7 @@ const file_services_operator_proto_rawDesc = "" +
 	"\x0fedge_signing_ca\x18\x06 \x03(\v2\x13.x509.X509CertChainB\x05\xb8\xa8\x1d\x80\bR\redgeSigningCa\x12?\n" +
 	"\x11kmaker_signing_ca\x18\a \x01(\v2\x13.x509.X509CertChainR\x0fkmakerSigningCa\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xfa\x06\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopJ\x04\b\b\x10\tR\x13blobstore_token_key\"\xbb\a\n" +
 	"\x06Config\x12*\n" +
 	"\x04mode\x18\x01 \x01(\x0e2\x16.operator.OperatorModeR\x04mode\x12\x12\n" +
 	"\x04fqdn\x18\x03 \x01(\tR\x04fqdn\x12\x19\n" +
@@ -1133,12 +1334,15 @@ const file_services_operator_proto_rawDesc = "" +
 	"\x05patch\x18\f \x01(\x05R\x05patch\x12\x10\n" +
 	"\x03dev\x18\r \x01(\bR\x03dev\x122\n" +
 	"\x15gitlab_registry_token\x18\x0e \x01(\tR\x13gitlabRegistryToken\x122\n" +
-	"\rspiffe_prefix\x18\x0f \x01(\tB\r\x8a\xa8\x1d\tlocal/devR\fspiffePrefix\x12C\n" +
+	"\rspiffe_prefix\x18\x0f \x01(\tB\r\x8a\xa8\x1d\tlocal.devR\fspiffePrefix\x12C\n" +
 	"\x0froot_cred_pairs\x18\x12 \x03(\v2\x15.credentials.CredPairB\x04\xb8\xa8\x1d@R\rrootCredPairs\x12>\n" +
 	"\rcluster_oauth\x18\x11 \x01(\v2\x19.oauth.ClusterOAuthConfigR\fclusterOauth\x12&\n" +
 	"\x06kmaker\x18\x13 \x01(\v2\x0e.kmaker.ConfigR\x06kmaker\x12%\n" +
 	"\x0ellm_credential\x18\x14 \x01(\tR\rllmCredential\x12<\n" +
-	"\x17llm_credential_services\x18\x15 \x03(\tB\x04\xb8\xa8\x1d@R\x15llmCredentialServices\x12\x1a\n" +
+	"\x17llm_credential_services\x18\x15 \x03(\tB\x04\xb8\xa8\x1d@R\x15llmCredentialServices\x12\x1e\n" +
+	"\atenants\x18\x16 \x03(\tB\x04\xb8\xa8\x1d@R\atenants\x12\x1f\n" +
+	"\vexternal_ip\x18\x17 \x01(\tR\n" +
+	"externalIp\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0eҨ\x1d\n" +
 	"\n" +
@@ -1177,7 +1381,8 @@ const file_services_operator_proto_rawDesc = "" +
 	"\tSetConfig\x12\x10.operator.Config\x1a\x10.operator.Config\x126\n" +
 	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x10.operator.Config0\x01\x1a\x0e\xea\x97\"\n" +
 	"\n" +
-	"\boperatorB`Z^gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/operatorb\x06proto3"
+	"\boperatorBf\x92\xb6\x18\r\n" +
+	"\vkernel.MintZSgitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/operatorb\x06proto3"
 
 var (
 	file_services_operator_proto_rawDescOnce sync.Once

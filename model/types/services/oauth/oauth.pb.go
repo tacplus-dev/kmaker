@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -22,8 +22,9 @@
 package oauth
 
 import (
-	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
-	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
+	mcp "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/mcp"
+	_ "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/spec"
+	trace "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -206,15 +207,16 @@ func (SessionRpcId) EnumDescriptor() ([]byte, []int) {
 type AuthRpcId int32
 
 const (
-	AuthRpcId_AUTH_RPC_ID_UNSPECIFIED          AuthRpcId = 0
-	AuthRpcId_AUTH_RPC_ID_ALL_ACCESSORS        AuthRpcId = 1
-	AuthRpcId_AUTH_RPC_ID_ALL_MUTATORS         AuthRpcId = 2
-	AuthRpcId_AUTH_RPC_ID_ALL_EXECUTORS        AuthRpcId = 3
-	AuthRpcId_AUTH_RPC_ID_LIST_PROVIDERS       AuthRpcId = 4
-	AuthRpcId_AUTH_RPC_ID_AUTHORIZE            AuthRpcId = 5
-	AuthRpcId_AUTH_RPC_ID_MINT_CALLBACK_TOKENS AuthRpcId = 6
-	AuthRpcId_AUTH_RPC_ID_REVOKE_SESSION       AuthRpcId = 7
-	AuthRpcId_AUTH_RPC_ID_BROKER_CLI_AUTH      AuthRpcId = 8
+	AuthRpcId_AUTH_RPC_ID_UNSPECIFIED             AuthRpcId = 0
+	AuthRpcId_AUTH_RPC_ID_ALL_ACCESSORS           AuthRpcId = 1
+	AuthRpcId_AUTH_RPC_ID_ALL_MUTATORS            AuthRpcId = 2
+	AuthRpcId_AUTH_RPC_ID_ALL_EXECUTORS           AuthRpcId = 3
+	AuthRpcId_AUTH_RPC_ID_LIST_PROVIDERS          AuthRpcId = 4
+	AuthRpcId_AUTH_RPC_ID_AUTHORIZE               AuthRpcId = 5
+	AuthRpcId_AUTH_RPC_ID_MINT_CALLBACK_TOKENS    AuthRpcId = 6
+	AuthRpcId_AUTH_RPC_ID_REVOKE_SESSION          AuthRpcId = 7
+	AuthRpcId_AUTH_RPC_ID_BROKER_CLI_AUTH         AuthRpcId = 8
+	AuthRpcId_AUTH_RPC_ID_BROKER_AUTH_MCP_SESSION AuthRpcId = 9
 )
 
 // Enum value maps for AuthRpcId.
@@ -229,17 +231,19 @@ var (
 		6: "AUTH_RPC_ID_MINT_CALLBACK_TOKENS",
 		7: "AUTH_RPC_ID_REVOKE_SESSION",
 		8: "AUTH_RPC_ID_BROKER_CLI_AUTH",
+		9: "AUTH_RPC_ID_BROKER_AUTH_MCP_SESSION",
 	}
 	AuthRpcId_value = map[string]int32{
-		"AUTH_RPC_ID_UNSPECIFIED":          0,
-		"AUTH_RPC_ID_ALL_ACCESSORS":        1,
-		"AUTH_RPC_ID_ALL_MUTATORS":         2,
-		"AUTH_RPC_ID_ALL_EXECUTORS":        3,
-		"AUTH_RPC_ID_LIST_PROVIDERS":       4,
-		"AUTH_RPC_ID_AUTHORIZE":            5,
-		"AUTH_RPC_ID_MINT_CALLBACK_TOKENS": 6,
-		"AUTH_RPC_ID_REVOKE_SESSION":       7,
-		"AUTH_RPC_ID_BROKER_CLI_AUTH":      8,
+		"AUTH_RPC_ID_UNSPECIFIED":             0,
+		"AUTH_RPC_ID_ALL_ACCESSORS":           1,
+		"AUTH_RPC_ID_ALL_MUTATORS":            2,
+		"AUTH_RPC_ID_ALL_EXECUTORS":           3,
+		"AUTH_RPC_ID_LIST_PROVIDERS":          4,
+		"AUTH_RPC_ID_AUTHORIZE":               5,
+		"AUTH_RPC_ID_MINT_CALLBACK_TOKENS":    6,
+		"AUTH_RPC_ID_REVOKE_SESSION":          7,
+		"AUTH_RPC_ID_BROKER_CLI_AUTH":         8,
+		"AUTH_RPC_ID_BROKER_AUTH_MCP_SESSION": 9,
 	}
 )
 
@@ -475,7 +479,8 @@ type ProviderConfig struct {
 	// name is a human-friendly label (e.g. "Google", "Okta", "Microsoft").
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	// domains maps email domains to this provider. When a user's email domain
-	// matches, they are routed to this IDP automatically.
+	// matches, they are routed to this IDP automatically. Each entry is a DNS
+	// hostname, bounded to 253 bytes by RFC 1035/1123.
 	Domains []string `protobuf:"bytes,3,rep,name=domains,proto3" json:"domains,omitempty"`
 	// issuer is the OpenID Connect issuer URL.
 	// Used for .well-known/openid-configuration auto-discovery.
@@ -495,11 +500,31 @@ type ProviderConfig struct {
 	// ca_pem is an optional PEM-encoded CA certificate to trust for this provider.
 	// Used for providers with self-signed or private CA certificates (e.g. mock IDPs).
 	// If empty, the system default CA bundle is used.
-	CaPem         string `protobuf:"bytes,11,opt,name=ca_pem,json=caPem,proto3" json:"ca_pem,omitempty"`
-	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	CaPem string `protobuf:"bytes,11,opt,name=ca_pem,json=caPem,proto3" json:"ca_pem,omitempty"`
+	// allowed_redirect_uri_prefixes is the operator-configured allowlist of
+	// callback URLs this provider may redirect a user back to. AuthorizeRequest
+	// .callback_url is caller-supplied and unauthenticated; without this list it
+	// would be handed to the IDP as redirect_uri verbatim, letting anyone start a
+	// login that delivers the authorization code to a host they control.
+	//
+	// Matching rule (deliberately strict, no wildcards, no URL parsing):
+	//   - An entry that does NOT end in "/" matches only a byte-identical
+	//     callback_url.
+	//   - An entry that DOES end in "/" additionally matches any callback_url
+	//     that begins with it. The trailing slash is what makes the prefix end on
+	//     a path boundary, so "https://legit.example.com/app/" cannot be
+	//     satisfied by "https://legit.example.com/app-evil/..." and
+	//     "https://legit.example.com/app" cannot be satisfied by
+	//     "https://legit.example.comX/".
+	//
+	// Comparison is exact and case-sensitive. There is no implicit default: a
+	// provider with an empty list authorizes nothing, so the service fails closed
+	// if the field is ever missing at runtime.
+	AllowedRedirectUriPrefixes []string `protobuf:"bytes,12,rep,name=allowed_redirect_uri_prefixes,json=allowedRedirectUriPrefixes,proto3" json:"allowed_redirect_uri_prefixes,omitempty"`
+	TraceId                    string   `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop                       bool     `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields              protoimpl.UnknownFields
+	sizeCache                  protoimpl.SizeCache
 }
 
 func (x *ProviderConfig) Reset() {
@@ -607,6 +632,13 @@ func (x *ProviderConfig) GetCaPem() string {
 		return x.CaPem
 	}
 	return ""
+}
+
+func (x *ProviderConfig) GetAllowedRedirectUriPrefixes() []string {
+	if x != nil {
+		return x.AllowedRedirectUriPrefixes
+	}
+	return nil
 }
 
 func (x *ProviderConfig) GetTraceId() string {
@@ -1014,7 +1046,8 @@ type ProviderInfo struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// name is the display name (e.g. "Google").
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	// domains handled by this provider.
+	// domains handled by this provider. Each entry is a DNS hostname, bounded to
+	// 253 bytes by RFC 1035/1123.
 	Domains []string `protobuf:"bytes,2,rep,name=domains,proto3" json:"domains,omitempty"`
 	// provider_index identifies this provider in subsequent Authorize calls.
 	ProviderIndex int32  `protobuf:"varint,3,opt,name=provider_index,json=providerIndex,proto3" json:"provider_index,omitempty"`
@@ -1100,7 +1133,15 @@ type AuthorizeRequest struct {
 	// session_id is set when the OAuth flow was initiated by a CLI client.
 	// If present, the callback handler writes the minted token to OAuthState
 	// for delivery to the matching bidi stream.
-	SessionId     string `protobuf:"bytes,3,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	SessionId string `protobuf:"bytes,3,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	// nonce is a caller-supplied OIDC nonce, relayed verbatim to the IDP's
+	// authorization endpoint so the IDP echoes it back as the id_token's
+	// `nonce` claim (forwarded to kernel as `origin_nonce`). Set by a device
+	// proving possession of its key — the value is then the key's RFC 7638
+	// thumbprint, which CreateTenantUserLink's device side compares against.
+	// Empty means no nonce is requested and no `nonce` param is sent at all,
+	// which is every login that is not proving device possession.
+	Nonce         string `protobuf:"bytes,4,opt,name=nonce,proto3" json:"nonce,omitempty"`
 	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1154,6 +1195,13 @@ func (x *AuthorizeRequest) GetCallbackUrl() string {
 func (x *AuthorizeRequest) GetSessionId() string {
 	if x != nil {
 		return x.SessionId
+	}
+	return ""
+}
+
+func (x *AuthorizeRequest) GetNonce() string {
+	if x != nil {
+		return x.Nonce
 	}
 	return ""
 }
@@ -2106,7 +2154,7 @@ var File_services_oauth_proto protoreflect.FileDescriptor
 
 const file_services_oauth_proto_rawDesc = "" +
 	"\n" +
-	"\x14services/oauth.proto\x12\x05oauth\x1a\x0esys/spec.proto\x1a\x0fsys/trace.proto\"\xc7\x04\n" +
+	"\x14services/oauth.proto\x12\x05oauth\x1a\x0esys/spec.proto\x1a\rsys/mcp.proto\x1a\x0fsys/trace.proto\"\xc7\x04\n" +
 	"\x06Config\x12J\n" +
 	"\x17session_timeout_seconds\x18\x01 \x01(\x03B\x12\xc0\xa6\x1d\x01Ȧ\x1d\x1eЦ\x1d\xd8\x04\x90\xa8\x1d\xac\x02R\x15sessionTimeoutSeconds\x12[\n" +
 	"\x1erefresh_token_lifetime_seconds\x18\x02 \x01(\x03B\x16\xc0\xa6\x1d\x01Ȧ\x1d\x90\x1cЦ\x1d\x80\x9a\x9e\x01\x90\xa8\x1d\x80\xf5$R\x1brefreshTokenLifetimeSeconds\x12R\n" +
@@ -2118,11 +2166,11 @@ const file_services_oauth_proto_rawDesc = "" +
 	"\x1cjwk_refetch_interval_seconds\x18\b \x01(\x03B\t\xc0\xa6\x1d\x01\x90\xa8\x1d\xac\x02R\x19jwkRefetchIntervalSeconds\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\vҨ\x1d\a\n" +
-	"\x05oauth\"\xe2\x03\n" +
+	"\x05oauth\"\xb8\x04\n" +
 	"\x0eProviderConfig\x12\x16\n" +
 	"\x06enable\x18\x01 \x01(\bR\x06enable\x12\x18\n" +
-	"\x04name\x18\x02 \x01(\tB\x04\xa0\xa9\x1d\x01R\x04name\x12\x1e\n" +
-	"\adomains\x18\x03 \x03(\tB\x04\xb8\xa8\x1d R\adomains\x12 \n" +
+	"\x04name\x18\x02 \x01(\tB\x04\xa0\xa9\x1d\x01R\x04name\x12#\n" +
+	"\adomains\x18\x03 \x03(\tB\t\xb8\xa8\x1d Ы\x1d\xfd\x01R\adomains\x12 \n" +
 	"\x06issuer\x18\x04 \x01(\tB\b\x88\xa6\x1d\x01\xa8\xa6\x1d\x02R\x06issuer\x12%\n" +
 	"\tclient_id\x18\x05 \x01(\tB\b\x88\xa6\x1d\x01\xa0\xa9\x1d\x01R\bclientId\x12-\n" +
 	"\rclient_secret\x18\x06 \x01(\tB\b\x88\xa6\x1d\x01\xa0\xa9\x1d\x01R\fclientSecret\x12;\n" +
@@ -2131,7 +2179,8 @@ const file_services_oauth_proto_rawDesc = "" +
 	"\x14end_session_endpoint\x18\t \x01(\tB\x04\xa8\xa6\x1d\x02R\x12endSessionEndpoint\x12\x1c\n" +
 	"\x06scopes\x18\n" +
 	" \x03(\tB\x04\xb8\xa8\x1d\x10R\x06scopes\x12\x15\n" +
-	"\x06ca_pem\x18\v \x01(\tR\x05caPem\x12\x1a\n" +
+	"\x06ca_pem\x18\v \x01(\tR\x05caPem\x12O\n" +
+	"\x1dallowed_redirect_uri_prefixes\x18\f \x03(\tB\f\x88\xa6\x1d\x01\xb8\xa8\x1d \xa0\xa9\x1d\x01R\x1aallowedRedirectUriPrefixes\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"w\n" +
 	"\x16CompleteCliAuthRequest\x12,\n" +
@@ -2159,18 +2208,19 @@ const file_services_oauth_proto_rawDesc = "" +
 	"\x15ListProvidersResponse\x127\n" +
 	"\tproviders\x18\x01 \x03(\v2\x13.oauth.ProviderInfoB\x04\xb8\xa8\x1d\x10R\tproviders\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xaf\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xb4\x01\n" +
 	"\fProviderInfo\x12!\n" +
-	"\x04name\x18\x01 \x01(\tB\r\x88\xa6\x1d\x01\xb8\xa8\x1d\x80\x01\xa0\xa9\x1d\x01R\x04name\x12\x1e\n" +
-	"\adomains\x18\x02 \x03(\tB\x04\xb8\xa8\x1d R\adomains\x12+\n" +
+	"\x04name\x18\x01 \x01(\tB\r\x88\xa6\x1d\x01\xb8\xa8\x1d\x80\x01\xa0\xa9\x1d\x01R\x04name\x12#\n" +
+	"\adomains\x18\x02 \x03(\tB\t\xb8\xa8\x1d Ы\x1d\xfd\x01R\adomains\x12+\n" +
 	"\x0eprovider_index\x18\x03 \x01(\x05B\x04\xb0\xa7\x1d\x00R\rproviderIndex\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xc3\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xe0\x01\n" +
 	"\x10AuthorizeRequest\x12+\n" +
 	"\x0eprovider_index\x18\x01 \x01(\x05B\x04\xb0\xa7\x1d\x00R\rproviderIndex\x12+\n" +
 	"\fcallback_url\x18\x02 \x01(\tB\b\x88\xa6\x1d\x01\xa8\xa6\x1d\x02R\vcallbackUrl\x12$\n" +
 	"\n" +
-	"session_id\x18\x03 \x01(\tB\x05\xb8\xa8\x1d\x80\x01R\tsessionId\x12\x1a\n" +
+	"session_id\x18\x03 \x01(\tB\x05\xb8\xa8\x1d\x80\x01R\tsessionId\x12\x1b\n" +
+	"\x05nonce\x18\x04 \x01(\tB\x05\xb8\xa8\x1d\x80\x01R\x05nonce\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"q\n" +
 	"\x11AuthorizeResponse\x12+\n" +
@@ -2274,7 +2324,7 @@ const file_services_oauth_proto_rawDesc = "" +
 	"\x1cSESSION_RPC_ID_ALL_ACCESSORS\x10\x01\x12\x1f\n" +
 	"\x1bSESSION_RPC_ID_ALL_MUTATORS\x10\x02\x12 \n" +
 	"\x1cSESSION_RPC_ID_ALL_EXECUTORS\x10\x03\x12!\n" +
-	"\x1dSESSION_RPC_ID_BROKER_SESSION\x10\x04*\xa6\x02\n" +
+	"\x1dSESSION_RPC_ID_BROKER_SESSION\x10\x04*\xcf\x02\n" +
 	"\tAuthRpcId\x12\x1b\n" +
 	"\x17AUTH_RPC_ID_UNSPECIFIED\x10\x00\x12\x1d\n" +
 	"\x19AUTH_RPC_ID_ALL_ACCESSORS\x10\x01\x12\x1c\n" +
@@ -2284,7 +2334,8 @@ const file_services_oauth_proto_rawDesc = "" +
 	"\x15AUTH_RPC_ID_AUTHORIZE\x10\x05\x12$\n" +
 	" AUTH_RPC_ID_MINT_CALLBACK_TOKENS\x10\x06\x12\x1e\n" +
 	"\x1aAUTH_RPC_ID_REVOKE_SESSION\x10\a\x12\x1f\n" +
-	"\x1bAUTH_RPC_ID_BROKER_CLI_AUTH\x10\b*\x87\x03\n" +
+	"\x1bAUTH_RPC_ID_BROKER_CLI_AUTH\x10\b\x12'\n" +
+	"#AUTH_RPC_ID_BROKER_AUTH_MCP_SESSION\x10\t*\x87\x03\n" +
 	"\x1cOauthConfigStateServiceRpcId\x121\n" +
 	"-OAUTH_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x123\n" +
 	"/OAUTH_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x122\n" +
@@ -2294,23 +2345,24 @@ const file_services_oauth_proto_rawDesc = "" +
 	",OAUTH_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x122\n" +
 	".OAUTH_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062`\n" +
 	"\aSession\x12O\n" +
-	"\rBrokerSession\x12\x15.oauth.SessionRequest\x1a\x16.oauth.SessionResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01(\x010\x01\x1a\x04\xf2\x97\"\x002\xc5\x03\n" +
+	"\rBrokerSession\x12\x15.oauth.SessionRequest\x1a\x16.oauth.SessionResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01(\x010\x01\x1a\x04\xf2\x97\"\x002\x91\x04\n" +
 	"\x04Auth\x12n\n" +
 	"\rListProviders\x12\x13.trace.TraceRequest\x1a\x1c.oauth.ListProvidersResponse\"*ʈ'\x03\n" +
 	"\x01\x01\xf2\x88'\x14\b\x01\x12\x0eprovider_index\x18\x10\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x12K\n" +
 	"\tAuthorize\x12\x17.oauth.AuthorizeRequest\x1a\x18.oauth.AuthorizeResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x12R\n" +
 	"\x12MintCallbackTokens\x12\x16.oauth.CallbackRequest\x1a\x17.oauth.CallbackResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x04\x12I\n" +
 	"\rRevokeSession\x12\x14.oauth.LogoutRequest\x1a\x15.oauth.LogoutResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x12[\n" +
-	"\rBrokerCliAuth\x12\x1d.oauth.CompleteCliAuthRequest\x1a\x1e.oauth.CompleteCliAuthResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x02\x1a\x04\xf2\x97\"\x002\xb7\x01\n" +
+	"\rBrokerCliAuth\x12\x1d.oauth.CompleteCliAuthRequest\x1a\x1e.oauth.CompleteCliAuthResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x02\x12J\n" +
+	"\x14BrokerAuthMcpSession\x12\x0f.mcp.McpRequest\x1a\x10.mcp.McpResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x03(\x010\x01\x1a\x04\xf2\x97\"\x002\xb7\x01\n" +
 	"\x17OauthConfigStateService\x12/\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\r.oauth.Config\x12)\n" +
 	"\tSetConfig\x12\r.oauth.Config\x1a\r.oauth.Config\x123\n" +
 	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\r.oauth.Config0\x01\x1a\v\xea\x97\"\a\n" +
-	"\x05oauthB\xb7\x01\x92\xb5\x18\x11\n" +
+	"\x05oauthB\xac\x01\x92\xb5\x18\x11\n" +
 	"\fDEFAULT_PORT\x10\xfbAڵ\x18\x00\xe2\xb5\x18\x11\n" +
 	"\x0fkernel.Identity\x92\xb6\x18\r\n" +
 	"\vkernel.Mint\x92\xb6\x18\x17\n" +
-	"\x15kernel.CliTokenBrokerZ[gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/oauthb\x06proto3"
+	"\x15kernel.CliTokenBrokerZPgitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/oauthb\x06proto3"
 
 var (
 	file_services_oauth_proto_rawDescOnce sync.Once
@@ -2353,6 +2405,8 @@ var file_services_oauth_proto_goTypes = []any{
 	(*OauthConfigState)(nil),          // 23: oauth.OauthConfigState
 	(*MapEmpty)(nil),                  // 24: oauth.MapEmpty
 	(*trace.TraceRequest)(nil),        // 25: trace.TraceRequest
+	(*mcp.McpRequest)(nil),            // 26: mcp.McpRequest
+	(*mcp.McpResponse)(nil),           // 27: mcp.McpResponse
 }
 var file_services_oauth_proto_depIdxs = []int32{
 	5,  // 0: oauth.Config.providers:type_name -> oauth.ProviderConfig
@@ -2367,20 +2421,22 @@ var file_services_oauth_proto_depIdxs = []int32{
 	14, // 9: oauth.Auth.MintCallbackTokens:input_type -> oauth.CallbackRequest
 	16, // 10: oauth.Auth.RevokeSession:input_type -> oauth.LogoutRequest
 	6,  // 11: oauth.Auth.BrokerCliAuth:input_type -> oauth.CompleteCliAuthRequest
-	25, // 12: oauth.OauthConfigStateService.GetConfig:input_type -> trace.TraceRequest
-	4,  // 13: oauth.OauthConfigStateService.SetConfig:input_type -> oauth.Config
-	25, // 14: oauth.OauthConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	9,  // 15: oauth.Session.BrokerSession:output_type -> oauth.SessionResponse
-	10, // 16: oauth.Auth.ListProviders:output_type -> oauth.ListProvidersResponse
-	13, // 17: oauth.Auth.Authorize:output_type -> oauth.AuthorizeResponse
-	15, // 18: oauth.Auth.MintCallbackTokens:output_type -> oauth.CallbackResponse
-	17, // 19: oauth.Auth.RevokeSession:output_type -> oauth.LogoutResponse
-	7,  // 20: oauth.Auth.BrokerCliAuth:output_type -> oauth.CompleteCliAuthResponse
-	4,  // 21: oauth.OauthConfigStateService.GetConfig:output_type -> oauth.Config
-	4,  // 22: oauth.OauthConfigStateService.SetConfig:output_type -> oauth.Config
-	4,  // 23: oauth.OauthConfigStateService.WatchConfig:output_type -> oauth.Config
-	15, // [15:24] is the sub-list for method output_type
-	6,  // [6:15] is the sub-list for method input_type
+	26, // 12: oauth.Auth.BrokerAuthMcpSession:input_type -> mcp.McpRequest
+	25, // 13: oauth.OauthConfigStateService.GetConfig:input_type -> trace.TraceRequest
+	4,  // 14: oauth.OauthConfigStateService.SetConfig:input_type -> oauth.Config
+	25, // 15: oauth.OauthConfigStateService.WatchConfig:input_type -> trace.TraceRequest
+	9,  // 16: oauth.Session.BrokerSession:output_type -> oauth.SessionResponse
+	10, // 17: oauth.Auth.ListProviders:output_type -> oauth.ListProvidersResponse
+	13, // 18: oauth.Auth.Authorize:output_type -> oauth.AuthorizeResponse
+	15, // 19: oauth.Auth.MintCallbackTokens:output_type -> oauth.CallbackResponse
+	17, // 20: oauth.Auth.RevokeSession:output_type -> oauth.LogoutResponse
+	7,  // 21: oauth.Auth.BrokerCliAuth:output_type -> oauth.CompleteCliAuthResponse
+	27, // 22: oauth.Auth.BrokerAuthMcpSession:output_type -> mcp.McpResponse
+	4,  // 23: oauth.OauthConfigStateService.GetConfig:output_type -> oauth.Config
+	4,  // 24: oauth.OauthConfigStateService.SetConfig:output_type -> oauth.Config
+	4,  // 25: oauth.OauthConfigStateService.WatchConfig:output_type -> oauth.Config
+	16, // [16:26] is the sub-list for method output_type
+	6,  // [6:16] is the sub-list for method input_type
 	6,  // [6:6] is the sub-list for extension type_name
 	6,  // [6:6] is the sub-list for extension extendee
 	0,  // [0:6] is the sub-list for field type_name

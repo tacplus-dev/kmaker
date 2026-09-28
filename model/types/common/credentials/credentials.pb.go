@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -22,9 +22,9 @@
 package credentials
 
 import (
-	entitlements "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/entitlements"
-	jwk "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/jwk"
-	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
+	entitlements "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/entitlements"
+	jwk "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/jwk"
+	_ "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/spec"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -102,9 +102,9 @@ func (TypeID) EnumDescriptor() ([]byte, []int) {
 //
 // Example grants:
 //
-//	spiffe://local/dev/_cluster/services/sentinel   — full sentinel access
-//	spiffe://local/dev/_cluster/services/stratum/*  — any stratum RPC
-//	spiffe://local/dev/_models/anthropic/claude-*   — LLM model scoping
+//	spiffe://local.dev/_cluster/services/sentinel   — full sentinel access
+//	spiffe://local.dev/_cluster/services/stratum/*  — any stratum RPC
+//	spiffe://local.dev/_models/anthropic/claude-*   — LLM model scoping
 //
 // A tenant's own subtree (spiffe://<prefix>/<tenant_name>/...) is implicitly
 // granted to all principals inside that tenant and need not be listed.
@@ -416,7 +416,7 @@ const file_common_credentials_proto_rawDesc = "" +
 	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x18\n" +
 	"\x14TYPE_ID_ENTITLEMENTS\x10\x01\x12\x15\n" +
 	"\x11TYPE_ID_CRED_PAIR\x10\x02\x12 \n" +
-	"\x1cTYPE_ID_KERNEL_TENANT_CONFIG\x10\x03BaZ_gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/common/credentialsb\x06proto3"
+	"\x1cTYPE_ID_KERNEL_TENANT_CONFIG\x10\x03BVZTgitlab.com/seabeam/schematic/platform/services/kmaker/model/types/common/credentialsb\x06proto3"
 
 var (
 	file_common_credentials_proto_rawDescOnce sync.Once

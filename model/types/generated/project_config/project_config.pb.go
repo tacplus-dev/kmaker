@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -78,7 +78,7 @@ var File_generated_project_config_proto protoreflect.FileDescriptor
 const file_generated_project_config_proto_rawDesc = "" +
 	"\n" +
 	"\x1egenerated/project_config.proto\x12\x0eproject_config\"\x0f\n" +
-	"\rProjectConfigBgZegitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/project_configb\x06proto3"
+	"\rProjectConfigB\\ZZgitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/project_configb\x06proto3"
 
 var (
 	file_generated_project_config_proto_rawDescOnce sync.Once

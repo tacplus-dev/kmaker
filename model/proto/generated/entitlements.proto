@@ -3,7 +3,7 @@
 syntax = "proto3";
 
 package entitlements;
-option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/entitlements";
+option go_package = "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/entitlements";
 
 // TokenEntitlements holds compressed C2S entitlements embedded in user tokens.
 // OPA returns this structure directly; the token authority embeds it in the JWT service_entitlements claim.

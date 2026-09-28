@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -23,8 +23,9 @@ package sentinel
 
 import (
 	context "context"
-	hazelcast "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/common/hazelcast"
-	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
+	hazelcast "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/common/hazelcast"
+	mcp "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/mcp"
+	trace "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -36,38 +37,70 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Dashboard_GetClusterInfo_FullMethodName        = "/sentinel.Dashboard/GetClusterInfo"
-	Dashboard_GetClusterHealth_FullMethodName      = "/sentinel.Dashboard/GetClusterHealth"
-	Dashboard_ListNodeMetrics_FullMethodName       = "/sentinel.Dashboard/ListNodeMetrics"
-	Dashboard_ListGrpcStats_FullMethodName         = "/sentinel.Dashboard/ListGrpcStats"
-	Dashboard_ListPersistenceStatus_FullMethodName = "/sentinel.Dashboard/ListPersistenceStatus"
-	Dashboard_ListNetworkStats_FullMethodName      = "/sentinel.Dashboard/ListNetworkStats"
-	Dashboard_ListThreadInfo_FullMethodName        = "/sentinel.Dashboard/ListThreadInfo"
-	Dashboard_ListTokenCacheStats_FullMethodName   = "/sentinel.Dashboard/ListTokenCacheStats"
-	Dashboard_ListMapStats_FullMethodName          = "/sentinel.Dashboard/ListMapStats"
-	Dashboard_GetDashboard_FullMethodName          = "/sentinel.Dashboard/GetDashboard"
-	Dashboard_SubscribeDashboard_FullMethodName    = "/sentinel.Dashboard/SubscribeDashboard"
+	Dashboard_GetClusterInfo_FullMethodName            = "/sentinel.Dashboard/GetClusterInfo"
+	Dashboard_GetClusterHealth_FullMethodName          = "/sentinel.Dashboard/GetClusterHealth"
+	Dashboard_ListNodeMetrics_FullMethodName           = "/sentinel.Dashboard/ListNodeMetrics"
+	Dashboard_ListGrpcStats_FullMethodName             = "/sentinel.Dashboard/ListGrpcStats"
+	Dashboard_ListPersistenceStatus_FullMethodName     = "/sentinel.Dashboard/ListPersistenceStatus"
+	Dashboard_ListNetworkStats_FullMethodName          = "/sentinel.Dashboard/ListNetworkStats"
+	Dashboard_ListThreadInfo_FullMethodName            = "/sentinel.Dashboard/ListThreadInfo"
+	Dashboard_ListTokenCacheStats_FullMethodName       = "/sentinel.Dashboard/ListTokenCacheStats"
+	Dashboard_ListMapStats_FullMethodName              = "/sentinel.Dashboard/ListMapStats"
+	Dashboard_GetDashboard_FullMethodName              = "/sentinel.Dashboard/GetDashboard"
+	Dashboard_SubscribeDashboard_FullMethodName        = "/sentinel.Dashboard/SubscribeDashboard"
+	Dashboard_BrokerDashboardMcpSession_FullMethodName = "/sentinel.Dashboard/BrokerDashboardMcpSession"
 )
 
 // DashboardClient is the client API for Dashboard service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DashboardClient interface {
-	// Cluster-wide singletons
+	// Returns cluster identity and membership — cluster name, version, partition
+	// count and the member list — for inventory and topology views.
 	GetClusterInfo(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*hazelcast.AdminClusterInfo, error)
+	// Returns the cluster's current health — whether it is safe, running, holds
+	// quorum and how much migration work is still queued — for dashboards and
+	// automated health checks.
 	GetClusterHealth(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*hazelcast.AdminClusterHealth, error)
-	// Per-node collections
+	// Lists per-node resource use (heap, CPU and disk) for every cluster member,
+	// to find nodes under memory or disk pressure.
 	ListNodeMetrics(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*NodeMetricsResponse, error)
+	// Lists each node's gRPC serving statistics — connection, stream and RPC
+	// counts plus rate-limited rejections — to see where request load and
+	// throttling are landing.
 	ListGrpcStats(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*GrpcStatsResponse, error)
+	// Lists each node's persistence status — redo log size, last dump time and
+	// dump count — to confirm cluster state is being written durably and the redo
+	// log is not growing unbounded.
 	ListPersistenceStatus(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*PersistenceStatusResponse, error)
+	// Lists each node's network state — listen addresses, member-to-member
+	// connectivity and bytes sent and received — to diagnose a partitioned or
+	// unreachable member.
 	ListNetworkStats(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*NetworkStatsResponse, error)
+	// Lists each node's thread counts and any deadlocked threads, to diagnose a
+	// node that has stopped making progress.
 	ListThreadInfo(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*ThreadInfoResponse, error)
+	// Lists each node's token cache hit, miss and eviction counts, to judge
+	// whether auth token caching is working or thrashing.
 	ListTokenCacheStats(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*TokenCacheStatsResponse, error)
+	// Lists per-map storage and access statistics — entry counts, memory cost and
+	// read/write counts — to find which distributed maps dominate memory or
+	// traffic.
 	ListMapStats(ctx context.Context, in *DashboardPageRequest, opts ...grpc.CallOption) (*MapStatsResponse, error)
 	// Full snapshot (all data in one call)
 	GetDashboard(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (*DashboardResponse, error)
 	// Server-streaming dashboard: pushes updates at a regular interval.
 	SubscribeDashboard(ctx context.Context, in *WatchDashboardRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DashboardResponse], error)
+	// BrokerDashboardMcpSession carries one Model Context Protocol session for Dashboard over a
+	// single bidirectional stream: one complete JSON-RPC frame per stream message,
+	// request frames in and response frames out, for the life of the session.
+	//
+	// Generated, never declared: Dashboard has at least one RPC_PRINCIPAL_MCP rpc, and this
+	// is the only channel those tools are reachable through. Bidirectional because an
+	// MCP session is stateful — it opens with an initialize handshake and holds the
+	// negotiated protocol version after it — so a unary call would repeat that
+	// handshake per tool call.
+	BrokerDashboardMcpSession(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[mcp.McpRequest, mcp.McpResponse], error)
 }
 
 type dashboardClient struct {
@@ -197,25 +230,69 @@ func (c *dashboardClient) SubscribeDashboard(ctx context.Context, in *WatchDashb
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type Dashboard_SubscribeDashboardClient = grpc.ServerStreamingClient[DashboardResponse]
 
+func (c *dashboardClient) BrokerDashboardMcpSession(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[mcp.McpRequest, mcp.McpResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &Dashboard_ServiceDesc.Streams[1], Dashboard_BrokerDashboardMcpSession_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[mcp.McpRequest, mcp.McpResponse]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Dashboard_BrokerDashboardMcpSessionClient = grpc.BidiStreamingClient[mcp.McpRequest, mcp.McpResponse]
+
 // DashboardServer is the server API for Dashboard service.
 // All implementations must embed UnimplementedDashboardServer
 // for forward compatibility.
 type DashboardServer interface {
-	// Cluster-wide singletons
+	// Returns cluster identity and membership — cluster name, version, partition
+	// count and the member list — for inventory and topology views.
 	GetClusterInfo(context.Context, *trace.TraceRequest) (*hazelcast.AdminClusterInfo, error)
+	// Returns the cluster's current health — whether it is safe, running, holds
+	// quorum and how much migration work is still queued — for dashboards and
+	// automated health checks.
 	GetClusterHealth(context.Context, *trace.TraceRequest) (*hazelcast.AdminClusterHealth, error)
-	// Per-node collections
+	// Lists per-node resource use (heap, CPU and disk) for every cluster member,
+	// to find nodes under memory or disk pressure.
 	ListNodeMetrics(context.Context, *DashboardPageRequest) (*NodeMetricsResponse, error)
+	// Lists each node's gRPC serving statistics — connection, stream and RPC
+	// counts plus rate-limited rejections — to see where request load and
+	// throttling are landing.
 	ListGrpcStats(context.Context, *DashboardPageRequest) (*GrpcStatsResponse, error)
+	// Lists each node's persistence status — redo log size, last dump time and
+	// dump count — to confirm cluster state is being written durably and the redo
+	// log is not growing unbounded.
 	ListPersistenceStatus(context.Context, *DashboardPageRequest) (*PersistenceStatusResponse, error)
+	// Lists each node's network state — listen addresses, member-to-member
+	// connectivity and bytes sent and received — to diagnose a partitioned or
+	// unreachable member.
 	ListNetworkStats(context.Context, *DashboardPageRequest) (*NetworkStatsResponse, error)
+	// Lists each node's thread counts and any deadlocked threads, to diagnose a
+	// node that has stopped making progress.
 	ListThreadInfo(context.Context, *DashboardPageRequest) (*ThreadInfoResponse, error)
+	// Lists each node's token cache hit, miss and eviction counts, to judge
+	// whether auth token caching is working or thrashing.
 	ListTokenCacheStats(context.Context, *DashboardPageRequest) (*TokenCacheStatsResponse, error)
+	// Lists per-map storage and access statistics — entry counts, memory cost and
+	// read/write counts — to find which distributed maps dominate memory or
+	// traffic.
 	ListMapStats(context.Context, *DashboardPageRequest) (*MapStatsResponse, error)
 	// Full snapshot (all data in one call)
 	GetDashboard(context.Context, *trace.TraceRequest) (*DashboardResponse, error)
 	// Server-streaming dashboard: pushes updates at a regular interval.
 	SubscribeDashboard(*WatchDashboardRequest, grpc.ServerStreamingServer[DashboardResponse]) error
+	// BrokerDashboardMcpSession carries one Model Context Protocol session for Dashboard over a
+	// single bidirectional stream: one complete JSON-RPC frame per stream message,
+	// request frames in and response frames out, for the life of the session.
+	//
+	// Generated, never declared: Dashboard has at least one RPC_PRINCIPAL_MCP rpc, and this
+	// is the only channel those tools are reachable through. Bidirectional because an
+	// MCP session is stateful — it opens with an initialize handshake and holds the
+	// negotiated protocol version after it — so a unary call would repeat that
+	// handshake per tool call.
+	BrokerDashboardMcpSession(grpc.BidiStreamingServer[mcp.McpRequest, mcp.McpResponse]) error
 	mustEmbedUnimplementedDashboardServer()
 }
 
@@ -258,6 +335,9 @@ func (UnimplementedDashboardServer) GetDashboard(context.Context, *trace.TraceRe
 }
 func (UnimplementedDashboardServer) SubscribeDashboard(*WatchDashboardRequest, grpc.ServerStreamingServer[DashboardResponse]) error {
 	return status.Error(codes.Unimplemented, "method SubscribeDashboard not implemented")
+}
+func (UnimplementedDashboardServer) BrokerDashboardMcpSession(grpc.BidiStreamingServer[mcp.McpRequest, mcp.McpResponse]) error {
+	return status.Error(codes.Unimplemented, "method BrokerDashboardMcpSession not implemented")
 }
 func (UnimplementedDashboardServer) mustEmbedUnimplementedDashboardServer() {}
 func (UnimplementedDashboardServer) testEmbeddedByValue()                   {}
@@ -471,6 +551,13 @@ func _Dashboard_SubscribeDashboard_Handler(srv interface{}, stream grpc.ServerSt
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type Dashboard_SubscribeDashboardServer = grpc.ServerStreamingServer[DashboardResponse]
 
+func _Dashboard_BrokerDashboardMcpSession_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(DashboardServer).BrokerDashboardMcpSession(&grpc.GenericServerStream[mcp.McpRequest, mcp.McpResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Dashboard_BrokerDashboardMcpSessionServer = grpc.BidiStreamingServer[mcp.McpRequest, mcp.McpResponse]
+
 // Dashboard_ServiceDesc is the grpc.ServiceDesc for Dashboard service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -524,6 +611,12 @@ var Dashboard_ServiceDesc = grpc.ServiceDesc{
 			StreamName:    "SubscribeDashboard",
 			Handler:       _Dashboard_SubscribeDashboard_Handler,
 			ServerStreams: true,
+		},
+		{
+			StreamName:    "BrokerDashboardMcpSession",
+			Handler:       _Dashboard_BrokerDashboardMcpSession_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
 		},
 	},
 	Metadata: "services/sentinel.proto",

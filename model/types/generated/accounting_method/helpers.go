@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -26,8 +26,8 @@ import (
 	"encoding/json"
 
 	"github.com/pelletier/go-toml/v2"
-	services "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/services"
-	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/errors"
+	services "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/services"
+	protoerrors "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/errors"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"gopkg.in/yaml.v3"
@@ -40,17 +40,22 @@ import (
 // AccountingMethodJSON represents AccountingMethod in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type accountingmethodJSON struct {
-	Sentinel    string `json:"sentinel,omitempty"`
-	Gateway     string `json:"gateway,omitempty"`
-	Kernel      string `json:"kernel,omitempty"`
-	Eventbus    string `json:"eventbus,omitempty"`
-	Oauth       string `json:"oauth,omitempty"`
-	Saml        string `json:"saml,omitempty"`
-	Messaging   string `json:"messaging,omitempty"`
-	Scottyagent string `json:"scottyagent,omitempty"`
-	Mailbox     string `json:"mailbox,omitempty"`
-	Llmsettings string `json:"llmsettings,omitempty"`
-	Scotty      string `json:"scotty,omitempty"`
+	Sentinel       string `json:"sentinel,omitempty"`
+	Gateway        string `json:"gateway,omitempty"`
+	Kernel         string `json:"kernel,omitempty"`
+	Eventbus       string `json:"eventbus,omitempty"`
+	Oauth          string `json:"oauth,omitempty"`
+	Saml           string `json:"saml,omitempty"`
+	Messaging      string `json:"messaging,omitempty"`
+	Scottyagent    string `json:"scottyagent,omitempty"`
+	Mailbox        string `json:"mailbox,omitempty"`
+	Llmsettings    string `json:"llmsettings,omitempty"`
+	Personalauth   string `json:"personalauth,omitempty"`
+	Scotty         string `json:"scotty,omitempty"`
+	Scottypersonal string `json:"scottypersonal,omitempty"`
+	Work           string `json:"work,omitempty"`
+	Profile        string `json:"profile,omitempty"`
+	Docmanager     string `json:"docmanager,omitempty"`
 }
 
 // AccountingMethodToJSON converts AccountingMethod to JSON bytes.
@@ -61,17 +66,22 @@ func AccountingMethodToJSON(v *AccountingMethod) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := accountingmethodJSON{
-		Sentinel:    services.SentinelRPCsToString(v.Sentinel),
-		Gateway:     services.GatewayRPCsToString(v.Gateway),
-		Kernel:      services.KernelRPCsToString(v.Kernel),
-		Eventbus:    services.EventbusRPCsToString(v.Eventbus),
-		Oauth:       services.OauthRPCsToString(v.Oauth),
-		Saml:        services.SamlRPCsToString(v.Saml),
-		Messaging:   services.MessagingRPCsToString(v.Messaging),
-		Scottyagent: services.ScottyagentRPCsToString(v.Scottyagent),
-		Mailbox:     services.MailboxRPCsToString(v.Mailbox),
-		Llmsettings: services.LlmsettingsRPCsToString(v.Llmsettings),
-		Scotty:      services.ScottyRPCsToString(v.Scotty),
+		Sentinel:       services.SentinelRPCsToString(v.Sentinel),
+		Gateway:        services.GatewayRPCsToString(v.Gateway),
+		Kernel:         services.KernelRPCsToString(v.Kernel),
+		Eventbus:       services.EventbusRPCsToString(v.Eventbus),
+		Oauth:          services.OauthRPCsToString(v.Oauth),
+		Saml:           services.SamlRPCsToString(v.Saml),
+		Messaging:      services.MessagingRPCsToString(v.Messaging),
+		Scottyagent:    services.ScottyagentRPCsToString(v.Scottyagent),
+		Mailbox:        services.MailboxRPCsToString(v.Mailbox),
+		Llmsettings:    services.LlmsettingsRPCsToString(v.Llmsettings),
+		Personalauth:   services.PersonalauthRPCsToString(v.Personalauth),
+		Scotty:         services.ScottyRPCsToString(v.Scotty),
+		Scottypersonal: services.ScottypersonalRPCsToString(v.Scottypersonal),
+		Work:           services.WorkRPCsToString(v.Work),
+		Profile:        services.ProfileRPCsToString(v.Profile),
+		Docmanager:     services.DocmanagerRPCsToString(v.Docmanager),
 	}
 	return json.Marshal(helper)
 }
@@ -84,17 +94,22 @@ func AccountingMethodToJSONPretty(v *AccountingMethod) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := accountingmethodJSON{
-		Sentinel:    services.SentinelRPCsToString(v.Sentinel),
-		Gateway:     services.GatewayRPCsToString(v.Gateway),
-		Kernel:      services.KernelRPCsToString(v.Kernel),
-		Eventbus:    services.EventbusRPCsToString(v.Eventbus),
-		Oauth:       services.OauthRPCsToString(v.Oauth),
-		Saml:        services.SamlRPCsToString(v.Saml),
-		Messaging:   services.MessagingRPCsToString(v.Messaging),
-		Scottyagent: services.ScottyagentRPCsToString(v.Scottyagent),
-		Mailbox:     services.MailboxRPCsToString(v.Mailbox),
-		Llmsettings: services.LlmsettingsRPCsToString(v.Llmsettings),
-		Scotty:      services.ScottyRPCsToString(v.Scotty),
+		Sentinel:       services.SentinelRPCsToString(v.Sentinel),
+		Gateway:        services.GatewayRPCsToString(v.Gateway),
+		Kernel:         services.KernelRPCsToString(v.Kernel),
+		Eventbus:       services.EventbusRPCsToString(v.Eventbus),
+		Oauth:          services.OauthRPCsToString(v.Oauth),
+		Saml:           services.SamlRPCsToString(v.Saml),
+		Messaging:      services.MessagingRPCsToString(v.Messaging),
+		Scottyagent:    services.ScottyagentRPCsToString(v.Scottyagent),
+		Mailbox:        services.MailboxRPCsToString(v.Mailbox),
+		Llmsettings:    services.LlmsettingsRPCsToString(v.Llmsettings),
+		Personalauth:   services.PersonalauthRPCsToString(v.Personalauth),
+		Scotty:         services.ScottyRPCsToString(v.Scotty),
+		Scottypersonal: services.ScottypersonalRPCsToString(v.Scottypersonal),
+		Work:           services.WorkRPCsToString(v.Work),
+		Profile:        services.ProfileRPCsToString(v.Profile),
+		Docmanager:     services.DocmanagerRPCsToString(v.Docmanager),
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -219,10 +234,40 @@ func AccountingMethodFromJSON(data []byte) (*AccountingMethod, error) {
 			result.Llmsettings = parsed
 		}
 	}
+	// Parse enum field: Personalauth
+	if raw.Personalauth != "" {
+		if parsed, err := services.ParsePersonalauthRPCs(raw.Personalauth); err == nil {
+			result.Personalauth = parsed
+		}
+	}
 	// Parse enum field: Scotty
 	if raw.Scotty != "" {
 		if parsed, err := services.ParseScottyRPCs(raw.Scotty); err == nil {
 			result.Scotty = parsed
+		}
+	}
+	// Parse enum field: Scottypersonal
+	if raw.Scottypersonal != "" {
+		if parsed, err := services.ParseScottypersonalRPCs(raw.Scottypersonal); err == nil {
+			result.Scottypersonal = parsed
+		}
+	}
+	// Parse enum field: Work
+	if raw.Work != "" {
+		if parsed, err := services.ParseWorkRPCs(raw.Work); err == nil {
+			result.Work = parsed
+		}
+	}
+	// Parse enum field: Profile
+	if raw.Profile != "" {
+		if parsed, err := services.ParseProfileRPCs(raw.Profile); err == nil {
+			result.Profile = parsed
+		}
+	}
+	// Parse enum field: Docmanager
+	if raw.Docmanager != "" {
+		if parsed, err := services.ParseDocmanagerRPCs(raw.Docmanager); err == nil {
+			result.Docmanager = parsed
 		}
 	}
 	return result, nil
@@ -316,7 +361,12 @@ func AccountingMethodToEnvVar(v *AccountingMethod) map[string]string {
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SCOTTYAGENT"] = services.ScottyagentRPCsToString(v.Scottyagent)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_MAILBOX"] = services.MailboxRPCsToString(v.Mailbox)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_LLMSETTINGS"] = services.LlmsettingsRPCsToString(v.Llmsettings)
+	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_PERSONALAUTH"] = services.PersonalauthRPCsToString(v.Personalauth)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SCOTTY"] = services.ScottyRPCsToString(v.Scotty)
+	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SCOTTYPERSONAL"] = services.ScottypersonalRPCsToString(v.Scottypersonal)
+	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_WORK"] = services.WorkRPCsToString(v.Work)
+	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_PROFILE"] = services.ProfileRPCsToString(v.Profile)
+	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_DOCMANAGER"] = services.DocmanagerRPCsToString(v.Docmanager)
 	return result
 }
 
@@ -393,12 +443,47 @@ func AccountingMethodFromEnvVar(env map[string]string) (*AccountingMethod, error
 		}
 		result.Llmsettings = parsed
 	}
+	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_PERSONALAUTH"]; ok && val != "" {
+		parsed, err := services.ParsePersonalauthRPCs(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Personalauth = parsed
+	}
 	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SCOTTY"]; ok && val != "" {
 		parsed, err := services.ParseScottyRPCs(val)
 		if err != nil {
 			return nil, err
 		}
 		result.Scotty = parsed
+	}
+	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SCOTTYPERSONAL"]; ok && val != "" {
+		parsed, err := services.ParseScottypersonalRPCs(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Scottypersonal = parsed
+	}
+	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_WORK"]; ok && val != "" {
+		parsed, err := services.ParseWorkRPCs(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Work = parsed
+	}
+	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_PROFILE"]; ok && val != "" {
+		parsed, err := services.ParseProfileRPCs(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Profile = parsed
+	}
+	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_DOCMANAGER"]; ok && val != "" {
+		parsed, err := services.ParseDocmanagerRPCs(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Docmanager = parsed
 	}
 	return result, nil
 }
@@ -472,9 +557,34 @@ func ValidateAccountingMethodWithDepth(m *AccountingMethod, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Llmsettings has unknown enum value %d", int32(m.Llmsettings))
 	}
 
+	// Validate Personalauth enum value is known
+	if _, ok := services.PersonalauthRPCs_name[int32(m.Personalauth)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Personalauth has unknown enum value %d", int32(m.Personalauth))
+	}
+
 	// Validate Scotty enum value is known
 	if _, ok := services.ScottyRPCs_name[int32(m.Scotty)]; !ok {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Scotty has unknown enum value %d", int32(m.Scotty))
+	}
+
+	// Validate Scottypersonal enum value is known
+	if _, ok := services.ScottypersonalRPCs_name[int32(m.Scottypersonal)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Scottypersonal has unknown enum value %d", int32(m.Scottypersonal))
+	}
+
+	// Validate Work enum value is known
+	if _, ok := services.WorkRPCs_name[int32(m.Work)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Work has unknown enum value %d", int32(m.Work))
+	}
+
+	// Validate Profile enum value is known
+	if _, ok := services.ProfileRPCs_name[int32(m.Profile)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Profile has unknown enum value %d", int32(m.Profile))
+	}
+
+	// Validate Docmanager enum value is known
+	if _, ok := services.DocmanagerRPCs_name[int32(m.Docmanager)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Docmanager has unknown enum value %d", int32(m.Docmanager))
 	}
 
 	return nil
@@ -536,7 +646,22 @@ func MergeAccountingMethod(dst, src *AccountingMethod) {
 	if dst.Llmsettings == 0 {
 		dst.Llmsettings = src.Llmsettings
 	}
+	if dst.Personalauth == 0 {
+		dst.Personalauth = src.Personalauth
+	}
 	if dst.Scotty == 0 {
 		dst.Scotty = src.Scotty
+	}
+	if dst.Scottypersonal == 0 {
+		dst.Scottypersonal = src.Scottypersonal
+	}
+	if dst.Work == 0 {
+		dst.Work = src.Work
+	}
+	if dst.Profile == 0 {
+		dst.Profile = src.Profile
+	}
+	if dst.Docmanager == 0 {
+		dst.Docmanager = src.Docmanager
 	}
 }

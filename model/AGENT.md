@@ -5,9 +5,9 @@ This file is embedded in `registry.json` and describes how to navigate it.
 ## Overview
 
 This registry describes a tacplus-generated service mesh with:
-- **1099** message types across **66** packages
-- **708** RPCs across **64** gRPC services
-- **68** state boundaries
+- **1963** message types across **75** packages
+- **1088** RPCs across **117** gRPC services
+- **106** state boundaries
 
 ## Structure
 
@@ -150,6 +150,9 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `timeseries_cardinality_hint` — spec.CardinalityHint
 - `data_entitlement_mode` — spec.RedactMode
 - `filter_mode` — spec.QueryOp
+- `store_principal` — bool
+- `store_namespace` — bool
+- `record_key` — bool
 
 
 ### TypeInfo
@@ -169,7 +172,6 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `service_store_label` — repeated string
 - `timeseries_dedup` — tacplus.DedupPolicyInfo
 - `data_entitlement_default` — spec.RedactMode
-- `record_retention` — tacplus.RetentionPolicyInfo
 
 
 ### TransformationFieldInfo
@@ -178,11 +180,6 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `order_key` — int32
 - `partition_key` — bool
 - `cardinality_hint` — spec.CardinalityHint
-
-
-### RetentionPolicyInfo
-- `timestamp_field` — string
-- `duration_seconds` — int64
 
 
 ### DedupPolicyInfo
@@ -214,6 +211,7 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `http_path` — string
 - `http_methods` — repeated string
 - `http_alias_path` — string
+- `tenant_scope` — string
 
 
 ### RpcInfo
@@ -232,6 +230,7 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `http_alias_path` — string
 - `auth_disabled` — bool
 - `auth_services` — repeated string
+- `auth_actors` — repeated string
 - `auth_entitled_users` — bool
 - `auth_any_user` — bool
 - `auth_model` — string
@@ -264,6 +263,7 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `mcp` — bool
 - `mcp_tool_name` — string
 - `mcp_session_carrier` — bool
+- `tenant_scope` — string
 
 
 ### EnumInfo
@@ -287,6 +287,16 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `host_label` — string
 - `mcp` — bool
 - `mcp_exposure` — spec.RpcExposure
+- `tenant_owned` — bool
+- `pinned_tenant` — string
+- `volume_groups` — repeated tacplus.VolumeGroupInfo
+
+
+### VolumeGroupInfo
+- `name` — string
+- `max_blob_bytes` — uint64
+- `content_types` — repeated string
+- `tenant_quota_bytes` — uint64
 
 
 ### VServiceInfo
@@ -445,6 +455,10 @@ Each `RpcInfo` carries:
 - `auth_model` — primary annotated service model (`s2s`, `c2s`, or `c2d`)
 - `target_namespace_field`, `subject_namespace_source`,
   `target_namespace_source`, `target_namespace` — namespace authorization inputs
+- `tenant_scope` — S2S record query plane only: `fleet` (every authorized caller
+  reads across all tenants) or `caller_pinned` (a `/system` caller stays
+  fleet-wide, a `/tenants/<t>` caller reads only `<t>`, decided at runtime from
+  the caller's own token claim). Empty on every other rpc
 - `surfaces` — per-transport auth metadata, including derived W2S rows
 - `category` — legacy accessor/mutator/executor classification
 - `rpc_verb`, `rpc_noun`, `method_pattern`, `access_kind`, `verb_class`,
@@ -456,67 +470,120 @@ Each `RpcInfo` carries:
 
 - **AccountingRecordBusStateService**
 - **Admin**
+- **AgentCursorBusStateService**
 - **AgentCycleBusStateService**
 - **AgentEventBusStateService**
 - **AgentSessionStateBusStateService**
+- **AlertBusStateService**
 - **Auth**
+- **BlobBusStateService**
+- **BlobLinkBusStateService**
+- **BlobLinkStatsBusStateService**
+- **BlobStore**
+- **BlobstoreConfigStateService**
 - **CaStateService**
+- **ChatBusStateService**
+- **ChatEventBusStateService**
+- **ChatMembershipBusStateService**
+- **ChatSessionBusStateService**
 - **CliTokenBroker**
 - **ClusterService**
 - **ClusterStateService**
 - **ConfigStateService**
 - **Dashboard**
+- **Device**
+- **DocFileMetadataBusStateService**
+- **DocHashIndexBusStateService**
+- **DocManager**
+- **DocmanagerConfigStateService**
+- **EquipmentBusStateService**
 - **EventbusConfigStateService**
 - **EventbusStateService**
 - **FencedLock**
+- **ForecastBusStateService**
 - **GatewayConfigStateService**
+- **HumanBusStateService**
 - **IdentityStateService**
 - **Inbound**
+- **IngestPipelineBusStateService**
+- **JobBusStateService**
 - **JwkVerifyingKeysViewService**
 - **Kmaker**
 - **KmakerConfigStateService**
+- **LetsEncryptCertBusStateService**
 - **LetsEncryptStateService**
 - **LetsencryptConfigStateService**
+- **LlmProviderSecretBusStateService**
+- **LlmProviderSettingsBusStateService**
+- **LlmProxy**
 - **LlmSettings**
-- **LlmSettingsStateService**
+- **LlmproxyConfigStateService**
 - **LlmsettingsConfigStateService**
 - **Mailbox**
 - **MailboxConfigStateService**
 - **MailboxEntryBusStateService**
-- **MailboxStateService**
 - **MessageBusStateService**
 - **Messaging**
 - **MessagingConfigStateService**
 - **Metadata**
 - **Mint**
 - **OauthConfigStateService**
+- **ObservationBusStateService**
 - **OpaConfigStateService**
 - **OpaEval**
 - **OpaStateService**
 - **OperatorConfigStateService**
 - **Outbound**
+- **PartnerBusStateService**
+- **PermitBusStateService**
+- **PersonalIdentity**
+- **PersonalauthConfigStateService**
+- **PlaceBusStateService**
+- **PolicyVersionBusStateService**
+- **PrincipalStateService**
+- **Profile**
+- **ProfileConfigStateService**
 - **PublicJwksViewService**
 - **RecordMap**
+- **Reveille**
+- **ReveilleConfigStateService**
+- **RfpBusStateService**
+- **RuleNodeBusStateService**
 - **SamlConfigStateService**
 - **Scotty**
 - **ScottyActivityBusStateService**
 - **ScottyAgent**
 - **ScottyConfigStateService**
+- **ScottyPersonal**
 - **ScottyRecords**
-- **ScottyStateService**
 - **ScottyagentConfigStateService**
-- **ScottyagentStateService**
+- **ScottypersonalConfigStateService**
+- **ScottypersonalRecords**
 - **SentinelConfigStateService**
 - **ServiceConfigStateService**
 - **ServiceHealthStateService**
 - **Session**
 - **SmbCertService**
 - **StratumConfigStateService**
+- **TaskBusStateService**
 - **TenantAdmin**
+- **TicketAdviceBusStateService**
+- **TicketBusStateService**
+- **TicketCommentBusStateService**
+- **TicketDecisionBusStateService**
 - **TlsCertService**
 - **TraceEventBusStateService**
 - **TraceSession**
 - **TrustedCaStateService**
+- **UploadSessionBusStateService**
+- **UserMint**
+- **UserProfileBusStateService**
+- **Weather**
+- **WeatherConfigStateService**
+- **Work**
+- **WorkActivityBusStateService**
+- **WorkConfigStateService**
+- **WorkRecords**
 - **WorkloadStateService**
 
 ## Packages
@@ -531,22 +598,31 @@ Each `RpcInfo` carries:
 - `generated/services`
 - `generated/services_config`
 - `generated/tenant_config`
+- `services/blobstore`
+- `services/docmanager`
 - `services/eventbus`
 - `services/gateway`
 - `services/kernel`
 - `services/kmaker`
 - `services/letsencrypt`
+- `services/llmproxy`
 - `services/llmsettings`
 - `services/mailbox`
 - `services/messaging`
 - `services/oauth`
 - `services/opa`
 - `services/operator`
+- `services/personalauth`
+- `services/profile`
+- `services/reveille`
 - `services/saml`
 - `services/scotty`
 - `services/scottyagent`
+- `services/scottypersonal`
 - `services/sentinel`
 - `services/stratum`
+- `services/weather`
+- `services/work`
 - `sys/accounting`
 - `sys/alpn`
 - `sys/cloudidentity`

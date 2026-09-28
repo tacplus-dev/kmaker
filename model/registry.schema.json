@@ -453,6 +453,9 @@
         "quorum_write": {
           "type": "boolean"
         },
+        "record_key": {
+          "type": "boolean"
+        },
         "repeated": {
           "type": "boolean"
         },
@@ -460,6 +463,12 @@
           "type": "boolean"
         },
         "store_key": {
+          "type": "boolean"
+        },
+        "store_namespace": {
+          "type": "boolean"
+        },
+        "store_principal": {
           "type": "boolean"
         },
         "timeseries_cardinality_hint": {
@@ -623,26 +632,6 @@
       },
       "type": "object"
     },
-    "RetentionPolicyInfo": {
-      "description": "tacplus.RetentionPolicyInfo",
-      "properties": {
-        "duration_seconds": {
-          "oneOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "pattern": "^-?\\d+$",
-              "type": "string"
-            }
-          ]
-        },
-        "timestamp_field": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
     "RpcInfo": {
       "description": "tacplus.RpcInfo",
       "properties": {
@@ -657,6 +646,12 @@
         },
         "audit_meaning": {
           "type": "string"
+        },
+        "auth_actors": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
         },
         "auth_any_user": {
           "type": "boolean"
@@ -806,6 +801,9 @@
         "target_namespace_source": {
           "type": "string"
         },
+        "tenant_scope": {
+          "type": "string"
+        },
         "verb_boundary": {
           "type": "string"
         },
@@ -872,6 +870,9 @@
         "target_namespace_source": {
           "type": "string"
         },
+        "tenant_scope": {
+          "type": "string"
+        },
         "transport": {
           "type": "string"
         }
@@ -915,6 +916,9 @@
         "package": {
           "type": "string"
         },
+        "pinned_tenant": {
+          "type": "string"
+        },
         "rpcs": {
           "items": {
             "$ref": "#/$defs/RpcInfo"
@@ -933,6 +937,15 @@
             "SMB_ROOT_CLUSTER"
           ],
           "type": "string"
+        },
+        "tenant_owned": {
+          "type": "boolean"
+        },
+        "volume_groups": {
+          "items": {
+            "$ref": "#/$defs/VolumeGroupInfo"
+          },
+          "type": "array"
         }
       },
       "type": "object"
@@ -1041,9 +1054,6 @@
         },
         "record_owner": {
           "type": "string"
-        },
-        "record_retention": {
-          "$ref": "#/$defs/RetentionPolicyInfo"
         },
         "schema_json": {
           "type": "string"
@@ -1160,6 +1170,43 @@
         },
         "total": {
           "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "VolumeGroupInfo": {
+      "description": "tacplus.VolumeGroupInfo",
+      "properties": {
+        "content_types": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "max_blob_bytes": {
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "pattern": "^-?\\d+$",
+              "type": "string"
+            }
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "tenant_quota_bytes": {
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "pattern": "^-?\\d+$",
+              "type": "string"
+            }
+          ]
         }
       },
       "type": "object"

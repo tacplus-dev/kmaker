@@ -17,37 +17,38 @@ import (
 	"syscall"
 	"time"
 
-	healthstate_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kernel"
-	healthreport_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/healthreport"
-	host_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/host"
+	healthstate_pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kernel"
+	healthreport_pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/healthreport"
+	host_pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/host"
 
 	"go.uber.org/zap"
 
-	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/grpcserver"
+	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/grpcserver"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
-	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/grpcconfig"
-	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/service_im"
-	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/servicemanager"
+	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/grpcconfig"
+	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/service_im"
+	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/servicemanager"
+	wrapperToken "gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/token"
 
-	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/healthreporter"
-	wrapperSpiffe "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/spiffe"
+	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/healthreporter"
+	wrapperSpiffe "gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/spiffe"
 
-	kmaker_fe "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/s2sm/grpc/servers/services/kmaker"
+	kmaker_fe "gitlab.com/seabeam/schematic/platform/services/kmaker/model/s2sm/grpc/servers/services/kmaker"
 
-	kmaker_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
+	kmaker_pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker"
 
-	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/s2sm/state"
+	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/s2sm/state"
 
-	smgrpc "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/s2sm/grpc"
+	smgrpc "gitlab.com/seabeam/schematic/platform/services/kmaker/model/s2sm/grpc"
 
-	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/am"
-	accountingrecord_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/vservices/accountingrecord"
+	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/am"
+	accountingrecord_pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/vservices/accountingrecord"
 
-	grpcconfig_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/grpcconfig"
-	trace_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
+	grpcconfig_pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/grpcconfig"
+	trace_pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -77,9 +78,9 @@ type ServiceManager struct {
 	grpcPkg *smgrpc.Grpc
 
 	auth                      grpcserver.Authorizer
-	authorizeFunc             func(ctx context.Context, fullMethod string, req any) error
-	authenticateFunc          func(ctx context.Context) error
-	authenticateAtOrBelowFunc func(ctx context.Context, targetNamespace string) error
+	authorizeFunc             func(ctx context.Context, fullMethod string, req any) (*wrapperToken.TokenWrapper, error)
+	authenticateFunc          func(ctx context.Context) (*wrapperToken.TokenWrapper, error)
+	authenticateAtOrBelowFunc func(ctx context.Context, targetNamespace string) (*wrapperToken.TokenWrapper, error)
 }
 
 // reportTLSDegraded records a TLS-renewal degradation and notifies subscribers
@@ -378,7 +379,8 @@ func (sm *ServiceManager) TokenProviderFunc() func() (string, error) {
 // Always available — services that disable auth in proto simply won't call it,
 // but it remains available for ad-hoc use in hand-written code (e.g. a store S2S).
 func (sm *ServiceManager) Authorize(ctx context.Context, fullMethod string, req any) error {
-	return sm.authorizeFunc(ctx, fullMethod, req)
+	_, err := sm.authorizeFunc(ctx, fullMethod, req)
+	return err
 }
 
 // Authorizer returns the underlying Authorizer for direct access to

@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -22,9 +22,9 @@
 package stratum
 
 import (
-	healthreport "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/healthreport"
-	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
-	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
+	healthreport "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/healthreport"
+	_ "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/spec"
+	trace "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -177,11 +177,22 @@ type Config struct {
 	// active_session_idle_seconds is the idle threshold for ListActiveSessions.
 	// A session is considered active if its last event was within this window.
 	// Default: 900 (15 min). Min: 30.
-	ActiveSessionIdleSeconds int32  `protobuf:"varint,7,opt,name=active_session_idle_seconds,json=activeSessionIdleSeconds,proto3" json:"active_session_idle_seconds,omitempty"`
-	TraceId                  string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop                     bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields            protoimpl.UnknownFields
-	sizeCache                protoimpl.SizeCache
+	ActiveSessionIdleSeconds int32 `protobuf:"varint,7,opt,name=active_session_idle_seconds,json=activeSessionIdleSeconds,proto3" json:"active_session_idle_seconds,omitempty"`
+	// warm_window_seconds is the memory-residency window for warm-tiered records:
+	// rows younger than this are served from memory, rows older than it are served
+	// from the on-disk warm tier. It is the default applied to a record type that
+	// declares the warm residency preset without a window_seconds of its own.
+	//
+	// It must be SHORTER than retention_days or the disk tier is never reached:
+	// retention deletes a row before it is ever old enough to age out of memory,
+	// and the "still queryable, only slower" promise the disk tier exists to keep
+	// never applies to anything. Default: 604800 (7 days), which leaves rows aged
+	// 7-90 days served from disk under the 90-day retention default. Min: 60.
+	WarmWindowSeconds int64  `protobuf:"varint,8,opt,name=warm_window_seconds,json=warmWindowSeconds,proto3" json:"warm_window_seconds,omitempty"`
+	TraceId           string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop              bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *Config) Reset() {
@@ -252,6 +263,13 @@ func (x *Config) GetCleanupIntervalSeconds() int64 {
 func (x *Config) GetActiveSessionIdleSeconds() int32 {
 	if x != nil {
 		return x.ActiveSessionIdleSeconds
+	}
+	return 0
+}
+
+func (x *Config) GetWarmWindowSeconds() int64 {
+	if x != nil {
+		return x.WarmWindowSeconds
 	}
 	return 0
 }
@@ -544,7 +562,7 @@ var File_services_stratum_proto protoreflect.FileDescriptor
 
 const file_services_stratum_proto_rawDesc = "" +
 	"\n" +
-	"\x16services/stratum.proto\x12\astratum\x1a\x0esys/spec.proto\x1a\x16sys/healthreport.proto\x1a\x0fsys/trace.proto\"\xa5\x03\n" +
+	"\x16services/stratum.proto\x12\astratum\x1a\x0esys/spec.proto\x1a\x16sys/healthreport.proto\x1a\x0fsys/trace.proto\"\xe1\x03\n" +
 	"\x06Config\x12:\n" +
 	"\x13hazelcast_memory_mb\x18\x01 \x01(\x05B\n" +
 	"\xb0\xa7\x1d\x80\x02\x90\xa8\x1d\x80\x10R\x11hazelcastMemoryMb\x12:\n" +
@@ -552,7 +570,9 @@ const file_services_stratum_proto_rawDesc = "" +
 	"\bmax_maps\x18\x04 \x01(\x05B\b\xb0\xa7\x1d\x01\x90\xa8\x1d\x14R\amaxMaps\x12/\n" +
 	"\x0eretention_days\x18\x05 \x01(\x05B\b\xb0\xa7\x1d\x01\x90\xa8\x1dZR\rretentionDays\x12C\n" +
 	"\x18cleanup_interval_seconds\x18\x06 \x01(\x03B\t\xb0\xa7\x1d<\x90\xa8\x1d\x90\x1cR\x16cleanupIntervalSeconds\x12H\n" +
-	"\x1bactive_session_idle_seconds\x18\a \x01(\x05B\t\xb0\xa7\x1d\x1e\x90\xa8\x1d\x84\aR\x18activeSessionIdleSeconds\x12\x1a\n" +
+	"\x1bactive_session_idle_seconds\x18\a \x01(\x05B\t\xb0\xa7\x1d\x1e\x90\xa8\x1d\x84\aR\x18activeSessionIdleSeconds\x12:\n" +
+	"\x13warm_window_seconds\x18\b \x01(\x03B\n" +
+	"\xb0\xa7\x1d<\x90\xa8\x1d\x80\xf5$R\x11warmWindowSeconds\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\rҨ\x1d\t\n" +
 	"\astratum\"O\n" +
@@ -600,8 +620,8 @@ const file_services_stratum_proto_rawDesc = "" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x0f.stratum.Config\x12-\n" +
 	"\tSetConfig\x12\x0f.stratum.Config\x1a\x0f.stratum.Config\x125\n" +
 	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x0f.stratum.Config0\x01\x1a\r\xea\x97\"\t\n" +
-	"\astratumB|\x92\xb5\x18\x11\n" +
-	"\fDEFAULT_PORT\x10\xfbAڵ\x18\x00\xba\xb6\x18\x00Z]gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/stratumb\x06proto3"
+	"\astratumBq\x92\xb5\x18\x11\n" +
+	"\fDEFAULT_PORT\x10\xfbAڵ\x18\x00\xba\xb6\x18\x00ZRgitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/stratumb\x06proto3"
 
 var (
 	file_services_stratum_proto_rawDescOnce sync.Once

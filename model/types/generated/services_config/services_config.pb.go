@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -22,21 +22,30 @@
 package services_config
 
 import (
-	eventbus "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/eventbus"
-	gateway "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gateway"
-	kmaker "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
-	letsencrypt "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/letsencrypt"
-	llmsettings "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/llmsettings"
-	mailbox "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/mailbox"
-	messaging "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/messaging"
-	oauth "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/oauth"
-	opa "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/opa"
-	operator "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/operator"
-	samlsvc "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/samlsvc"
-	scotty "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/scotty"
-	scottyagent "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/scottyagent"
-	sentinel "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/sentinel"
-	stratum "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/stratum"
+	blobstore "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/blobstore"
+	docmanager "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/docmanager"
+	eventbus "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/eventbus"
+	gateway "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/gateway"
+	kmaker "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker"
+	letsencrypt "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/letsencrypt"
+	llmproxy "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/llmproxy"
+	llmsettings "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/llmsettings"
+	mailbox "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/mailbox"
+	messaging "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/messaging"
+	oauth "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/oauth"
+	opa "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/opa"
+	operator "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/operator"
+	personalauth "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/personalauth"
+	profile "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/profile"
+	reveille "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/reveille"
+	samlsvc "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/samlsvc"
+	scotty "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/scotty"
+	scottyagent "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/scottyagent"
+	scottypersonal "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/scottypersonal"
+	sentinel "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/sentinel"
+	stratum "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/stratum"
+	weather "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/weather"
+	work "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/work"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -52,24 +61,33 @@ const (
 )
 
 type Services struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	SentinelConfig    *sentinel.Config       `protobuf:"bytes,5,opt,name=sentinel_config,json=sentinelConfig,proto3" json:"sentinel_config,omitempty"`
-	GatewayConfig     *gateway.Config        `protobuf:"bytes,7,opt,name=gateway_config,json=gatewayConfig,proto3" json:"gateway_config,omitempty"`
-	LetsencryptConfig *letsencrypt.Config    `protobuf:"bytes,9,opt,name=letsencrypt_config,json=letsencryptConfig,proto3" json:"letsencrypt_config,omitempty"`
-	EventbusConfig    *eventbus.Config       `protobuf:"bytes,18,opt,name=eventbus_config,json=eventbusConfig,proto3" json:"eventbus_config,omitempty"`
-	OauthConfig       *oauth.Config          `protobuf:"bytes,21,opt,name=oauth_config,json=oauthConfig,proto3" json:"oauth_config,omitempty"`
-	OpaConfig         *opa.Config            `protobuf:"bytes,29,opt,name=opa_config,json=opaConfig,proto3" json:"opa_config,omitempty"`
-	StratumConfig     *stratum.Config        `protobuf:"bytes,34,opt,name=stratum_config,json=stratumConfig,proto3" json:"stratum_config,omitempty"`
-	SamlConfig        *samlsvc.Config        `protobuf:"bytes,38,opt,name=saml_config,json=samlConfig,proto3" json:"saml_config,omitempty"`
-	OperatorConfig    *operator.Config       `protobuf:"bytes,47,opt,name=operator_config,json=operatorConfig,proto3" json:"operator_config,omitempty"`
-	KmakerConfig      *kmaker.Config         `protobuf:"bytes,49,opt,name=kmaker_config,json=kmakerConfig,proto3" json:"kmaker_config,omitempty"`
-	MessagingConfig   *messaging.Config      `protobuf:"bytes,53,opt,name=messaging_config,json=messagingConfig,proto3" json:"messaging_config,omitempty"`
-	ScottyagentConfig *scottyagent.Config    `protobuf:"bytes,54,opt,name=scottyagent_config,json=scottyagentConfig,proto3" json:"scottyagent_config,omitempty"`
-	MailboxConfig     *mailbox.Config        `protobuf:"bytes,55,opt,name=mailbox_config,json=mailboxConfig,proto3" json:"mailbox_config,omitempty"`
-	LlmsettingsConfig *llmsettings.Config    `protobuf:"bytes,56,opt,name=llmsettings_config,json=llmsettingsConfig,proto3" json:"llmsettings_config,omitempty"`
-	ScottyConfig      *scotty.Config         `protobuf:"bytes,70,opt,name=scotty_config,json=scottyConfig,proto3" json:"scotty_config,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	SentinelConfig       *sentinel.Config       `protobuf:"bytes,5,opt,name=sentinel_config,json=sentinelConfig,proto3" json:"sentinel_config,omitempty"`
+	GatewayConfig        *gateway.Config        `protobuf:"bytes,7,opt,name=gateway_config,json=gatewayConfig,proto3" json:"gateway_config,omitempty"`
+	LetsencryptConfig    *letsencrypt.Config    `protobuf:"bytes,9,opt,name=letsencrypt_config,json=letsencryptConfig,proto3" json:"letsencrypt_config,omitempty"`
+	EventbusConfig       *eventbus.Config       `protobuf:"bytes,18,opt,name=eventbus_config,json=eventbusConfig,proto3" json:"eventbus_config,omitempty"`
+	OauthConfig          *oauth.Config          `protobuf:"bytes,21,opt,name=oauth_config,json=oauthConfig,proto3" json:"oauth_config,omitempty"`
+	OpaConfig            *opa.Config            `protobuf:"bytes,29,opt,name=opa_config,json=opaConfig,proto3" json:"opa_config,omitempty"`
+	StratumConfig        *stratum.Config        `protobuf:"bytes,34,opt,name=stratum_config,json=stratumConfig,proto3" json:"stratum_config,omitempty"`
+	SamlConfig           *samlsvc.Config        `protobuf:"bytes,38,opt,name=saml_config,json=samlConfig,proto3" json:"saml_config,omitempty"`
+	OperatorConfig       *operator.Config       `protobuf:"bytes,47,opt,name=operator_config,json=operatorConfig,proto3" json:"operator_config,omitempty"`
+	KmakerConfig         *kmaker.Config         `protobuf:"bytes,49,opt,name=kmaker_config,json=kmakerConfig,proto3" json:"kmaker_config,omitempty"`
+	MessagingConfig      *messaging.Config      `protobuf:"bytes,53,opt,name=messaging_config,json=messagingConfig,proto3" json:"messaging_config,omitempty"`
+	ScottyagentConfig    *scottyagent.Config    `protobuf:"bytes,54,opt,name=scottyagent_config,json=scottyagentConfig,proto3" json:"scottyagent_config,omitempty"`
+	MailboxConfig        *mailbox.Config        `protobuf:"bytes,55,opt,name=mailbox_config,json=mailboxConfig,proto3" json:"mailbox_config,omitempty"`
+	LlmsettingsConfig    *llmsettings.Config    `protobuf:"bytes,56,opt,name=llmsettings_config,json=llmsettingsConfig,proto3" json:"llmsettings_config,omitempty"`
+	PersonalauthConfig   *personalauth.Config   `protobuf:"bytes,57,opt,name=personalauth_config,json=personalauthConfig,proto3" json:"personalauth_config,omitempty"`
+	BlobstoreConfig      *blobstore.Config      `protobuf:"bytes,58,opt,name=blobstore_config,json=blobstoreConfig,proto3" json:"blobstore_config,omitempty"`
+	ScottyConfig         *scotty.Config         `protobuf:"bytes,70,opt,name=scotty_config,json=scottyConfig,proto3" json:"scotty_config,omitempty"`
+	ScottypersonalConfig *scottypersonal.Config `protobuf:"bytes,72,opt,name=scottypersonal_config,json=scottypersonalConfig,proto3" json:"scottypersonal_config,omitempty"`
+	WorkConfig           *work.Config           `protobuf:"bytes,73,opt,name=work_config,json=workConfig,proto3" json:"work_config,omitempty"`
+	WeatherConfig        *weather.Config        `protobuf:"bytes,74,opt,name=weather_config,json=weatherConfig,proto3" json:"weather_config,omitempty"`
+	LlmproxyConfig       *llmproxy.Config       `protobuf:"bytes,75,opt,name=llmproxy_config,json=llmproxyConfig,proto3" json:"llmproxy_config,omitempty"`
+	ProfileConfig        *profile.Config        `protobuf:"bytes,76,opt,name=profile_config,json=profileConfig,proto3" json:"profile_config,omitempty"`
+	DocmanagerConfig     *docmanager.Config     `protobuf:"bytes,80,opt,name=docmanager_config,json=docmanagerConfig,proto3" json:"docmanager_config,omitempty"`
+	ReveilleConfig       *reveille.Config       `protobuf:"bytes,81,opt,name=reveille_config,json=reveilleConfig,proto3" json:"reveille_config,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
 }
 
 func (x *Services) Reset() {
@@ -200,9 +218,72 @@ func (x *Services) GetLlmsettingsConfig() *llmsettings.Config {
 	return nil
 }
 
+func (x *Services) GetPersonalauthConfig() *personalauth.Config {
+	if x != nil {
+		return x.PersonalauthConfig
+	}
+	return nil
+}
+
+func (x *Services) GetBlobstoreConfig() *blobstore.Config {
+	if x != nil {
+		return x.BlobstoreConfig
+	}
+	return nil
+}
+
 func (x *Services) GetScottyConfig() *scotty.Config {
 	if x != nil {
 		return x.ScottyConfig
+	}
+	return nil
+}
+
+func (x *Services) GetScottypersonalConfig() *scottypersonal.Config {
+	if x != nil {
+		return x.ScottypersonalConfig
+	}
+	return nil
+}
+
+func (x *Services) GetWorkConfig() *work.Config {
+	if x != nil {
+		return x.WorkConfig
+	}
+	return nil
+}
+
+func (x *Services) GetWeatherConfig() *weather.Config {
+	if x != nil {
+		return x.WeatherConfig
+	}
+	return nil
+}
+
+func (x *Services) GetLlmproxyConfig() *llmproxy.Config {
+	if x != nil {
+		return x.LlmproxyConfig
+	}
+	return nil
+}
+
+func (x *Services) GetProfileConfig() *profile.Config {
+	if x != nil {
+		return x.ProfileConfig
+	}
+	return nil
+}
+
+func (x *Services) GetDocmanagerConfig() *docmanager.Config {
+	if x != nil {
+		return x.DocmanagerConfig
+	}
+	return nil
+}
+
+func (x *Services) GetReveilleConfig() *reveille.Config {
+	if x != nil {
+		return x.ReveilleConfig
 	}
 	return nil
 }
@@ -211,7 +292,7 @@ var File_generated_services_config_proto protoreflect.FileDescriptor
 
 const file_generated_services_config_proto_rawDesc = "" +
 	"\n" +
-	"\x1fgenerated/services_config.proto\x12\x0fservices_config\x1a\x17services/sentinel.proto\x1a\x16services/gateway.proto\x1a\x1aservices/letsencrypt.proto\x1a\x17services/eventbus.proto\x1a\x14services/oauth.proto\x1a\x12services/opa.proto\x1a\x16services/stratum.proto\x1a\x13services/saml.proto\x1a\x17services/operator.proto\x1a\x15services/kmaker.proto\x1a\x18services/messaging.proto\x1a\x1aservices/scottyagent.proto\x1a\x16services/mailbox.proto\x1a\x1aservices/llmsettings.proto\x1a\x15services/scotty.proto\"\xe7\x06\n" +
+	"\x1fgenerated/services_config.proto\x12\x0fservices_config\x1a\x17services/sentinel.proto\x1a\x16services/gateway.proto\x1a\x1aservices/letsencrypt.proto\x1a\x17services/eventbus.proto\x1a\x14services/oauth.proto\x1a\x12services/opa.proto\x1a\x16services/stratum.proto\x1a\x13services/saml.proto\x1a\x17services/operator.proto\x1a\x15services/kmaker.proto\x1a\x18services/messaging.proto\x1a\x1aservices/scottyagent.proto\x1a\x16services/mailbox.proto\x1a\x1aservices/llmsettings.proto\x1a\x1bservices/personalauth.proto\x1a\x18services/blobstore.proto\x1a\x15services/scotty.proto\x1a\x1dservices/scottypersonal.proto\x1a\x13services/work.proto\x1a\x16services/weather.proto\x1a\x17services/llmproxy.proto\x1a\x16services/profile.proto\x1a\x19services/docmanager.proto\x1a\x17services/reveille.proto\"\x8f\v\n" +
 	"\bServices\x129\n" +
 	"\x0fsentinel_config\x18\x05 \x01(\v2\x10.sentinel.ConfigR\x0esentinelConfig\x126\n" +
 	"\x0egateway_config\x18\a \x01(\v2\x0f.gateway.ConfigR\rgatewayConfig\x12B\n" +
@@ -228,8 +309,18 @@ const file_generated_services_config_proto_rawDesc = "" +
 	"\x10messaging_config\x185 \x01(\v2\x11.messaging.ConfigR\x0fmessagingConfig\x12B\n" +
 	"\x12scottyagent_config\x186 \x01(\v2\x13.scottyagent.ConfigR\x11scottyagentConfig\x126\n" +
 	"\x0emailbox_config\x187 \x01(\v2\x0f.mailbox.ConfigR\rmailboxConfig\x12B\n" +
-	"\x12llmsettings_config\x188 \x01(\v2\x13.llmsettings.ConfigR\x11llmsettingsConfig\x123\n" +
-	"\rscotty_config\x18F \x01(\v2\x0e.scotty.ConfigR\fscottyConfigBhZfgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/services_configb\x06proto3"
+	"\x12llmsettings_config\x188 \x01(\v2\x13.llmsettings.ConfigR\x11llmsettingsConfig\x12E\n" +
+	"\x13personalauth_config\x189 \x01(\v2\x14.personalauth.ConfigR\x12personalauthConfig\x12<\n" +
+	"\x10blobstore_config\x18: \x01(\v2\x11.blobstore.ConfigR\x0fblobstoreConfig\x123\n" +
+	"\rscotty_config\x18F \x01(\v2\x0e.scotty.ConfigR\fscottyConfig\x12K\n" +
+	"\x15scottypersonal_config\x18H \x01(\v2\x16.scottypersonal.ConfigR\x14scottypersonalConfig\x12-\n" +
+	"\vwork_config\x18I \x01(\v2\f.work.ConfigR\n" +
+	"workConfig\x126\n" +
+	"\x0eweather_config\x18J \x01(\v2\x0f.weather.ConfigR\rweatherConfig\x129\n" +
+	"\x0fllmproxy_config\x18K \x01(\v2\x10.llmproxy.ConfigR\x0ellmproxyConfig\x126\n" +
+	"\x0eprofile_config\x18L \x01(\v2\x0f.profile.ConfigR\rprofileConfig\x12?\n" +
+	"\x11docmanager_config\x18P \x01(\v2\x12.docmanager.ConfigR\x10docmanagerConfig\x129\n" +
+	"\x0freveille_config\x18Q \x01(\v2\x10.reveille.ConfigR\x0ereveilleConfigB]Z[gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/services_configb\x06proto3"
 
 var (
 	file_generated_services_config_proto_rawDescOnce sync.Once
@@ -245,22 +336,31 @@ func file_generated_services_config_proto_rawDescGZIP() []byte {
 
 var file_generated_services_config_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_generated_services_config_proto_goTypes = []any{
-	(*Services)(nil),           // 0: services_config.Services
-	(*sentinel.Config)(nil),    // 1: sentinel.Config
-	(*gateway.Config)(nil),     // 2: gateway.Config
-	(*letsencrypt.Config)(nil), // 3: letsencrypt.Config
-	(*eventbus.Config)(nil),    // 4: eventbus.Config
-	(*oauth.Config)(nil),       // 5: oauth.Config
-	(*opa.Config)(nil),         // 6: opa.Config
-	(*stratum.Config)(nil),     // 7: stratum.Config
-	(*samlsvc.Config)(nil),     // 8: samlsvc.Config
-	(*operator.Config)(nil),    // 9: operator.Config
-	(*kmaker.Config)(nil),      // 10: kmaker.Config
-	(*messaging.Config)(nil),   // 11: messaging.Config
-	(*scottyagent.Config)(nil), // 12: scottyagent.Config
-	(*mailbox.Config)(nil),     // 13: mailbox.Config
-	(*llmsettings.Config)(nil), // 14: llmsettings.Config
-	(*scotty.Config)(nil),      // 15: scotty.Config
+	(*Services)(nil),              // 0: services_config.Services
+	(*sentinel.Config)(nil),       // 1: sentinel.Config
+	(*gateway.Config)(nil),        // 2: gateway.Config
+	(*letsencrypt.Config)(nil),    // 3: letsencrypt.Config
+	(*eventbus.Config)(nil),       // 4: eventbus.Config
+	(*oauth.Config)(nil),          // 5: oauth.Config
+	(*opa.Config)(nil),            // 6: opa.Config
+	(*stratum.Config)(nil),        // 7: stratum.Config
+	(*samlsvc.Config)(nil),        // 8: samlsvc.Config
+	(*operator.Config)(nil),       // 9: operator.Config
+	(*kmaker.Config)(nil),         // 10: kmaker.Config
+	(*messaging.Config)(nil),      // 11: messaging.Config
+	(*scottyagent.Config)(nil),    // 12: scottyagent.Config
+	(*mailbox.Config)(nil),        // 13: mailbox.Config
+	(*llmsettings.Config)(nil),    // 14: llmsettings.Config
+	(*personalauth.Config)(nil),   // 15: personalauth.Config
+	(*blobstore.Config)(nil),      // 16: blobstore.Config
+	(*scotty.Config)(nil),         // 17: scotty.Config
+	(*scottypersonal.Config)(nil), // 18: scottypersonal.Config
+	(*work.Config)(nil),           // 19: work.Config
+	(*weather.Config)(nil),        // 20: weather.Config
+	(*llmproxy.Config)(nil),       // 21: llmproxy.Config
+	(*profile.Config)(nil),        // 22: profile.Config
+	(*docmanager.Config)(nil),     // 23: docmanager.Config
+	(*reveille.Config)(nil),       // 24: reveille.Config
 }
 var file_generated_services_config_proto_depIdxs = []int32{
 	1,  // 0: services_config.Services.sentinel_config:type_name -> sentinel.Config
@@ -277,12 +377,21 @@ var file_generated_services_config_proto_depIdxs = []int32{
 	12, // 11: services_config.Services.scottyagent_config:type_name -> scottyagent.Config
 	13, // 12: services_config.Services.mailbox_config:type_name -> mailbox.Config
 	14, // 13: services_config.Services.llmsettings_config:type_name -> llmsettings.Config
-	15, // 14: services_config.Services.scotty_config:type_name -> scotty.Config
-	15, // [15:15] is the sub-list for method output_type
-	15, // [15:15] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	15, // 14: services_config.Services.personalauth_config:type_name -> personalauth.Config
+	16, // 15: services_config.Services.blobstore_config:type_name -> blobstore.Config
+	17, // 16: services_config.Services.scotty_config:type_name -> scotty.Config
+	18, // 17: services_config.Services.scottypersonal_config:type_name -> scottypersonal.Config
+	19, // 18: services_config.Services.work_config:type_name -> work.Config
+	20, // 19: services_config.Services.weather_config:type_name -> weather.Config
+	21, // 20: services_config.Services.llmproxy_config:type_name -> llmproxy.Config
+	22, // 21: services_config.Services.profile_config:type_name -> profile.Config
+	23, // 22: services_config.Services.docmanager_config:type_name -> docmanager.Config
+	24, // 23: services_config.Services.reveille_config:type_name -> reveille.Config
+	24, // [24:24] is the sub-list for method output_type
+	24, // [24:24] is the sub-list for method input_type
+	24, // [24:24] is the sub-list for extension type_name
+	24, // [24:24] is the sub-list for extension extendee
+	0,  // [0:24] is the sub-list for field type_name
 }
 
 func init() { file_generated_services_config_proto_init() }

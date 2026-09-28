@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -22,9 +22,10 @@
 package sentinel
 
 import (
-	hazelcast "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/common/hazelcast"
-	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
-	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
+	hazelcast "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/common/hazelcast"
+	mcp "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/mcp"
+	_ "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/spec"
+	trace "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -131,21 +132,22 @@ func (TypeID) EnumDescriptor() ([]byte, []int) {
 type DashboardRpcId int32
 
 const (
-	DashboardRpcId_DASHBOARD_RPC_ID_UNSPECIFIED             DashboardRpcId = 0
-	DashboardRpcId_DASHBOARD_RPC_ID_ALL_ACCESSORS           DashboardRpcId = 1
-	DashboardRpcId_DASHBOARD_RPC_ID_ALL_MUTATORS            DashboardRpcId = 2
-	DashboardRpcId_DASHBOARD_RPC_ID_ALL_EXECUTORS           DashboardRpcId = 3
-	DashboardRpcId_DASHBOARD_RPC_ID_GET_CLUSTER_INFO        DashboardRpcId = 4
-	DashboardRpcId_DASHBOARD_RPC_ID_GET_CLUSTER_HEALTH      DashboardRpcId = 5
-	DashboardRpcId_DASHBOARD_RPC_ID_LIST_NODE_METRICS       DashboardRpcId = 6
-	DashboardRpcId_DASHBOARD_RPC_ID_LIST_GRPC_STATS         DashboardRpcId = 7
-	DashboardRpcId_DASHBOARD_RPC_ID_LIST_PERSISTENCE_STATUS DashboardRpcId = 8
-	DashboardRpcId_DASHBOARD_RPC_ID_LIST_NETWORK_STATS      DashboardRpcId = 9
-	DashboardRpcId_DASHBOARD_RPC_ID_LIST_THREAD_INFO        DashboardRpcId = 10
-	DashboardRpcId_DASHBOARD_RPC_ID_LIST_TOKEN_CACHE_STATS  DashboardRpcId = 11
-	DashboardRpcId_DASHBOARD_RPC_ID_LIST_MAP_STATS          DashboardRpcId = 12
-	DashboardRpcId_DASHBOARD_RPC_ID_GET_DASHBOARD           DashboardRpcId = 13
-	DashboardRpcId_DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD     DashboardRpcId = 14
+	DashboardRpcId_DASHBOARD_RPC_ID_UNSPECIFIED                  DashboardRpcId = 0
+	DashboardRpcId_DASHBOARD_RPC_ID_ALL_ACCESSORS                DashboardRpcId = 1
+	DashboardRpcId_DASHBOARD_RPC_ID_ALL_MUTATORS                 DashboardRpcId = 2
+	DashboardRpcId_DASHBOARD_RPC_ID_ALL_EXECUTORS                DashboardRpcId = 3
+	DashboardRpcId_DASHBOARD_RPC_ID_GET_CLUSTER_INFO             DashboardRpcId = 4
+	DashboardRpcId_DASHBOARD_RPC_ID_GET_CLUSTER_HEALTH           DashboardRpcId = 5
+	DashboardRpcId_DASHBOARD_RPC_ID_LIST_NODE_METRICS            DashboardRpcId = 6
+	DashboardRpcId_DASHBOARD_RPC_ID_LIST_GRPC_STATS              DashboardRpcId = 7
+	DashboardRpcId_DASHBOARD_RPC_ID_LIST_PERSISTENCE_STATUS      DashboardRpcId = 8
+	DashboardRpcId_DASHBOARD_RPC_ID_LIST_NETWORK_STATS           DashboardRpcId = 9
+	DashboardRpcId_DASHBOARD_RPC_ID_LIST_THREAD_INFO             DashboardRpcId = 10
+	DashboardRpcId_DASHBOARD_RPC_ID_LIST_TOKEN_CACHE_STATS       DashboardRpcId = 11
+	DashboardRpcId_DASHBOARD_RPC_ID_LIST_MAP_STATS               DashboardRpcId = 12
+	DashboardRpcId_DASHBOARD_RPC_ID_GET_DASHBOARD                DashboardRpcId = 13
+	DashboardRpcId_DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD          DashboardRpcId = 14
+	DashboardRpcId_DASHBOARD_RPC_ID_BROKER_DASHBOARD_MCP_SESSION DashboardRpcId = 15
 )
 
 // Enum value maps for DashboardRpcId.
@@ -166,23 +168,25 @@ var (
 		12: "DASHBOARD_RPC_ID_LIST_MAP_STATS",
 		13: "DASHBOARD_RPC_ID_GET_DASHBOARD",
 		14: "DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD",
+		15: "DASHBOARD_RPC_ID_BROKER_DASHBOARD_MCP_SESSION",
 	}
 	DashboardRpcId_value = map[string]int32{
-		"DASHBOARD_RPC_ID_UNSPECIFIED":             0,
-		"DASHBOARD_RPC_ID_ALL_ACCESSORS":           1,
-		"DASHBOARD_RPC_ID_ALL_MUTATORS":            2,
-		"DASHBOARD_RPC_ID_ALL_EXECUTORS":           3,
-		"DASHBOARD_RPC_ID_GET_CLUSTER_INFO":        4,
-		"DASHBOARD_RPC_ID_GET_CLUSTER_HEALTH":      5,
-		"DASHBOARD_RPC_ID_LIST_NODE_METRICS":       6,
-		"DASHBOARD_RPC_ID_LIST_GRPC_STATS":         7,
-		"DASHBOARD_RPC_ID_LIST_PERSISTENCE_STATUS": 8,
-		"DASHBOARD_RPC_ID_LIST_NETWORK_STATS":      9,
-		"DASHBOARD_RPC_ID_LIST_THREAD_INFO":        10,
-		"DASHBOARD_RPC_ID_LIST_TOKEN_CACHE_STATS":  11,
-		"DASHBOARD_RPC_ID_LIST_MAP_STATS":          12,
-		"DASHBOARD_RPC_ID_GET_DASHBOARD":           13,
-		"DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD":     14,
+		"DASHBOARD_RPC_ID_UNSPECIFIED":                  0,
+		"DASHBOARD_RPC_ID_ALL_ACCESSORS":                1,
+		"DASHBOARD_RPC_ID_ALL_MUTATORS":                 2,
+		"DASHBOARD_RPC_ID_ALL_EXECUTORS":                3,
+		"DASHBOARD_RPC_ID_GET_CLUSTER_INFO":             4,
+		"DASHBOARD_RPC_ID_GET_CLUSTER_HEALTH":           5,
+		"DASHBOARD_RPC_ID_LIST_NODE_METRICS":            6,
+		"DASHBOARD_RPC_ID_LIST_GRPC_STATS":              7,
+		"DASHBOARD_RPC_ID_LIST_PERSISTENCE_STATUS":      8,
+		"DASHBOARD_RPC_ID_LIST_NETWORK_STATS":           9,
+		"DASHBOARD_RPC_ID_LIST_THREAD_INFO":             10,
+		"DASHBOARD_RPC_ID_LIST_TOKEN_CACHE_STATS":       11,
+		"DASHBOARD_RPC_ID_LIST_MAP_STATS":               12,
+		"DASHBOARD_RPC_ID_GET_DASHBOARD":                13,
+		"DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD":          14,
+		"DASHBOARD_RPC_ID_BROKER_DASHBOARD_MCP_SESSION": 15,
 	}
 )
 
@@ -1284,7 +1288,7 @@ var File_services_sentinel_proto protoreflect.FileDescriptor
 
 const file_services_sentinel_proto_rawDesc = "" +
 	"\n" +
-	"\x17services/sentinel.proto\x12\bsentinel\x1a\x0esys/spec.proto\x1a\x16common/hazelcast.proto\x1a\x0fsys/trace.proto\"I\n" +
+	"\x17services/sentinel.proto\x12\bsentinel\x1a\x0esys/spec.proto\x1a\x16common/hazelcast.proto\x1a\rsys/mcp.proto\x1a\x0fsys/trace.proto\"I\n" +
 	"\x06Config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0eҨ\x1d\n" +
@@ -1390,7 +1394,7 @@ const file_services_sentinel_proto_rawDesc = "" +
 	"\x1aTYPE_ID_MAP_STATS_RESPONSE\x10\v\x12\x1e\n" +
 	"\x1aTYPE_ID_DASHBOARD_RESPONSE\x10\f\x12!\n" +
 	"\x1dTYPE_ID_SENTINEL_CONFIG_STATE\x10\r\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10\x0e*\xd9\x04\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x10\x0e*\x8c\x05\n" +
 	"\x0eDashboardRpcId\x12 \n" +
 	"\x1cDASHBOARD_RPC_ID_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1eDASHBOARD_RPC_ID_ALL_ACCESSORS\x10\x01\x12!\n" +
@@ -1407,7 +1411,8 @@ const file_services_sentinel_proto_rawDesc = "" +
 	"'DASHBOARD_RPC_ID_LIST_TOKEN_CACHE_STATS\x10\v\x12#\n" +
 	"\x1fDASHBOARD_RPC_ID_LIST_MAP_STATS\x10\f\x12\"\n" +
 	"\x1eDASHBOARD_RPC_ID_GET_DASHBOARD\x10\r\x12(\n" +
-	"$DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD\x10\x0e*\x9f\x03\n" +
+	"$DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD\x10\x0e\x121\n" +
+	"-DASHBOARD_RPC_ID_BROKER_DASHBOARD_MCP_SESSION\x10\x0f*\x9f\x03\n" +
 	"\x1fSentinelConfigStateServiceRpcId\x124\n" +
 	"0SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x126\n" +
 	"2SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x125\n" +
@@ -1415,7 +1420,7 @@ const file_services_sentinel_proto_rawDesc = "" +
 	"2SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x123\n" +
 	"/SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_GET_CONFIG\x10\x04\x123\n" +
 	"/SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_SET_CONFIG\x10\x05\x125\n" +
-	"1SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\x8d\b\n" +
+	"1SENTINEL_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xdc\b\n" +
 	"\tDashboard\x12D\n" +
 	"\x0eGetClusterInfo\x12\x13.trace.TraceRequest\x1a\x1b.hazelcast.AdminClusterInfo\"\x00\x12H\n" +
 	"\x10GetClusterHealth\x12\x13.trace.TraceRequest\x1a\x1d.hazelcast.AdminClusterHealth\"\x00\x12c\n" +
@@ -1427,7 +1432,8 @@ const file_services_sentinel_proto_rawDesc = "" +
 	"\x13ListTokenCacheStats\x12\x1e.sentinel.DashboardPageRequest\x1a!.sentinel.TokenCacheStatsResponse\"\x11\xf2\x88'\r\b\x03\x12\anode_id( \x12^\n" +
 	"\fListMapStats\x12\x1e.sentinel.DashboardPageRequest\x1a\x1a.sentinel.MapStatsResponse\"\x12\xf2\x88'\x0e\b\x03\x12\bmap_name(d\x12B\n" +
 	"\fGetDashboard\x12\x13.trace.TraceRequest\x1a\x1b.sentinel.DashboardResponse\"\x00\x12V\n" +
-	"\x12SubscribeDashboard\x12\x1f.sentinel.WatchDashboardRequest\x1a\x1b.sentinel.DashboardResponse\"\x000\x01\x1a\x06\xf2\x97\"\x02\x18\x012&\n" +
+	"\x12SubscribeDashboard\x12\x1f.sentinel.WatchDashboardRequest\x1a\x1b.sentinel.DashboardResponse\"\x000\x01\x12M\n" +
+	"\x19BrokerDashboardMcpSession\x12\x0f.mcp.McpRequest\x1a\x10.mcp.McpResponse\"\t\xfa\x88'\x05\b\x01\x1a\x01\x03(\x010\x01\x1a\x06\xf2\x97\"\x02\x18\x012&\n" +
 	"\x14SentinelStateService\x1a\x0e\xea\x97\"\n" +
 	"\n" +
 	"\bsentinel2\xc9\x01\n" +
@@ -1436,9 +1442,9 @@ const file_services_sentinel_proto_rawDesc = "" +
 	"\tSetConfig\x12\x10.sentinel.Config\x1a\x10.sentinel.Config\x126\n" +
 	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x10.sentinel.Config0\x01\x1a\x0e\xea\x97\"\n" +
 	"\n" +
-	"\bsentinelB\x8d\x01\x92\xb5\x18\x11\n" +
+	"\bsentinelB\x82\x01\x92\xb5\x18\x11\n" +
 	"\fDEFAULT_PORT\x10\xfbAڵ\x18\x00\xe2\xb5\x18\x10\n" +
-	"\x0ekernel.ClusterZ^gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/sentinelb\x06proto3"
+	"\x0ekernel.ClusterZSgitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/sentinelb\x06proto3"
 
 var (
 	file_services_sentinel_proto_rawDescOnce sync.Once
@@ -1482,6 +1488,8 @@ var file_services_sentinel_proto_goTypes = []any{
 	(*hazelcast.AdminClusterInfo)(nil),       // 24: hazelcast.AdminClusterInfo
 	(*hazelcast.AdminClusterHealth)(nil),     // 25: hazelcast.AdminClusterHealth
 	(*trace.TraceRequest)(nil),               // 26: trace.TraceRequest
+	(*mcp.McpRequest)(nil),                   // 27: mcp.McpRequest
+	(*mcp.McpResponse)(nil),                  // 28: mcp.McpResponse
 }
 var file_services_sentinel_proto_depIdxs = []int32{
 	17, // 0: sentinel.NodeMetricsResponse.items:type_name -> hazelcast.AdminNodeMetrics
@@ -1512,25 +1520,27 @@ var file_services_sentinel_proto_depIdxs = []int32{
 	6,  // 25: sentinel.Dashboard.ListMapStats:input_type -> sentinel.DashboardPageRequest
 	26, // 26: sentinel.Dashboard.GetDashboard:input_type -> trace.TraceRequest
 	5,  // 27: sentinel.Dashboard.SubscribeDashboard:input_type -> sentinel.WatchDashboardRequest
-	26, // 28: sentinel.SentinelConfigStateService.GetConfig:input_type -> trace.TraceRequest
-	3,  // 29: sentinel.SentinelConfigStateService.SetConfig:input_type -> sentinel.Config
-	26, // 30: sentinel.SentinelConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	24, // 31: sentinel.Dashboard.GetClusterInfo:output_type -> hazelcast.AdminClusterInfo
-	25, // 32: sentinel.Dashboard.GetClusterHealth:output_type -> hazelcast.AdminClusterHealth
-	7,  // 33: sentinel.Dashboard.ListNodeMetrics:output_type -> sentinel.NodeMetricsResponse
-	8,  // 34: sentinel.Dashboard.ListGrpcStats:output_type -> sentinel.GrpcStatsResponse
-	9,  // 35: sentinel.Dashboard.ListPersistenceStatus:output_type -> sentinel.PersistenceStatusResponse
-	10, // 36: sentinel.Dashboard.ListNetworkStats:output_type -> sentinel.NetworkStatsResponse
-	11, // 37: sentinel.Dashboard.ListThreadInfo:output_type -> sentinel.ThreadInfoResponse
-	12, // 38: sentinel.Dashboard.ListTokenCacheStats:output_type -> sentinel.TokenCacheStatsResponse
-	13, // 39: sentinel.Dashboard.ListMapStats:output_type -> sentinel.MapStatsResponse
-	14, // 40: sentinel.Dashboard.GetDashboard:output_type -> sentinel.DashboardResponse
-	14, // 41: sentinel.Dashboard.SubscribeDashboard:output_type -> sentinel.DashboardResponse
-	3,  // 42: sentinel.SentinelConfigStateService.GetConfig:output_type -> sentinel.Config
-	3,  // 43: sentinel.SentinelConfigStateService.SetConfig:output_type -> sentinel.Config
-	3,  // 44: sentinel.SentinelConfigStateService.WatchConfig:output_type -> sentinel.Config
-	31, // [31:45] is the sub-list for method output_type
-	17, // [17:31] is the sub-list for method input_type
+	27, // 28: sentinel.Dashboard.BrokerDashboardMcpSession:input_type -> mcp.McpRequest
+	26, // 29: sentinel.SentinelConfigStateService.GetConfig:input_type -> trace.TraceRequest
+	3,  // 30: sentinel.SentinelConfigStateService.SetConfig:input_type -> sentinel.Config
+	26, // 31: sentinel.SentinelConfigStateService.WatchConfig:input_type -> trace.TraceRequest
+	24, // 32: sentinel.Dashboard.GetClusterInfo:output_type -> hazelcast.AdminClusterInfo
+	25, // 33: sentinel.Dashboard.GetClusterHealth:output_type -> hazelcast.AdminClusterHealth
+	7,  // 34: sentinel.Dashboard.ListNodeMetrics:output_type -> sentinel.NodeMetricsResponse
+	8,  // 35: sentinel.Dashboard.ListGrpcStats:output_type -> sentinel.GrpcStatsResponse
+	9,  // 36: sentinel.Dashboard.ListPersistenceStatus:output_type -> sentinel.PersistenceStatusResponse
+	10, // 37: sentinel.Dashboard.ListNetworkStats:output_type -> sentinel.NetworkStatsResponse
+	11, // 38: sentinel.Dashboard.ListThreadInfo:output_type -> sentinel.ThreadInfoResponse
+	12, // 39: sentinel.Dashboard.ListTokenCacheStats:output_type -> sentinel.TokenCacheStatsResponse
+	13, // 40: sentinel.Dashboard.ListMapStats:output_type -> sentinel.MapStatsResponse
+	14, // 41: sentinel.Dashboard.GetDashboard:output_type -> sentinel.DashboardResponse
+	14, // 42: sentinel.Dashboard.SubscribeDashboard:output_type -> sentinel.DashboardResponse
+	28, // 43: sentinel.Dashboard.BrokerDashboardMcpSession:output_type -> mcp.McpResponse
+	3,  // 44: sentinel.SentinelConfigStateService.GetConfig:output_type -> sentinel.Config
+	3,  // 45: sentinel.SentinelConfigStateService.SetConfig:output_type -> sentinel.Config
+	3,  // 46: sentinel.SentinelConfigStateService.WatchConfig:output_type -> sentinel.Config
+	32, // [32:47] is the sub-list for method output_type
+	17, // [17:32] is the sub-list for method input_type
 	17, // [17:17] is the sub-list for extension type_name
 	17, // [17:17] is the sub-list for extension extendee
 	0,  // [0:17] is the sub-list for field type_name

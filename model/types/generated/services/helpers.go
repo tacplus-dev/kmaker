@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -25,7 +25,7 @@ import (
 	"strconv"
 	"strings"
 
-	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/errors"
+	protoerrors "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/errors"
 )
 
 // ============================================================
@@ -42,20 +42,31 @@ func ServiceNameValues() []ServiceName {
 		ServiceName_SERVICE_NAME_OAUTH,
 		ServiceName_SERVICE_NAME_OPA,
 		ServiceName_SERVICE_NAME_STRATUM,
+		ServiceName_SERVICE_NAME_SAML,
+		ServiceName_SERVICE_NAME_OPERATOR,
 		ServiceName_SERVICE_NAME_KMAKER,
 		ServiceName_SERVICE_NAME_SAMLSVC,
 		ServiceName_SERVICE_NAME_MESSAGING,
 		ServiceName_SERVICE_NAME_SCOTTYAGENT,
 		ServiceName_SERVICE_NAME_MAILBOX,
 		ServiceName_SERVICE_NAME_LLMSETTINGS,
+		ServiceName_SERVICE_NAME_PERSONALAUTH,
+		ServiceName_SERVICE_NAME_BLOBSTORE,
 		ServiceName_SERVICE_NAME_SCOTTY,
+		ServiceName_SERVICE_NAME_SCOTTYPERSONAL,
+		ServiceName_SERVICE_NAME_WORK,
+		ServiceName_SERVICE_NAME_WEATHER,
+		ServiceName_SERVICE_NAME_LLMPROXY,
+		ServiceName_SERVICE_NAME_PROFILE,
+		ServiceName_SERVICE_NAME_DOCMANAGER,
+		ServiceName_SERVICE_NAME_REVEILLE,
 		ServiceName_SERVICE_NAME_ANY,
 	}
 }
 
 // ServiceNameStringValues returns all valid ServiceName names as strings
 func ServiceNameStringValues() []string {
-	return []string{"sentinel", "gateway", "kernel", "letsencrypt", "eventbus", "oauth", "opa", "stratum", "kmaker", "samlsvc", "messaging", "scottyagent", "mailbox", "llmsettings", "scotty", "any"}
+	return []string{"sentinel", "gateway", "kernel", "letsencrypt", "eventbus", "oauth", "opa", "stratum", "saml", "operator", "kmaker", "samlsvc", "messaging", "scottyagent", "mailbox", "llmsettings", "personalauth", "blobstore", "scotty", "scottypersonal", "work", "weather", "llmproxy", "profile", "docmanager", "reveille", "any"}
 }
 
 // ParseServiceName converts a string to a ServiceName enum value
@@ -82,6 +93,10 @@ func ParseServiceName(s string) (ServiceName, error) {
 		return ServiceName_SERVICE_NAME_OPA, nil
 	case "stratum", "service-name-stratum":
 		return ServiceName_SERVICE_NAME_STRATUM, nil
+	case "saml", "service-name-saml":
+		return ServiceName_SERVICE_NAME_SAML, nil
+	case "operator", "service-name-operator":
+		return ServiceName_SERVICE_NAME_OPERATOR, nil
 	case "kmaker", "service-name-kmaker":
 		return ServiceName_SERVICE_NAME_KMAKER, nil
 	case "samlsvc", "service-name-samlsvc":
@@ -94,8 +109,26 @@ func ParseServiceName(s string) (ServiceName, error) {
 		return ServiceName_SERVICE_NAME_MAILBOX, nil
 	case "llmsettings", "service-name-llmsettings":
 		return ServiceName_SERVICE_NAME_LLMSETTINGS, nil
+	case "personalauth", "service-name-personalauth":
+		return ServiceName_SERVICE_NAME_PERSONALAUTH, nil
+	case "blobstore", "service-name-blobstore":
+		return ServiceName_SERVICE_NAME_BLOBSTORE, nil
 	case "scotty", "service-name-scotty":
 		return ServiceName_SERVICE_NAME_SCOTTY, nil
+	case "scottypersonal", "service-name-scottypersonal":
+		return ServiceName_SERVICE_NAME_SCOTTYPERSONAL, nil
+	case "work", "service-name-work":
+		return ServiceName_SERVICE_NAME_WORK, nil
+	case "weather", "service-name-weather":
+		return ServiceName_SERVICE_NAME_WEATHER, nil
+	case "llmproxy", "service-name-llmproxy":
+		return ServiceName_SERVICE_NAME_LLMPROXY, nil
+	case "profile", "service-name-profile":
+		return ServiceName_SERVICE_NAME_PROFILE, nil
+	case "docmanager", "service-name-docmanager":
+		return ServiceName_SERVICE_NAME_DOCMANAGER, nil
+	case "reveille", "service-name-reveille":
+		return ServiceName_SERVICE_NAME_REVEILLE, nil
 	case "any", "service-name-any":
 		return ServiceName_SERVICE_NAME_ANY, nil
 	default:
@@ -144,6 +177,10 @@ func ServiceNameToString(v ServiceName) string {
 		return "opa"
 	case ServiceName_SERVICE_NAME_STRATUM:
 		return "stratum"
+	case ServiceName_SERVICE_NAME_SAML:
+		return "saml"
+	case ServiceName_SERVICE_NAME_OPERATOR:
+		return "operator"
 	case ServiceName_SERVICE_NAME_KMAKER:
 		return "kmaker"
 	case ServiceName_SERVICE_NAME_SAMLSVC:
@@ -156,8 +193,26 @@ func ServiceNameToString(v ServiceName) string {
 		return "mailbox"
 	case ServiceName_SERVICE_NAME_LLMSETTINGS:
 		return "llmsettings"
+	case ServiceName_SERVICE_NAME_PERSONALAUTH:
+		return "personalauth"
+	case ServiceName_SERVICE_NAME_BLOBSTORE:
+		return "blobstore"
 	case ServiceName_SERVICE_NAME_SCOTTY:
 		return "scotty"
+	case ServiceName_SERVICE_NAME_SCOTTYPERSONAL:
+		return "scottypersonal"
+	case ServiceName_SERVICE_NAME_WORK:
+		return "work"
+	case ServiceName_SERVICE_NAME_WEATHER:
+		return "weather"
+	case ServiceName_SERVICE_NAME_LLMPROXY:
+		return "llmproxy"
+	case ServiceName_SERVICE_NAME_PROFILE:
+		return "profile"
+	case ServiceName_SERVICE_NAME_DOCMANAGER:
+		return "docmanager"
+	case ServiceName_SERVICE_NAME_REVEILLE:
+		return "reveille"
 	case ServiceName_SERVICE_NAME_ANY:
 		return "any"
 	default:
@@ -198,6 +253,10 @@ func ParseServiceNameLiberal(s string) ServiceName {
 		return ServiceName_SERVICE_NAME_OPA
 	case "stratum", "service-name-stratum":
 		return ServiceName_SERVICE_NAME_STRATUM
+	case "saml", "service-name-saml":
+		return ServiceName_SERVICE_NAME_SAML
+	case "operator", "service-name-operator":
+		return ServiceName_SERVICE_NAME_OPERATOR
 	case "kmaker", "service-name-kmaker":
 		return ServiceName_SERVICE_NAME_KMAKER
 	case "samlsvc", "service-name-samlsvc":
@@ -210,8 +269,26 @@ func ParseServiceNameLiberal(s string) ServiceName {
 		return ServiceName_SERVICE_NAME_MAILBOX
 	case "llmsettings", "service-name-llmsettings":
 		return ServiceName_SERVICE_NAME_LLMSETTINGS
+	case "personalauth", "service-name-personalauth":
+		return ServiceName_SERVICE_NAME_PERSONALAUTH
+	case "blobstore", "service-name-blobstore":
+		return ServiceName_SERVICE_NAME_BLOBSTORE
 	case "scotty", "service-name-scotty":
 		return ServiceName_SERVICE_NAME_SCOTTY
+	case "scottypersonal", "service-name-scottypersonal":
+		return ServiceName_SERVICE_NAME_SCOTTYPERSONAL
+	case "work", "service-name-work":
+		return ServiceName_SERVICE_NAME_WORK
+	case "weather", "service-name-weather":
+		return ServiceName_SERVICE_NAME_WEATHER
+	case "llmproxy", "service-name-llmproxy":
+		return ServiceName_SERVICE_NAME_LLMPROXY
+	case "profile", "service-name-profile":
+		return ServiceName_SERVICE_NAME_PROFILE
+	case "docmanager", "service-name-docmanager":
+		return ServiceName_SERVICE_NAME_DOCMANAGER
+	case "reveille", "service-name-reveille":
+		return ServiceName_SERVICE_NAME_REVEILLE
 	case "any", "service-name-any":
 		return ServiceName_SERVICE_NAME_ANY
 	default:
@@ -240,6 +317,10 @@ func ServiceNameToSpecName(v ServiceName) string {
 		return "SERVICE_NAME_OPA"
 	case ServiceName_SERVICE_NAME_STRATUM:
 		return "SERVICE_NAME_STRATUM"
+	case ServiceName_SERVICE_NAME_SAML:
+		return "SERVICE_NAME_SAML"
+	case ServiceName_SERVICE_NAME_OPERATOR:
+		return "SERVICE_NAME_OPERATOR"
 	case ServiceName_SERVICE_NAME_KMAKER:
 		return "SERVICE_NAME_KMAKER"
 	case ServiceName_SERVICE_NAME_SAMLSVC:
@@ -252,8 +333,26 @@ func ServiceNameToSpecName(v ServiceName) string {
 		return "SERVICE_NAME_MAILBOX"
 	case ServiceName_SERVICE_NAME_LLMSETTINGS:
 		return "SERVICE_NAME_LLMSETTINGS"
+	case ServiceName_SERVICE_NAME_PERSONALAUTH:
+		return "SERVICE_NAME_PERSONALAUTH"
+	case ServiceName_SERVICE_NAME_BLOBSTORE:
+		return "SERVICE_NAME_BLOBSTORE"
 	case ServiceName_SERVICE_NAME_SCOTTY:
 		return "SERVICE_NAME_SCOTTY"
+	case ServiceName_SERVICE_NAME_SCOTTYPERSONAL:
+		return "SERVICE_NAME_SCOTTYPERSONAL"
+	case ServiceName_SERVICE_NAME_WORK:
+		return "SERVICE_NAME_WORK"
+	case ServiceName_SERVICE_NAME_WEATHER:
+		return "SERVICE_NAME_WEATHER"
+	case ServiceName_SERVICE_NAME_LLMPROXY:
+		return "SERVICE_NAME_LLMPROXY"
+	case ServiceName_SERVICE_NAME_PROFILE:
+		return "SERVICE_NAME_PROFILE"
+	case ServiceName_SERVICE_NAME_DOCMANAGER:
+		return "SERVICE_NAME_DOCMANAGER"
+	case ServiceName_SERVICE_NAME_REVEILLE:
+		return "SERVICE_NAME_REVEILLE"
 	case ServiceName_SERVICE_NAME_ANY:
 		return "SERVICE_NAME_ANY"
 	default:
@@ -275,13 +374,14 @@ func SentinelRPCsValues() []SentinelRPCs {
 		SentinelRPCs_SENTINEL_RPCS_LIST_MAP_STATS,
 		SentinelRPCs_SENTINEL_RPCS_GET_DASHBOARD,
 		SentinelRPCs_SENTINEL_RPCS_SUBSCRIBE_DASHBOARD,
+		SentinelRPCs_SENTINEL_RPCS_BROKER_DASHBOARD_MCP_SESSION,
 		SentinelRPCs_SENTINEL_RPCS_ANY,
 	}
 }
 
 // SentinelRPCsStringValues returns all valid SentinelRPCs names as strings
 func SentinelRPCsStringValues() []string {
-	return []string{"sentinel-rpcs-get-cluster-info", "sentinel-rpcs-get-cluster-health", "sentinel-rpcs-list-node-metrics", "sentinel-rpcs-list-grpc-stats", "sentinel-rpcs-list-persistence-status", "sentinel-rpcs-list-network-stats", "sentinel-rpcs-list-thread-info", "sentinel-rpcs-list-token-cache-stats", "sentinel-rpcs-list-map-stats", "sentinel-rpcs-get-dashboard", "sentinel-rpcs-subscribe-dashboard", "sentinel-rpcs-any"}
+	return []string{"sentinel-rpcs-get-cluster-info", "sentinel-rpcs-get-cluster-health", "sentinel-rpcs-list-node-metrics", "sentinel-rpcs-list-grpc-stats", "sentinel-rpcs-list-persistence-status", "sentinel-rpcs-list-network-stats", "sentinel-rpcs-list-thread-info", "sentinel-rpcs-list-token-cache-stats", "sentinel-rpcs-list-map-stats", "sentinel-rpcs-get-dashboard", "sentinel-rpcs-subscribe-dashboard", "sentinel-rpcs-broker-dashboard-mcp-session", "sentinel-rpcs-any"}
 }
 
 // ParseSentinelRPCs converts a string to a SentinelRPCs enum value
@@ -314,6 +414,8 @@ func ParseSentinelRPCs(s string) (SentinelRPCs, error) {
 		return SentinelRPCs_SENTINEL_RPCS_GET_DASHBOARD, nil
 	case "sentinel-rpcs-subscribe-dashboard":
 		return SentinelRPCs_SENTINEL_RPCS_SUBSCRIBE_DASHBOARD, nil
+	case "sentinel-rpcs-broker-dashboard-mcp-session":
+		return SentinelRPCs_SENTINEL_RPCS_BROKER_DASHBOARD_MCP_SESSION, nil
 	case "sentinel-rpcs-any":
 		return SentinelRPCs_SENTINEL_RPCS_ANY, nil
 	default:
@@ -368,6 +470,8 @@ func SentinelRPCsToString(v SentinelRPCs) string {
 		return "sentinel-rpcs-get-dashboard"
 	case SentinelRPCs_SENTINEL_RPCS_SUBSCRIBE_DASHBOARD:
 		return "sentinel-rpcs-subscribe-dashboard"
+	case SentinelRPCs_SENTINEL_RPCS_BROKER_DASHBOARD_MCP_SESSION:
+		return "sentinel-rpcs-broker-dashboard-mcp-session"
 	case SentinelRPCs_SENTINEL_RPCS_ANY:
 		return "sentinel-rpcs-any"
 	default:
@@ -414,6 +518,8 @@ func ParseSentinelRPCsLiberal(s string) SentinelRPCs {
 		return SentinelRPCs_SENTINEL_RPCS_GET_DASHBOARD
 	case "sentinel-rpcs-subscribe-dashboard":
 		return SentinelRPCs_SENTINEL_RPCS_SUBSCRIBE_DASHBOARD
+	case "sentinel-rpcs-broker-dashboard-mcp-session":
+		return SentinelRPCs_SENTINEL_RPCS_BROKER_DASHBOARD_MCP_SESSION
 	case "sentinel-rpcs-any":
 		return SentinelRPCs_SENTINEL_RPCS_ANY
 	default:
@@ -448,6 +554,8 @@ func SentinelRPCsToSpecName(v SentinelRPCs) string {
 		return "SENTINEL_RPCS_GET_DASHBOARD"
 	case SentinelRPCs_SENTINEL_RPCS_SUBSCRIBE_DASHBOARD:
 		return "SENTINEL_RPCS_SUBSCRIBE_DASHBOARD"
+	case SentinelRPCs_SENTINEL_RPCS_BROKER_DASHBOARD_MCP_SESSION:
+		return "SENTINEL_RPCS_BROKER_DASHBOARD_MCP_SESSION"
 	case SentinelRPCs_SENTINEL_RPCS_ANY:
 		return "SENTINEL_RPCS_ANY"
 	default:
@@ -598,6 +706,11 @@ func GatewayRPCsToSpecName(v GatewayRPCs) string {
 // KernelRPCsValues returns all valid KernelRPCs values (excluding UNDEFINED)
 func KernelRPCsValues() []KernelRPCs {
 	return []KernelRPCs{
+		KernelRPCs_KERNEL_RPCS_MINT_DELEGATE_OFFLINE_TOKEN,
+		KernelRPCs_KERNEL_RPCS_GET_MY_IDENTITY,
+		KernelRPCs_KERNEL_RPCS_REVOKE_TENANT_USER_LINK,
+		KernelRPCs_KERNEL_RPCS_CREATE_PENDING_APPROVAL,
+		KernelRPCs_KERNEL_RPCS_BROKER_PERSONAL_IDENTITY_MCP_SESSION,
 		KernelRPCs_KERNEL_RPCS_CREATE_TENANT,
 		KernelRPCs_KERNEL_RPCS_DELETE_TENANT,
 		KernelRPCs_KERNEL_RPCS_LIST_TENANTS,
@@ -607,13 +720,14 @@ func KernelRPCsValues() []KernelRPCs {
 		KernelRPCs_KERNEL_RPCS_UPDATE_PROJECT_CONFIG,
 		KernelRPCs_KERNEL_RPCS_LIST_PROJECTS,
 		KernelRPCs_KERNEL_RPCS_DELETE_PROJECT,
+		KernelRPCs_KERNEL_RPCS_BROKER_TENANT_ADMIN_MCP_SESSION,
 		KernelRPCs_KERNEL_RPCS_ANY,
 	}
 }
 
 // KernelRPCsStringValues returns all valid KernelRPCs names as strings
 func KernelRPCsStringValues() []string {
-	return []string{"kernel-rpcs-create-tenant", "kernel-rpcs-delete-tenant", "kernel-rpcs-list-tenants", "kernel-rpcs-get-tenant-config", "kernel-rpcs-update-tenant-config", "kernel-rpcs-get-project-config", "kernel-rpcs-update-project-config", "kernel-rpcs-list-projects", "kernel-rpcs-delete-project", "kernel-rpcs-any"}
+	return []string{"kernel-rpcs-mint-delegate-offline-token", "kernel-rpcs-get-my-identity", "kernel-rpcs-revoke-tenant-user-link", "kernel-rpcs-create-pending-approval", "kernel-rpcs-broker-personal-identity-mcp-session", "kernel-rpcs-create-tenant", "kernel-rpcs-delete-tenant", "kernel-rpcs-list-tenants", "kernel-rpcs-get-tenant-config", "kernel-rpcs-update-tenant-config", "kernel-rpcs-get-project-config", "kernel-rpcs-update-project-config", "kernel-rpcs-list-projects", "kernel-rpcs-delete-project", "kernel-rpcs-broker-tenant-admin-mcp-session", "kernel-rpcs-any"}
 }
 
 // ParseKernelRPCs converts a string to a KernelRPCs enum value
@@ -624,6 +738,16 @@ func ParseKernelRPCs(s string) (KernelRPCs, error) {
 	switch normalized {
 	case "":
 		return KernelRPCs_KERNEL_RPCS_UNSPECIFIED, nil
+	case "kernel-rpcs-mint-delegate-offline-token":
+		return KernelRPCs_KERNEL_RPCS_MINT_DELEGATE_OFFLINE_TOKEN, nil
+	case "kernel-rpcs-get-my-identity":
+		return KernelRPCs_KERNEL_RPCS_GET_MY_IDENTITY, nil
+	case "kernel-rpcs-revoke-tenant-user-link":
+		return KernelRPCs_KERNEL_RPCS_REVOKE_TENANT_USER_LINK, nil
+	case "kernel-rpcs-create-pending-approval":
+		return KernelRPCs_KERNEL_RPCS_CREATE_PENDING_APPROVAL, nil
+	case "kernel-rpcs-broker-personal-identity-mcp-session":
+		return KernelRPCs_KERNEL_RPCS_BROKER_PERSONAL_IDENTITY_MCP_SESSION, nil
 	case "kernel-rpcs-create-tenant":
 		return KernelRPCs_KERNEL_RPCS_CREATE_TENANT, nil
 	case "kernel-rpcs-delete-tenant":
@@ -642,6 +766,8 @@ func ParseKernelRPCs(s string) (KernelRPCs, error) {
 		return KernelRPCs_KERNEL_RPCS_LIST_PROJECTS, nil
 	case "kernel-rpcs-delete-project":
 		return KernelRPCs_KERNEL_RPCS_DELETE_PROJECT, nil
+	case "kernel-rpcs-broker-tenant-admin-mcp-session":
+		return KernelRPCs_KERNEL_RPCS_BROKER_TENANT_ADMIN_MCP_SESSION, nil
 	case "kernel-rpcs-any":
 		return KernelRPCs_KERNEL_RPCS_ANY, nil
 	default:
@@ -674,6 +800,16 @@ func ParseKernelRPCss(s string) ([]KernelRPCs, error) {
 // KernelRPCsToString converts a KernelRPCs to its lowercase string representation
 func KernelRPCsToString(v KernelRPCs) string {
 	switch v {
+	case KernelRPCs_KERNEL_RPCS_MINT_DELEGATE_OFFLINE_TOKEN:
+		return "kernel-rpcs-mint-delegate-offline-token"
+	case KernelRPCs_KERNEL_RPCS_GET_MY_IDENTITY:
+		return "kernel-rpcs-get-my-identity"
+	case KernelRPCs_KERNEL_RPCS_REVOKE_TENANT_USER_LINK:
+		return "kernel-rpcs-revoke-tenant-user-link"
+	case KernelRPCs_KERNEL_RPCS_CREATE_PENDING_APPROVAL:
+		return "kernel-rpcs-create-pending-approval"
+	case KernelRPCs_KERNEL_RPCS_BROKER_PERSONAL_IDENTITY_MCP_SESSION:
+		return "kernel-rpcs-broker-personal-identity-mcp-session"
 	case KernelRPCs_KERNEL_RPCS_CREATE_TENANT:
 		return "kernel-rpcs-create-tenant"
 	case KernelRPCs_KERNEL_RPCS_DELETE_TENANT:
@@ -692,6 +828,8 @@ func KernelRPCsToString(v KernelRPCs) string {
 		return "kernel-rpcs-list-projects"
 	case KernelRPCs_KERNEL_RPCS_DELETE_PROJECT:
 		return "kernel-rpcs-delete-project"
+	case KernelRPCs_KERNEL_RPCS_BROKER_TENANT_ADMIN_MCP_SESSION:
+		return "kernel-rpcs-broker-tenant-admin-mcp-session"
 	case KernelRPCs_KERNEL_RPCS_ANY:
 		return "kernel-rpcs-any"
 	default:
@@ -716,6 +854,16 @@ func ParseKernelRPCsLiberal(s string) KernelRPCs {
 	normalized = strings.ReplaceAll(normalized, "_", "-")
 	normalized = strings.ReplaceAll(normalized, " ", "-")
 	switch normalized {
+	case "kernel-rpcs-mint-delegate-offline-token":
+		return KernelRPCs_KERNEL_RPCS_MINT_DELEGATE_OFFLINE_TOKEN
+	case "kernel-rpcs-get-my-identity":
+		return KernelRPCs_KERNEL_RPCS_GET_MY_IDENTITY
+	case "kernel-rpcs-revoke-tenant-user-link":
+		return KernelRPCs_KERNEL_RPCS_REVOKE_TENANT_USER_LINK
+	case "kernel-rpcs-create-pending-approval":
+		return KernelRPCs_KERNEL_RPCS_CREATE_PENDING_APPROVAL
+	case "kernel-rpcs-broker-personal-identity-mcp-session":
+		return KernelRPCs_KERNEL_RPCS_BROKER_PERSONAL_IDENTITY_MCP_SESSION
 	case "kernel-rpcs-create-tenant":
 		return KernelRPCs_KERNEL_RPCS_CREATE_TENANT
 	case "kernel-rpcs-delete-tenant":
@@ -734,6 +882,8 @@ func ParseKernelRPCsLiberal(s string) KernelRPCs {
 		return KernelRPCs_KERNEL_RPCS_LIST_PROJECTS
 	case "kernel-rpcs-delete-project":
 		return KernelRPCs_KERNEL_RPCS_DELETE_PROJECT
+	case "kernel-rpcs-broker-tenant-admin-mcp-session":
+		return KernelRPCs_KERNEL_RPCS_BROKER_TENANT_ADMIN_MCP_SESSION
 	case "kernel-rpcs-any":
 		return KernelRPCs_KERNEL_RPCS_ANY
 	default:
@@ -746,6 +896,16 @@ func KernelRPCsToSpecName(v KernelRPCs) string {
 	switch v {
 	case KernelRPCs_KERNEL_RPCS_UNSPECIFIED:
 		return "KERNEL_RPCS_UNSPECIFIED"
+	case KernelRPCs_KERNEL_RPCS_MINT_DELEGATE_OFFLINE_TOKEN:
+		return "KERNEL_RPCS_MINT_DELEGATE_OFFLINE_TOKEN"
+	case KernelRPCs_KERNEL_RPCS_GET_MY_IDENTITY:
+		return "KERNEL_RPCS_GET_MY_IDENTITY"
+	case KernelRPCs_KERNEL_RPCS_REVOKE_TENANT_USER_LINK:
+		return "KERNEL_RPCS_REVOKE_TENANT_USER_LINK"
+	case KernelRPCs_KERNEL_RPCS_CREATE_PENDING_APPROVAL:
+		return "KERNEL_RPCS_CREATE_PENDING_APPROVAL"
+	case KernelRPCs_KERNEL_RPCS_BROKER_PERSONAL_IDENTITY_MCP_SESSION:
+		return "KERNEL_RPCS_BROKER_PERSONAL_IDENTITY_MCP_SESSION"
 	case KernelRPCs_KERNEL_RPCS_CREATE_TENANT:
 		return "KERNEL_RPCS_CREATE_TENANT"
 	case KernelRPCs_KERNEL_RPCS_DELETE_TENANT:
@@ -764,6 +924,8 @@ func KernelRPCsToSpecName(v KernelRPCs) string {
 		return "KERNEL_RPCS_LIST_PROJECTS"
 	case KernelRPCs_KERNEL_RPCS_DELETE_PROJECT:
 		return "KERNEL_RPCS_DELETE_PROJECT"
+	case KernelRPCs_KERNEL_RPCS_BROKER_TENANT_ADMIN_MCP_SESSION:
+		return "KERNEL_RPCS_BROKER_TENANT_ADMIN_MCP_SESSION"
 	case KernelRPCs_KERNEL_RPCS_ANY:
 		return "KERNEL_RPCS_ANY"
 	default:
@@ -884,13 +1046,14 @@ func OauthRPCsValues() []OauthRPCs {
 		OauthRPCs_OAUTH_RPCS_MINT_CALLBACK_TOKENS,
 		OauthRPCs_OAUTH_RPCS_REVOKE_SESSION,
 		OauthRPCs_OAUTH_RPCS_BROKER_CLI_AUTH,
+		OauthRPCs_OAUTH_RPCS_BROKER_AUTH_MCP_SESSION,
 		OauthRPCs_OAUTH_RPCS_ANY,
 	}
 }
 
 // OauthRPCsStringValues returns all valid OauthRPCs names as strings
 func OauthRPCsStringValues() []string {
-	return []string{"oauth-rpcs-broker-session", "oauth-rpcs-list-providers", "oauth-rpcs-authorize", "oauth-rpcs-mint-callback-tokens", "oauth-rpcs-revoke-session", "oauth-rpcs-broker-cli-auth", "oauth-rpcs-any"}
+	return []string{"oauth-rpcs-broker-session", "oauth-rpcs-list-providers", "oauth-rpcs-authorize", "oauth-rpcs-mint-callback-tokens", "oauth-rpcs-revoke-session", "oauth-rpcs-broker-cli-auth", "oauth-rpcs-broker-auth-mcp-session", "oauth-rpcs-any"}
 }
 
 // ParseOauthRPCs converts a string to a OauthRPCs enum value
@@ -913,6 +1076,8 @@ func ParseOauthRPCs(s string) (OauthRPCs, error) {
 		return OauthRPCs_OAUTH_RPCS_REVOKE_SESSION, nil
 	case "oauth-rpcs-broker-cli-auth":
 		return OauthRPCs_OAUTH_RPCS_BROKER_CLI_AUTH, nil
+	case "oauth-rpcs-broker-auth-mcp-session":
+		return OauthRPCs_OAUTH_RPCS_BROKER_AUTH_MCP_SESSION, nil
 	case "oauth-rpcs-any":
 		return OauthRPCs_OAUTH_RPCS_ANY, nil
 	default:
@@ -957,6 +1122,8 @@ func OauthRPCsToString(v OauthRPCs) string {
 		return "oauth-rpcs-revoke-session"
 	case OauthRPCs_OAUTH_RPCS_BROKER_CLI_AUTH:
 		return "oauth-rpcs-broker-cli-auth"
+	case OauthRPCs_OAUTH_RPCS_BROKER_AUTH_MCP_SESSION:
+		return "oauth-rpcs-broker-auth-mcp-session"
 	case OauthRPCs_OAUTH_RPCS_ANY:
 		return "oauth-rpcs-any"
 	default:
@@ -993,6 +1160,8 @@ func ParseOauthRPCsLiberal(s string) OauthRPCs {
 		return OauthRPCs_OAUTH_RPCS_REVOKE_SESSION
 	case "oauth-rpcs-broker-cli-auth":
 		return OauthRPCs_OAUTH_RPCS_BROKER_CLI_AUTH
+	case "oauth-rpcs-broker-auth-mcp-session":
+		return OauthRPCs_OAUTH_RPCS_BROKER_AUTH_MCP_SESSION
 	case "oauth-rpcs-any":
 		return OauthRPCs_OAUTH_RPCS_ANY
 	default:
@@ -1017,6 +1186,8 @@ func OauthRPCsToSpecName(v OauthRPCs) string {
 		return "OAUTH_RPCS_REVOKE_SESSION"
 	case OauthRPCs_OAUTH_RPCS_BROKER_CLI_AUTH:
 		return "OAUTH_RPCS_BROKER_CLI_AUTH"
+	case OauthRPCs_OAUTH_RPCS_BROKER_AUTH_MCP_SESSION:
+		return "OAUTH_RPCS_BROKER_AUTH_MCP_SESSION"
 	case OauthRPCs_OAUTH_RPCS_ANY:
 		return "OAUTH_RPCS_ANY"
 	default:
@@ -1031,16 +1202,18 @@ func SamlRPCsValues() []SamlRPCs {
 		SamlRPCs_SAML_RPCS_AUTHORIZE,
 		SamlRPCs_SAML_RPCS_MINT_ASSERTION,
 		SamlRPCs_SAML_RPCS_LIST_S_PS,
+		SamlRPCs_SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION,
 		SamlRPCs_SAML_RPCS_GET_IDP_METADATA,
 		SamlRPCs_SAML_RPCS_GET_SP_METADATA,
 		SamlRPCs_SAML_RPCS_GET_IDP_DESCRIPTOR,
+		SamlRPCs_SAML_RPCS_BROKER_METADATA_MCP_SESSION,
 		SamlRPCs_SAML_RPCS_ANY,
 	}
 }
 
 // SamlRPCsStringValues returns all valid SamlRPCs names as strings
 func SamlRPCsStringValues() []string {
-	return []string{"saml-rpcs-mint-acs-tokens", "saml-rpcs-authorize", "saml-rpcs-mint-assertion", "saml-rpcs-list-s-ps", "saml-rpcs-get-idp-metadata", "saml-rpcs-get-sp-metadata", "saml-rpcs-get-idp-descriptor", "saml-rpcs-any"}
+	return []string{"saml-rpcs-mint-acs-tokens", "saml-rpcs-authorize", "saml-rpcs-mint-assertion", "saml-rpcs-list-s-ps", "saml-rpcs-broker-outbound-mcp-session", "saml-rpcs-get-idp-metadata", "saml-rpcs-get-sp-metadata", "saml-rpcs-get-idp-descriptor", "saml-rpcs-broker-metadata-mcp-session", "saml-rpcs-any"}
 }
 
 // ParseSamlRPCs converts a string to a SamlRPCs enum value
@@ -1059,12 +1232,16 @@ func ParseSamlRPCs(s string) (SamlRPCs, error) {
 		return SamlRPCs_SAML_RPCS_MINT_ASSERTION, nil
 	case "saml-rpcs-list-s-ps":
 		return SamlRPCs_SAML_RPCS_LIST_S_PS, nil
+	case "saml-rpcs-broker-outbound-mcp-session":
+		return SamlRPCs_SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION, nil
 	case "saml-rpcs-get-idp-metadata":
 		return SamlRPCs_SAML_RPCS_GET_IDP_METADATA, nil
 	case "saml-rpcs-get-sp-metadata":
 		return SamlRPCs_SAML_RPCS_GET_SP_METADATA, nil
 	case "saml-rpcs-get-idp-descriptor":
 		return SamlRPCs_SAML_RPCS_GET_IDP_DESCRIPTOR, nil
+	case "saml-rpcs-broker-metadata-mcp-session":
+		return SamlRPCs_SAML_RPCS_BROKER_METADATA_MCP_SESSION, nil
 	case "saml-rpcs-any":
 		return SamlRPCs_SAML_RPCS_ANY, nil
 	default:
@@ -1105,12 +1282,16 @@ func SamlRPCsToString(v SamlRPCs) string {
 		return "saml-rpcs-mint-assertion"
 	case SamlRPCs_SAML_RPCS_LIST_S_PS:
 		return "saml-rpcs-list-s-ps"
+	case SamlRPCs_SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION:
+		return "saml-rpcs-broker-outbound-mcp-session"
 	case SamlRPCs_SAML_RPCS_GET_IDP_METADATA:
 		return "saml-rpcs-get-idp-metadata"
 	case SamlRPCs_SAML_RPCS_GET_SP_METADATA:
 		return "saml-rpcs-get-sp-metadata"
 	case SamlRPCs_SAML_RPCS_GET_IDP_DESCRIPTOR:
 		return "saml-rpcs-get-idp-descriptor"
+	case SamlRPCs_SAML_RPCS_BROKER_METADATA_MCP_SESSION:
+		return "saml-rpcs-broker-metadata-mcp-session"
 	case SamlRPCs_SAML_RPCS_ANY:
 		return "saml-rpcs-any"
 	default:
@@ -1143,12 +1324,16 @@ func ParseSamlRPCsLiberal(s string) SamlRPCs {
 		return SamlRPCs_SAML_RPCS_MINT_ASSERTION
 	case "saml-rpcs-list-s-ps":
 		return SamlRPCs_SAML_RPCS_LIST_S_PS
+	case "saml-rpcs-broker-outbound-mcp-session":
+		return SamlRPCs_SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION
 	case "saml-rpcs-get-idp-metadata":
 		return SamlRPCs_SAML_RPCS_GET_IDP_METADATA
 	case "saml-rpcs-get-sp-metadata":
 		return SamlRPCs_SAML_RPCS_GET_SP_METADATA
 	case "saml-rpcs-get-idp-descriptor":
 		return SamlRPCs_SAML_RPCS_GET_IDP_DESCRIPTOR
+	case "saml-rpcs-broker-metadata-mcp-session":
+		return SamlRPCs_SAML_RPCS_BROKER_METADATA_MCP_SESSION
 	case "saml-rpcs-any":
 		return SamlRPCs_SAML_RPCS_ANY
 	default:
@@ -1169,12 +1354,16 @@ func SamlRPCsToSpecName(v SamlRPCs) string {
 		return "SAML_RPCS_MINT_ASSERTION"
 	case SamlRPCs_SAML_RPCS_LIST_S_PS:
 		return "SAML_RPCS_LIST_S_PS"
+	case SamlRPCs_SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION:
+		return "SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION"
 	case SamlRPCs_SAML_RPCS_GET_IDP_METADATA:
 		return "SAML_RPCS_GET_IDP_METADATA"
 	case SamlRPCs_SAML_RPCS_GET_SP_METADATA:
 		return "SAML_RPCS_GET_SP_METADATA"
 	case SamlRPCs_SAML_RPCS_GET_IDP_DESCRIPTOR:
 		return "SAML_RPCS_GET_IDP_DESCRIPTOR"
+	case SamlRPCs_SAML_RPCS_BROKER_METADATA_MCP_SESSION:
+		return "SAML_RPCS_BROKER_METADATA_MCP_SESSION"
 	case SamlRPCs_SAML_RPCS_ANY:
 		return "SAML_RPCS_ANY"
 	default:
@@ -1186,13 +1375,14 @@ func SamlRPCsToSpecName(v SamlRPCs) string {
 func MessagingRPCsValues() []MessagingRPCs {
 	return []MessagingRPCs{
 		MessagingRPCs_MESSAGING_RPCS_SEND_MESSAGE,
+		MessagingRPCs_MESSAGING_RPCS_BROKER_MESSAGING_MCP_SESSION,
 		MessagingRPCs_MESSAGING_RPCS_ANY,
 	}
 }
 
 // MessagingRPCsStringValues returns all valid MessagingRPCs names as strings
 func MessagingRPCsStringValues() []string {
-	return []string{"messaging-rpcs-send-message", "messaging-rpcs-any"}
+	return []string{"messaging-rpcs-send-message", "messaging-rpcs-broker-messaging-mcp-session", "messaging-rpcs-any"}
 }
 
 // ParseMessagingRPCs converts a string to a MessagingRPCs enum value
@@ -1205,6 +1395,8 @@ func ParseMessagingRPCs(s string) (MessagingRPCs, error) {
 		return MessagingRPCs_MESSAGING_RPCS_UNSPECIFIED, nil
 	case "messaging-rpcs-send-message":
 		return MessagingRPCs_MESSAGING_RPCS_SEND_MESSAGE, nil
+	case "messaging-rpcs-broker-messaging-mcp-session":
+		return MessagingRPCs_MESSAGING_RPCS_BROKER_MESSAGING_MCP_SESSION, nil
 	case "messaging-rpcs-any":
 		return MessagingRPCs_MESSAGING_RPCS_ANY, nil
 	default:
@@ -1239,6 +1431,8 @@ func MessagingRPCsToString(v MessagingRPCs) string {
 	switch v {
 	case MessagingRPCs_MESSAGING_RPCS_SEND_MESSAGE:
 		return "messaging-rpcs-send-message"
+	case MessagingRPCs_MESSAGING_RPCS_BROKER_MESSAGING_MCP_SESSION:
+		return "messaging-rpcs-broker-messaging-mcp-session"
 	case MessagingRPCs_MESSAGING_RPCS_ANY:
 		return "messaging-rpcs-any"
 	default:
@@ -1265,6 +1459,8 @@ func ParseMessagingRPCsLiberal(s string) MessagingRPCs {
 	switch normalized {
 	case "messaging-rpcs-send-message":
 		return MessagingRPCs_MESSAGING_RPCS_SEND_MESSAGE
+	case "messaging-rpcs-broker-messaging-mcp-session":
+		return MessagingRPCs_MESSAGING_RPCS_BROKER_MESSAGING_MCP_SESSION
 	case "messaging-rpcs-any":
 		return MessagingRPCs_MESSAGING_RPCS_ANY
 	default:
@@ -1279,6 +1475,8 @@ func MessagingRPCsToSpecName(v MessagingRPCs) string {
 		return "MESSAGING_RPCS_UNSPECIFIED"
 	case MessagingRPCs_MESSAGING_RPCS_SEND_MESSAGE:
 		return "MESSAGING_RPCS_SEND_MESSAGE"
+	case MessagingRPCs_MESSAGING_RPCS_BROKER_MESSAGING_MCP_SESSION:
+		return "MESSAGING_RPCS_BROKER_MESSAGING_MCP_SESSION"
 	case MessagingRPCs_MESSAGING_RPCS_ANY:
 		return "MESSAGING_RPCS_ANY"
 	default:
@@ -1404,13 +1602,14 @@ func MailboxRPCsValues() []MailboxRPCs {
 	return []MailboxRPCs{
 		MailboxRPCs_MAILBOX_RPCS_LIST_HELD_MAIL,
 		MailboxRPCs_MAILBOX_RPCS_UPDATE_HELD_MAIL,
+		MailboxRPCs_MAILBOX_RPCS_BROKER_MAILBOX_MCP_SESSION,
 		MailboxRPCs_MAILBOX_RPCS_ANY,
 	}
 }
 
 // MailboxRPCsStringValues returns all valid MailboxRPCs names as strings
 func MailboxRPCsStringValues() []string {
-	return []string{"mailbox-rpcs-list-held-mail", "mailbox-rpcs-update-held-mail", "mailbox-rpcs-any"}
+	return []string{"mailbox-rpcs-list-held-mail", "mailbox-rpcs-update-held-mail", "mailbox-rpcs-broker-mailbox-mcp-session", "mailbox-rpcs-any"}
 }
 
 // ParseMailboxRPCs converts a string to a MailboxRPCs enum value
@@ -1425,6 +1624,8 @@ func ParseMailboxRPCs(s string) (MailboxRPCs, error) {
 		return MailboxRPCs_MAILBOX_RPCS_LIST_HELD_MAIL, nil
 	case "mailbox-rpcs-update-held-mail":
 		return MailboxRPCs_MAILBOX_RPCS_UPDATE_HELD_MAIL, nil
+	case "mailbox-rpcs-broker-mailbox-mcp-session":
+		return MailboxRPCs_MAILBOX_RPCS_BROKER_MAILBOX_MCP_SESSION, nil
 	case "mailbox-rpcs-any":
 		return MailboxRPCs_MAILBOX_RPCS_ANY, nil
 	default:
@@ -1461,6 +1662,8 @@ func MailboxRPCsToString(v MailboxRPCs) string {
 		return "mailbox-rpcs-list-held-mail"
 	case MailboxRPCs_MAILBOX_RPCS_UPDATE_HELD_MAIL:
 		return "mailbox-rpcs-update-held-mail"
+	case MailboxRPCs_MAILBOX_RPCS_BROKER_MAILBOX_MCP_SESSION:
+		return "mailbox-rpcs-broker-mailbox-mcp-session"
 	case MailboxRPCs_MAILBOX_RPCS_ANY:
 		return "mailbox-rpcs-any"
 	default:
@@ -1489,6 +1692,8 @@ func ParseMailboxRPCsLiberal(s string) MailboxRPCs {
 		return MailboxRPCs_MAILBOX_RPCS_LIST_HELD_MAIL
 	case "mailbox-rpcs-update-held-mail":
 		return MailboxRPCs_MAILBOX_RPCS_UPDATE_HELD_MAIL
+	case "mailbox-rpcs-broker-mailbox-mcp-session":
+		return MailboxRPCs_MAILBOX_RPCS_BROKER_MAILBOX_MCP_SESSION
 	case "mailbox-rpcs-any":
 		return MailboxRPCs_MAILBOX_RPCS_ANY
 	default:
@@ -1505,6 +1710,8 @@ func MailboxRPCsToSpecName(v MailboxRPCs) string {
 		return "MAILBOX_RPCS_LIST_HELD_MAIL"
 	case MailboxRPCs_MAILBOX_RPCS_UPDATE_HELD_MAIL:
 		return "MAILBOX_RPCS_UPDATE_HELD_MAIL"
+	case MailboxRPCs_MAILBOX_RPCS_BROKER_MAILBOX_MCP_SESSION:
+		return "MAILBOX_RPCS_BROKER_MAILBOX_MCP_SESSION"
 	case MailboxRPCs_MAILBOX_RPCS_ANY:
 		return "MAILBOX_RPCS_ANY"
 	default:
@@ -1517,13 +1724,14 @@ func LlmsettingsRPCsValues() []LlmsettingsRPCs {
 	return []LlmsettingsRPCs{
 		LlmsettingsRPCs_LLMSETTINGS_RPCS_LIST_MY_LLM_SETTINGS,
 		LlmsettingsRPCs_LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS,
+		LlmsettingsRPCs_LLMSETTINGS_RPCS_BROKER_LLM_SETTINGS_MCP_SESSION,
 		LlmsettingsRPCs_LLMSETTINGS_RPCS_ANY,
 	}
 }
 
 // LlmsettingsRPCsStringValues returns all valid LlmsettingsRPCs names as strings
 func LlmsettingsRPCsStringValues() []string {
-	return []string{"llmsettings-rpcs-list-my-llm-settings", "llmsettings-rpcs-update-llm-settings", "llmsettings-rpcs-any"}
+	return []string{"llmsettings-rpcs-list-my-llm-settings", "llmsettings-rpcs-update-llm-settings", "llmsettings-rpcs-broker-llm-settings-mcp-session", "llmsettings-rpcs-any"}
 }
 
 // ParseLlmsettingsRPCs converts a string to a LlmsettingsRPCs enum value
@@ -1538,6 +1746,8 @@ func ParseLlmsettingsRPCs(s string) (LlmsettingsRPCs, error) {
 		return LlmsettingsRPCs_LLMSETTINGS_RPCS_LIST_MY_LLM_SETTINGS, nil
 	case "llmsettings-rpcs-update-llm-settings":
 		return LlmsettingsRPCs_LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS, nil
+	case "llmsettings-rpcs-broker-llm-settings-mcp-session":
+		return LlmsettingsRPCs_LLMSETTINGS_RPCS_BROKER_LLM_SETTINGS_MCP_SESSION, nil
 	case "llmsettings-rpcs-any":
 		return LlmsettingsRPCs_LLMSETTINGS_RPCS_ANY, nil
 	default:
@@ -1574,6 +1784,8 @@ func LlmsettingsRPCsToString(v LlmsettingsRPCs) string {
 		return "llmsettings-rpcs-list-my-llm-settings"
 	case LlmsettingsRPCs_LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS:
 		return "llmsettings-rpcs-update-llm-settings"
+	case LlmsettingsRPCs_LLMSETTINGS_RPCS_BROKER_LLM_SETTINGS_MCP_SESSION:
+		return "llmsettings-rpcs-broker-llm-settings-mcp-session"
 	case LlmsettingsRPCs_LLMSETTINGS_RPCS_ANY:
 		return "llmsettings-rpcs-any"
 	default:
@@ -1602,6 +1814,8 @@ func ParseLlmsettingsRPCsLiberal(s string) LlmsettingsRPCs {
 		return LlmsettingsRPCs_LLMSETTINGS_RPCS_LIST_MY_LLM_SETTINGS
 	case "llmsettings-rpcs-update-llm-settings":
 		return LlmsettingsRPCs_LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS
+	case "llmsettings-rpcs-broker-llm-settings-mcp-session":
+		return LlmsettingsRPCs_LLMSETTINGS_RPCS_BROKER_LLM_SETTINGS_MCP_SESSION
 	case "llmsettings-rpcs-any":
 		return LlmsettingsRPCs_LLMSETTINGS_RPCS_ANY
 	default:
@@ -1618,8 +1832,123 @@ func LlmsettingsRPCsToSpecName(v LlmsettingsRPCs) string {
 		return "LLMSETTINGS_RPCS_LIST_MY_LLM_SETTINGS"
 	case LlmsettingsRPCs_LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS:
 		return "LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS"
+	case LlmsettingsRPCs_LLMSETTINGS_RPCS_BROKER_LLM_SETTINGS_MCP_SESSION:
+		return "LLMSETTINGS_RPCS_BROKER_LLM_SETTINGS_MCP_SESSION"
 	case LlmsettingsRPCs_LLMSETTINGS_RPCS_ANY:
 		return "LLMSETTINGS_RPCS_ANY"
+	default:
+		return ""
+	}
+}
+
+// PersonalauthRPCsValues returns all valid PersonalauthRPCs values (excluding UNDEFINED)
+func PersonalauthRPCsValues() []PersonalauthRPCs {
+	return []PersonalauthRPCs{
+		PersonalauthRPCs_PERSONALAUTH_RPCS_CREATE_DEVICE_PRINCIPAL,
+		PersonalauthRPCs_PERSONALAUTH_RPCS_MINT_DEVICE_TOKENS,
+		PersonalauthRPCs_PERSONALAUTH_RPCS_ANY,
+	}
+}
+
+// PersonalauthRPCsStringValues returns all valid PersonalauthRPCs names as strings
+func PersonalauthRPCsStringValues() []string {
+	return []string{"personalauth-rpcs-create-device-principal", "personalauth-rpcs-mint-device-tokens", "personalauth-rpcs-any"}
+}
+
+// ParsePersonalauthRPCs converts a string to a PersonalauthRPCs enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParsePersonalauthRPCs(s string) (PersonalauthRPCs, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return PersonalauthRPCs_PERSONALAUTH_RPCS_UNSPECIFIED, nil
+	case "personalauth-rpcs-create-device-principal":
+		return PersonalauthRPCs_PERSONALAUTH_RPCS_CREATE_DEVICE_PRINCIPAL, nil
+	case "personalauth-rpcs-mint-device-tokens":
+		return PersonalauthRPCs_PERSONALAUTH_RPCS_MINT_DEVICE_TOKENS, nil
+	case "personalauth-rpcs-any":
+		return PersonalauthRPCs_PERSONALAUTH_RPCS_ANY, nil
+	default:
+		return PersonalauthRPCs_PERSONALAUTH_RPCS_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid personalauthrpcs %s, expecting one of: %v", s, PersonalauthRPCsStringValues())
+	}
+}
+
+// ParsePersonalauthRPCss converts a comma-separated string to a slice of PersonalauthRPCs enum values
+// Returns an error if any value is invalid
+func ParsePersonalauthRPCss(s string) ([]PersonalauthRPCs, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]PersonalauthRPCs, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParsePersonalauthRPCs(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// PersonalauthRPCsToString converts a PersonalauthRPCs to its lowercase string representation
+func PersonalauthRPCsToString(v PersonalauthRPCs) string {
+	switch v {
+	case PersonalauthRPCs_PERSONALAUTH_RPCS_CREATE_DEVICE_PRINCIPAL:
+		return "personalauth-rpcs-create-device-principal"
+	case PersonalauthRPCs_PERSONALAUTH_RPCS_MINT_DEVICE_TOKENS:
+		return "personalauth-rpcs-mint-device-tokens"
+	case PersonalauthRPCs_PERSONALAUTH_RPCS_ANY:
+		return "personalauth-rpcs-any"
+	default:
+		return ""
+	}
+}
+
+// ParsePersonalauthRPCsLiberal parses a PersonalauthRPCs liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParsePersonalauthRPCsLiberal(s string) PersonalauthRPCs {
+	if s == "" {
+		return PersonalauthRPCs_PERSONALAUTH_RPCS_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return PersonalauthRPCs(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "personalauth-rpcs-create-device-principal":
+		return PersonalauthRPCs_PERSONALAUTH_RPCS_CREATE_DEVICE_PRINCIPAL
+	case "personalauth-rpcs-mint-device-tokens":
+		return PersonalauthRPCs_PERSONALAUTH_RPCS_MINT_DEVICE_TOKENS
+	case "personalauth-rpcs-any":
+		return PersonalauthRPCs_PERSONALAUTH_RPCS_ANY
+	default:
+		return PersonalauthRPCs_PERSONALAUTH_RPCS_UNSPECIFIED
+	}
+}
+
+// PersonalauthRPCsToSpecName converts a PersonalauthRPCs to its canonical protobuf spec name
+func PersonalauthRPCsToSpecName(v PersonalauthRPCs) string {
+	switch v {
+	case PersonalauthRPCs_PERSONALAUTH_RPCS_UNSPECIFIED:
+		return "PERSONALAUTH_RPCS_UNSPECIFIED"
+	case PersonalauthRPCs_PERSONALAUTH_RPCS_CREATE_DEVICE_PRINCIPAL:
+		return "PERSONALAUTH_RPCS_CREATE_DEVICE_PRINCIPAL"
+	case PersonalauthRPCs_PERSONALAUTH_RPCS_MINT_DEVICE_TOKENS:
+		return "PERSONALAUTH_RPCS_MINT_DEVICE_TOKENS"
+	case PersonalauthRPCs_PERSONALAUTH_RPCS_ANY:
+		return "PERSONALAUTH_RPCS_ANY"
 	default:
 		return ""
 	}
@@ -1841,6 +2170,926 @@ func ScottyRPCsToSpecName(v ScottyRPCs) string {
 		return "SCOTTY_RPCS_BROKER_SCOTTY_MCP_SESSION"
 	case ScottyRPCs_SCOTTY_RPCS_ANY:
 		return "SCOTTY_RPCS_ANY"
+	default:
+		return ""
+	}
+}
+
+// ScottypersonalRPCsValues returns all valid ScottypersonalRPCs values (excluding UNDEFINED)
+func ScottypersonalRPCsValues() []ScottypersonalRPCs {
+	return []ScottypersonalRPCs{
+		ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_CHAT,
+		ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_GET_CHAT,
+		ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_CHAT,
+		ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_CHAT_MEMBERSHIPS,
+		ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_CHAT_MEMBERSHIP,
+		ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE,
+		ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_CHAT_EVENTS,
+		ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_MY_SESSION_STATE,
+		ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_MY_SESSION_STATE,
+		ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_MY_CHAT_HISTORY,
+		ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_TICKET_FROM_CHAT,
+		ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE_MOVE,
+		ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_MY_CHAT_MEMBERSHIP,
+		ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_GET_MY_ROUTING_MAP,
+		ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_BROKER_SCOTTY_PERSONAL_MCP_SESSION,
+		ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_ANY,
+	}
+}
+
+// ScottypersonalRPCsStringValues returns all valid ScottypersonalRPCs names as strings
+func ScottypersonalRPCsStringValues() []string {
+	return []string{"scottypersonal-rpcs-create-chat", "scottypersonal-rpcs-get-chat", "scottypersonal-rpcs-update-chat", "scottypersonal-rpcs-list-chat-memberships", "scottypersonal-rpcs-update-chat-membership", "scottypersonal-rpcs-create-chat-message", "scottypersonal-rpcs-list-chat-events", "scottypersonal-rpcs-list-my-session-state", "scottypersonal-rpcs-update-my-session-state", "scottypersonal-rpcs-list-my-chat-history", "scottypersonal-rpcs-create-ticket-from-chat", "scottypersonal-rpcs-create-chat-message-move", "scottypersonal-rpcs-update-my-chat-membership", "scottypersonal-rpcs-get-my-routing-map", "scottypersonal-rpcs-broker-scotty-personal-mcp-session", "scottypersonal-rpcs-any"}
+}
+
+// ParseScottypersonalRPCs converts a string to a ScottypersonalRPCs enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseScottypersonalRPCs(s string) (ScottypersonalRPCs, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UNSPECIFIED, nil
+	case "scottypersonal-rpcs-create-chat":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_CHAT, nil
+	case "scottypersonal-rpcs-get-chat":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_GET_CHAT, nil
+	case "scottypersonal-rpcs-update-chat":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_CHAT, nil
+	case "scottypersonal-rpcs-list-chat-memberships":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_CHAT_MEMBERSHIPS, nil
+	case "scottypersonal-rpcs-update-chat-membership":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_CHAT_MEMBERSHIP, nil
+	case "scottypersonal-rpcs-create-chat-message":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE, nil
+	case "scottypersonal-rpcs-list-chat-events":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_CHAT_EVENTS, nil
+	case "scottypersonal-rpcs-list-my-session-state":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_MY_SESSION_STATE, nil
+	case "scottypersonal-rpcs-update-my-session-state":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_MY_SESSION_STATE, nil
+	case "scottypersonal-rpcs-list-my-chat-history":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_MY_CHAT_HISTORY, nil
+	case "scottypersonal-rpcs-create-ticket-from-chat":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_TICKET_FROM_CHAT, nil
+	case "scottypersonal-rpcs-create-chat-message-move":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE_MOVE, nil
+	case "scottypersonal-rpcs-update-my-chat-membership":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_MY_CHAT_MEMBERSHIP, nil
+	case "scottypersonal-rpcs-get-my-routing-map":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_GET_MY_ROUTING_MAP, nil
+	case "scottypersonal-rpcs-broker-scotty-personal-mcp-session":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_BROKER_SCOTTY_PERSONAL_MCP_SESSION, nil
+	case "scottypersonal-rpcs-any":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_ANY, nil
+	default:
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid scottypersonalrpcs %s, expecting one of: %v", s, ScottypersonalRPCsStringValues())
+	}
+}
+
+// ParseScottypersonalRPCss converts a comma-separated string to a slice of ScottypersonalRPCs enum values
+// Returns an error if any value is invalid
+func ParseScottypersonalRPCss(s string) ([]ScottypersonalRPCs, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]ScottypersonalRPCs, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseScottypersonalRPCs(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// ScottypersonalRPCsToString converts a ScottypersonalRPCs to its lowercase string representation
+func ScottypersonalRPCsToString(v ScottypersonalRPCs) string {
+	switch v {
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_CHAT:
+		return "scottypersonal-rpcs-create-chat"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_GET_CHAT:
+		return "scottypersonal-rpcs-get-chat"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_CHAT:
+		return "scottypersonal-rpcs-update-chat"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_CHAT_MEMBERSHIPS:
+		return "scottypersonal-rpcs-list-chat-memberships"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_CHAT_MEMBERSHIP:
+		return "scottypersonal-rpcs-update-chat-membership"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE:
+		return "scottypersonal-rpcs-create-chat-message"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_CHAT_EVENTS:
+		return "scottypersonal-rpcs-list-chat-events"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_MY_SESSION_STATE:
+		return "scottypersonal-rpcs-list-my-session-state"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_MY_SESSION_STATE:
+		return "scottypersonal-rpcs-update-my-session-state"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_MY_CHAT_HISTORY:
+		return "scottypersonal-rpcs-list-my-chat-history"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_TICKET_FROM_CHAT:
+		return "scottypersonal-rpcs-create-ticket-from-chat"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE_MOVE:
+		return "scottypersonal-rpcs-create-chat-message-move"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_MY_CHAT_MEMBERSHIP:
+		return "scottypersonal-rpcs-update-my-chat-membership"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_GET_MY_ROUTING_MAP:
+		return "scottypersonal-rpcs-get-my-routing-map"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_BROKER_SCOTTY_PERSONAL_MCP_SESSION:
+		return "scottypersonal-rpcs-broker-scotty-personal-mcp-session"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_ANY:
+		return "scottypersonal-rpcs-any"
+	default:
+		return ""
+	}
+}
+
+// ParseScottypersonalRPCsLiberal parses a ScottypersonalRPCs liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseScottypersonalRPCsLiberal(s string) ScottypersonalRPCs {
+	if s == "" {
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return ScottypersonalRPCs(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "scottypersonal-rpcs-create-chat":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_CHAT
+	case "scottypersonal-rpcs-get-chat":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_GET_CHAT
+	case "scottypersonal-rpcs-update-chat":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_CHAT
+	case "scottypersonal-rpcs-list-chat-memberships":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_CHAT_MEMBERSHIPS
+	case "scottypersonal-rpcs-update-chat-membership":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_CHAT_MEMBERSHIP
+	case "scottypersonal-rpcs-create-chat-message":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE
+	case "scottypersonal-rpcs-list-chat-events":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_CHAT_EVENTS
+	case "scottypersonal-rpcs-list-my-session-state":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_MY_SESSION_STATE
+	case "scottypersonal-rpcs-update-my-session-state":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_MY_SESSION_STATE
+	case "scottypersonal-rpcs-list-my-chat-history":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_MY_CHAT_HISTORY
+	case "scottypersonal-rpcs-create-ticket-from-chat":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_TICKET_FROM_CHAT
+	case "scottypersonal-rpcs-create-chat-message-move":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE_MOVE
+	case "scottypersonal-rpcs-update-my-chat-membership":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_MY_CHAT_MEMBERSHIP
+	case "scottypersonal-rpcs-get-my-routing-map":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_GET_MY_ROUTING_MAP
+	case "scottypersonal-rpcs-broker-scotty-personal-mcp-session":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_BROKER_SCOTTY_PERSONAL_MCP_SESSION
+	case "scottypersonal-rpcs-any":
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_ANY
+	default:
+		return ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UNSPECIFIED
+	}
+}
+
+// ScottypersonalRPCsToSpecName converts a ScottypersonalRPCs to its canonical protobuf spec name
+func ScottypersonalRPCsToSpecName(v ScottypersonalRPCs) string {
+	switch v {
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UNSPECIFIED:
+		return "SCOTTYPERSONAL_RPCS_UNSPECIFIED"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_CHAT:
+		return "SCOTTYPERSONAL_RPCS_CREATE_CHAT"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_GET_CHAT:
+		return "SCOTTYPERSONAL_RPCS_GET_CHAT"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_CHAT:
+		return "SCOTTYPERSONAL_RPCS_UPDATE_CHAT"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_CHAT_MEMBERSHIPS:
+		return "SCOTTYPERSONAL_RPCS_LIST_CHAT_MEMBERSHIPS"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_CHAT_MEMBERSHIP:
+		return "SCOTTYPERSONAL_RPCS_UPDATE_CHAT_MEMBERSHIP"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE:
+		return "SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_CHAT_EVENTS:
+		return "SCOTTYPERSONAL_RPCS_LIST_CHAT_EVENTS"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_MY_SESSION_STATE:
+		return "SCOTTYPERSONAL_RPCS_LIST_MY_SESSION_STATE"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_MY_SESSION_STATE:
+		return "SCOTTYPERSONAL_RPCS_UPDATE_MY_SESSION_STATE"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_MY_CHAT_HISTORY:
+		return "SCOTTYPERSONAL_RPCS_LIST_MY_CHAT_HISTORY"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_TICKET_FROM_CHAT:
+		return "SCOTTYPERSONAL_RPCS_CREATE_TICKET_FROM_CHAT"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE_MOVE:
+		return "SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE_MOVE"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_MY_CHAT_MEMBERSHIP:
+		return "SCOTTYPERSONAL_RPCS_UPDATE_MY_CHAT_MEMBERSHIP"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_GET_MY_ROUTING_MAP:
+		return "SCOTTYPERSONAL_RPCS_GET_MY_ROUTING_MAP"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_BROKER_SCOTTY_PERSONAL_MCP_SESSION:
+		return "SCOTTYPERSONAL_RPCS_BROKER_SCOTTY_PERSONAL_MCP_SESSION"
+	case ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_ANY:
+		return "SCOTTYPERSONAL_RPCS_ANY"
+	default:
+		return ""
+	}
+}
+
+// WorkRPCsValues returns all valid WorkRPCs values (excluding UNDEFINED)
+func WorkRPCsValues() []WorkRPCs {
+	return []WorkRPCs{
+		WorkRPCs_WORK_RPCS_CREATE_JOB,
+		WorkRPCs_WORK_RPCS_GET_JOB,
+		WorkRPCs_WORK_RPCS_LIST_JOBS,
+		WorkRPCs_WORK_RPCS_UPDATE_JOB,
+		WorkRPCs_WORK_RPCS_CREATE_TASK,
+		WorkRPCs_WORK_RPCS_LIST_TASKS,
+		WorkRPCs_WORK_RPCS_UPDATE_TASK,
+		WorkRPCs_WORK_RPCS_CREATE_PARTNER,
+		WorkRPCs_WORK_RPCS_GET_PARTNER,
+		WorkRPCs_WORK_RPCS_LIST_PARTNERS,
+		WorkRPCs_WORK_RPCS_UPDATE_PARTNER,
+		WorkRPCs_WORK_RPCS_CREATE_PERMIT,
+		WorkRPCs_WORK_RPCS_LIST_PERMITS,
+		WorkRPCs_WORK_RPCS_UPDATE_PERMIT,
+		WorkRPCs_WORK_RPCS_CREATE_EQUIPMENT,
+		WorkRPCs_WORK_RPCS_GET_EQUIPMENT,
+		WorkRPCs_WORK_RPCS_LIST_EQUIPMENT,
+		WorkRPCs_WORK_RPCS_UPDATE_EQUIPMENT,
+		WorkRPCs_WORK_RPCS_CREATE_RFP,
+		WorkRPCs_WORK_RPCS_LIST_RFPS,
+		WorkRPCs_WORK_RPCS_UPDATE_RFP,
+		WorkRPCs_WORK_RPCS_CREATE_MY_TASK,
+		WorkRPCs_WORK_RPCS_UPDATE_MY_TASK,
+		WorkRPCs_WORK_RPCS_GET_MY_JOB,
+		WorkRPCs_WORK_RPCS_LIST_MY_JOBS,
+		WorkRPCs_WORK_RPCS_LIST_MY_LAPSING_PERMITS,
+		WorkRPCs_WORK_RPCS_UPDATE_MY_JOB,
+		WorkRPCs_WORK_RPCS_CREATE_MY_PERMIT,
+		WorkRPCs_WORK_RPCS_GET_MY_EQUIPMENT,
+		WorkRPCs_WORK_RPCS_BROKER_WORK_MCP_SESSION,
+		WorkRPCs_WORK_RPCS_ANY,
+	}
+}
+
+// WorkRPCsStringValues returns all valid WorkRPCs names as strings
+func WorkRPCsStringValues() []string {
+	return []string{"work-rpcs-create-job", "work-rpcs-get-job", "work-rpcs-list-jobs", "work-rpcs-update-job", "work-rpcs-create-task", "work-rpcs-list-tasks", "work-rpcs-update-task", "work-rpcs-create-partner", "work-rpcs-get-partner", "work-rpcs-list-partners", "work-rpcs-update-partner", "work-rpcs-create-permit", "work-rpcs-list-permits", "work-rpcs-update-permit", "work-rpcs-create-equipment", "work-rpcs-get-equipment", "work-rpcs-list-equipment", "work-rpcs-update-equipment", "work-rpcs-create-rfp", "work-rpcs-list-rfps", "work-rpcs-update-rfp", "work-rpcs-create-my-task", "work-rpcs-update-my-task", "work-rpcs-get-my-job", "work-rpcs-list-my-jobs", "work-rpcs-list-my-lapsing-permits", "work-rpcs-update-my-job", "work-rpcs-create-my-permit", "work-rpcs-get-my-equipment", "work-rpcs-broker-work-mcp-session", "work-rpcs-any"}
+}
+
+// ParseWorkRPCs converts a string to a WorkRPCs enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseWorkRPCs(s string) (WorkRPCs, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return WorkRPCs_WORK_RPCS_UNSPECIFIED, nil
+	case "work-rpcs-create-job":
+		return WorkRPCs_WORK_RPCS_CREATE_JOB, nil
+	case "work-rpcs-get-job":
+		return WorkRPCs_WORK_RPCS_GET_JOB, nil
+	case "work-rpcs-list-jobs":
+		return WorkRPCs_WORK_RPCS_LIST_JOBS, nil
+	case "work-rpcs-update-job":
+		return WorkRPCs_WORK_RPCS_UPDATE_JOB, nil
+	case "work-rpcs-create-task":
+		return WorkRPCs_WORK_RPCS_CREATE_TASK, nil
+	case "work-rpcs-list-tasks":
+		return WorkRPCs_WORK_RPCS_LIST_TASKS, nil
+	case "work-rpcs-update-task":
+		return WorkRPCs_WORK_RPCS_UPDATE_TASK, nil
+	case "work-rpcs-create-partner":
+		return WorkRPCs_WORK_RPCS_CREATE_PARTNER, nil
+	case "work-rpcs-get-partner":
+		return WorkRPCs_WORK_RPCS_GET_PARTNER, nil
+	case "work-rpcs-list-partners":
+		return WorkRPCs_WORK_RPCS_LIST_PARTNERS, nil
+	case "work-rpcs-update-partner":
+		return WorkRPCs_WORK_RPCS_UPDATE_PARTNER, nil
+	case "work-rpcs-create-permit":
+		return WorkRPCs_WORK_RPCS_CREATE_PERMIT, nil
+	case "work-rpcs-list-permits":
+		return WorkRPCs_WORK_RPCS_LIST_PERMITS, nil
+	case "work-rpcs-update-permit":
+		return WorkRPCs_WORK_RPCS_UPDATE_PERMIT, nil
+	case "work-rpcs-create-equipment":
+		return WorkRPCs_WORK_RPCS_CREATE_EQUIPMENT, nil
+	case "work-rpcs-get-equipment":
+		return WorkRPCs_WORK_RPCS_GET_EQUIPMENT, nil
+	case "work-rpcs-list-equipment":
+		return WorkRPCs_WORK_RPCS_LIST_EQUIPMENT, nil
+	case "work-rpcs-update-equipment":
+		return WorkRPCs_WORK_RPCS_UPDATE_EQUIPMENT, nil
+	case "work-rpcs-create-rfp":
+		return WorkRPCs_WORK_RPCS_CREATE_RFP, nil
+	case "work-rpcs-list-rfps":
+		return WorkRPCs_WORK_RPCS_LIST_RFPS, nil
+	case "work-rpcs-update-rfp":
+		return WorkRPCs_WORK_RPCS_UPDATE_RFP, nil
+	case "work-rpcs-create-my-task":
+		return WorkRPCs_WORK_RPCS_CREATE_MY_TASK, nil
+	case "work-rpcs-update-my-task":
+		return WorkRPCs_WORK_RPCS_UPDATE_MY_TASK, nil
+	case "work-rpcs-get-my-job":
+		return WorkRPCs_WORK_RPCS_GET_MY_JOB, nil
+	case "work-rpcs-list-my-jobs":
+		return WorkRPCs_WORK_RPCS_LIST_MY_JOBS, nil
+	case "work-rpcs-list-my-lapsing-permits":
+		return WorkRPCs_WORK_RPCS_LIST_MY_LAPSING_PERMITS, nil
+	case "work-rpcs-update-my-job":
+		return WorkRPCs_WORK_RPCS_UPDATE_MY_JOB, nil
+	case "work-rpcs-create-my-permit":
+		return WorkRPCs_WORK_RPCS_CREATE_MY_PERMIT, nil
+	case "work-rpcs-get-my-equipment":
+		return WorkRPCs_WORK_RPCS_GET_MY_EQUIPMENT, nil
+	case "work-rpcs-broker-work-mcp-session":
+		return WorkRPCs_WORK_RPCS_BROKER_WORK_MCP_SESSION, nil
+	case "work-rpcs-any":
+		return WorkRPCs_WORK_RPCS_ANY, nil
+	default:
+		return WorkRPCs_WORK_RPCS_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid workrpcs %s, expecting one of: %v", s, WorkRPCsStringValues())
+	}
+}
+
+// ParseWorkRPCss converts a comma-separated string to a slice of WorkRPCs enum values
+// Returns an error if any value is invalid
+func ParseWorkRPCss(s string) ([]WorkRPCs, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]WorkRPCs, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseWorkRPCs(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// WorkRPCsToString converts a WorkRPCs to its lowercase string representation
+func WorkRPCsToString(v WorkRPCs) string {
+	switch v {
+	case WorkRPCs_WORK_RPCS_CREATE_JOB:
+		return "work-rpcs-create-job"
+	case WorkRPCs_WORK_RPCS_GET_JOB:
+		return "work-rpcs-get-job"
+	case WorkRPCs_WORK_RPCS_LIST_JOBS:
+		return "work-rpcs-list-jobs"
+	case WorkRPCs_WORK_RPCS_UPDATE_JOB:
+		return "work-rpcs-update-job"
+	case WorkRPCs_WORK_RPCS_CREATE_TASK:
+		return "work-rpcs-create-task"
+	case WorkRPCs_WORK_RPCS_LIST_TASKS:
+		return "work-rpcs-list-tasks"
+	case WorkRPCs_WORK_RPCS_UPDATE_TASK:
+		return "work-rpcs-update-task"
+	case WorkRPCs_WORK_RPCS_CREATE_PARTNER:
+		return "work-rpcs-create-partner"
+	case WorkRPCs_WORK_RPCS_GET_PARTNER:
+		return "work-rpcs-get-partner"
+	case WorkRPCs_WORK_RPCS_LIST_PARTNERS:
+		return "work-rpcs-list-partners"
+	case WorkRPCs_WORK_RPCS_UPDATE_PARTNER:
+		return "work-rpcs-update-partner"
+	case WorkRPCs_WORK_RPCS_CREATE_PERMIT:
+		return "work-rpcs-create-permit"
+	case WorkRPCs_WORK_RPCS_LIST_PERMITS:
+		return "work-rpcs-list-permits"
+	case WorkRPCs_WORK_RPCS_UPDATE_PERMIT:
+		return "work-rpcs-update-permit"
+	case WorkRPCs_WORK_RPCS_CREATE_EQUIPMENT:
+		return "work-rpcs-create-equipment"
+	case WorkRPCs_WORK_RPCS_GET_EQUIPMENT:
+		return "work-rpcs-get-equipment"
+	case WorkRPCs_WORK_RPCS_LIST_EQUIPMENT:
+		return "work-rpcs-list-equipment"
+	case WorkRPCs_WORK_RPCS_UPDATE_EQUIPMENT:
+		return "work-rpcs-update-equipment"
+	case WorkRPCs_WORK_RPCS_CREATE_RFP:
+		return "work-rpcs-create-rfp"
+	case WorkRPCs_WORK_RPCS_LIST_RFPS:
+		return "work-rpcs-list-rfps"
+	case WorkRPCs_WORK_RPCS_UPDATE_RFP:
+		return "work-rpcs-update-rfp"
+	case WorkRPCs_WORK_RPCS_CREATE_MY_TASK:
+		return "work-rpcs-create-my-task"
+	case WorkRPCs_WORK_RPCS_UPDATE_MY_TASK:
+		return "work-rpcs-update-my-task"
+	case WorkRPCs_WORK_RPCS_GET_MY_JOB:
+		return "work-rpcs-get-my-job"
+	case WorkRPCs_WORK_RPCS_LIST_MY_JOBS:
+		return "work-rpcs-list-my-jobs"
+	case WorkRPCs_WORK_RPCS_LIST_MY_LAPSING_PERMITS:
+		return "work-rpcs-list-my-lapsing-permits"
+	case WorkRPCs_WORK_RPCS_UPDATE_MY_JOB:
+		return "work-rpcs-update-my-job"
+	case WorkRPCs_WORK_RPCS_CREATE_MY_PERMIT:
+		return "work-rpcs-create-my-permit"
+	case WorkRPCs_WORK_RPCS_GET_MY_EQUIPMENT:
+		return "work-rpcs-get-my-equipment"
+	case WorkRPCs_WORK_RPCS_BROKER_WORK_MCP_SESSION:
+		return "work-rpcs-broker-work-mcp-session"
+	case WorkRPCs_WORK_RPCS_ANY:
+		return "work-rpcs-any"
+	default:
+		return ""
+	}
+}
+
+// ParseWorkRPCsLiberal parses a WorkRPCs liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseWorkRPCsLiberal(s string) WorkRPCs {
+	if s == "" {
+		return WorkRPCs_WORK_RPCS_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return WorkRPCs(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "work-rpcs-create-job":
+		return WorkRPCs_WORK_RPCS_CREATE_JOB
+	case "work-rpcs-get-job":
+		return WorkRPCs_WORK_RPCS_GET_JOB
+	case "work-rpcs-list-jobs":
+		return WorkRPCs_WORK_RPCS_LIST_JOBS
+	case "work-rpcs-update-job":
+		return WorkRPCs_WORK_RPCS_UPDATE_JOB
+	case "work-rpcs-create-task":
+		return WorkRPCs_WORK_RPCS_CREATE_TASK
+	case "work-rpcs-list-tasks":
+		return WorkRPCs_WORK_RPCS_LIST_TASKS
+	case "work-rpcs-update-task":
+		return WorkRPCs_WORK_RPCS_UPDATE_TASK
+	case "work-rpcs-create-partner":
+		return WorkRPCs_WORK_RPCS_CREATE_PARTNER
+	case "work-rpcs-get-partner":
+		return WorkRPCs_WORK_RPCS_GET_PARTNER
+	case "work-rpcs-list-partners":
+		return WorkRPCs_WORK_RPCS_LIST_PARTNERS
+	case "work-rpcs-update-partner":
+		return WorkRPCs_WORK_RPCS_UPDATE_PARTNER
+	case "work-rpcs-create-permit":
+		return WorkRPCs_WORK_RPCS_CREATE_PERMIT
+	case "work-rpcs-list-permits":
+		return WorkRPCs_WORK_RPCS_LIST_PERMITS
+	case "work-rpcs-update-permit":
+		return WorkRPCs_WORK_RPCS_UPDATE_PERMIT
+	case "work-rpcs-create-equipment":
+		return WorkRPCs_WORK_RPCS_CREATE_EQUIPMENT
+	case "work-rpcs-get-equipment":
+		return WorkRPCs_WORK_RPCS_GET_EQUIPMENT
+	case "work-rpcs-list-equipment":
+		return WorkRPCs_WORK_RPCS_LIST_EQUIPMENT
+	case "work-rpcs-update-equipment":
+		return WorkRPCs_WORK_RPCS_UPDATE_EQUIPMENT
+	case "work-rpcs-create-rfp":
+		return WorkRPCs_WORK_RPCS_CREATE_RFP
+	case "work-rpcs-list-rfps":
+		return WorkRPCs_WORK_RPCS_LIST_RFPS
+	case "work-rpcs-update-rfp":
+		return WorkRPCs_WORK_RPCS_UPDATE_RFP
+	case "work-rpcs-create-my-task":
+		return WorkRPCs_WORK_RPCS_CREATE_MY_TASK
+	case "work-rpcs-update-my-task":
+		return WorkRPCs_WORK_RPCS_UPDATE_MY_TASK
+	case "work-rpcs-get-my-job":
+		return WorkRPCs_WORK_RPCS_GET_MY_JOB
+	case "work-rpcs-list-my-jobs":
+		return WorkRPCs_WORK_RPCS_LIST_MY_JOBS
+	case "work-rpcs-list-my-lapsing-permits":
+		return WorkRPCs_WORK_RPCS_LIST_MY_LAPSING_PERMITS
+	case "work-rpcs-update-my-job":
+		return WorkRPCs_WORK_RPCS_UPDATE_MY_JOB
+	case "work-rpcs-create-my-permit":
+		return WorkRPCs_WORK_RPCS_CREATE_MY_PERMIT
+	case "work-rpcs-get-my-equipment":
+		return WorkRPCs_WORK_RPCS_GET_MY_EQUIPMENT
+	case "work-rpcs-broker-work-mcp-session":
+		return WorkRPCs_WORK_RPCS_BROKER_WORK_MCP_SESSION
+	case "work-rpcs-any":
+		return WorkRPCs_WORK_RPCS_ANY
+	default:
+		return WorkRPCs_WORK_RPCS_UNSPECIFIED
+	}
+}
+
+// WorkRPCsToSpecName converts a WorkRPCs to its canonical protobuf spec name
+func WorkRPCsToSpecName(v WorkRPCs) string {
+	switch v {
+	case WorkRPCs_WORK_RPCS_UNSPECIFIED:
+		return "WORK_RPCS_UNSPECIFIED"
+	case WorkRPCs_WORK_RPCS_CREATE_JOB:
+		return "WORK_RPCS_CREATE_JOB"
+	case WorkRPCs_WORK_RPCS_GET_JOB:
+		return "WORK_RPCS_GET_JOB"
+	case WorkRPCs_WORK_RPCS_LIST_JOBS:
+		return "WORK_RPCS_LIST_JOBS"
+	case WorkRPCs_WORK_RPCS_UPDATE_JOB:
+		return "WORK_RPCS_UPDATE_JOB"
+	case WorkRPCs_WORK_RPCS_CREATE_TASK:
+		return "WORK_RPCS_CREATE_TASK"
+	case WorkRPCs_WORK_RPCS_LIST_TASKS:
+		return "WORK_RPCS_LIST_TASKS"
+	case WorkRPCs_WORK_RPCS_UPDATE_TASK:
+		return "WORK_RPCS_UPDATE_TASK"
+	case WorkRPCs_WORK_RPCS_CREATE_PARTNER:
+		return "WORK_RPCS_CREATE_PARTNER"
+	case WorkRPCs_WORK_RPCS_GET_PARTNER:
+		return "WORK_RPCS_GET_PARTNER"
+	case WorkRPCs_WORK_RPCS_LIST_PARTNERS:
+		return "WORK_RPCS_LIST_PARTNERS"
+	case WorkRPCs_WORK_RPCS_UPDATE_PARTNER:
+		return "WORK_RPCS_UPDATE_PARTNER"
+	case WorkRPCs_WORK_RPCS_CREATE_PERMIT:
+		return "WORK_RPCS_CREATE_PERMIT"
+	case WorkRPCs_WORK_RPCS_LIST_PERMITS:
+		return "WORK_RPCS_LIST_PERMITS"
+	case WorkRPCs_WORK_RPCS_UPDATE_PERMIT:
+		return "WORK_RPCS_UPDATE_PERMIT"
+	case WorkRPCs_WORK_RPCS_CREATE_EQUIPMENT:
+		return "WORK_RPCS_CREATE_EQUIPMENT"
+	case WorkRPCs_WORK_RPCS_GET_EQUIPMENT:
+		return "WORK_RPCS_GET_EQUIPMENT"
+	case WorkRPCs_WORK_RPCS_LIST_EQUIPMENT:
+		return "WORK_RPCS_LIST_EQUIPMENT"
+	case WorkRPCs_WORK_RPCS_UPDATE_EQUIPMENT:
+		return "WORK_RPCS_UPDATE_EQUIPMENT"
+	case WorkRPCs_WORK_RPCS_CREATE_RFP:
+		return "WORK_RPCS_CREATE_RFP"
+	case WorkRPCs_WORK_RPCS_LIST_RFPS:
+		return "WORK_RPCS_LIST_RFPS"
+	case WorkRPCs_WORK_RPCS_UPDATE_RFP:
+		return "WORK_RPCS_UPDATE_RFP"
+	case WorkRPCs_WORK_RPCS_CREATE_MY_TASK:
+		return "WORK_RPCS_CREATE_MY_TASK"
+	case WorkRPCs_WORK_RPCS_UPDATE_MY_TASK:
+		return "WORK_RPCS_UPDATE_MY_TASK"
+	case WorkRPCs_WORK_RPCS_GET_MY_JOB:
+		return "WORK_RPCS_GET_MY_JOB"
+	case WorkRPCs_WORK_RPCS_LIST_MY_JOBS:
+		return "WORK_RPCS_LIST_MY_JOBS"
+	case WorkRPCs_WORK_RPCS_LIST_MY_LAPSING_PERMITS:
+		return "WORK_RPCS_LIST_MY_LAPSING_PERMITS"
+	case WorkRPCs_WORK_RPCS_UPDATE_MY_JOB:
+		return "WORK_RPCS_UPDATE_MY_JOB"
+	case WorkRPCs_WORK_RPCS_CREATE_MY_PERMIT:
+		return "WORK_RPCS_CREATE_MY_PERMIT"
+	case WorkRPCs_WORK_RPCS_GET_MY_EQUIPMENT:
+		return "WORK_RPCS_GET_MY_EQUIPMENT"
+	case WorkRPCs_WORK_RPCS_BROKER_WORK_MCP_SESSION:
+		return "WORK_RPCS_BROKER_WORK_MCP_SESSION"
+	case WorkRPCs_WORK_RPCS_ANY:
+		return "WORK_RPCS_ANY"
+	default:
+		return ""
+	}
+}
+
+// ProfileRPCsValues returns all valid ProfileRPCs values (excluding UNDEFINED)
+func ProfileRPCsValues() []ProfileRPCs {
+	return []ProfileRPCs{
+		ProfileRPCs_PROFILE_RPCS_GET_PROFILE,
+		ProfileRPCs_PROFILE_RPCS_UPDATE_PREFERENCES,
+		ProfileRPCs_PROFILE_RPCS_LIST_RULES,
+		ProfileRPCs_PROFILE_RPCS_GET_RULE,
+		ProfileRPCs_PROFILE_RPCS_CREATE_RULE,
+		ProfileRPCs_PROFILE_RPCS_UPDATE_RULE,
+		ProfileRPCs_PROFILE_RPCS_UPDATE_RULE_POSITION,
+		ProfileRPCs_PROFILE_RPCS_DELETE_RULE,
+		ProfileRPCs_PROFILE_RPCS_BROKER_PROFILE_MCP_SESSION,
+		ProfileRPCs_PROFILE_RPCS_ANY,
+	}
+}
+
+// ProfileRPCsStringValues returns all valid ProfileRPCs names as strings
+func ProfileRPCsStringValues() []string {
+	return []string{"profile-rpcs-get-profile", "profile-rpcs-update-preferences", "profile-rpcs-list-rules", "profile-rpcs-get-rule", "profile-rpcs-create-rule", "profile-rpcs-update-rule", "profile-rpcs-update-rule-position", "profile-rpcs-delete-rule", "profile-rpcs-broker-profile-mcp-session", "profile-rpcs-any"}
+}
+
+// ParseProfileRPCs converts a string to a ProfileRPCs enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseProfileRPCs(s string) (ProfileRPCs, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return ProfileRPCs_PROFILE_RPCS_UNSPECIFIED, nil
+	case "profile-rpcs-get-profile":
+		return ProfileRPCs_PROFILE_RPCS_GET_PROFILE, nil
+	case "profile-rpcs-update-preferences":
+		return ProfileRPCs_PROFILE_RPCS_UPDATE_PREFERENCES, nil
+	case "profile-rpcs-list-rules":
+		return ProfileRPCs_PROFILE_RPCS_LIST_RULES, nil
+	case "profile-rpcs-get-rule":
+		return ProfileRPCs_PROFILE_RPCS_GET_RULE, nil
+	case "profile-rpcs-create-rule":
+		return ProfileRPCs_PROFILE_RPCS_CREATE_RULE, nil
+	case "profile-rpcs-update-rule":
+		return ProfileRPCs_PROFILE_RPCS_UPDATE_RULE, nil
+	case "profile-rpcs-update-rule-position":
+		return ProfileRPCs_PROFILE_RPCS_UPDATE_RULE_POSITION, nil
+	case "profile-rpcs-delete-rule":
+		return ProfileRPCs_PROFILE_RPCS_DELETE_RULE, nil
+	case "profile-rpcs-broker-profile-mcp-session":
+		return ProfileRPCs_PROFILE_RPCS_BROKER_PROFILE_MCP_SESSION, nil
+	case "profile-rpcs-any":
+		return ProfileRPCs_PROFILE_RPCS_ANY, nil
+	default:
+		return ProfileRPCs_PROFILE_RPCS_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid profilerpcs %s, expecting one of: %v", s, ProfileRPCsStringValues())
+	}
+}
+
+// ParseProfileRPCss converts a comma-separated string to a slice of ProfileRPCs enum values
+// Returns an error if any value is invalid
+func ParseProfileRPCss(s string) ([]ProfileRPCs, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]ProfileRPCs, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseProfileRPCs(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// ProfileRPCsToString converts a ProfileRPCs to its lowercase string representation
+func ProfileRPCsToString(v ProfileRPCs) string {
+	switch v {
+	case ProfileRPCs_PROFILE_RPCS_GET_PROFILE:
+		return "profile-rpcs-get-profile"
+	case ProfileRPCs_PROFILE_RPCS_UPDATE_PREFERENCES:
+		return "profile-rpcs-update-preferences"
+	case ProfileRPCs_PROFILE_RPCS_LIST_RULES:
+		return "profile-rpcs-list-rules"
+	case ProfileRPCs_PROFILE_RPCS_GET_RULE:
+		return "profile-rpcs-get-rule"
+	case ProfileRPCs_PROFILE_RPCS_CREATE_RULE:
+		return "profile-rpcs-create-rule"
+	case ProfileRPCs_PROFILE_RPCS_UPDATE_RULE:
+		return "profile-rpcs-update-rule"
+	case ProfileRPCs_PROFILE_RPCS_UPDATE_RULE_POSITION:
+		return "profile-rpcs-update-rule-position"
+	case ProfileRPCs_PROFILE_RPCS_DELETE_RULE:
+		return "profile-rpcs-delete-rule"
+	case ProfileRPCs_PROFILE_RPCS_BROKER_PROFILE_MCP_SESSION:
+		return "profile-rpcs-broker-profile-mcp-session"
+	case ProfileRPCs_PROFILE_RPCS_ANY:
+		return "profile-rpcs-any"
+	default:
+		return ""
+	}
+}
+
+// ParseProfileRPCsLiberal parses a ProfileRPCs liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseProfileRPCsLiberal(s string) ProfileRPCs {
+	if s == "" {
+		return ProfileRPCs_PROFILE_RPCS_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return ProfileRPCs(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "profile-rpcs-get-profile":
+		return ProfileRPCs_PROFILE_RPCS_GET_PROFILE
+	case "profile-rpcs-update-preferences":
+		return ProfileRPCs_PROFILE_RPCS_UPDATE_PREFERENCES
+	case "profile-rpcs-list-rules":
+		return ProfileRPCs_PROFILE_RPCS_LIST_RULES
+	case "profile-rpcs-get-rule":
+		return ProfileRPCs_PROFILE_RPCS_GET_RULE
+	case "profile-rpcs-create-rule":
+		return ProfileRPCs_PROFILE_RPCS_CREATE_RULE
+	case "profile-rpcs-update-rule":
+		return ProfileRPCs_PROFILE_RPCS_UPDATE_RULE
+	case "profile-rpcs-update-rule-position":
+		return ProfileRPCs_PROFILE_RPCS_UPDATE_RULE_POSITION
+	case "profile-rpcs-delete-rule":
+		return ProfileRPCs_PROFILE_RPCS_DELETE_RULE
+	case "profile-rpcs-broker-profile-mcp-session":
+		return ProfileRPCs_PROFILE_RPCS_BROKER_PROFILE_MCP_SESSION
+	case "profile-rpcs-any":
+		return ProfileRPCs_PROFILE_RPCS_ANY
+	default:
+		return ProfileRPCs_PROFILE_RPCS_UNSPECIFIED
+	}
+}
+
+// ProfileRPCsToSpecName converts a ProfileRPCs to its canonical protobuf spec name
+func ProfileRPCsToSpecName(v ProfileRPCs) string {
+	switch v {
+	case ProfileRPCs_PROFILE_RPCS_UNSPECIFIED:
+		return "PROFILE_RPCS_UNSPECIFIED"
+	case ProfileRPCs_PROFILE_RPCS_GET_PROFILE:
+		return "PROFILE_RPCS_GET_PROFILE"
+	case ProfileRPCs_PROFILE_RPCS_UPDATE_PREFERENCES:
+		return "PROFILE_RPCS_UPDATE_PREFERENCES"
+	case ProfileRPCs_PROFILE_RPCS_LIST_RULES:
+		return "PROFILE_RPCS_LIST_RULES"
+	case ProfileRPCs_PROFILE_RPCS_GET_RULE:
+		return "PROFILE_RPCS_GET_RULE"
+	case ProfileRPCs_PROFILE_RPCS_CREATE_RULE:
+		return "PROFILE_RPCS_CREATE_RULE"
+	case ProfileRPCs_PROFILE_RPCS_UPDATE_RULE:
+		return "PROFILE_RPCS_UPDATE_RULE"
+	case ProfileRPCs_PROFILE_RPCS_UPDATE_RULE_POSITION:
+		return "PROFILE_RPCS_UPDATE_RULE_POSITION"
+	case ProfileRPCs_PROFILE_RPCS_DELETE_RULE:
+		return "PROFILE_RPCS_DELETE_RULE"
+	case ProfileRPCs_PROFILE_RPCS_BROKER_PROFILE_MCP_SESSION:
+		return "PROFILE_RPCS_BROKER_PROFILE_MCP_SESSION"
+	case ProfileRPCs_PROFILE_RPCS_ANY:
+		return "PROFILE_RPCS_ANY"
+	default:
+		return ""
+	}
+}
+
+// DocmanagerRPCsValues returns all valid DocmanagerRPCs values (excluding UNDEFINED)
+func DocmanagerRPCsValues() []DocmanagerRPCs {
+	return []DocmanagerRPCs{
+		DocmanagerRPCs_DOCMANAGER_RPCS_CREATE_INGEST,
+		DocmanagerRPCs_DOCMANAGER_RPCS_GET_DOC_FILE_METADATA,
+		DocmanagerRPCs_DOCMANAGER_RPCS_LIST_DOC_FILE_METADATA,
+		DocmanagerRPCs_DOCMANAGER_RPCS_CREATE_DOC_FILE_LINK,
+		DocmanagerRPCs_DOCMANAGER_RPCS_UPDATE_DOC_FILE_LOCATION,
+		DocmanagerRPCs_DOCMANAGER_RPCS_BROKER_DOC_MANAGER_MCP_SESSION,
+		DocmanagerRPCs_DOCMANAGER_RPCS_ANY,
+	}
+}
+
+// DocmanagerRPCsStringValues returns all valid DocmanagerRPCs names as strings
+func DocmanagerRPCsStringValues() []string {
+	return []string{"docmanager-rpcs-create-ingest", "docmanager-rpcs-get-doc-file-metadata", "docmanager-rpcs-list-doc-file-metadata", "docmanager-rpcs-create-doc-file-link", "docmanager-rpcs-update-doc-file-location", "docmanager-rpcs-broker-doc-manager-mcp-session", "docmanager-rpcs-any"}
+}
+
+// ParseDocmanagerRPCs converts a string to a DocmanagerRPCs enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseDocmanagerRPCs(s string) (DocmanagerRPCs, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return DocmanagerRPCs_DOCMANAGER_RPCS_UNSPECIFIED, nil
+	case "docmanager-rpcs-create-ingest":
+		return DocmanagerRPCs_DOCMANAGER_RPCS_CREATE_INGEST, nil
+	case "docmanager-rpcs-get-doc-file-metadata":
+		return DocmanagerRPCs_DOCMANAGER_RPCS_GET_DOC_FILE_METADATA, nil
+	case "docmanager-rpcs-list-doc-file-metadata":
+		return DocmanagerRPCs_DOCMANAGER_RPCS_LIST_DOC_FILE_METADATA, nil
+	case "docmanager-rpcs-create-doc-file-link":
+		return DocmanagerRPCs_DOCMANAGER_RPCS_CREATE_DOC_FILE_LINK, nil
+	case "docmanager-rpcs-update-doc-file-location":
+		return DocmanagerRPCs_DOCMANAGER_RPCS_UPDATE_DOC_FILE_LOCATION, nil
+	case "docmanager-rpcs-broker-doc-manager-mcp-session":
+		return DocmanagerRPCs_DOCMANAGER_RPCS_BROKER_DOC_MANAGER_MCP_SESSION, nil
+	case "docmanager-rpcs-any":
+		return DocmanagerRPCs_DOCMANAGER_RPCS_ANY, nil
+	default:
+		return DocmanagerRPCs_DOCMANAGER_RPCS_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid docmanagerrpcs %s, expecting one of: %v", s, DocmanagerRPCsStringValues())
+	}
+}
+
+// ParseDocmanagerRPCss converts a comma-separated string to a slice of DocmanagerRPCs enum values
+// Returns an error if any value is invalid
+func ParseDocmanagerRPCss(s string) ([]DocmanagerRPCs, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]DocmanagerRPCs, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseDocmanagerRPCs(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// DocmanagerRPCsToString converts a DocmanagerRPCs to its lowercase string representation
+func DocmanagerRPCsToString(v DocmanagerRPCs) string {
+	switch v {
+	case DocmanagerRPCs_DOCMANAGER_RPCS_CREATE_INGEST:
+		return "docmanager-rpcs-create-ingest"
+	case DocmanagerRPCs_DOCMANAGER_RPCS_GET_DOC_FILE_METADATA:
+		return "docmanager-rpcs-get-doc-file-metadata"
+	case DocmanagerRPCs_DOCMANAGER_RPCS_LIST_DOC_FILE_METADATA:
+		return "docmanager-rpcs-list-doc-file-metadata"
+	case DocmanagerRPCs_DOCMANAGER_RPCS_CREATE_DOC_FILE_LINK:
+		return "docmanager-rpcs-create-doc-file-link"
+	case DocmanagerRPCs_DOCMANAGER_RPCS_UPDATE_DOC_FILE_LOCATION:
+		return "docmanager-rpcs-update-doc-file-location"
+	case DocmanagerRPCs_DOCMANAGER_RPCS_BROKER_DOC_MANAGER_MCP_SESSION:
+		return "docmanager-rpcs-broker-doc-manager-mcp-session"
+	case DocmanagerRPCs_DOCMANAGER_RPCS_ANY:
+		return "docmanager-rpcs-any"
+	default:
+		return ""
+	}
+}
+
+// ParseDocmanagerRPCsLiberal parses a DocmanagerRPCs liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseDocmanagerRPCsLiberal(s string) DocmanagerRPCs {
+	if s == "" {
+		return DocmanagerRPCs_DOCMANAGER_RPCS_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return DocmanagerRPCs(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "docmanager-rpcs-create-ingest":
+		return DocmanagerRPCs_DOCMANAGER_RPCS_CREATE_INGEST
+	case "docmanager-rpcs-get-doc-file-metadata":
+		return DocmanagerRPCs_DOCMANAGER_RPCS_GET_DOC_FILE_METADATA
+	case "docmanager-rpcs-list-doc-file-metadata":
+		return DocmanagerRPCs_DOCMANAGER_RPCS_LIST_DOC_FILE_METADATA
+	case "docmanager-rpcs-create-doc-file-link":
+		return DocmanagerRPCs_DOCMANAGER_RPCS_CREATE_DOC_FILE_LINK
+	case "docmanager-rpcs-update-doc-file-location":
+		return DocmanagerRPCs_DOCMANAGER_RPCS_UPDATE_DOC_FILE_LOCATION
+	case "docmanager-rpcs-broker-doc-manager-mcp-session":
+		return DocmanagerRPCs_DOCMANAGER_RPCS_BROKER_DOC_MANAGER_MCP_SESSION
+	case "docmanager-rpcs-any":
+		return DocmanagerRPCs_DOCMANAGER_RPCS_ANY
+	default:
+		return DocmanagerRPCs_DOCMANAGER_RPCS_UNSPECIFIED
+	}
+}
+
+// DocmanagerRPCsToSpecName converts a DocmanagerRPCs to its canonical protobuf spec name
+func DocmanagerRPCsToSpecName(v DocmanagerRPCs) string {
+	switch v {
+	case DocmanagerRPCs_DOCMANAGER_RPCS_UNSPECIFIED:
+		return "DOCMANAGER_RPCS_UNSPECIFIED"
+	case DocmanagerRPCs_DOCMANAGER_RPCS_CREATE_INGEST:
+		return "DOCMANAGER_RPCS_CREATE_INGEST"
+	case DocmanagerRPCs_DOCMANAGER_RPCS_GET_DOC_FILE_METADATA:
+		return "DOCMANAGER_RPCS_GET_DOC_FILE_METADATA"
+	case DocmanagerRPCs_DOCMANAGER_RPCS_LIST_DOC_FILE_METADATA:
+		return "DOCMANAGER_RPCS_LIST_DOC_FILE_METADATA"
+	case DocmanagerRPCs_DOCMANAGER_RPCS_CREATE_DOC_FILE_LINK:
+		return "DOCMANAGER_RPCS_CREATE_DOC_FILE_LINK"
+	case DocmanagerRPCs_DOCMANAGER_RPCS_UPDATE_DOC_FILE_LOCATION:
+		return "DOCMANAGER_RPCS_UPDATE_DOC_FILE_LOCATION"
+	case DocmanagerRPCs_DOCMANAGER_RPCS_BROKER_DOC_MANAGER_MCP_SESSION:
+		return "DOCMANAGER_RPCS_BROKER_DOC_MANAGER_MCP_SESSION"
+	case DocmanagerRPCs_DOCMANAGER_RPCS_ANY:
+		return "DOCMANAGER_RPCS_ANY"
 	default:
 		return ""
 	}

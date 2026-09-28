@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -66,9 +66,10 @@
 syntax = "proto3";
 
 package oauth;
-option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/oauth";
+option go_package = "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/oauth";
 
 import "sys/spec.proto";
+import "sys/mcp.proto";
 import "sys/trace.proto";
 
 // ============================================================================
@@ -129,7 +130,8 @@ message ProviderConfig {
   string name = 2;
 
   // domains maps email domains to this provider. When a user's email domain
-  // matches, they are routed to this IDP automatically.
+  // matches, they are routed to this IDP automatically. Each entry is a DNS
+  // hostname, bounded to 253 bytes by RFC 1035/1123.
   repeated string domains = 3;
 
   // issuer is the OpenID Connect issuer URL.
@@ -158,6 +160,27 @@ message ProviderConfig {
   // Used for providers with self-signed or private CA certificates (e.g. mock IDPs).
   // If empty, the system default CA bundle is used.
   string ca_pem = 11;
+
+  // allowed_redirect_uri_prefixes is the operator-configured allowlist of
+  // callback URLs this provider may redirect a user back to. AuthorizeRequest
+  // .callback_url is caller-supplied and unauthenticated; without this list it
+  // would be handed to the IDP as redirect_uri verbatim, letting anyone start a
+  // login that delivers the authorization code to a host they control.
+  //
+  // Matching rule (deliberately strict, no wildcards, no URL parsing):
+  //   - An entry that does NOT end in "/" matches only a byte-identical
+  //     callback_url.
+  //   - An entry that DOES end in "/" additionally matches any callback_url
+  //     that begins with it. The trailing slash is what makes the prefix end on
+  //     a path boundary, so "https://legit.example.com/app/" cannot be
+  //     satisfied by "https://legit.example.com/app-evil/..." and
+  //     "https://legit.example.com/app" cannot be satisfied by
+  //     "https://legit.example.comX/".
+  //
+  // Comparison is exact and case-sensitive. There is no implicit default: a
+  // provider with an empty list authorizes nothing, so the service fails closed
+  // if the field is ever missing at runtime.
+  repeated string allowed_redirect_uri_prefixes = 12;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -232,6 +255,18 @@ service Auth {
   // to kernel's CliTokenBroker for nonce completion and token minting.
   rpc BrokerCliAuth(CompleteCliAuthRequest) returns (CompleteCliAuthResponse) {
   }
+
+  // BrokerAuthMcpSession carries one Model Context Protocol session for Auth over a
+  // single bidirectional stream: one complete JSON-RPC frame per stream message,
+  // request frames in and response frames out, for the life of the session.
+  //
+  // Generated, never declared: Auth has at least one RPC_PRINCIPAL_MCP rpc, and this
+  // is the only channel those tools are reachable through. Bidirectional because an
+  // MCP session is stateful — it opens with an initialize handshake and holds the
+  // negotiated protocol version after it — so a unary call would repeat that
+  // handshake per tool call.
+  rpc BrokerAuthMcpSession(stream mcp.McpRequest) returns (stream mcp.McpResponse) {
+  }
 }
 
 // ============================================================================
@@ -286,7 +321,8 @@ message ProviderInfo {
   // name is the display name (e.g. "Google").
   string name = 1;
 
-  // domains handled by this provider.
+  // domains handled by this provider. Each entry is a DNS hostname, bounded to
+  // 253 bytes by RFC 1035/1123.
   repeated string domains = 2;
 
   // provider_index identifies this provider in subsequent Authorize calls.
@@ -308,6 +344,15 @@ message AuthorizeRequest {
   // If present, the callback handler writes the minted token to OAuthState
   // for delivery to the matching bidi stream.
   string session_id = 3;
+
+  // nonce is a caller-supplied OIDC nonce, relayed verbatim to the IDP's
+  // authorization endpoint so the IDP echoes it back as the id_token's
+  // `nonce` claim (forwarded to kernel as `origin_nonce`). Set by a device
+  // proving possession of its key — the value is then the key's RFC 7638
+  // thumbprint, which CreateTenantUserLink's device side compares against.
+  // Empty means no nonce is requested and no `nonce` param is sent at all,
+  // which is every login that is not proving device possession.
+  string nonce = 4;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -543,6 +588,7 @@ enum AuthRpcId {
   AUTH_RPC_ID_MINT_CALLBACK_TOKENS = 6;
   AUTH_RPC_ID_REVOKE_SESSION = 7;
   AUTH_RPC_ID_BROKER_CLI_AUTH = 8;
+  AUTH_RPC_ID_BROKER_AUTH_MCP_SESSION = 9;
 }
 
 enum OauthConfigStateServiceRpcId {

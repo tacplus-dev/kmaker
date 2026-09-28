@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -41,7 +41,7 @@
 syntax = "proto3";
 
 package operator;
-option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/operator";
+option go_package = "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/operator";
 
 import "sys/spec.proto";
 import "sys/x509.proto";
@@ -74,6 +74,12 @@ message TLSConfig {
   // Custom CA chain for edge TLS certificates.
   // Required when letsencrypt = false. Ignored when letsencrypt = true.
   x509.X509CertChain ca = 2;
+
+  // email is the ACME account registration address, rendered into the
+  // letsencrypt service's config as lets_encrypt_email. Let's Encrypt sends
+  // certificate expiry notices there. Empty leaves the letsencrypt service on
+  // its own "admin@<fqdn>" default. Ignored when letsencrypt = false.
+  string email = 3;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -119,7 +125,29 @@ message Topology {
   reserved 11;
   reserved "argus_nodes";
 
+  // stratum_nodes is the number of WRITER members: the StatefulSet with volumes.
+  // A writer holds partitions like any member AND persists every write — its redo
+  // log, its record index, its share of the daily checkpoint — so this is the
+  // count that decides durability. It is counted for min_durable_copies and for
+  // the hot-restore barrier, and it is meant to be fairly static (2 or 3).
   int32 stratum_nodes    = 12;
+
+  // stratum_search_nodes is the number of SEARCH members: a second, volume-less
+  // workload joining the same Hazelcast cluster with the member attribute
+  // stratum.role=search.
+  //
+  // A search member holds partitions (primaries and backups) and answers the
+  // parallel scatter-gather a predicate query is, and does nothing else: no
+  // volume, no redo log, no record index, no checkpoint. It is never a durable
+  // copy and never a restore contributor, so a search member that leaves loses
+  // nothing durable and scaling this number up or down changes query throughput
+  // and nothing about durability.
+  //
+  // Defaults to 0: query throughput is a thing a deployment asks for. Raising
+  // this is NOT a way to raise durability — min_durable_copies counts writers
+  // (stratum_nodes) only, and a cluster with fewer writers than the floor refuses
+  // writes however many search members are running.
+  int32 stratum_search_nodes = 22;
 
   // saml_nodes is used when optional_services.saml = true.
   int32 saml_nodes       = 13;
@@ -133,6 +161,34 @@ message Topology {
   // Defaults to 1 rather than 3: the sample service is stateless and exists to
   // be poked at, so a second replica proves nothing and costs a pod.
   int32 echo_nodes = 17;
+
+  // messaging_nodes is used when optional_services.messaging = true.
+  // Defaults to 1: the service is stateless mediation over eventbus, so a
+  // second replica buys availability, not throughput, and a cluster that wants
+  // it says so.
+  int32 messaging_nodes = 19;
+
+  // mailbox_nodes is used when optional_services.mailbox = true.
+  // Defaults to 1 for the same reason as messaging_nodes.
+  int32 mailbox_nodes = 20;
+
+  // personalauth_nodes is used when optional_services.personalauth = true.
+  // Defaults to 3, not 1: this is the login path for PERSONAL principals, so a
+  // single replica makes every device registration and every device login
+  // unavailable for the length of a rollout. Same reasoning, and the same
+  // count, as oauth_nodes.
+  int32 personalauth_nodes = 21;
+
+  // blobstore_nodes is used when optional_services.blobstore = true.
+  //
+  // DEFAULTS TO 2, AND 2 IS THE ONLY SUPPORTED VALUE. blobstore is a mirrored
+  // PAIR: an upload is acked only when both pods have the bytes fsynced, and each
+  // pod streams to exactly one peer (blob-store-2026-09-25.md R2). The service
+  // refuses to start if the peer list it is given does not reduce to one peer, so a
+  // 1 or a 3 here is a cluster that will not come up rather than a cluster that
+  // quietly degrades. It is a field rather than a constant only so that the
+  // rendering path is uniform with every other service's.
+  int32 blobstore_nodes = 23;
 
   // app_services declares replica counts for services that are NOT part of the
   // platform: an application's own services, defined in the application's proto
@@ -179,6 +235,31 @@ message OptionalServices {
   // Disabled by default: it is a diagnostic/reference service, not something a
   // production cluster should carry.
   bool echo = 9;
+
+  // Messaging — the platform's message primitive (messaging.proto).
+  // messaging_nodes replicas when enabled. Disabled by default: it is a
+  // primitive an application opts into, not something every cluster carries.
+  bool messaging = 10;
+
+  // Mailbox — pull delivery and eviction eligibility over messaging's
+  // deliveries (mailbox.proto). mailbox_nodes replicas when enabled.
+  // Disabled by default; requires messaging.
+  bool mailbox = 11;
+
+  // personalauth — the login broker for PERSONAL principals (personalauth.proto).
+  // Today one arm: DEVICE, a device-held key registering and logging itself in.
+  // personalauth_nodes replicas when enabled. Disabled by default: a cluster
+  // whose people all arrive through a tenant IdP has no use for it.
+  bool personalauth = 12;
+
+  // blobstore — the platform's binary blob primitive (blobstore.proto): a
+  // two-pod mirror of content-addressed files, with its metadata in stratum
+  // records. blobstore_nodes replicas when enabled, which is 2.
+  //
+  // Disabled by default, and enabling it costs two PersistentVolumeClaims, so a
+  // cluster whose services declare no volume groups should leave it off — with no
+  // group declared it would accept no upload anyway ("no group, no upload").
+  bool blobstore = 13;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -212,6 +293,15 @@ message PKI {
   // Kmaker signing CA, signed by cluster_ca and constrained to issue only
   // kernel bootstrap leaf certificates.
   x509.X509CertChain kmaker_signing_ca = 7;
+
+  // 8 held blobstore_token_key, an HMAC secret blobstore signed upload tokens
+  // with. There is no such secret: an upload token is raw randomness whose
+  // sha256 keys the UploadSession row that holds the grant, so verification is
+  // a lookup and there is nothing to generate, deliver or rotate (decided
+  // 2026-09-27, blob-store-2026-09-25.md R3). Reserved rather than simply
+  // removed because the field DID reach a live cluster's crypto.yaml.
+  reserved 8;
+  reserved "blobstore_token_key";
   string trace_id = 200;
   bool noop = 201;
 }
@@ -278,12 +368,14 @@ message Config {
   // the generated Helm chart. Keep this out of version control — store in crypto.yaml.
   string gitlab_registry_token = 14;
 
-  // SPIFFE trust-domain prefix for identity URIs. Every workload identity is
-  // formed as `spiffe://${spiffe_prefix}/${service_name}` — this powers token
-  // subject claims, mTLS URI SANs, and (post-B-end-state) SPIFFE-aware client
-  // cert verification. Operator propagates this value to kernel's bootstrap
-  // AND to every service configmap so all components agree on the trust
-  // domain at boot, without a runtime SCS round-trip.
+  // SPIFFE trust domain for identity URIs: the URI authority, so it must not
+  // contain '/'. Workload identities are formed as
+  // `spiffe://${spiffe_prefix}/system/services/${service_name}` — this powers
+  // token subject claims, mTLS URI SANs, and (post-B-end-state) SPIFFE-aware
+  // client cert verification. Operator propagates this value to kernel's
+  // bootstrap AND to every service configmap so all components agree on the
+  // trust domain at boot, without a runtime SCS round-trip. Must equal
+  // kernel.Config.spiffe_trust_domain.
   string spiffe_prefix = 15;
 
   // root_cred_pairs are the bootstrap admin credentials, loaded from
@@ -315,6 +407,41 @@ message Config {
   // llm_credential_services names the app services (by AppServiceNames key)
   // that should receive llm_credential in their generated bootstrap config.
   repeated string llm_credential_services = 21;
+
+  // tenants names the tenants this cluster hosts, e.g. ["acme", "beta"]. Each
+  // entry is a bare tenant name; the canonical authorization namespace is
+  // "/tenants/<name>" (see kernel.Delegate.tenant_namespace).
+  //
+  // The operator is the single source of truth for the tenant list, the same
+  // way it is for app_services: nothing queries kernel to discover tenants and
+  // no second config file lists them. For every service that registry.json
+  // marks (spec.service).tenant_owned, the operator deploys one Deployment +
+  // ServiceAccount named "<svc>-<tenant>" per entry here, and writes one kernel
+  // delegate named <svc> with tenant_namespace "/tenants/<name>" for each.
+  // Services NOT marked tenant_owned ignore this field entirely and keep their
+  // single shared instance.
+  //
+  // This does NOT tell a service its own tenant. Tenant identity is derived
+  // only from the SPIFFE ID in the caller's token at runtime, never from
+  // config a service can read.
+  repeated string tenants = 22;
+
+  // external_ip pins the cluster's external LoadBalancer Service to a
+  // pre-reserved static external address (e.g. a GCP regional compute
+  // address). It is rendered as spec.loadBalancerIP on the gateway's
+  // "<gateway>-lb" Service — the ONE externally-exposed Service there is,
+  // carrying TCP/443 and TCP/80 together.
+  //
+  // Both ports are on the one Service on purpose: fqdn's public A record
+  // resolves to this address, and ACME HTTP-01 validation connects to port 80
+  // on that same name. The gateway answers on 80 and proxies challenge
+  // requests to the letsencrypt service in-cluster, so letsencrypt needs no
+  // external address of its own.
+  //
+  // Leave empty to let the provider assign an ephemeral address per Service —
+  // fine for local and dev clusters, but then the address changes on every
+  // re-render and any DNS record pointing at it goes stale.
+  string external_ip = 23;
   string trace_id = 200;
   bool noop = 201;
 }

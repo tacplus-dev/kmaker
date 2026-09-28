@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -22,10 +22,10 @@
 package tenant_config
 
 import (
-	credentials "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/common/credentials"
-	oauth "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/oauth"
-	opa "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/opa"
-	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
+	credentials "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/common/credentials"
+	oauth "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/oauth"
+	opa "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/opa"
+	_ "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/spec"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -110,7 +110,7 @@ const file_generated_tenant_config_proto_rawDesc = "" +
 	"\fTenantConfig\x127\n" +
 	"\x06kernel\x18\x01 \x01(\v2\x1f.credentials.KernelTenantConfigR\x06kernel\x12&\n" +
 	"\x03opa\x18\x02 \x01(\v2\x14.opa.OpaTenantConfigR\x03opa\x12.\n" +
-	"\x05oauth\x18\x03 \x01(\v2\x18.oauth.OAuthTenantConfigR\x05oauth:\x04\xa0\xaa\x1d\x01BfZdgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/tenant_configb\x06proto3"
+	"\x05oauth\x18\x03 \x01(\v2\x18.oauth.OAuthTenantConfigR\x05oauth:\x04\xa0\xaa\x1d\x01B[ZYgitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/tenant_configb\x06proto3"
 
 var (
 	file_generated_tenant_config_proto_rawDescOnce sync.Once

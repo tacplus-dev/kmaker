@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -22,9 +22,9 @@
 package eventbus
 
 import (
-	host "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/host"
-	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
-	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
+	host "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/host"
+	_ "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/spec"
+	trace "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -4299,8 +4299,8 @@ const file_services_eventbus_proto_rawDesc = "" +
 	"\tSetConfig\x12\x10.eventbus.Config\x1a\x10.eventbus.Config\x126\n" +
 	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x10.eventbus.Config0\x01\x1a\x0e\xea\x97\"\n" +
 	"\n" +
-	"\beventbusBwڵ\x18\x02\x18\x01\x92\xb6\x18\r\n" +
-	"\vkernel.MintZ^gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/eventbusb\x06proto3"
+	"\beventbusBlڵ\x18\x02\x18\x01\x92\xb6\x18\r\n" +
+	"\vkernel.MintZSgitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/eventbusb\x06proto3"
 
 var (
 	file_services_eventbus_proto_rawDescOnce sync.Once

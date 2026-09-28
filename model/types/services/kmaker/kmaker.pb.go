@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -22,11 +22,11 @@
 package kmaker
 
 import (
-	host "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/host"
-	logger "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/logger"
-	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
-	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
-	x509 "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/x509"
+	host "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/host"
+	logger "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/logger"
+	_ "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/spec"
+	trace "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
+	x509 "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -234,8 +234,10 @@ type Config struct {
 	// The private key is present in the mounted kmaker config and must be backed
 	// by a Kubernetes Secret owned by operator.
 	SigningCa *x509.X509CertChain `protobuf:"bytes,5,opt,name=signing_ca,json=signingCa,proto3" json:"signing_ca,omitempty"`
-	// spiffe_prefix is the deployment prefix for kernel SPIFFE URI SANs.
-	// Certificates minted here receive spiffe://<spiffe_prefix>/kernel.
+	// spiffe_prefix is the SPIFFE trust domain for kernel SPIFFE URI SANs: the
+	// URI authority, so it must not contain '/'. Certificates minted here
+	// receive spiffe://<spiffe_prefix>/kernel. Operator supplies this from
+	// operator.Config.spiffe_prefix.
 	SpiffePrefix string `protobuf:"bytes,6,opt,name=spiffe_prefix,json=spiffePrefix,proto3" json:"spiffe_prefix,omitempty"`
 	// token_audience is the required Kubernetes TokenReview audience.
 	TokenAudience string `protobuf:"bytes,7,opt,name=token_audience,json=tokenAudience,proto3" json:"token_audience,omitempty"`
@@ -673,7 +675,7 @@ const file_services_kmaker_proto_rawDesc = "" +
 	"cluster_ca\x18\x04 \x03(\v2\x0e.x509.X509CertB\x04\xb8\xa8\x1d\x10R\tclusterCa\x128\n" +
 	"\n" +
 	"signing_ca\x18\x05 \x01(\v2\x13.x509.X509CertChainB\x04\x88\xa6\x1d\x01R\tsigningCa\x122\n" +
-	"\rspiffe_prefix\x18\x06 \x01(\tB\r\x8a\xa8\x1d\tlocal/devR\fspiffePrefix\x121\n" +
+	"\rspiffe_prefix\x18\x06 \x01(\tB\r\x8a\xa8\x1d\tlocal.devR\fspiffePrefix\x121\n" +
 	"\x0etoken_audience\x18\a \x01(\tB\n" +
 	"\x8a\xa8\x1d\x06kmakerR\rtokenAudience\x12Z\n" +
 	"\x17kernel_service_accounts\x18\b \x03(\v2\x1c.kmaker.KernelServiceAccountB\x04\xb8\xa8\x1d R\x15kernelServiceAccounts\x12K\n" +
@@ -735,9 +737,9 @@ const file_services_kmaker_proto_rawDesc = "" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x0e.kmaker.Config\x12+\n" +
 	"\tSetConfig\x12\x0e.kmaker.Config\x1a\x0e.kmaker.Config\x124\n" +
 	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x0e.kmaker.Config0\x01\x1a\f\xea\x97\"\b\n" +
-	"\x06kmakerB\x7f\x92\xb5\x18\x11\n" +
+	"\x06kmakerBt\x92\xb5\x18\x11\n" +
 	"\fDEFAULT_PORT\x10\xfbAڵ\x18\b\n" +
-	"\x06kmakerZ\\gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmakerb\x06proto3"
+	"\x06kmakerZQgitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmakerb\x06proto3"
 
 var (
 	file_services_kmaker_proto_rawDescOnce sync.Once

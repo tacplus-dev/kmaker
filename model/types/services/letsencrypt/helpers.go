@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -29,11 +29,12 @@ import (
 	"strings"
 
 	"github.com/pelletier/go-toml/v2"
-	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/errors"
-	host "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/host"
-	x509 "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/x509"
+	protoerrors "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/errors"
+	host "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/host"
+	x509 "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	"gopkg.in/yaml.v3"
 )
 
@@ -47,14 +48,18 @@ func TypeIDValues() []TypeID {
 		TypeID_TYPE_ID_LETS_ENCRYPT_STATE,
 		TypeID_TYPE_ID_LETS_ENCRYPT_CERT_DATA,
 		TypeID_TYPE_ID_CERT_MAGIC_STATE,
+		TypeID_TYPE_ID_LETS_ENCRYPT_CERT,
+		TypeID_TYPE_ID_LETS_ENCRYPT_CERT_BUS,
 		TypeID_TYPE_ID_LETSENCRYPT_CONFIG_STATE,
+		TypeID_TYPE_ID_LETS_ENCRYPT_CERT_BUS_STREAM_SUBSCRIBE_RECORD,
 		TypeID_TYPE_ID_MAP_EMPTY,
+		TypeID_TYPE_ID_EVENT_BUS_RECORD_META,
 	}
 }
 
 // TypeIDStringValues returns all valid TypeID names as strings
 func TypeIDStringValues() []string {
-	return []string{"config", "lets-encrypt-state", "lets-encrypt-cert-data", "cert-magic-state", "letsencrypt-config-state", "map-empty"}
+	return []string{"config", "lets-encrypt-state", "lets-encrypt-cert-data", "cert-magic-state", "lets-encrypt-cert", "lets-encrypt-cert-bus", "letsencrypt-config-state", "lets-encrypt-cert-bus-stream-subscribe-record", "map-empty", "event-bus-record-meta"}
 }
 
 // ParseTypeID converts a string to a TypeID enum value
@@ -73,10 +78,18 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_LETS_ENCRYPT_CERT_DATA, nil
 	case "cert-magic-state", "type-id-cert-magic-state":
 		return TypeID_TYPE_ID_CERT_MAGIC_STATE, nil
+	case "lets-encrypt-cert", "type-id-lets-encrypt-cert":
+		return TypeID_TYPE_ID_LETS_ENCRYPT_CERT, nil
+	case "lets-encrypt-cert-bus", "type-id-lets-encrypt-cert-bus":
+		return TypeID_TYPE_ID_LETS_ENCRYPT_CERT_BUS, nil
 	case "letsencrypt-config-state", "type-id-letsencrypt-config-state":
 		return TypeID_TYPE_ID_LETSENCRYPT_CONFIG_STATE, nil
+	case "lets-encrypt-cert-bus-stream-subscribe-record", "type-id-lets-encrypt-cert-bus-stream-subscribe-record":
+		return TypeID_TYPE_ID_LETS_ENCRYPT_CERT_BUS_STREAM_SUBSCRIBE_RECORD, nil
 	case "map-empty", "type-id-map-empty":
 		return TypeID_TYPE_ID_MAP_EMPTY, nil
+	case "event-bus-record-meta", "type-id-event-bus-record-meta":
+		return TypeID_TYPE_ID_EVENT_BUS_RECORD_META, nil
 	default:
 		return TypeID_TYPE_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid typeid %s, expecting one of: %v", s, TypeIDStringValues())
 	}
@@ -115,10 +128,18 @@ func TypeIDToString(v TypeID) string {
 		return "lets-encrypt-cert-data"
 	case TypeID_TYPE_ID_CERT_MAGIC_STATE:
 		return "cert-magic-state"
+	case TypeID_TYPE_ID_LETS_ENCRYPT_CERT:
+		return "lets-encrypt-cert"
+	case TypeID_TYPE_ID_LETS_ENCRYPT_CERT_BUS:
+		return "lets-encrypt-cert-bus"
 	case TypeID_TYPE_ID_LETSENCRYPT_CONFIG_STATE:
 		return "letsencrypt-config-state"
+	case TypeID_TYPE_ID_LETS_ENCRYPT_CERT_BUS_STREAM_SUBSCRIBE_RECORD:
+		return "lets-encrypt-cert-bus-stream-subscribe-record"
 	case TypeID_TYPE_ID_MAP_EMPTY:
 		return "map-empty"
+	case TypeID_TYPE_ID_EVENT_BUS_RECORD_META:
+		return "event-bus-record-meta"
 	default:
 		return ""
 	}
@@ -149,10 +170,18 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_LETS_ENCRYPT_CERT_DATA
 	case "cert-magic-state", "type-id-cert-magic-state":
 		return TypeID_TYPE_ID_CERT_MAGIC_STATE
+	case "lets-encrypt-cert", "type-id-lets-encrypt-cert":
+		return TypeID_TYPE_ID_LETS_ENCRYPT_CERT
+	case "lets-encrypt-cert-bus", "type-id-lets-encrypt-cert-bus":
+		return TypeID_TYPE_ID_LETS_ENCRYPT_CERT_BUS
 	case "letsencrypt-config-state", "type-id-letsencrypt-config-state":
 		return TypeID_TYPE_ID_LETSENCRYPT_CONFIG_STATE
+	case "lets-encrypt-cert-bus-stream-subscribe-record", "type-id-lets-encrypt-cert-bus-stream-subscribe-record":
+		return TypeID_TYPE_ID_LETS_ENCRYPT_CERT_BUS_STREAM_SUBSCRIBE_RECORD
 	case "map-empty", "type-id-map-empty":
 		return TypeID_TYPE_ID_MAP_EMPTY
+	case "event-bus-record-meta", "type-id-event-bus-record-meta":
+		return TypeID_TYPE_ID_EVENT_BUS_RECORD_META
 	default:
 		return TypeID_TYPE_ID_UNSPECIFIED
 	}
@@ -171,10 +200,18 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_LETS_ENCRYPT_CERT_DATA"
 	case TypeID_TYPE_ID_CERT_MAGIC_STATE:
 		return "TYPE_ID_CERT_MAGIC_STATE"
+	case TypeID_TYPE_ID_LETS_ENCRYPT_CERT:
+		return "TYPE_ID_LETS_ENCRYPT_CERT"
+	case TypeID_TYPE_ID_LETS_ENCRYPT_CERT_BUS:
+		return "TYPE_ID_LETS_ENCRYPT_CERT_BUS"
 	case TypeID_TYPE_ID_LETSENCRYPT_CONFIG_STATE:
 		return "TYPE_ID_LETSENCRYPT_CONFIG_STATE"
+	case TypeID_TYPE_ID_LETS_ENCRYPT_CERT_BUS_STREAM_SUBSCRIBE_RECORD:
+		return "TYPE_ID_LETS_ENCRYPT_CERT_BUS_STREAM_SUBSCRIBE_RECORD"
 	case TypeID_TYPE_ID_MAP_EMPTY:
 		return "TYPE_ID_MAP_EMPTY"
+	case TypeID_TYPE_ID_EVENT_BUS_RECORD_META:
+		return "TYPE_ID_EVENT_BUS_RECORD_META"
 	default:
 		return ""
 	}
@@ -315,6 +352,137 @@ func LetsEncryptStateServiceRpcIdToSpecName(v LetsEncryptStateServiceRpcId) stri
 		return "LETS_ENCRYPT_STATE_SERVICE_RPC_ID_SET_CERT_DATA"
 	case LetsEncryptStateServiceRpcId_LETS_ENCRYPT_STATE_SERVICE_RPC_ID_WATCH_CERT_DATA:
 		return "LETS_ENCRYPT_STATE_SERVICE_RPC_ID_WATCH_CERT_DATA"
+	default:
+		return ""
+	}
+}
+
+// LetsEncryptCertBusStateServiceRpcIdValues returns all valid LetsEncryptCertBusStateServiceRpcId values (excluding UNDEFINED)
+func LetsEncryptCertBusStateServiceRpcIdValues() []LetsEncryptCertBusStateServiceRpcId {
+	return []LetsEncryptCertBusStateServiceRpcId{
+		LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_ACCESSORS,
+		LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_MUTATORS,
+		LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_EXECUTORS,
+		LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_PUBLISH_TO_STREAM,
+		LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_SUBSCRIBE_TO_STREAM,
+	}
+}
+
+// LetsEncryptCertBusStateServiceRpcIdStringValues returns all valid LetsEncryptCertBusStateServiceRpcId names as strings
+func LetsEncryptCertBusStateServiceRpcIdStringValues() []string {
+	return []string{"all-accessors", "all-mutators", "all-executors", "publish-to-stream", "subscribe-to-stream"}
+}
+
+// ParseLetsEncryptCertBusStateServiceRpcId converts a string to a LetsEncryptCertBusStateServiceRpcId enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseLetsEncryptCertBusStateServiceRpcId(s string) (LetsEncryptCertBusStateServiceRpcId, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_UNSPECIFIED, nil
+	case "all-accessors", "lets-encrypt-cert-bus-state-service-rpc-id-all-accessors":
+		return LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_ACCESSORS, nil
+	case "all-mutators", "lets-encrypt-cert-bus-state-service-rpc-id-all-mutators":
+		return LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_MUTATORS, nil
+	case "all-executors", "lets-encrypt-cert-bus-state-service-rpc-id-all-executors":
+		return LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_EXECUTORS, nil
+	case "publish-to-stream", "lets-encrypt-cert-bus-state-service-rpc-id-publish-to-stream":
+		return LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_PUBLISH_TO_STREAM, nil
+	case "subscribe-to-stream", "lets-encrypt-cert-bus-state-service-rpc-id-subscribe-to-stream":
+		return LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_SUBSCRIBE_TO_STREAM, nil
+	default:
+		return LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid letsencryptcertbusstateservicerpcid %s, expecting one of: %v", s, LetsEncryptCertBusStateServiceRpcIdStringValues())
+	}
+}
+
+// ParseLetsEncryptCertBusStateServiceRpcIds converts a comma-separated string to a slice of LetsEncryptCertBusStateServiceRpcId enum values
+// Returns an error if any value is invalid
+func ParseLetsEncryptCertBusStateServiceRpcIds(s string) ([]LetsEncryptCertBusStateServiceRpcId, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]LetsEncryptCertBusStateServiceRpcId, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseLetsEncryptCertBusStateServiceRpcId(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// LetsEncryptCertBusStateServiceRpcIdToString converts a LetsEncryptCertBusStateServiceRpcId to its lowercase string representation
+func LetsEncryptCertBusStateServiceRpcIdToString(v LetsEncryptCertBusStateServiceRpcId) string {
+	switch v {
+	case LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_ACCESSORS:
+		return "all-accessors"
+	case LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_MUTATORS:
+		return "all-mutators"
+	case LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_EXECUTORS:
+		return "all-executors"
+	case LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_PUBLISH_TO_STREAM:
+		return "publish-to-stream"
+	case LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_SUBSCRIBE_TO_STREAM:
+		return "subscribe-to-stream"
+	default:
+		return ""
+	}
+}
+
+// ParseLetsEncryptCertBusStateServiceRpcIdLiberal parses a LetsEncryptCertBusStateServiceRpcId liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseLetsEncryptCertBusStateServiceRpcIdLiberal(s string) LetsEncryptCertBusStateServiceRpcId {
+	if s == "" {
+		return LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return LetsEncryptCertBusStateServiceRpcId(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "all-accessors", "lets-encrypt-cert-bus-state-service-rpc-id-all-accessors":
+		return LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_ACCESSORS
+	case "all-mutators", "lets-encrypt-cert-bus-state-service-rpc-id-all-mutators":
+		return LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_MUTATORS
+	case "all-executors", "lets-encrypt-cert-bus-state-service-rpc-id-all-executors":
+		return LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_EXECUTORS
+	case "publish-to-stream", "lets-encrypt-cert-bus-state-service-rpc-id-publish-to-stream":
+		return LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_PUBLISH_TO_STREAM
+	case "subscribe-to-stream", "lets-encrypt-cert-bus-state-service-rpc-id-subscribe-to-stream":
+		return LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_SUBSCRIBE_TO_STREAM
+	default:
+		return LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_UNSPECIFIED
+	}
+}
+
+// LetsEncryptCertBusStateServiceRpcIdToSpecName converts a LetsEncryptCertBusStateServiceRpcId to its canonical protobuf spec name
+func LetsEncryptCertBusStateServiceRpcIdToSpecName(v LetsEncryptCertBusStateServiceRpcId) string {
+	switch v {
+	case LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_UNSPECIFIED:
+		return "LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_UNSPECIFIED"
+	case LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_ACCESSORS:
+		return "LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_ACCESSORS"
+	case LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_MUTATORS:
+		return "LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_MUTATORS"
+	case LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_EXECUTORS:
+		return "LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_EXECUTORS"
+	case LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_PUBLISH_TO_STREAM:
+		return "LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_PUBLISH_TO_STREAM"
+	case LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_SUBSCRIBE_TO_STREAM:
+		return "LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_SUBSCRIBE_TO_STREAM"
 	default:
 		return ""
 	}
@@ -1186,6 +1354,376 @@ func CertMagicStateToTOML(v *CertMagicState) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
+// LetsEncryptCertJSON represents LetsEncryptCert in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type letsencryptcertJSON struct {
+	CertSetId      string          `json:"cert_set_id,omitempty"`
+	TlsCert        json.RawMessage `json:"tls_cert,omitempty"`
+	CertmagicState json.RawMessage `json:"certmagic_state,omitempty"`
+	Hostnames      []string        `json:"hostnames,omitempty"`
+	IssuedAt       int64           `json:"issued_at,omitempty"`
+	ExpiresAt      int64           `json:"expires_at,omitempty"`
+	SpiffeId       string          `json:"spiffe_id,omitempty"`
+	Namespace      string          `json:"namespace,omitempty"`
+	TraceId        string          `json:"trace_id,omitempty"`
+	Noop           bool            `json:"noop,omitempty"`
+}
+
+// LetsEncryptCertToJSON converts LetsEncryptCert to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func LetsEncryptCertToJSON(v *LetsEncryptCert) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "letsencryptcert is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := letsencryptcertJSON{
+		CertSetId: v.CertSetId,
+		TlsCert: func() json.RawMessage {
+			if v.TlsCert == nil {
+				return nil
+			}
+			data, _ := x509.X509CertChainToJSON(v.TlsCert)
+			return data
+		}(),
+		CertmagicState: func() json.RawMessage {
+			if v.CertmagicState == nil {
+				return nil
+			}
+			data, _ := CertMagicStateToJSON(v.CertmagicState)
+			return data
+		}(),
+		Hostnames: v.Hostnames,
+		IssuedAt:  v.IssuedAt,
+		ExpiresAt: v.ExpiresAt,
+		SpiffeId:  v.SpiffeId,
+		Namespace: v.Namespace,
+		TraceId:   v.TraceId,
+		Noop:      v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// LetsEncryptCertToJSONPretty converts LetsEncryptCert to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func LetsEncryptCertToJSONPretty(v *LetsEncryptCert) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "letsencryptcert is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := letsencryptcertJSON{
+		CertSetId: v.CertSetId,
+		TlsCert: func() json.RawMessage {
+			if v.TlsCert == nil {
+				return nil
+			}
+			data, _ := x509.X509CertChainToJSON(v.TlsCert)
+			return data
+		}(),
+		CertmagicState: func() json.RawMessage {
+			if v.CertmagicState == nil {
+				return nil
+			}
+			data, _ := CertMagicStateToJSON(v.CertmagicState)
+			return data
+		}(),
+		Hostnames: v.Hostnames,
+		IssuedAt:  v.IssuedAt,
+		ExpiresAt: v.ExpiresAt,
+		SpiffeId:  v.SpiffeId,
+		Namespace: v.Namespace,
+		TraceId:   v.TraceId,
+		Noop:      v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// LetsEncryptCertFromBytes creates LetsEncryptCert from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func LetsEncryptCertFromBytes(data []byte) (*LetsEncryptCert, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := LetsEncryptCertFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := LetsEncryptCertFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := LetsEncryptCertFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &LetsEncryptCert{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse LetsEncryptCert: unsupported format or invalid data")
+}
+
+// LetsEncryptCertFromJSON creates LetsEncryptCert from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func LetsEncryptCertFromJSON(data []byte) (*LetsEncryptCert, error) {
+	// Unmarshal into helper struct with string enums
+	var raw letsencryptcertJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &LetsEncryptCert{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &LetsEncryptCert{}
+	result.CertSetId = raw.CertSetId
+	// Parse message field: TlsCert
+	if len(raw.TlsCert) > 0 {
+		parsed, err := x509.X509CertChainFromJSON(raw.TlsCert)
+		if err == nil {
+			result.TlsCert = parsed
+		}
+	}
+	// Parse message field: CertmagicState
+	if len(raw.CertmagicState) > 0 {
+		parsed, err := CertMagicStateFromJSON(raw.CertmagicState)
+		if err == nil {
+			result.CertmagicState = parsed
+		}
+	}
+	result.Hostnames = raw.Hostnames
+	result.IssuedAt = raw.IssuedAt
+	result.ExpiresAt = raw.ExpiresAt
+	result.SpiffeId = raw.SpiffeId
+	result.Namespace = raw.Namespace
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// LetsEncryptCertToYAML converts LetsEncryptCert to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func LetsEncryptCertToYAML(v *LetsEncryptCert) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "letsencryptcert is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := LetsEncryptCertToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// LetsEncryptCertToTOML converts LetsEncryptCert to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func LetsEncryptCertToTOML(v *LetsEncryptCert) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "letsencryptcert is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := LetsEncryptCertToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// LetsEncryptCertBusJSON represents LetsEncryptCertBus in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type letsencryptcertbusJSON struct {
+	Stream  json.RawMessage `json:"stream,omitempty"`
+	TraceId string          `json:"trace_id,omitempty"`
+	Noop    bool            `json:"noop,omitempty"`
+}
+
+// LetsEncryptCertBusToJSON converts LetsEncryptCertBus to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func LetsEncryptCertBusToJSON(v *LetsEncryptCertBus) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "letsencryptcertbus is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := letsencryptcertbusJSON{
+		Stream: func() json.RawMessage {
+			if v.Stream == nil {
+				return nil
+			}
+			data, _ := LetsEncryptCertToJSON(v.Stream)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// LetsEncryptCertBusToJSONPretty converts LetsEncryptCertBus to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func LetsEncryptCertBusToJSONPretty(v *LetsEncryptCertBus) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "letsencryptcertbus is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := letsencryptcertbusJSON{
+		Stream: func() json.RawMessage {
+			if v.Stream == nil {
+				return nil
+			}
+			data, _ := LetsEncryptCertToJSON(v.Stream)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// LetsEncryptCertBusFromBytes creates LetsEncryptCertBus from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func LetsEncryptCertBusFromBytes(data []byte) (*LetsEncryptCertBus, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := LetsEncryptCertBusFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := LetsEncryptCertBusFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := LetsEncryptCertBusFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &LetsEncryptCertBus{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse LetsEncryptCertBus: unsupported format or invalid data")
+}
+
+// LetsEncryptCertBusFromJSON creates LetsEncryptCertBus from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func LetsEncryptCertBusFromJSON(data []byte) (*LetsEncryptCertBus, error) {
+	// Unmarshal into helper struct with string enums
+	var raw letsencryptcertbusJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &LetsEncryptCertBus{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &LetsEncryptCertBus{}
+	// Parse message field: Stream
+	if len(raw.Stream) > 0 {
+		parsed, err := LetsEncryptCertFromJSON(raw.Stream)
+		if err == nil {
+			result.Stream = parsed
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// LetsEncryptCertBusToYAML converts LetsEncryptCertBus to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func LetsEncryptCertBusToYAML(v *LetsEncryptCertBus) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "letsencryptcertbus is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := LetsEncryptCertBusToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// LetsEncryptCertBusToTOML converts LetsEncryptCertBus to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func LetsEncryptCertBusToTOML(v *LetsEncryptCertBus) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "letsencryptcertbus is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := LetsEncryptCertBusToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
 // LetsencryptConfigStateJSON represents LetsencryptConfigState in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type letsencryptconfigstateJSON struct {
@@ -1348,6 +1886,182 @@ func LetsencryptConfigStateToTOML(v *LetsencryptConfigState) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
+// LetsEncryptCertBusStreamSubscribeRecordJSON represents LetsEncryptCertBusStreamSubscribeRecord in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type letsencryptcertbusstreamsubscriberecordJSON struct {
+	Meta    json.RawMessage `json:"meta,omitempty"`
+	Payload json.RawMessage `json:"payload,omitempty"`
+}
+
+// LetsEncryptCertBusStreamSubscribeRecordToJSON converts LetsEncryptCertBusStreamSubscribeRecord to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func LetsEncryptCertBusStreamSubscribeRecordToJSON(v *LetsEncryptCertBusStreamSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "letsencryptcertbusstreamsubscriberecord is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := letsencryptcertbusstreamsubscriberecordJSON{
+		Meta: func() json.RawMessage {
+			if v.Meta == nil {
+				return nil
+			}
+			data, _ := EventBusRecordMetaToJSON(v.Meta)
+			return data
+		}(),
+		Payload: func() json.RawMessage {
+			if v.Payload == nil {
+				return nil
+			}
+			data, _ := LetsEncryptCertToJSON(v.Payload)
+			return data
+		}(),
+	}
+	return json.Marshal(helper)
+}
+
+// LetsEncryptCertBusStreamSubscribeRecordToJSONPretty converts LetsEncryptCertBusStreamSubscribeRecord to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func LetsEncryptCertBusStreamSubscribeRecordToJSONPretty(v *LetsEncryptCertBusStreamSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "letsencryptcertbusstreamsubscriberecord is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := letsencryptcertbusstreamsubscriberecordJSON{
+		Meta: func() json.RawMessage {
+			if v.Meta == nil {
+				return nil
+			}
+			data, _ := EventBusRecordMetaToJSON(v.Meta)
+			return data
+		}(),
+		Payload: func() json.RawMessage {
+			if v.Payload == nil {
+				return nil
+			}
+			data, _ := LetsEncryptCertToJSON(v.Payload)
+			return data
+		}(),
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// LetsEncryptCertBusStreamSubscribeRecordFromBytes creates LetsEncryptCertBusStreamSubscribeRecord from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func LetsEncryptCertBusStreamSubscribeRecordFromBytes(data []byte) (*LetsEncryptCertBusStreamSubscribeRecord, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := LetsEncryptCertBusStreamSubscribeRecordFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := LetsEncryptCertBusStreamSubscribeRecordFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := LetsEncryptCertBusStreamSubscribeRecordFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &LetsEncryptCertBusStreamSubscribeRecord{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse LetsEncryptCertBusStreamSubscribeRecord: unsupported format or invalid data")
+}
+
+// LetsEncryptCertBusStreamSubscribeRecordFromJSON creates LetsEncryptCertBusStreamSubscribeRecord from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func LetsEncryptCertBusStreamSubscribeRecordFromJSON(data []byte) (*LetsEncryptCertBusStreamSubscribeRecord, error) {
+	// Unmarshal into helper struct with string enums
+	var raw letsencryptcertbusstreamsubscriberecordJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &LetsEncryptCertBusStreamSubscribeRecord{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &LetsEncryptCertBusStreamSubscribeRecord{}
+	// Parse message field: Meta
+	if len(raw.Meta) > 0 {
+		parsed, err := EventBusRecordMetaFromJSON(raw.Meta)
+		if err == nil {
+			result.Meta = parsed
+		}
+	}
+	// Parse message field: Payload
+	if len(raw.Payload) > 0 {
+		parsed, err := LetsEncryptCertFromJSON(raw.Payload)
+		if err == nil {
+			result.Payload = parsed
+		}
+	}
+	return result, nil
+}
+
+// LetsEncryptCertBusStreamSubscribeRecordToYAML converts LetsEncryptCertBusStreamSubscribeRecord to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func LetsEncryptCertBusStreamSubscribeRecordToYAML(v *LetsEncryptCertBusStreamSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "letsencryptcertbusstreamsubscriberecord is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := LetsEncryptCertBusStreamSubscribeRecordToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// LetsEncryptCertBusStreamSubscribeRecordToTOML converts LetsEncryptCertBusStreamSubscribeRecord to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func LetsEncryptCertBusStreamSubscribeRecordToTOML(v *LetsEncryptCertBusStreamSubscribeRecord) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "letsencryptcertbusstreamsubscriberecord is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := LetsEncryptCertBusStreamSubscribeRecordToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
 // MapEmptyJSON represents MapEmpty in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type mapemptyJSON struct {
@@ -1477,6 +2191,176 @@ func MapEmptyToTOML(v *MapEmpty) ([]byte, error) {
 	}
 	// Convert to JSON first
 	jsonData, err := MapEmptyToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// EventBusRecordMetaJSON represents EventBusRecordMeta in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type eventbusrecordmetaJSON struct {
+	Key       []byte          `json:"key,omitempty"`
+	Topic     string          `json:"topic,omitempty"`
+	Partition int32           `json:"partition,omitempty"`
+	Offset    int64           `json:"offset,omitempty"`
+	Timestamp json.RawMessage `json:"timestamp,omitempty"`
+}
+
+// EventBusRecordMetaToJSON converts EventBusRecordMeta to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func EventBusRecordMetaToJSON(v *EventBusRecordMeta) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusrecordmeta is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := eventbusrecordmetaJSON{
+		Key:       v.Key,
+		Topic:     v.Topic,
+		Partition: v.Partition,
+		Offset:    v.Offset,
+		Timestamp: func() json.RawMessage {
+			if v.Timestamp == nil {
+				return nil
+			}
+			data, _ := protojson.Marshal(v.Timestamp)
+			return data
+		}(),
+	}
+	return json.Marshal(helper)
+}
+
+// EventBusRecordMetaToJSONPretty converts EventBusRecordMeta to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func EventBusRecordMetaToJSONPretty(v *EventBusRecordMeta) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusrecordmeta is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := eventbusrecordmetaJSON{
+		Key:       v.Key,
+		Topic:     v.Topic,
+		Partition: v.Partition,
+		Offset:    v.Offset,
+		Timestamp: func() json.RawMessage {
+			if v.Timestamp == nil {
+				return nil
+			}
+			data, _ := protojson.Marshal(v.Timestamp)
+			return data
+		}(),
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// EventBusRecordMetaFromBytes creates EventBusRecordMeta from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func EventBusRecordMetaFromBytes(data []byte) (*EventBusRecordMeta, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := EventBusRecordMetaFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := EventBusRecordMetaFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := EventBusRecordMetaFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &EventBusRecordMeta{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse EventBusRecordMeta: unsupported format or invalid data")
+}
+
+// EventBusRecordMetaFromJSON creates EventBusRecordMeta from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func EventBusRecordMetaFromJSON(data []byte) (*EventBusRecordMeta, error) {
+	// Unmarshal into helper struct with string enums
+	var raw eventbusrecordmetaJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &EventBusRecordMeta{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &EventBusRecordMeta{}
+	result.Key = raw.Key
+	result.Topic = raw.Topic
+	result.Partition = raw.Partition
+	result.Offset = raw.Offset
+	// Parse well-known type: Timestamp
+	if len(raw.Timestamp) > 0 {
+		result.Timestamp = &timestamppb.Timestamp{}
+		if err := protojson.Unmarshal(raw.Timestamp, result.Timestamp); err != nil {
+			result.Timestamp = nil
+		}
+	}
+	return result, nil
+}
+
+// EventBusRecordMetaToYAML converts EventBusRecordMeta to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func EventBusRecordMetaToYAML(v *EventBusRecordMeta) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusrecordmeta is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := EventBusRecordMetaToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// EventBusRecordMetaToTOML converts EventBusRecordMeta to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func EventBusRecordMetaToTOML(v *EventBusRecordMeta) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "eventbusrecordmeta is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := EventBusRecordMetaToJSON(v)
 	if err != nil {
 		return nil, err
 	}
@@ -1724,6 +2608,124 @@ func CertMagicStateFromEnvVar(env map[string]string) (*CertMagicState, error) {
 	return result, nil
 }
 
+// LetsEncryptCertToEnvVar converts LetsEncryptCert to environment variable key-value pairs.
+func LetsEncryptCertToEnvVar(v *LetsEncryptCert) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_CERT_SET_ID"] = v.CertSetId
+	if v.TlsCert != nil {
+		for k, val := range x509.X509CertChainToEnvVar(v.TlsCert) {
+			result[k] = val
+		}
+	}
+	if v.CertmagicState != nil {
+		for k, val := range CertMagicStateToEnvVar(v.CertmagicState) {
+			result[k] = val
+		}
+	}
+	if len(v.Hostnames) > 0 {
+		result["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_HOSTNAMES"] = strings.Join(v.Hostnames, ",")
+	}
+	result["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_ISSUED_AT"] = strconv.FormatInt(v.IssuedAt, 10)
+	result["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_EXPIRES_AT"] = strconv.FormatInt(v.ExpiresAt, 10)
+	result["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_SPIFFE_ID"] = v.SpiffeId
+	result["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_NAMESPACE"] = v.Namespace
+	result["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// LetsEncryptCertFromEnvVar creates LetsEncryptCert from environment variable key-value pairs.
+func LetsEncryptCertFromEnvVar(env map[string]string) (*LetsEncryptCert, error) {
+	result := &LetsEncryptCert{}
+	if val, ok := env["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_CERT_SET_ID"]; ok && val != "" {
+		result.CertSetId = val
+	}
+	if sub, err := x509.X509CertChainFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.TlsCert = sub
+	}
+	if sub, err := CertMagicStateFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.CertmagicState = sub
+	}
+	if val, ok := env["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_HOSTNAMES"]; ok && val != "" {
+		result.Hostnames = strings.Split(val, ",")
+	}
+	if val, ok := env["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_ISSUED_AT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.IssuedAt = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_EXPIRES_AT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.ExpiresAt = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_SPIFFE_ID"]; ok && val != "" {
+		result.SpiffeId = val
+	}
+	if val, ok := env["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_NAMESPACE"]; ok && val != "" {
+		result.Namespace = val
+	}
+	if val, ok := env["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// LetsEncryptCertBusToEnvVar converts LetsEncryptCertBus to environment variable key-value pairs.
+func LetsEncryptCertBusToEnvVar(v *LetsEncryptCertBus) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.Stream != nil {
+		for k, val := range LetsEncryptCertToEnvVar(v.Stream) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_BUS_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_BUS_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// LetsEncryptCertBusFromEnvVar creates LetsEncryptCertBus from environment variable key-value pairs.
+func LetsEncryptCertBusFromEnvVar(env map[string]string) (*LetsEncryptCertBus, error) {
+	result := &LetsEncryptCertBus{}
+	if sub, err := LetsEncryptCertFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Stream = sub
+	}
+	if val, ok := env["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_BUS_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_LETSENCRYPT_LETS_ENCRYPT_CERT_BUS_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
 // LetsencryptConfigStateToEnvVar converts LetsencryptConfigState to environment variable key-value pairs.
 func LetsencryptConfigStateToEnvVar(v *LetsencryptConfigState) map[string]string {
 	if v == nil {
@@ -1761,6 +2763,41 @@ func LetsencryptConfigStateFromEnvVar(env map[string]string) (*LetsencryptConfig
 	return result, nil
 }
 
+// LetsEncryptCertBusStreamSubscribeRecordToEnvVar converts LetsEncryptCertBusStreamSubscribeRecord to environment variable key-value pairs.
+func LetsEncryptCertBusStreamSubscribeRecordToEnvVar(v *LetsEncryptCertBusStreamSubscribeRecord) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.Meta != nil {
+		for k, val := range EventBusRecordMetaToEnvVar(v.Meta) {
+			result[k] = val
+		}
+	}
+	if v.Payload != nil {
+		for k, val := range LetsEncryptCertToEnvVar(v.Payload) {
+			result[k] = val
+		}
+	}
+	return result
+}
+
+// LetsEncryptCertBusStreamSubscribeRecordFromEnvVar creates LetsEncryptCertBusStreamSubscribeRecord from environment variable key-value pairs.
+func LetsEncryptCertBusStreamSubscribeRecordFromEnvVar(env map[string]string) (*LetsEncryptCertBusStreamSubscribeRecord, error) {
+	result := &LetsEncryptCertBusStreamSubscribeRecord{}
+	if sub, err := EventBusRecordMetaFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Meta = sub
+	}
+	if sub, err := LetsEncryptCertFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Payload = sub
+	}
+	return result, nil
+}
+
 // MapEmptyToEnvVar converts MapEmpty to environment variable key-value pairs.
 func MapEmptyToEnvVar(v *MapEmpty) map[string]string {
 	if v == nil {
@@ -1784,6 +2821,49 @@ func MapEmptyFromEnvVar(env map[string]string) (*MapEmpty, error) {
 			return nil, err
 		}
 		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// EventBusRecordMetaToEnvVar converts EventBusRecordMeta to environment variable key-value pairs.
+func EventBusRecordMetaToEnvVar(v *EventBusRecordMeta) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_LETSENCRYPT_EVENT_BUS_RECORD_META_KEY"] = base64.StdEncoding.EncodeToString(v.Key)
+	result["PROTO_SERVICES_LETSENCRYPT_EVENT_BUS_RECORD_META_TOPIC"] = v.Topic
+	result["PROTO_SERVICES_LETSENCRYPT_EVENT_BUS_RECORD_META_PARTITION"] = strconv.FormatInt(int64(v.Partition), 10)
+	result["PROTO_SERVICES_LETSENCRYPT_EVENT_BUS_RECORD_META_OFFSET"] = strconv.FormatInt(v.Offset, 10)
+	return result
+}
+
+// EventBusRecordMetaFromEnvVar creates EventBusRecordMeta from environment variable key-value pairs.
+func EventBusRecordMetaFromEnvVar(env map[string]string) (*EventBusRecordMeta, error) {
+	result := &EventBusRecordMeta{}
+	if val, ok := env["PROTO_SERVICES_LETSENCRYPT_EVENT_BUS_RECORD_META_KEY"]; ok && val != "" {
+		parsed, err := base64.StdEncoding.DecodeString(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Key = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_LETSENCRYPT_EVENT_BUS_RECORD_META_TOPIC"]; ok && val != "" {
+		result.Topic = val
+	}
+	if val, ok := env["PROTO_SERVICES_LETSENCRYPT_EVENT_BUS_RECORD_META_PARTITION"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.Partition = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_LETSENCRYPT_EVENT_BUS_RECORD_META_OFFSET"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.Offset = parsed
 	}
 	return result, nil
 }
@@ -1891,11 +2971,6 @@ func ValidateLetsEncryptCertDataWithDepth(m *LetsEncryptCertData, depth int) err
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate TlsCert (assert_required)
-	if m.TlsCert == nil {
-		return protoerrors.NewErrMissingInvalidData(nil, "field TlsCert is required")
-	}
-
 	// Validate CertmagicState (assert_required)
 	if m.CertmagicState == nil {
 		return protoerrors.NewErrMissingInvalidData(nil, "field CertmagicState is required")
@@ -1983,6 +3058,130 @@ func ValidateCertMagicStateWithDepth(m *CertMagicState, depth int) error {
 	return nil
 }
 
+// ValidateLetsEncryptCert validates all fields in LetsEncryptCert according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateLetsEncryptCert(m *LetsEncryptCert) error {
+	return ValidateLetsEncryptCertWithDepth(m, 0)
+}
+
+// ValidateLetsEncryptCertWithDepth validates LetsEncryptCert and carries nested-message depth across
+// generated package boundaries.
+func ValidateLetsEncryptCertWithDepth(m *LetsEncryptCert, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate CertSetId (assert_max_size: 128 bytes)
+	if len(m.CertSetId) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CertSetId exceeds max size of 128 bytes, got: %d", len(m.CertSetId))
+	}
+
+	// Validate CertSetId (assert_min_size: 1 bytes)
+	if len(m.CertSetId) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CertSetId below min size of 1 bytes, got: %d", len(m.CertSetId))
+	}
+
+	// Validate CertSetId (assert_required)
+	if m.CertSetId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CertSetId is required")
+	}
+
+	// Validate CertmagicState (assert_required)
+	if m.CertmagicState == nil {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CertmagicState is required")
+	}
+
+	// Validate Hostnames (assert_max_size: 16)
+	if len(m.Hostnames) > 16 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Hostnames exceeds max size of 16, got: %d", len(m.Hostnames))
+	}
+
+	// Validate Hostnames (assert_required)
+	if len(m.Hostnames) == 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Hostnames is required")
+	}
+
+	// Validate IssuedAt (assert_ge: 0)
+	if m.IssuedAt < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field IssuedAt must be >= 0, got: %v", m.IssuedAt)
+	}
+	// Validate ExpiresAt (assert_ge: 0)
+	if m.ExpiresAt < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ExpiresAt must be >= 0, got: %v", m.ExpiresAt)
+	}
+	// Validate SpiffeId (assert_max_size: 1024 bytes)
+	if len(m.SpiffeId) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field SpiffeId exceeds max size of 1024 bytes, got: %d", len(m.SpiffeId))
+	}
+
+	// Validate Namespace (assert_max_size: 256 bytes)
+	if len(m.Namespace) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Namespace exceeds max size of 256 bytes, got: %d", len(m.Namespace))
+	}
+
+	// Validate Hostnames elements (default max size: 32768 bytes)
+	for i, val := range m.Hostnames {
+		if len(val) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field Hostnames[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
+		}
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate TlsCert nested message
+	if m.TlsCert != nil {
+		if err := x509.ValidateX509CertChainWithDepth(m.TlsCert, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field TlsCert validation failed")
+		}
+	}
+
+	// Validate CertmagicState nested message
+	if m.CertmagicState != nil {
+		if err := ValidateCertMagicStateWithDepth(m.CertmagicState, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field CertmagicState validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidateLetsEncryptCertBus validates all fields in LetsEncryptCertBus according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateLetsEncryptCertBus(m *LetsEncryptCertBus) error {
+	return ValidateLetsEncryptCertBusWithDepth(m, 0)
+}
+
+// ValidateLetsEncryptCertBusWithDepth validates LetsEncryptCertBus and carries nested-message depth across
+// generated package boundaries.
+func ValidateLetsEncryptCertBusWithDepth(m *LetsEncryptCertBus, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Stream nested message
+	if m.Stream != nil {
+		if err := ValidateLetsEncryptCertWithDepth(m.Stream, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Stream validation failed")
+		}
+	}
+
+	return nil
+}
+
 // ValidateLetsencryptConfigState validates all fields in LetsencryptConfigState according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateLetsencryptConfigState(m *LetsencryptConfigState) error {
@@ -2014,6 +3213,39 @@ func ValidateLetsencryptConfigStateWithDepth(m *LetsencryptConfigState, depth in
 	return nil
 }
 
+// ValidateLetsEncryptCertBusStreamSubscribeRecord validates all fields in LetsEncryptCertBusStreamSubscribeRecord according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateLetsEncryptCertBusStreamSubscribeRecord(m *LetsEncryptCertBusStreamSubscribeRecord) error {
+	return ValidateLetsEncryptCertBusStreamSubscribeRecordWithDepth(m, 0)
+}
+
+// ValidateLetsEncryptCertBusStreamSubscribeRecordWithDepth validates LetsEncryptCertBusStreamSubscribeRecord and carries nested-message depth across
+// generated package boundaries.
+func ValidateLetsEncryptCertBusStreamSubscribeRecordWithDepth(m *LetsEncryptCertBusStreamSubscribeRecord, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Meta nested message
+	if m.Meta != nil {
+		if err := ValidateEventBusRecordMetaWithDepth(m.Meta, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Meta validation failed")
+		}
+	}
+
+	// Validate Payload nested message
+	if m.Payload != nil {
+		if err := ValidateLetsEncryptCertWithDepth(m.Payload, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Payload validation failed")
+		}
+	}
+
+	return nil
+}
+
 // ValidateMapEmpty validates all fields in MapEmpty according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateMapEmpty(m *MapEmpty) error {
@@ -2033,6 +3265,35 @@ func ValidateMapEmptyWithDepth(m *MapEmpty, depth int) error {
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateEventBusRecordMeta validates all fields in EventBusRecordMeta according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateEventBusRecordMeta(m *EventBusRecordMeta) error {
+	return ValidateEventBusRecordMetaWithDepth(m, 0)
+}
+
+// ValidateEventBusRecordMetaWithDepth validates EventBusRecordMeta and carries nested-message depth across
+// generated package boundaries.
+func ValidateEventBusRecordMetaWithDepth(m *EventBusRecordMeta, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Key (default max size: 32768 bytes)
+	if len(m.Key) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key exceeds max size of 32768 bytes, got: %d", len(m.Key))
+	}
+
+	// Validate Topic (default max size: 32768 bytes)
+	if len(m.Topic) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Topic exceeds max size of 32768 bytes, got: %d", len(m.Topic))
 	}
 
 	return nil
@@ -2059,8 +3320,16 @@ const (
 	MaxSizeCertmagicstateValue           int = 32768
 	MaxSizeCertmagicstateChildren        int = 256
 	MaxSizeCertmagicstateTraceId         int = 32768
+	MaxSizeLetsencryptcertCertSetId      int = 128
+	MaxSizeLetsencryptcertHostnames      int = 16
+	MaxSizeLetsencryptcertSpiffeId       int = 1024
+	MaxSizeLetsencryptcertNamespace      int = 256
+	MaxSizeLetsencryptcertTraceId        int = 32768
+	MaxSizeLetsencryptcertbusTraceId     int = 32768
 	MaxSizeLetsencryptconfigstateTraceId int = 32768
 	MaxSizeMapemptyTraceId               int = 32768
+	MaxSizeEventbusrecordmetaKey         int = 32768
+	MaxSizeEventbusrecordmetaTopic       int = 32768
 )
 
 // ============================================================
@@ -2116,6 +3385,32 @@ func CertMagicStateDefaults(v *CertMagicState) {
 }
 
 // ============================================================
+// TypeDefaults: LetsEncryptCert
+// ============================================================
+// LetsEncryptCertDefaults applies field-level default values to zero-valued fields.
+func LetsEncryptCertDefaults(v *LetsEncryptCert) {
+	if v == nil {
+		return
+	}
+	if v.CertmagicState == nil {
+		v.CertmagicState = &CertMagicState{}
+	}
+}
+
+// ============================================================
+// TypeDefaults: LetsEncryptCertBus
+// ============================================================
+// LetsEncryptCertBusDefaults applies field-level default values to zero-valued fields.
+func LetsEncryptCertBusDefaults(v *LetsEncryptCertBus) {
+	if v == nil {
+		return
+	}
+	if v.Stream != nil {
+		LetsEncryptCertDefaults(v.Stream)
+	}
+}
+
+// ============================================================
 // TypeDefaults: LetsencryptConfigState
 // ============================================================
 // LetsencryptConfigStateDefaults applies field-level default values to zero-valued fields.
@@ -2129,10 +3424,33 @@ func LetsencryptConfigStateDefaults(v *LetsencryptConfigState) {
 }
 
 // ============================================================
+// TypeDefaults: LetsEncryptCertBusStreamSubscribeRecord
+// ============================================================
+// LetsEncryptCertBusStreamSubscribeRecordDefaults applies field-level default values to zero-valued fields.
+func LetsEncryptCertBusStreamSubscribeRecordDefaults(v *LetsEncryptCertBusStreamSubscribeRecord) {
+	if v == nil {
+		return
+	}
+	if v.Payload != nil {
+		LetsEncryptCertDefaults(v.Payload)
+	}
+}
+
+// ============================================================
 // TypeDefaults: MapEmpty
 // ============================================================
 // MapEmptyDefaults applies field-level default values to zero-valued fields.
 func MapEmptyDefaults(v *MapEmpty) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: EventBusRecordMeta
+// ============================================================
+// EventBusRecordMetaDefaults applies field-level default values to zero-valued fields.
+func EventBusRecordMetaDefaults(v *EventBusRecordMeta) {
 	if v == nil {
 		return
 	}
@@ -2192,6 +3510,31 @@ func CertMagicStateUndefaults(v *CertMagicState) {
 }
 
 // ============================================================
+// TypeUndefaults: LetsEncryptCert
+// ============================================================
+// LetsEncryptCertUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func LetsEncryptCertUndefaults(v *LetsEncryptCert) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: LetsEncryptCertBus
+// ============================================================
+// LetsEncryptCertBusUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func LetsEncryptCertBusUndefaults(v *LetsEncryptCertBus) {
+	if v == nil {
+		return
+	}
+	if v.Stream != nil {
+		LetsEncryptCertUndefaults(v.Stream)
+	}
+}
+
+// ============================================================
 // TypeUndefaults: LetsencryptConfigState
 // ============================================================
 // LetsencryptConfigStateUndefaults resets fields that match their default values back to zero.
@@ -2206,11 +3549,36 @@ func LetsencryptConfigStateUndefaults(v *LetsencryptConfigState) {
 }
 
 // ============================================================
+// TypeUndefaults: LetsEncryptCertBusStreamSubscribeRecord
+// ============================================================
+// LetsEncryptCertBusStreamSubscribeRecordUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func LetsEncryptCertBusStreamSubscribeRecordUndefaults(v *LetsEncryptCertBusStreamSubscribeRecord) {
+	if v == nil {
+		return
+	}
+	if v.Payload != nil {
+		LetsEncryptCertUndefaults(v.Payload)
+	}
+}
+
+// ============================================================
 // TypeUndefaults: MapEmpty
 // ============================================================
 // MapEmptyUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
 func MapEmptyUndefaults(v *MapEmpty) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: EventBusRecordMeta
+// ============================================================
+// EventBusRecordMetaUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func EventBusRecordMetaUndefaults(v *EventBusRecordMeta) {
 	if v == nil {
 		return
 	}
@@ -2320,6 +3688,63 @@ func MergeCertMagicState(dst, src *CertMagicState) {
 }
 
 // ============================================================
+// Merge: LetsEncryptCert
+// ============================================================
+// MergeLetsEncryptCert fills zero-valued fields in dst from src.
+func MergeLetsEncryptCert(dst, src *LetsEncryptCert) {
+	if dst.CertSetId == "" {
+		dst.CertSetId = src.CertSetId
+	}
+	if dst.TlsCert == nil {
+		dst.TlsCert = src.TlsCert
+	}
+	if dst.CertmagicState == nil {
+		dst.CertmagicState = src.CertmagicState
+	} else if src.CertmagicState != nil {
+		MergeCertMagicState(dst.CertmagicState, src.CertmagicState)
+	}
+	if len(dst.Hostnames) == 0 {
+		dst.Hostnames = src.Hostnames
+	}
+	if dst.IssuedAt == 0 {
+		dst.IssuedAt = src.IssuedAt
+	}
+	if dst.ExpiresAt == 0 {
+		dst.ExpiresAt = src.ExpiresAt
+	}
+	if dst.SpiffeId == "" {
+		dst.SpiffeId = src.SpiffeId
+	}
+	if dst.Namespace == "" {
+		dst.Namespace = src.Namespace
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: LetsEncryptCertBus
+// ============================================================
+// MergeLetsEncryptCertBus fills zero-valued fields in dst from src.
+func MergeLetsEncryptCertBus(dst, src *LetsEncryptCertBus) {
+	if dst.Stream == nil {
+		dst.Stream = src.Stream
+	} else if src.Stream != nil {
+		MergeLetsEncryptCert(dst.Stream, src.Stream)
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
 // Merge: LetsencryptConfigState
 // ============================================================
 // MergeLetsencryptConfigState fills zero-valued fields in dst from src.
@@ -2338,6 +3763,23 @@ func MergeLetsencryptConfigState(dst, src *LetsencryptConfigState) {
 }
 
 // ============================================================
+// Merge: LetsEncryptCertBusStreamSubscribeRecord
+// ============================================================
+// MergeLetsEncryptCertBusStreamSubscribeRecord fills zero-valued fields in dst from src.
+func MergeLetsEncryptCertBusStreamSubscribeRecord(dst, src *LetsEncryptCertBusStreamSubscribeRecord) {
+	if dst.Meta == nil {
+		dst.Meta = src.Meta
+	} else if src.Meta != nil {
+		MergeEventBusRecordMeta(dst.Meta, src.Meta)
+	}
+	if dst.Payload == nil {
+		dst.Payload = src.Payload
+	} else if src.Payload != nil {
+		MergeLetsEncryptCert(dst.Payload, src.Payload)
+	}
+}
+
+// ============================================================
 // Merge: MapEmpty
 // ============================================================
 // MergeMapEmpty fills zero-valued fields in dst from src.
@@ -2347,5 +3789,27 @@ func MergeMapEmpty(dst, src *MapEmpty) {
 	}
 	if !dst.Noop {
 		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: EventBusRecordMeta
+// ============================================================
+// MergeEventBusRecordMeta fills zero-valued fields in dst from src.
+func MergeEventBusRecordMeta(dst, src *EventBusRecordMeta) {
+	if len(dst.Key) == 0 {
+		dst.Key = src.Key
+	}
+	if dst.Topic == "" {
+		dst.Topic = src.Topic
+	}
+	if dst.Partition == 0 {
+		dst.Partition = src.Partition
+	}
+	if dst.Offset == 0 {
+		dst.Offset = src.Offset
+	}
+	if dst.Timestamp == nil {
+		dst.Timestamp = src.Timestamp
 	}
 }

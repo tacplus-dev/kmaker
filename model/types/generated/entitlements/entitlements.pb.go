@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -135,7 +135,7 @@ const file_generated_entitlements_proto_rawDesc = "" +
 	"\vdata_grants\x18\x02 \x03(\tR\n" +
 	"dataGrants\x12'\n" +
 	"\x0fprincipal_scope\x18\x03 \x01(\tR\x0eprincipalScope\x12\x10\n" +
-	"\x03azp\x18d \x03(\tR\x03azpBeZcgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/entitlementsb\x06proto3"
+	"\x03azp\x18d \x03(\tR\x03azpBZZXgitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/entitlementsb\x06proto3"
 
 var (
 	file_generated_entitlements_proto_rawDescOnce sync.Once

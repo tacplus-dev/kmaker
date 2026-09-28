@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -23,12 +23,13 @@ package kernel
 
 import (
 	context "context"
-	hazelcast "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/common/hazelcast"
-	tenant_config "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/tenant_config"
-	healthreport "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/healthreport"
-	tokenrequest "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/tokenrequest"
-	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
-	x509 "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/x509"
+	hazelcast "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/common/hazelcast"
+	tenant_config "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/tenant_config"
+	healthreport "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/healthreport"
+	mcp "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/mcp"
+	tokenrequest "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/tokenrequest"
+	trace "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
+	x509 "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -41,16 +42,20 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Mint_MintServiceToken_FullMethodName   = "/kernel.Mint/MintServiceToken"
-	Mint_MintUserToken_FullMethodName      = "/kernel.Mint/MintUserToken"
-	Mint_MintDelegatedToken_FullMethodName = "/kernel.Mint/MintDelegatedToken"
-	Mint_MintToken_FullMethodName          = "/kernel.Mint/MintToken"
-	Mint_MintExternalToken_FullMethodName  = "/kernel.Mint/MintExternalToken"
-	Mint_MintClientToken_FullMethodName    = "/kernel.Mint/MintClientToken"
-	Mint_MintX509Cert_FullMethodName       = "/kernel.Mint/MintX509Cert"
-	Mint_MintWorkload_FullMethodName       = "/kernel.Mint/MintWorkload"
-	Mint_RevokeWorkload_FullMethodName     = "/kernel.Mint/RevokeWorkload"
-	Mint_RevokeGrant_FullMethodName        = "/kernel.Mint/RevokeGrant"
+	Mint_MintServiceToken_FullMethodName           = "/kernel.Mint/MintServiceToken"
+	Mint_MintUserToken_FullMethodName              = "/kernel.Mint/MintUserToken"
+	Mint_MintDelegatedToken_FullMethodName         = "/kernel.Mint/MintDelegatedToken"
+	Mint_BrokerDelegateOfflineToken_FullMethodName = "/kernel.Mint/BrokerDelegateOfflineToken"
+	Mint_MintToken_FullMethodName                  = "/kernel.Mint/MintToken"
+	Mint_MintExternalToken_FullMethodName          = "/kernel.Mint/MintExternalToken"
+	Mint_MintClientToken_FullMethodName            = "/kernel.Mint/MintClientToken"
+	Mint_CreatePersonalPrincipal_FullMethodName    = "/kernel.Mint/CreatePersonalPrincipal"
+	Mint_CreateTenantUserLink_FullMethodName       = "/kernel.Mint/CreateTenantUserLink"
+	Mint_BrokerPendingApproval_FullMethodName      = "/kernel.Mint/BrokerPendingApproval"
+	Mint_MintX509Cert_FullMethodName               = "/kernel.Mint/MintX509Cert"
+	Mint_MintWorkload_FullMethodName               = "/kernel.Mint/MintWorkload"
+	Mint_RevokeWorkload_FullMethodName             = "/kernel.Mint/RevokeWorkload"
+	Mint_RevokeGrant_FullMethodName                = "/kernel.Mint/RevokeGrant"
 )
 
 // MintClient is the client API for Mint service.
@@ -79,11 +84,17 @@ type MintClient interface {
 	// auth_disabled: the caller authenticates via credentials in the request body
 	// (kubernetes_token / cloud_proof / kernel-signed input_token), not a bearer header.
 	MintServiceToken(ctx context.Context, in *tokenrequest.MintServiceTokenRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error)
-	// MintUserToken — on-behalf-of (AZP). A broker (oauth/saml) presents the
-	// user's already-IDP-validated claims; kernel runs OPA EvalEntitlement on
-	// them, then signs a user token with sub = user and azp = the broker's
-	// identity (the broker attests the claims; kernel trusts azp). Restricted to
-	// auth brokers. Signs Ed25519.
+	// MintUserToken — on-behalf-of (AZP). A broker presents the user's
+	// already-IDP-validated claims; kernel runs OPA EvalEntitlement on them, then
+	// signs a user token with sub = user and azp = the broker's identity (the
+	// broker attests the claims; kernel trusts azp). Signs Ed25519.
+	// auth_services: ["*"] because which delegates may attest a human login is
+	// per-delegate runtime config, not a compile-time literal here; the identity
+	// check that matters is Delegate.auth_broker_kinds containing the request's
+	// broker_kind, done inside the handler, exactly as doMintDelegatedToken
+	// checks grant.delegate_name. Empty auth_broker_kinds — the default — is
+	// refused, so this is a relocation of the former ["oauth", "saml"] allowlist,
+	// not a widening.
 	MintUserToken(ctx context.Context, in *tokenrequest.MintUserTokenRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error)
 	// MintDelegatedToken — standing delegation (Grant) mint. A delegate presents
 	// its OWN kernel-issued S2S bearer token (verified identity) plus a Grant id
@@ -99,6 +110,23 @@ type MintClient interface {
 	// done inside the handler, exactly as doMintUserToken checks the caller
 	// against a Delegate today.
 	MintDelegatedToken(ctx context.Context, in *tokenrequest.MintDelegatedTokenRequest, opts ...grpc.CallOption) (*tokenrequest.MintDelegatedTokenResponse, error)
+	// BrokerDelegateOfflineToken — runtime delegation, delegate half. The delegate
+	// presents its OWN kernel-issued S2S bearer token (verified identity) plus the
+	// code the user handed it. Kernel looks the code up, confirms the caller's
+	// verified identity equals the withheld token's act claim, burns the code
+	// single-use, and releases the Offline Token. The code alone is not
+	// sufficient — the redeeming identity is the security boundary.
+	// auth_services: ["*"] because any registered delegate may be handed a code
+	// (not just oauth/saml); the identity check that matters is the withheld
+	// token's act claim, done inside the handler, exactly as doMintDelegatedToken
+	// checks grant.delegate_name today.
+	// Named Broker, not Redeem: "Redeem" is not in tacplus's closed verb registry
+	// and Broker is the registered canonical whose definition this matches —
+	// "coordinate a mediated exchange between two parties ... owns matching,
+	// relay, or completion semantics" — which is exactly the CliTokenBroker-shaped
+	// handoff the decision doc points at. The request/response message types keep
+	// their frozen Redeem* names.
+	BrokerDelegateOfflineToken(ctx context.Context, in *tokenrequest.RedeemDelegateOfflineTokenRequest, opts ...grpc.CallOption) (*tokenrequest.RedeemDelegateOfflineTokenResponse, error)
 	// MintToken — exchange (RT→AT→ST). The caller presents a kernel-signed token;
 	// kernel VERIFIES it and mints the next tier per the 3-tier rules (a refresh
 	// can't directly mint a service token, etc.). service_auds mints AT + N ST in
@@ -122,6 +150,95 @@ type MintClient interface {
 	// pre-tenant external clients (schematic CLI, CI pipelines) can reach it.
 	// auth_disabled: the request body carries its own proof (no bearer header).
 	MintClientToken(ctx context.Context, in *tokenrequest.MintClientTokenRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error)
+	// CreatePersonalPrincipal — device-first registration (first launch). The
+	// device presents a JWT signed by the key it is registering; kernel verifies
+	// that signature against the public key carried in the SAME request, mints an
+	// opaque principal_id, and creates the PersonalPrincipal row holding that one
+	// credential. This is the bootstrap case MintClientToken does not have: there
+	// is no stored credential to look the key up by yet, so the key comes out of
+	// the request body and the only thing that proof establishes is possession of
+	// the private half — which is all the BODY needs to establish, because any
+	// person may create a personal principal (device-first, no signup). Who may
+	// carry that request to kernel is a separate question, answered below.
+	//
+	// Registration issues NO token. A registered device obtains one through
+	// MintUserToken with AUTH_BROKER_KIND_DEVICE, which is where the
+	// Delegate.auth_broker_kinds gate lives; minting here would route around it.
+	//
+	// NOT self-authenticating, and therefore NOT proxied to the outside. A device
+	// reaches this only through the personalauth broker, which calls it S2S:
+	// RPC_FLAG_SELF_AUTHENTICATES would make tacplus emit a NoAuth gateway proxy
+	// route, and an open route lets a client skip the broker entirely — which is
+	// where azp provenance, rate limiting and every future abuse control live.
+	// Dropping the flag deletes the route, so gateway's deny-by-default refuses
+	// the path; the generator enforces this, not a rule someone has to remember.
+	//
+	// auth_services: ["*"] rather than ["personalauth"] deliberately: who may
+	// broker a login is per-delegate config (Delegate.auth_broker_kinds), not a
+	// compile-time broker literal in kernel.proto. "*" says only "some
+	// authenticated S2S caller"; the handler requires that caller to be a
+	// delegate carrying AUTH_BROKER_KIND_DEVICE.
+	//
+	// The request body proof is unchanged and is a second, independent
+	// requirement: the caller must also hold the private half of the key it is
+	// registering, which is what makes the row worth writing.
+	CreatePersonalPrincipal(ctx context.Context, in *CreatePersonalPrincipalRequest, opts ...grpc.CallOption) (*CreatePersonalPrincipalResponse, error)
+	// CreateTenantUserLink records that two tenant-user identities are the same human.
+	// Both sides are proved in ONE request: the caller is an IdP broker that has
+	// just verified BOTH id_tokens, and both carry the same `nonce` — the value
+	// the client generated once and sent into both logins. The shared nonce is
+	// the whole proof: without it a stolen token for one side could be replayed
+	// on its own to fabricate a link to somebody else's account.
+	//
+	// Neither side's namespace is taken from the request. The people side is
+	// derived from the verified issuer/subject, exactly as MintUserToken's people
+	// arm derives it; any other side's namespace comes from OPA, the same
+	// authority that names it at mint. A broker therefore cannot name a tenant it
+	// did not just authenticate a login into.
+	//
+	// A DEVICE SIDE (identity decision doc §3) replaces one of the two logins
+	// with a WebAuthn assertion — see TenantUserLinkSide.device_assertion. The
+	// proof is the same shape and the same strength, with the shared nonce
+	// replaced by a pair of bindings in opposite directions: the id_token's
+	// `nonce` is the device key's RFC 7638 thumbprint, and the assertion's
+	// challenge names that exact login. Kernel verifies the assertion itself, so
+	// a device side rests on no broker's word at all.
+	//
+	// auth_services: ["*"] for the same reason MintUserToken carries it — which
+	// delegates may attest a human login is per-delegate runtime config
+	// (Delegate.auth_broker_kinds), checked in the handler.
+	CreateTenantUserLink(ctx context.Context, in *CreateTenantUserLinkRequest, opts ...grpc.CallOption) (*CreateTenantUserLinkResponse, error)
+	// BrokerPendingApproval is the DEVICE-ONLY APPROVAL check (identity decision
+	// doc §5). tacplus's generated (spec.rpc).requires_device check calls it; no
+	// product implements it, and nothing else in the platform verifies an
+	// approval.
+	//
+	// A pending approval is PROPOSED by the person through
+	// PersonalIdentity.CreatePendingApproval — a browser or an agent proposes —
+	// and is consumed here by the one thing that counts: a WebAuthn assertion
+	// from a device linked to that person. A browser IdP session, a delegated
+	// agent token and a tenant admin all fail this, however completely they are
+	// the user.
+	//
+	// Verb Broker, not Authorize. This is the shape BrokerDelegateOfflineToken
+	// already has on this service — look one single-use record up by its opaque
+	// id, verify the presenter cryptographically, burn it, release the result.
+	// Authorize is defined as an authorization decision with NO state change, and
+	// this one burns.
+	//
+	// On Mint rather than on a service of its own because every service in the
+	// fleet already holds a generated kernel Mint client (kernel is the
+	// token_minter), so the generated check needs no new client, no new route and
+	// no new deployment wiring in any service that declares a requires_device RPC.
+	//
+	// auth_services: ["*"] because ANY service may declare a requires_device RPC,
+	// so any service may reach this. Nothing rests on the caller's word about the
+	// approval: the record names its own person, its own method and its own
+	// request hash, and the assertion is verified against the credential kernel
+	// stores. What a caller IS trusted for is reporting which of its own users it
+	// is serving (caller_namespace/caller_subject) — a service serving that
+	// request is already trusted with it.
+	BrokerPendingApproval(ctx context.Context, in *BrokerPendingApprovalRequest, opts ...grpc.CallOption) (*BrokerPendingApprovalResponse, error)
 	// MintX509Cert signs an X.509 certificate under a per-service intermediate CA.
 	// Authentication via bearer token in the Authorization header or input_token
 	// in the request body (for gateway-mediated calls). auth_disabled: handler
@@ -201,6 +318,16 @@ func (c *mintClient) MintDelegatedToken(ctx context.Context, in *tokenrequest.Mi
 	return out, nil
 }
 
+func (c *mintClient) BrokerDelegateOfflineToken(ctx context.Context, in *tokenrequest.RedeemDelegateOfflineTokenRequest, opts ...grpc.CallOption) (*tokenrequest.RedeemDelegateOfflineTokenResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(tokenrequest.RedeemDelegateOfflineTokenResponse)
+	err := c.cc.Invoke(ctx, Mint_BrokerDelegateOfflineToken_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *mintClient) MintToken(ctx context.Context, in *tokenrequest.TokenMintRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(tokenrequest.TokenMintResponse)
@@ -225,6 +352,36 @@ func (c *mintClient) MintClientToken(ctx context.Context, in *tokenrequest.MintC
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(tokenrequest.TokenMintResponse)
 	err := c.cc.Invoke(ctx, Mint_MintClientToken_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mintClient) CreatePersonalPrincipal(ctx context.Context, in *CreatePersonalPrincipalRequest, opts ...grpc.CallOption) (*CreatePersonalPrincipalResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreatePersonalPrincipalResponse)
+	err := c.cc.Invoke(ctx, Mint_CreatePersonalPrincipal_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mintClient) CreateTenantUserLink(ctx context.Context, in *CreateTenantUserLinkRequest, opts ...grpc.CallOption) (*CreateTenantUserLinkResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateTenantUserLinkResponse)
+	err := c.cc.Invoke(ctx, Mint_CreateTenantUserLink_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mintClient) BrokerPendingApproval(ctx context.Context, in *BrokerPendingApprovalRequest, opts ...grpc.CallOption) (*BrokerPendingApprovalResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BrokerPendingApprovalResponse)
+	err := c.cc.Invoke(ctx, Mint_BrokerPendingApproval_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -297,11 +454,17 @@ type MintServer interface {
 	// auth_disabled: the caller authenticates via credentials in the request body
 	// (kubernetes_token / cloud_proof / kernel-signed input_token), not a bearer header.
 	MintServiceToken(context.Context, *tokenrequest.MintServiceTokenRequest) (*tokenrequest.TokenMintResponse, error)
-	// MintUserToken — on-behalf-of (AZP). A broker (oauth/saml) presents the
-	// user's already-IDP-validated claims; kernel runs OPA EvalEntitlement on
-	// them, then signs a user token with sub = user and azp = the broker's
-	// identity (the broker attests the claims; kernel trusts azp). Restricted to
-	// auth brokers. Signs Ed25519.
+	// MintUserToken — on-behalf-of (AZP). A broker presents the user's
+	// already-IDP-validated claims; kernel runs OPA EvalEntitlement on them, then
+	// signs a user token with sub = user and azp = the broker's identity (the
+	// broker attests the claims; kernel trusts azp). Signs Ed25519.
+	// auth_services: ["*"] because which delegates may attest a human login is
+	// per-delegate runtime config, not a compile-time literal here; the identity
+	// check that matters is Delegate.auth_broker_kinds containing the request's
+	// broker_kind, done inside the handler, exactly as doMintDelegatedToken
+	// checks grant.delegate_name. Empty auth_broker_kinds — the default — is
+	// refused, so this is a relocation of the former ["oauth", "saml"] allowlist,
+	// not a widening.
 	MintUserToken(context.Context, *tokenrequest.MintUserTokenRequest) (*tokenrequest.TokenMintResponse, error)
 	// MintDelegatedToken — standing delegation (Grant) mint. A delegate presents
 	// its OWN kernel-issued S2S bearer token (verified identity) plus a Grant id
@@ -317,6 +480,23 @@ type MintServer interface {
 	// done inside the handler, exactly as doMintUserToken checks the caller
 	// against a Delegate today.
 	MintDelegatedToken(context.Context, *tokenrequest.MintDelegatedTokenRequest) (*tokenrequest.MintDelegatedTokenResponse, error)
+	// BrokerDelegateOfflineToken — runtime delegation, delegate half. The delegate
+	// presents its OWN kernel-issued S2S bearer token (verified identity) plus the
+	// code the user handed it. Kernel looks the code up, confirms the caller's
+	// verified identity equals the withheld token's act claim, burns the code
+	// single-use, and releases the Offline Token. The code alone is not
+	// sufficient — the redeeming identity is the security boundary.
+	// auth_services: ["*"] because any registered delegate may be handed a code
+	// (not just oauth/saml); the identity check that matters is the withheld
+	// token's act claim, done inside the handler, exactly as doMintDelegatedToken
+	// checks grant.delegate_name today.
+	// Named Broker, not Redeem: "Redeem" is not in tacplus's closed verb registry
+	// and Broker is the registered canonical whose definition this matches —
+	// "coordinate a mediated exchange between two parties ... owns matching,
+	// relay, or completion semantics" — which is exactly the CliTokenBroker-shaped
+	// handoff the decision doc points at. The request/response message types keep
+	// their frozen Redeem* names.
+	BrokerDelegateOfflineToken(context.Context, *tokenrequest.RedeemDelegateOfflineTokenRequest) (*tokenrequest.RedeemDelegateOfflineTokenResponse, error)
 	// MintToken — exchange (RT→AT→ST). The caller presents a kernel-signed token;
 	// kernel VERIFIES it and mints the next tier per the 3-tier rules (a refresh
 	// can't directly mint a service token, etc.). service_auds mints AT + N ST in
@@ -340,6 +520,95 @@ type MintServer interface {
 	// pre-tenant external clients (schematic CLI, CI pipelines) can reach it.
 	// auth_disabled: the request body carries its own proof (no bearer header).
 	MintClientToken(context.Context, *tokenrequest.MintClientTokenRequest) (*tokenrequest.TokenMintResponse, error)
+	// CreatePersonalPrincipal — device-first registration (first launch). The
+	// device presents a JWT signed by the key it is registering; kernel verifies
+	// that signature against the public key carried in the SAME request, mints an
+	// opaque principal_id, and creates the PersonalPrincipal row holding that one
+	// credential. This is the bootstrap case MintClientToken does not have: there
+	// is no stored credential to look the key up by yet, so the key comes out of
+	// the request body and the only thing that proof establishes is possession of
+	// the private half — which is all the BODY needs to establish, because any
+	// person may create a personal principal (device-first, no signup). Who may
+	// carry that request to kernel is a separate question, answered below.
+	//
+	// Registration issues NO token. A registered device obtains one through
+	// MintUserToken with AUTH_BROKER_KIND_DEVICE, which is where the
+	// Delegate.auth_broker_kinds gate lives; minting here would route around it.
+	//
+	// NOT self-authenticating, and therefore NOT proxied to the outside. A device
+	// reaches this only through the personalauth broker, which calls it S2S:
+	// RPC_FLAG_SELF_AUTHENTICATES would make tacplus emit a NoAuth gateway proxy
+	// route, and an open route lets a client skip the broker entirely — which is
+	// where azp provenance, rate limiting and every future abuse control live.
+	// Dropping the flag deletes the route, so gateway's deny-by-default refuses
+	// the path; the generator enforces this, not a rule someone has to remember.
+	//
+	// auth_services: ["*"] rather than ["personalauth"] deliberately: who may
+	// broker a login is per-delegate config (Delegate.auth_broker_kinds), not a
+	// compile-time broker literal in kernel.proto. "*" says only "some
+	// authenticated S2S caller"; the handler requires that caller to be a
+	// delegate carrying AUTH_BROKER_KIND_DEVICE.
+	//
+	// The request body proof is unchanged and is a second, independent
+	// requirement: the caller must also hold the private half of the key it is
+	// registering, which is what makes the row worth writing.
+	CreatePersonalPrincipal(context.Context, *CreatePersonalPrincipalRequest) (*CreatePersonalPrincipalResponse, error)
+	// CreateTenantUserLink records that two tenant-user identities are the same human.
+	// Both sides are proved in ONE request: the caller is an IdP broker that has
+	// just verified BOTH id_tokens, and both carry the same `nonce` — the value
+	// the client generated once and sent into both logins. The shared nonce is
+	// the whole proof: without it a stolen token for one side could be replayed
+	// on its own to fabricate a link to somebody else's account.
+	//
+	// Neither side's namespace is taken from the request. The people side is
+	// derived from the verified issuer/subject, exactly as MintUserToken's people
+	// arm derives it; any other side's namespace comes from OPA, the same
+	// authority that names it at mint. A broker therefore cannot name a tenant it
+	// did not just authenticate a login into.
+	//
+	// A DEVICE SIDE (identity decision doc §3) replaces one of the two logins
+	// with a WebAuthn assertion — see TenantUserLinkSide.device_assertion. The
+	// proof is the same shape and the same strength, with the shared nonce
+	// replaced by a pair of bindings in opposite directions: the id_token's
+	// `nonce` is the device key's RFC 7638 thumbprint, and the assertion's
+	// challenge names that exact login. Kernel verifies the assertion itself, so
+	// a device side rests on no broker's word at all.
+	//
+	// auth_services: ["*"] for the same reason MintUserToken carries it — which
+	// delegates may attest a human login is per-delegate runtime config
+	// (Delegate.auth_broker_kinds), checked in the handler.
+	CreateTenantUserLink(context.Context, *CreateTenantUserLinkRequest) (*CreateTenantUserLinkResponse, error)
+	// BrokerPendingApproval is the DEVICE-ONLY APPROVAL check (identity decision
+	// doc §5). tacplus's generated (spec.rpc).requires_device check calls it; no
+	// product implements it, and nothing else in the platform verifies an
+	// approval.
+	//
+	// A pending approval is PROPOSED by the person through
+	// PersonalIdentity.CreatePendingApproval — a browser or an agent proposes —
+	// and is consumed here by the one thing that counts: a WebAuthn assertion
+	// from a device linked to that person. A browser IdP session, a delegated
+	// agent token and a tenant admin all fail this, however completely they are
+	// the user.
+	//
+	// Verb Broker, not Authorize. This is the shape BrokerDelegateOfflineToken
+	// already has on this service — look one single-use record up by its opaque
+	// id, verify the presenter cryptographically, burn it, release the result.
+	// Authorize is defined as an authorization decision with NO state change, and
+	// this one burns.
+	//
+	// On Mint rather than on a service of its own because every service in the
+	// fleet already holds a generated kernel Mint client (kernel is the
+	// token_minter), so the generated check needs no new client, no new route and
+	// no new deployment wiring in any service that declares a requires_device RPC.
+	//
+	// auth_services: ["*"] because ANY service may declare a requires_device RPC,
+	// so any service may reach this. Nothing rests on the caller's word about the
+	// approval: the record names its own person, its own method and its own
+	// request hash, and the assertion is verified against the credential kernel
+	// stores. What a caller IS trusted for is reporting which of its own users it
+	// is serving (caller_namespace/caller_subject) — a service serving that
+	// request is already trusted with it.
+	BrokerPendingApproval(context.Context, *BrokerPendingApprovalRequest) (*BrokerPendingApprovalResponse, error)
 	// MintX509Cert signs an X.509 certificate under a per-service intermediate CA.
 	// Authentication via bearer token in the Authorization header or input_token
 	// in the request body (for gateway-mediated calls). auth_disabled: handler
@@ -398,6 +667,9 @@ func (UnimplementedMintServer) MintUserToken(context.Context, *tokenrequest.Mint
 func (UnimplementedMintServer) MintDelegatedToken(context.Context, *tokenrequest.MintDelegatedTokenRequest) (*tokenrequest.MintDelegatedTokenResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method MintDelegatedToken not implemented")
 }
+func (UnimplementedMintServer) BrokerDelegateOfflineToken(context.Context, *tokenrequest.RedeemDelegateOfflineTokenRequest) (*tokenrequest.RedeemDelegateOfflineTokenResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method BrokerDelegateOfflineToken not implemented")
+}
 func (UnimplementedMintServer) MintToken(context.Context, *tokenrequest.TokenMintRequest) (*tokenrequest.TokenMintResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method MintToken not implemented")
 }
@@ -406,6 +678,15 @@ func (UnimplementedMintServer) MintExternalToken(context.Context, *tokenrequest.
 }
 func (UnimplementedMintServer) MintClientToken(context.Context, *tokenrequest.MintClientTokenRequest) (*tokenrequest.TokenMintResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method MintClientToken not implemented")
+}
+func (UnimplementedMintServer) CreatePersonalPrincipal(context.Context, *CreatePersonalPrincipalRequest) (*CreatePersonalPrincipalResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreatePersonalPrincipal not implemented")
+}
+func (UnimplementedMintServer) CreateTenantUserLink(context.Context, *CreateTenantUserLinkRequest) (*CreateTenantUserLinkResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateTenantUserLink not implemented")
+}
+func (UnimplementedMintServer) BrokerPendingApproval(context.Context, *BrokerPendingApprovalRequest) (*BrokerPendingApprovalResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method BrokerPendingApproval not implemented")
 }
 func (UnimplementedMintServer) MintX509Cert(context.Context, *tokenrequest.X509MintRequest) (*x509.X509CertChain, error) {
 	return nil, status.Error(codes.Unimplemented, "method MintX509Cert not implemented")
@@ -494,6 +775,24 @@ func _Mint_MintDelegatedToken_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Mint_BrokerDelegateOfflineToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(tokenrequest.RedeemDelegateOfflineTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MintServer).BrokerDelegateOfflineToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Mint_BrokerDelegateOfflineToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MintServer).BrokerDelegateOfflineToken(ctx, req.(*tokenrequest.RedeemDelegateOfflineTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Mint_MintToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(tokenrequest.TokenMintRequest)
 	if err := dec(in); err != nil {
@@ -544,6 +843,60 @@ func _Mint_MintClientToken_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MintServer).MintClientToken(ctx, req.(*tokenrequest.MintClientTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Mint_CreatePersonalPrincipal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreatePersonalPrincipalRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MintServer).CreatePersonalPrincipal(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Mint_CreatePersonalPrincipal_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MintServer).CreatePersonalPrincipal(ctx, req.(*CreatePersonalPrincipalRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Mint_CreateTenantUserLink_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTenantUserLinkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MintServer).CreateTenantUserLink(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Mint_CreateTenantUserLink_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MintServer).CreateTenantUserLink(ctx, req.(*CreateTenantUserLinkRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Mint_BrokerPendingApproval_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BrokerPendingApprovalRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MintServer).BrokerPendingApproval(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Mint_BrokerPendingApproval_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MintServer).BrokerPendingApproval(ctx, req.(*BrokerPendingApprovalRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -640,6 +993,10 @@ var Mint_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Mint_MintDelegatedToken_Handler,
 		},
 		{
+			MethodName: "BrokerDelegateOfflineToken",
+			Handler:    _Mint_BrokerDelegateOfflineToken_Handler,
+		},
+		{
 			MethodName: "MintToken",
 			Handler:    _Mint_MintToken_Handler,
 		},
@@ -650,6 +1007,18 @@ var Mint_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "MintClientToken",
 			Handler:    _Mint_MintClientToken_Handler,
+		},
+		{
+			MethodName: "CreatePersonalPrincipal",
+			Handler:    _Mint_CreatePersonalPrincipal_Handler,
+		},
+		{
+			MethodName: "CreateTenantUserLink",
+			Handler:    _Mint_CreateTenantUserLink_Handler,
+		},
+		{
+			MethodName: "BrokerPendingApproval",
+			Handler:    _Mint_BrokerPendingApproval_Handler,
 		},
 		{
 			MethodName: "MintX509Cert",
@@ -666,6 +1035,174 @@ var Mint_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RevokeGrant",
 			Handler:    _Mint_RevokeGrant_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "services/kernel.proto",
+}
+
+const (
+	UserMint_MintDelegateOfflineToken_FullMethodName = "/kernel.UserMint/MintDelegateOfflineToken"
+)
+
+// UserMintClient is the client API for UserMint service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// UserMint is the user-facing half of the mint surface (token-management
+// decision item 7): a mint RPC whose caller is a PERSON holding their own
+// bearer token, not a service. It is a second service rather than two more
+// RPCs on Mint because a service declares exactly one caller surface —
+// tacplus's ValidateServiceSurfaces refuses (spec.service_c2s) and
+// (spec.service_s2s) on one service, and every downstream consumer (REST/proxy
+// route emission, the registry's auth_model, collection.TrustOf) reads that
+// single classification. Mint stays S2S and authoritative; this block carries
+// only the RPCs a client calls, and the gateway reaches them through its
+// ordinary generic C2S routing (package kernel, no hand-written front).
+//
+// Same physical service, same Java handler instance — only the declared
+// surface differs, exactly as PersonalIdentity and TenantAdmin already sit
+// alongside kernel's S2S services in this file.
+type UserMintClient interface {
+	// MintDelegateOfflineToken — runtime delegation, user half. The USER calls
+	// this with their own bearer token to connect an agent (a Delegate) they own,
+	// replacing the redeploy that bootstrap-only Grant rows used to require.
+	// Kernel resolves the (delegate_name, delegate_namespace) pair, mints an
+	// Offline Token with sub = the calling user, act = delegate_name, and the
+	// user's fresh OPA entitlements intersected with the request's optional
+	// narrowing scope — and does NOT return it. The OT never transits the user's
+	// client: the response carries only a short-lived single-use code the user
+	// hands to the delegate, which redeems it S2S via
+	// Mint.BrokerDelegateOfflineToken.
+	//
+	// RPC_FLAG_AUTH_ANY_USER, not the service default of entitled users: any
+	// authenticated person may connect an agent of their own, and the authority
+	// that agent ends up with is not this call's to widen — the handler mints
+	// against the caller's OWN fresh OPA entitlements, narrowed further by the
+	// request's optional scope. A separate entitlement grant here would gate
+	// "may this person delegate at all", which is not a question the platform
+	// asks today; GetMyIdentity is annotated the same way for the same reason.
+	MintDelegateOfflineToken(ctx context.Context, in *tokenrequest.MintDelegateOfflineTokenRequest, opts ...grpc.CallOption) (*tokenrequest.MintDelegateOfflineTokenResponse, error)
+}
+
+type userMintClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewUserMintClient(cc grpc.ClientConnInterface) UserMintClient {
+	return &userMintClient{cc}
+}
+
+func (c *userMintClient) MintDelegateOfflineToken(ctx context.Context, in *tokenrequest.MintDelegateOfflineTokenRequest, opts ...grpc.CallOption) (*tokenrequest.MintDelegateOfflineTokenResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(tokenrequest.MintDelegateOfflineTokenResponse)
+	err := c.cc.Invoke(ctx, UserMint_MintDelegateOfflineToken_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// UserMintServer is the server API for UserMint service.
+// All implementations must embed UnimplementedUserMintServer
+// for forward compatibility.
+//
+// UserMint is the user-facing half of the mint surface (token-management
+// decision item 7): a mint RPC whose caller is a PERSON holding their own
+// bearer token, not a service. It is a second service rather than two more
+// RPCs on Mint because a service declares exactly one caller surface —
+// tacplus's ValidateServiceSurfaces refuses (spec.service_c2s) and
+// (spec.service_s2s) on one service, and every downstream consumer (REST/proxy
+// route emission, the registry's auth_model, collection.TrustOf) reads that
+// single classification. Mint stays S2S and authoritative; this block carries
+// only the RPCs a client calls, and the gateway reaches them through its
+// ordinary generic C2S routing (package kernel, no hand-written front).
+//
+// Same physical service, same Java handler instance — only the declared
+// surface differs, exactly as PersonalIdentity and TenantAdmin already sit
+// alongside kernel's S2S services in this file.
+type UserMintServer interface {
+	// MintDelegateOfflineToken — runtime delegation, user half. The USER calls
+	// this with their own bearer token to connect an agent (a Delegate) they own,
+	// replacing the redeploy that bootstrap-only Grant rows used to require.
+	// Kernel resolves the (delegate_name, delegate_namespace) pair, mints an
+	// Offline Token with sub = the calling user, act = delegate_name, and the
+	// user's fresh OPA entitlements intersected with the request's optional
+	// narrowing scope — and does NOT return it. The OT never transits the user's
+	// client: the response carries only a short-lived single-use code the user
+	// hands to the delegate, which redeems it S2S via
+	// Mint.BrokerDelegateOfflineToken.
+	//
+	// RPC_FLAG_AUTH_ANY_USER, not the service default of entitled users: any
+	// authenticated person may connect an agent of their own, and the authority
+	// that agent ends up with is not this call's to widen — the handler mints
+	// against the caller's OWN fresh OPA entitlements, narrowed further by the
+	// request's optional scope. A separate entitlement grant here would gate
+	// "may this person delegate at all", which is not a question the platform
+	// asks today; GetMyIdentity is annotated the same way for the same reason.
+	MintDelegateOfflineToken(context.Context, *tokenrequest.MintDelegateOfflineTokenRequest) (*tokenrequest.MintDelegateOfflineTokenResponse, error)
+	mustEmbedUnimplementedUserMintServer()
+}
+
+// UnimplementedUserMintServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedUserMintServer struct{}
+
+func (UnimplementedUserMintServer) MintDelegateOfflineToken(context.Context, *tokenrequest.MintDelegateOfflineTokenRequest) (*tokenrequest.MintDelegateOfflineTokenResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MintDelegateOfflineToken not implemented")
+}
+func (UnimplementedUserMintServer) mustEmbedUnimplementedUserMintServer() {}
+func (UnimplementedUserMintServer) testEmbeddedByValue()                  {}
+
+// UnsafeUserMintServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to UserMintServer will
+// result in compilation errors.
+type UnsafeUserMintServer interface {
+	mustEmbedUnimplementedUserMintServer()
+}
+
+func RegisterUserMintServer(s grpc.ServiceRegistrar, srv UserMintServer) {
+	// If the following call panics, it indicates UnimplementedUserMintServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&UserMint_ServiceDesc, srv)
+}
+
+func _UserMint_MintDelegateOfflineToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(tokenrequest.MintDelegateOfflineTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserMintServer).MintDelegateOfflineToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserMint_MintDelegateOfflineToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserMintServer).MintDelegateOfflineToken(ctx, req.(*tokenrequest.MintDelegateOfflineTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// UserMint_ServiceDesc is the grpc.ServiceDesc for UserMint service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var UserMint_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kernel.UserMint",
+	HandlerType: (*UserMintServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "MintDelegateOfflineToken",
+			Handler:    _UserMint_MintDelegateOfflineToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -1005,15 +1542,331 @@ var CliTokenBroker_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	TenantAdmin_CreateTenant_FullMethodName        = "/kernel.TenantAdmin/CreateTenant"
-	TenantAdmin_DeleteTenant_FullMethodName        = "/kernel.TenantAdmin/DeleteTenant"
-	TenantAdmin_ListTenants_FullMethodName         = "/kernel.TenantAdmin/ListTenants"
-	TenantAdmin_GetTenantConfig_FullMethodName     = "/kernel.TenantAdmin/GetTenantConfig"
-	TenantAdmin_UpdateTenantConfig_FullMethodName  = "/kernel.TenantAdmin/UpdateTenantConfig"
-	TenantAdmin_GetProjectConfig_FullMethodName    = "/kernel.TenantAdmin/GetProjectConfig"
-	TenantAdmin_UpdateProjectConfig_FullMethodName = "/kernel.TenantAdmin/UpdateProjectConfig"
-	TenantAdmin_ListProjects_FullMethodName        = "/kernel.TenantAdmin/ListProjects"
-	TenantAdmin_DeleteProject_FullMethodName       = "/kernel.TenantAdmin/DeleteProject"
+	PersonalIdentity_GetMyIdentity_FullMethodName                    = "/kernel.PersonalIdentity/GetMyIdentity"
+	PersonalIdentity_RevokeTenantUserLink_FullMethodName             = "/kernel.PersonalIdentity/RevokeTenantUserLink"
+	PersonalIdentity_CreatePendingApproval_FullMethodName            = "/kernel.PersonalIdentity/CreatePendingApproval"
+	PersonalIdentity_BrokerPersonalIdentityMcpSession_FullMethodName = "/kernel.PersonalIdentity/BrokerPersonalIdentityMcpSession"
+)
+
+// PersonalIdentityClient is the client API for PersonalIdentity service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// PersonalIdentity is the personal principal's own view of itself. It exists
+// because kernel state RPCs are service-only (checkAccess denies user tokens on
+// every policed graph), so a person cannot read their own registry row over the
+// state plane.
+type PersonalIdentityClient interface {
+	// GetMyIdentity returns the CALLER'S memberships. It takes no principal
+	// argument by construction: the principal is resolved from the token's sub,
+	// so there is no field an attacker can point at somebody else.
+	GetMyIdentity(ctx context.Context, in *GetMyIdentityRequest, opts ...grpc.CallOption) (*GetMyIdentityResponse, error)
+	// RevokeTenantUserLink is UNLINK. It takes no owner argument, for the same
+	// reason GetMyIdentity takes none: the owning side of the edge is the
+	// CALLER'S OWN namespace and sub, out of the verified token, so there is no
+	// field pointing at somebody else's link. The request names only the peer to
+	// unlink from.
+	//
+	// Either side may unlink, which is what makes "the person may unlink a
+	// device, from any linked device or via the people tenant flow" (identity
+	// decision doc §3) true without a second surface: a /people/<pid> device
+	// token unlinks its own person edge, and a /tenants/people person token
+	// unlinks any of its device edges.
+	//
+	// NO RE-PROOF IS REQUIRED. Linking demands both credentials at once because
+	// it GRANTS reach into another namespace; unlinking only withdraws it, and a
+	// device is most often unlinked precisely when it can no longer be presented
+	// (lost, stolen, wiped). Demanding the link-time proof to undo a link would
+	// mean a lost device can never be removed. Recorded as a product default in
+	// the slice's decision doc, not a silent choice.
+	RevokeTenantUserLink(ctx context.Context, in *RevokeTenantUserLinkRequest, opts ...grpc.CallOption) (*RevokeTenantUserLinkResponse, error)
+	// CreatePendingApproval PROPOSES something that will need a device tap
+	// (identity decision doc §5). The caller is the person, or a tenant user
+	// linked to one, or an agent holding that person's delegated token — and
+	// proposing is ALL this does. The record it writes authorizes nothing until a
+	// device linked to that person signs it, which Mint.BrokerPendingApproval
+	// checks; that is why a proposer needs no privilege beyond being the user.
+	//
+	// It takes no principal argument, for the same reason GetMyIdentity takes
+	// none: the person is resolved from the caller's own verified claims, through
+	// the link registry, so there is no field pointing at somebody else's
+	// approval to create.
+	//
+	// What it pins is the EXACT request. rpc_method names one RPC and
+	// request_hash digests the exact request that will be made, so an approval
+	// for "transfer 5" cannot be spent on "transfer 5000": the generated check
+	// re-hashes the request it is about to serve, and a different hash is a
+	// different approval.
+	CreatePendingApproval(ctx context.Context, in *CreatePendingApprovalRequest, opts ...grpc.CallOption) (*CreatePendingApprovalResponse, error)
+	// BrokerPersonalIdentityMcpSession carries one Model Context Protocol session for PersonalIdentity over a
+	// single bidirectional stream: one complete JSON-RPC frame per stream message,
+	// request frames in and response frames out, for the life of the session.
+	//
+	// Generated, never declared: PersonalIdentity has at least one RPC_PRINCIPAL_MCP rpc, and this
+	// is the only channel those tools are reachable through. Bidirectional because an
+	// MCP session is stateful — it opens with an initialize handshake and holds the
+	// negotiated protocol version after it — so a unary call would repeat that
+	// handshake per tool call.
+	BrokerPersonalIdentityMcpSession(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[mcp.McpRequest, mcp.McpResponse], error)
+}
+
+type personalIdentityClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewPersonalIdentityClient(cc grpc.ClientConnInterface) PersonalIdentityClient {
+	return &personalIdentityClient{cc}
+}
+
+func (c *personalIdentityClient) GetMyIdentity(ctx context.Context, in *GetMyIdentityRequest, opts ...grpc.CallOption) (*GetMyIdentityResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMyIdentityResponse)
+	err := c.cc.Invoke(ctx, PersonalIdentity_GetMyIdentity_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *personalIdentityClient) RevokeTenantUserLink(ctx context.Context, in *RevokeTenantUserLinkRequest, opts ...grpc.CallOption) (*RevokeTenantUserLinkResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RevokeTenantUserLinkResponse)
+	err := c.cc.Invoke(ctx, PersonalIdentity_RevokeTenantUserLink_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *personalIdentityClient) CreatePendingApproval(ctx context.Context, in *CreatePendingApprovalRequest, opts ...grpc.CallOption) (*CreatePendingApprovalResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreatePendingApprovalResponse)
+	err := c.cc.Invoke(ctx, PersonalIdentity_CreatePendingApproval_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *personalIdentityClient) BrokerPersonalIdentityMcpSession(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[mcp.McpRequest, mcp.McpResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &PersonalIdentity_ServiceDesc.Streams[0], PersonalIdentity_BrokerPersonalIdentityMcpSession_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[mcp.McpRequest, mcp.McpResponse]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PersonalIdentity_BrokerPersonalIdentityMcpSessionClient = grpc.BidiStreamingClient[mcp.McpRequest, mcp.McpResponse]
+
+// PersonalIdentityServer is the server API for PersonalIdentity service.
+// All implementations must embed UnimplementedPersonalIdentityServer
+// for forward compatibility.
+//
+// PersonalIdentity is the personal principal's own view of itself. It exists
+// because kernel state RPCs are service-only (checkAccess denies user tokens on
+// every policed graph), so a person cannot read their own registry row over the
+// state plane.
+type PersonalIdentityServer interface {
+	// GetMyIdentity returns the CALLER'S memberships. It takes no principal
+	// argument by construction: the principal is resolved from the token's sub,
+	// so there is no field an attacker can point at somebody else.
+	GetMyIdentity(context.Context, *GetMyIdentityRequest) (*GetMyIdentityResponse, error)
+	// RevokeTenantUserLink is UNLINK. It takes no owner argument, for the same
+	// reason GetMyIdentity takes none: the owning side of the edge is the
+	// CALLER'S OWN namespace and sub, out of the verified token, so there is no
+	// field pointing at somebody else's link. The request names only the peer to
+	// unlink from.
+	//
+	// Either side may unlink, which is what makes "the person may unlink a
+	// device, from any linked device or via the people tenant flow" (identity
+	// decision doc §3) true without a second surface: a /people/<pid> device
+	// token unlinks its own person edge, and a /tenants/people person token
+	// unlinks any of its device edges.
+	//
+	// NO RE-PROOF IS REQUIRED. Linking demands both credentials at once because
+	// it GRANTS reach into another namespace; unlinking only withdraws it, and a
+	// device is most often unlinked precisely when it can no longer be presented
+	// (lost, stolen, wiped). Demanding the link-time proof to undo a link would
+	// mean a lost device can never be removed. Recorded as a product default in
+	// the slice's decision doc, not a silent choice.
+	RevokeTenantUserLink(context.Context, *RevokeTenantUserLinkRequest) (*RevokeTenantUserLinkResponse, error)
+	// CreatePendingApproval PROPOSES something that will need a device tap
+	// (identity decision doc §5). The caller is the person, or a tenant user
+	// linked to one, or an agent holding that person's delegated token — and
+	// proposing is ALL this does. The record it writes authorizes nothing until a
+	// device linked to that person signs it, which Mint.BrokerPendingApproval
+	// checks; that is why a proposer needs no privilege beyond being the user.
+	//
+	// It takes no principal argument, for the same reason GetMyIdentity takes
+	// none: the person is resolved from the caller's own verified claims, through
+	// the link registry, so there is no field pointing at somebody else's
+	// approval to create.
+	//
+	// What it pins is the EXACT request. rpc_method names one RPC and
+	// request_hash digests the exact request that will be made, so an approval
+	// for "transfer 5" cannot be spent on "transfer 5000": the generated check
+	// re-hashes the request it is about to serve, and a different hash is a
+	// different approval.
+	CreatePendingApproval(context.Context, *CreatePendingApprovalRequest) (*CreatePendingApprovalResponse, error)
+	// BrokerPersonalIdentityMcpSession carries one Model Context Protocol session for PersonalIdentity over a
+	// single bidirectional stream: one complete JSON-RPC frame per stream message,
+	// request frames in and response frames out, for the life of the session.
+	//
+	// Generated, never declared: PersonalIdentity has at least one RPC_PRINCIPAL_MCP rpc, and this
+	// is the only channel those tools are reachable through. Bidirectional because an
+	// MCP session is stateful — it opens with an initialize handshake and holds the
+	// negotiated protocol version after it — so a unary call would repeat that
+	// handshake per tool call.
+	BrokerPersonalIdentityMcpSession(grpc.BidiStreamingServer[mcp.McpRequest, mcp.McpResponse]) error
+	mustEmbedUnimplementedPersonalIdentityServer()
+}
+
+// UnimplementedPersonalIdentityServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedPersonalIdentityServer struct{}
+
+func (UnimplementedPersonalIdentityServer) GetMyIdentity(context.Context, *GetMyIdentityRequest) (*GetMyIdentityResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetMyIdentity not implemented")
+}
+func (UnimplementedPersonalIdentityServer) RevokeTenantUserLink(context.Context, *RevokeTenantUserLinkRequest) (*RevokeTenantUserLinkResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RevokeTenantUserLink not implemented")
+}
+func (UnimplementedPersonalIdentityServer) CreatePendingApproval(context.Context, *CreatePendingApprovalRequest) (*CreatePendingApprovalResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreatePendingApproval not implemented")
+}
+func (UnimplementedPersonalIdentityServer) BrokerPersonalIdentityMcpSession(grpc.BidiStreamingServer[mcp.McpRequest, mcp.McpResponse]) error {
+	return status.Error(codes.Unimplemented, "method BrokerPersonalIdentityMcpSession not implemented")
+}
+func (UnimplementedPersonalIdentityServer) mustEmbedUnimplementedPersonalIdentityServer() {}
+func (UnimplementedPersonalIdentityServer) testEmbeddedByValue()                          {}
+
+// UnsafePersonalIdentityServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to PersonalIdentityServer will
+// result in compilation errors.
+type UnsafePersonalIdentityServer interface {
+	mustEmbedUnimplementedPersonalIdentityServer()
+}
+
+func RegisterPersonalIdentityServer(s grpc.ServiceRegistrar, srv PersonalIdentityServer) {
+	// If the following call panics, it indicates UnimplementedPersonalIdentityServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&PersonalIdentity_ServiceDesc, srv)
+}
+
+func _PersonalIdentity_GetMyIdentity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMyIdentityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PersonalIdentityServer).GetMyIdentity(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PersonalIdentity_GetMyIdentity_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PersonalIdentityServer).GetMyIdentity(ctx, req.(*GetMyIdentityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PersonalIdentity_RevokeTenantUserLink_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RevokeTenantUserLinkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PersonalIdentityServer).RevokeTenantUserLink(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PersonalIdentity_RevokeTenantUserLink_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PersonalIdentityServer).RevokeTenantUserLink(ctx, req.(*RevokeTenantUserLinkRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PersonalIdentity_CreatePendingApproval_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreatePendingApprovalRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PersonalIdentityServer).CreatePendingApproval(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PersonalIdentity_CreatePendingApproval_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PersonalIdentityServer).CreatePendingApproval(ctx, req.(*CreatePendingApprovalRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PersonalIdentity_BrokerPersonalIdentityMcpSession_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(PersonalIdentityServer).BrokerPersonalIdentityMcpSession(&grpc.GenericServerStream[mcp.McpRequest, mcp.McpResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PersonalIdentity_BrokerPersonalIdentityMcpSessionServer = grpc.BidiStreamingServer[mcp.McpRequest, mcp.McpResponse]
+
+// PersonalIdentity_ServiceDesc is the grpc.ServiceDesc for PersonalIdentity service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var PersonalIdentity_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kernel.PersonalIdentity",
+	HandlerType: (*PersonalIdentityServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetMyIdentity",
+			Handler:    _PersonalIdentity_GetMyIdentity_Handler,
+		},
+		{
+			MethodName: "RevokeTenantUserLink",
+			Handler:    _PersonalIdentity_RevokeTenantUserLink_Handler,
+		},
+		{
+			MethodName: "CreatePendingApproval",
+			Handler:    _PersonalIdentity_CreatePendingApproval_Handler,
+		},
+	},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "BrokerPersonalIdentityMcpSession",
+			Handler:       _PersonalIdentity_BrokerPersonalIdentityMcpSession_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+	},
+	Metadata: "services/kernel.proto",
+}
+
+const (
+	TenantAdmin_CreateTenant_FullMethodName                = "/kernel.TenantAdmin/CreateTenant"
+	TenantAdmin_DeleteTenant_FullMethodName                = "/kernel.TenantAdmin/DeleteTenant"
+	TenantAdmin_ListTenants_FullMethodName                 = "/kernel.TenantAdmin/ListTenants"
+	TenantAdmin_GetTenantConfig_FullMethodName             = "/kernel.TenantAdmin/GetTenantConfig"
+	TenantAdmin_UpdateTenantConfig_FullMethodName          = "/kernel.TenantAdmin/UpdateTenantConfig"
+	TenantAdmin_GetProjectConfig_FullMethodName            = "/kernel.TenantAdmin/GetProjectConfig"
+	TenantAdmin_UpdateProjectConfig_FullMethodName         = "/kernel.TenantAdmin/UpdateProjectConfig"
+	TenantAdmin_ListProjects_FullMethodName                = "/kernel.TenantAdmin/ListProjects"
+	TenantAdmin_DeleteProject_FullMethodName               = "/kernel.TenantAdmin/DeleteProject"
+	TenantAdmin_BrokerTenantAdminMcpSession_FullMethodName = "/kernel.TenantAdmin/BrokerTenantAdminMcpSession"
 )
 
 // TenantAdminClient is the client API for TenantAdmin service.
@@ -1066,6 +1919,16 @@ type TenantAdminClient interface {
 	ListProjects(ctx context.Context, in *ListProjectsRequest, opts ...grpc.CallOption) (*ListProjectsResponse, error)
 	// DeleteProject removes the project named by project_namespace and its state.
 	DeleteProject(ctx context.Context, in *DeleteProjectRequest, opts ...grpc.CallOption) (*DeleteProjectResponse, error)
+	// BrokerTenantAdminMcpSession carries one Model Context Protocol session for TenantAdmin over a
+	// single bidirectional stream: one complete JSON-RPC frame per stream message,
+	// request frames in and response frames out, for the life of the session.
+	//
+	// Generated, never declared: TenantAdmin has at least one RPC_PRINCIPAL_MCP rpc, and this
+	// is the only channel those tools are reachable through. Bidirectional because an
+	// MCP session is stateful — it opens with an initialize handshake and holds the
+	// negotiated protocol version after it — so a unary call would repeat that
+	// handshake per tool call.
+	BrokerTenantAdminMcpSession(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[mcp.McpRequest, mcp.McpResponse], error)
 }
 
 type tenantAdminClient struct {
@@ -1166,6 +2029,19 @@ func (c *tenantAdminClient) DeleteProject(ctx context.Context, in *DeleteProject
 	return out, nil
 }
 
+func (c *tenantAdminClient) BrokerTenantAdminMcpSession(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[mcp.McpRequest, mcp.McpResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &TenantAdmin_ServiceDesc.Streams[0], TenantAdmin_BrokerTenantAdminMcpSession_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[mcp.McpRequest, mcp.McpResponse]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type TenantAdmin_BrokerTenantAdminMcpSessionClient = grpc.BidiStreamingClient[mcp.McpRequest, mcp.McpResponse]
+
 // TenantAdminServer is the server API for TenantAdmin service.
 // All implementations must embed UnimplementedTenantAdminServer
 // for forward compatibility.
@@ -1216,6 +2092,16 @@ type TenantAdminServer interface {
 	ListProjects(context.Context, *ListProjectsRequest) (*ListProjectsResponse, error)
 	// DeleteProject removes the project named by project_namespace and its state.
 	DeleteProject(context.Context, *DeleteProjectRequest) (*DeleteProjectResponse, error)
+	// BrokerTenantAdminMcpSession carries one Model Context Protocol session for TenantAdmin over a
+	// single bidirectional stream: one complete JSON-RPC frame per stream message,
+	// request frames in and response frames out, for the life of the session.
+	//
+	// Generated, never declared: TenantAdmin has at least one RPC_PRINCIPAL_MCP rpc, and this
+	// is the only channel those tools are reachable through. Bidirectional because an
+	// MCP session is stateful — it opens with an initialize handshake and holds the
+	// negotiated protocol version after it — so a unary call would repeat that
+	// handshake per tool call.
+	BrokerTenantAdminMcpSession(grpc.BidiStreamingServer[mcp.McpRequest, mcp.McpResponse]) error
 	mustEmbedUnimplementedTenantAdminServer()
 }
 
@@ -1252,6 +2138,9 @@ func (UnimplementedTenantAdminServer) ListProjects(context.Context, *ListProject
 }
 func (UnimplementedTenantAdminServer) DeleteProject(context.Context, *DeleteProjectRequest) (*DeleteProjectResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteProject not implemented")
+}
+func (UnimplementedTenantAdminServer) BrokerTenantAdminMcpSession(grpc.BidiStreamingServer[mcp.McpRequest, mcp.McpResponse]) error {
+	return status.Error(codes.Unimplemented, "method BrokerTenantAdminMcpSession not implemented")
 }
 func (UnimplementedTenantAdminServer) mustEmbedUnimplementedTenantAdminServer() {}
 func (UnimplementedTenantAdminServer) testEmbeddedByValue()                     {}
@@ -1436,6 +2325,13 @@ func _TenantAdmin_DeleteProject_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TenantAdmin_BrokerTenantAdminMcpSession_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(TenantAdminServer).BrokerTenantAdminMcpSession(&grpc.GenericServerStream[mcp.McpRequest, mcp.McpResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type TenantAdmin_BrokerTenantAdminMcpSessionServer = grpc.BidiStreamingServer[mcp.McpRequest, mcp.McpResponse]
+
 // TenantAdmin_ServiceDesc is the grpc.ServiceDesc for TenantAdmin service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1480,7 +2376,14 @@ var TenantAdmin_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _TenantAdmin_DeleteProject_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "BrokerTenantAdminMcpSession",
+			Handler:       _TenantAdmin_BrokerTenantAdminMcpSession_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "services/kernel.proto",
 }
 
@@ -11821,6 +12724,2241 @@ var WorkloadStateService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "WatchQueryRevocations",
 			Handler:       _WorkloadStateService_WatchQueryRevocations_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "services/kernel.proto",
+}
+
+const (
+	PrincipalStateService_GetPersonalPrincipals_FullMethodName         = "/kernel.PrincipalStateService/GetPersonalPrincipals"
+	PrincipalStateService_PutPersonalPrincipals_FullMethodName         = "/kernel.PrincipalStateService/PutPersonalPrincipals"
+	PrincipalStateService_SetPersonalPrincipals_FullMethodName         = "/kernel.PrincipalStateService/SetPersonalPrincipals"
+	PrincipalStateService_RemovePersonalPrincipals_FullMethodName      = "/kernel.PrincipalStateService/RemovePersonalPrincipals"
+	PrincipalStateService_DeletePersonalPrincipals_FullMethodName      = "/kernel.PrincipalStateService/DeletePersonalPrincipals"
+	PrincipalStateService_ContainsKeyPersonalPrincipals_FullMethodName = "/kernel.PrincipalStateService/ContainsKeyPersonalPrincipals"
+	PrincipalStateService_GetAllPersonalPrincipals_FullMethodName      = "/kernel.PrincipalStateService/GetAllPersonalPrincipals"
+	PrincipalStateService_KeySetPersonalPrincipals_FullMethodName      = "/kernel.PrincipalStateService/KeySetPersonalPrincipals"
+	PrincipalStateService_SizePersonalPrincipals_FullMethodName        = "/kernel.PrincipalStateService/SizePersonalPrincipals"
+	PrincipalStateService_ClearPersonalPrincipals_FullMethodName       = "/kernel.PrincipalStateService/ClearPersonalPrincipals"
+	PrincipalStateService_PutIfAbsentPersonalPrincipals_FullMethodName = "/kernel.PrincipalStateService/PutIfAbsentPersonalPrincipals"
+	PrincipalStateService_WatchPersonalPrincipals_FullMethodName       = "/kernel.PrincipalStateService/WatchPersonalPrincipals"
+	PrincipalStateService_QueryPersonalPrincipals_FullMethodName       = "/kernel.PrincipalStateService/QueryPersonalPrincipals"
+	PrincipalStateService_WatchQueryPersonalPrincipals_FullMethodName  = "/kernel.PrincipalStateService/WatchQueryPersonalPrincipals"
+	PrincipalStateService_GetPeople_FullMethodName                     = "/kernel.PrincipalStateService/GetPeople"
+	PrincipalStateService_PutPeople_FullMethodName                     = "/kernel.PrincipalStateService/PutPeople"
+	PrincipalStateService_SetPeople_FullMethodName                     = "/kernel.PrincipalStateService/SetPeople"
+	PrincipalStateService_RemovePeople_FullMethodName                  = "/kernel.PrincipalStateService/RemovePeople"
+	PrincipalStateService_DeletePeople_FullMethodName                  = "/kernel.PrincipalStateService/DeletePeople"
+	PrincipalStateService_ContainsKeyPeople_FullMethodName             = "/kernel.PrincipalStateService/ContainsKeyPeople"
+	PrincipalStateService_GetAllPeople_FullMethodName                  = "/kernel.PrincipalStateService/GetAllPeople"
+	PrincipalStateService_KeySetPeople_FullMethodName                  = "/kernel.PrincipalStateService/KeySetPeople"
+	PrincipalStateService_SizePeople_FullMethodName                    = "/kernel.PrincipalStateService/SizePeople"
+	PrincipalStateService_ClearPeople_FullMethodName                   = "/kernel.PrincipalStateService/ClearPeople"
+	PrincipalStateService_PutIfAbsentPeople_FullMethodName             = "/kernel.PrincipalStateService/PutIfAbsentPeople"
+	PrincipalStateService_WatchPeople_FullMethodName                   = "/kernel.PrincipalStateService/WatchPeople"
+	PrincipalStateService_QueryPeople_FullMethodName                   = "/kernel.PrincipalStateService/QueryPeople"
+	PrincipalStateService_WatchQueryPeople_FullMethodName              = "/kernel.PrincipalStateService/WatchQueryPeople"
+	PrincipalStateService_GetTenantUserLinks_FullMethodName            = "/kernel.PrincipalStateService/GetTenantUserLinks"
+	PrincipalStateService_PutTenantUserLinks_FullMethodName            = "/kernel.PrincipalStateService/PutTenantUserLinks"
+	PrincipalStateService_SetTenantUserLinks_FullMethodName            = "/kernel.PrincipalStateService/SetTenantUserLinks"
+	PrincipalStateService_RemoveTenantUserLinks_FullMethodName         = "/kernel.PrincipalStateService/RemoveTenantUserLinks"
+	PrincipalStateService_DeleteTenantUserLinks_FullMethodName         = "/kernel.PrincipalStateService/DeleteTenantUserLinks"
+	PrincipalStateService_ContainsKeyTenantUserLinks_FullMethodName    = "/kernel.PrincipalStateService/ContainsKeyTenantUserLinks"
+	PrincipalStateService_GetAllTenantUserLinks_FullMethodName         = "/kernel.PrincipalStateService/GetAllTenantUserLinks"
+	PrincipalStateService_KeySetTenantUserLinks_FullMethodName         = "/kernel.PrincipalStateService/KeySetTenantUserLinks"
+	PrincipalStateService_SizeTenantUserLinks_FullMethodName           = "/kernel.PrincipalStateService/SizeTenantUserLinks"
+	PrincipalStateService_ClearTenantUserLinks_FullMethodName          = "/kernel.PrincipalStateService/ClearTenantUserLinks"
+	PrincipalStateService_PutIfAbsentTenantUserLinks_FullMethodName    = "/kernel.PrincipalStateService/PutIfAbsentTenantUserLinks"
+	PrincipalStateService_WatchTenantUserLinks_FullMethodName          = "/kernel.PrincipalStateService/WatchTenantUserLinks"
+	PrincipalStateService_QueryTenantUserLinks_FullMethodName          = "/kernel.PrincipalStateService/QueryTenantUserLinks"
+	PrincipalStateService_WatchQueryTenantUserLinks_FullMethodName     = "/kernel.PrincipalStateService/WatchQueryTenantUserLinks"
+	PrincipalStateService_GetPendingApprovals_FullMethodName           = "/kernel.PrincipalStateService/GetPendingApprovals"
+	PrincipalStateService_PutPendingApprovals_FullMethodName           = "/kernel.PrincipalStateService/PutPendingApprovals"
+	PrincipalStateService_SetPendingApprovals_FullMethodName           = "/kernel.PrincipalStateService/SetPendingApprovals"
+	PrincipalStateService_RemovePendingApprovals_FullMethodName        = "/kernel.PrincipalStateService/RemovePendingApprovals"
+	PrincipalStateService_DeletePendingApprovals_FullMethodName        = "/kernel.PrincipalStateService/DeletePendingApprovals"
+	PrincipalStateService_ContainsKeyPendingApprovals_FullMethodName   = "/kernel.PrincipalStateService/ContainsKeyPendingApprovals"
+	PrincipalStateService_GetAllPendingApprovals_FullMethodName        = "/kernel.PrincipalStateService/GetAllPendingApprovals"
+	PrincipalStateService_KeySetPendingApprovals_FullMethodName        = "/kernel.PrincipalStateService/KeySetPendingApprovals"
+	PrincipalStateService_SizePendingApprovals_FullMethodName          = "/kernel.PrincipalStateService/SizePendingApprovals"
+	PrincipalStateService_ClearPendingApprovals_FullMethodName         = "/kernel.PrincipalStateService/ClearPendingApprovals"
+	PrincipalStateService_PutIfAbsentPendingApprovals_FullMethodName   = "/kernel.PrincipalStateService/PutIfAbsentPendingApprovals"
+	PrincipalStateService_WatchPendingApprovals_FullMethodName         = "/kernel.PrincipalStateService/WatchPendingApprovals"
+	PrincipalStateService_QueryPendingApprovals_FullMethodName         = "/kernel.PrincipalStateService/QueryPendingApprovals"
+	PrincipalStateService_WatchQueryPendingApprovals_FullMethodName    = "/kernel.PrincipalStateService/WatchQueryPendingApprovals"
+)
+
+// PrincipalStateServiceClient is the client API for PrincipalStateService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// ============================================================================
+// Auto-generated State Service (tacplus)
+// ============================================================================
+// tacplus:generated-service state
+type PrincipalStateServiceClient interface {
+	// Collection: PersonalPrincipals
+	GetPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsGetRequest, opts ...grpc.CallOption) (*PersonalPrincipalsValueResponse, error)
+	PutPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsPutRequest, opts ...grpc.CallOption) (*PersonalPrincipalsValueResponse, error)
+	SetPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsPutRequest, opts ...grpc.CallOption) (*MapEmpty, error)
+	RemovePersonalPrincipals(ctx context.Context, in *PersonalPrincipalsGetRequest, opts ...grpc.CallOption) (*PersonalPrincipalsValueResponse, error)
+	DeletePersonalPrincipals(ctx context.Context, in *PersonalPrincipalsGetRequest, opts ...grpc.CallOption) (*MapEmpty, error)
+	ContainsKeyPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsGetRequest, opts ...grpc.CallOption) (*PersonalPrincipalsValueResponse, error)
+	GetAllPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsGetAllRequest, opts ...grpc.CallOption) (*PersonalPrincipalsEntriesResponse, error)
+	KeySetPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsKeysRequest, opts ...grpc.CallOption) (*PersonalPrincipalsKeysResponse, error)
+	SizePersonalPrincipals(ctx context.Context, in *PersonalPrincipalsSizeRequest, opts ...grpc.CallOption) (*PersonalPrincipalsSizeResponse, error)
+	ClearPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsClearRequest, opts ...grpc.CallOption) (*MapEmpty, error)
+	PutIfAbsentPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsPutRequest, opts ...grpc.CallOption) (*PersonalPrincipalsValueResponse, error)
+	WatchPersonalPrincipals(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[PersonalPrincipalsEntriesResponse], error)
+	QueryPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsQueryRequest, opts ...grpc.CallOption) (*PersonalPrincipalsQueryResponse, error)
+	WatchQueryPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsQueryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[PersonalPrincipalsQueryResponse], error)
+	// Collection: People
+	GetPeople(ctx context.Context, in *PeopleGetRequest, opts ...grpc.CallOption) (*PeopleValueResponse, error)
+	PutPeople(ctx context.Context, in *PeoplePutRequest, opts ...grpc.CallOption) (*PeopleValueResponse, error)
+	SetPeople(ctx context.Context, in *PeoplePutRequest, opts ...grpc.CallOption) (*MapEmpty, error)
+	RemovePeople(ctx context.Context, in *PeopleGetRequest, opts ...grpc.CallOption) (*PeopleValueResponse, error)
+	DeletePeople(ctx context.Context, in *PeopleGetRequest, opts ...grpc.CallOption) (*MapEmpty, error)
+	ContainsKeyPeople(ctx context.Context, in *PeopleGetRequest, opts ...grpc.CallOption) (*PeopleValueResponse, error)
+	GetAllPeople(ctx context.Context, in *PeopleGetAllRequest, opts ...grpc.CallOption) (*PeopleEntriesResponse, error)
+	KeySetPeople(ctx context.Context, in *PeopleKeysRequest, opts ...grpc.CallOption) (*PeopleKeysResponse, error)
+	SizePeople(ctx context.Context, in *PeopleSizeRequest, opts ...grpc.CallOption) (*PeopleSizeResponse, error)
+	ClearPeople(ctx context.Context, in *PeopleClearRequest, opts ...grpc.CallOption) (*MapEmpty, error)
+	PutIfAbsentPeople(ctx context.Context, in *PeoplePutRequest, opts ...grpc.CallOption) (*PeopleValueResponse, error)
+	WatchPeople(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[PeopleEntriesResponse], error)
+	QueryPeople(ctx context.Context, in *PeopleQueryRequest, opts ...grpc.CallOption) (*PeopleQueryResponse, error)
+	WatchQueryPeople(ctx context.Context, in *PeopleQueryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[PeopleQueryResponse], error)
+	// Collection: TenantUserLinks
+	GetTenantUserLinks(ctx context.Context, in *TenantUserLinksGetRequest, opts ...grpc.CallOption) (*TenantUserLinksValueResponse, error)
+	PutTenantUserLinks(ctx context.Context, in *TenantUserLinksPutRequest, opts ...grpc.CallOption) (*TenantUserLinksValueResponse, error)
+	SetTenantUserLinks(ctx context.Context, in *TenantUserLinksPutRequest, opts ...grpc.CallOption) (*MapEmpty, error)
+	RemoveTenantUserLinks(ctx context.Context, in *TenantUserLinksGetRequest, opts ...grpc.CallOption) (*TenantUserLinksValueResponse, error)
+	DeleteTenantUserLinks(ctx context.Context, in *TenantUserLinksGetRequest, opts ...grpc.CallOption) (*MapEmpty, error)
+	ContainsKeyTenantUserLinks(ctx context.Context, in *TenantUserLinksGetRequest, opts ...grpc.CallOption) (*TenantUserLinksValueResponse, error)
+	GetAllTenantUserLinks(ctx context.Context, in *TenantUserLinksGetAllRequest, opts ...grpc.CallOption) (*TenantUserLinksEntriesResponse, error)
+	KeySetTenantUserLinks(ctx context.Context, in *TenantUserLinksKeysRequest, opts ...grpc.CallOption) (*TenantUserLinksKeysResponse, error)
+	SizeTenantUserLinks(ctx context.Context, in *TenantUserLinksSizeRequest, opts ...grpc.CallOption) (*TenantUserLinksSizeResponse, error)
+	ClearTenantUserLinks(ctx context.Context, in *TenantUserLinksClearRequest, opts ...grpc.CallOption) (*MapEmpty, error)
+	PutIfAbsentTenantUserLinks(ctx context.Context, in *TenantUserLinksPutRequest, opts ...grpc.CallOption) (*TenantUserLinksValueResponse, error)
+	WatchTenantUserLinks(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TenantUserLinksEntriesResponse], error)
+	QueryTenantUserLinks(ctx context.Context, in *TenantUserLinksQueryRequest, opts ...grpc.CallOption) (*TenantUserLinksQueryResponse, error)
+	WatchQueryTenantUserLinks(ctx context.Context, in *TenantUserLinksQueryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TenantUserLinksQueryResponse], error)
+	// Collection: PendingApprovals
+	GetPendingApprovals(ctx context.Context, in *PendingApprovalsGetRequest, opts ...grpc.CallOption) (*PendingApprovalsValueResponse, error)
+	PutPendingApprovals(ctx context.Context, in *PendingApprovalsPutRequest, opts ...grpc.CallOption) (*PendingApprovalsValueResponse, error)
+	SetPendingApprovals(ctx context.Context, in *PendingApprovalsPutRequest, opts ...grpc.CallOption) (*MapEmpty, error)
+	RemovePendingApprovals(ctx context.Context, in *PendingApprovalsGetRequest, opts ...grpc.CallOption) (*PendingApprovalsValueResponse, error)
+	DeletePendingApprovals(ctx context.Context, in *PendingApprovalsGetRequest, opts ...grpc.CallOption) (*MapEmpty, error)
+	ContainsKeyPendingApprovals(ctx context.Context, in *PendingApprovalsGetRequest, opts ...grpc.CallOption) (*PendingApprovalsValueResponse, error)
+	GetAllPendingApprovals(ctx context.Context, in *PendingApprovalsGetAllRequest, opts ...grpc.CallOption) (*PendingApprovalsEntriesResponse, error)
+	KeySetPendingApprovals(ctx context.Context, in *PendingApprovalsKeysRequest, opts ...grpc.CallOption) (*PendingApprovalsKeysResponse, error)
+	SizePendingApprovals(ctx context.Context, in *PendingApprovalsSizeRequest, opts ...grpc.CallOption) (*PendingApprovalsSizeResponse, error)
+	ClearPendingApprovals(ctx context.Context, in *PendingApprovalsClearRequest, opts ...grpc.CallOption) (*MapEmpty, error)
+	PutIfAbsentPendingApprovals(ctx context.Context, in *PendingApprovalsPutRequest, opts ...grpc.CallOption) (*PendingApprovalsValueResponse, error)
+	WatchPendingApprovals(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[PendingApprovalsEntriesResponse], error)
+	QueryPendingApprovals(ctx context.Context, in *PendingApprovalsQueryRequest, opts ...grpc.CallOption) (*PendingApprovalsQueryResponse, error)
+	WatchQueryPendingApprovals(ctx context.Context, in *PendingApprovalsQueryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[PendingApprovalsQueryResponse], error)
+}
+
+type principalStateServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewPrincipalStateServiceClient(cc grpc.ClientConnInterface) PrincipalStateServiceClient {
+	return &principalStateServiceClient{cc}
+}
+
+func (c *principalStateServiceClient) GetPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsGetRequest, opts ...grpc.CallOption) (*PersonalPrincipalsValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PersonalPrincipalsValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_GetPersonalPrincipals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) PutPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsPutRequest, opts ...grpc.CallOption) (*PersonalPrincipalsValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PersonalPrincipalsValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_PutPersonalPrincipals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) SetPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsPutRequest, opts ...grpc.CallOption) (*MapEmpty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MapEmpty)
+	err := c.cc.Invoke(ctx, PrincipalStateService_SetPersonalPrincipals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) RemovePersonalPrincipals(ctx context.Context, in *PersonalPrincipalsGetRequest, opts ...grpc.CallOption) (*PersonalPrincipalsValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PersonalPrincipalsValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_RemovePersonalPrincipals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) DeletePersonalPrincipals(ctx context.Context, in *PersonalPrincipalsGetRequest, opts ...grpc.CallOption) (*MapEmpty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MapEmpty)
+	err := c.cc.Invoke(ctx, PrincipalStateService_DeletePersonalPrincipals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) ContainsKeyPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsGetRequest, opts ...grpc.CallOption) (*PersonalPrincipalsValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PersonalPrincipalsValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_ContainsKeyPersonalPrincipals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) GetAllPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsGetAllRequest, opts ...grpc.CallOption) (*PersonalPrincipalsEntriesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PersonalPrincipalsEntriesResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_GetAllPersonalPrincipals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) KeySetPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsKeysRequest, opts ...grpc.CallOption) (*PersonalPrincipalsKeysResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PersonalPrincipalsKeysResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_KeySetPersonalPrincipals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) SizePersonalPrincipals(ctx context.Context, in *PersonalPrincipalsSizeRequest, opts ...grpc.CallOption) (*PersonalPrincipalsSizeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PersonalPrincipalsSizeResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_SizePersonalPrincipals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) ClearPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsClearRequest, opts ...grpc.CallOption) (*MapEmpty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MapEmpty)
+	err := c.cc.Invoke(ctx, PrincipalStateService_ClearPersonalPrincipals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) PutIfAbsentPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsPutRequest, opts ...grpc.CallOption) (*PersonalPrincipalsValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PersonalPrincipalsValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_PutIfAbsentPersonalPrincipals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) WatchPersonalPrincipals(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[PersonalPrincipalsEntriesResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &PrincipalStateService_ServiceDesc.Streams[0], PrincipalStateService_WatchPersonalPrincipals_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[trace.TraceRequest, PersonalPrincipalsEntriesResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PrincipalStateService_WatchPersonalPrincipalsClient = grpc.ServerStreamingClient[PersonalPrincipalsEntriesResponse]
+
+func (c *principalStateServiceClient) QueryPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsQueryRequest, opts ...grpc.CallOption) (*PersonalPrincipalsQueryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PersonalPrincipalsQueryResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_QueryPersonalPrincipals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) WatchQueryPersonalPrincipals(ctx context.Context, in *PersonalPrincipalsQueryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[PersonalPrincipalsQueryResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &PrincipalStateService_ServiceDesc.Streams[1], PrincipalStateService_WatchQueryPersonalPrincipals_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[PersonalPrincipalsQueryRequest, PersonalPrincipalsQueryResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PrincipalStateService_WatchQueryPersonalPrincipalsClient = grpc.ServerStreamingClient[PersonalPrincipalsQueryResponse]
+
+func (c *principalStateServiceClient) GetPeople(ctx context.Context, in *PeopleGetRequest, opts ...grpc.CallOption) (*PeopleValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PeopleValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_GetPeople_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) PutPeople(ctx context.Context, in *PeoplePutRequest, opts ...grpc.CallOption) (*PeopleValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PeopleValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_PutPeople_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) SetPeople(ctx context.Context, in *PeoplePutRequest, opts ...grpc.CallOption) (*MapEmpty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MapEmpty)
+	err := c.cc.Invoke(ctx, PrincipalStateService_SetPeople_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) RemovePeople(ctx context.Context, in *PeopleGetRequest, opts ...grpc.CallOption) (*PeopleValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PeopleValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_RemovePeople_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) DeletePeople(ctx context.Context, in *PeopleGetRequest, opts ...grpc.CallOption) (*MapEmpty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MapEmpty)
+	err := c.cc.Invoke(ctx, PrincipalStateService_DeletePeople_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) ContainsKeyPeople(ctx context.Context, in *PeopleGetRequest, opts ...grpc.CallOption) (*PeopleValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PeopleValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_ContainsKeyPeople_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) GetAllPeople(ctx context.Context, in *PeopleGetAllRequest, opts ...grpc.CallOption) (*PeopleEntriesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PeopleEntriesResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_GetAllPeople_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) KeySetPeople(ctx context.Context, in *PeopleKeysRequest, opts ...grpc.CallOption) (*PeopleKeysResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PeopleKeysResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_KeySetPeople_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) SizePeople(ctx context.Context, in *PeopleSizeRequest, opts ...grpc.CallOption) (*PeopleSizeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PeopleSizeResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_SizePeople_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) ClearPeople(ctx context.Context, in *PeopleClearRequest, opts ...grpc.CallOption) (*MapEmpty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MapEmpty)
+	err := c.cc.Invoke(ctx, PrincipalStateService_ClearPeople_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) PutIfAbsentPeople(ctx context.Context, in *PeoplePutRequest, opts ...grpc.CallOption) (*PeopleValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PeopleValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_PutIfAbsentPeople_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) WatchPeople(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[PeopleEntriesResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &PrincipalStateService_ServiceDesc.Streams[2], PrincipalStateService_WatchPeople_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[trace.TraceRequest, PeopleEntriesResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PrincipalStateService_WatchPeopleClient = grpc.ServerStreamingClient[PeopleEntriesResponse]
+
+func (c *principalStateServiceClient) QueryPeople(ctx context.Context, in *PeopleQueryRequest, opts ...grpc.CallOption) (*PeopleQueryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PeopleQueryResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_QueryPeople_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) WatchQueryPeople(ctx context.Context, in *PeopleQueryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[PeopleQueryResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &PrincipalStateService_ServiceDesc.Streams[3], PrincipalStateService_WatchQueryPeople_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[PeopleQueryRequest, PeopleQueryResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PrincipalStateService_WatchQueryPeopleClient = grpc.ServerStreamingClient[PeopleQueryResponse]
+
+func (c *principalStateServiceClient) GetTenantUserLinks(ctx context.Context, in *TenantUserLinksGetRequest, opts ...grpc.CallOption) (*TenantUserLinksValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TenantUserLinksValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_GetTenantUserLinks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) PutTenantUserLinks(ctx context.Context, in *TenantUserLinksPutRequest, opts ...grpc.CallOption) (*TenantUserLinksValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TenantUserLinksValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_PutTenantUserLinks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) SetTenantUserLinks(ctx context.Context, in *TenantUserLinksPutRequest, opts ...grpc.CallOption) (*MapEmpty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MapEmpty)
+	err := c.cc.Invoke(ctx, PrincipalStateService_SetTenantUserLinks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) RemoveTenantUserLinks(ctx context.Context, in *TenantUserLinksGetRequest, opts ...grpc.CallOption) (*TenantUserLinksValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TenantUserLinksValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_RemoveTenantUserLinks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) DeleteTenantUserLinks(ctx context.Context, in *TenantUserLinksGetRequest, opts ...grpc.CallOption) (*MapEmpty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MapEmpty)
+	err := c.cc.Invoke(ctx, PrincipalStateService_DeleteTenantUserLinks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) ContainsKeyTenantUserLinks(ctx context.Context, in *TenantUserLinksGetRequest, opts ...grpc.CallOption) (*TenantUserLinksValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TenantUserLinksValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_ContainsKeyTenantUserLinks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) GetAllTenantUserLinks(ctx context.Context, in *TenantUserLinksGetAllRequest, opts ...grpc.CallOption) (*TenantUserLinksEntriesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TenantUserLinksEntriesResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_GetAllTenantUserLinks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) KeySetTenantUserLinks(ctx context.Context, in *TenantUserLinksKeysRequest, opts ...grpc.CallOption) (*TenantUserLinksKeysResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TenantUserLinksKeysResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_KeySetTenantUserLinks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) SizeTenantUserLinks(ctx context.Context, in *TenantUserLinksSizeRequest, opts ...grpc.CallOption) (*TenantUserLinksSizeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TenantUserLinksSizeResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_SizeTenantUserLinks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) ClearTenantUserLinks(ctx context.Context, in *TenantUserLinksClearRequest, opts ...grpc.CallOption) (*MapEmpty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MapEmpty)
+	err := c.cc.Invoke(ctx, PrincipalStateService_ClearTenantUserLinks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) PutIfAbsentTenantUserLinks(ctx context.Context, in *TenantUserLinksPutRequest, opts ...grpc.CallOption) (*TenantUserLinksValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TenantUserLinksValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_PutIfAbsentTenantUserLinks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) WatchTenantUserLinks(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TenantUserLinksEntriesResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &PrincipalStateService_ServiceDesc.Streams[4], PrincipalStateService_WatchTenantUserLinks_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[trace.TraceRequest, TenantUserLinksEntriesResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PrincipalStateService_WatchTenantUserLinksClient = grpc.ServerStreamingClient[TenantUserLinksEntriesResponse]
+
+func (c *principalStateServiceClient) QueryTenantUserLinks(ctx context.Context, in *TenantUserLinksQueryRequest, opts ...grpc.CallOption) (*TenantUserLinksQueryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TenantUserLinksQueryResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_QueryTenantUserLinks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) WatchQueryTenantUserLinks(ctx context.Context, in *TenantUserLinksQueryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[TenantUserLinksQueryResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &PrincipalStateService_ServiceDesc.Streams[5], PrincipalStateService_WatchQueryTenantUserLinks_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[TenantUserLinksQueryRequest, TenantUserLinksQueryResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PrincipalStateService_WatchQueryTenantUserLinksClient = grpc.ServerStreamingClient[TenantUserLinksQueryResponse]
+
+func (c *principalStateServiceClient) GetPendingApprovals(ctx context.Context, in *PendingApprovalsGetRequest, opts ...grpc.CallOption) (*PendingApprovalsValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PendingApprovalsValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_GetPendingApprovals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) PutPendingApprovals(ctx context.Context, in *PendingApprovalsPutRequest, opts ...grpc.CallOption) (*PendingApprovalsValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PendingApprovalsValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_PutPendingApprovals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) SetPendingApprovals(ctx context.Context, in *PendingApprovalsPutRequest, opts ...grpc.CallOption) (*MapEmpty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MapEmpty)
+	err := c.cc.Invoke(ctx, PrincipalStateService_SetPendingApprovals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) RemovePendingApprovals(ctx context.Context, in *PendingApprovalsGetRequest, opts ...grpc.CallOption) (*PendingApprovalsValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PendingApprovalsValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_RemovePendingApprovals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) DeletePendingApprovals(ctx context.Context, in *PendingApprovalsGetRequest, opts ...grpc.CallOption) (*MapEmpty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MapEmpty)
+	err := c.cc.Invoke(ctx, PrincipalStateService_DeletePendingApprovals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) ContainsKeyPendingApprovals(ctx context.Context, in *PendingApprovalsGetRequest, opts ...grpc.CallOption) (*PendingApprovalsValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PendingApprovalsValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_ContainsKeyPendingApprovals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) GetAllPendingApprovals(ctx context.Context, in *PendingApprovalsGetAllRequest, opts ...grpc.CallOption) (*PendingApprovalsEntriesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PendingApprovalsEntriesResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_GetAllPendingApprovals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) KeySetPendingApprovals(ctx context.Context, in *PendingApprovalsKeysRequest, opts ...grpc.CallOption) (*PendingApprovalsKeysResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PendingApprovalsKeysResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_KeySetPendingApprovals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) SizePendingApprovals(ctx context.Context, in *PendingApprovalsSizeRequest, opts ...grpc.CallOption) (*PendingApprovalsSizeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PendingApprovalsSizeResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_SizePendingApprovals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) ClearPendingApprovals(ctx context.Context, in *PendingApprovalsClearRequest, opts ...grpc.CallOption) (*MapEmpty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MapEmpty)
+	err := c.cc.Invoke(ctx, PrincipalStateService_ClearPendingApprovals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) PutIfAbsentPendingApprovals(ctx context.Context, in *PendingApprovalsPutRequest, opts ...grpc.CallOption) (*PendingApprovalsValueResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PendingApprovalsValueResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_PutIfAbsentPendingApprovals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) WatchPendingApprovals(ctx context.Context, in *trace.TraceRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[PendingApprovalsEntriesResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &PrincipalStateService_ServiceDesc.Streams[6], PrincipalStateService_WatchPendingApprovals_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[trace.TraceRequest, PendingApprovalsEntriesResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PrincipalStateService_WatchPendingApprovalsClient = grpc.ServerStreamingClient[PendingApprovalsEntriesResponse]
+
+func (c *principalStateServiceClient) QueryPendingApprovals(ctx context.Context, in *PendingApprovalsQueryRequest, opts ...grpc.CallOption) (*PendingApprovalsQueryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PendingApprovalsQueryResponse)
+	err := c.cc.Invoke(ctx, PrincipalStateService_QueryPendingApprovals_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *principalStateServiceClient) WatchQueryPendingApprovals(ctx context.Context, in *PendingApprovalsQueryRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[PendingApprovalsQueryResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &PrincipalStateService_ServiceDesc.Streams[7], PrincipalStateService_WatchQueryPendingApprovals_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[PendingApprovalsQueryRequest, PendingApprovalsQueryResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PrincipalStateService_WatchQueryPendingApprovalsClient = grpc.ServerStreamingClient[PendingApprovalsQueryResponse]
+
+// PrincipalStateServiceServer is the server API for PrincipalStateService service.
+// All implementations must embed UnimplementedPrincipalStateServiceServer
+// for forward compatibility.
+//
+// ============================================================================
+// Auto-generated State Service (tacplus)
+// ============================================================================
+// tacplus:generated-service state
+type PrincipalStateServiceServer interface {
+	// Collection: PersonalPrincipals
+	GetPersonalPrincipals(context.Context, *PersonalPrincipalsGetRequest) (*PersonalPrincipalsValueResponse, error)
+	PutPersonalPrincipals(context.Context, *PersonalPrincipalsPutRequest) (*PersonalPrincipalsValueResponse, error)
+	SetPersonalPrincipals(context.Context, *PersonalPrincipalsPutRequest) (*MapEmpty, error)
+	RemovePersonalPrincipals(context.Context, *PersonalPrincipalsGetRequest) (*PersonalPrincipalsValueResponse, error)
+	DeletePersonalPrincipals(context.Context, *PersonalPrincipalsGetRequest) (*MapEmpty, error)
+	ContainsKeyPersonalPrincipals(context.Context, *PersonalPrincipalsGetRequest) (*PersonalPrincipalsValueResponse, error)
+	GetAllPersonalPrincipals(context.Context, *PersonalPrincipalsGetAllRequest) (*PersonalPrincipalsEntriesResponse, error)
+	KeySetPersonalPrincipals(context.Context, *PersonalPrincipalsKeysRequest) (*PersonalPrincipalsKeysResponse, error)
+	SizePersonalPrincipals(context.Context, *PersonalPrincipalsSizeRequest) (*PersonalPrincipalsSizeResponse, error)
+	ClearPersonalPrincipals(context.Context, *PersonalPrincipalsClearRequest) (*MapEmpty, error)
+	PutIfAbsentPersonalPrincipals(context.Context, *PersonalPrincipalsPutRequest) (*PersonalPrincipalsValueResponse, error)
+	WatchPersonalPrincipals(*trace.TraceRequest, grpc.ServerStreamingServer[PersonalPrincipalsEntriesResponse]) error
+	QueryPersonalPrincipals(context.Context, *PersonalPrincipalsQueryRequest) (*PersonalPrincipalsQueryResponse, error)
+	WatchQueryPersonalPrincipals(*PersonalPrincipalsQueryRequest, grpc.ServerStreamingServer[PersonalPrincipalsQueryResponse]) error
+	// Collection: People
+	GetPeople(context.Context, *PeopleGetRequest) (*PeopleValueResponse, error)
+	PutPeople(context.Context, *PeoplePutRequest) (*PeopleValueResponse, error)
+	SetPeople(context.Context, *PeoplePutRequest) (*MapEmpty, error)
+	RemovePeople(context.Context, *PeopleGetRequest) (*PeopleValueResponse, error)
+	DeletePeople(context.Context, *PeopleGetRequest) (*MapEmpty, error)
+	ContainsKeyPeople(context.Context, *PeopleGetRequest) (*PeopleValueResponse, error)
+	GetAllPeople(context.Context, *PeopleGetAllRequest) (*PeopleEntriesResponse, error)
+	KeySetPeople(context.Context, *PeopleKeysRequest) (*PeopleKeysResponse, error)
+	SizePeople(context.Context, *PeopleSizeRequest) (*PeopleSizeResponse, error)
+	ClearPeople(context.Context, *PeopleClearRequest) (*MapEmpty, error)
+	PutIfAbsentPeople(context.Context, *PeoplePutRequest) (*PeopleValueResponse, error)
+	WatchPeople(*trace.TraceRequest, grpc.ServerStreamingServer[PeopleEntriesResponse]) error
+	QueryPeople(context.Context, *PeopleQueryRequest) (*PeopleQueryResponse, error)
+	WatchQueryPeople(*PeopleQueryRequest, grpc.ServerStreamingServer[PeopleQueryResponse]) error
+	// Collection: TenantUserLinks
+	GetTenantUserLinks(context.Context, *TenantUserLinksGetRequest) (*TenantUserLinksValueResponse, error)
+	PutTenantUserLinks(context.Context, *TenantUserLinksPutRequest) (*TenantUserLinksValueResponse, error)
+	SetTenantUserLinks(context.Context, *TenantUserLinksPutRequest) (*MapEmpty, error)
+	RemoveTenantUserLinks(context.Context, *TenantUserLinksGetRequest) (*TenantUserLinksValueResponse, error)
+	DeleteTenantUserLinks(context.Context, *TenantUserLinksGetRequest) (*MapEmpty, error)
+	ContainsKeyTenantUserLinks(context.Context, *TenantUserLinksGetRequest) (*TenantUserLinksValueResponse, error)
+	GetAllTenantUserLinks(context.Context, *TenantUserLinksGetAllRequest) (*TenantUserLinksEntriesResponse, error)
+	KeySetTenantUserLinks(context.Context, *TenantUserLinksKeysRequest) (*TenantUserLinksKeysResponse, error)
+	SizeTenantUserLinks(context.Context, *TenantUserLinksSizeRequest) (*TenantUserLinksSizeResponse, error)
+	ClearTenantUserLinks(context.Context, *TenantUserLinksClearRequest) (*MapEmpty, error)
+	PutIfAbsentTenantUserLinks(context.Context, *TenantUserLinksPutRequest) (*TenantUserLinksValueResponse, error)
+	WatchTenantUserLinks(*trace.TraceRequest, grpc.ServerStreamingServer[TenantUserLinksEntriesResponse]) error
+	QueryTenantUserLinks(context.Context, *TenantUserLinksQueryRequest) (*TenantUserLinksQueryResponse, error)
+	WatchQueryTenantUserLinks(*TenantUserLinksQueryRequest, grpc.ServerStreamingServer[TenantUserLinksQueryResponse]) error
+	// Collection: PendingApprovals
+	GetPendingApprovals(context.Context, *PendingApprovalsGetRequest) (*PendingApprovalsValueResponse, error)
+	PutPendingApprovals(context.Context, *PendingApprovalsPutRequest) (*PendingApprovalsValueResponse, error)
+	SetPendingApprovals(context.Context, *PendingApprovalsPutRequest) (*MapEmpty, error)
+	RemovePendingApprovals(context.Context, *PendingApprovalsGetRequest) (*PendingApprovalsValueResponse, error)
+	DeletePendingApprovals(context.Context, *PendingApprovalsGetRequest) (*MapEmpty, error)
+	ContainsKeyPendingApprovals(context.Context, *PendingApprovalsGetRequest) (*PendingApprovalsValueResponse, error)
+	GetAllPendingApprovals(context.Context, *PendingApprovalsGetAllRequest) (*PendingApprovalsEntriesResponse, error)
+	KeySetPendingApprovals(context.Context, *PendingApprovalsKeysRequest) (*PendingApprovalsKeysResponse, error)
+	SizePendingApprovals(context.Context, *PendingApprovalsSizeRequest) (*PendingApprovalsSizeResponse, error)
+	ClearPendingApprovals(context.Context, *PendingApprovalsClearRequest) (*MapEmpty, error)
+	PutIfAbsentPendingApprovals(context.Context, *PendingApprovalsPutRequest) (*PendingApprovalsValueResponse, error)
+	WatchPendingApprovals(*trace.TraceRequest, grpc.ServerStreamingServer[PendingApprovalsEntriesResponse]) error
+	QueryPendingApprovals(context.Context, *PendingApprovalsQueryRequest) (*PendingApprovalsQueryResponse, error)
+	WatchQueryPendingApprovals(*PendingApprovalsQueryRequest, grpc.ServerStreamingServer[PendingApprovalsQueryResponse]) error
+	mustEmbedUnimplementedPrincipalStateServiceServer()
+}
+
+// UnimplementedPrincipalStateServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedPrincipalStateServiceServer struct{}
+
+func (UnimplementedPrincipalStateServiceServer) GetPersonalPrincipals(context.Context, *PersonalPrincipalsGetRequest) (*PersonalPrincipalsValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetPersonalPrincipals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) PutPersonalPrincipals(context.Context, *PersonalPrincipalsPutRequest) (*PersonalPrincipalsValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method PutPersonalPrincipals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) SetPersonalPrincipals(context.Context, *PersonalPrincipalsPutRequest) (*MapEmpty, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetPersonalPrincipals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) RemovePersonalPrincipals(context.Context, *PersonalPrincipalsGetRequest) (*PersonalPrincipalsValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RemovePersonalPrincipals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) DeletePersonalPrincipals(context.Context, *PersonalPrincipalsGetRequest) (*MapEmpty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeletePersonalPrincipals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) ContainsKeyPersonalPrincipals(context.Context, *PersonalPrincipalsGetRequest) (*PersonalPrincipalsValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ContainsKeyPersonalPrincipals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) GetAllPersonalPrincipals(context.Context, *PersonalPrincipalsGetAllRequest) (*PersonalPrincipalsEntriesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAllPersonalPrincipals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) KeySetPersonalPrincipals(context.Context, *PersonalPrincipalsKeysRequest) (*PersonalPrincipalsKeysResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method KeySetPersonalPrincipals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) SizePersonalPrincipals(context.Context, *PersonalPrincipalsSizeRequest) (*PersonalPrincipalsSizeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SizePersonalPrincipals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) ClearPersonalPrincipals(context.Context, *PersonalPrincipalsClearRequest) (*MapEmpty, error) {
+	return nil, status.Error(codes.Unimplemented, "method ClearPersonalPrincipals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) PutIfAbsentPersonalPrincipals(context.Context, *PersonalPrincipalsPutRequest) (*PersonalPrincipalsValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method PutIfAbsentPersonalPrincipals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) WatchPersonalPrincipals(*trace.TraceRequest, grpc.ServerStreamingServer[PersonalPrincipalsEntriesResponse]) error {
+	return status.Error(codes.Unimplemented, "method WatchPersonalPrincipals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) QueryPersonalPrincipals(context.Context, *PersonalPrincipalsQueryRequest) (*PersonalPrincipalsQueryResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method QueryPersonalPrincipals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) WatchQueryPersonalPrincipals(*PersonalPrincipalsQueryRequest, grpc.ServerStreamingServer[PersonalPrincipalsQueryResponse]) error {
+	return status.Error(codes.Unimplemented, "method WatchQueryPersonalPrincipals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) GetPeople(context.Context, *PeopleGetRequest) (*PeopleValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetPeople not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) PutPeople(context.Context, *PeoplePutRequest) (*PeopleValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method PutPeople not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) SetPeople(context.Context, *PeoplePutRequest) (*MapEmpty, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetPeople not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) RemovePeople(context.Context, *PeopleGetRequest) (*PeopleValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RemovePeople not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) DeletePeople(context.Context, *PeopleGetRequest) (*MapEmpty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeletePeople not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) ContainsKeyPeople(context.Context, *PeopleGetRequest) (*PeopleValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ContainsKeyPeople not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) GetAllPeople(context.Context, *PeopleGetAllRequest) (*PeopleEntriesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAllPeople not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) KeySetPeople(context.Context, *PeopleKeysRequest) (*PeopleKeysResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method KeySetPeople not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) SizePeople(context.Context, *PeopleSizeRequest) (*PeopleSizeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SizePeople not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) ClearPeople(context.Context, *PeopleClearRequest) (*MapEmpty, error) {
+	return nil, status.Error(codes.Unimplemented, "method ClearPeople not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) PutIfAbsentPeople(context.Context, *PeoplePutRequest) (*PeopleValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method PutIfAbsentPeople not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) WatchPeople(*trace.TraceRequest, grpc.ServerStreamingServer[PeopleEntriesResponse]) error {
+	return status.Error(codes.Unimplemented, "method WatchPeople not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) QueryPeople(context.Context, *PeopleQueryRequest) (*PeopleQueryResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method QueryPeople not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) WatchQueryPeople(*PeopleQueryRequest, grpc.ServerStreamingServer[PeopleQueryResponse]) error {
+	return status.Error(codes.Unimplemented, "method WatchQueryPeople not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) GetTenantUserLinks(context.Context, *TenantUserLinksGetRequest) (*TenantUserLinksValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetTenantUserLinks not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) PutTenantUserLinks(context.Context, *TenantUserLinksPutRequest) (*TenantUserLinksValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method PutTenantUserLinks not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) SetTenantUserLinks(context.Context, *TenantUserLinksPutRequest) (*MapEmpty, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetTenantUserLinks not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) RemoveTenantUserLinks(context.Context, *TenantUserLinksGetRequest) (*TenantUserLinksValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RemoveTenantUserLinks not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) DeleteTenantUserLinks(context.Context, *TenantUserLinksGetRequest) (*MapEmpty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteTenantUserLinks not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) ContainsKeyTenantUserLinks(context.Context, *TenantUserLinksGetRequest) (*TenantUserLinksValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ContainsKeyTenantUserLinks not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) GetAllTenantUserLinks(context.Context, *TenantUserLinksGetAllRequest) (*TenantUserLinksEntriesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAllTenantUserLinks not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) KeySetTenantUserLinks(context.Context, *TenantUserLinksKeysRequest) (*TenantUserLinksKeysResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method KeySetTenantUserLinks not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) SizeTenantUserLinks(context.Context, *TenantUserLinksSizeRequest) (*TenantUserLinksSizeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SizeTenantUserLinks not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) ClearTenantUserLinks(context.Context, *TenantUserLinksClearRequest) (*MapEmpty, error) {
+	return nil, status.Error(codes.Unimplemented, "method ClearTenantUserLinks not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) PutIfAbsentTenantUserLinks(context.Context, *TenantUserLinksPutRequest) (*TenantUserLinksValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method PutIfAbsentTenantUserLinks not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) WatchTenantUserLinks(*trace.TraceRequest, grpc.ServerStreamingServer[TenantUserLinksEntriesResponse]) error {
+	return status.Error(codes.Unimplemented, "method WatchTenantUserLinks not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) QueryTenantUserLinks(context.Context, *TenantUserLinksQueryRequest) (*TenantUserLinksQueryResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method QueryTenantUserLinks not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) WatchQueryTenantUserLinks(*TenantUserLinksQueryRequest, grpc.ServerStreamingServer[TenantUserLinksQueryResponse]) error {
+	return status.Error(codes.Unimplemented, "method WatchQueryTenantUserLinks not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) GetPendingApprovals(context.Context, *PendingApprovalsGetRequest) (*PendingApprovalsValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetPendingApprovals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) PutPendingApprovals(context.Context, *PendingApprovalsPutRequest) (*PendingApprovalsValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method PutPendingApprovals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) SetPendingApprovals(context.Context, *PendingApprovalsPutRequest) (*MapEmpty, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetPendingApprovals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) RemovePendingApprovals(context.Context, *PendingApprovalsGetRequest) (*PendingApprovalsValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RemovePendingApprovals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) DeletePendingApprovals(context.Context, *PendingApprovalsGetRequest) (*MapEmpty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeletePendingApprovals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) ContainsKeyPendingApprovals(context.Context, *PendingApprovalsGetRequest) (*PendingApprovalsValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ContainsKeyPendingApprovals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) GetAllPendingApprovals(context.Context, *PendingApprovalsGetAllRequest) (*PendingApprovalsEntriesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAllPendingApprovals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) KeySetPendingApprovals(context.Context, *PendingApprovalsKeysRequest) (*PendingApprovalsKeysResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method KeySetPendingApprovals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) SizePendingApprovals(context.Context, *PendingApprovalsSizeRequest) (*PendingApprovalsSizeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SizePendingApprovals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) ClearPendingApprovals(context.Context, *PendingApprovalsClearRequest) (*MapEmpty, error) {
+	return nil, status.Error(codes.Unimplemented, "method ClearPendingApprovals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) PutIfAbsentPendingApprovals(context.Context, *PendingApprovalsPutRequest) (*PendingApprovalsValueResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method PutIfAbsentPendingApprovals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) WatchPendingApprovals(*trace.TraceRequest, grpc.ServerStreamingServer[PendingApprovalsEntriesResponse]) error {
+	return status.Error(codes.Unimplemented, "method WatchPendingApprovals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) QueryPendingApprovals(context.Context, *PendingApprovalsQueryRequest) (*PendingApprovalsQueryResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method QueryPendingApprovals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) WatchQueryPendingApprovals(*PendingApprovalsQueryRequest, grpc.ServerStreamingServer[PendingApprovalsQueryResponse]) error {
+	return status.Error(codes.Unimplemented, "method WatchQueryPendingApprovals not implemented")
+}
+func (UnimplementedPrincipalStateServiceServer) mustEmbedUnimplementedPrincipalStateServiceServer() {}
+func (UnimplementedPrincipalStateServiceServer) testEmbeddedByValue()                               {}
+
+// UnsafePrincipalStateServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to PrincipalStateServiceServer will
+// result in compilation errors.
+type UnsafePrincipalStateServiceServer interface {
+	mustEmbedUnimplementedPrincipalStateServiceServer()
+}
+
+func RegisterPrincipalStateServiceServer(s grpc.ServiceRegistrar, srv PrincipalStateServiceServer) {
+	// If the following call panics, it indicates UnimplementedPrincipalStateServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&PrincipalStateService_ServiceDesc, srv)
+}
+
+func _PrincipalStateService_GetPersonalPrincipals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PersonalPrincipalsGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).GetPersonalPrincipals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_GetPersonalPrincipals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).GetPersonalPrincipals(ctx, req.(*PersonalPrincipalsGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_PutPersonalPrincipals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PersonalPrincipalsPutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).PutPersonalPrincipals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_PutPersonalPrincipals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).PutPersonalPrincipals(ctx, req.(*PersonalPrincipalsPutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_SetPersonalPrincipals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PersonalPrincipalsPutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).SetPersonalPrincipals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_SetPersonalPrincipals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).SetPersonalPrincipals(ctx, req.(*PersonalPrincipalsPutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_RemovePersonalPrincipals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PersonalPrincipalsGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).RemovePersonalPrincipals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_RemovePersonalPrincipals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).RemovePersonalPrincipals(ctx, req.(*PersonalPrincipalsGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_DeletePersonalPrincipals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PersonalPrincipalsGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).DeletePersonalPrincipals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_DeletePersonalPrincipals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).DeletePersonalPrincipals(ctx, req.(*PersonalPrincipalsGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_ContainsKeyPersonalPrincipals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PersonalPrincipalsGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).ContainsKeyPersonalPrincipals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_ContainsKeyPersonalPrincipals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).ContainsKeyPersonalPrincipals(ctx, req.(*PersonalPrincipalsGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_GetAllPersonalPrincipals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PersonalPrincipalsGetAllRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).GetAllPersonalPrincipals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_GetAllPersonalPrincipals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).GetAllPersonalPrincipals(ctx, req.(*PersonalPrincipalsGetAllRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_KeySetPersonalPrincipals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PersonalPrincipalsKeysRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).KeySetPersonalPrincipals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_KeySetPersonalPrincipals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).KeySetPersonalPrincipals(ctx, req.(*PersonalPrincipalsKeysRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_SizePersonalPrincipals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PersonalPrincipalsSizeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).SizePersonalPrincipals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_SizePersonalPrincipals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).SizePersonalPrincipals(ctx, req.(*PersonalPrincipalsSizeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_ClearPersonalPrincipals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PersonalPrincipalsClearRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).ClearPersonalPrincipals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_ClearPersonalPrincipals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).ClearPersonalPrincipals(ctx, req.(*PersonalPrincipalsClearRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_PutIfAbsentPersonalPrincipals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PersonalPrincipalsPutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).PutIfAbsentPersonalPrincipals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_PutIfAbsentPersonalPrincipals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).PutIfAbsentPersonalPrincipals(ctx, req.(*PersonalPrincipalsPutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_WatchPersonalPrincipals_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(trace.TraceRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(PrincipalStateServiceServer).WatchPersonalPrincipals(m, &grpc.GenericServerStream[trace.TraceRequest, PersonalPrincipalsEntriesResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PrincipalStateService_WatchPersonalPrincipalsServer = grpc.ServerStreamingServer[PersonalPrincipalsEntriesResponse]
+
+func _PrincipalStateService_QueryPersonalPrincipals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PersonalPrincipalsQueryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).QueryPersonalPrincipals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_QueryPersonalPrincipals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).QueryPersonalPrincipals(ctx, req.(*PersonalPrincipalsQueryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_WatchQueryPersonalPrincipals_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(PersonalPrincipalsQueryRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(PrincipalStateServiceServer).WatchQueryPersonalPrincipals(m, &grpc.GenericServerStream[PersonalPrincipalsQueryRequest, PersonalPrincipalsQueryResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PrincipalStateService_WatchQueryPersonalPrincipalsServer = grpc.ServerStreamingServer[PersonalPrincipalsQueryResponse]
+
+func _PrincipalStateService_GetPeople_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PeopleGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).GetPeople(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_GetPeople_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).GetPeople(ctx, req.(*PeopleGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_PutPeople_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PeoplePutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).PutPeople(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_PutPeople_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).PutPeople(ctx, req.(*PeoplePutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_SetPeople_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PeoplePutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).SetPeople(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_SetPeople_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).SetPeople(ctx, req.(*PeoplePutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_RemovePeople_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PeopleGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).RemovePeople(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_RemovePeople_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).RemovePeople(ctx, req.(*PeopleGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_DeletePeople_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PeopleGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).DeletePeople(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_DeletePeople_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).DeletePeople(ctx, req.(*PeopleGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_ContainsKeyPeople_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PeopleGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).ContainsKeyPeople(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_ContainsKeyPeople_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).ContainsKeyPeople(ctx, req.(*PeopleGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_GetAllPeople_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PeopleGetAllRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).GetAllPeople(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_GetAllPeople_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).GetAllPeople(ctx, req.(*PeopleGetAllRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_KeySetPeople_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PeopleKeysRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).KeySetPeople(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_KeySetPeople_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).KeySetPeople(ctx, req.(*PeopleKeysRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_SizePeople_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PeopleSizeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).SizePeople(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_SizePeople_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).SizePeople(ctx, req.(*PeopleSizeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_ClearPeople_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PeopleClearRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).ClearPeople(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_ClearPeople_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).ClearPeople(ctx, req.(*PeopleClearRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_PutIfAbsentPeople_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PeoplePutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).PutIfAbsentPeople(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_PutIfAbsentPeople_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).PutIfAbsentPeople(ctx, req.(*PeoplePutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_WatchPeople_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(trace.TraceRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(PrincipalStateServiceServer).WatchPeople(m, &grpc.GenericServerStream[trace.TraceRequest, PeopleEntriesResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PrincipalStateService_WatchPeopleServer = grpc.ServerStreamingServer[PeopleEntriesResponse]
+
+func _PrincipalStateService_QueryPeople_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PeopleQueryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).QueryPeople(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_QueryPeople_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).QueryPeople(ctx, req.(*PeopleQueryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_WatchQueryPeople_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(PeopleQueryRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(PrincipalStateServiceServer).WatchQueryPeople(m, &grpc.GenericServerStream[PeopleQueryRequest, PeopleQueryResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PrincipalStateService_WatchQueryPeopleServer = grpc.ServerStreamingServer[PeopleQueryResponse]
+
+func _PrincipalStateService_GetTenantUserLinks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TenantUserLinksGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).GetTenantUserLinks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_GetTenantUserLinks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).GetTenantUserLinks(ctx, req.(*TenantUserLinksGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_PutTenantUserLinks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TenantUserLinksPutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).PutTenantUserLinks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_PutTenantUserLinks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).PutTenantUserLinks(ctx, req.(*TenantUserLinksPutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_SetTenantUserLinks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TenantUserLinksPutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).SetTenantUserLinks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_SetTenantUserLinks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).SetTenantUserLinks(ctx, req.(*TenantUserLinksPutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_RemoveTenantUserLinks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TenantUserLinksGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).RemoveTenantUserLinks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_RemoveTenantUserLinks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).RemoveTenantUserLinks(ctx, req.(*TenantUserLinksGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_DeleteTenantUserLinks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TenantUserLinksGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).DeleteTenantUserLinks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_DeleteTenantUserLinks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).DeleteTenantUserLinks(ctx, req.(*TenantUserLinksGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_ContainsKeyTenantUserLinks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TenantUserLinksGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).ContainsKeyTenantUserLinks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_ContainsKeyTenantUserLinks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).ContainsKeyTenantUserLinks(ctx, req.(*TenantUserLinksGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_GetAllTenantUserLinks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TenantUserLinksGetAllRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).GetAllTenantUserLinks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_GetAllTenantUserLinks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).GetAllTenantUserLinks(ctx, req.(*TenantUserLinksGetAllRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_KeySetTenantUserLinks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TenantUserLinksKeysRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).KeySetTenantUserLinks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_KeySetTenantUserLinks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).KeySetTenantUserLinks(ctx, req.(*TenantUserLinksKeysRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_SizeTenantUserLinks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TenantUserLinksSizeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).SizeTenantUserLinks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_SizeTenantUserLinks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).SizeTenantUserLinks(ctx, req.(*TenantUserLinksSizeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_ClearTenantUserLinks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TenantUserLinksClearRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).ClearTenantUserLinks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_ClearTenantUserLinks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).ClearTenantUserLinks(ctx, req.(*TenantUserLinksClearRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_PutIfAbsentTenantUserLinks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TenantUserLinksPutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).PutIfAbsentTenantUserLinks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_PutIfAbsentTenantUserLinks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).PutIfAbsentTenantUserLinks(ctx, req.(*TenantUserLinksPutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_WatchTenantUserLinks_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(trace.TraceRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(PrincipalStateServiceServer).WatchTenantUserLinks(m, &grpc.GenericServerStream[trace.TraceRequest, TenantUserLinksEntriesResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PrincipalStateService_WatchTenantUserLinksServer = grpc.ServerStreamingServer[TenantUserLinksEntriesResponse]
+
+func _PrincipalStateService_QueryTenantUserLinks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TenantUserLinksQueryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).QueryTenantUserLinks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_QueryTenantUserLinks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).QueryTenantUserLinks(ctx, req.(*TenantUserLinksQueryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_WatchQueryTenantUserLinks_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(TenantUserLinksQueryRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(PrincipalStateServiceServer).WatchQueryTenantUserLinks(m, &grpc.GenericServerStream[TenantUserLinksQueryRequest, TenantUserLinksQueryResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PrincipalStateService_WatchQueryTenantUserLinksServer = grpc.ServerStreamingServer[TenantUserLinksQueryResponse]
+
+func _PrincipalStateService_GetPendingApprovals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PendingApprovalsGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).GetPendingApprovals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_GetPendingApprovals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).GetPendingApprovals(ctx, req.(*PendingApprovalsGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_PutPendingApprovals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PendingApprovalsPutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).PutPendingApprovals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_PutPendingApprovals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).PutPendingApprovals(ctx, req.(*PendingApprovalsPutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_SetPendingApprovals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PendingApprovalsPutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).SetPendingApprovals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_SetPendingApprovals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).SetPendingApprovals(ctx, req.(*PendingApprovalsPutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_RemovePendingApprovals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PendingApprovalsGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).RemovePendingApprovals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_RemovePendingApprovals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).RemovePendingApprovals(ctx, req.(*PendingApprovalsGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_DeletePendingApprovals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PendingApprovalsGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).DeletePendingApprovals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_DeletePendingApprovals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).DeletePendingApprovals(ctx, req.(*PendingApprovalsGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_ContainsKeyPendingApprovals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PendingApprovalsGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).ContainsKeyPendingApprovals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_ContainsKeyPendingApprovals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).ContainsKeyPendingApprovals(ctx, req.(*PendingApprovalsGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_GetAllPendingApprovals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PendingApprovalsGetAllRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).GetAllPendingApprovals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_GetAllPendingApprovals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).GetAllPendingApprovals(ctx, req.(*PendingApprovalsGetAllRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_KeySetPendingApprovals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PendingApprovalsKeysRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).KeySetPendingApprovals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_KeySetPendingApprovals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).KeySetPendingApprovals(ctx, req.(*PendingApprovalsKeysRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_SizePendingApprovals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PendingApprovalsSizeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).SizePendingApprovals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_SizePendingApprovals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).SizePendingApprovals(ctx, req.(*PendingApprovalsSizeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_ClearPendingApprovals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PendingApprovalsClearRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).ClearPendingApprovals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_ClearPendingApprovals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).ClearPendingApprovals(ctx, req.(*PendingApprovalsClearRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_PutIfAbsentPendingApprovals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PendingApprovalsPutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).PutIfAbsentPendingApprovals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_PutIfAbsentPendingApprovals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).PutIfAbsentPendingApprovals(ctx, req.(*PendingApprovalsPutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_WatchPendingApprovals_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(trace.TraceRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(PrincipalStateServiceServer).WatchPendingApprovals(m, &grpc.GenericServerStream[trace.TraceRequest, PendingApprovalsEntriesResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PrincipalStateService_WatchPendingApprovalsServer = grpc.ServerStreamingServer[PendingApprovalsEntriesResponse]
+
+func _PrincipalStateService_QueryPendingApprovals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PendingApprovalsQueryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PrincipalStateServiceServer).QueryPendingApprovals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PrincipalStateService_QueryPendingApprovals_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PrincipalStateServiceServer).QueryPendingApprovals(ctx, req.(*PendingApprovalsQueryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PrincipalStateService_WatchQueryPendingApprovals_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(PendingApprovalsQueryRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(PrincipalStateServiceServer).WatchQueryPendingApprovals(m, &grpc.GenericServerStream[PendingApprovalsQueryRequest, PendingApprovalsQueryResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type PrincipalStateService_WatchQueryPendingApprovalsServer = grpc.ServerStreamingServer[PendingApprovalsQueryResponse]
+
+// PrincipalStateService_ServiceDesc is the grpc.ServiceDesc for PrincipalStateService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var PrincipalStateService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kernel.PrincipalStateService",
+	HandlerType: (*PrincipalStateServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetPersonalPrincipals",
+			Handler:    _PrincipalStateService_GetPersonalPrincipals_Handler,
+		},
+		{
+			MethodName: "PutPersonalPrincipals",
+			Handler:    _PrincipalStateService_PutPersonalPrincipals_Handler,
+		},
+		{
+			MethodName: "SetPersonalPrincipals",
+			Handler:    _PrincipalStateService_SetPersonalPrincipals_Handler,
+		},
+		{
+			MethodName: "RemovePersonalPrincipals",
+			Handler:    _PrincipalStateService_RemovePersonalPrincipals_Handler,
+		},
+		{
+			MethodName: "DeletePersonalPrincipals",
+			Handler:    _PrincipalStateService_DeletePersonalPrincipals_Handler,
+		},
+		{
+			MethodName: "ContainsKeyPersonalPrincipals",
+			Handler:    _PrincipalStateService_ContainsKeyPersonalPrincipals_Handler,
+		},
+		{
+			MethodName: "GetAllPersonalPrincipals",
+			Handler:    _PrincipalStateService_GetAllPersonalPrincipals_Handler,
+		},
+		{
+			MethodName: "KeySetPersonalPrincipals",
+			Handler:    _PrincipalStateService_KeySetPersonalPrincipals_Handler,
+		},
+		{
+			MethodName: "SizePersonalPrincipals",
+			Handler:    _PrincipalStateService_SizePersonalPrincipals_Handler,
+		},
+		{
+			MethodName: "ClearPersonalPrincipals",
+			Handler:    _PrincipalStateService_ClearPersonalPrincipals_Handler,
+		},
+		{
+			MethodName: "PutIfAbsentPersonalPrincipals",
+			Handler:    _PrincipalStateService_PutIfAbsentPersonalPrincipals_Handler,
+		},
+		{
+			MethodName: "QueryPersonalPrincipals",
+			Handler:    _PrincipalStateService_QueryPersonalPrincipals_Handler,
+		},
+		{
+			MethodName: "GetPeople",
+			Handler:    _PrincipalStateService_GetPeople_Handler,
+		},
+		{
+			MethodName: "PutPeople",
+			Handler:    _PrincipalStateService_PutPeople_Handler,
+		},
+		{
+			MethodName: "SetPeople",
+			Handler:    _PrincipalStateService_SetPeople_Handler,
+		},
+		{
+			MethodName: "RemovePeople",
+			Handler:    _PrincipalStateService_RemovePeople_Handler,
+		},
+		{
+			MethodName: "DeletePeople",
+			Handler:    _PrincipalStateService_DeletePeople_Handler,
+		},
+		{
+			MethodName: "ContainsKeyPeople",
+			Handler:    _PrincipalStateService_ContainsKeyPeople_Handler,
+		},
+		{
+			MethodName: "GetAllPeople",
+			Handler:    _PrincipalStateService_GetAllPeople_Handler,
+		},
+		{
+			MethodName: "KeySetPeople",
+			Handler:    _PrincipalStateService_KeySetPeople_Handler,
+		},
+		{
+			MethodName: "SizePeople",
+			Handler:    _PrincipalStateService_SizePeople_Handler,
+		},
+		{
+			MethodName: "ClearPeople",
+			Handler:    _PrincipalStateService_ClearPeople_Handler,
+		},
+		{
+			MethodName: "PutIfAbsentPeople",
+			Handler:    _PrincipalStateService_PutIfAbsentPeople_Handler,
+		},
+		{
+			MethodName: "QueryPeople",
+			Handler:    _PrincipalStateService_QueryPeople_Handler,
+		},
+		{
+			MethodName: "GetTenantUserLinks",
+			Handler:    _PrincipalStateService_GetTenantUserLinks_Handler,
+		},
+		{
+			MethodName: "PutTenantUserLinks",
+			Handler:    _PrincipalStateService_PutTenantUserLinks_Handler,
+		},
+		{
+			MethodName: "SetTenantUserLinks",
+			Handler:    _PrincipalStateService_SetTenantUserLinks_Handler,
+		},
+		{
+			MethodName: "RemoveTenantUserLinks",
+			Handler:    _PrincipalStateService_RemoveTenantUserLinks_Handler,
+		},
+		{
+			MethodName: "DeleteTenantUserLinks",
+			Handler:    _PrincipalStateService_DeleteTenantUserLinks_Handler,
+		},
+		{
+			MethodName: "ContainsKeyTenantUserLinks",
+			Handler:    _PrincipalStateService_ContainsKeyTenantUserLinks_Handler,
+		},
+		{
+			MethodName: "GetAllTenantUserLinks",
+			Handler:    _PrincipalStateService_GetAllTenantUserLinks_Handler,
+		},
+		{
+			MethodName: "KeySetTenantUserLinks",
+			Handler:    _PrincipalStateService_KeySetTenantUserLinks_Handler,
+		},
+		{
+			MethodName: "SizeTenantUserLinks",
+			Handler:    _PrincipalStateService_SizeTenantUserLinks_Handler,
+		},
+		{
+			MethodName: "ClearTenantUserLinks",
+			Handler:    _PrincipalStateService_ClearTenantUserLinks_Handler,
+		},
+		{
+			MethodName: "PutIfAbsentTenantUserLinks",
+			Handler:    _PrincipalStateService_PutIfAbsentTenantUserLinks_Handler,
+		},
+		{
+			MethodName: "QueryTenantUserLinks",
+			Handler:    _PrincipalStateService_QueryTenantUserLinks_Handler,
+		},
+		{
+			MethodName: "GetPendingApprovals",
+			Handler:    _PrincipalStateService_GetPendingApprovals_Handler,
+		},
+		{
+			MethodName: "PutPendingApprovals",
+			Handler:    _PrincipalStateService_PutPendingApprovals_Handler,
+		},
+		{
+			MethodName: "SetPendingApprovals",
+			Handler:    _PrincipalStateService_SetPendingApprovals_Handler,
+		},
+		{
+			MethodName: "RemovePendingApprovals",
+			Handler:    _PrincipalStateService_RemovePendingApprovals_Handler,
+		},
+		{
+			MethodName: "DeletePendingApprovals",
+			Handler:    _PrincipalStateService_DeletePendingApprovals_Handler,
+		},
+		{
+			MethodName: "ContainsKeyPendingApprovals",
+			Handler:    _PrincipalStateService_ContainsKeyPendingApprovals_Handler,
+		},
+		{
+			MethodName: "GetAllPendingApprovals",
+			Handler:    _PrincipalStateService_GetAllPendingApprovals_Handler,
+		},
+		{
+			MethodName: "KeySetPendingApprovals",
+			Handler:    _PrincipalStateService_KeySetPendingApprovals_Handler,
+		},
+		{
+			MethodName: "SizePendingApprovals",
+			Handler:    _PrincipalStateService_SizePendingApprovals_Handler,
+		},
+		{
+			MethodName: "ClearPendingApprovals",
+			Handler:    _PrincipalStateService_ClearPendingApprovals_Handler,
+		},
+		{
+			MethodName: "PutIfAbsentPendingApprovals",
+			Handler:    _PrincipalStateService_PutIfAbsentPendingApprovals_Handler,
+		},
+		{
+			MethodName: "QueryPendingApprovals",
+			Handler:    _PrincipalStateService_QueryPendingApprovals_Handler,
+		},
+	},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "WatchPersonalPrincipals",
+			Handler:       _PrincipalStateService_WatchPersonalPrincipals_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "WatchQueryPersonalPrincipals",
+			Handler:       _PrincipalStateService_WatchQueryPersonalPrincipals_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "WatchPeople",
+			Handler:       _PrincipalStateService_WatchPeople_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "WatchQueryPeople",
+			Handler:       _PrincipalStateService_WatchQueryPeople_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "WatchTenantUserLinks",
+			Handler:       _PrincipalStateService_WatchTenantUserLinks_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "WatchQueryTenantUserLinks",
+			Handler:       _PrincipalStateService_WatchQueryTenantUserLinks_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "WatchPendingApprovals",
+			Handler:       _PrincipalStateService_WatchPendingApprovals_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "WatchQueryPendingApprovals",
+			Handler:       _PrincipalStateService_WatchQueryPendingApprovals_Handler,
 			ServerStreams: true,
 		},
 	},

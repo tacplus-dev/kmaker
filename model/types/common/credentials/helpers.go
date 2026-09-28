@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -28,9 +28,9 @@ import (
 	"strings"
 
 	"github.com/pelletier/go-toml/v2"
-	entitlements "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/entitlements"
-	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/errors"
-	jwk "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/jwk"
+	entitlements "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/entitlements"
+	protoerrors "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/errors"
+	jwk "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/jwk"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"

@@ -14,9 +14,9 @@ import (
 	"testing"
 	"time"
 
-	keypb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/key"
-	x509pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/x509"
-	pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
+	keypb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/key"
+	x509pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
+	pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

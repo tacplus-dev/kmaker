@@ -5,7 +5,7 @@
 
 ✗ Search (grep)
   │ "uri_sans|IsCa|dns_names|instance_id" in **/*.{go}
-  │ (~/workspace/gitlab/secondstarcavalier/schematic/platform/services/kmaker/internal)
+  │ (~/workspace/gitlab/seabeam/schematic/platform/services/kmaker/internal)
   └ Permission denied and could not request permission from user
 
 ✔ Todo completed 2 items

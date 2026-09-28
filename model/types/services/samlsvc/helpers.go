@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -28,9 +28,9 @@ import (
 	"strings"
 
 	"github.com/pelletier/go-toml/v2"
-	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/errors"
-	saml "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/saml"
-	utils "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/utils"
+	protoerrors "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/errors"
+	saml "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/saml"
+	utils "gitlab.com/seabeam/schematic/platform/services/kmaker/model/utils"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"gopkg.in/yaml.v3"
@@ -426,12 +426,13 @@ func OutboundRpcIdValues() []OutboundRpcId {
 		OutboundRpcId_OUTBOUND_RPC_ID_ALL_EXECUTORS,
 		OutboundRpcId_OUTBOUND_RPC_ID_MINT_ASSERTION,
 		OutboundRpcId_OUTBOUND_RPC_ID_LIST_S_PS,
+		OutboundRpcId_OUTBOUND_RPC_ID_BROKER_OUTBOUND_MCP_SESSION,
 	}
 }
 
 // OutboundRpcIdStringValues returns all valid OutboundRpcId names as strings
 func OutboundRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "mint-assertion", "list-s-ps"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "mint-assertion", "list-s-ps", "broker-outbound-mcp-session"}
 }
 
 // ParseOutboundRpcId converts a string to a OutboundRpcId enum value
@@ -452,6 +453,8 @@ func ParseOutboundRpcId(s string) (OutboundRpcId, error) {
 		return OutboundRpcId_OUTBOUND_RPC_ID_MINT_ASSERTION, nil
 	case "list-s-ps", "outbound-rpc-id-list-s-ps":
 		return OutboundRpcId_OUTBOUND_RPC_ID_LIST_S_PS, nil
+	case "broker-outbound-mcp-session", "outbound-rpc-id-broker-outbound-mcp-session":
+		return OutboundRpcId_OUTBOUND_RPC_ID_BROKER_OUTBOUND_MCP_SESSION, nil
 	default:
 		return OutboundRpcId_OUTBOUND_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid outboundrpcid %s, expecting one of: %v", s, OutboundRpcIdStringValues())
 	}
@@ -492,6 +495,8 @@ func OutboundRpcIdToString(v OutboundRpcId) string {
 		return "mint-assertion"
 	case OutboundRpcId_OUTBOUND_RPC_ID_LIST_S_PS:
 		return "list-s-ps"
+	case OutboundRpcId_OUTBOUND_RPC_ID_BROKER_OUTBOUND_MCP_SESSION:
+		return "broker-outbound-mcp-session"
 	default:
 		return ""
 	}
@@ -524,6 +529,8 @@ func ParseOutboundRpcIdLiberal(s string) OutboundRpcId {
 		return OutboundRpcId_OUTBOUND_RPC_ID_MINT_ASSERTION
 	case "list-s-ps", "outbound-rpc-id-list-s-ps":
 		return OutboundRpcId_OUTBOUND_RPC_ID_LIST_S_PS
+	case "broker-outbound-mcp-session", "outbound-rpc-id-broker-outbound-mcp-session":
+		return OutboundRpcId_OUTBOUND_RPC_ID_BROKER_OUTBOUND_MCP_SESSION
 	default:
 		return OutboundRpcId_OUTBOUND_RPC_ID_UNSPECIFIED
 	}
@@ -544,6 +551,8 @@ func OutboundRpcIdToSpecName(v OutboundRpcId) string {
 		return "OUTBOUND_RPC_ID_MINT_ASSERTION"
 	case OutboundRpcId_OUTBOUND_RPC_ID_LIST_S_PS:
 		return "OUTBOUND_RPC_ID_LIST_S_PS"
+	case OutboundRpcId_OUTBOUND_RPC_ID_BROKER_OUTBOUND_MCP_SESSION:
+		return "OUTBOUND_RPC_ID_BROKER_OUTBOUND_MCP_SESSION"
 	default:
 		return ""
 	}
@@ -558,12 +567,13 @@ func MetadataRpcIdValues() []MetadataRpcId {
 		MetadataRpcId_METADATA_RPC_ID_GET_IDP_METADATA,
 		MetadataRpcId_METADATA_RPC_ID_GET_SP_METADATA,
 		MetadataRpcId_METADATA_RPC_ID_GET_IDP_DESCRIPTOR,
+		MetadataRpcId_METADATA_RPC_ID_BROKER_METADATA_MCP_SESSION,
 	}
 }
 
 // MetadataRpcIdStringValues returns all valid MetadataRpcId names as strings
 func MetadataRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "get-idp-metadata", "get-sp-metadata", "get-idp-descriptor"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "get-idp-metadata", "get-sp-metadata", "get-idp-descriptor", "broker-metadata-mcp-session"}
 }
 
 // ParseMetadataRpcId converts a string to a MetadataRpcId enum value
@@ -586,6 +596,8 @@ func ParseMetadataRpcId(s string) (MetadataRpcId, error) {
 		return MetadataRpcId_METADATA_RPC_ID_GET_SP_METADATA, nil
 	case "get-idp-descriptor", "metadata-rpc-id-get-idp-descriptor":
 		return MetadataRpcId_METADATA_RPC_ID_GET_IDP_DESCRIPTOR, nil
+	case "broker-metadata-mcp-session", "metadata-rpc-id-broker-metadata-mcp-session":
+		return MetadataRpcId_METADATA_RPC_ID_BROKER_METADATA_MCP_SESSION, nil
 	default:
 		return MetadataRpcId_METADATA_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid metadatarpcid %s, expecting one of: %v", s, MetadataRpcIdStringValues())
 	}
@@ -628,6 +640,8 @@ func MetadataRpcIdToString(v MetadataRpcId) string {
 		return "get-sp-metadata"
 	case MetadataRpcId_METADATA_RPC_ID_GET_IDP_DESCRIPTOR:
 		return "get-idp-descriptor"
+	case MetadataRpcId_METADATA_RPC_ID_BROKER_METADATA_MCP_SESSION:
+		return "broker-metadata-mcp-session"
 	default:
 		return ""
 	}
@@ -662,6 +676,8 @@ func ParseMetadataRpcIdLiberal(s string) MetadataRpcId {
 		return MetadataRpcId_METADATA_RPC_ID_GET_SP_METADATA
 	case "get-idp-descriptor", "metadata-rpc-id-get-idp-descriptor":
 		return MetadataRpcId_METADATA_RPC_ID_GET_IDP_DESCRIPTOR
+	case "broker-metadata-mcp-session", "metadata-rpc-id-broker-metadata-mcp-session":
+		return MetadataRpcId_METADATA_RPC_ID_BROKER_METADATA_MCP_SESSION
 	default:
 		return MetadataRpcId_METADATA_RPC_ID_UNSPECIFIED
 	}
@@ -684,6 +700,8 @@ func MetadataRpcIdToSpecName(v MetadataRpcId) string {
 		return "METADATA_RPC_ID_GET_SP_METADATA"
 	case MetadataRpcId_METADATA_RPC_ID_GET_IDP_DESCRIPTOR:
 		return "METADATA_RPC_ID_GET_IDP_DESCRIPTOR"
+	case MetadataRpcId_METADATA_RPC_ID_BROKER_METADATA_MCP_SESSION:
+		return "METADATA_RPC_ID_BROKER_METADATA_MCP_SESSION"
 	default:
 		return ""
 	}

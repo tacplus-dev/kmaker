@@ -4,7 +4,7 @@
 syntax = "proto3";
 
 package services_config;
-option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/services_config";
+option go_package = "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/services_config";
 
 import "services/sentinel.proto";
 import "services/gateway.proto";
@@ -20,7 +20,16 @@ import "services/messaging.proto";
 import "services/scottyagent.proto";
 import "services/mailbox.proto";
 import "services/llmsettings.proto";
+import "services/personalauth.proto";
+import "services/blobstore.proto";
 import "services/scotty.proto";
+import "services/scottypersonal.proto";
+import "services/work.proto";
+import "services/weather.proto";
+import "services/llmproxy.proto";
+import "services/profile.proto";
+import "services/docmanager.proto";
+import "services/reveille.proto";
 
 message Services {
   sentinel.Config sentinel_config = 5;
@@ -37,5 +46,14 @@ message Services {
   scottyagent.Config scottyagent_config = 54;
   mailbox.Config mailbox_config = 55;
   llmsettings.Config llmsettings_config = 56;
+  personalauth.Config personalauth_config = 57;
+  blobstore.Config blobstore_config = 58;
   scotty.Config scotty_config = 70;
+  scottypersonal.Config scottypersonal_config = 72;
+  work.Config work_config = 73;
+  weather.Config weather_config = 74;
+  llmproxy.Config llmproxy_config = 75;
+  profile.Config profile_config = 76;
+  docmanager.Config docmanager_config = 80;
+  reveille.Config reveille_config = 81;
 }

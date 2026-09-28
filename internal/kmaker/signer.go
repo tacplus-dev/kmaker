@@ -18,10 +18,10 @@ import (
 	"strings"
 	"time"
 
-	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/spiffe"
-	keypb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/key"
-	x509pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/x509"
-	pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
+	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/spiffe"
+	keypb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/key"
+	x509pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
+	pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker"
 )
 
 // minSubjectRSAKeyBits is the smallest RSA subject key kmaker will sign. It

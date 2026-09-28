@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
-	keypb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/key"
-	x509pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/x509"
+	pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker"
+	keypb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/key"
+	x509pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
 )
 
 // servingTLSChain builds a self-signed leaf usable as kmaker's serving credential.

@@ -9,11 +9,11 @@ package service_health
 
 import (
 	"context"
-	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/service_im"
-	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/servicemanager"
-	types "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kernel"
-	healthreport_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/healthreport"
-	trace_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
+	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/service_im"
+	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/servicemanager"
+	types "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kernel"
+	healthreport_pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/healthreport"
+	trace_pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
 	"math/rand"

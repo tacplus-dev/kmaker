@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -28,8 +28,8 @@ import (
 	"strings"
 
 	"github.com/pelletier/go-toml/v2"
-	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/errors"
-	utils "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/utils"
+	protoerrors "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/errors"
+	utils "gitlab.com/seabeam/schematic/platform/services/kmaker/model/utils"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"gopkg.in/yaml.v3"
@@ -446,12 +446,13 @@ func AuthRpcIdValues() []AuthRpcId {
 		AuthRpcId_AUTH_RPC_ID_MINT_CALLBACK_TOKENS,
 		AuthRpcId_AUTH_RPC_ID_REVOKE_SESSION,
 		AuthRpcId_AUTH_RPC_ID_BROKER_CLI_AUTH,
+		AuthRpcId_AUTH_RPC_ID_BROKER_AUTH_MCP_SESSION,
 	}
 }
 
 // AuthRpcIdStringValues returns all valid AuthRpcId names as strings
 func AuthRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "list-providers", "authorize", "mint-callback-tokens", "revoke-session", "broker-cli-auth"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "list-providers", "authorize", "mint-callback-tokens", "revoke-session", "broker-cli-auth", "broker-auth-mcp-session"}
 }
 
 // ParseAuthRpcId converts a string to a AuthRpcId enum value
@@ -478,6 +479,8 @@ func ParseAuthRpcId(s string) (AuthRpcId, error) {
 		return AuthRpcId_AUTH_RPC_ID_REVOKE_SESSION, nil
 	case "broker-cli-auth", "auth-rpc-id-broker-cli-auth":
 		return AuthRpcId_AUTH_RPC_ID_BROKER_CLI_AUTH, nil
+	case "broker-auth-mcp-session", "auth-rpc-id-broker-auth-mcp-session":
+		return AuthRpcId_AUTH_RPC_ID_BROKER_AUTH_MCP_SESSION, nil
 	default:
 		return AuthRpcId_AUTH_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid authrpcid %s, expecting one of: %v", s, AuthRpcIdStringValues())
 	}
@@ -524,6 +527,8 @@ func AuthRpcIdToString(v AuthRpcId) string {
 		return "revoke-session"
 	case AuthRpcId_AUTH_RPC_ID_BROKER_CLI_AUTH:
 		return "broker-cli-auth"
+	case AuthRpcId_AUTH_RPC_ID_BROKER_AUTH_MCP_SESSION:
+		return "broker-auth-mcp-session"
 	default:
 		return ""
 	}
@@ -562,6 +567,8 @@ func ParseAuthRpcIdLiberal(s string) AuthRpcId {
 		return AuthRpcId_AUTH_RPC_ID_REVOKE_SESSION
 	case "broker-cli-auth", "auth-rpc-id-broker-cli-auth":
 		return AuthRpcId_AUTH_RPC_ID_BROKER_CLI_AUTH
+	case "broker-auth-mcp-session", "auth-rpc-id-broker-auth-mcp-session":
+		return AuthRpcId_AUTH_RPC_ID_BROKER_AUTH_MCP_SESSION
 	default:
 		return AuthRpcId_AUTH_RPC_ID_UNSPECIFIED
 	}
@@ -588,6 +595,8 @@ func AuthRpcIdToSpecName(v AuthRpcId) string {
 		return "AUTH_RPC_ID_REVOKE_SESSION"
 	case AuthRpcId_AUTH_RPC_ID_BROKER_CLI_AUTH:
 		return "AUTH_RPC_ID_BROKER_CLI_AUTH"
+	case AuthRpcId_AUTH_RPC_ID_BROKER_AUTH_MCP_SESSION:
+		return "AUTH_RPC_ID_BROKER_AUTH_MCP_SESSION"
 	default:
 		return ""
 	}
@@ -949,19 +958,20 @@ func ConfigToTOML(v *Config) ([]byte, error) {
 // ProviderConfigJSON represents ProviderConfig in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type providerconfigJSON struct {
-	Enable                bool     `json:"enable,omitempty"`
-	Name                  string   `json:"name,omitempty"`
-	Domains               []string `json:"domains,omitempty"`
-	Issuer                string   `json:"issuer,omitempty"`
-	ClientId              string   `json:"client_id,omitempty"`
-	ClientSecret          string   `json:"client_secret,omitempty"`
-	AuthorizationEndpoint string   `json:"authorization_endpoint,omitempty"`
-	TokenEndpoint         string   `json:"token_endpoint,omitempty"`
-	EndSessionEndpoint    string   `json:"end_session_endpoint,omitempty"`
-	Scopes                []string `json:"scopes,omitempty"`
-	CaPem                 string   `json:"ca_pem,omitempty"`
-	TraceId               string   `json:"trace_id,omitempty"`
-	Noop                  bool     `json:"noop,omitempty"`
+	Enable                     bool     `json:"enable,omitempty"`
+	Name                       string   `json:"name,omitempty"`
+	Domains                    []string `json:"domains,omitempty"`
+	Issuer                     string   `json:"issuer,omitempty"`
+	ClientId                   string   `json:"client_id,omitempty"`
+	ClientSecret               string   `json:"client_secret,omitempty"`
+	AuthorizationEndpoint      string   `json:"authorization_endpoint,omitempty"`
+	TokenEndpoint              string   `json:"token_endpoint,omitempty"`
+	EndSessionEndpoint         string   `json:"end_session_endpoint,omitempty"`
+	Scopes                     []string `json:"scopes,omitempty"`
+	CaPem                      string   `json:"ca_pem,omitempty"`
+	AllowedRedirectUriPrefixes []string `json:"allowed_redirect_uri_prefixes,omitempty"`
+	TraceId                    string   `json:"trace_id,omitempty"`
+	Noop                       bool     `json:"noop,omitempty"`
 }
 
 // ProviderConfigToJSON converts ProviderConfig to JSON bytes.
@@ -972,19 +982,20 @@ func ProviderConfigToJSON(v *ProviderConfig) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := providerconfigJSON{
-		Enable:                v.Enable,
-		Name:                  v.Name,
-		Domains:               v.Domains,
-		Issuer:                v.Issuer,
-		ClientId:              v.ClientId,
-		ClientSecret:          v.ClientSecret,
-		AuthorizationEndpoint: v.AuthorizationEndpoint,
-		TokenEndpoint:         v.TokenEndpoint,
-		EndSessionEndpoint:    v.EndSessionEndpoint,
-		Scopes:                v.Scopes,
-		CaPem:                 v.CaPem,
-		TraceId:               v.TraceId,
-		Noop:                  v.Noop,
+		Enable:                     v.Enable,
+		Name:                       v.Name,
+		Domains:                    v.Domains,
+		Issuer:                     v.Issuer,
+		ClientId:                   v.ClientId,
+		ClientSecret:               v.ClientSecret,
+		AuthorizationEndpoint:      v.AuthorizationEndpoint,
+		TokenEndpoint:              v.TokenEndpoint,
+		EndSessionEndpoint:         v.EndSessionEndpoint,
+		Scopes:                     v.Scopes,
+		CaPem:                      v.CaPem,
+		AllowedRedirectUriPrefixes: v.AllowedRedirectUriPrefixes,
+		TraceId:                    v.TraceId,
+		Noop:                       v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -997,19 +1008,20 @@ func ProviderConfigToJSONPretty(v *ProviderConfig) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := providerconfigJSON{
-		Enable:                v.Enable,
-		Name:                  v.Name,
-		Domains:               v.Domains,
-		Issuer:                v.Issuer,
-		ClientId:              v.ClientId,
-		ClientSecret:          v.ClientSecret,
-		AuthorizationEndpoint: v.AuthorizationEndpoint,
-		TokenEndpoint:         v.TokenEndpoint,
-		EndSessionEndpoint:    v.EndSessionEndpoint,
-		Scopes:                v.Scopes,
-		CaPem:                 v.CaPem,
-		TraceId:               v.TraceId,
-		Noop:                  v.Noop,
+		Enable:                     v.Enable,
+		Name:                       v.Name,
+		Domains:                    v.Domains,
+		Issuer:                     v.Issuer,
+		ClientId:                   v.ClientId,
+		ClientSecret:               v.ClientSecret,
+		AuthorizationEndpoint:      v.AuthorizationEndpoint,
+		TokenEndpoint:              v.TokenEndpoint,
+		EndSessionEndpoint:         v.EndSessionEndpoint,
+		Scopes:                     v.Scopes,
+		CaPem:                      v.CaPem,
+		AllowedRedirectUriPrefixes: v.AllowedRedirectUriPrefixes,
+		TraceId:                    v.TraceId,
+		Noop:                       v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -1085,6 +1097,7 @@ func ProviderConfigFromJSON(data []byte) (*ProviderConfig, error) {
 	result.EndSessionEndpoint = raw.EndSessionEndpoint
 	result.Scopes = raw.Scopes
 	result.CaPem = raw.CaPem
+	result.AllowedRedirectUriPrefixes = raw.AllowedRedirectUriPrefixes
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -2080,6 +2093,7 @@ type authorizerequestJSON struct {
 	ProviderIndex int32  `json:"provider_index,omitempty"`
 	CallbackUrl   string `json:"callback_url,omitempty"`
 	SessionId     string `json:"session_id,omitempty"`
+	Nonce         string `json:"nonce,omitempty"`
 	TraceId       string `json:"trace_id,omitempty"`
 	Noop          bool   `json:"noop,omitempty"`
 }
@@ -2095,6 +2109,7 @@ func AuthorizeRequestToJSON(v *AuthorizeRequest) ([]byte, error) {
 		ProviderIndex: v.ProviderIndex,
 		CallbackUrl:   v.CallbackUrl,
 		SessionId:     v.SessionId,
+		Nonce:         v.Nonce,
 		TraceId:       v.TraceId,
 		Noop:          v.Noop,
 	}
@@ -2112,6 +2127,7 @@ func AuthorizeRequestToJSONPretty(v *AuthorizeRequest) ([]byte, error) {
 		ProviderIndex: v.ProviderIndex,
 		CallbackUrl:   v.CallbackUrl,
 		SessionId:     v.SessionId,
+		Nonce:         v.Nonce,
 		TraceId:       v.TraceId,
 		Noop:          v.Noop,
 	}
@@ -2181,6 +2197,7 @@ func AuthorizeRequestFromJSON(data []byte) (*AuthorizeRequest, error) {
 	result.ProviderIndex = raw.ProviderIndex
 	result.CallbackUrl = raw.CallbackUrl
 	result.SessionId = raw.SessionId
+	result.Nonce = raw.Nonce
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -4297,6 +4314,9 @@ func ProviderConfigToEnvVar(v *ProviderConfig) map[string]string {
 		result["PROTO_SERVICES_OAUTH_PROVIDER_CONFIG_SCOPES"] = strings.Join(v.Scopes, ",")
 	}
 	result["PROTO_SERVICES_OAUTH_PROVIDER_CONFIG_CA_PEM"] = v.CaPem
+	if len(v.AllowedRedirectUriPrefixes) > 0 {
+		result["PROTO_SERVICES_OAUTH_PROVIDER_CONFIG_ALLOWED_REDIRECT_URI_PREFIXES"] = strings.Join(v.AllowedRedirectUriPrefixes, ",")
+	}
 	result["PROTO_SERVICES_OAUTH_PROVIDER_CONFIG_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_OAUTH_PROVIDER_CONFIG_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -4341,6 +4361,9 @@ func ProviderConfigFromEnvVar(env map[string]string) (*ProviderConfig, error) {
 	}
 	if val, ok := env["PROTO_SERVICES_OAUTH_PROVIDER_CONFIG_CA_PEM"]; ok && val != "" {
 		result.CaPem = val
+	}
+	if val, ok := env["PROTO_SERVICES_OAUTH_PROVIDER_CONFIG_ALLOWED_REDIRECT_URI_PREFIXES"]; ok && val != "" {
+		result.AllowedRedirectUriPrefixes = strings.Split(val, ",")
 	}
 	if val, ok := env["PROTO_SERVICES_OAUTH_PROVIDER_CONFIG_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -4564,6 +4587,7 @@ func AuthorizeRequestToEnvVar(v *AuthorizeRequest) map[string]string {
 	result["PROTO_SERVICES_OAUTH_AUTHORIZE_REQUEST_PROVIDER_INDEX"] = strconv.FormatInt(int64(v.ProviderIndex), 10)
 	result["PROTO_SERVICES_OAUTH_AUTHORIZE_REQUEST_CALLBACK_URL"] = v.CallbackUrl
 	result["PROTO_SERVICES_OAUTH_AUTHORIZE_REQUEST_SESSION_ID"] = v.SessionId
+	result["PROTO_SERVICES_OAUTH_AUTHORIZE_REQUEST_NONCE"] = v.Nonce
 	result["PROTO_SERVICES_OAUTH_AUTHORIZE_REQUEST_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_OAUTH_AUTHORIZE_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -4584,6 +4608,9 @@ func AuthorizeRequestFromEnvVar(env map[string]string) (*AuthorizeRequest, error
 	}
 	if val, ok := env["PROTO_SERVICES_OAUTH_AUTHORIZE_REQUEST_SESSION_ID"]; ok && val != "" {
 		result.SessionId = val
+	}
+	if val, ok := env["PROTO_SERVICES_OAUTH_AUTHORIZE_REQUEST_NONCE"]; ok && val != "" {
+		result.Nonce = val
 	}
 	if val, ok := env["PROTO_SERVICES_OAUTH_AUTHORIZE_REQUEST_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -5264,10 +5291,25 @@ func ValidateProviderConfigWithDepth(m *ProviderConfig, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Scopes exceeds max size of 16, got: %d", len(m.Scopes))
 	}
 
-	// Validate Domains elements (default max size: 32768 bytes)
+	// Validate AllowedRedirectUriPrefixes (assert_max_size: 32)
+	if len(m.AllowedRedirectUriPrefixes) > 32 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field AllowedRedirectUriPrefixes exceeds max size of 32, got: %d", len(m.AllowedRedirectUriPrefixes))
+	}
+
+	// Validate AllowedRedirectUriPrefixes (assert_min_size: 1)
+	if len(m.AllowedRedirectUriPrefixes) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field AllowedRedirectUriPrefixes below min size of 1, got: %d", len(m.AllowedRedirectUriPrefixes))
+	}
+
+	// Validate AllowedRedirectUriPrefixes (assert_required)
+	if len(m.AllowedRedirectUriPrefixes) == 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field AllowedRedirectUriPrefixes is required")
+	}
+
+	// Validate Domains elements (assert_element_max_size: 253 bytes)
 	for i, val := range m.Domains {
-		if len(val) > 32768 {
-			return protoerrors.NewErrMissingInvalidData(nil, "field Domains[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
+		if len(val) > 253 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field Domains[%d] exceeds max size of 253 bytes, got: %d", i, len(val))
 		}
 	}
 
@@ -5275,6 +5317,13 @@ func ValidateProviderConfigWithDepth(m *ProviderConfig, depth int) error {
 	for i, val := range m.Scopes {
 		if len(val) > 32768 {
 			return protoerrors.NewErrMissingInvalidData(nil, "field Scopes[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
+		}
+	}
+
+	// Validate AllowedRedirectUriPrefixes elements (default max size: 32768 bytes)
+	for i, val := range m.AllowedRedirectUriPrefixes {
+		if len(val) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field AllowedRedirectUriPrefixes[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
 		}
 	}
 
@@ -5528,10 +5577,10 @@ func ValidateProviderInfoWithDepth(m *ProviderInfo, depth int) error {
 	if m.ProviderIndex < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ProviderIndex must be >= 0, got: %v", m.ProviderIndex)
 	}
-	// Validate Domains elements (default max size: 32768 bytes)
+	// Validate Domains elements (assert_element_max_size: 253 bytes)
 	for i, val := range m.Domains {
-		if len(val) > 32768 {
-			return protoerrors.NewErrMissingInvalidData(nil, "field Domains[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
+		if len(val) > 253 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field Domains[%d] exceeds max size of 253 bytes, got: %d", i, len(val))
 		}
 	}
 
@@ -5578,6 +5627,11 @@ func ValidateAuthorizeRequestWithDepth(m *AuthorizeRequest, depth int) error {
 	// Validate SessionId (assert_max_size: 128 bytes)
 	if len(m.SessionId) > 128 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SessionId exceeds max size of 128 bytes, got: %d", len(m.SessionId))
+	}
+
+	// Validate Nonce (assert_max_size: 128 bytes)
+	if len(m.Nonce) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Nonce exceeds max size of 128 bytes, got: %d", len(m.Nonce))
 	}
 
 	// Validate CallbackUrl (default max size: 32768 bytes)
@@ -6260,75 +6314,77 @@ const (
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
-	MaxSizeConfigScopes                        int = 16
-	MaxSizeConfigProviders                     int = 16
-	MaxSizeConfigTraceId                       int = 32768
-	MaxSizeProviderconfigName                  int = 32768
-	MaxSizeProviderconfigDomains               int = 32
-	MaxSizeProviderconfigIssuer                int = 32768
-	MaxSizeProviderconfigClientId              int = 32768
-	MaxSizeProviderconfigClientSecret          int = 32768
-	MaxSizeProviderconfigAuthorizationEndpoint int = 32768
-	MaxSizeProviderconfigTokenEndpoint         int = 32768
-	MaxSizeProviderconfigEndSessionEndpoint    int = 32768
-	MaxSizeProviderconfigScopes                int = 16
-	MaxSizeProviderconfigCaPem                 int = 32768
-	MaxSizeProviderconfigTraceId               int = 32768
-	MaxSizeCompletecliauthrequestSessionId     int = 128
-	MaxSizeCompletecliauthrequestTraceId       int = 32768
-	MaxSizeCompletecliauthresponseTraceId      int = 32768
-	MaxSizeSessionrequestSessionId             int = 128
-	MaxSizeSessionrequestTraceId               int = 32768
-	MaxSizeSessionresponseToken                int = 8192
-	MaxSizeSessionresponseError                int = 1024
-	MaxSizeSessionresponseTraceId              int = 32768
-	MaxSizeListprovidersresponseProviders      int = 16
-	MaxSizeListprovidersresponseTraceId        int = 32768
-	MaxSizeProviderinfoName                    int = 128
-	MaxSizeProviderinfoDomains                 int = 32
-	MaxSizeProviderinfoTraceId                 int = 32768
-	MaxSizeAuthorizerequestCallbackUrl         int = 32768
-	MaxSizeAuthorizerequestSessionId           int = 128
-	MaxSizeAuthorizerequestTraceId             int = 32768
-	MaxSizeAuthorizeresponseRedirectUrl        int = 32768
-	MaxSizeAuthorizeresponseTraceId            int = 32768
-	MaxSizeCallbackrequestCode                 int = 32768
-	MaxSizeCallbackrequestState                int = 32768
-	MaxSizeCallbackrequestTraceId              int = 32768
-	MaxSizeCallbackresponseRefreshToken        int = 32768
-	MaxSizeCallbackresponseAccessToken         int = 32768
-	MaxSizeCallbackresponseCallbackUrl         int = 32768
-	MaxSizeCallbackresponseTraceId             int = 32768
-	MaxSizeLogoutrequestPostLogoutRedirectUrl  int = 32768
-	MaxSizeLogoutrequestIdTokenHint            int = 32768
-	MaxSizeLogoutrequestTraceId                int = 32768
-	MaxSizeLogoutresponseRedirectUrl           int = 32768
-	MaxSizeLogoutresponseTraceId               int = 32768
-	MaxSizeClusteroauthproviderIssuerUrl       int = 32768
-	MaxSizeClusteroauthproviderClientId        int = 32768
-	MaxSizeClusteroauthproviderClientSecret    int = 32768
-	MaxSizeClusteroauthproviderAllowedScopes   int = 16
-	MaxSizeClusteroauthproviderJwksUri         int = 32768
-	MaxSizeClusteroauthproviderCaPem           int = 32768
-	MaxSizeClusteroauthproviderTraceId         int = 32768
-	MaxSizeClusteroauthconfigProviders         int = 16
-	MaxSizeClusteroauthconfigTraceId           int = 32768
-	MaxSizeOauthproviderIssuerUrl              int = 32768
-	MaxSizeOauthproviderClientId               int = 32768
-	MaxSizeOauthproviderClientSecret           int = 32768
-	MaxSizeOauthproviderAllowedScopes          int = 16
-	MaxSizeOauthproviderJwksUri                int = 32768
-	MaxSizeOauthproviderCaPem                  int = 32768
-	MaxSizeOauthproviderTraceId                int = 32768
-	MaxSizeClaimmatcherProviderIssuerUrl       int = 32768
-	MaxSizeClaimmatcherClaimKey                int = 32768
-	MaxSizeClaimmatcherClaimValue              int = 32768
-	MaxSizeClaimmatcherTraceId                 int = 32768
-	MaxSizeOauthtenantconfigProviders          int = 16
-	MaxSizeOauthtenantconfigClaimMatchers      int = 32
-	MaxSizeOauthtenantconfigTraceId            int = 32768
-	MaxSizeOauthconfigstateTraceId             int = 32768
-	MaxSizeMapemptyTraceId                     int = 32768
+	MaxSizeConfigScopes                             int = 16
+	MaxSizeConfigProviders                          int = 16
+	MaxSizeConfigTraceId                            int = 32768
+	MaxSizeProviderconfigName                       int = 32768
+	MaxSizeProviderconfigDomains                    int = 32
+	MaxSizeProviderconfigIssuer                     int = 32768
+	MaxSizeProviderconfigClientId                   int = 32768
+	MaxSizeProviderconfigClientSecret               int = 32768
+	MaxSizeProviderconfigAuthorizationEndpoint      int = 32768
+	MaxSizeProviderconfigTokenEndpoint              int = 32768
+	MaxSizeProviderconfigEndSessionEndpoint         int = 32768
+	MaxSizeProviderconfigScopes                     int = 16
+	MaxSizeProviderconfigCaPem                      int = 32768
+	MaxSizeProviderconfigAllowedRedirectUriPrefixes int = 32
+	MaxSizeProviderconfigTraceId                    int = 32768
+	MaxSizeCompletecliauthrequestSessionId          int = 128
+	MaxSizeCompletecliauthrequestTraceId            int = 32768
+	MaxSizeCompletecliauthresponseTraceId           int = 32768
+	MaxSizeSessionrequestSessionId                  int = 128
+	MaxSizeSessionrequestTraceId                    int = 32768
+	MaxSizeSessionresponseToken                     int = 8192
+	MaxSizeSessionresponseError                     int = 1024
+	MaxSizeSessionresponseTraceId                   int = 32768
+	MaxSizeListprovidersresponseProviders           int = 16
+	MaxSizeListprovidersresponseTraceId             int = 32768
+	MaxSizeProviderinfoName                         int = 128
+	MaxSizeProviderinfoDomains                      int = 32
+	MaxSizeProviderinfoTraceId                      int = 32768
+	MaxSizeAuthorizerequestCallbackUrl              int = 32768
+	MaxSizeAuthorizerequestSessionId                int = 128
+	MaxSizeAuthorizerequestNonce                    int = 128
+	MaxSizeAuthorizerequestTraceId                  int = 32768
+	MaxSizeAuthorizeresponseRedirectUrl             int = 32768
+	MaxSizeAuthorizeresponseTraceId                 int = 32768
+	MaxSizeCallbackrequestCode                      int = 32768
+	MaxSizeCallbackrequestState                     int = 32768
+	MaxSizeCallbackrequestTraceId                   int = 32768
+	MaxSizeCallbackresponseRefreshToken             int = 32768
+	MaxSizeCallbackresponseAccessToken              int = 32768
+	MaxSizeCallbackresponseCallbackUrl              int = 32768
+	MaxSizeCallbackresponseTraceId                  int = 32768
+	MaxSizeLogoutrequestPostLogoutRedirectUrl       int = 32768
+	MaxSizeLogoutrequestIdTokenHint                 int = 32768
+	MaxSizeLogoutrequestTraceId                     int = 32768
+	MaxSizeLogoutresponseRedirectUrl                int = 32768
+	MaxSizeLogoutresponseTraceId                    int = 32768
+	MaxSizeClusteroauthproviderIssuerUrl            int = 32768
+	MaxSizeClusteroauthproviderClientId             int = 32768
+	MaxSizeClusteroauthproviderClientSecret         int = 32768
+	MaxSizeClusteroauthproviderAllowedScopes        int = 16
+	MaxSizeClusteroauthproviderJwksUri              int = 32768
+	MaxSizeClusteroauthproviderCaPem                int = 32768
+	MaxSizeClusteroauthproviderTraceId              int = 32768
+	MaxSizeClusteroauthconfigProviders              int = 16
+	MaxSizeClusteroauthconfigTraceId                int = 32768
+	MaxSizeOauthproviderIssuerUrl                   int = 32768
+	MaxSizeOauthproviderClientId                    int = 32768
+	MaxSizeOauthproviderClientSecret                int = 32768
+	MaxSizeOauthproviderAllowedScopes               int = 16
+	MaxSizeOauthproviderJwksUri                     int = 32768
+	MaxSizeOauthproviderCaPem                       int = 32768
+	MaxSizeOauthproviderTraceId                     int = 32768
+	MaxSizeClaimmatcherProviderIssuerUrl            int = 32768
+	MaxSizeClaimmatcherClaimKey                     int = 32768
+	MaxSizeClaimmatcherClaimValue                   int = 32768
+	MaxSizeClaimmatcherTraceId                      int = 32768
+	MaxSizeOauthtenantconfigProviders               int = 16
+	MaxSizeOauthtenantconfigClaimMatchers           int = 32
+	MaxSizeOauthtenantconfigTraceId                 int = 32768
+	MaxSizeOauthconfigstateTraceId                  int = 32768
+	MaxSizeMapemptyTraceId                          int = 32768
 )
 
 // ============================================================
@@ -6883,6 +6939,9 @@ func MergeProviderConfig(dst, src *ProviderConfig) {
 	if dst.CaPem == "" {
 		dst.CaPem = src.CaPem
 	}
+	if len(dst.AllowedRedirectUriPrefixes) == 0 {
+		dst.AllowedRedirectUriPrefixes = src.AllowedRedirectUriPrefixes
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -7009,6 +7068,9 @@ func MergeAuthorizeRequest(dst, src *AuthorizeRequest) {
 	}
 	if dst.SessionId == "" {
 		dst.SessionId = src.SessionId
+	}
+	if dst.Nonce == "" {
+		dst.Nonce = src.Nonce
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

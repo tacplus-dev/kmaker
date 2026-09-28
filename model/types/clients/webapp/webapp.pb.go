@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -22,7 +22,7 @@
 package webapp
 
 import (
-	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
+	_ "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/spec"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -40,13 +40,13 @@ var File_clients_webapp_proto protoreflect.FileDescriptor
 
 const file_clients_webapp_proto_rawDesc = "" +
 	"\n" +
-	"\x14clients/webapp.proto\x12\x06webapp\x1a\x0esys/spec.protoB\xc0\x01ڵ\x18\b\n" +
+	"\x14clients/webapp.proto\x12\x06webapp\x1a\x0esys/spec.protoB\xb5\x01ڵ\x18\b\n" +
 	"\x06webapp\xa2\xb6\x18\f\n" +
 	"\n" +
 	"oauth.Auth\xa2\xb6\x18\x0e\n" +
 	"\fgateway.Mint\xa2\xb6\x18\x14\n" +
 	"\x12sentinel.Dashboard\xa2\xb6\x18\x19\n" +
-	"\x17llmsettings.LlmSettingsZ[gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/clients/webappb\x06proto3"
+	"\x17llmsettings.LlmSettingsZPgitlab.com/seabeam/schematic/platform/services/kmaker/model/types/clients/webappb\x06proto3"
 
 var file_clients_webapp_proto_goTypes = []any{}
 var file_clients_webapp_proto_depIdxs = []int32{

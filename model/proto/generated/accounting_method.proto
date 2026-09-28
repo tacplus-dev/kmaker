@@ -3,7 +3,7 @@
 syntax = "proto3";
 
 package accounting_method;
-option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/accounting_method";
+option go_package = "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/accounting_method";
 
 import "generated/services.proto";
 
@@ -21,5 +21,10 @@ message AccountingMethod {
   services.ScottyagentRPCs scottyagent = 54;
   services.MailboxRPCs mailbox = 55;
   services.LlmsettingsRPCs llmsettings = 56;
+  services.PersonalauthRPCs personalauth = 57;
   services.ScottyRPCs scotty = 70;
+  services.ScottypersonalRPCs scottypersonal = 72;
+  services.WorkRPCs work = 73;
+  services.ProfileRPCs profile = 76;
+  services.DocmanagerRPCs docmanager = 80;
 }

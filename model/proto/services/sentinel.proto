@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -24,11 +24,12 @@
 syntax = "proto3";
 
 package sentinel;
-option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/sentinel";
+option go_package = "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/sentinel";
 
 import "sys/spec.proto";
 import "common/hazelcast.proto";
 
+import "sys/mcp.proto";
 import "sys/trace.proto";
 
 // ============================================================================
@@ -58,22 +59,47 @@ message SentinelState {
 service Dashboard {
 
   // Cluster-wide singletons
+
+  // Returns cluster identity and membership — cluster name, version, partition
+  // count and the member list — for inventory and topology views.
   rpc GetClusterInfo(trace.TraceRequest) returns (hazelcast.AdminClusterInfo) {}
+  // Returns the cluster's current health — whether it is safe, running, holds
+  // quorum and how much migration work is still queued — for dashboards and
+  // automated health checks.
   rpc GetClusterHealth(trace.TraceRequest) returns (hazelcast.AdminClusterHealth) {}
 
   // Per-node collections
+
+  // Lists per-node resource use (heap, CPU and disk) for every cluster member,
+  // to find nodes under memory or disk pressure.
   rpc ListNodeMetrics(DashboardPageRequest) returns (NodeMetricsResponse) {
   }
+  // Lists each node's gRPC serving statistics — connection, stream and RPC
+  // counts plus rate-limited rejections — to see where request load and
+  // throttling are landing.
   rpc ListGrpcStats(DashboardPageRequest) returns (GrpcStatsResponse) {
   }
+  // Lists each node's persistence status — redo log size, last dump time and
+  // dump count — to confirm cluster state is being written durably and the redo
+  // log is not growing unbounded.
   rpc ListPersistenceStatus(DashboardPageRequest) returns (PersistenceStatusResponse) {
   }
+  // Lists each node's network state — listen addresses, member-to-member
+  // connectivity and bytes sent and received — to diagnose a partitioned or
+  // unreachable member.
   rpc ListNetworkStats(DashboardPageRequest) returns (NetworkStatsResponse) {
   }
+  // Lists each node's thread counts and any deadlocked threads, to diagnose a
+  // node that has stopped making progress.
   rpc ListThreadInfo(DashboardPageRequest) returns (ThreadInfoResponse) {
   }
+  // Lists each node's token cache hit, miss and eviction counts, to judge
+  // whether auth token caching is working or thrashing.
   rpc ListTokenCacheStats(DashboardPageRequest) returns (TokenCacheStatsResponse) {
   }
+  // Lists per-map storage and access statistics — entry counts, memory cost and
+  // read/write counts — to find which distributed maps dominate memory or
+  // traffic.
   rpc ListMapStats(DashboardPageRequest) returns (MapStatsResponse) {
   }
 
@@ -82,6 +108,18 @@ service Dashboard {
 
   // Server-streaming dashboard: pushes updates at a regular interval.
   rpc SubscribeDashboard(WatchDashboardRequest) returns (stream DashboardResponse) {}
+
+  // BrokerDashboardMcpSession carries one Model Context Protocol session for Dashboard over a
+  // single bidirectional stream: one complete JSON-RPC frame per stream message,
+  // request frames in and response frames out, for the life of the session.
+  //
+  // Generated, never declared: Dashboard has at least one RPC_PRINCIPAL_MCP rpc, and this
+  // is the only channel those tools are reachable through. Bidirectional because an
+  // MCP session is stateful — it opens with an initialize handshake and holds the
+  // negotiated protocol version after it — so a unary call would repeat that
+  // handshake per tool call.
+  rpc BrokerDashboardMcpSession(stream mcp.McpRequest) returns (stream mcp.McpResponse) {
+  }
 }
 
 // ============================================================================
@@ -241,6 +279,7 @@ enum DashboardRpcId {
   DASHBOARD_RPC_ID_LIST_MAP_STATS = 12;
   DASHBOARD_RPC_ID_GET_DASHBOARD = 13;
   DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD = 14;
+  DASHBOARD_RPC_ID_BROKER_DASHBOARD_MCP_SESSION = 15;
 }
 
 enum SentinelConfigStateServiceRpcId {

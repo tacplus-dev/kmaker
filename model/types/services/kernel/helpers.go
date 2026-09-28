@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -23,27 +23,28 @@ package kernel
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"strconv"
 	"strings"
 
 	"github.com/pelletier/go-toml/v2"
-	credentials "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/common/credentials"
-	hazelcast "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/common/hazelcast"
-	entitlements "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/entitlements"
-	services "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/services"
-	services_config "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/services_config"
-	tenant_config "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/tenant_config"
-	cloudvendor "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/cloudvendor"
-	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/errors"
-	healthreport "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/healthreport"
-	host "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/host"
-	jwk "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/jwk"
-	key "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/key"
-	logger "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/logger"
-	outputformat "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/outputformat"
-	x509 "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/x509"
-	utils "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/utils"
+	credentials "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/common/credentials"
+	hazelcast "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/common/hazelcast"
+	entitlements "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/entitlements"
+	services "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/services"
+	services_config "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/services_config"
+	tenant_config "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/tenant_config"
+	cloudvendor "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/cloudvendor"
+	protoerrors "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/errors"
+	healthreport "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/healthreport"
+	host "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/host"
+	jwk "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/jwk"
+	key "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/key"
+	logger "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/logger"
+	tokenrequest "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/tokenrequest"
+	x509 "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
+	utils "gitlab.com/seabeam/schematic/platform/services/kmaker/model/utils"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	structpb "google.golang.org/protobuf/types/known/structpb"
@@ -54,6 +55,223 @@ import (
 // ============================================================
 // Enum Helpers
 // ============================================================
+// PeopleIdpProviderValues returns all valid PeopleIdpProvider values (excluding UNDEFINED)
+func PeopleIdpProviderValues() []PeopleIdpProvider {
+	return []PeopleIdpProvider{
+		PeopleIdpProvider_PEOPLE_IDP_PROVIDER_APPLE,
+		PeopleIdpProvider_PEOPLE_IDP_PROVIDER_GOOGLE,
+	}
+}
+
+// PeopleIdpProviderStringValues returns all valid PeopleIdpProvider names as strings
+func PeopleIdpProviderStringValues() []string {
+	return []string{"apple", "google"}
+}
+
+// ParsePeopleIdpProvider converts a string to a PeopleIdpProvider enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParsePeopleIdpProvider(s string) (PeopleIdpProvider, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return PeopleIdpProvider_PEOPLE_IDP_PROVIDER_UNSPECIFIED, nil
+	case "apple", "people-idp-provider-apple":
+		return PeopleIdpProvider_PEOPLE_IDP_PROVIDER_APPLE, nil
+	case "google", "people-idp-provider-google":
+		return PeopleIdpProvider_PEOPLE_IDP_PROVIDER_GOOGLE, nil
+	default:
+		return PeopleIdpProvider_PEOPLE_IDP_PROVIDER_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid peopleidpprovider %s, expecting one of: %v", s, PeopleIdpProviderStringValues())
+	}
+}
+
+// ParsePeopleIdpProviders converts a comma-separated string to a slice of PeopleIdpProvider enum values
+// Returns an error if any value is invalid
+func ParsePeopleIdpProviders(s string) ([]PeopleIdpProvider, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]PeopleIdpProvider, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParsePeopleIdpProvider(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// PeopleIdpProviderToString converts a PeopleIdpProvider to its lowercase string representation
+func PeopleIdpProviderToString(v PeopleIdpProvider) string {
+	switch v {
+	case PeopleIdpProvider_PEOPLE_IDP_PROVIDER_APPLE:
+		return "apple"
+	case PeopleIdpProvider_PEOPLE_IDP_PROVIDER_GOOGLE:
+		return "google"
+	default:
+		return ""
+	}
+}
+
+// ParsePeopleIdpProviderLiberal parses a PeopleIdpProvider liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParsePeopleIdpProviderLiberal(s string) PeopleIdpProvider {
+	if s == "" {
+		return PeopleIdpProvider_PEOPLE_IDP_PROVIDER_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return PeopleIdpProvider(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "apple", "people-idp-provider-apple":
+		return PeopleIdpProvider_PEOPLE_IDP_PROVIDER_APPLE
+	case "google", "people-idp-provider-google":
+		return PeopleIdpProvider_PEOPLE_IDP_PROVIDER_GOOGLE
+	default:
+		return PeopleIdpProvider_PEOPLE_IDP_PROVIDER_UNSPECIFIED
+	}
+}
+
+// PeopleIdpProviderToSpecName converts a PeopleIdpProvider to its canonical protobuf spec name
+func PeopleIdpProviderToSpecName(v PeopleIdpProvider) string {
+	switch v {
+	case PeopleIdpProvider_PEOPLE_IDP_PROVIDER_UNSPECIFIED:
+		return "PEOPLE_IDP_PROVIDER_UNSPECIFIED"
+	case PeopleIdpProvider_PEOPLE_IDP_PROVIDER_APPLE:
+		return "PEOPLE_IDP_PROVIDER_APPLE"
+	case PeopleIdpProvider_PEOPLE_IDP_PROVIDER_GOOGLE:
+		return "PEOPLE_IDP_PROVIDER_GOOGLE"
+	default:
+		return ""
+	}
+}
+
+// MembershipProofKindValues returns all valid MembershipProofKind values (excluding UNDEFINED)
+func MembershipProofKindValues() []MembershipProofKind {
+	return []MembershipProofKind{
+		MembershipProofKind_MEMBERSHIP_PROOF_KIND_TENANT_IDP,
+		MembershipProofKind_MEMBERSHIP_PROOF_KIND_EMAIL_LINK,
+		MembershipProofKind_MEMBERSHIP_PROOF_KIND_LINKED_PERSONAL_IDENTITY,
+	}
+}
+
+// MembershipProofKindStringValues returns all valid MembershipProofKind names as strings
+func MembershipProofKindStringValues() []string {
+	return []string{"tenant-idp", "email-link", "linked-personal-identity"}
+}
+
+// ParseMembershipProofKind converts a string to a MembershipProofKind enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseMembershipProofKind(s string) (MembershipProofKind, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return MembershipProofKind_MEMBERSHIP_PROOF_KIND_UNSPECIFIED, nil
+	case "tenant-idp", "membership-proof-kind-tenant-idp":
+		return MembershipProofKind_MEMBERSHIP_PROOF_KIND_TENANT_IDP, nil
+	case "email-link", "membership-proof-kind-email-link":
+		return MembershipProofKind_MEMBERSHIP_PROOF_KIND_EMAIL_LINK, nil
+	case "linked-personal-identity", "membership-proof-kind-linked-personal-identity":
+		return MembershipProofKind_MEMBERSHIP_PROOF_KIND_LINKED_PERSONAL_IDENTITY, nil
+	default:
+		return MembershipProofKind_MEMBERSHIP_PROOF_KIND_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid membershipproofkind %s, expecting one of: %v", s, MembershipProofKindStringValues())
+	}
+}
+
+// ParseMembershipProofKinds converts a comma-separated string to a slice of MembershipProofKind enum values
+// Returns an error if any value is invalid
+func ParseMembershipProofKinds(s string) ([]MembershipProofKind, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]MembershipProofKind, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseMembershipProofKind(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// MembershipProofKindToString converts a MembershipProofKind to its lowercase string representation
+func MembershipProofKindToString(v MembershipProofKind) string {
+	switch v {
+	case MembershipProofKind_MEMBERSHIP_PROOF_KIND_TENANT_IDP:
+		return "tenant-idp"
+	case MembershipProofKind_MEMBERSHIP_PROOF_KIND_EMAIL_LINK:
+		return "email-link"
+	case MembershipProofKind_MEMBERSHIP_PROOF_KIND_LINKED_PERSONAL_IDENTITY:
+		return "linked-personal-identity"
+	default:
+		return ""
+	}
+}
+
+// ParseMembershipProofKindLiberal parses a MembershipProofKind liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseMembershipProofKindLiberal(s string) MembershipProofKind {
+	if s == "" {
+		return MembershipProofKind_MEMBERSHIP_PROOF_KIND_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return MembershipProofKind(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "tenant-idp", "membership-proof-kind-tenant-idp":
+		return MembershipProofKind_MEMBERSHIP_PROOF_KIND_TENANT_IDP
+	case "email-link", "membership-proof-kind-email-link":
+		return MembershipProofKind_MEMBERSHIP_PROOF_KIND_EMAIL_LINK
+	case "linked-personal-identity", "membership-proof-kind-linked-personal-identity":
+		return MembershipProofKind_MEMBERSHIP_PROOF_KIND_LINKED_PERSONAL_IDENTITY
+	default:
+		return MembershipProofKind_MEMBERSHIP_PROOF_KIND_UNSPECIFIED
+	}
+}
+
+// MembershipProofKindToSpecName converts a MembershipProofKind to its canonical protobuf spec name
+func MembershipProofKindToSpecName(v MembershipProofKind) string {
+	switch v {
+	case MembershipProofKind_MEMBERSHIP_PROOF_KIND_UNSPECIFIED:
+		return "MEMBERSHIP_PROOF_KIND_UNSPECIFIED"
+	case MembershipProofKind_MEMBERSHIP_PROOF_KIND_TENANT_IDP:
+		return "MEMBERSHIP_PROOF_KIND_TENANT_IDP"
+	case MembershipProofKind_MEMBERSHIP_PROOF_KIND_EMAIL_LINK:
+		return "MEMBERSHIP_PROOF_KIND_EMAIL_LINK"
+	case MembershipProofKind_MEMBERSHIP_PROOF_KIND_LINKED_PERSONAL_IDENTITY:
+		return "MEMBERSHIP_PROOF_KIND_LINKED_PERSONAL_IDENTITY"
+	default:
+		return ""
+	}
+}
+
 // TenantStatusValues returns all valid TenantStatus values (excluding UNDEFINED)
 func TenantStatusValues() []TenantStatus {
 	return []TenantStatus{
@@ -582,6 +800,29 @@ func TypeIDValues() []TypeID {
 		TypeID_TYPE_ID_WORKLOAD_LOCALITY,
 		TypeID_TYPE_ID_WORKLOAD_REVOCATION,
 		TypeID_TYPE_ID_WORKLOAD_STATE,
+		TypeID_TYPE_ID_PEOPLE_IDP_CREDENTIAL,
+		TypeID_TYPE_ID_PERSON,
+		TypeID_TYPE_ID_PERSONAL_CREDENTIAL,
+		TypeID_TYPE_ID_TENANT_MEMBERSHIP,
+		TypeID_TYPE_ID_PERSONAL_PRINCIPAL,
+		TypeID_TYPE_ID_TENANT_USER_LINK,
+		TypeID_TYPE_ID_TENANT_USER_LINKS,
+		TypeID_TYPE_ID_PRINCIPAL_STATE,
+		TypeID_TYPE_ID_REVOKE_TENANT_USER_LINK_REQUEST,
+		TypeID_TYPE_ID_REVOKE_TENANT_USER_LINK_RESPONSE,
+		TypeID_TYPE_ID_GET_MY_IDENTITY_REQUEST,
+		TypeID_TYPE_ID_GET_MY_IDENTITY_RESPONSE,
+		TypeID_TYPE_ID_CREATE_PERSONAL_PRINCIPAL_REQUEST,
+		TypeID_TYPE_ID_CREATE_PERSONAL_PRINCIPAL_RESPONSE,
+		TypeID_TYPE_ID_WEBAUTHN_ASSERTION,
+		TypeID_TYPE_ID_TENANT_USER_LINK_SIDE,
+		TypeID_TYPE_ID_CREATE_TENANT_USER_LINK_REQUEST,
+		TypeID_TYPE_ID_CREATE_TENANT_USER_LINK_RESPONSE,
+		TypeID_TYPE_ID_PENDING_APPROVAL,
+		TypeID_TYPE_ID_CREATE_PENDING_APPROVAL_REQUEST,
+		TypeID_TYPE_ID_CREATE_PENDING_APPROVAL_RESPONSE,
+		TypeID_TYPE_ID_BROKER_PENDING_APPROVAL_REQUEST,
+		TypeID_TYPE_ID_BROKER_PENDING_APPROVAL_RESPONSE,
 		TypeID_TYPE_ID_CA,
 		TypeID_TYPE_ID_CONSTRAINTS,
 		TypeID_TYPE_ID_TENANT,
@@ -825,6 +1066,54 @@ func TypeIDValues() []TypeID {
 		TypeID_TYPE_ID_REVOCATIONS_SIZE_RESPONSE,
 		TypeID_TYPE_ID_REVOCATIONS_QUERY_REQUEST,
 		TypeID_TYPE_ID_REVOCATIONS_QUERY_RESPONSE,
+		TypeID_TYPE_ID_PERSONAL_PRINCIPALS_GET_REQUEST,
+		TypeID_TYPE_ID_PERSONAL_PRINCIPALS_PUT_REQUEST,
+		TypeID_TYPE_ID_PERSONAL_PRINCIPALS_GET_ALL_REQUEST,
+		TypeID_TYPE_ID_PERSONAL_PRINCIPALS_KEYS_REQUEST,
+		TypeID_TYPE_ID_PERSONAL_PRINCIPALS_SIZE_REQUEST,
+		TypeID_TYPE_ID_PERSONAL_PRINCIPALS_CLEAR_REQUEST,
+		TypeID_TYPE_ID_PERSONAL_PRINCIPALS_VALUE_RESPONSE,
+		TypeID_TYPE_ID_PERSONAL_PRINCIPALS_ENTRIES_RESPONSE,
+		TypeID_TYPE_ID_PERSONAL_PRINCIPALS_KEYS_RESPONSE,
+		TypeID_TYPE_ID_PERSONAL_PRINCIPALS_SIZE_RESPONSE,
+		TypeID_TYPE_ID_PERSONAL_PRINCIPALS_QUERY_REQUEST,
+		TypeID_TYPE_ID_PERSONAL_PRINCIPALS_QUERY_RESPONSE,
+		TypeID_TYPE_ID_PEOPLE_GET_REQUEST,
+		TypeID_TYPE_ID_PEOPLE_PUT_REQUEST,
+		TypeID_TYPE_ID_PEOPLE_GET_ALL_REQUEST,
+		TypeID_TYPE_ID_PEOPLE_KEYS_REQUEST,
+		TypeID_TYPE_ID_PEOPLE_SIZE_REQUEST,
+		TypeID_TYPE_ID_PEOPLE_CLEAR_REQUEST,
+		TypeID_TYPE_ID_PEOPLE_VALUE_RESPONSE,
+		TypeID_TYPE_ID_PEOPLE_ENTRIES_RESPONSE,
+		TypeID_TYPE_ID_PEOPLE_KEYS_RESPONSE,
+		TypeID_TYPE_ID_PEOPLE_SIZE_RESPONSE,
+		TypeID_TYPE_ID_PEOPLE_QUERY_REQUEST,
+		TypeID_TYPE_ID_PEOPLE_QUERY_RESPONSE,
+		TypeID_TYPE_ID_TENANT_USER_LINKS_GET_REQUEST,
+		TypeID_TYPE_ID_TENANT_USER_LINKS_PUT_REQUEST,
+		TypeID_TYPE_ID_TENANT_USER_LINKS_GET_ALL_REQUEST,
+		TypeID_TYPE_ID_TENANT_USER_LINKS_KEYS_REQUEST,
+		TypeID_TYPE_ID_TENANT_USER_LINKS_SIZE_REQUEST,
+		TypeID_TYPE_ID_TENANT_USER_LINKS_CLEAR_REQUEST,
+		TypeID_TYPE_ID_TENANT_USER_LINKS_VALUE_RESPONSE,
+		TypeID_TYPE_ID_TENANT_USER_LINKS_ENTRIES_RESPONSE,
+		TypeID_TYPE_ID_TENANT_USER_LINKS_KEYS_RESPONSE,
+		TypeID_TYPE_ID_TENANT_USER_LINKS_SIZE_RESPONSE,
+		TypeID_TYPE_ID_TENANT_USER_LINKS_QUERY_REQUEST,
+		TypeID_TYPE_ID_TENANT_USER_LINKS_QUERY_RESPONSE,
+		TypeID_TYPE_ID_PENDING_APPROVALS_GET_REQUEST,
+		TypeID_TYPE_ID_PENDING_APPROVALS_PUT_REQUEST,
+		TypeID_TYPE_ID_PENDING_APPROVALS_GET_ALL_REQUEST,
+		TypeID_TYPE_ID_PENDING_APPROVALS_KEYS_REQUEST,
+		TypeID_TYPE_ID_PENDING_APPROVALS_SIZE_REQUEST,
+		TypeID_TYPE_ID_PENDING_APPROVALS_CLEAR_REQUEST,
+		TypeID_TYPE_ID_PENDING_APPROVALS_VALUE_RESPONSE,
+		TypeID_TYPE_ID_PENDING_APPROVALS_ENTRIES_RESPONSE,
+		TypeID_TYPE_ID_PENDING_APPROVALS_KEYS_RESPONSE,
+		TypeID_TYPE_ID_PENDING_APPROVALS_SIZE_RESPONSE,
+		TypeID_TYPE_ID_PENDING_APPROVALS_QUERY_REQUEST,
+		TypeID_TYPE_ID_PENDING_APPROVALS_QUERY_RESPONSE,
 		TypeID_TYPE_ID_CA_CERTS_GET_REQUEST,
 		TypeID_TYPE_ID_CA_CERTS_PUT_REQUEST,
 		TypeID_TYPE_ID_CA_CERTS_GET_ALL_REQUEST,
@@ -891,7 +1180,7 @@ func TypeIDValues() []TypeID {
 
 // TypeIDStringValues returns all valid TypeID names as strings
 func TypeIDStringValues() []string {
-	return []string{"config", "identity", "identity-fqdn", "signing-key-record", "trusted-ca", "fenced-lock-acquire-request", "fenced-lock-acquire-response", "fenced-lock-release-request", "fenced-lock-release-response", "cli-token-broker-request", "cli-token-broker-response", "cli-token-broker-register", "cli-token-broker-register-nonce", "cli-token-broker-complete-nonce", "cli-token-broker-token-delivery", "cli-token-broker-error", "cloud-identity-matcher", "kubernetes-service-account-matcher", "delegate", "cluster", "admin-set-log-level-request", "admin-reload-config-request", "admin-config-dump", "service-health", "workload-revoke-request", "workload-locality", "workload-revocation", "workload-state", "ca", "constraints", "tenant", "tenant-config-entry", "project-config", "project-config-entry", "config-state", "grant", "grant-revoke-request", "kernel-disk-state", "create-tenant-request", "delete-tenant-request", "delete-tenant-response", "list-tenants-request", "list-tenants-response", "get-tenant-config-request", "set-tenant-config-request", "get-project-config-request", "set-project-config-request", "project-namespace", "list-projects-request", "list-projects-response", "delete-project-request", "delete-project-response", "query-value", "predicate", "predicate-group", "sort-field", "collection-query", "verifying-keys-get-request", "verifying-keys-put-request", "verifying-keys-get-all-request", "verifying-keys-keys-request", "verifying-keys-size-request", "verifying-keys-clear-request", "verifying-keys-value-response", "verifying-keys-entries-response", "verifying-keys-keys-response", "verifying-keys-size-response", "verifying-keys-query-request", "verifying-keys-query-response", "trusted-cas-get-request", "trusted-cas-put-request", "trusted-cas-get-all-request", "trusted-cas-keys-request", "trusted-cas-size-request", "trusted-cas-clear-request", "trusted-cas-value-response", "trusted-cas-entries-response", "trusted-cas-keys-response", "trusted-cas-size-response", "trusted-cas-query-request", "trusted-cas-query-response", "node-metrics-get-request", "node-metrics-put-request", "node-metrics-get-all-request", "node-metrics-keys-request", "node-metrics-size-request", "node-metrics-clear-request", "node-metrics-value-response", "node-metrics-entries-response", "node-metrics-keys-response", "node-metrics-size-response", "node-metrics-query-request", "node-metrics-query-response", "grpc-stats-get-request", "grpc-stats-put-request", "grpc-stats-get-all-request", "grpc-stats-keys-request", "grpc-stats-size-request", "grpc-stats-clear-request", "grpc-stats-value-response", "grpc-stats-entries-response", "grpc-stats-keys-response", "grpc-stats-size-response", "grpc-stats-query-request", "grpc-stats-query-response", "persistence-status-get-request", "persistence-status-put-request", "persistence-status-get-all-request", "persistence-status-keys-request", "persistence-status-size-request", "persistence-status-clear-request", "persistence-status-value-response", "persistence-status-entries-response", "persistence-status-keys-response", "persistence-status-size-response", "persistence-status-query-request", "persistence-status-query-response", "network-stats-get-request", "network-stats-put-request", "network-stats-get-all-request", "network-stats-keys-request", "network-stats-size-request", "network-stats-clear-request", "network-stats-value-response", "network-stats-entries-response", "network-stats-keys-response", "network-stats-size-response", "network-stats-query-request", "network-stats-query-response", "thread-info-get-request", "thread-info-put-request", "thread-info-get-all-request", "thread-info-keys-request", "thread-info-size-request", "thread-info-clear-request", "thread-info-value-response", "thread-info-entries-response", "thread-info-keys-response", "thread-info-size-response", "thread-info-query-request", "thread-info-query-response", "token-cache-stats-get-request", "token-cache-stats-put-request", "token-cache-stats-get-all-request", "token-cache-stats-keys-request", "token-cache-stats-size-request", "token-cache-stats-clear-request", "token-cache-stats-value-response", "token-cache-stats-entries-response", "token-cache-stats-keys-response", "token-cache-stats-size-response", "token-cache-stats-query-request", "token-cache-stats-query-response", "map-stats-get-request", "map-stats-put-request", "map-stats-get-all-request", "map-stats-keys-request", "map-stats-size-request", "map-stats-clear-request", "map-stats-value-response", "map-stats-entries-response", "map-stats-keys-response", "map-stats-size-response", "map-stats-query-request", "map-stats-query-response", "graph-registry-get-request", "graph-registry-put-request", "graph-registry-get-all-request", "graph-registry-keys-request", "graph-registry-size-request", "graph-registry-clear-request", "graph-registry-value-response", "graph-registry-entries-response", "graph-registry-keys-response", "graph-registry-size-response", "graph-registry-query-request", "graph-registry-query-response", "service-connections-get-request", "service-connections-put-request", "service-connections-get-all-request", "service-connections-keys-request", "service-connections-size-request", "service-connections-clear-request", "service-connections-value-response", "service-connections-entries-response", "service-connections-keys-response", "service-connections-size-response", "service-connections-query-request", "service-connections-query-response", "queue-stats-get-request", "queue-stats-put-request", "queue-stats-get-all-request", "queue-stats-keys-request", "queue-stats-size-request", "queue-stats-clear-request", "queue-stats-value-response", "queue-stats-entries-response", "queue-stats-keys-response", "queue-stats-size-response", "queue-stats-query-request", "queue-stats-query-response", "topic-stats-get-request", "topic-stats-put-request", "topic-stats-get-all-request", "topic-stats-keys-request", "topic-stats-size-request", "topic-stats-clear-request", "topic-stats-value-response", "topic-stats-entries-response", "topic-stats-keys-response", "topic-stats-size-response", "topic-stats-query-request", "topic-stats-query-response", "watch-health-get-request", "watch-health-put-request", "watch-health-get-all-request", "watch-health-keys-request", "watch-health-size-request", "watch-health-clear-request", "watch-health-value-response", "watch-health-entries-response", "watch-health-keys-response", "watch-health-size-response", "watch-health-query-request", "watch-health-query-response", "mutation-rates-get-request", "mutation-rates-put-request", "mutation-rates-get-all-request", "mutation-rates-keys-request", "mutation-rates-size-request", "mutation-rates-clear-request", "mutation-rates-value-response", "mutation-rates-entries-response", "mutation-rates-keys-response", "mutation-rates-size-response", "mutation-rates-query-request", "mutation-rates-query-response", "instances-get-request", "instances-get-all-request", "instances-keys-request", "instances-size-request", "instances-value-response", "instances-entries-response", "instances-keys-response", "instances-size-response", "instances-query-request", "instances-query-response", "localities-get-request", "localities-put-request", "localities-get-all-request", "localities-keys-request", "localities-size-request", "localities-clear-request", "localities-value-response", "localities-entries-response", "localities-keys-response", "localities-size-response", "localities-query-request", "localities-query-response", "revocations-get-request", "revocations-put-request", "revocations-get-all-request", "revocations-keys-request", "revocations-size-request", "revocations-clear-request", "revocations-value-response", "revocations-entries-response", "revocations-keys-response", "revocations-size-response", "revocations-query-request", "revocations-query-response", "ca-certs-get-request", "ca-certs-put-request", "ca-certs-get-all-request", "ca-certs-keys-request", "ca-certs-size-request", "ca-certs-clear-request", "ca-certs-value-response", "ca-certs-entries-response", "ca-certs-keys-response", "ca-certs-size-response", "ca-certs-query-request", "ca-certs-query-response", "service-cas-get-request", "service-cas-put-request", "service-cas-get-all-request", "service-cas-keys-request", "service-cas-size-request", "service-cas-clear-request", "service-cas-value-response", "service-cas-entries-response", "service-cas-keys-response", "service-cas-size-response", "service-cas-query-request", "service-cas-query-response", "tenants-get-request", "tenants-put-request", "tenants-get-all-request", "tenants-keys-request", "tenants-size-request", "tenants-clear-request", "tenants-value-response", "tenants-entries-response", "tenants-keys-response", "tenants-size-response", "tenants-query-request", "tenants-query-response", "tenant-configs-get-request", "tenant-configs-put-request", "tenant-configs-get-all-request", "tenant-configs-keys-request", "tenant-configs-size-request", "tenant-configs-clear-request", "tenant-configs-value-response", "tenant-configs-entries-response", "tenant-configs-keys-response", "tenant-configs-size-response", "tenant-configs-query-request", "tenant-configs-query-response", "project-configs-get-request", "project-configs-put-request", "project-configs-get-all-request", "project-configs-keys-request", "project-configs-size-request", "project-configs-clear-request", "project-configs-value-response", "project-configs-entries-response", "project-configs-keys-response", "project-configs-size-response", "project-configs-query-request", "project-configs-query-response", "map-empty"}
+	return []string{"config", "identity", "identity-fqdn", "signing-key-record", "trusted-ca", "fenced-lock-acquire-request", "fenced-lock-acquire-response", "fenced-lock-release-request", "fenced-lock-release-response", "cli-token-broker-request", "cli-token-broker-response", "cli-token-broker-register", "cli-token-broker-register-nonce", "cli-token-broker-complete-nonce", "cli-token-broker-token-delivery", "cli-token-broker-error", "cloud-identity-matcher", "kubernetes-service-account-matcher", "delegate", "cluster", "admin-set-log-level-request", "admin-reload-config-request", "admin-config-dump", "service-health", "workload-revoke-request", "workload-locality", "workload-revocation", "workload-state", "people-idp-credential", "person", "personal-credential", "tenant-membership", "personal-principal", "tenant-user-link", "tenant-user-links", "principal-state", "revoke-tenant-user-link-request", "revoke-tenant-user-link-response", "get-my-identity-request", "get-my-identity-response", "create-personal-principal-request", "create-personal-principal-response", "webauthn-assertion", "tenant-user-link-side", "create-tenant-user-link-request", "create-tenant-user-link-response", "pending-approval", "create-pending-approval-request", "create-pending-approval-response", "broker-pending-approval-request", "broker-pending-approval-response", "ca", "constraints", "tenant", "tenant-config-entry", "project-config", "project-config-entry", "config-state", "grant", "grant-revoke-request", "kernel-disk-state", "create-tenant-request", "delete-tenant-request", "delete-tenant-response", "list-tenants-request", "list-tenants-response", "get-tenant-config-request", "set-tenant-config-request", "get-project-config-request", "set-project-config-request", "project-namespace", "list-projects-request", "list-projects-response", "delete-project-request", "delete-project-response", "query-value", "predicate", "predicate-group", "sort-field", "collection-query", "verifying-keys-get-request", "verifying-keys-put-request", "verifying-keys-get-all-request", "verifying-keys-keys-request", "verifying-keys-size-request", "verifying-keys-clear-request", "verifying-keys-value-response", "verifying-keys-entries-response", "verifying-keys-keys-response", "verifying-keys-size-response", "verifying-keys-query-request", "verifying-keys-query-response", "trusted-cas-get-request", "trusted-cas-put-request", "trusted-cas-get-all-request", "trusted-cas-keys-request", "trusted-cas-size-request", "trusted-cas-clear-request", "trusted-cas-value-response", "trusted-cas-entries-response", "trusted-cas-keys-response", "trusted-cas-size-response", "trusted-cas-query-request", "trusted-cas-query-response", "node-metrics-get-request", "node-metrics-put-request", "node-metrics-get-all-request", "node-metrics-keys-request", "node-metrics-size-request", "node-metrics-clear-request", "node-metrics-value-response", "node-metrics-entries-response", "node-metrics-keys-response", "node-metrics-size-response", "node-metrics-query-request", "node-metrics-query-response", "grpc-stats-get-request", "grpc-stats-put-request", "grpc-stats-get-all-request", "grpc-stats-keys-request", "grpc-stats-size-request", "grpc-stats-clear-request", "grpc-stats-value-response", "grpc-stats-entries-response", "grpc-stats-keys-response", "grpc-stats-size-response", "grpc-stats-query-request", "grpc-stats-query-response", "persistence-status-get-request", "persistence-status-put-request", "persistence-status-get-all-request", "persistence-status-keys-request", "persistence-status-size-request", "persistence-status-clear-request", "persistence-status-value-response", "persistence-status-entries-response", "persistence-status-keys-response", "persistence-status-size-response", "persistence-status-query-request", "persistence-status-query-response", "network-stats-get-request", "network-stats-put-request", "network-stats-get-all-request", "network-stats-keys-request", "network-stats-size-request", "network-stats-clear-request", "network-stats-value-response", "network-stats-entries-response", "network-stats-keys-response", "network-stats-size-response", "network-stats-query-request", "network-stats-query-response", "thread-info-get-request", "thread-info-put-request", "thread-info-get-all-request", "thread-info-keys-request", "thread-info-size-request", "thread-info-clear-request", "thread-info-value-response", "thread-info-entries-response", "thread-info-keys-response", "thread-info-size-response", "thread-info-query-request", "thread-info-query-response", "token-cache-stats-get-request", "token-cache-stats-put-request", "token-cache-stats-get-all-request", "token-cache-stats-keys-request", "token-cache-stats-size-request", "token-cache-stats-clear-request", "token-cache-stats-value-response", "token-cache-stats-entries-response", "token-cache-stats-keys-response", "token-cache-stats-size-response", "token-cache-stats-query-request", "token-cache-stats-query-response", "map-stats-get-request", "map-stats-put-request", "map-stats-get-all-request", "map-stats-keys-request", "map-stats-size-request", "map-stats-clear-request", "map-stats-value-response", "map-stats-entries-response", "map-stats-keys-response", "map-stats-size-response", "map-stats-query-request", "map-stats-query-response", "graph-registry-get-request", "graph-registry-put-request", "graph-registry-get-all-request", "graph-registry-keys-request", "graph-registry-size-request", "graph-registry-clear-request", "graph-registry-value-response", "graph-registry-entries-response", "graph-registry-keys-response", "graph-registry-size-response", "graph-registry-query-request", "graph-registry-query-response", "service-connections-get-request", "service-connections-put-request", "service-connections-get-all-request", "service-connections-keys-request", "service-connections-size-request", "service-connections-clear-request", "service-connections-value-response", "service-connections-entries-response", "service-connections-keys-response", "service-connections-size-response", "service-connections-query-request", "service-connections-query-response", "queue-stats-get-request", "queue-stats-put-request", "queue-stats-get-all-request", "queue-stats-keys-request", "queue-stats-size-request", "queue-stats-clear-request", "queue-stats-value-response", "queue-stats-entries-response", "queue-stats-keys-response", "queue-stats-size-response", "queue-stats-query-request", "queue-stats-query-response", "topic-stats-get-request", "topic-stats-put-request", "topic-stats-get-all-request", "topic-stats-keys-request", "topic-stats-size-request", "topic-stats-clear-request", "topic-stats-value-response", "topic-stats-entries-response", "topic-stats-keys-response", "topic-stats-size-response", "topic-stats-query-request", "topic-stats-query-response", "watch-health-get-request", "watch-health-put-request", "watch-health-get-all-request", "watch-health-keys-request", "watch-health-size-request", "watch-health-clear-request", "watch-health-value-response", "watch-health-entries-response", "watch-health-keys-response", "watch-health-size-response", "watch-health-query-request", "watch-health-query-response", "mutation-rates-get-request", "mutation-rates-put-request", "mutation-rates-get-all-request", "mutation-rates-keys-request", "mutation-rates-size-request", "mutation-rates-clear-request", "mutation-rates-value-response", "mutation-rates-entries-response", "mutation-rates-keys-response", "mutation-rates-size-response", "mutation-rates-query-request", "mutation-rates-query-response", "instances-get-request", "instances-get-all-request", "instances-keys-request", "instances-size-request", "instances-value-response", "instances-entries-response", "instances-keys-response", "instances-size-response", "instances-query-request", "instances-query-response", "localities-get-request", "localities-put-request", "localities-get-all-request", "localities-keys-request", "localities-size-request", "localities-clear-request", "localities-value-response", "localities-entries-response", "localities-keys-response", "localities-size-response", "localities-query-request", "localities-query-response", "revocations-get-request", "revocations-put-request", "revocations-get-all-request", "revocations-keys-request", "revocations-size-request", "revocations-clear-request", "revocations-value-response", "revocations-entries-response", "revocations-keys-response", "revocations-size-response", "revocations-query-request", "revocations-query-response", "personal-principals-get-request", "personal-principals-put-request", "personal-principals-get-all-request", "personal-principals-keys-request", "personal-principals-size-request", "personal-principals-clear-request", "personal-principals-value-response", "personal-principals-entries-response", "personal-principals-keys-response", "personal-principals-size-response", "personal-principals-query-request", "personal-principals-query-response", "people-get-request", "people-put-request", "people-get-all-request", "people-keys-request", "people-size-request", "people-clear-request", "people-value-response", "people-entries-response", "people-keys-response", "people-size-response", "people-query-request", "people-query-response", "tenant-user-links-get-request", "tenant-user-links-put-request", "tenant-user-links-get-all-request", "tenant-user-links-keys-request", "tenant-user-links-size-request", "tenant-user-links-clear-request", "tenant-user-links-value-response", "tenant-user-links-entries-response", "tenant-user-links-keys-response", "tenant-user-links-size-response", "tenant-user-links-query-request", "tenant-user-links-query-response", "pending-approvals-get-request", "pending-approvals-put-request", "pending-approvals-get-all-request", "pending-approvals-keys-request", "pending-approvals-size-request", "pending-approvals-clear-request", "pending-approvals-value-response", "pending-approvals-entries-response", "pending-approvals-keys-response", "pending-approvals-size-response", "pending-approvals-query-request", "pending-approvals-query-response", "ca-certs-get-request", "ca-certs-put-request", "ca-certs-get-all-request", "ca-certs-keys-request", "ca-certs-size-request", "ca-certs-clear-request", "ca-certs-value-response", "ca-certs-entries-response", "ca-certs-keys-response", "ca-certs-size-response", "ca-certs-query-request", "ca-certs-query-response", "service-cas-get-request", "service-cas-put-request", "service-cas-get-all-request", "service-cas-keys-request", "service-cas-size-request", "service-cas-clear-request", "service-cas-value-response", "service-cas-entries-response", "service-cas-keys-response", "service-cas-size-response", "service-cas-query-request", "service-cas-query-response", "tenants-get-request", "tenants-put-request", "tenants-get-all-request", "tenants-keys-request", "tenants-size-request", "tenants-clear-request", "tenants-value-response", "tenants-entries-response", "tenants-keys-response", "tenants-size-response", "tenants-query-request", "tenants-query-response", "tenant-configs-get-request", "tenant-configs-put-request", "tenant-configs-get-all-request", "tenant-configs-keys-request", "tenant-configs-size-request", "tenant-configs-clear-request", "tenant-configs-value-response", "tenant-configs-entries-response", "tenant-configs-keys-response", "tenant-configs-size-response", "tenant-configs-query-request", "tenant-configs-query-response", "project-configs-get-request", "project-configs-put-request", "project-configs-get-all-request", "project-configs-keys-request", "project-configs-size-request", "project-configs-clear-request", "project-configs-value-response", "project-configs-entries-response", "project-configs-keys-response", "project-configs-size-response", "project-configs-query-request", "project-configs-query-response", "map-empty"}
 }
 
 // ParseTypeID converts a string to a TypeID enum value
@@ -958,6 +1247,52 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_WORKLOAD_REVOCATION, nil
 	case "workload-state", "type-id-workload-state":
 		return TypeID_TYPE_ID_WORKLOAD_STATE, nil
+	case "people-idp-credential", "type-id-people-idp-credential":
+		return TypeID_TYPE_ID_PEOPLE_IDP_CREDENTIAL, nil
+	case "person", "type-id-person":
+		return TypeID_TYPE_ID_PERSON, nil
+	case "personal-credential", "type-id-personal-credential":
+		return TypeID_TYPE_ID_PERSONAL_CREDENTIAL, nil
+	case "tenant-membership", "type-id-tenant-membership":
+		return TypeID_TYPE_ID_TENANT_MEMBERSHIP, nil
+	case "personal-principal", "type-id-personal-principal":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPAL, nil
+	case "tenant-user-link", "type-id-tenant-user-link":
+		return TypeID_TYPE_ID_TENANT_USER_LINK, nil
+	case "tenant-user-links", "type-id-tenant-user-links":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS, nil
+	case "principal-state", "type-id-principal-state":
+		return TypeID_TYPE_ID_PRINCIPAL_STATE, nil
+	case "revoke-tenant-user-link-request", "type-id-revoke-tenant-user-link-request":
+		return TypeID_TYPE_ID_REVOKE_TENANT_USER_LINK_REQUEST, nil
+	case "revoke-tenant-user-link-response", "type-id-revoke-tenant-user-link-response":
+		return TypeID_TYPE_ID_REVOKE_TENANT_USER_LINK_RESPONSE, nil
+	case "get-my-identity-request", "type-id-get-my-identity-request":
+		return TypeID_TYPE_ID_GET_MY_IDENTITY_REQUEST, nil
+	case "get-my-identity-response", "type-id-get-my-identity-response":
+		return TypeID_TYPE_ID_GET_MY_IDENTITY_RESPONSE, nil
+	case "create-personal-principal-request", "type-id-create-personal-principal-request":
+		return TypeID_TYPE_ID_CREATE_PERSONAL_PRINCIPAL_REQUEST, nil
+	case "create-personal-principal-response", "type-id-create-personal-principal-response":
+		return TypeID_TYPE_ID_CREATE_PERSONAL_PRINCIPAL_RESPONSE, nil
+	case "webauthn-assertion", "type-id-webauthn-assertion":
+		return TypeID_TYPE_ID_WEBAUTHN_ASSERTION, nil
+	case "tenant-user-link-side", "type-id-tenant-user-link-side":
+		return TypeID_TYPE_ID_TENANT_USER_LINK_SIDE, nil
+	case "create-tenant-user-link-request", "type-id-create-tenant-user-link-request":
+		return TypeID_TYPE_ID_CREATE_TENANT_USER_LINK_REQUEST, nil
+	case "create-tenant-user-link-response", "type-id-create-tenant-user-link-response":
+		return TypeID_TYPE_ID_CREATE_TENANT_USER_LINK_RESPONSE, nil
+	case "pending-approval", "type-id-pending-approval":
+		return TypeID_TYPE_ID_PENDING_APPROVAL, nil
+	case "create-pending-approval-request", "type-id-create-pending-approval-request":
+		return TypeID_TYPE_ID_CREATE_PENDING_APPROVAL_REQUEST, nil
+	case "create-pending-approval-response", "type-id-create-pending-approval-response":
+		return TypeID_TYPE_ID_CREATE_PENDING_APPROVAL_RESPONSE, nil
+	case "broker-pending-approval-request", "type-id-broker-pending-approval-request":
+		return TypeID_TYPE_ID_BROKER_PENDING_APPROVAL_REQUEST, nil
+	case "broker-pending-approval-response", "type-id-broker-pending-approval-response":
+		return TypeID_TYPE_ID_BROKER_PENDING_APPROVAL_RESPONSE, nil
 	case "ca", "type-id-ca":
 		return TypeID_TYPE_ID_CA, nil
 	case "constraints", "type-id-constraints":
@@ -1444,6 +1779,102 @@ func ParseTypeID(s string) (TypeID, error) {
 		return TypeID_TYPE_ID_REVOCATIONS_QUERY_REQUEST, nil
 	case "revocations-query-response", "type-id-revocations-query-response":
 		return TypeID_TYPE_ID_REVOCATIONS_QUERY_RESPONSE, nil
+	case "personal-principals-get-request", "type-id-personal-principals-get-request":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_GET_REQUEST, nil
+	case "personal-principals-put-request", "type-id-personal-principals-put-request":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_PUT_REQUEST, nil
+	case "personal-principals-get-all-request", "type-id-personal-principals-get-all-request":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_GET_ALL_REQUEST, nil
+	case "personal-principals-keys-request", "type-id-personal-principals-keys-request":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_KEYS_REQUEST, nil
+	case "personal-principals-size-request", "type-id-personal-principals-size-request":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_SIZE_REQUEST, nil
+	case "personal-principals-clear-request", "type-id-personal-principals-clear-request":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_CLEAR_REQUEST, nil
+	case "personal-principals-value-response", "type-id-personal-principals-value-response":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_VALUE_RESPONSE, nil
+	case "personal-principals-entries-response", "type-id-personal-principals-entries-response":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_ENTRIES_RESPONSE, nil
+	case "personal-principals-keys-response", "type-id-personal-principals-keys-response":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_KEYS_RESPONSE, nil
+	case "personal-principals-size-response", "type-id-personal-principals-size-response":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_SIZE_RESPONSE, nil
+	case "personal-principals-query-request", "type-id-personal-principals-query-request":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_QUERY_REQUEST, nil
+	case "personal-principals-query-response", "type-id-personal-principals-query-response":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_QUERY_RESPONSE, nil
+	case "people-get-request", "type-id-people-get-request":
+		return TypeID_TYPE_ID_PEOPLE_GET_REQUEST, nil
+	case "people-put-request", "type-id-people-put-request":
+		return TypeID_TYPE_ID_PEOPLE_PUT_REQUEST, nil
+	case "people-get-all-request", "type-id-people-get-all-request":
+		return TypeID_TYPE_ID_PEOPLE_GET_ALL_REQUEST, nil
+	case "people-keys-request", "type-id-people-keys-request":
+		return TypeID_TYPE_ID_PEOPLE_KEYS_REQUEST, nil
+	case "people-size-request", "type-id-people-size-request":
+		return TypeID_TYPE_ID_PEOPLE_SIZE_REQUEST, nil
+	case "people-clear-request", "type-id-people-clear-request":
+		return TypeID_TYPE_ID_PEOPLE_CLEAR_REQUEST, nil
+	case "people-value-response", "type-id-people-value-response":
+		return TypeID_TYPE_ID_PEOPLE_VALUE_RESPONSE, nil
+	case "people-entries-response", "type-id-people-entries-response":
+		return TypeID_TYPE_ID_PEOPLE_ENTRIES_RESPONSE, nil
+	case "people-keys-response", "type-id-people-keys-response":
+		return TypeID_TYPE_ID_PEOPLE_KEYS_RESPONSE, nil
+	case "people-size-response", "type-id-people-size-response":
+		return TypeID_TYPE_ID_PEOPLE_SIZE_RESPONSE, nil
+	case "people-query-request", "type-id-people-query-request":
+		return TypeID_TYPE_ID_PEOPLE_QUERY_REQUEST, nil
+	case "people-query-response", "type-id-people-query-response":
+		return TypeID_TYPE_ID_PEOPLE_QUERY_RESPONSE, nil
+	case "tenant-user-links-get-request", "type-id-tenant-user-links-get-request":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_GET_REQUEST, nil
+	case "tenant-user-links-put-request", "type-id-tenant-user-links-put-request":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_PUT_REQUEST, nil
+	case "tenant-user-links-get-all-request", "type-id-tenant-user-links-get-all-request":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_GET_ALL_REQUEST, nil
+	case "tenant-user-links-keys-request", "type-id-tenant-user-links-keys-request":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_KEYS_REQUEST, nil
+	case "tenant-user-links-size-request", "type-id-tenant-user-links-size-request":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_SIZE_REQUEST, nil
+	case "tenant-user-links-clear-request", "type-id-tenant-user-links-clear-request":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_CLEAR_REQUEST, nil
+	case "tenant-user-links-value-response", "type-id-tenant-user-links-value-response":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_VALUE_RESPONSE, nil
+	case "tenant-user-links-entries-response", "type-id-tenant-user-links-entries-response":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_ENTRIES_RESPONSE, nil
+	case "tenant-user-links-keys-response", "type-id-tenant-user-links-keys-response":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_KEYS_RESPONSE, nil
+	case "tenant-user-links-size-response", "type-id-tenant-user-links-size-response":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_SIZE_RESPONSE, nil
+	case "tenant-user-links-query-request", "type-id-tenant-user-links-query-request":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_QUERY_REQUEST, nil
+	case "tenant-user-links-query-response", "type-id-tenant-user-links-query-response":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_QUERY_RESPONSE, nil
+	case "pending-approvals-get-request", "type-id-pending-approvals-get-request":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_GET_REQUEST, nil
+	case "pending-approvals-put-request", "type-id-pending-approvals-put-request":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_PUT_REQUEST, nil
+	case "pending-approvals-get-all-request", "type-id-pending-approvals-get-all-request":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_GET_ALL_REQUEST, nil
+	case "pending-approvals-keys-request", "type-id-pending-approvals-keys-request":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_KEYS_REQUEST, nil
+	case "pending-approvals-size-request", "type-id-pending-approvals-size-request":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_SIZE_REQUEST, nil
+	case "pending-approvals-clear-request", "type-id-pending-approvals-clear-request":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_CLEAR_REQUEST, nil
+	case "pending-approvals-value-response", "type-id-pending-approvals-value-response":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_VALUE_RESPONSE, nil
+	case "pending-approvals-entries-response", "type-id-pending-approvals-entries-response":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_ENTRIES_RESPONSE, nil
+	case "pending-approvals-keys-response", "type-id-pending-approvals-keys-response":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_KEYS_RESPONSE, nil
+	case "pending-approvals-size-response", "type-id-pending-approvals-size-response":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_SIZE_RESPONSE, nil
+	case "pending-approvals-query-request", "type-id-pending-approvals-query-request":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_QUERY_REQUEST, nil
+	case "pending-approvals-query-response", "type-id-pending-approvals-query-response":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_QUERY_RESPONSE, nil
 	case "ca-certs-get-request", "type-id-ca-certs-get-request":
 		return TypeID_TYPE_ID_CA_CERTS_GET_REQUEST, nil
 	case "ca-certs-put-request", "type-id-ca-certs-put-request":
@@ -1652,6 +2083,52 @@ func TypeIDToString(v TypeID) string {
 		return "workload-revocation"
 	case TypeID_TYPE_ID_WORKLOAD_STATE:
 		return "workload-state"
+	case TypeID_TYPE_ID_PEOPLE_IDP_CREDENTIAL:
+		return "people-idp-credential"
+	case TypeID_TYPE_ID_PERSON:
+		return "person"
+	case TypeID_TYPE_ID_PERSONAL_CREDENTIAL:
+		return "personal-credential"
+	case TypeID_TYPE_ID_TENANT_MEMBERSHIP:
+		return "tenant-membership"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPAL:
+		return "personal-principal"
+	case TypeID_TYPE_ID_TENANT_USER_LINK:
+		return "tenant-user-link"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS:
+		return "tenant-user-links"
+	case TypeID_TYPE_ID_PRINCIPAL_STATE:
+		return "principal-state"
+	case TypeID_TYPE_ID_REVOKE_TENANT_USER_LINK_REQUEST:
+		return "revoke-tenant-user-link-request"
+	case TypeID_TYPE_ID_REVOKE_TENANT_USER_LINK_RESPONSE:
+		return "revoke-tenant-user-link-response"
+	case TypeID_TYPE_ID_GET_MY_IDENTITY_REQUEST:
+		return "get-my-identity-request"
+	case TypeID_TYPE_ID_GET_MY_IDENTITY_RESPONSE:
+		return "get-my-identity-response"
+	case TypeID_TYPE_ID_CREATE_PERSONAL_PRINCIPAL_REQUEST:
+		return "create-personal-principal-request"
+	case TypeID_TYPE_ID_CREATE_PERSONAL_PRINCIPAL_RESPONSE:
+		return "create-personal-principal-response"
+	case TypeID_TYPE_ID_WEBAUTHN_ASSERTION:
+		return "webauthn-assertion"
+	case TypeID_TYPE_ID_TENANT_USER_LINK_SIDE:
+		return "tenant-user-link-side"
+	case TypeID_TYPE_ID_CREATE_TENANT_USER_LINK_REQUEST:
+		return "create-tenant-user-link-request"
+	case TypeID_TYPE_ID_CREATE_TENANT_USER_LINK_RESPONSE:
+		return "create-tenant-user-link-response"
+	case TypeID_TYPE_ID_PENDING_APPROVAL:
+		return "pending-approval"
+	case TypeID_TYPE_ID_CREATE_PENDING_APPROVAL_REQUEST:
+		return "create-pending-approval-request"
+	case TypeID_TYPE_ID_CREATE_PENDING_APPROVAL_RESPONSE:
+		return "create-pending-approval-response"
+	case TypeID_TYPE_ID_BROKER_PENDING_APPROVAL_REQUEST:
+		return "broker-pending-approval-request"
+	case TypeID_TYPE_ID_BROKER_PENDING_APPROVAL_RESPONSE:
+		return "broker-pending-approval-response"
 	case TypeID_TYPE_ID_CA:
 		return "ca"
 	case TypeID_TYPE_ID_CONSTRAINTS:
@@ -2138,6 +2615,102 @@ func TypeIDToString(v TypeID) string {
 		return "revocations-query-request"
 	case TypeID_TYPE_ID_REVOCATIONS_QUERY_RESPONSE:
 		return "revocations-query-response"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_GET_REQUEST:
+		return "personal-principals-get-request"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_PUT_REQUEST:
+		return "personal-principals-put-request"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_GET_ALL_REQUEST:
+		return "personal-principals-get-all-request"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_KEYS_REQUEST:
+		return "personal-principals-keys-request"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_SIZE_REQUEST:
+		return "personal-principals-size-request"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_CLEAR_REQUEST:
+		return "personal-principals-clear-request"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_VALUE_RESPONSE:
+		return "personal-principals-value-response"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_ENTRIES_RESPONSE:
+		return "personal-principals-entries-response"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_KEYS_RESPONSE:
+		return "personal-principals-keys-response"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_SIZE_RESPONSE:
+		return "personal-principals-size-response"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_QUERY_REQUEST:
+		return "personal-principals-query-request"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_QUERY_RESPONSE:
+		return "personal-principals-query-response"
+	case TypeID_TYPE_ID_PEOPLE_GET_REQUEST:
+		return "people-get-request"
+	case TypeID_TYPE_ID_PEOPLE_PUT_REQUEST:
+		return "people-put-request"
+	case TypeID_TYPE_ID_PEOPLE_GET_ALL_REQUEST:
+		return "people-get-all-request"
+	case TypeID_TYPE_ID_PEOPLE_KEYS_REQUEST:
+		return "people-keys-request"
+	case TypeID_TYPE_ID_PEOPLE_SIZE_REQUEST:
+		return "people-size-request"
+	case TypeID_TYPE_ID_PEOPLE_CLEAR_REQUEST:
+		return "people-clear-request"
+	case TypeID_TYPE_ID_PEOPLE_VALUE_RESPONSE:
+		return "people-value-response"
+	case TypeID_TYPE_ID_PEOPLE_ENTRIES_RESPONSE:
+		return "people-entries-response"
+	case TypeID_TYPE_ID_PEOPLE_KEYS_RESPONSE:
+		return "people-keys-response"
+	case TypeID_TYPE_ID_PEOPLE_SIZE_RESPONSE:
+		return "people-size-response"
+	case TypeID_TYPE_ID_PEOPLE_QUERY_REQUEST:
+		return "people-query-request"
+	case TypeID_TYPE_ID_PEOPLE_QUERY_RESPONSE:
+		return "people-query-response"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_GET_REQUEST:
+		return "tenant-user-links-get-request"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_PUT_REQUEST:
+		return "tenant-user-links-put-request"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_GET_ALL_REQUEST:
+		return "tenant-user-links-get-all-request"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_KEYS_REQUEST:
+		return "tenant-user-links-keys-request"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_SIZE_REQUEST:
+		return "tenant-user-links-size-request"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_CLEAR_REQUEST:
+		return "tenant-user-links-clear-request"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_VALUE_RESPONSE:
+		return "tenant-user-links-value-response"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_ENTRIES_RESPONSE:
+		return "tenant-user-links-entries-response"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_KEYS_RESPONSE:
+		return "tenant-user-links-keys-response"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_SIZE_RESPONSE:
+		return "tenant-user-links-size-response"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_QUERY_REQUEST:
+		return "tenant-user-links-query-request"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_QUERY_RESPONSE:
+		return "tenant-user-links-query-response"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_GET_REQUEST:
+		return "pending-approvals-get-request"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_PUT_REQUEST:
+		return "pending-approvals-put-request"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_GET_ALL_REQUEST:
+		return "pending-approvals-get-all-request"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_KEYS_REQUEST:
+		return "pending-approvals-keys-request"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_SIZE_REQUEST:
+		return "pending-approvals-size-request"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_CLEAR_REQUEST:
+		return "pending-approvals-clear-request"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_VALUE_RESPONSE:
+		return "pending-approvals-value-response"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_ENTRIES_RESPONSE:
+		return "pending-approvals-entries-response"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_KEYS_RESPONSE:
+		return "pending-approvals-keys-response"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_SIZE_RESPONSE:
+		return "pending-approvals-size-response"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_QUERY_REQUEST:
+		return "pending-approvals-query-request"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_QUERY_RESPONSE:
+		return "pending-approvals-query-response"
 	case TypeID_TYPE_ID_CA_CERTS_GET_REQUEST:
 		return "ca-certs-get-request"
 	case TypeID_TYPE_ID_CA_CERTS_PUT_REQUEST:
@@ -2338,6 +2911,52 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_WORKLOAD_REVOCATION
 	case "workload-state", "type-id-workload-state":
 		return TypeID_TYPE_ID_WORKLOAD_STATE
+	case "people-idp-credential", "type-id-people-idp-credential":
+		return TypeID_TYPE_ID_PEOPLE_IDP_CREDENTIAL
+	case "person", "type-id-person":
+		return TypeID_TYPE_ID_PERSON
+	case "personal-credential", "type-id-personal-credential":
+		return TypeID_TYPE_ID_PERSONAL_CREDENTIAL
+	case "tenant-membership", "type-id-tenant-membership":
+		return TypeID_TYPE_ID_TENANT_MEMBERSHIP
+	case "personal-principal", "type-id-personal-principal":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPAL
+	case "tenant-user-link", "type-id-tenant-user-link":
+		return TypeID_TYPE_ID_TENANT_USER_LINK
+	case "tenant-user-links", "type-id-tenant-user-links":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS
+	case "principal-state", "type-id-principal-state":
+		return TypeID_TYPE_ID_PRINCIPAL_STATE
+	case "revoke-tenant-user-link-request", "type-id-revoke-tenant-user-link-request":
+		return TypeID_TYPE_ID_REVOKE_TENANT_USER_LINK_REQUEST
+	case "revoke-tenant-user-link-response", "type-id-revoke-tenant-user-link-response":
+		return TypeID_TYPE_ID_REVOKE_TENANT_USER_LINK_RESPONSE
+	case "get-my-identity-request", "type-id-get-my-identity-request":
+		return TypeID_TYPE_ID_GET_MY_IDENTITY_REQUEST
+	case "get-my-identity-response", "type-id-get-my-identity-response":
+		return TypeID_TYPE_ID_GET_MY_IDENTITY_RESPONSE
+	case "create-personal-principal-request", "type-id-create-personal-principal-request":
+		return TypeID_TYPE_ID_CREATE_PERSONAL_PRINCIPAL_REQUEST
+	case "create-personal-principal-response", "type-id-create-personal-principal-response":
+		return TypeID_TYPE_ID_CREATE_PERSONAL_PRINCIPAL_RESPONSE
+	case "webauthn-assertion", "type-id-webauthn-assertion":
+		return TypeID_TYPE_ID_WEBAUTHN_ASSERTION
+	case "tenant-user-link-side", "type-id-tenant-user-link-side":
+		return TypeID_TYPE_ID_TENANT_USER_LINK_SIDE
+	case "create-tenant-user-link-request", "type-id-create-tenant-user-link-request":
+		return TypeID_TYPE_ID_CREATE_TENANT_USER_LINK_REQUEST
+	case "create-tenant-user-link-response", "type-id-create-tenant-user-link-response":
+		return TypeID_TYPE_ID_CREATE_TENANT_USER_LINK_RESPONSE
+	case "pending-approval", "type-id-pending-approval":
+		return TypeID_TYPE_ID_PENDING_APPROVAL
+	case "create-pending-approval-request", "type-id-create-pending-approval-request":
+		return TypeID_TYPE_ID_CREATE_PENDING_APPROVAL_REQUEST
+	case "create-pending-approval-response", "type-id-create-pending-approval-response":
+		return TypeID_TYPE_ID_CREATE_PENDING_APPROVAL_RESPONSE
+	case "broker-pending-approval-request", "type-id-broker-pending-approval-request":
+		return TypeID_TYPE_ID_BROKER_PENDING_APPROVAL_REQUEST
+	case "broker-pending-approval-response", "type-id-broker-pending-approval-response":
+		return TypeID_TYPE_ID_BROKER_PENDING_APPROVAL_RESPONSE
 	case "ca", "type-id-ca":
 		return TypeID_TYPE_ID_CA
 	case "constraints", "type-id-constraints":
@@ -2824,6 +3443,102 @@ func ParseTypeIDLiberal(s string) TypeID {
 		return TypeID_TYPE_ID_REVOCATIONS_QUERY_REQUEST
 	case "revocations-query-response", "type-id-revocations-query-response":
 		return TypeID_TYPE_ID_REVOCATIONS_QUERY_RESPONSE
+	case "personal-principals-get-request", "type-id-personal-principals-get-request":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_GET_REQUEST
+	case "personal-principals-put-request", "type-id-personal-principals-put-request":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_PUT_REQUEST
+	case "personal-principals-get-all-request", "type-id-personal-principals-get-all-request":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_GET_ALL_REQUEST
+	case "personal-principals-keys-request", "type-id-personal-principals-keys-request":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_KEYS_REQUEST
+	case "personal-principals-size-request", "type-id-personal-principals-size-request":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_SIZE_REQUEST
+	case "personal-principals-clear-request", "type-id-personal-principals-clear-request":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_CLEAR_REQUEST
+	case "personal-principals-value-response", "type-id-personal-principals-value-response":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_VALUE_RESPONSE
+	case "personal-principals-entries-response", "type-id-personal-principals-entries-response":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_ENTRIES_RESPONSE
+	case "personal-principals-keys-response", "type-id-personal-principals-keys-response":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_KEYS_RESPONSE
+	case "personal-principals-size-response", "type-id-personal-principals-size-response":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_SIZE_RESPONSE
+	case "personal-principals-query-request", "type-id-personal-principals-query-request":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_QUERY_REQUEST
+	case "personal-principals-query-response", "type-id-personal-principals-query-response":
+		return TypeID_TYPE_ID_PERSONAL_PRINCIPALS_QUERY_RESPONSE
+	case "people-get-request", "type-id-people-get-request":
+		return TypeID_TYPE_ID_PEOPLE_GET_REQUEST
+	case "people-put-request", "type-id-people-put-request":
+		return TypeID_TYPE_ID_PEOPLE_PUT_REQUEST
+	case "people-get-all-request", "type-id-people-get-all-request":
+		return TypeID_TYPE_ID_PEOPLE_GET_ALL_REQUEST
+	case "people-keys-request", "type-id-people-keys-request":
+		return TypeID_TYPE_ID_PEOPLE_KEYS_REQUEST
+	case "people-size-request", "type-id-people-size-request":
+		return TypeID_TYPE_ID_PEOPLE_SIZE_REQUEST
+	case "people-clear-request", "type-id-people-clear-request":
+		return TypeID_TYPE_ID_PEOPLE_CLEAR_REQUEST
+	case "people-value-response", "type-id-people-value-response":
+		return TypeID_TYPE_ID_PEOPLE_VALUE_RESPONSE
+	case "people-entries-response", "type-id-people-entries-response":
+		return TypeID_TYPE_ID_PEOPLE_ENTRIES_RESPONSE
+	case "people-keys-response", "type-id-people-keys-response":
+		return TypeID_TYPE_ID_PEOPLE_KEYS_RESPONSE
+	case "people-size-response", "type-id-people-size-response":
+		return TypeID_TYPE_ID_PEOPLE_SIZE_RESPONSE
+	case "people-query-request", "type-id-people-query-request":
+		return TypeID_TYPE_ID_PEOPLE_QUERY_REQUEST
+	case "people-query-response", "type-id-people-query-response":
+		return TypeID_TYPE_ID_PEOPLE_QUERY_RESPONSE
+	case "tenant-user-links-get-request", "type-id-tenant-user-links-get-request":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_GET_REQUEST
+	case "tenant-user-links-put-request", "type-id-tenant-user-links-put-request":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_PUT_REQUEST
+	case "tenant-user-links-get-all-request", "type-id-tenant-user-links-get-all-request":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_GET_ALL_REQUEST
+	case "tenant-user-links-keys-request", "type-id-tenant-user-links-keys-request":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_KEYS_REQUEST
+	case "tenant-user-links-size-request", "type-id-tenant-user-links-size-request":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_SIZE_REQUEST
+	case "tenant-user-links-clear-request", "type-id-tenant-user-links-clear-request":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_CLEAR_REQUEST
+	case "tenant-user-links-value-response", "type-id-tenant-user-links-value-response":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_VALUE_RESPONSE
+	case "tenant-user-links-entries-response", "type-id-tenant-user-links-entries-response":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_ENTRIES_RESPONSE
+	case "tenant-user-links-keys-response", "type-id-tenant-user-links-keys-response":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_KEYS_RESPONSE
+	case "tenant-user-links-size-response", "type-id-tenant-user-links-size-response":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_SIZE_RESPONSE
+	case "tenant-user-links-query-request", "type-id-tenant-user-links-query-request":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_QUERY_REQUEST
+	case "tenant-user-links-query-response", "type-id-tenant-user-links-query-response":
+		return TypeID_TYPE_ID_TENANT_USER_LINKS_QUERY_RESPONSE
+	case "pending-approvals-get-request", "type-id-pending-approvals-get-request":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_GET_REQUEST
+	case "pending-approvals-put-request", "type-id-pending-approvals-put-request":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_PUT_REQUEST
+	case "pending-approvals-get-all-request", "type-id-pending-approvals-get-all-request":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_GET_ALL_REQUEST
+	case "pending-approvals-keys-request", "type-id-pending-approvals-keys-request":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_KEYS_REQUEST
+	case "pending-approvals-size-request", "type-id-pending-approvals-size-request":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_SIZE_REQUEST
+	case "pending-approvals-clear-request", "type-id-pending-approvals-clear-request":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_CLEAR_REQUEST
+	case "pending-approvals-value-response", "type-id-pending-approvals-value-response":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_VALUE_RESPONSE
+	case "pending-approvals-entries-response", "type-id-pending-approvals-entries-response":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_ENTRIES_RESPONSE
+	case "pending-approvals-keys-response", "type-id-pending-approvals-keys-response":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_KEYS_RESPONSE
+	case "pending-approvals-size-response", "type-id-pending-approvals-size-response":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_SIZE_RESPONSE
+	case "pending-approvals-query-request", "type-id-pending-approvals-query-request":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_QUERY_REQUEST
+	case "pending-approvals-query-response", "type-id-pending-approvals-query-response":
+		return TypeID_TYPE_ID_PENDING_APPROVALS_QUERY_RESPONSE
 	case "ca-certs-get-request", "type-id-ca-certs-get-request":
 		return TypeID_TYPE_ID_CA_CERTS_GET_REQUEST
 	case "ca-certs-put-request", "type-id-ca-certs-put-request":
@@ -3012,6 +3727,52 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_WORKLOAD_REVOCATION"
 	case TypeID_TYPE_ID_WORKLOAD_STATE:
 		return "TYPE_ID_WORKLOAD_STATE"
+	case TypeID_TYPE_ID_PEOPLE_IDP_CREDENTIAL:
+		return "TYPE_ID_PEOPLE_IDP_CREDENTIAL"
+	case TypeID_TYPE_ID_PERSON:
+		return "TYPE_ID_PERSON"
+	case TypeID_TYPE_ID_PERSONAL_CREDENTIAL:
+		return "TYPE_ID_PERSONAL_CREDENTIAL"
+	case TypeID_TYPE_ID_TENANT_MEMBERSHIP:
+		return "TYPE_ID_TENANT_MEMBERSHIP"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPAL:
+		return "TYPE_ID_PERSONAL_PRINCIPAL"
+	case TypeID_TYPE_ID_TENANT_USER_LINK:
+		return "TYPE_ID_TENANT_USER_LINK"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS:
+		return "TYPE_ID_TENANT_USER_LINKS"
+	case TypeID_TYPE_ID_PRINCIPAL_STATE:
+		return "TYPE_ID_PRINCIPAL_STATE"
+	case TypeID_TYPE_ID_REVOKE_TENANT_USER_LINK_REQUEST:
+		return "TYPE_ID_REVOKE_TENANT_USER_LINK_REQUEST"
+	case TypeID_TYPE_ID_REVOKE_TENANT_USER_LINK_RESPONSE:
+		return "TYPE_ID_REVOKE_TENANT_USER_LINK_RESPONSE"
+	case TypeID_TYPE_ID_GET_MY_IDENTITY_REQUEST:
+		return "TYPE_ID_GET_MY_IDENTITY_REQUEST"
+	case TypeID_TYPE_ID_GET_MY_IDENTITY_RESPONSE:
+		return "TYPE_ID_GET_MY_IDENTITY_RESPONSE"
+	case TypeID_TYPE_ID_CREATE_PERSONAL_PRINCIPAL_REQUEST:
+		return "TYPE_ID_CREATE_PERSONAL_PRINCIPAL_REQUEST"
+	case TypeID_TYPE_ID_CREATE_PERSONAL_PRINCIPAL_RESPONSE:
+		return "TYPE_ID_CREATE_PERSONAL_PRINCIPAL_RESPONSE"
+	case TypeID_TYPE_ID_WEBAUTHN_ASSERTION:
+		return "TYPE_ID_WEBAUTHN_ASSERTION"
+	case TypeID_TYPE_ID_TENANT_USER_LINK_SIDE:
+		return "TYPE_ID_TENANT_USER_LINK_SIDE"
+	case TypeID_TYPE_ID_CREATE_TENANT_USER_LINK_REQUEST:
+		return "TYPE_ID_CREATE_TENANT_USER_LINK_REQUEST"
+	case TypeID_TYPE_ID_CREATE_TENANT_USER_LINK_RESPONSE:
+		return "TYPE_ID_CREATE_TENANT_USER_LINK_RESPONSE"
+	case TypeID_TYPE_ID_PENDING_APPROVAL:
+		return "TYPE_ID_PENDING_APPROVAL"
+	case TypeID_TYPE_ID_CREATE_PENDING_APPROVAL_REQUEST:
+		return "TYPE_ID_CREATE_PENDING_APPROVAL_REQUEST"
+	case TypeID_TYPE_ID_CREATE_PENDING_APPROVAL_RESPONSE:
+		return "TYPE_ID_CREATE_PENDING_APPROVAL_RESPONSE"
+	case TypeID_TYPE_ID_BROKER_PENDING_APPROVAL_REQUEST:
+		return "TYPE_ID_BROKER_PENDING_APPROVAL_REQUEST"
+	case TypeID_TYPE_ID_BROKER_PENDING_APPROVAL_RESPONSE:
+		return "TYPE_ID_BROKER_PENDING_APPROVAL_RESPONSE"
 	case TypeID_TYPE_ID_CA:
 		return "TYPE_ID_CA"
 	case TypeID_TYPE_ID_CONSTRAINTS:
@@ -3498,6 +4259,102 @@ func TypeIDToSpecName(v TypeID) string {
 		return "TYPE_ID_REVOCATIONS_QUERY_REQUEST"
 	case TypeID_TYPE_ID_REVOCATIONS_QUERY_RESPONSE:
 		return "TYPE_ID_REVOCATIONS_QUERY_RESPONSE"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_GET_REQUEST:
+		return "TYPE_ID_PERSONAL_PRINCIPALS_GET_REQUEST"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_PUT_REQUEST:
+		return "TYPE_ID_PERSONAL_PRINCIPALS_PUT_REQUEST"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_GET_ALL_REQUEST:
+		return "TYPE_ID_PERSONAL_PRINCIPALS_GET_ALL_REQUEST"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_KEYS_REQUEST:
+		return "TYPE_ID_PERSONAL_PRINCIPALS_KEYS_REQUEST"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_SIZE_REQUEST:
+		return "TYPE_ID_PERSONAL_PRINCIPALS_SIZE_REQUEST"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_CLEAR_REQUEST:
+		return "TYPE_ID_PERSONAL_PRINCIPALS_CLEAR_REQUEST"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_VALUE_RESPONSE:
+		return "TYPE_ID_PERSONAL_PRINCIPALS_VALUE_RESPONSE"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_ENTRIES_RESPONSE:
+		return "TYPE_ID_PERSONAL_PRINCIPALS_ENTRIES_RESPONSE"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_KEYS_RESPONSE:
+		return "TYPE_ID_PERSONAL_PRINCIPALS_KEYS_RESPONSE"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_SIZE_RESPONSE:
+		return "TYPE_ID_PERSONAL_PRINCIPALS_SIZE_RESPONSE"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_QUERY_REQUEST:
+		return "TYPE_ID_PERSONAL_PRINCIPALS_QUERY_REQUEST"
+	case TypeID_TYPE_ID_PERSONAL_PRINCIPALS_QUERY_RESPONSE:
+		return "TYPE_ID_PERSONAL_PRINCIPALS_QUERY_RESPONSE"
+	case TypeID_TYPE_ID_PEOPLE_GET_REQUEST:
+		return "TYPE_ID_PEOPLE_GET_REQUEST"
+	case TypeID_TYPE_ID_PEOPLE_PUT_REQUEST:
+		return "TYPE_ID_PEOPLE_PUT_REQUEST"
+	case TypeID_TYPE_ID_PEOPLE_GET_ALL_REQUEST:
+		return "TYPE_ID_PEOPLE_GET_ALL_REQUEST"
+	case TypeID_TYPE_ID_PEOPLE_KEYS_REQUEST:
+		return "TYPE_ID_PEOPLE_KEYS_REQUEST"
+	case TypeID_TYPE_ID_PEOPLE_SIZE_REQUEST:
+		return "TYPE_ID_PEOPLE_SIZE_REQUEST"
+	case TypeID_TYPE_ID_PEOPLE_CLEAR_REQUEST:
+		return "TYPE_ID_PEOPLE_CLEAR_REQUEST"
+	case TypeID_TYPE_ID_PEOPLE_VALUE_RESPONSE:
+		return "TYPE_ID_PEOPLE_VALUE_RESPONSE"
+	case TypeID_TYPE_ID_PEOPLE_ENTRIES_RESPONSE:
+		return "TYPE_ID_PEOPLE_ENTRIES_RESPONSE"
+	case TypeID_TYPE_ID_PEOPLE_KEYS_RESPONSE:
+		return "TYPE_ID_PEOPLE_KEYS_RESPONSE"
+	case TypeID_TYPE_ID_PEOPLE_SIZE_RESPONSE:
+		return "TYPE_ID_PEOPLE_SIZE_RESPONSE"
+	case TypeID_TYPE_ID_PEOPLE_QUERY_REQUEST:
+		return "TYPE_ID_PEOPLE_QUERY_REQUEST"
+	case TypeID_TYPE_ID_PEOPLE_QUERY_RESPONSE:
+		return "TYPE_ID_PEOPLE_QUERY_RESPONSE"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_GET_REQUEST:
+		return "TYPE_ID_TENANT_USER_LINKS_GET_REQUEST"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_PUT_REQUEST:
+		return "TYPE_ID_TENANT_USER_LINKS_PUT_REQUEST"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_GET_ALL_REQUEST:
+		return "TYPE_ID_TENANT_USER_LINKS_GET_ALL_REQUEST"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_KEYS_REQUEST:
+		return "TYPE_ID_TENANT_USER_LINKS_KEYS_REQUEST"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_SIZE_REQUEST:
+		return "TYPE_ID_TENANT_USER_LINKS_SIZE_REQUEST"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_CLEAR_REQUEST:
+		return "TYPE_ID_TENANT_USER_LINKS_CLEAR_REQUEST"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_VALUE_RESPONSE:
+		return "TYPE_ID_TENANT_USER_LINKS_VALUE_RESPONSE"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_ENTRIES_RESPONSE:
+		return "TYPE_ID_TENANT_USER_LINKS_ENTRIES_RESPONSE"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_KEYS_RESPONSE:
+		return "TYPE_ID_TENANT_USER_LINKS_KEYS_RESPONSE"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_SIZE_RESPONSE:
+		return "TYPE_ID_TENANT_USER_LINKS_SIZE_RESPONSE"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_QUERY_REQUEST:
+		return "TYPE_ID_TENANT_USER_LINKS_QUERY_REQUEST"
+	case TypeID_TYPE_ID_TENANT_USER_LINKS_QUERY_RESPONSE:
+		return "TYPE_ID_TENANT_USER_LINKS_QUERY_RESPONSE"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_GET_REQUEST:
+		return "TYPE_ID_PENDING_APPROVALS_GET_REQUEST"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_PUT_REQUEST:
+		return "TYPE_ID_PENDING_APPROVALS_PUT_REQUEST"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_GET_ALL_REQUEST:
+		return "TYPE_ID_PENDING_APPROVALS_GET_ALL_REQUEST"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_KEYS_REQUEST:
+		return "TYPE_ID_PENDING_APPROVALS_KEYS_REQUEST"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_SIZE_REQUEST:
+		return "TYPE_ID_PENDING_APPROVALS_SIZE_REQUEST"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_CLEAR_REQUEST:
+		return "TYPE_ID_PENDING_APPROVALS_CLEAR_REQUEST"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_VALUE_RESPONSE:
+		return "TYPE_ID_PENDING_APPROVALS_VALUE_RESPONSE"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_ENTRIES_RESPONSE:
+		return "TYPE_ID_PENDING_APPROVALS_ENTRIES_RESPONSE"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_KEYS_RESPONSE:
+		return "TYPE_ID_PENDING_APPROVALS_KEYS_RESPONSE"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_SIZE_RESPONSE:
+		return "TYPE_ID_PENDING_APPROVALS_SIZE_RESPONSE"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_QUERY_REQUEST:
+		return "TYPE_ID_PENDING_APPROVALS_QUERY_REQUEST"
+	case TypeID_TYPE_ID_PENDING_APPROVALS_QUERY_RESPONSE:
+		return "TYPE_ID_PENDING_APPROVALS_QUERY_RESPONSE"
 	case TypeID_TYPE_ID_CA_CERTS_GET_REQUEST:
 		return "TYPE_ID_CA_CERTS_GET_REQUEST"
 	case TypeID_TYPE_ID_CA_CERTS_PUT_REQUEST:
@@ -3634,9 +4491,13 @@ func MintRpcIdValues() []MintRpcId {
 		MintRpcId_MINT_RPC_ID_MINT_SERVICE_TOKEN,
 		MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN,
 		MintRpcId_MINT_RPC_ID_MINT_DELEGATED_TOKEN,
+		MintRpcId_MINT_RPC_ID_BROKER_DELEGATE_OFFLINE_TOKEN,
 		MintRpcId_MINT_RPC_ID_MINT_TOKEN,
 		MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_TOKEN,
 		MintRpcId_MINT_RPC_ID_MINT_CLIENT_TOKEN,
+		MintRpcId_MINT_RPC_ID_CREATE_PERSONAL_PRINCIPAL,
+		MintRpcId_MINT_RPC_ID_CREATE_TENANT_USER_LINK,
+		MintRpcId_MINT_RPC_ID_BROKER_PENDING_APPROVAL,
 		MintRpcId_MINT_RPC_ID_MINT_X509_CERT,
 		MintRpcId_MINT_RPC_ID_MINT_WORKLOAD,
 		MintRpcId_MINT_RPC_ID_REVOKE_WORKLOAD,
@@ -3646,7 +4507,7 @@ func MintRpcIdValues() []MintRpcId {
 
 // MintRpcIdStringValues returns all valid MintRpcId names as strings
 func MintRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "mint-service-token", "mint-user-token", "mint-delegated-token", "mint-token", "mint-external-token", "mint-client-token", "mint-x509-cert", "mint-workload", "revoke-workload", "revoke-grant"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "mint-service-token", "mint-user-token", "mint-delegated-token", "broker-delegate-offline-token", "mint-token", "mint-external-token", "mint-client-token", "create-personal-principal", "create-tenant-user-link", "broker-pending-approval", "mint-x509-cert", "mint-workload", "revoke-workload", "revoke-grant"}
 }
 
 // ParseMintRpcId converts a string to a MintRpcId enum value
@@ -3669,12 +4530,20 @@ func ParseMintRpcId(s string) (MintRpcId, error) {
 		return MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN, nil
 	case "mint-delegated-token", "mint-rpc-id-mint-delegated-token":
 		return MintRpcId_MINT_RPC_ID_MINT_DELEGATED_TOKEN, nil
+	case "broker-delegate-offline-token", "mint-rpc-id-broker-delegate-offline-token":
+		return MintRpcId_MINT_RPC_ID_BROKER_DELEGATE_OFFLINE_TOKEN, nil
 	case "mint-token", "mint-rpc-id-mint-token":
 		return MintRpcId_MINT_RPC_ID_MINT_TOKEN, nil
 	case "mint-external-token", "mint-rpc-id-mint-external-token":
 		return MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_TOKEN, nil
 	case "mint-client-token", "mint-rpc-id-mint-client-token":
 		return MintRpcId_MINT_RPC_ID_MINT_CLIENT_TOKEN, nil
+	case "create-personal-principal", "mint-rpc-id-create-personal-principal":
+		return MintRpcId_MINT_RPC_ID_CREATE_PERSONAL_PRINCIPAL, nil
+	case "create-tenant-user-link", "mint-rpc-id-create-tenant-user-link":
+		return MintRpcId_MINT_RPC_ID_CREATE_TENANT_USER_LINK, nil
+	case "broker-pending-approval", "mint-rpc-id-broker-pending-approval":
+		return MintRpcId_MINT_RPC_ID_BROKER_PENDING_APPROVAL, nil
 	case "mint-x509-cert", "mint-rpc-id-mint-x509-cert":
 		return MintRpcId_MINT_RPC_ID_MINT_X509_CERT, nil
 	case "mint-workload", "mint-rpc-id-mint-workload":
@@ -3725,12 +4594,20 @@ func MintRpcIdToString(v MintRpcId) string {
 		return "mint-user-token"
 	case MintRpcId_MINT_RPC_ID_MINT_DELEGATED_TOKEN:
 		return "mint-delegated-token"
+	case MintRpcId_MINT_RPC_ID_BROKER_DELEGATE_OFFLINE_TOKEN:
+		return "broker-delegate-offline-token"
 	case MintRpcId_MINT_RPC_ID_MINT_TOKEN:
 		return "mint-token"
 	case MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_TOKEN:
 		return "mint-external-token"
 	case MintRpcId_MINT_RPC_ID_MINT_CLIENT_TOKEN:
 		return "mint-client-token"
+	case MintRpcId_MINT_RPC_ID_CREATE_PERSONAL_PRINCIPAL:
+		return "create-personal-principal"
+	case MintRpcId_MINT_RPC_ID_CREATE_TENANT_USER_LINK:
+		return "create-tenant-user-link"
+	case MintRpcId_MINT_RPC_ID_BROKER_PENDING_APPROVAL:
+		return "broker-pending-approval"
 	case MintRpcId_MINT_RPC_ID_MINT_X509_CERT:
 		return "mint-x509-cert"
 	case MintRpcId_MINT_RPC_ID_MINT_WORKLOAD:
@@ -3773,12 +4650,20 @@ func ParseMintRpcIdLiberal(s string) MintRpcId {
 		return MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN
 	case "mint-delegated-token", "mint-rpc-id-mint-delegated-token":
 		return MintRpcId_MINT_RPC_ID_MINT_DELEGATED_TOKEN
+	case "broker-delegate-offline-token", "mint-rpc-id-broker-delegate-offline-token":
+		return MintRpcId_MINT_RPC_ID_BROKER_DELEGATE_OFFLINE_TOKEN
 	case "mint-token", "mint-rpc-id-mint-token":
 		return MintRpcId_MINT_RPC_ID_MINT_TOKEN
 	case "mint-external-token", "mint-rpc-id-mint-external-token":
 		return MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_TOKEN
 	case "mint-client-token", "mint-rpc-id-mint-client-token":
 		return MintRpcId_MINT_RPC_ID_MINT_CLIENT_TOKEN
+	case "create-personal-principal", "mint-rpc-id-create-personal-principal":
+		return MintRpcId_MINT_RPC_ID_CREATE_PERSONAL_PRINCIPAL
+	case "create-tenant-user-link", "mint-rpc-id-create-tenant-user-link":
+		return MintRpcId_MINT_RPC_ID_CREATE_TENANT_USER_LINK
+	case "broker-pending-approval", "mint-rpc-id-broker-pending-approval":
+		return MintRpcId_MINT_RPC_ID_BROKER_PENDING_APPROVAL
 	case "mint-x509-cert", "mint-rpc-id-mint-x509-cert":
 		return MintRpcId_MINT_RPC_ID_MINT_X509_CERT
 	case "mint-workload", "mint-rpc-id-mint-workload":
@@ -3809,12 +4694,20 @@ func MintRpcIdToSpecName(v MintRpcId) string {
 		return "MINT_RPC_ID_MINT_USER_TOKEN"
 	case MintRpcId_MINT_RPC_ID_MINT_DELEGATED_TOKEN:
 		return "MINT_RPC_ID_MINT_DELEGATED_TOKEN"
+	case MintRpcId_MINT_RPC_ID_BROKER_DELEGATE_OFFLINE_TOKEN:
+		return "MINT_RPC_ID_BROKER_DELEGATE_OFFLINE_TOKEN"
 	case MintRpcId_MINT_RPC_ID_MINT_TOKEN:
 		return "MINT_RPC_ID_MINT_TOKEN"
 	case MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_TOKEN:
 		return "MINT_RPC_ID_MINT_EXTERNAL_TOKEN"
 	case MintRpcId_MINT_RPC_ID_MINT_CLIENT_TOKEN:
 		return "MINT_RPC_ID_MINT_CLIENT_TOKEN"
+	case MintRpcId_MINT_RPC_ID_CREATE_PERSONAL_PRINCIPAL:
+		return "MINT_RPC_ID_CREATE_PERSONAL_PRINCIPAL"
+	case MintRpcId_MINT_RPC_ID_CREATE_TENANT_USER_LINK:
+		return "MINT_RPC_ID_CREATE_TENANT_USER_LINK"
+	case MintRpcId_MINT_RPC_ID_BROKER_PENDING_APPROVAL:
+		return "MINT_RPC_ID_BROKER_PENDING_APPROVAL"
 	case MintRpcId_MINT_RPC_ID_MINT_X509_CERT:
 		return "MINT_RPC_ID_MINT_X509_CERT"
 	case MintRpcId_MINT_RPC_ID_MINT_WORKLOAD:
@@ -3823,6 +4716,128 @@ func MintRpcIdToSpecName(v MintRpcId) string {
 		return "MINT_RPC_ID_REVOKE_WORKLOAD"
 	case MintRpcId_MINT_RPC_ID_REVOKE_GRANT:
 		return "MINT_RPC_ID_REVOKE_GRANT"
+	default:
+		return ""
+	}
+}
+
+// UserMintRpcIdValues returns all valid UserMintRpcId values (excluding UNDEFINED)
+func UserMintRpcIdValues() []UserMintRpcId {
+	return []UserMintRpcId{
+		UserMintRpcId_USER_MINT_RPC_ID_ALL_ACCESSORS,
+		UserMintRpcId_USER_MINT_RPC_ID_ALL_MUTATORS,
+		UserMintRpcId_USER_MINT_RPC_ID_ALL_EXECUTORS,
+		UserMintRpcId_USER_MINT_RPC_ID_MINT_DELEGATE_OFFLINE_TOKEN,
+	}
+}
+
+// UserMintRpcIdStringValues returns all valid UserMintRpcId names as strings
+func UserMintRpcIdStringValues() []string {
+	return []string{"all-accessors", "all-mutators", "all-executors", "mint-delegate-offline-token"}
+}
+
+// ParseUserMintRpcId converts a string to a UserMintRpcId enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParseUserMintRpcId(s string) (UserMintRpcId, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return UserMintRpcId_USER_MINT_RPC_ID_UNSPECIFIED, nil
+	case "all-accessors", "user-mint-rpc-id-all-accessors":
+		return UserMintRpcId_USER_MINT_RPC_ID_ALL_ACCESSORS, nil
+	case "all-mutators", "user-mint-rpc-id-all-mutators":
+		return UserMintRpcId_USER_MINT_RPC_ID_ALL_MUTATORS, nil
+	case "all-executors", "user-mint-rpc-id-all-executors":
+		return UserMintRpcId_USER_MINT_RPC_ID_ALL_EXECUTORS, nil
+	case "mint-delegate-offline-token", "user-mint-rpc-id-mint-delegate-offline-token":
+		return UserMintRpcId_USER_MINT_RPC_ID_MINT_DELEGATE_OFFLINE_TOKEN, nil
+	default:
+		return UserMintRpcId_USER_MINT_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid usermintrpcid %s, expecting one of: %v", s, UserMintRpcIdStringValues())
+	}
+}
+
+// ParseUserMintRpcIds converts a comma-separated string to a slice of UserMintRpcId enum values
+// Returns an error if any value is invalid
+func ParseUserMintRpcIds(s string) ([]UserMintRpcId, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]UserMintRpcId, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParseUserMintRpcId(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// UserMintRpcIdToString converts a UserMintRpcId to its lowercase string representation
+func UserMintRpcIdToString(v UserMintRpcId) string {
+	switch v {
+	case UserMintRpcId_USER_MINT_RPC_ID_ALL_ACCESSORS:
+		return "all-accessors"
+	case UserMintRpcId_USER_MINT_RPC_ID_ALL_MUTATORS:
+		return "all-mutators"
+	case UserMintRpcId_USER_MINT_RPC_ID_ALL_EXECUTORS:
+		return "all-executors"
+	case UserMintRpcId_USER_MINT_RPC_ID_MINT_DELEGATE_OFFLINE_TOKEN:
+		return "mint-delegate-offline-token"
+	default:
+		return ""
+	}
+}
+
+// ParseUserMintRpcIdLiberal parses a UserMintRpcId liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParseUserMintRpcIdLiberal(s string) UserMintRpcId {
+	if s == "" {
+		return UserMintRpcId_USER_MINT_RPC_ID_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return UserMintRpcId(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "all-accessors", "user-mint-rpc-id-all-accessors":
+		return UserMintRpcId_USER_MINT_RPC_ID_ALL_ACCESSORS
+	case "all-mutators", "user-mint-rpc-id-all-mutators":
+		return UserMintRpcId_USER_MINT_RPC_ID_ALL_MUTATORS
+	case "all-executors", "user-mint-rpc-id-all-executors":
+		return UserMintRpcId_USER_MINT_RPC_ID_ALL_EXECUTORS
+	case "mint-delegate-offline-token", "user-mint-rpc-id-mint-delegate-offline-token":
+		return UserMintRpcId_USER_MINT_RPC_ID_MINT_DELEGATE_OFFLINE_TOKEN
+	default:
+		return UserMintRpcId_USER_MINT_RPC_ID_UNSPECIFIED
+	}
+}
+
+// UserMintRpcIdToSpecName converts a UserMintRpcId to its canonical protobuf spec name
+func UserMintRpcIdToSpecName(v UserMintRpcId) string {
+	switch v {
+	case UserMintRpcId_USER_MINT_RPC_ID_UNSPECIFIED:
+		return "USER_MINT_RPC_ID_UNSPECIFIED"
+	case UserMintRpcId_USER_MINT_RPC_ID_ALL_ACCESSORS:
+		return "USER_MINT_RPC_ID_ALL_ACCESSORS"
+	case UserMintRpcId_USER_MINT_RPC_ID_ALL_MUTATORS:
+		return "USER_MINT_RPC_ID_ALL_MUTATORS"
+	case UserMintRpcId_USER_MINT_RPC_ID_ALL_EXECUTORS:
+		return "USER_MINT_RPC_ID_ALL_EXECUTORS"
+	case UserMintRpcId_USER_MINT_RPC_ID_MINT_DELEGATE_OFFLINE_TOKEN:
+		return "USER_MINT_RPC_ID_MINT_DELEGATE_OFFLINE_TOKEN"
 	default:
 		return ""
 	}
@@ -4081,6 +5096,155 @@ func CliTokenBrokerRpcIdToSpecName(v CliTokenBrokerRpcId) string {
 	}
 }
 
+// PersonalIdentityRpcIdValues returns all valid PersonalIdentityRpcId values (excluding UNDEFINED)
+func PersonalIdentityRpcIdValues() []PersonalIdentityRpcId {
+	return []PersonalIdentityRpcId{
+		PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_ALL_ACCESSORS,
+		PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_ALL_MUTATORS,
+		PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_ALL_EXECUTORS,
+		PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_GET_MY_IDENTITY,
+		PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_REVOKE_TENANT_USER_LINK,
+		PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_CREATE_PENDING_APPROVAL,
+		PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_BROKER_PERSONAL_IDENTITY_MCP_SESSION,
+	}
+}
+
+// PersonalIdentityRpcIdStringValues returns all valid PersonalIdentityRpcId names as strings
+func PersonalIdentityRpcIdStringValues() []string {
+	return []string{"all-accessors", "all-mutators", "all-executors", "get-my-identity", "revoke-tenant-user-link", "create-pending-approval", "broker-personal-identity-mcp-session"}
+}
+
+// ParsePersonalIdentityRpcId converts a string to a PersonalIdentityRpcId enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParsePersonalIdentityRpcId(s string) (PersonalIdentityRpcId, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_UNSPECIFIED, nil
+	case "all-accessors", "personal-identity-rpc-id-all-accessors":
+		return PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_ALL_ACCESSORS, nil
+	case "all-mutators", "personal-identity-rpc-id-all-mutators":
+		return PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_ALL_MUTATORS, nil
+	case "all-executors", "personal-identity-rpc-id-all-executors":
+		return PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_ALL_EXECUTORS, nil
+	case "get-my-identity", "personal-identity-rpc-id-get-my-identity":
+		return PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_GET_MY_IDENTITY, nil
+	case "revoke-tenant-user-link", "personal-identity-rpc-id-revoke-tenant-user-link":
+		return PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_REVOKE_TENANT_USER_LINK, nil
+	case "create-pending-approval", "personal-identity-rpc-id-create-pending-approval":
+		return PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_CREATE_PENDING_APPROVAL, nil
+	case "broker-personal-identity-mcp-session", "personal-identity-rpc-id-broker-personal-identity-mcp-session":
+		return PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_BROKER_PERSONAL_IDENTITY_MCP_SESSION, nil
+	default:
+		return PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid personalidentityrpcid %s, expecting one of: %v", s, PersonalIdentityRpcIdStringValues())
+	}
+}
+
+// ParsePersonalIdentityRpcIds converts a comma-separated string to a slice of PersonalIdentityRpcId enum values
+// Returns an error if any value is invalid
+func ParsePersonalIdentityRpcIds(s string) ([]PersonalIdentityRpcId, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]PersonalIdentityRpcId, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParsePersonalIdentityRpcId(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// PersonalIdentityRpcIdToString converts a PersonalIdentityRpcId to its lowercase string representation
+func PersonalIdentityRpcIdToString(v PersonalIdentityRpcId) string {
+	switch v {
+	case PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_ALL_ACCESSORS:
+		return "all-accessors"
+	case PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_ALL_MUTATORS:
+		return "all-mutators"
+	case PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_ALL_EXECUTORS:
+		return "all-executors"
+	case PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_GET_MY_IDENTITY:
+		return "get-my-identity"
+	case PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_REVOKE_TENANT_USER_LINK:
+		return "revoke-tenant-user-link"
+	case PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_CREATE_PENDING_APPROVAL:
+		return "create-pending-approval"
+	case PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_BROKER_PERSONAL_IDENTITY_MCP_SESSION:
+		return "broker-personal-identity-mcp-session"
+	default:
+		return ""
+	}
+}
+
+// ParsePersonalIdentityRpcIdLiberal parses a PersonalIdentityRpcId liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParsePersonalIdentityRpcIdLiberal(s string) PersonalIdentityRpcId {
+	if s == "" {
+		return PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return PersonalIdentityRpcId(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "all-accessors", "personal-identity-rpc-id-all-accessors":
+		return PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_ALL_ACCESSORS
+	case "all-mutators", "personal-identity-rpc-id-all-mutators":
+		return PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_ALL_MUTATORS
+	case "all-executors", "personal-identity-rpc-id-all-executors":
+		return PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_ALL_EXECUTORS
+	case "get-my-identity", "personal-identity-rpc-id-get-my-identity":
+		return PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_GET_MY_IDENTITY
+	case "revoke-tenant-user-link", "personal-identity-rpc-id-revoke-tenant-user-link":
+		return PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_REVOKE_TENANT_USER_LINK
+	case "create-pending-approval", "personal-identity-rpc-id-create-pending-approval":
+		return PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_CREATE_PENDING_APPROVAL
+	case "broker-personal-identity-mcp-session", "personal-identity-rpc-id-broker-personal-identity-mcp-session":
+		return PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_BROKER_PERSONAL_IDENTITY_MCP_SESSION
+	default:
+		return PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_UNSPECIFIED
+	}
+}
+
+// PersonalIdentityRpcIdToSpecName converts a PersonalIdentityRpcId to its canonical protobuf spec name
+func PersonalIdentityRpcIdToSpecName(v PersonalIdentityRpcId) string {
+	switch v {
+	case PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_UNSPECIFIED:
+		return "PERSONAL_IDENTITY_RPC_ID_UNSPECIFIED"
+	case PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_ALL_ACCESSORS:
+		return "PERSONAL_IDENTITY_RPC_ID_ALL_ACCESSORS"
+	case PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_ALL_MUTATORS:
+		return "PERSONAL_IDENTITY_RPC_ID_ALL_MUTATORS"
+	case PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_ALL_EXECUTORS:
+		return "PERSONAL_IDENTITY_RPC_ID_ALL_EXECUTORS"
+	case PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_GET_MY_IDENTITY:
+		return "PERSONAL_IDENTITY_RPC_ID_GET_MY_IDENTITY"
+	case PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_REVOKE_TENANT_USER_LINK:
+		return "PERSONAL_IDENTITY_RPC_ID_REVOKE_TENANT_USER_LINK"
+	case PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_CREATE_PENDING_APPROVAL:
+		return "PERSONAL_IDENTITY_RPC_ID_CREATE_PENDING_APPROVAL"
+	case PersonalIdentityRpcId_PERSONAL_IDENTITY_RPC_ID_BROKER_PERSONAL_IDENTITY_MCP_SESSION:
+		return "PERSONAL_IDENTITY_RPC_ID_BROKER_PERSONAL_IDENTITY_MCP_SESSION"
+	default:
+		return ""
+	}
+}
+
 // TenantAdminRpcIdValues returns all valid TenantAdminRpcId values (excluding UNDEFINED)
 func TenantAdminRpcIdValues() []TenantAdminRpcId {
 	return []TenantAdminRpcId{
@@ -4096,12 +5260,13 @@ func TenantAdminRpcIdValues() []TenantAdminRpcId {
 		TenantAdminRpcId_TENANT_ADMIN_RPC_ID_UPDATE_PROJECT_CONFIG,
 		TenantAdminRpcId_TENANT_ADMIN_RPC_ID_LIST_PROJECTS,
 		TenantAdminRpcId_TENANT_ADMIN_RPC_ID_DELETE_PROJECT,
+		TenantAdminRpcId_TENANT_ADMIN_RPC_ID_BROKER_TENANT_ADMIN_MCP_SESSION,
 	}
 }
 
 // TenantAdminRpcIdStringValues returns all valid TenantAdminRpcId names as strings
 func TenantAdminRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "create-tenant", "delete-tenant", "list-tenants", "get-tenant-config", "update-tenant-config", "get-project-config", "update-project-config", "list-projects", "delete-project"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "create-tenant", "delete-tenant", "list-tenants", "get-tenant-config", "update-tenant-config", "get-project-config", "update-project-config", "list-projects", "delete-project", "broker-tenant-admin-mcp-session"}
 }
 
 // ParseTenantAdminRpcId converts a string to a TenantAdminRpcId enum value
@@ -4136,6 +5301,8 @@ func ParseTenantAdminRpcId(s string) (TenantAdminRpcId, error) {
 		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_LIST_PROJECTS, nil
 	case "delete-project", "tenant-admin-rpc-id-delete-project":
 		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_DELETE_PROJECT, nil
+	case "broker-tenant-admin-mcp-session", "tenant-admin-rpc-id-broker-tenant-admin-mcp-session":
+		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_BROKER_TENANT_ADMIN_MCP_SESSION, nil
 	default:
 		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid tenantadminrpcid %s, expecting one of: %v", s, TenantAdminRpcIdStringValues())
 	}
@@ -4190,6 +5357,8 @@ func TenantAdminRpcIdToString(v TenantAdminRpcId) string {
 		return "list-projects"
 	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_DELETE_PROJECT:
 		return "delete-project"
+	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_BROKER_TENANT_ADMIN_MCP_SESSION:
+		return "broker-tenant-admin-mcp-session"
 	default:
 		return ""
 	}
@@ -4236,6 +5405,8 @@ func ParseTenantAdminRpcIdLiberal(s string) TenantAdminRpcId {
 		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_LIST_PROJECTS
 	case "delete-project", "tenant-admin-rpc-id-delete-project":
 		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_DELETE_PROJECT
+	case "broker-tenant-admin-mcp-session", "tenant-admin-rpc-id-broker-tenant-admin-mcp-session":
+		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_BROKER_TENANT_ADMIN_MCP_SESSION
 	default:
 		return TenantAdminRpcId_TENANT_ADMIN_RPC_ID_UNSPECIFIED
 	}
@@ -4270,6 +5441,8 @@ func TenantAdminRpcIdToSpecName(v TenantAdminRpcId) string {
 		return "TENANT_ADMIN_RPC_ID_LIST_PROJECTS"
 	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_DELETE_PROJECT:
 		return "TENANT_ADMIN_RPC_ID_DELETE_PROJECT"
+	case TenantAdminRpcId_TENANT_ADMIN_RPC_ID_BROKER_TENANT_ADMIN_MCP_SESSION:
+		return "TENANT_ADMIN_RPC_ID_BROKER_TENANT_ADMIN_MCP_SESSION"
 	default:
 		return ""
 	}
@@ -7162,6 +8335,623 @@ func WorkloadStateServiceRpcIdToSpecName(v WorkloadStateServiceRpcId) string {
 	}
 }
 
+// PrincipalStateServiceRpcIdValues returns all valid PrincipalStateServiceRpcId values (excluding UNDEFINED)
+func PrincipalStateServiceRpcIdValues() []PrincipalStateServiceRpcId {
+	return []PrincipalStateServiceRpcId{
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_ALL_ACCESSORS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_ALL_MUTATORS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_ALL_EXECUTORS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_PERSONAL_PRINCIPALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_PERSONAL_PRINCIPALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_PERSONAL_PRINCIPALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_PERSONAL_PRINCIPALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_PERSONAL_PRINCIPALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_PERSONAL_PRINCIPALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_PERSONAL_PRINCIPALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_PERSONAL_PRINCIPALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_PERSONAL_PRINCIPALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_PERSONAL_PRINCIPALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PERSONAL_PRINCIPALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_PERSONAL_PRINCIPALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_PERSONAL_PRINCIPALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_PERSONAL_PRINCIPALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_PEOPLE,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_PEOPLE,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_PEOPLE,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_PEOPLE,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_PEOPLE,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_PEOPLE,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_PEOPLE,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_PEOPLE,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_PEOPLE,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_PEOPLE,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PEOPLE,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_PEOPLE,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_PEOPLE,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_PEOPLE,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_TENANT_USER_LINKS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_TENANT_USER_LINKS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_TENANT_USER_LINKS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_TENANT_USER_LINKS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_TENANT_USER_LINKS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_TENANT_USER_LINKS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_TENANT_USER_LINKS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_TENANT_USER_LINKS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_TENANT_USER_LINKS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_TENANT_USER_LINKS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_TENANT_USER_LINKS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_TENANT_USER_LINKS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_TENANT_USER_LINKS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_TENANT_USER_LINKS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_PENDING_APPROVALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_PENDING_APPROVALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_PENDING_APPROVALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_PENDING_APPROVALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_PENDING_APPROVALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_PENDING_APPROVALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_PENDING_APPROVALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_PENDING_APPROVALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_PENDING_APPROVALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_PENDING_APPROVALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PENDING_APPROVALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_PENDING_APPROVALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_PENDING_APPROVALS,
+		PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_PENDING_APPROVALS,
+	}
+}
+
+// PrincipalStateServiceRpcIdStringValues returns all valid PrincipalStateServiceRpcId names as strings
+func PrincipalStateServiceRpcIdStringValues() []string {
+	return []string{"all-accessors", "all-mutators", "all-executors", "get-personal-principals", "put-personal-principals", "set-personal-principals", "remove-personal-principals", "delete-personal-principals", "contains-key-personal-principals", "get-all-personal-principals", "key-set-personal-principals", "size-personal-principals", "clear-personal-principals", "put-if-absent-personal-principals", "watch-personal-principals", "query-personal-principals", "watch-query-personal-principals", "get-people", "put-people", "set-people", "remove-people", "delete-people", "contains-key-people", "get-all-people", "key-set-people", "size-people", "clear-people", "put-if-absent-people", "watch-people", "query-people", "watch-query-people", "get-tenant-user-links", "put-tenant-user-links", "set-tenant-user-links", "remove-tenant-user-links", "delete-tenant-user-links", "contains-key-tenant-user-links", "get-all-tenant-user-links", "key-set-tenant-user-links", "size-tenant-user-links", "clear-tenant-user-links", "put-if-absent-tenant-user-links", "watch-tenant-user-links", "query-tenant-user-links", "watch-query-tenant-user-links", "get-pending-approvals", "put-pending-approvals", "set-pending-approvals", "remove-pending-approvals", "delete-pending-approvals", "contains-key-pending-approvals", "get-all-pending-approvals", "key-set-pending-approvals", "size-pending-approvals", "clear-pending-approvals", "put-if-absent-pending-approvals", "watch-pending-approvals", "query-pending-approvals", "watch-query-pending-approvals"}
+}
+
+// ParsePrincipalStateServiceRpcId converts a string to a PrincipalStateServiceRpcId enum value
+// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
+func ParsePrincipalStateServiceRpcId(s string) (PrincipalStateServiceRpcId, error) {
+	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
+	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
+	switch normalized {
+	case "":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_UNSPECIFIED, nil
+	case "all-accessors", "principal-state-service-rpc-id-all-accessors":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_ALL_ACCESSORS, nil
+	case "all-mutators", "principal-state-service-rpc-id-all-mutators":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_ALL_MUTATORS, nil
+	case "all-executors", "principal-state-service-rpc-id-all-executors":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_ALL_EXECUTORS, nil
+	case "get-personal-principals", "principal-state-service-rpc-id-get-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_PERSONAL_PRINCIPALS, nil
+	case "put-personal-principals", "principal-state-service-rpc-id-put-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_PERSONAL_PRINCIPALS, nil
+	case "set-personal-principals", "principal-state-service-rpc-id-set-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_PERSONAL_PRINCIPALS, nil
+	case "remove-personal-principals", "principal-state-service-rpc-id-remove-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_PERSONAL_PRINCIPALS, nil
+	case "delete-personal-principals", "principal-state-service-rpc-id-delete-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_PERSONAL_PRINCIPALS, nil
+	case "contains-key-personal-principals", "principal-state-service-rpc-id-contains-key-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_PERSONAL_PRINCIPALS, nil
+	case "get-all-personal-principals", "principal-state-service-rpc-id-get-all-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_PERSONAL_PRINCIPALS, nil
+	case "key-set-personal-principals", "principal-state-service-rpc-id-key-set-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_PERSONAL_PRINCIPALS, nil
+	case "size-personal-principals", "principal-state-service-rpc-id-size-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_PERSONAL_PRINCIPALS, nil
+	case "clear-personal-principals", "principal-state-service-rpc-id-clear-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_PERSONAL_PRINCIPALS, nil
+	case "put-if-absent-personal-principals", "principal-state-service-rpc-id-put-if-absent-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PERSONAL_PRINCIPALS, nil
+	case "watch-personal-principals", "principal-state-service-rpc-id-watch-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_PERSONAL_PRINCIPALS, nil
+	case "query-personal-principals", "principal-state-service-rpc-id-query-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_PERSONAL_PRINCIPALS, nil
+	case "watch-query-personal-principals", "principal-state-service-rpc-id-watch-query-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_PERSONAL_PRINCIPALS, nil
+	case "get-people", "principal-state-service-rpc-id-get-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_PEOPLE, nil
+	case "put-people", "principal-state-service-rpc-id-put-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_PEOPLE, nil
+	case "set-people", "principal-state-service-rpc-id-set-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_PEOPLE, nil
+	case "remove-people", "principal-state-service-rpc-id-remove-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_PEOPLE, nil
+	case "delete-people", "principal-state-service-rpc-id-delete-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_PEOPLE, nil
+	case "contains-key-people", "principal-state-service-rpc-id-contains-key-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_PEOPLE, nil
+	case "get-all-people", "principal-state-service-rpc-id-get-all-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_PEOPLE, nil
+	case "key-set-people", "principal-state-service-rpc-id-key-set-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_PEOPLE, nil
+	case "size-people", "principal-state-service-rpc-id-size-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_PEOPLE, nil
+	case "clear-people", "principal-state-service-rpc-id-clear-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_PEOPLE, nil
+	case "put-if-absent-people", "principal-state-service-rpc-id-put-if-absent-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PEOPLE, nil
+	case "watch-people", "principal-state-service-rpc-id-watch-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_PEOPLE, nil
+	case "query-people", "principal-state-service-rpc-id-query-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_PEOPLE, nil
+	case "watch-query-people", "principal-state-service-rpc-id-watch-query-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_PEOPLE, nil
+	case "get-tenant-user-links", "principal-state-service-rpc-id-get-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_TENANT_USER_LINKS, nil
+	case "put-tenant-user-links", "principal-state-service-rpc-id-put-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_TENANT_USER_LINKS, nil
+	case "set-tenant-user-links", "principal-state-service-rpc-id-set-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_TENANT_USER_LINKS, nil
+	case "remove-tenant-user-links", "principal-state-service-rpc-id-remove-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_TENANT_USER_LINKS, nil
+	case "delete-tenant-user-links", "principal-state-service-rpc-id-delete-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_TENANT_USER_LINKS, nil
+	case "contains-key-tenant-user-links", "principal-state-service-rpc-id-contains-key-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_TENANT_USER_LINKS, nil
+	case "get-all-tenant-user-links", "principal-state-service-rpc-id-get-all-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_TENANT_USER_LINKS, nil
+	case "key-set-tenant-user-links", "principal-state-service-rpc-id-key-set-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_TENANT_USER_LINKS, nil
+	case "size-tenant-user-links", "principal-state-service-rpc-id-size-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_TENANT_USER_LINKS, nil
+	case "clear-tenant-user-links", "principal-state-service-rpc-id-clear-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_TENANT_USER_LINKS, nil
+	case "put-if-absent-tenant-user-links", "principal-state-service-rpc-id-put-if-absent-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_TENANT_USER_LINKS, nil
+	case "watch-tenant-user-links", "principal-state-service-rpc-id-watch-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_TENANT_USER_LINKS, nil
+	case "query-tenant-user-links", "principal-state-service-rpc-id-query-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_TENANT_USER_LINKS, nil
+	case "watch-query-tenant-user-links", "principal-state-service-rpc-id-watch-query-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_TENANT_USER_LINKS, nil
+	case "get-pending-approvals", "principal-state-service-rpc-id-get-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_PENDING_APPROVALS, nil
+	case "put-pending-approvals", "principal-state-service-rpc-id-put-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_PENDING_APPROVALS, nil
+	case "set-pending-approvals", "principal-state-service-rpc-id-set-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_PENDING_APPROVALS, nil
+	case "remove-pending-approvals", "principal-state-service-rpc-id-remove-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_PENDING_APPROVALS, nil
+	case "delete-pending-approvals", "principal-state-service-rpc-id-delete-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_PENDING_APPROVALS, nil
+	case "contains-key-pending-approvals", "principal-state-service-rpc-id-contains-key-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_PENDING_APPROVALS, nil
+	case "get-all-pending-approvals", "principal-state-service-rpc-id-get-all-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_PENDING_APPROVALS, nil
+	case "key-set-pending-approvals", "principal-state-service-rpc-id-key-set-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_PENDING_APPROVALS, nil
+	case "size-pending-approvals", "principal-state-service-rpc-id-size-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_PENDING_APPROVALS, nil
+	case "clear-pending-approvals", "principal-state-service-rpc-id-clear-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_PENDING_APPROVALS, nil
+	case "put-if-absent-pending-approvals", "principal-state-service-rpc-id-put-if-absent-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PENDING_APPROVALS, nil
+	case "watch-pending-approvals", "principal-state-service-rpc-id-watch-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_PENDING_APPROVALS, nil
+	case "query-pending-approvals", "principal-state-service-rpc-id-query-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_PENDING_APPROVALS, nil
+	case "watch-query-pending-approvals", "principal-state-service-rpc-id-watch-query-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_PENDING_APPROVALS, nil
+	default:
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid principalstateservicerpcid %s, expecting one of: %v", s, PrincipalStateServiceRpcIdStringValues())
+	}
+}
+
+// ParsePrincipalStateServiceRpcIds converts a comma-separated string to a slice of PrincipalStateServiceRpcId enum values
+// Returns an error if any value is invalid
+func ParsePrincipalStateServiceRpcIds(s string) ([]PrincipalStateServiceRpcId, error) {
+	if s == "" {
+		return nil, nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]PrincipalStateServiceRpcId, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		val, err := ParsePrincipalStateServiceRpcId(trimmed)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, val)
+	}
+	return result, nil
+}
+
+// PrincipalStateServiceRpcIdToString converts a PrincipalStateServiceRpcId to its lowercase string representation
+func PrincipalStateServiceRpcIdToString(v PrincipalStateServiceRpcId) string {
+	switch v {
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_ALL_ACCESSORS:
+		return "all-accessors"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_ALL_MUTATORS:
+		return "all-mutators"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_ALL_EXECUTORS:
+		return "all-executors"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_PERSONAL_PRINCIPALS:
+		return "get-personal-principals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_PERSONAL_PRINCIPALS:
+		return "put-personal-principals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_PERSONAL_PRINCIPALS:
+		return "set-personal-principals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_PERSONAL_PRINCIPALS:
+		return "remove-personal-principals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_PERSONAL_PRINCIPALS:
+		return "delete-personal-principals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_PERSONAL_PRINCIPALS:
+		return "contains-key-personal-principals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_PERSONAL_PRINCIPALS:
+		return "get-all-personal-principals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_PERSONAL_PRINCIPALS:
+		return "key-set-personal-principals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_PERSONAL_PRINCIPALS:
+		return "size-personal-principals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_PERSONAL_PRINCIPALS:
+		return "clear-personal-principals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PERSONAL_PRINCIPALS:
+		return "put-if-absent-personal-principals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_PERSONAL_PRINCIPALS:
+		return "watch-personal-principals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_PERSONAL_PRINCIPALS:
+		return "query-personal-principals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_PERSONAL_PRINCIPALS:
+		return "watch-query-personal-principals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_PEOPLE:
+		return "get-people"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_PEOPLE:
+		return "put-people"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_PEOPLE:
+		return "set-people"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_PEOPLE:
+		return "remove-people"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_PEOPLE:
+		return "delete-people"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_PEOPLE:
+		return "contains-key-people"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_PEOPLE:
+		return "get-all-people"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_PEOPLE:
+		return "key-set-people"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_PEOPLE:
+		return "size-people"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_PEOPLE:
+		return "clear-people"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PEOPLE:
+		return "put-if-absent-people"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_PEOPLE:
+		return "watch-people"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_PEOPLE:
+		return "query-people"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_PEOPLE:
+		return "watch-query-people"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_TENANT_USER_LINKS:
+		return "get-tenant-user-links"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_TENANT_USER_LINKS:
+		return "put-tenant-user-links"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_TENANT_USER_LINKS:
+		return "set-tenant-user-links"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_TENANT_USER_LINKS:
+		return "remove-tenant-user-links"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_TENANT_USER_LINKS:
+		return "delete-tenant-user-links"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_TENANT_USER_LINKS:
+		return "contains-key-tenant-user-links"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_TENANT_USER_LINKS:
+		return "get-all-tenant-user-links"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_TENANT_USER_LINKS:
+		return "key-set-tenant-user-links"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_TENANT_USER_LINKS:
+		return "size-tenant-user-links"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_TENANT_USER_LINKS:
+		return "clear-tenant-user-links"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_TENANT_USER_LINKS:
+		return "put-if-absent-tenant-user-links"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_TENANT_USER_LINKS:
+		return "watch-tenant-user-links"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_TENANT_USER_LINKS:
+		return "query-tenant-user-links"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_TENANT_USER_LINKS:
+		return "watch-query-tenant-user-links"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_PENDING_APPROVALS:
+		return "get-pending-approvals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_PENDING_APPROVALS:
+		return "put-pending-approvals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_PENDING_APPROVALS:
+		return "set-pending-approvals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_PENDING_APPROVALS:
+		return "remove-pending-approvals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_PENDING_APPROVALS:
+		return "delete-pending-approvals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_PENDING_APPROVALS:
+		return "contains-key-pending-approvals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_PENDING_APPROVALS:
+		return "get-all-pending-approvals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_PENDING_APPROVALS:
+		return "key-set-pending-approvals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_PENDING_APPROVALS:
+		return "size-pending-approvals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_PENDING_APPROVALS:
+		return "clear-pending-approvals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PENDING_APPROVALS:
+		return "put-if-absent-pending-approvals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_PENDING_APPROVALS:
+		return "watch-pending-approvals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_PENDING_APPROVALS:
+		return "query-pending-approvals"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_PENDING_APPROVALS:
+		return "watch-query-pending-approvals"
+	default:
+		return ""
+	}
+}
+
+// ParsePrincipalStateServiceRpcIdLiberal parses a PrincipalStateServiceRpcId liberally, accepting:
+// - Integer values (as string or int)
+// - Enum names in any case
+// - RFC-compliant JSON names
+func ParsePrincipalStateServiceRpcIdLiberal(s string) PrincipalStateServiceRpcId {
+	if s == "" {
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_UNSPECIFIED
+	}
+	// Try parsing as integer
+	if num, err := strconv.Atoi(s); err == nil {
+		return PrincipalStateServiceRpcId(num)
+	}
+	// Normalize and try parsing
+	normalized := strings.ToLower(strings.TrimSpace(s))
+	normalized = strings.ReplaceAll(normalized, "_", "-")
+	normalized = strings.ReplaceAll(normalized, " ", "-")
+	switch normalized {
+	case "all-accessors", "principal-state-service-rpc-id-all-accessors":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_ALL_ACCESSORS
+	case "all-mutators", "principal-state-service-rpc-id-all-mutators":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_ALL_MUTATORS
+	case "all-executors", "principal-state-service-rpc-id-all-executors":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_ALL_EXECUTORS
+	case "get-personal-principals", "principal-state-service-rpc-id-get-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_PERSONAL_PRINCIPALS
+	case "put-personal-principals", "principal-state-service-rpc-id-put-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_PERSONAL_PRINCIPALS
+	case "set-personal-principals", "principal-state-service-rpc-id-set-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_PERSONAL_PRINCIPALS
+	case "remove-personal-principals", "principal-state-service-rpc-id-remove-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_PERSONAL_PRINCIPALS
+	case "delete-personal-principals", "principal-state-service-rpc-id-delete-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_PERSONAL_PRINCIPALS
+	case "contains-key-personal-principals", "principal-state-service-rpc-id-contains-key-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_PERSONAL_PRINCIPALS
+	case "get-all-personal-principals", "principal-state-service-rpc-id-get-all-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_PERSONAL_PRINCIPALS
+	case "key-set-personal-principals", "principal-state-service-rpc-id-key-set-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_PERSONAL_PRINCIPALS
+	case "size-personal-principals", "principal-state-service-rpc-id-size-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_PERSONAL_PRINCIPALS
+	case "clear-personal-principals", "principal-state-service-rpc-id-clear-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_PERSONAL_PRINCIPALS
+	case "put-if-absent-personal-principals", "principal-state-service-rpc-id-put-if-absent-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PERSONAL_PRINCIPALS
+	case "watch-personal-principals", "principal-state-service-rpc-id-watch-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_PERSONAL_PRINCIPALS
+	case "query-personal-principals", "principal-state-service-rpc-id-query-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_PERSONAL_PRINCIPALS
+	case "watch-query-personal-principals", "principal-state-service-rpc-id-watch-query-personal-principals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_PERSONAL_PRINCIPALS
+	case "get-people", "principal-state-service-rpc-id-get-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_PEOPLE
+	case "put-people", "principal-state-service-rpc-id-put-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_PEOPLE
+	case "set-people", "principal-state-service-rpc-id-set-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_PEOPLE
+	case "remove-people", "principal-state-service-rpc-id-remove-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_PEOPLE
+	case "delete-people", "principal-state-service-rpc-id-delete-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_PEOPLE
+	case "contains-key-people", "principal-state-service-rpc-id-contains-key-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_PEOPLE
+	case "get-all-people", "principal-state-service-rpc-id-get-all-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_PEOPLE
+	case "key-set-people", "principal-state-service-rpc-id-key-set-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_PEOPLE
+	case "size-people", "principal-state-service-rpc-id-size-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_PEOPLE
+	case "clear-people", "principal-state-service-rpc-id-clear-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_PEOPLE
+	case "put-if-absent-people", "principal-state-service-rpc-id-put-if-absent-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PEOPLE
+	case "watch-people", "principal-state-service-rpc-id-watch-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_PEOPLE
+	case "query-people", "principal-state-service-rpc-id-query-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_PEOPLE
+	case "watch-query-people", "principal-state-service-rpc-id-watch-query-people":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_PEOPLE
+	case "get-tenant-user-links", "principal-state-service-rpc-id-get-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_TENANT_USER_LINKS
+	case "put-tenant-user-links", "principal-state-service-rpc-id-put-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_TENANT_USER_LINKS
+	case "set-tenant-user-links", "principal-state-service-rpc-id-set-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_TENANT_USER_LINKS
+	case "remove-tenant-user-links", "principal-state-service-rpc-id-remove-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_TENANT_USER_LINKS
+	case "delete-tenant-user-links", "principal-state-service-rpc-id-delete-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_TENANT_USER_LINKS
+	case "contains-key-tenant-user-links", "principal-state-service-rpc-id-contains-key-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_TENANT_USER_LINKS
+	case "get-all-tenant-user-links", "principal-state-service-rpc-id-get-all-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_TENANT_USER_LINKS
+	case "key-set-tenant-user-links", "principal-state-service-rpc-id-key-set-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_TENANT_USER_LINKS
+	case "size-tenant-user-links", "principal-state-service-rpc-id-size-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_TENANT_USER_LINKS
+	case "clear-tenant-user-links", "principal-state-service-rpc-id-clear-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_TENANT_USER_LINKS
+	case "put-if-absent-tenant-user-links", "principal-state-service-rpc-id-put-if-absent-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_TENANT_USER_LINKS
+	case "watch-tenant-user-links", "principal-state-service-rpc-id-watch-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_TENANT_USER_LINKS
+	case "query-tenant-user-links", "principal-state-service-rpc-id-query-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_TENANT_USER_LINKS
+	case "watch-query-tenant-user-links", "principal-state-service-rpc-id-watch-query-tenant-user-links":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_TENANT_USER_LINKS
+	case "get-pending-approvals", "principal-state-service-rpc-id-get-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_PENDING_APPROVALS
+	case "put-pending-approvals", "principal-state-service-rpc-id-put-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_PENDING_APPROVALS
+	case "set-pending-approvals", "principal-state-service-rpc-id-set-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_PENDING_APPROVALS
+	case "remove-pending-approvals", "principal-state-service-rpc-id-remove-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_PENDING_APPROVALS
+	case "delete-pending-approvals", "principal-state-service-rpc-id-delete-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_PENDING_APPROVALS
+	case "contains-key-pending-approvals", "principal-state-service-rpc-id-contains-key-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_PENDING_APPROVALS
+	case "get-all-pending-approvals", "principal-state-service-rpc-id-get-all-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_PENDING_APPROVALS
+	case "key-set-pending-approvals", "principal-state-service-rpc-id-key-set-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_PENDING_APPROVALS
+	case "size-pending-approvals", "principal-state-service-rpc-id-size-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_PENDING_APPROVALS
+	case "clear-pending-approvals", "principal-state-service-rpc-id-clear-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_PENDING_APPROVALS
+	case "put-if-absent-pending-approvals", "principal-state-service-rpc-id-put-if-absent-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PENDING_APPROVALS
+	case "watch-pending-approvals", "principal-state-service-rpc-id-watch-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_PENDING_APPROVALS
+	case "query-pending-approvals", "principal-state-service-rpc-id-query-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_PENDING_APPROVALS
+	case "watch-query-pending-approvals", "principal-state-service-rpc-id-watch-query-pending-approvals":
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_PENDING_APPROVALS
+	default:
+		return PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_UNSPECIFIED
+	}
+}
+
+// PrincipalStateServiceRpcIdToSpecName converts a PrincipalStateServiceRpcId to its canonical protobuf spec name
+func PrincipalStateServiceRpcIdToSpecName(v PrincipalStateServiceRpcId) string {
+	switch v {
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_UNSPECIFIED:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_UNSPECIFIED"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_ALL_ACCESSORS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_ALL_ACCESSORS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_ALL_MUTATORS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_ALL_MUTATORS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_ALL_EXECUTORS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_ALL_EXECUTORS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_PERSONAL_PRINCIPALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_GET_PERSONAL_PRINCIPALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_PERSONAL_PRINCIPALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_PERSONAL_PRINCIPALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_PERSONAL_PRINCIPALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_SET_PERSONAL_PRINCIPALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_PERSONAL_PRINCIPALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_PERSONAL_PRINCIPALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_PERSONAL_PRINCIPALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_PERSONAL_PRINCIPALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_PERSONAL_PRINCIPALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_PERSONAL_PRINCIPALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_PERSONAL_PRINCIPALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_PERSONAL_PRINCIPALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_PERSONAL_PRINCIPALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_PERSONAL_PRINCIPALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_PERSONAL_PRINCIPALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_PERSONAL_PRINCIPALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_PERSONAL_PRINCIPALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_PERSONAL_PRINCIPALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PERSONAL_PRINCIPALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PERSONAL_PRINCIPALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_PERSONAL_PRINCIPALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_PERSONAL_PRINCIPALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_PERSONAL_PRINCIPALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_PERSONAL_PRINCIPALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_PERSONAL_PRINCIPALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_PERSONAL_PRINCIPALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_PEOPLE:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_GET_PEOPLE"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_PEOPLE:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_PEOPLE"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_PEOPLE:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_SET_PEOPLE"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_PEOPLE:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_PEOPLE"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_PEOPLE:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_PEOPLE"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_PEOPLE:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_PEOPLE"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_PEOPLE:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_PEOPLE"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_PEOPLE:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_PEOPLE"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_PEOPLE:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_PEOPLE"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_PEOPLE:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_PEOPLE"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PEOPLE:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PEOPLE"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_PEOPLE:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_PEOPLE"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_PEOPLE:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_PEOPLE"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_PEOPLE:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_PEOPLE"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_TENANT_USER_LINKS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_GET_TENANT_USER_LINKS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_TENANT_USER_LINKS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_TENANT_USER_LINKS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_TENANT_USER_LINKS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_SET_TENANT_USER_LINKS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_TENANT_USER_LINKS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_TENANT_USER_LINKS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_TENANT_USER_LINKS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_TENANT_USER_LINKS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_TENANT_USER_LINKS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_TENANT_USER_LINKS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_TENANT_USER_LINKS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_TENANT_USER_LINKS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_TENANT_USER_LINKS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_TENANT_USER_LINKS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_TENANT_USER_LINKS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_TENANT_USER_LINKS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_TENANT_USER_LINKS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_TENANT_USER_LINKS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_TENANT_USER_LINKS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_TENANT_USER_LINKS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_TENANT_USER_LINKS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_TENANT_USER_LINKS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_TENANT_USER_LINKS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_TENANT_USER_LINKS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_TENANT_USER_LINKS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_TENANT_USER_LINKS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_PENDING_APPROVALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_GET_PENDING_APPROVALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_PENDING_APPROVALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_PENDING_APPROVALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SET_PENDING_APPROVALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_SET_PENDING_APPROVALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_PENDING_APPROVALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_REMOVE_PENDING_APPROVALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_PENDING_APPROVALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_DELETE_PENDING_APPROVALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_PENDING_APPROVALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_CONTAINS_KEY_PENDING_APPROVALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_PENDING_APPROVALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_GET_ALL_PENDING_APPROVALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_PENDING_APPROVALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_KEY_SET_PENDING_APPROVALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_PENDING_APPROVALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_SIZE_PENDING_APPROVALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_PENDING_APPROVALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_CLEAR_PENDING_APPROVALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PENDING_APPROVALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_PUT_IF_ABSENT_PENDING_APPROVALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_PENDING_APPROVALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_PENDING_APPROVALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_PENDING_APPROVALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_QUERY_PENDING_APPROVALS"
+	case PrincipalStateServiceRpcId_PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_PENDING_APPROVALS:
+		return "PRINCIPAL_STATE_SERVICE_RPC_ID_WATCH_QUERY_PENDING_APPROVALS"
+	default:
+		return ""
+	}
+}
+
 // CaStateServiceRpcIdValues returns all valid CaStateServiceRpcId values (excluding UNDEFINED)
 func CaStateServiceRpcIdValues() []CaStateServiceRpcId {
 	return []CaStateServiceRpcId{
@@ -8032,8 +9822,7 @@ type configJSON struct {
 	PartitionCount              int32             `json:"partition_count,omitempty"`
 	Network                     json.RawMessage   `json:"network,omitempty"`
 	Logger                      json.RawMessage   `json:"logger,omitempty"`
-	PersistenceDir              string            `json:"persistence_dir,omitempty"`
-	PersistenceFormat           string            `json:"persistence_format,omitempty"`
+	DiskDir                     string            `json:"disk_dir,omitempty"`
 	HazelcastListener           json.RawMessage   `json:"hazelcast_listener,omitempty"`
 	Tls                         json.RawMessage   `json:"tls,omitempty"`
 	ClusterCa                   []json.RawMessage `json:"cluster_ca,omitempty"`
@@ -8058,6 +9847,7 @@ type configJSON struct {
 	HealthProbePort             int32             `json:"health_probe_port,omitempty"`
 	Grants                      []json.RawMessage `json:"grants,omitempty"`
 	RatisListener               json.RawMessage   `json:"ratis_listener,omitempty"`
+	PeopleIdpCredentials        []json.RawMessage `json:"people_idp_credentials,omitempty"`
 	TraceId                     string            `json:"trace_id,omitempty"`
 	Noop                        bool              `json:"noop,omitempty"`
 }
@@ -8108,8 +9898,7 @@ func ConfigToJSON(v *Config) ([]byte, error) {
 			data, _ := logger.LoggerConfigToJSON(v.Logger)
 			return data
 		}(),
-		PersistenceDir:    v.PersistenceDir,
-		PersistenceFormat: outputformat.OutputFormatToString(v.PersistenceFormat),
+		DiskDir: v.DiskDir,
 		HazelcastListener: func() json.RawMessage {
 			if v.HazelcastListener == nil {
 				return nil
@@ -8234,6 +10023,20 @@ func ConfigToJSON(v *Config) ([]byte, error) {
 			}
 			data, _ := host.HostToJSON(v.RatisListener)
 			return data
+		}(),
+		PeopleIdpCredentials: func() []json.RawMessage {
+			if len(v.PeopleIdpCredentials) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.PeopleIdpCredentials))
+			for _, item := range v.PeopleIdpCredentials {
+				if item != nil {
+					if data, err := PeopleIdpCredentialToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
 		}(),
 		TraceId: v.TraceId,
 		Noop:    v.Noop,
@@ -8287,8 +10090,7 @@ func ConfigToJSONPretty(v *Config) ([]byte, error) {
 			data, _ := logger.LoggerConfigToJSON(v.Logger)
 			return data
 		}(),
-		PersistenceDir:    v.PersistenceDir,
-		PersistenceFormat: outputformat.OutputFormatToString(v.PersistenceFormat),
+		DiskDir: v.DiskDir,
 		HazelcastListener: func() json.RawMessage {
 			if v.HazelcastListener == nil {
 				return nil
@@ -8413,6 +10215,20 @@ func ConfigToJSONPretty(v *Config) ([]byte, error) {
 			}
 			data, _ := host.HostToJSON(v.RatisListener)
 			return data
+		}(),
+		PeopleIdpCredentials: func() []json.RawMessage {
+			if len(v.PeopleIdpCredentials) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.PeopleIdpCredentials))
+			for _, item := range v.PeopleIdpCredentials {
+				if item != nil {
+					if data, err := PeopleIdpCredentialToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
 		}(),
 		TraceId: v.TraceId,
 		Noop:    v.Noop,
@@ -8516,13 +10332,7 @@ func ConfigFromJSON(data []byte) (*Config, error) {
 			result.Logger = parsed
 		}
 	}
-	result.PersistenceDir = raw.PersistenceDir
-	// Parse enum field: PersistenceFormat
-	if raw.PersistenceFormat != "" {
-		if parsed, err := outputformat.ParseOutputFormat(raw.PersistenceFormat); err == nil {
-			result.PersistenceFormat = parsed
-		}
-	}
+	result.DiskDir = raw.DiskDir
 	// Parse message field: HazelcastListener
 	if len(raw.HazelcastListener) > 0 {
 		parsed, err := host.HostFromJSON(raw.HazelcastListener)
@@ -8636,6 +10446,18 @@ func ConfigFromJSON(data []byte) (*Config, error) {
 		parsed, err := host.HostFromJSON(raw.RatisListener)
 		if err == nil {
 			result.RatisListener = parsed
+		}
+	}
+	// Parse repeated message field: PeopleIdpCredentials
+	if len(raw.PeopleIdpCredentials) > 0 {
+		result.PeopleIdpCredentials = make([]*PeopleIdpCredential, 0, len(raw.PeopleIdpCredentials))
+		for _, itemJSON := range raw.PeopleIdpCredentials {
+			if len(itemJSON) > 0 {
+				parsed, err := PeopleIdpCredentialFromJSON(itemJSON)
+				if err == nil {
+					result.PeopleIdpCredentials = append(result.PeopleIdpCredentials, parsed)
+				}
+			}
 		}
 	}
 	result.TraceId = raw.TraceId
@@ -11436,10 +13258,12 @@ func KubernetesServiceAccountMatcherToTOML(v *KubernetesServiceAccountMatcher) (
 // MARKER: JSON helper struct generated from serial.go
 type delegateJSON struct {
 	Name                      string            `json:"name,omitempty"`
+	TenantNamespace           string            `json:"tenant_namespace,omitempty"`
 	CloudIdentities           []json.RawMessage `json:"cloud_identities,omitempty"`
 	KubernetesServiceAccounts []json.RawMessage `json:"kubernetes_service_accounts,omitempty"`
 	AuthorizedServices        []string          `json:"authorized_services,omitempty"`
 	CustomClaims              map[string]string `json:"custom_claims,omitempty"`
+	AuthBrokerKinds           []string          `json:"auth_broker_kinds,omitempty"`
 	TraceId                   string            `json:"trace_id,omitempty"`
 	Noop                      bool              `json:"noop,omitempty"`
 }
@@ -11452,7 +13276,8 @@ func DelegateToJSON(v *Delegate) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := delegateJSON{
-		Name: v.Name,
+		Name:            v.Name,
+		TenantNamespace: v.TenantNamespace,
 		CloudIdentities: func() []json.RawMessage {
 			if len(v.CloudIdentities) == 0 {
 				return nil
@@ -11492,8 +13317,18 @@ func DelegateToJSON(v *Delegate) ([]byte, error) {
 			return result
 		}(),
 		CustomClaims: v.CustomClaims,
-		TraceId:      v.TraceId,
-		Noop:         v.Noop,
+		AuthBrokerKinds: func() []string {
+			if len(v.AuthBrokerKinds) == 0 {
+				return nil
+			}
+			result := make([]string, len(v.AuthBrokerKinds))
+			for i, val := range v.AuthBrokerKinds {
+				result[i] = tokenrequest.AuthBrokerKindToString(val)
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -11506,7 +13341,8 @@ func DelegateToJSONPretty(v *Delegate) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := delegateJSON{
-		Name: v.Name,
+		Name:            v.Name,
+		TenantNamespace: v.TenantNamespace,
 		CloudIdentities: func() []json.RawMessage {
 			if len(v.CloudIdentities) == 0 {
 				return nil
@@ -11546,8 +13382,18 @@ func DelegateToJSONPretty(v *Delegate) ([]byte, error) {
 			return result
 		}(),
 		CustomClaims: v.CustomClaims,
-		TraceId:      v.TraceId,
-		Noop:         v.Noop,
+		AuthBrokerKinds: func() []string {
+			if len(v.AuthBrokerKinds) == 0 {
+				return nil
+			}
+			result := make([]string, len(v.AuthBrokerKinds))
+			for i, val := range v.AuthBrokerKinds {
+				result[i] = tokenrequest.AuthBrokerKindToString(val)
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -11613,6 +13459,7 @@ func DelegateFromJSON(data []byte) (*Delegate, error) {
 	// Build result with parsed enums
 	result := &Delegate{}
 	result.Name = raw.Name
+	result.TenantNamespace = raw.TenantNamespace
 	// Parse repeated message field: CloudIdentities
 	if len(raw.CloudIdentities) > 0 {
 		result.CloudIdentities = make([]*CloudIdentityMatcher, 0, len(raw.CloudIdentities))
@@ -11652,6 +13499,20 @@ func DelegateFromJSON(data []byte) (*Delegate, error) {
 		}
 	}
 	result.CustomClaims = raw.CustomClaims
+	// Parse repeated enum field: AuthBrokerKinds
+	if len(raw.AuthBrokerKinds) > 0 {
+		result.AuthBrokerKinds = make([]tokenrequest.AuthBrokerKind, 0, len(raw.AuthBrokerKinds))
+		for _, val := range raw.AuthBrokerKinds {
+			if val != "" {
+				parsed, err := tokenrequest.ParseAuthBrokerKind(val)
+				if err != nil {
+					// Skip invalid enum values
+					continue
+				}
+				result.AuthBrokerKinds = append(result.AuthBrokerKinds, parsed)
+			}
+		}
+	}
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -13781,6 +15642,4009 @@ func WorkloadStateToTOML(v *WorkloadState) ([]byte, error) {
 	return toml.Marshal(obj)
 }
 
+// PeopleIdpCredentialJSON represents PeopleIdpCredential in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type peopleidpcredentialJSON struct {
+	Provider     string `json:"provider,omitempty"`
+	ClientId     string `json:"client_id,omitempty"`
+	ClientSecret string `json:"client_secret,omitempty"`
+	TraceId      string `json:"trace_id,omitempty"`
+	Noop         bool   `json:"noop,omitempty"`
+}
+
+// PeopleIdpCredentialToJSON converts PeopleIdpCredential to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleIdpCredentialToJSON(v *PeopleIdpCredential) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peopleidpcredential is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peopleidpcredentialJSON{
+		Provider:     PeopleIdpProviderToString(v.Provider),
+		ClientId:     v.ClientId,
+		ClientSecret: v.ClientSecret,
+		TraceId:      v.TraceId,
+		Noop:         v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PeopleIdpCredentialToJSONPretty converts PeopleIdpCredential to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleIdpCredentialToJSONPretty(v *PeopleIdpCredential) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peopleidpcredential is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peopleidpcredentialJSON{
+		Provider:     PeopleIdpProviderToString(v.Provider),
+		ClientId:     v.ClientId,
+		ClientSecret: v.ClientSecret,
+		TraceId:      v.TraceId,
+		Noop:         v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PeopleIdpCredentialFromBytes creates PeopleIdpCredential from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PeopleIdpCredentialFromBytes(data []byte) (*PeopleIdpCredential, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PeopleIdpCredentialFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PeopleIdpCredentialFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PeopleIdpCredentialFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PeopleIdpCredential{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PeopleIdpCredential: unsupported format or invalid data")
+}
+
+// PeopleIdpCredentialFromJSON creates PeopleIdpCredential from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PeopleIdpCredentialFromJSON(data []byte) (*PeopleIdpCredential, error) {
+	// Unmarshal into helper struct with string enums
+	var raw peopleidpcredentialJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PeopleIdpCredential{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PeopleIdpCredential{}
+	// Parse enum field: Provider
+	if raw.Provider != "" {
+		if parsed, err := ParsePeopleIdpProvider(raw.Provider); err == nil {
+			result.Provider = parsed
+		}
+	}
+	result.ClientId = raw.ClientId
+	result.ClientSecret = raw.ClientSecret
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PeopleIdpCredentialToYAML converts PeopleIdpCredential to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PeopleIdpCredentialToYAML(v *PeopleIdpCredential) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peopleidpcredential is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleIdpCredentialToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PeopleIdpCredentialToTOML converts PeopleIdpCredential to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PeopleIdpCredentialToTOML(v *PeopleIdpCredential) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peopleidpcredential is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleIdpCredentialToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PersonJSON represents Person in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type personJSON struct {
+	UserId          string `json:"user_id,omitempty"`
+	Provider        string `json:"provider,omitempty"`
+	ProviderSubject string `json:"provider_subject,omitempty"`
+	CreatedAtMs     int64  `json:"created_at_ms,omitempty"`
+	DisabledAtMs    int64  `json:"disabled_at_ms,omitempty"`
+	TraceId         string `json:"trace_id,omitempty"`
+	Noop            bool   `json:"noop,omitempty"`
+}
+
+// PersonToJSON converts Person to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonToJSON(v *Person) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "person is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personJSON{
+		UserId:          v.UserId,
+		Provider:        PeopleIdpProviderToString(v.Provider),
+		ProviderSubject: v.ProviderSubject,
+		CreatedAtMs:     v.CreatedAtMs,
+		DisabledAtMs:    v.DisabledAtMs,
+		TraceId:         v.TraceId,
+		Noop:            v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PersonToJSONPretty converts Person to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonToJSONPretty(v *Person) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "person is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personJSON{
+		UserId:          v.UserId,
+		Provider:        PeopleIdpProviderToString(v.Provider),
+		ProviderSubject: v.ProviderSubject,
+		CreatedAtMs:     v.CreatedAtMs,
+		DisabledAtMs:    v.DisabledAtMs,
+		TraceId:         v.TraceId,
+		Noop:            v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PersonFromBytes creates Person from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PersonFromBytes(data []byte) (*Person, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PersonFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PersonFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PersonFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &Person{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse Person: unsupported format or invalid data")
+}
+
+// PersonFromJSON creates Person from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PersonFromJSON(data []byte) (*Person, error) {
+	// Unmarshal into helper struct with string enums
+	var raw personJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &Person{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &Person{}
+	result.UserId = raw.UserId
+	// Parse enum field: Provider
+	if raw.Provider != "" {
+		if parsed, err := ParsePeopleIdpProvider(raw.Provider); err == nil {
+			result.Provider = parsed
+		}
+	}
+	result.ProviderSubject = raw.ProviderSubject
+	result.CreatedAtMs = raw.CreatedAtMs
+	result.DisabledAtMs = raw.DisabledAtMs
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PersonToYAML converts Person to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PersonToYAML(v *Person) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "person is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PersonToTOML converts Person to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PersonToTOML(v *Person) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "person is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PersonalCredentialJSON represents PersonalCredential in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type personalcredentialJSON struct {
+	CredentialId   string          `json:"credential_id,omitempty"`
+	PublicKey      json.RawMessage `json:"public_key,omitempty"`
+	Label          string          `json:"label,omitempty"`
+	PlatformSynced bool            `json:"platform_synced,omitempty"`
+	CreatedAtMs    int64           `json:"created_at_ms,omitempty"`
+	RevokedAtMs    int64           `json:"revoked_at_ms,omitempty"`
+	TraceId        string          `json:"trace_id,omitempty"`
+	Noop           bool            `json:"noop,omitempty"`
+}
+
+// PersonalCredentialToJSON converts PersonalCredential to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalCredentialToJSON(v *PersonalCredential) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalcredential is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalcredentialJSON{
+		CredentialId: v.CredentialId,
+		PublicKey: func() json.RawMessage {
+			if v.PublicKey == nil {
+				return nil
+			}
+			data, _ := jwk.JwkToJSON(v.PublicKey)
+			return data
+		}(),
+		Label:          v.Label,
+		PlatformSynced: v.PlatformSynced,
+		CreatedAtMs:    v.CreatedAtMs,
+		RevokedAtMs:    v.RevokedAtMs,
+		TraceId:        v.TraceId,
+		Noop:           v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PersonalCredentialToJSONPretty converts PersonalCredential to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalCredentialToJSONPretty(v *PersonalCredential) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalcredential is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalcredentialJSON{
+		CredentialId: v.CredentialId,
+		PublicKey: func() json.RawMessage {
+			if v.PublicKey == nil {
+				return nil
+			}
+			data, _ := jwk.JwkToJSON(v.PublicKey)
+			return data
+		}(),
+		Label:          v.Label,
+		PlatformSynced: v.PlatformSynced,
+		CreatedAtMs:    v.CreatedAtMs,
+		RevokedAtMs:    v.RevokedAtMs,
+		TraceId:        v.TraceId,
+		Noop:           v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PersonalCredentialFromBytes creates PersonalCredential from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PersonalCredentialFromBytes(data []byte) (*PersonalCredential, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PersonalCredentialFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PersonalCredentialFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PersonalCredentialFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PersonalCredential{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PersonalCredential: unsupported format or invalid data")
+}
+
+// PersonalCredentialFromJSON creates PersonalCredential from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PersonalCredentialFromJSON(data []byte) (*PersonalCredential, error) {
+	// Unmarshal into helper struct with string enums
+	var raw personalcredentialJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PersonalCredential{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PersonalCredential{}
+	result.CredentialId = raw.CredentialId
+	// Parse message field: PublicKey
+	if len(raw.PublicKey) > 0 {
+		parsed, err := jwk.JwkFromJSON(raw.PublicKey)
+		if err == nil {
+			result.PublicKey = parsed
+		}
+	}
+	result.Label = raw.Label
+	result.PlatformSynced = raw.PlatformSynced
+	result.CreatedAtMs = raw.CreatedAtMs
+	result.RevokedAtMs = raw.RevokedAtMs
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PersonalCredentialToYAML converts PersonalCredential to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PersonalCredentialToYAML(v *PersonalCredential) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalcredential is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalCredentialToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PersonalCredentialToTOML converts PersonalCredential to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PersonalCredentialToTOML(v *PersonalCredential) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalcredential is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalCredentialToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// TenantMembershipJSON represents TenantMembership in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type tenantmembershipJSON struct {
+	TenantNamespace string `json:"tenant_namespace,omitempty"`
+	ProofKind       string `json:"proof_kind,omitempty"`
+	Customer        bool   `json:"customer,omitempty"`
+	ProofReference  string `json:"proof_reference,omitempty"`
+	CreatedAtMs     int64  `json:"created_at_ms,omitempty"`
+	ExpiresAtMs     int64  `json:"expires_at_ms,omitempty"`
+	RevokedAtMs     int64  `json:"revoked_at_ms,omitempty"`
+	TraceId         string `json:"trace_id,omitempty"`
+	Noop            bool   `json:"noop,omitempty"`
+}
+
+// TenantMembershipToJSON converts TenantMembership to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantMembershipToJSON(v *TenantMembership) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantmembership is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantmembershipJSON{
+		TenantNamespace: v.TenantNamespace,
+		ProofKind:       MembershipProofKindToString(v.ProofKind),
+		Customer:        v.Customer,
+		ProofReference:  v.ProofReference,
+		CreatedAtMs:     v.CreatedAtMs,
+		ExpiresAtMs:     v.ExpiresAtMs,
+		RevokedAtMs:     v.RevokedAtMs,
+		TraceId:         v.TraceId,
+		Noop:            v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// TenantMembershipToJSONPretty converts TenantMembership to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantMembershipToJSONPretty(v *TenantMembership) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantmembership is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantmembershipJSON{
+		TenantNamespace: v.TenantNamespace,
+		ProofKind:       MembershipProofKindToString(v.ProofKind),
+		Customer:        v.Customer,
+		ProofReference:  v.ProofReference,
+		CreatedAtMs:     v.CreatedAtMs,
+		ExpiresAtMs:     v.ExpiresAtMs,
+		RevokedAtMs:     v.RevokedAtMs,
+		TraceId:         v.TraceId,
+		Noop:            v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// TenantMembershipFromBytes creates TenantMembership from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func TenantMembershipFromBytes(data []byte) (*TenantMembership, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := TenantMembershipFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := TenantMembershipFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := TenantMembershipFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &TenantMembership{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse TenantMembership: unsupported format or invalid data")
+}
+
+// TenantMembershipFromJSON creates TenantMembership from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func TenantMembershipFromJSON(data []byte) (*TenantMembership, error) {
+	// Unmarshal into helper struct with string enums
+	var raw tenantmembershipJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &TenantMembership{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &TenantMembership{}
+	result.TenantNamespace = raw.TenantNamespace
+	// Parse enum field: ProofKind
+	if raw.ProofKind != "" {
+		if parsed, err := ParseMembershipProofKind(raw.ProofKind); err == nil {
+			result.ProofKind = parsed
+		}
+	}
+	result.Customer = raw.Customer
+	result.ProofReference = raw.ProofReference
+	result.CreatedAtMs = raw.CreatedAtMs
+	result.ExpiresAtMs = raw.ExpiresAtMs
+	result.RevokedAtMs = raw.RevokedAtMs
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// TenantMembershipToYAML converts TenantMembership to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func TenantMembershipToYAML(v *TenantMembership) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantmembership is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantMembershipToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// TenantMembershipToTOML converts TenantMembership to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func TenantMembershipToTOML(v *TenantMembership) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantmembership is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantMembershipToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PersonalPrincipalJSON represents PersonalPrincipal in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type personalprincipalJSON struct {
+	PrincipalId  string            `json:"principal_id,omitempty"`
+	Credentials  []json.RawMessage `json:"credentials,omitempty"`
+	Memberships  []json.RawMessage `json:"memberships,omitempty"`
+	CreatedAtMs  int64             `json:"created_at_ms,omitempty"`
+	DisabledAtMs int64             `json:"disabled_at_ms,omitempty"`
+	TraceId      string            `json:"trace_id,omitempty"`
+	Noop         bool              `json:"noop,omitempty"`
+}
+
+// PersonalPrincipalToJSON converts PersonalPrincipal to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalToJSON(v *PersonalPrincipal) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipal is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalJSON{
+		PrincipalId: v.PrincipalId,
+		Credentials: func() []json.RawMessage {
+			if len(v.Credentials) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Credentials))
+			for _, item := range v.Credentials {
+				if item != nil {
+					if data, err := PersonalCredentialToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		Memberships: func() []json.RawMessage {
+			if len(v.Memberships) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Memberships))
+			for _, item := range v.Memberships {
+				if item != nil {
+					if data, err := TenantMembershipToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		CreatedAtMs:  v.CreatedAtMs,
+		DisabledAtMs: v.DisabledAtMs,
+		TraceId:      v.TraceId,
+		Noop:         v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PersonalPrincipalToJSONPretty converts PersonalPrincipal to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalToJSONPretty(v *PersonalPrincipal) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipal is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalJSON{
+		PrincipalId: v.PrincipalId,
+		Credentials: func() []json.RawMessage {
+			if len(v.Credentials) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Credentials))
+			for _, item := range v.Credentials {
+				if item != nil {
+					if data, err := PersonalCredentialToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		Memberships: func() []json.RawMessage {
+			if len(v.Memberships) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Memberships))
+			for _, item := range v.Memberships {
+				if item != nil {
+					if data, err := TenantMembershipToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		CreatedAtMs:  v.CreatedAtMs,
+		DisabledAtMs: v.DisabledAtMs,
+		TraceId:      v.TraceId,
+		Noop:         v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PersonalPrincipalFromBytes creates PersonalPrincipal from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PersonalPrincipalFromBytes(data []byte) (*PersonalPrincipal, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PersonalPrincipalFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PersonalPrincipal{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PersonalPrincipal: unsupported format or invalid data")
+}
+
+// PersonalPrincipalFromJSON creates PersonalPrincipal from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PersonalPrincipalFromJSON(data []byte) (*PersonalPrincipal, error) {
+	// Unmarshal into helper struct with string enums
+	var raw personalprincipalJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PersonalPrincipal{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PersonalPrincipal{}
+	result.PrincipalId = raw.PrincipalId
+	// Parse repeated message field: Credentials
+	if len(raw.Credentials) > 0 {
+		result.Credentials = make([]*PersonalCredential, 0, len(raw.Credentials))
+		for _, itemJSON := range raw.Credentials {
+			if len(itemJSON) > 0 {
+				parsed, err := PersonalCredentialFromJSON(itemJSON)
+				if err == nil {
+					result.Credentials = append(result.Credentials, parsed)
+				}
+			}
+		}
+	}
+	// Parse repeated message field: Memberships
+	if len(raw.Memberships) > 0 {
+		result.Memberships = make([]*TenantMembership, 0, len(raw.Memberships))
+		for _, itemJSON := range raw.Memberships {
+			if len(itemJSON) > 0 {
+				parsed, err := TenantMembershipFromJSON(itemJSON)
+				if err == nil {
+					result.Memberships = append(result.Memberships, parsed)
+				}
+			}
+		}
+	}
+	result.CreatedAtMs = raw.CreatedAtMs
+	result.DisabledAtMs = raw.DisabledAtMs
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PersonalPrincipalToYAML converts PersonalPrincipal to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PersonalPrincipalToYAML(v *PersonalPrincipal) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipal is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PersonalPrincipalToTOML converts PersonalPrincipal to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PersonalPrincipalToTOML(v *PersonalPrincipal) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipal is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// TenantUserLinkJSON represents TenantUserLink in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type tenantuserlinkJSON struct {
+	PeerNamespace string `json:"peer_namespace,omitempty"`
+	PeerSubject   string `json:"peer_subject,omitempty"`
+	CreatedAtMs   int64  `json:"created_at_ms,omitempty"`
+	RevokedAtMs   int64  `json:"revoked_at_ms,omitempty"`
+	TraceId       string `json:"trace_id,omitempty"`
+	Noop          bool   `json:"noop,omitempty"`
+}
+
+// TenantUserLinkToJSON converts TenantUserLink to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinkToJSON(v *TenantUserLink) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlink is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinkJSON{
+		PeerNamespace: v.PeerNamespace,
+		PeerSubject:   v.PeerSubject,
+		CreatedAtMs:   v.CreatedAtMs,
+		RevokedAtMs:   v.RevokedAtMs,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// TenantUserLinkToJSONPretty converts TenantUserLink to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinkToJSONPretty(v *TenantUserLink) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlink is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinkJSON{
+		PeerNamespace: v.PeerNamespace,
+		PeerSubject:   v.PeerSubject,
+		CreatedAtMs:   v.CreatedAtMs,
+		RevokedAtMs:   v.RevokedAtMs,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// TenantUserLinkFromBytes creates TenantUserLink from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func TenantUserLinkFromBytes(data []byte) (*TenantUserLink, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := TenantUserLinkFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := TenantUserLinkFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := TenantUserLinkFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &TenantUserLink{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse TenantUserLink: unsupported format or invalid data")
+}
+
+// TenantUserLinkFromJSON creates TenantUserLink from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func TenantUserLinkFromJSON(data []byte) (*TenantUserLink, error) {
+	// Unmarshal into helper struct with string enums
+	var raw tenantuserlinkJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &TenantUserLink{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &TenantUserLink{}
+	result.PeerNamespace = raw.PeerNamespace
+	result.PeerSubject = raw.PeerSubject
+	result.CreatedAtMs = raw.CreatedAtMs
+	result.RevokedAtMs = raw.RevokedAtMs
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// TenantUserLinkToYAML converts TenantUserLink to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func TenantUserLinkToYAML(v *TenantUserLink) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlink is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinkToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// TenantUserLinkToTOML converts TenantUserLink to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func TenantUserLinkToTOML(v *TenantUserLink) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlink is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinkToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// TenantUserLinksJSON represents TenantUserLinks in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type tenantuserlinksJSON struct {
+	UserKey string            `json:"user_key,omitempty"`
+	Links   []json.RawMessage `json:"links,omitempty"`
+	TraceId string            `json:"trace_id,omitempty"`
+	Noop    bool              `json:"noop,omitempty"`
+}
+
+// TenantUserLinksToJSON converts TenantUserLinks to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksToJSON(v *TenantUserLinks) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinks is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksJSON{
+		UserKey: v.UserKey,
+		Links: func() []json.RawMessage {
+			if len(v.Links) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Links))
+			for _, item := range v.Links {
+				if item != nil {
+					if data, err := TenantUserLinkToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// TenantUserLinksToJSONPretty converts TenantUserLinks to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksToJSONPretty(v *TenantUserLinks) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinks is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksJSON{
+		UserKey: v.UserKey,
+		Links: func() []json.RawMessage {
+			if len(v.Links) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Links))
+			for _, item := range v.Links {
+				if item != nil {
+					if data, err := TenantUserLinkToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// TenantUserLinksFromBytes creates TenantUserLinks from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func TenantUserLinksFromBytes(data []byte) (*TenantUserLinks, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := TenantUserLinksFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := TenantUserLinksFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := TenantUserLinksFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &TenantUserLinks{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse TenantUserLinks: unsupported format or invalid data")
+}
+
+// TenantUserLinksFromJSON creates TenantUserLinks from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func TenantUserLinksFromJSON(data []byte) (*TenantUserLinks, error) {
+	// Unmarshal into helper struct with string enums
+	var raw tenantuserlinksJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &TenantUserLinks{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &TenantUserLinks{}
+	result.UserKey = raw.UserKey
+	// Parse repeated message field: Links
+	if len(raw.Links) > 0 {
+		result.Links = make([]*TenantUserLink, 0, len(raw.Links))
+		for _, itemJSON := range raw.Links {
+			if len(itemJSON) > 0 {
+				parsed, err := TenantUserLinkFromJSON(itemJSON)
+				if err == nil {
+					result.Links = append(result.Links, parsed)
+				}
+			}
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// TenantUserLinksToYAML converts TenantUserLinks to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func TenantUserLinksToYAML(v *TenantUserLinks) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinks is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// TenantUserLinksToTOML converts TenantUserLinks to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func TenantUserLinksToTOML(v *TenantUserLinks) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinks is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PrincipalStateJSON represents PrincipalState in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type principalstateJSON struct {
+	PersonalPrincipals []json.RawMessage `json:"personal_principals,omitempty"`
+	People             []json.RawMessage `json:"people,omitempty"`
+	TenantUserLinks    []json.RawMessage `json:"tenant_user_links,omitempty"`
+	PendingApprovals   []json.RawMessage `json:"pending_approvals,omitempty"`
+	TraceId            string            `json:"trace_id,omitempty"`
+	Noop               bool              `json:"noop,omitempty"`
+}
+
+// PrincipalStateToJSON converts PrincipalState to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PrincipalStateToJSON(v *PrincipalState) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "principalstate is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := principalstateJSON{
+		PersonalPrincipals: func() []json.RawMessage {
+			if len(v.PersonalPrincipals) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.PersonalPrincipals))
+			for _, item := range v.PersonalPrincipals {
+				if item != nil {
+					if data, err := PersonalPrincipalToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		People: func() []json.RawMessage {
+			if len(v.People) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.People))
+			for _, item := range v.People {
+				if item != nil {
+					if data, err := PersonToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TenantUserLinks: func() []json.RawMessage {
+			if len(v.TenantUserLinks) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.TenantUserLinks))
+			for _, item := range v.TenantUserLinks {
+				if item != nil {
+					if data, err := TenantUserLinksToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		PendingApprovals: func() []json.RawMessage {
+			if len(v.PendingApprovals) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.PendingApprovals))
+			for _, item := range v.PendingApprovals {
+				if item != nil {
+					if data, err := PendingApprovalToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PrincipalStateToJSONPretty converts PrincipalState to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PrincipalStateToJSONPretty(v *PrincipalState) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "principalstate is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := principalstateJSON{
+		PersonalPrincipals: func() []json.RawMessage {
+			if len(v.PersonalPrincipals) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.PersonalPrincipals))
+			for _, item := range v.PersonalPrincipals {
+				if item != nil {
+					if data, err := PersonalPrincipalToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		People: func() []json.RawMessage {
+			if len(v.People) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.People))
+			for _, item := range v.People {
+				if item != nil {
+					if data, err := PersonToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TenantUserLinks: func() []json.RawMessage {
+			if len(v.TenantUserLinks) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.TenantUserLinks))
+			for _, item := range v.TenantUserLinks {
+				if item != nil {
+					if data, err := TenantUserLinksToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		PendingApprovals: func() []json.RawMessage {
+			if len(v.PendingApprovals) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.PendingApprovals))
+			for _, item := range v.PendingApprovals {
+				if item != nil {
+					if data, err := PendingApprovalToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PrincipalStateFromBytes creates PrincipalState from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PrincipalStateFromBytes(data []byte) (*PrincipalState, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PrincipalStateFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PrincipalStateFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PrincipalStateFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PrincipalState{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PrincipalState: unsupported format or invalid data")
+}
+
+// PrincipalStateFromJSON creates PrincipalState from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PrincipalStateFromJSON(data []byte) (*PrincipalState, error) {
+	// Unmarshal into helper struct with string enums
+	var raw principalstateJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PrincipalState{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PrincipalState{}
+	// Parse repeated message field: PersonalPrincipals
+	if len(raw.PersonalPrincipals) > 0 {
+		result.PersonalPrincipals = make([]*PersonalPrincipal, 0, len(raw.PersonalPrincipals))
+		for _, itemJSON := range raw.PersonalPrincipals {
+			if len(itemJSON) > 0 {
+				parsed, err := PersonalPrincipalFromJSON(itemJSON)
+				if err == nil {
+					result.PersonalPrincipals = append(result.PersonalPrincipals, parsed)
+				}
+			}
+		}
+	}
+	// Parse repeated message field: People
+	if len(raw.People) > 0 {
+		result.People = make([]*Person, 0, len(raw.People))
+		for _, itemJSON := range raw.People {
+			if len(itemJSON) > 0 {
+				parsed, err := PersonFromJSON(itemJSON)
+				if err == nil {
+					result.People = append(result.People, parsed)
+				}
+			}
+		}
+	}
+	// Parse repeated message field: TenantUserLinks
+	if len(raw.TenantUserLinks) > 0 {
+		result.TenantUserLinks = make([]*TenantUserLinks, 0, len(raw.TenantUserLinks))
+		for _, itemJSON := range raw.TenantUserLinks {
+			if len(itemJSON) > 0 {
+				parsed, err := TenantUserLinksFromJSON(itemJSON)
+				if err == nil {
+					result.TenantUserLinks = append(result.TenantUserLinks, parsed)
+				}
+			}
+		}
+	}
+	// Parse repeated message field: PendingApprovals
+	if len(raw.PendingApprovals) > 0 {
+		result.PendingApprovals = make([]*PendingApproval, 0, len(raw.PendingApprovals))
+		for _, itemJSON := range raw.PendingApprovals {
+			if len(itemJSON) > 0 {
+				parsed, err := PendingApprovalFromJSON(itemJSON)
+				if err == nil {
+					result.PendingApprovals = append(result.PendingApprovals, parsed)
+				}
+			}
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PrincipalStateToYAML converts PrincipalState to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PrincipalStateToYAML(v *PrincipalState) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "principalstate is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PrincipalStateToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PrincipalStateToTOML converts PrincipalState to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PrincipalStateToTOML(v *PrincipalState) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "principalstate is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PrincipalStateToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// RevokeTenantUserLinkRequestJSON represents RevokeTenantUserLinkRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type revoketenantuserlinkrequestJSON struct {
+	PeerNamespace string `json:"peer_namespace,omitempty"`
+	PeerSubject   string `json:"peer_subject,omitempty"`
+	TraceId       string `json:"trace_id,omitempty"`
+	Noop          bool   `json:"noop,omitempty"`
+}
+
+// RevokeTenantUserLinkRequestToJSON converts RevokeTenantUserLinkRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func RevokeTenantUserLinkRequestToJSON(v *RevokeTenantUserLinkRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "revoketenantuserlinkrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := revoketenantuserlinkrequestJSON{
+		PeerNamespace: v.PeerNamespace,
+		PeerSubject:   v.PeerSubject,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// RevokeTenantUserLinkRequestToJSONPretty converts RevokeTenantUserLinkRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func RevokeTenantUserLinkRequestToJSONPretty(v *RevokeTenantUserLinkRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "revoketenantuserlinkrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := revoketenantuserlinkrequestJSON{
+		PeerNamespace: v.PeerNamespace,
+		PeerSubject:   v.PeerSubject,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// RevokeTenantUserLinkRequestFromBytes creates RevokeTenantUserLinkRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func RevokeTenantUserLinkRequestFromBytes(data []byte) (*RevokeTenantUserLinkRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := RevokeTenantUserLinkRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := RevokeTenantUserLinkRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := RevokeTenantUserLinkRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &RevokeTenantUserLinkRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse RevokeTenantUserLinkRequest: unsupported format or invalid data")
+}
+
+// RevokeTenantUserLinkRequestFromJSON creates RevokeTenantUserLinkRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func RevokeTenantUserLinkRequestFromJSON(data []byte) (*RevokeTenantUserLinkRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw revoketenantuserlinkrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &RevokeTenantUserLinkRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &RevokeTenantUserLinkRequest{}
+	result.PeerNamespace = raw.PeerNamespace
+	result.PeerSubject = raw.PeerSubject
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// RevokeTenantUserLinkRequestToYAML converts RevokeTenantUserLinkRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func RevokeTenantUserLinkRequestToYAML(v *RevokeTenantUserLinkRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "revoketenantuserlinkrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := RevokeTenantUserLinkRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// RevokeTenantUserLinkRequestToTOML converts RevokeTenantUserLinkRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func RevokeTenantUserLinkRequestToTOML(v *RevokeTenantUserLinkRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "revoketenantuserlinkrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := RevokeTenantUserLinkRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// RevokeTenantUserLinkResponseJSON represents RevokeTenantUserLinkResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type revoketenantuserlinkresponseJSON struct {
+	RevokedAtMs int64  `json:"revoked_at_ms,omitempty"`
+	TraceId     string `json:"trace_id,omitempty"`
+	Noop        bool   `json:"noop,omitempty"`
+}
+
+// RevokeTenantUserLinkResponseToJSON converts RevokeTenantUserLinkResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func RevokeTenantUserLinkResponseToJSON(v *RevokeTenantUserLinkResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "revoketenantuserlinkresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := revoketenantuserlinkresponseJSON{
+		RevokedAtMs: v.RevokedAtMs,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// RevokeTenantUserLinkResponseToJSONPretty converts RevokeTenantUserLinkResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func RevokeTenantUserLinkResponseToJSONPretty(v *RevokeTenantUserLinkResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "revoketenantuserlinkresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := revoketenantuserlinkresponseJSON{
+		RevokedAtMs: v.RevokedAtMs,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// RevokeTenantUserLinkResponseFromBytes creates RevokeTenantUserLinkResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func RevokeTenantUserLinkResponseFromBytes(data []byte) (*RevokeTenantUserLinkResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := RevokeTenantUserLinkResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := RevokeTenantUserLinkResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := RevokeTenantUserLinkResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &RevokeTenantUserLinkResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse RevokeTenantUserLinkResponse: unsupported format or invalid data")
+}
+
+// RevokeTenantUserLinkResponseFromJSON creates RevokeTenantUserLinkResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func RevokeTenantUserLinkResponseFromJSON(data []byte) (*RevokeTenantUserLinkResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw revoketenantuserlinkresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &RevokeTenantUserLinkResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &RevokeTenantUserLinkResponse{}
+	result.RevokedAtMs = raw.RevokedAtMs
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// RevokeTenantUserLinkResponseToYAML converts RevokeTenantUserLinkResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func RevokeTenantUserLinkResponseToYAML(v *RevokeTenantUserLinkResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "revoketenantuserlinkresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := RevokeTenantUserLinkResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// RevokeTenantUserLinkResponseToTOML converts RevokeTenantUserLinkResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func RevokeTenantUserLinkResponseToTOML(v *RevokeTenantUserLinkResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "revoketenantuserlinkresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := RevokeTenantUserLinkResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// GetMyIdentityRequestJSON represents GetMyIdentityRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type getmyidentityrequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// GetMyIdentityRequestToJSON converts GetMyIdentityRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func GetMyIdentityRequestToJSON(v *GetMyIdentityRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "getmyidentityrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := getmyidentityrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// GetMyIdentityRequestToJSONPretty converts GetMyIdentityRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func GetMyIdentityRequestToJSONPretty(v *GetMyIdentityRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "getmyidentityrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := getmyidentityrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// GetMyIdentityRequestFromBytes creates GetMyIdentityRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func GetMyIdentityRequestFromBytes(data []byte) (*GetMyIdentityRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := GetMyIdentityRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := GetMyIdentityRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := GetMyIdentityRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &GetMyIdentityRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse GetMyIdentityRequest: unsupported format or invalid data")
+}
+
+// GetMyIdentityRequestFromJSON creates GetMyIdentityRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func GetMyIdentityRequestFromJSON(data []byte) (*GetMyIdentityRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw getmyidentityrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &GetMyIdentityRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &GetMyIdentityRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// GetMyIdentityRequestToYAML converts GetMyIdentityRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func GetMyIdentityRequestToYAML(v *GetMyIdentityRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "getmyidentityrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := GetMyIdentityRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// GetMyIdentityRequestToTOML converts GetMyIdentityRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func GetMyIdentityRequestToTOML(v *GetMyIdentityRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "getmyidentityrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := GetMyIdentityRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// GetMyIdentityResponseJSON represents GetMyIdentityResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type getmyidentityresponseJSON struct {
+	PrincipalId string            `json:"principal_id,omitempty"`
+	Memberships []json.RawMessage `json:"memberships,omitempty"`
+	TraceId     string            `json:"trace_id,omitempty"`
+	Noop        bool              `json:"noop,omitempty"`
+}
+
+// GetMyIdentityResponseToJSON converts GetMyIdentityResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func GetMyIdentityResponseToJSON(v *GetMyIdentityResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "getmyidentityresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := getmyidentityresponseJSON{
+		PrincipalId: v.PrincipalId,
+		Memberships: func() []json.RawMessage {
+			if len(v.Memberships) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Memberships))
+			for _, item := range v.Memberships {
+				if item != nil {
+					if data, err := TenantMembershipToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// GetMyIdentityResponseToJSONPretty converts GetMyIdentityResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func GetMyIdentityResponseToJSONPretty(v *GetMyIdentityResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "getmyidentityresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := getmyidentityresponseJSON{
+		PrincipalId: v.PrincipalId,
+		Memberships: func() []json.RawMessage {
+			if len(v.Memberships) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Memberships))
+			for _, item := range v.Memberships {
+				if item != nil {
+					if data, err := TenantMembershipToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// GetMyIdentityResponseFromBytes creates GetMyIdentityResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func GetMyIdentityResponseFromBytes(data []byte) (*GetMyIdentityResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := GetMyIdentityResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := GetMyIdentityResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := GetMyIdentityResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &GetMyIdentityResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse GetMyIdentityResponse: unsupported format or invalid data")
+}
+
+// GetMyIdentityResponseFromJSON creates GetMyIdentityResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func GetMyIdentityResponseFromJSON(data []byte) (*GetMyIdentityResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw getmyidentityresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &GetMyIdentityResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &GetMyIdentityResponse{}
+	result.PrincipalId = raw.PrincipalId
+	// Parse repeated message field: Memberships
+	if len(raw.Memberships) > 0 {
+		result.Memberships = make([]*TenantMembership, 0, len(raw.Memberships))
+		for _, itemJSON := range raw.Memberships {
+			if len(itemJSON) > 0 {
+				parsed, err := TenantMembershipFromJSON(itemJSON)
+				if err == nil {
+					result.Memberships = append(result.Memberships, parsed)
+				}
+			}
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// GetMyIdentityResponseToYAML converts GetMyIdentityResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func GetMyIdentityResponseToYAML(v *GetMyIdentityResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "getmyidentityresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := GetMyIdentityResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// GetMyIdentityResponseToTOML converts GetMyIdentityResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func GetMyIdentityResponseToTOML(v *GetMyIdentityResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "getmyidentityresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := GetMyIdentityResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// CreatePersonalPrincipalRequestJSON represents CreatePersonalPrincipalRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type createpersonalprincipalrequestJSON struct {
+	ProofToken     string          `json:"proof_token,omitempty"`
+	PublicKey      json.RawMessage `json:"public_key,omitempty"`
+	Label          string          `json:"label,omitempty"`
+	PlatformSynced bool            `json:"platform_synced,omitempty"`
+	TraceId        string          `json:"trace_id,omitempty"`
+	Noop           bool            `json:"noop,omitempty"`
+}
+
+// CreatePersonalPrincipalRequestToJSON converts CreatePersonalPrincipalRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func CreatePersonalPrincipalRequestToJSON(v *CreatePersonalPrincipalRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createpersonalprincipalrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := createpersonalprincipalrequestJSON{
+		ProofToken: v.ProofToken,
+		PublicKey: func() json.RawMessage {
+			if v.PublicKey == nil {
+				return nil
+			}
+			data, _ := jwk.JwkToJSON(v.PublicKey)
+			return data
+		}(),
+		Label:          v.Label,
+		PlatformSynced: v.PlatformSynced,
+		TraceId:        v.TraceId,
+		Noop:           v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// CreatePersonalPrincipalRequestToJSONPretty converts CreatePersonalPrincipalRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func CreatePersonalPrincipalRequestToJSONPretty(v *CreatePersonalPrincipalRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createpersonalprincipalrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := createpersonalprincipalrequestJSON{
+		ProofToken: v.ProofToken,
+		PublicKey: func() json.RawMessage {
+			if v.PublicKey == nil {
+				return nil
+			}
+			data, _ := jwk.JwkToJSON(v.PublicKey)
+			return data
+		}(),
+		Label:          v.Label,
+		PlatformSynced: v.PlatformSynced,
+		TraceId:        v.TraceId,
+		Noop:           v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// CreatePersonalPrincipalRequestFromBytes creates CreatePersonalPrincipalRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func CreatePersonalPrincipalRequestFromBytes(data []byte) (*CreatePersonalPrincipalRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := CreatePersonalPrincipalRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := CreatePersonalPrincipalRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := CreatePersonalPrincipalRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &CreatePersonalPrincipalRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse CreatePersonalPrincipalRequest: unsupported format or invalid data")
+}
+
+// CreatePersonalPrincipalRequestFromJSON creates CreatePersonalPrincipalRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func CreatePersonalPrincipalRequestFromJSON(data []byte) (*CreatePersonalPrincipalRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw createpersonalprincipalrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &CreatePersonalPrincipalRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &CreatePersonalPrincipalRequest{}
+	result.ProofToken = raw.ProofToken
+	// Parse message field: PublicKey
+	if len(raw.PublicKey) > 0 {
+		parsed, err := jwk.JwkFromJSON(raw.PublicKey)
+		if err == nil {
+			result.PublicKey = parsed
+		}
+	}
+	result.Label = raw.Label
+	result.PlatformSynced = raw.PlatformSynced
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// CreatePersonalPrincipalRequestToYAML converts CreatePersonalPrincipalRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func CreatePersonalPrincipalRequestToYAML(v *CreatePersonalPrincipalRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createpersonalprincipalrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := CreatePersonalPrincipalRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// CreatePersonalPrincipalRequestToTOML converts CreatePersonalPrincipalRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func CreatePersonalPrincipalRequestToTOML(v *CreatePersonalPrincipalRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createpersonalprincipalrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := CreatePersonalPrincipalRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// CreatePersonalPrincipalResponseJSON represents CreatePersonalPrincipalResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type createpersonalprincipalresponseJSON struct {
+	PrincipalId string `json:"principal_id,omitempty"`
+	TraceId     string `json:"trace_id,omitempty"`
+	Noop        bool   `json:"noop,omitempty"`
+}
+
+// CreatePersonalPrincipalResponseToJSON converts CreatePersonalPrincipalResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func CreatePersonalPrincipalResponseToJSON(v *CreatePersonalPrincipalResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createpersonalprincipalresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := createpersonalprincipalresponseJSON{
+		PrincipalId: v.PrincipalId,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// CreatePersonalPrincipalResponseToJSONPretty converts CreatePersonalPrincipalResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func CreatePersonalPrincipalResponseToJSONPretty(v *CreatePersonalPrincipalResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createpersonalprincipalresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := createpersonalprincipalresponseJSON{
+		PrincipalId: v.PrincipalId,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// CreatePersonalPrincipalResponseFromBytes creates CreatePersonalPrincipalResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func CreatePersonalPrincipalResponseFromBytes(data []byte) (*CreatePersonalPrincipalResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := CreatePersonalPrincipalResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := CreatePersonalPrincipalResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := CreatePersonalPrincipalResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &CreatePersonalPrincipalResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse CreatePersonalPrincipalResponse: unsupported format or invalid data")
+}
+
+// CreatePersonalPrincipalResponseFromJSON creates CreatePersonalPrincipalResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func CreatePersonalPrincipalResponseFromJSON(data []byte) (*CreatePersonalPrincipalResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw createpersonalprincipalresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &CreatePersonalPrincipalResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &CreatePersonalPrincipalResponse{}
+	result.PrincipalId = raw.PrincipalId
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// CreatePersonalPrincipalResponseToYAML converts CreatePersonalPrincipalResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func CreatePersonalPrincipalResponseToYAML(v *CreatePersonalPrincipalResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createpersonalprincipalresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := CreatePersonalPrincipalResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// CreatePersonalPrincipalResponseToTOML converts CreatePersonalPrincipalResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func CreatePersonalPrincipalResponseToTOML(v *CreatePersonalPrincipalResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createpersonalprincipalresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := CreatePersonalPrincipalResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// WebauthnAssertionJSON represents WebauthnAssertion in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type webauthnassertionJSON struct {
+	CredentialId      string `json:"credential_id,omitempty"`
+	AuthenticatorData []byte `json:"authenticator_data,omitempty"`
+	ClientDataJson    []byte `json:"client_data_json,omitempty"`
+	Signature         []byte `json:"signature,omitempty"`
+	TraceId           string `json:"trace_id,omitempty"`
+	Noop              bool   `json:"noop,omitempty"`
+}
+
+// WebauthnAssertionToJSON converts WebauthnAssertion to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func WebauthnAssertionToJSON(v *WebauthnAssertion) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "webauthnassertion is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := webauthnassertionJSON{
+		CredentialId:      v.CredentialId,
+		AuthenticatorData: v.AuthenticatorData,
+		ClientDataJson:    v.ClientDataJson,
+		Signature:         v.Signature,
+		TraceId:           v.TraceId,
+		Noop:              v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// WebauthnAssertionToJSONPretty converts WebauthnAssertion to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func WebauthnAssertionToJSONPretty(v *WebauthnAssertion) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "webauthnassertion is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := webauthnassertionJSON{
+		CredentialId:      v.CredentialId,
+		AuthenticatorData: v.AuthenticatorData,
+		ClientDataJson:    v.ClientDataJson,
+		Signature:         v.Signature,
+		TraceId:           v.TraceId,
+		Noop:              v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// WebauthnAssertionFromBytes creates WebauthnAssertion from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func WebauthnAssertionFromBytes(data []byte) (*WebauthnAssertion, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := WebauthnAssertionFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := WebauthnAssertionFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := WebauthnAssertionFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &WebauthnAssertion{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse WebauthnAssertion: unsupported format or invalid data")
+}
+
+// WebauthnAssertionFromJSON creates WebauthnAssertion from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func WebauthnAssertionFromJSON(data []byte) (*WebauthnAssertion, error) {
+	// Unmarshal into helper struct with string enums
+	var raw webauthnassertionJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &WebauthnAssertion{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &WebauthnAssertion{}
+	result.CredentialId = raw.CredentialId
+	result.AuthenticatorData = raw.AuthenticatorData
+	result.ClientDataJson = raw.ClientDataJson
+	result.Signature = raw.Signature
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// WebauthnAssertionToYAML converts WebauthnAssertion to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func WebauthnAssertionToYAML(v *WebauthnAssertion) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "webauthnassertion is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := WebauthnAssertionToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// WebauthnAssertionToTOML converts WebauthnAssertion to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func WebauthnAssertionToTOML(v *WebauthnAssertion) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "webauthnassertion is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := WebauthnAssertionToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// TenantUserLinkSideJSON represents TenantUserLinkSide in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type tenantuserlinksideJSON struct {
+	Claims               json.RawMessage `json:"claims,omitempty"`
+	Subject              string          `json:"subject,omitempty"`
+	DeviceAssertion      json.RawMessage `json:"device_assertion,omitempty"`
+	DevicePublicKey      json.RawMessage `json:"device_public_key,omitempty"`
+	DeviceLabel          string          `json:"device_label,omitempty"`
+	DevicePlatformSynced bool            `json:"device_platform_synced,omitempty"`
+	TraceId              string          `json:"trace_id,omitempty"`
+	Noop                 bool            `json:"noop,omitempty"`
+}
+
+// TenantUserLinkSideToJSON converts TenantUserLinkSide to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinkSideToJSON(v *TenantUserLinkSide) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkside is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksideJSON{
+		Claims: func() json.RawMessage {
+			if v.Claims == nil {
+				return nil
+			}
+			data, _ := protojson.Marshal(v.Claims)
+			return data
+		}(),
+		Subject: v.Subject,
+		DeviceAssertion: func() json.RawMessage {
+			if v.DeviceAssertion == nil {
+				return nil
+			}
+			data, _ := WebauthnAssertionToJSON(v.DeviceAssertion)
+			return data
+		}(),
+		DevicePublicKey: func() json.RawMessage {
+			if v.DevicePublicKey == nil {
+				return nil
+			}
+			data, _ := jwk.JwkToJSON(v.DevicePublicKey)
+			return data
+		}(),
+		DeviceLabel:          v.DeviceLabel,
+		DevicePlatformSynced: v.DevicePlatformSynced,
+		TraceId:              v.TraceId,
+		Noop:                 v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// TenantUserLinkSideToJSONPretty converts TenantUserLinkSide to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinkSideToJSONPretty(v *TenantUserLinkSide) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkside is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksideJSON{
+		Claims: func() json.RawMessage {
+			if v.Claims == nil {
+				return nil
+			}
+			data, _ := protojson.Marshal(v.Claims)
+			return data
+		}(),
+		Subject: v.Subject,
+		DeviceAssertion: func() json.RawMessage {
+			if v.DeviceAssertion == nil {
+				return nil
+			}
+			data, _ := WebauthnAssertionToJSON(v.DeviceAssertion)
+			return data
+		}(),
+		DevicePublicKey: func() json.RawMessage {
+			if v.DevicePublicKey == nil {
+				return nil
+			}
+			data, _ := jwk.JwkToJSON(v.DevicePublicKey)
+			return data
+		}(),
+		DeviceLabel:          v.DeviceLabel,
+		DevicePlatformSynced: v.DevicePlatformSynced,
+		TraceId:              v.TraceId,
+		Noop:                 v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// TenantUserLinkSideFromBytes creates TenantUserLinkSide from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func TenantUserLinkSideFromBytes(data []byte) (*TenantUserLinkSide, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := TenantUserLinkSideFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := TenantUserLinkSideFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := TenantUserLinkSideFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &TenantUserLinkSide{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse TenantUserLinkSide: unsupported format or invalid data")
+}
+
+// TenantUserLinkSideFromJSON creates TenantUserLinkSide from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func TenantUserLinkSideFromJSON(data []byte) (*TenantUserLinkSide, error) {
+	// Unmarshal into helper struct with string enums
+	var raw tenantuserlinksideJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &TenantUserLinkSide{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &TenantUserLinkSide{}
+	// Parse well-known type: Claims
+	if len(raw.Claims) > 0 {
+		result.Claims = &structpb.Struct{}
+		if err := protojson.Unmarshal(raw.Claims, result.Claims); err != nil {
+			result.Claims = nil
+		}
+	}
+	result.Subject = raw.Subject
+	// Parse message field: DeviceAssertion
+	if len(raw.DeviceAssertion) > 0 {
+		parsed, err := WebauthnAssertionFromJSON(raw.DeviceAssertion)
+		if err == nil {
+			result.DeviceAssertion = parsed
+		}
+	}
+	// Parse message field: DevicePublicKey
+	if len(raw.DevicePublicKey) > 0 {
+		parsed, err := jwk.JwkFromJSON(raw.DevicePublicKey)
+		if err == nil {
+			result.DevicePublicKey = parsed
+		}
+	}
+	result.DeviceLabel = raw.DeviceLabel
+	result.DevicePlatformSynced = raw.DevicePlatformSynced
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// TenantUserLinkSideToYAML converts TenantUserLinkSide to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func TenantUserLinkSideToYAML(v *TenantUserLinkSide) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkside is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinkSideToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// TenantUserLinkSideToTOML converts TenantUserLinkSide to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func TenantUserLinkSideToTOML(v *TenantUserLinkSide) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkside is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinkSideToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// CreateTenantUserLinkRequestJSON represents CreateTenantUserLinkRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type createtenantuserlinkrequestJSON struct {
+	A       json.RawMessage `json:"a,omitempty"`
+	B       json.RawMessage `json:"b,omitempty"`
+	TraceId string          `json:"trace_id,omitempty"`
+}
+
+// CreateTenantUserLinkRequestToJSON converts CreateTenantUserLinkRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func CreateTenantUserLinkRequestToJSON(v *CreateTenantUserLinkRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createtenantuserlinkrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := createtenantuserlinkrequestJSON{
+		A: func() json.RawMessage {
+			if v.A == nil {
+				return nil
+			}
+			data, _ := TenantUserLinkSideToJSON(v.A)
+			return data
+		}(),
+		B: func() json.RawMessage {
+			if v.B == nil {
+				return nil
+			}
+			data, _ := TenantUserLinkSideToJSON(v.B)
+			return data
+		}(),
+		TraceId: v.TraceId,
+	}
+	return json.Marshal(helper)
+}
+
+// CreateTenantUserLinkRequestToJSONPretty converts CreateTenantUserLinkRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func CreateTenantUserLinkRequestToJSONPretty(v *CreateTenantUserLinkRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createtenantuserlinkrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := createtenantuserlinkrequestJSON{
+		A: func() json.RawMessage {
+			if v.A == nil {
+				return nil
+			}
+			data, _ := TenantUserLinkSideToJSON(v.A)
+			return data
+		}(),
+		B: func() json.RawMessage {
+			if v.B == nil {
+				return nil
+			}
+			data, _ := TenantUserLinkSideToJSON(v.B)
+			return data
+		}(),
+		TraceId: v.TraceId,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// CreateTenantUserLinkRequestFromBytes creates CreateTenantUserLinkRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func CreateTenantUserLinkRequestFromBytes(data []byte) (*CreateTenantUserLinkRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := CreateTenantUserLinkRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := CreateTenantUserLinkRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := CreateTenantUserLinkRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &CreateTenantUserLinkRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse CreateTenantUserLinkRequest: unsupported format or invalid data")
+}
+
+// CreateTenantUserLinkRequestFromJSON creates CreateTenantUserLinkRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func CreateTenantUserLinkRequestFromJSON(data []byte) (*CreateTenantUserLinkRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw createtenantuserlinkrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &CreateTenantUserLinkRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &CreateTenantUserLinkRequest{}
+	// Parse message field: A
+	if len(raw.A) > 0 {
+		parsed, err := TenantUserLinkSideFromJSON(raw.A)
+		if err == nil {
+			result.A = parsed
+		}
+	}
+	// Parse message field: B
+	if len(raw.B) > 0 {
+		parsed, err := TenantUserLinkSideFromJSON(raw.B)
+		if err == nil {
+			result.B = parsed
+		}
+	}
+	result.TraceId = raw.TraceId
+	return result, nil
+}
+
+// CreateTenantUserLinkRequestToYAML converts CreateTenantUserLinkRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func CreateTenantUserLinkRequestToYAML(v *CreateTenantUserLinkRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createtenantuserlinkrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := CreateTenantUserLinkRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// CreateTenantUserLinkRequestToTOML converts CreateTenantUserLinkRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func CreateTenantUserLinkRequestToTOML(v *CreateTenantUserLinkRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createtenantuserlinkrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := CreateTenantUserLinkRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// CreateTenantUserLinkResponseJSON represents CreateTenantUserLinkResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type createtenantuserlinkresponseJSON struct {
+	AUserKey    string `json:"a_user_key,omitempty"`
+	BUserKey    string `json:"b_user_key,omitempty"`
+	CreatedAtMs int64  `json:"created_at_ms,omitempty"`
+	TraceId     string `json:"trace_id,omitempty"`
+	Noop        bool   `json:"noop,omitempty"`
+}
+
+// CreateTenantUserLinkResponseToJSON converts CreateTenantUserLinkResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func CreateTenantUserLinkResponseToJSON(v *CreateTenantUserLinkResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createtenantuserlinkresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := createtenantuserlinkresponseJSON{
+		AUserKey:    v.AUserKey,
+		BUserKey:    v.BUserKey,
+		CreatedAtMs: v.CreatedAtMs,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// CreateTenantUserLinkResponseToJSONPretty converts CreateTenantUserLinkResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func CreateTenantUserLinkResponseToJSONPretty(v *CreateTenantUserLinkResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createtenantuserlinkresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := createtenantuserlinkresponseJSON{
+		AUserKey:    v.AUserKey,
+		BUserKey:    v.BUserKey,
+		CreatedAtMs: v.CreatedAtMs,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// CreateTenantUserLinkResponseFromBytes creates CreateTenantUserLinkResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func CreateTenantUserLinkResponseFromBytes(data []byte) (*CreateTenantUserLinkResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := CreateTenantUserLinkResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := CreateTenantUserLinkResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := CreateTenantUserLinkResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &CreateTenantUserLinkResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse CreateTenantUserLinkResponse: unsupported format or invalid data")
+}
+
+// CreateTenantUserLinkResponseFromJSON creates CreateTenantUserLinkResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func CreateTenantUserLinkResponseFromJSON(data []byte) (*CreateTenantUserLinkResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw createtenantuserlinkresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &CreateTenantUserLinkResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &CreateTenantUserLinkResponse{}
+	result.AUserKey = raw.AUserKey
+	result.BUserKey = raw.BUserKey
+	result.CreatedAtMs = raw.CreatedAtMs
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// CreateTenantUserLinkResponseToYAML converts CreateTenantUserLinkResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func CreateTenantUserLinkResponseToYAML(v *CreateTenantUserLinkResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createtenantuserlinkresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := CreateTenantUserLinkResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// CreateTenantUserLinkResponseToTOML converts CreateTenantUserLinkResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func CreateTenantUserLinkResponseToTOML(v *CreateTenantUserLinkResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "createtenantuserlinkresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := CreateTenantUserLinkResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PendingApprovalJSON represents PendingApproval in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type pendingapprovalJSON struct {
+	ApprovalId    string `json:"approval_id,omitempty"`
+	PersonUserKey string `json:"person_user_key,omitempty"`
+	RpcMethod     string `json:"rpc_method,omitempty"`
+	RequestHash   []byte `json:"request_hash,omitempty"`
+	CreatedAtMs   int64  `json:"created_at_ms,omitempty"`
+	ExpiresAtMs   int64  `json:"expires_at_ms,omitempty"`
+	ConsumedAtMs  int64  `json:"consumed_at_ms,omitempty"`
+	TraceId       string `json:"trace_id,omitempty"`
+	Noop          bool   `json:"noop,omitempty"`
+}
+
+// PendingApprovalToJSON converts PendingApproval to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalToJSON(v *PendingApproval) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapproval is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalJSON{
+		ApprovalId:    v.ApprovalId,
+		PersonUserKey: v.PersonUserKey,
+		RpcMethod:     v.RpcMethod,
+		RequestHash:   v.RequestHash,
+		CreatedAtMs:   v.CreatedAtMs,
+		ExpiresAtMs:   v.ExpiresAtMs,
+		ConsumedAtMs:  v.ConsumedAtMs,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PendingApprovalToJSONPretty converts PendingApproval to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalToJSONPretty(v *PendingApproval) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapproval is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalJSON{
+		ApprovalId:    v.ApprovalId,
+		PersonUserKey: v.PersonUserKey,
+		RpcMethod:     v.RpcMethod,
+		RequestHash:   v.RequestHash,
+		CreatedAtMs:   v.CreatedAtMs,
+		ExpiresAtMs:   v.ExpiresAtMs,
+		ConsumedAtMs:  v.ConsumedAtMs,
+		TraceId:       v.TraceId,
+		Noop:          v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PendingApprovalFromBytes creates PendingApproval from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PendingApprovalFromBytes(data []byte) (*PendingApproval, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PendingApprovalFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PendingApprovalFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PendingApprovalFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PendingApproval{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PendingApproval: unsupported format or invalid data")
+}
+
+// PendingApprovalFromJSON creates PendingApproval from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PendingApprovalFromJSON(data []byte) (*PendingApproval, error) {
+	// Unmarshal into helper struct with string enums
+	var raw pendingapprovalJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PendingApproval{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PendingApproval{}
+	result.ApprovalId = raw.ApprovalId
+	result.PersonUserKey = raw.PersonUserKey
+	result.RpcMethod = raw.RpcMethod
+	result.RequestHash = raw.RequestHash
+	result.CreatedAtMs = raw.CreatedAtMs
+	result.ExpiresAtMs = raw.ExpiresAtMs
+	result.ConsumedAtMs = raw.ConsumedAtMs
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PendingApprovalToYAML converts PendingApproval to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PendingApprovalToYAML(v *PendingApproval) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapproval is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PendingApprovalToTOML converts PendingApproval to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PendingApprovalToTOML(v *PendingApproval) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapproval is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// CreatePendingApprovalRequestJSON represents CreatePendingApprovalRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type creatependingapprovalrequestJSON struct {
+	RpcMethod   string `json:"rpc_method,omitempty"`
+	RequestHash []byte `json:"request_hash,omitempty"`
+	TtlSeconds  int64  `json:"ttl_seconds,omitempty"`
+	TraceId     string `json:"trace_id,omitempty"`
+	Noop        bool   `json:"noop,omitempty"`
+}
+
+// CreatePendingApprovalRequestToJSON converts CreatePendingApprovalRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func CreatePendingApprovalRequestToJSON(v *CreatePendingApprovalRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "creatependingapprovalrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := creatependingapprovalrequestJSON{
+		RpcMethod:   v.RpcMethod,
+		RequestHash: v.RequestHash,
+		TtlSeconds:  v.TtlSeconds,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// CreatePendingApprovalRequestToJSONPretty converts CreatePendingApprovalRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func CreatePendingApprovalRequestToJSONPretty(v *CreatePendingApprovalRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "creatependingapprovalrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := creatependingapprovalrequestJSON{
+		RpcMethod:   v.RpcMethod,
+		RequestHash: v.RequestHash,
+		TtlSeconds:  v.TtlSeconds,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// CreatePendingApprovalRequestFromBytes creates CreatePendingApprovalRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func CreatePendingApprovalRequestFromBytes(data []byte) (*CreatePendingApprovalRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := CreatePendingApprovalRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := CreatePendingApprovalRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := CreatePendingApprovalRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &CreatePendingApprovalRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse CreatePendingApprovalRequest: unsupported format or invalid data")
+}
+
+// CreatePendingApprovalRequestFromJSON creates CreatePendingApprovalRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func CreatePendingApprovalRequestFromJSON(data []byte) (*CreatePendingApprovalRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw creatependingapprovalrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &CreatePendingApprovalRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &CreatePendingApprovalRequest{}
+	result.RpcMethod = raw.RpcMethod
+	result.RequestHash = raw.RequestHash
+	result.TtlSeconds = raw.TtlSeconds
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// CreatePendingApprovalRequestToYAML converts CreatePendingApprovalRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func CreatePendingApprovalRequestToYAML(v *CreatePendingApprovalRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "creatependingapprovalrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := CreatePendingApprovalRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// CreatePendingApprovalRequestToTOML converts CreatePendingApprovalRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func CreatePendingApprovalRequestToTOML(v *CreatePendingApprovalRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "creatependingapprovalrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := CreatePendingApprovalRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// CreatePendingApprovalResponseJSON represents CreatePendingApprovalResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type creatependingapprovalresponseJSON struct {
+	ApprovalId  string `json:"approval_id,omitempty"`
+	ExpiresAtMs int64  `json:"expires_at_ms,omitempty"`
+	Challenge   string `json:"challenge,omitempty"`
+	TraceId     string `json:"trace_id,omitempty"`
+	Noop        bool   `json:"noop,omitempty"`
+}
+
+// CreatePendingApprovalResponseToJSON converts CreatePendingApprovalResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func CreatePendingApprovalResponseToJSON(v *CreatePendingApprovalResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "creatependingapprovalresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := creatependingapprovalresponseJSON{
+		ApprovalId:  v.ApprovalId,
+		ExpiresAtMs: v.ExpiresAtMs,
+		Challenge:   v.Challenge,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// CreatePendingApprovalResponseToJSONPretty converts CreatePendingApprovalResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func CreatePendingApprovalResponseToJSONPretty(v *CreatePendingApprovalResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "creatependingapprovalresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := creatependingapprovalresponseJSON{
+		ApprovalId:  v.ApprovalId,
+		ExpiresAtMs: v.ExpiresAtMs,
+		Challenge:   v.Challenge,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// CreatePendingApprovalResponseFromBytes creates CreatePendingApprovalResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func CreatePendingApprovalResponseFromBytes(data []byte) (*CreatePendingApprovalResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := CreatePendingApprovalResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := CreatePendingApprovalResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := CreatePendingApprovalResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &CreatePendingApprovalResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse CreatePendingApprovalResponse: unsupported format or invalid data")
+}
+
+// CreatePendingApprovalResponseFromJSON creates CreatePendingApprovalResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func CreatePendingApprovalResponseFromJSON(data []byte) (*CreatePendingApprovalResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw creatependingapprovalresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &CreatePendingApprovalResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &CreatePendingApprovalResponse{}
+	result.ApprovalId = raw.ApprovalId
+	result.ExpiresAtMs = raw.ExpiresAtMs
+	result.Challenge = raw.Challenge
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// CreatePendingApprovalResponseToYAML converts CreatePendingApprovalResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func CreatePendingApprovalResponseToYAML(v *CreatePendingApprovalResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "creatependingapprovalresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := CreatePendingApprovalResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// CreatePendingApprovalResponseToTOML converts CreatePendingApprovalResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func CreatePendingApprovalResponseToTOML(v *CreatePendingApprovalResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "creatependingapprovalresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := CreatePendingApprovalResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// BrokerPendingApprovalRequestJSON represents BrokerPendingApprovalRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type brokerpendingapprovalrequestJSON struct {
+	ApprovalId      string          `json:"approval_id,omitempty"`
+	RpcMethod       string          `json:"rpc_method,omitempty"`
+	RequestHash     []byte          `json:"request_hash,omitempty"`
+	CallerNamespace string          `json:"caller_namespace,omitempty"`
+	CallerSubject   string          `json:"caller_subject,omitempty"`
+	DeviceAssertion json.RawMessage `json:"device_assertion,omitempty"`
+	TraceId         string          `json:"trace_id,omitempty"`
+	Noop            bool            `json:"noop,omitempty"`
+}
+
+// BrokerPendingApprovalRequestToJSON converts BrokerPendingApprovalRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func BrokerPendingApprovalRequestToJSON(v *BrokerPendingApprovalRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "brokerpendingapprovalrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := brokerpendingapprovalrequestJSON{
+		ApprovalId:      v.ApprovalId,
+		RpcMethod:       v.RpcMethod,
+		RequestHash:     v.RequestHash,
+		CallerNamespace: v.CallerNamespace,
+		CallerSubject:   v.CallerSubject,
+		DeviceAssertion: func() json.RawMessage {
+			if v.DeviceAssertion == nil {
+				return nil
+			}
+			data, _ := WebauthnAssertionToJSON(v.DeviceAssertion)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// BrokerPendingApprovalRequestToJSONPretty converts BrokerPendingApprovalRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func BrokerPendingApprovalRequestToJSONPretty(v *BrokerPendingApprovalRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "brokerpendingapprovalrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := brokerpendingapprovalrequestJSON{
+		ApprovalId:      v.ApprovalId,
+		RpcMethod:       v.RpcMethod,
+		RequestHash:     v.RequestHash,
+		CallerNamespace: v.CallerNamespace,
+		CallerSubject:   v.CallerSubject,
+		DeviceAssertion: func() json.RawMessage {
+			if v.DeviceAssertion == nil {
+				return nil
+			}
+			data, _ := WebauthnAssertionToJSON(v.DeviceAssertion)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// BrokerPendingApprovalRequestFromBytes creates BrokerPendingApprovalRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func BrokerPendingApprovalRequestFromBytes(data []byte) (*BrokerPendingApprovalRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := BrokerPendingApprovalRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := BrokerPendingApprovalRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := BrokerPendingApprovalRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &BrokerPendingApprovalRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse BrokerPendingApprovalRequest: unsupported format or invalid data")
+}
+
+// BrokerPendingApprovalRequestFromJSON creates BrokerPendingApprovalRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func BrokerPendingApprovalRequestFromJSON(data []byte) (*BrokerPendingApprovalRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw brokerpendingapprovalrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &BrokerPendingApprovalRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &BrokerPendingApprovalRequest{}
+	result.ApprovalId = raw.ApprovalId
+	result.RpcMethod = raw.RpcMethod
+	result.RequestHash = raw.RequestHash
+	result.CallerNamespace = raw.CallerNamespace
+	result.CallerSubject = raw.CallerSubject
+	// Parse message field: DeviceAssertion
+	if len(raw.DeviceAssertion) > 0 {
+		parsed, err := WebauthnAssertionFromJSON(raw.DeviceAssertion)
+		if err == nil {
+			result.DeviceAssertion = parsed
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// BrokerPendingApprovalRequestToYAML converts BrokerPendingApprovalRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func BrokerPendingApprovalRequestToYAML(v *BrokerPendingApprovalRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "brokerpendingapprovalrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := BrokerPendingApprovalRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// BrokerPendingApprovalRequestToTOML converts BrokerPendingApprovalRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func BrokerPendingApprovalRequestToTOML(v *BrokerPendingApprovalRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "brokerpendingapprovalrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := BrokerPendingApprovalRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// BrokerPendingApprovalResponseJSON represents BrokerPendingApprovalResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type brokerpendingapprovalresponseJSON struct {
+	ConsumedAtMs    int64  `json:"consumed_at_ms,omitempty"`
+	PersonUserKey   string `json:"person_user_key,omitempty"`
+	DeviceNamespace string `json:"device_namespace,omitempty"`
+	TraceId         string `json:"trace_id,omitempty"`
+	Noop            bool   `json:"noop,omitempty"`
+}
+
+// BrokerPendingApprovalResponseToJSON converts BrokerPendingApprovalResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func BrokerPendingApprovalResponseToJSON(v *BrokerPendingApprovalResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "brokerpendingapprovalresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := brokerpendingapprovalresponseJSON{
+		ConsumedAtMs:    v.ConsumedAtMs,
+		PersonUserKey:   v.PersonUserKey,
+		DeviceNamespace: v.DeviceNamespace,
+		TraceId:         v.TraceId,
+		Noop:            v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// BrokerPendingApprovalResponseToJSONPretty converts BrokerPendingApprovalResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func BrokerPendingApprovalResponseToJSONPretty(v *BrokerPendingApprovalResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "brokerpendingapprovalresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := brokerpendingapprovalresponseJSON{
+		ConsumedAtMs:    v.ConsumedAtMs,
+		PersonUserKey:   v.PersonUserKey,
+		DeviceNamespace: v.DeviceNamespace,
+		TraceId:         v.TraceId,
+		Noop:            v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// BrokerPendingApprovalResponseFromBytes creates BrokerPendingApprovalResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func BrokerPendingApprovalResponseFromBytes(data []byte) (*BrokerPendingApprovalResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := BrokerPendingApprovalResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := BrokerPendingApprovalResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := BrokerPendingApprovalResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &BrokerPendingApprovalResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse BrokerPendingApprovalResponse: unsupported format or invalid data")
+}
+
+// BrokerPendingApprovalResponseFromJSON creates BrokerPendingApprovalResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func BrokerPendingApprovalResponseFromJSON(data []byte) (*BrokerPendingApprovalResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw brokerpendingapprovalresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &BrokerPendingApprovalResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &BrokerPendingApprovalResponse{}
+	result.ConsumedAtMs = raw.ConsumedAtMs
+	result.PersonUserKey = raw.PersonUserKey
+	result.DeviceNamespace = raw.DeviceNamespace
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// BrokerPendingApprovalResponseToYAML converts BrokerPendingApprovalResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func BrokerPendingApprovalResponseToYAML(v *BrokerPendingApprovalResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "brokerpendingapprovalresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := BrokerPendingApprovalResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// BrokerPendingApprovalResponseToTOML converts BrokerPendingApprovalResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func BrokerPendingApprovalResponseToTOML(v *BrokerPendingApprovalResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "brokerpendingapprovalresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := BrokerPendingApprovalResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
 // CaJSON represents Ca in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type caJSON struct {
@@ -15122,16 +20986,17 @@ func ConfigStateToTOML(v *ConfigState) ([]byte, error) {
 // GrantJSON represents Grant in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type grantJSON struct {
-	Id              string          `json:"id,omitempty"`
-	DelegateName    string          `json:"delegate_name,omitempty"`
-	Subject         string          `json:"subject,omitempty"`
-	AuthorizedScope json.RawMessage `json:"authorized_scope,omitempty"`
-	Claims          json.RawMessage `json:"claims,omitempty"`
-	CreatedAtMs     int64           `json:"created_at_ms,omitempty"`
-	ExpiresAtMs     int64           `json:"expires_at_ms,omitempty"`
-	RevokedAtMs     int64           `json:"revoked_at_ms,omitempty"`
-	TraceId         string          `json:"trace_id,omitempty"`
-	Noop            bool            `json:"noop,omitempty"`
+	Id                string          `json:"id,omitempty"`
+	DelegateName      string          `json:"delegate_name,omitempty"`
+	Subject           string          `json:"subject,omitempty"`
+	AuthorizedScope   json.RawMessage `json:"authorized_scope,omitempty"`
+	Claims            json.RawMessage `json:"claims,omitempty"`
+	CreatedAtMs       int64           `json:"created_at_ms,omitempty"`
+	ExpiresAtMs       int64           `json:"expires_at_ms,omitempty"`
+	RevokedAtMs       int64           `json:"revoked_at_ms,omitempty"`
+	DelegateNamespace string          `json:"delegate_namespace,omitempty"`
+	TraceId           string          `json:"trace_id,omitempty"`
+	Noop              bool            `json:"noop,omitempty"`
 }
 
 // GrantToJSON converts Grant to JSON bytes.
@@ -15159,11 +21024,12 @@ func GrantToJSON(v *Grant) ([]byte, error) {
 			data, _ := protojson.Marshal(v.Claims)
 			return data
 		}(),
-		CreatedAtMs: v.CreatedAtMs,
-		ExpiresAtMs: v.ExpiresAtMs,
-		RevokedAtMs: v.RevokedAtMs,
-		TraceId:     v.TraceId,
-		Noop:        v.Noop,
+		CreatedAtMs:       v.CreatedAtMs,
+		ExpiresAtMs:       v.ExpiresAtMs,
+		RevokedAtMs:       v.RevokedAtMs,
+		DelegateNamespace: v.DelegateNamespace,
+		TraceId:           v.TraceId,
+		Noop:              v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -15193,11 +21059,12 @@ func GrantToJSONPretty(v *Grant) ([]byte, error) {
 			data, _ := protojson.Marshal(v.Claims)
 			return data
 		}(),
-		CreatedAtMs: v.CreatedAtMs,
-		ExpiresAtMs: v.ExpiresAtMs,
-		RevokedAtMs: v.RevokedAtMs,
-		TraceId:     v.TraceId,
-		Noop:        v.Noop,
+		CreatedAtMs:       v.CreatedAtMs,
+		ExpiresAtMs:       v.ExpiresAtMs,
+		RevokedAtMs:       v.RevokedAtMs,
+		DelegateNamespace: v.DelegateNamespace,
+		TraceId:           v.TraceId,
+		Noop:              v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -15282,6 +21149,7 @@ func GrantFromJSON(data []byte) (*Grant, error) {
 	result.CreatedAtMs = raw.CreatedAtMs
 	result.ExpiresAtMs = raw.ExpiresAtMs
 	result.RevokedAtMs = raw.RevokedAtMs
+	result.DelegateNamespace = raw.DelegateNamespace
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -15483,6 +21351,9 @@ type kerneldiskstateJSON struct {
 	ProjectConfigs      []json.RawMessage `json:"project_configs,omitempty"`
 	WorkloadRevocations []json.RawMessage `json:"workload_revocations,omitempty"`
 	Grants              []json.RawMessage `json:"grants,omitempty"`
+	PersonalPrincipals  []json.RawMessage `json:"personal_principals,omitempty"`
+	People              []json.RawMessage `json:"people,omitempty"`
+	TenantUserLinks     []json.RawMessage `json:"tenant_user_links,omitempty"`
 	TraceId             string            `json:"trace_id,omitempty"`
 	Noop                bool              `json:"noop,omitempty"`
 }
@@ -15615,6 +21486,48 @@ func KernelDiskStateToJSON(v *KernelDiskState) ([]byte, error) {
 			for _, item := range v.Grants {
 				if item != nil {
 					if data, err := GrantToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		PersonalPrincipals: func() []json.RawMessage {
+			if len(v.PersonalPrincipals) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.PersonalPrincipals))
+			for _, item := range v.PersonalPrincipals {
+				if item != nil {
+					if data, err := PersonalPrincipalToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		People: func() []json.RawMessage {
+			if len(v.People) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.People))
+			for _, item := range v.People {
+				if item != nil {
+					if data, err := PersonToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TenantUserLinks: func() []json.RawMessage {
+			if len(v.TenantUserLinks) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.TenantUserLinks))
+			for _, item := range v.TenantUserLinks {
+				if item != nil {
+					if data, err := TenantUserLinksToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -15755,6 +21668,48 @@ func KernelDiskStateToJSONPretty(v *KernelDiskState) ([]byte, error) {
 			for _, item := range v.Grants {
 				if item != nil {
 					if data, err := GrantToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		PersonalPrincipals: func() []json.RawMessage {
+			if len(v.PersonalPrincipals) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.PersonalPrincipals))
+			for _, item := range v.PersonalPrincipals {
+				if item != nil {
+					if data, err := PersonalPrincipalToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		People: func() []json.RawMessage {
+			if len(v.People) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.People))
+			for _, item := range v.People {
+				if item != nil {
+					if data, err := PersonToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TenantUserLinks: func() []json.RawMessage {
+			if len(v.TenantUserLinks) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.TenantUserLinks))
+			for _, item := range v.TenantUserLinks {
+				if item != nil {
+					if data, err := TenantUserLinksToJSON(item); err == nil {
 						result = append(result, data)
 					}
 				}
@@ -15931,6 +21886,42 @@ func KernelDiskStateFromJSON(data []byte) (*KernelDiskState, error) {
 				parsed, err := GrantFromJSON(itemJSON)
 				if err == nil {
 					result.Grants = append(result.Grants, parsed)
+				}
+			}
+		}
+	}
+	// Parse repeated message field: PersonalPrincipals
+	if len(raw.PersonalPrincipals) > 0 {
+		result.PersonalPrincipals = make([]*PersonalPrincipal, 0, len(raw.PersonalPrincipals))
+		for _, itemJSON := range raw.PersonalPrincipals {
+			if len(itemJSON) > 0 {
+				parsed, err := PersonalPrincipalFromJSON(itemJSON)
+				if err == nil {
+					result.PersonalPrincipals = append(result.PersonalPrincipals, parsed)
+				}
+			}
+		}
+	}
+	// Parse repeated message field: People
+	if len(raw.People) > 0 {
+		result.People = make([]*Person, 0, len(raw.People))
+		for _, itemJSON := range raw.People {
+			if len(itemJSON) > 0 {
+				parsed, err := PersonFromJSON(itemJSON)
+				if err == nil {
+					result.People = append(result.People, parsed)
+				}
+			}
+		}
+	}
+	// Parse repeated message field: TenantUserLinks
+	if len(raw.TenantUserLinks) > 0 {
+		result.TenantUserLinks = make([]*TenantUserLinks, 0, len(raw.TenantUserLinks))
+		for _, itemJSON := range raw.TenantUserLinks {
+			if len(itemJSON) > 0 {
+				parsed, err := TenantUserLinksFromJSON(itemJSON)
+				if err == nil {
+					result.TenantUserLinks = append(result.TenantUserLinks, parsed)
 				}
 			}
 		}
@@ -52279,6 +58270,7434 @@ func RevocationsQueryResponseToTOML(v *RevocationsQueryResponse) ([]byte, error)
 	return toml.Marshal(obj)
 }
 
+// PersonalPrincipalsGetRequestJSON represents PersonalPrincipalsGetRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type personalprincipalsgetrequestJSON struct {
+	Key     string `json:"key,omitempty"`
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// PersonalPrincipalsGetRequestToJSON converts PersonalPrincipalsGetRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsGetRequestToJSON(v *PersonalPrincipalsGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsgetrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalsgetrequestJSON{
+		Key:     v.Key,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PersonalPrincipalsGetRequestToJSONPretty converts PersonalPrincipalsGetRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsGetRequestToJSONPretty(v *PersonalPrincipalsGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsgetrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalsgetrequestJSON{
+		Key:     v.Key,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PersonalPrincipalsGetRequestFromBytes creates PersonalPrincipalsGetRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PersonalPrincipalsGetRequestFromBytes(data []byte) (*PersonalPrincipalsGetRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PersonalPrincipalsGetRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsGetRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsGetRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PersonalPrincipalsGetRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PersonalPrincipalsGetRequest: unsupported format or invalid data")
+}
+
+// PersonalPrincipalsGetRequestFromJSON creates PersonalPrincipalsGetRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PersonalPrincipalsGetRequestFromJSON(data []byte) (*PersonalPrincipalsGetRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw personalprincipalsgetrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PersonalPrincipalsGetRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PersonalPrincipalsGetRequest{}
+	result.Key = raw.Key
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PersonalPrincipalsGetRequestToYAML converts PersonalPrincipalsGetRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PersonalPrincipalsGetRequestToYAML(v *PersonalPrincipalsGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsgetrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsGetRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PersonalPrincipalsGetRequestToTOML converts PersonalPrincipalsGetRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PersonalPrincipalsGetRequestToTOML(v *PersonalPrincipalsGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsgetrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsGetRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PersonalPrincipalsPutRequestJSON represents PersonalPrincipalsPutRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type personalprincipalsputrequestJSON struct {
+	Key         string          `json:"key,omitempty"`
+	Value       json.RawMessage `json:"value,omitempty"`
+	LockCounter int64           `json:"lock_counter,omitempty"`
+	TraceId     string          `json:"trace_id,omitempty"`
+	Noop        bool            `json:"noop,omitempty"`
+}
+
+// PersonalPrincipalsPutRequestToJSON converts PersonalPrincipalsPutRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsPutRequestToJSON(v *PersonalPrincipalsPutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsputrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalsputrequestJSON{
+		Key: v.Key,
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := PersonalPrincipalToJSON(v.Value)
+			return data
+		}(),
+		LockCounter: v.LockCounter,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PersonalPrincipalsPutRequestToJSONPretty converts PersonalPrincipalsPutRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsPutRequestToJSONPretty(v *PersonalPrincipalsPutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsputrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalsputrequestJSON{
+		Key: v.Key,
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := PersonalPrincipalToJSON(v.Value)
+			return data
+		}(),
+		LockCounter: v.LockCounter,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PersonalPrincipalsPutRequestFromBytes creates PersonalPrincipalsPutRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PersonalPrincipalsPutRequestFromBytes(data []byte) (*PersonalPrincipalsPutRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PersonalPrincipalsPutRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsPutRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsPutRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PersonalPrincipalsPutRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PersonalPrincipalsPutRequest: unsupported format or invalid data")
+}
+
+// PersonalPrincipalsPutRequestFromJSON creates PersonalPrincipalsPutRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PersonalPrincipalsPutRequestFromJSON(data []byte) (*PersonalPrincipalsPutRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw personalprincipalsputrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PersonalPrincipalsPutRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PersonalPrincipalsPutRequest{}
+	result.Key = raw.Key
+	// Parse message field: Value
+	if len(raw.Value) > 0 {
+		parsed, err := PersonalPrincipalFromJSON(raw.Value)
+		if err == nil {
+			result.Value = parsed
+		}
+	}
+	result.LockCounter = raw.LockCounter
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PersonalPrincipalsPutRequestToYAML converts PersonalPrincipalsPutRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PersonalPrincipalsPutRequestToYAML(v *PersonalPrincipalsPutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsputrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsPutRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PersonalPrincipalsPutRequestToTOML converts PersonalPrincipalsPutRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PersonalPrincipalsPutRequestToTOML(v *PersonalPrincipalsPutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsputrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsPutRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PersonalPrincipalsGetAllRequestJSON represents PersonalPrincipalsGetAllRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type personalprincipalsgetallrequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// PersonalPrincipalsGetAllRequestToJSON converts PersonalPrincipalsGetAllRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsGetAllRequestToJSON(v *PersonalPrincipalsGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsgetallrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalsgetallrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PersonalPrincipalsGetAllRequestToJSONPretty converts PersonalPrincipalsGetAllRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsGetAllRequestToJSONPretty(v *PersonalPrincipalsGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsgetallrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalsgetallrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PersonalPrincipalsGetAllRequestFromBytes creates PersonalPrincipalsGetAllRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PersonalPrincipalsGetAllRequestFromBytes(data []byte) (*PersonalPrincipalsGetAllRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PersonalPrincipalsGetAllRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsGetAllRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsGetAllRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PersonalPrincipalsGetAllRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PersonalPrincipalsGetAllRequest: unsupported format or invalid data")
+}
+
+// PersonalPrincipalsGetAllRequestFromJSON creates PersonalPrincipalsGetAllRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PersonalPrincipalsGetAllRequestFromJSON(data []byte) (*PersonalPrincipalsGetAllRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw personalprincipalsgetallrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PersonalPrincipalsGetAllRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PersonalPrincipalsGetAllRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PersonalPrincipalsGetAllRequestToYAML converts PersonalPrincipalsGetAllRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PersonalPrincipalsGetAllRequestToYAML(v *PersonalPrincipalsGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsgetallrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsGetAllRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PersonalPrincipalsGetAllRequestToTOML converts PersonalPrincipalsGetAllRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PersonalPrincipalsGetAllRequestToTOML(v *PersonalPrincipalsGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsgetallrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsGetAllRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PersonalPrincipalsKeysRequestJSON represents PersonalPrincipalsKeysRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type personalprincipalskeysrequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// PersonalPrincipalsKeysRequestToJSON converts PersonalPrincipalsKeysRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsKeysRequestToJSON(v *PersonalPrincipalsKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalskeysrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalskeysrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PersonalPrincipalsKeysRequestToJSONPretty converts PersonalPrincipalsKeysRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsKeysRequestToJSONPretty(v *PersonalPrincipalsKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalskeysrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalskeysrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PersonalPrincipalsKeysRequestFromBytes creates PersonalPrincipalsKeysRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PersonalPrincipalsKeysRequestFromBytes(data []byte) (*PersonalPrincipalsKeysRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PersonalPrincipalsKeysRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsKeysRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsKeysRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PersonalPrincipalsKeysRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PersonalPrincipalsKeysRequest: unsupported format or invalid data")
+}
+
+// PersonalPrincipalsKeysRequestFromJSON creates PersonalPrincipalsKeysRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PersonalPrincipalsKeysRequestFromJSON(data []byte) (*PersonalPrincipalsKeysRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw personalprincipalskeysrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PersonalPrincipalsKeysRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PersonalPrincipalsKeysRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PersonalPrincipalsKeysRequestToYAML converts PersonalPrincipalsKeysRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PersonalPrincipalsKeysRequestToYAML(v *PersonalPrincipalsKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalskeysrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsKeysRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PersonalPrincipalsKeysRequestToTOML converts PersonalPrincipalsKeysRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PersonalPrincipalsKeysRequestToTOML(v *PersonalPrincipalsKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalskeysrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsKeysRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PersonalPrincipalsSizeRequestJSON represents PersonalPrincipalsSizeRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type personalprincipalssizerequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// PersonalPrincipalsSizeRequestToJSON converts PersonalPrincipalsSizeRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsSizeRequestToJSON(v *PersonalPrincipalsSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalssizerequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalssizerequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PersonalPrincipalsSizeRequestToJSONPretty converts PersonalPrincipalsSizeRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsSizeRequestToJSONPretty(v *PersonalPrincipalsSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalssizerequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalssizerequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PersonalPrincipalsSizeRequestFromBytes creates PersonalPrincipalsSizeRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PersonalPrincipalsSizeRequestFromBytes(data []byte) (*PersonalPrincipalsSizeRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PersonalPrincipalsSizeRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsSizeRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsSizeRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PersonalPrincipalsSizeRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PersonalPrincipalsSizeRequest: unsupported format or invalid data")
+}
+
+// PersonalPrincipalsSizeRequestFromJSON creates PersonalPrincipalsSizeRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PersonalPrincipalsSizeRequestFromJSON(data []byte) (*PersonalPrincipalsSizeRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw personalprincipalssizerequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PersonalPrincipalsSizeRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PersonalPrincipalsSizeRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PersonalPrincipalsSizeRequestToYAML converts PersonalPrincipalsSizeRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PersonalPrincipalsSizeRequestToYAML(v *PersonalPrincipalsSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalssizerequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsSizeRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PersonalPrincipalsSizeRequestToTOML converts PersonalPrincipalsSizeRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PersonalPrincipalsSizeRequestToTOML(v *PersonalPrincipalsSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalssizerequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsSizeRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PersonalPrincipalsClearRequestJSON represents PersonalPrincipalsClearRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type personalprincipalsclearrequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// PersonalPrincipalsClearRequestToJSON converts PersonalPrincipalsClearRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsClearRequestToJSON(v *PersonalPrincipalsClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsclearrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalsclearrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PersonalPrincipalsClearRequestToJSONPretty converts PersonalPrincipalsClearRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsClearRequestToJSONPretty(v *PersonalPrincipalsClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsclearrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalsclearrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PersonalPrincipalsClearRequestFromBytes creates PersonalPrincipalsClearRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PersonalPrincipalsClearRequestFromBytes(data []byte) (*PersonalPrincipalsClearRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PersonalPrincipalsClearRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsClearRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsClearRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PersonalPrincipalsClearRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PersonalPrincipalsClearRequest: unsupported format or invalid data")
+}
+
+// PersonalPrincipalsClearRequestFromJSON creates PersonalPrincipalsClearRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PersonalPrincipalsClearRequestFromJSON(data []byte) (*PersonalPrincipalsClearRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw personalprincipalsclearrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PersonalPrincipalsClearRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PersonalPrincipalsClearRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PersonalPrincipalsClearRequestToYAML converts PersonalPrincipalsClearRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PersonalPrincipalsClearRequestToYAML(v *PersonalPrincipalsClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsclearrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsClearRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PersonalPrincipalsClearRequestToTOML converts PersonalPrincipalsClearRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PersonalPrincipalsClearRequestToTOML(v *PersonalPrincipalsClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsclearrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsClearRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PersonalPrincipalsValueResponseJSON represents PersonalPrincipalsValueResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type personalprincipalsvalueresponseJSON struct {
+	Value   json.RawMessage `json:"value,omitempty"`
+	Found   bool            `json:"found,omitempty"`
+	TraceId string          `json:"trace_id,omitempty"`
+	Noop    bool            `json:"noop,omitempty"`
+}
+
+// PersonalPrincipalsValueResponseToJSON converts PersonalPrincipalsValueResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsValueResponseToJSON(v *PersonalPrincipalsValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsvalueresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalsvalueresponseJSON{
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := PersonalPrincipalToJSON(v.Value)
+			return data
+		}(),
+		Found:   v.Found,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PersonalPrincipalsValueResponseToJSONPretty converts PersonalPrincipalsValueResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsValueResponseToJSONPretty(v *PersonalPrincipalsValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsvalueresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalsvalueresponseJSON{
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := PersonalPrincipalToJSON(v.Value)
+			return data
+		}(),
+		Found:   v.Found,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PersonalPrincipalsValueResponseFromBytes creates PersonalPrincipalsValueResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PersonalPrincipalsValueResponseFromBytes(data []byte) (*PersonalPrincipalsValueResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PersonalPrincipalsValueResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsValueResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsValueResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PersonalPrincipalsValueResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PersonalPrincipalsValueResponse: unsupported format or invalid data")
+}
+
+// PersonalPrincipalsValueResponseFromJSON creates PersonalPrincipalsValueResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PersonalPrincipalsValueResponseFromJSON(data []byte) (*PersonalPrincipalsValueResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw personalprincipalsvalueresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PersonalPrincipalsValueResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PersonalPrincipalsValueResponse{}
+	// Parse message field: Value
+	if len(raw.Value) > 0 {
+		parsed, err := PersonalPrincipalFromJSON(raw.Value)
+		if err == nil {
+			result.Value = parsed
+		}
+	}
+	result.Found = raw.Found
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PersonalPrincipalsValueResponseToYAML converts PersonalPrincipalsValueResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PersonalPrincipalsValueResponseToYAML(v *PersonalPrincipalsValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsvalueresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsValueResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PersonalPrincipalsValueResponseToTOML converts PersonalPrincipalsValueResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PersonalPrincipalsValueResponseToTOML(v *PersonalPrincipalsValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsvalueresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsValueResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PersonalPrincipalsEntriesResponseJSON represents PersonalPrincipalsEntriesResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type personalprincipalsentriesresponseJSON struct {
+	Entries map[string]json.RawMessage `json:"entries,omitempty"`
+	TraceId string                     `json:"trace_id,omitempty"`
+	Noop    bool                       `json:"noop,omitempty"`
+}
+
+// PersonalPrincipalsEntriesResponseToJSON converts PersonalPrincipalsEntriesResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsEntriesResponseToJSON(v *PersonalPrincipalsEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsentriesresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalsentriesresponseJSON{
+		Entries: func() map[string]json.RawMessage {
+			if len(v.Entries) == 0 {
+				return nil
+			}
+			result := make(map[string]json.RawMessage, len(v.Entries))
+			for k, item := range v.Entries {
+				if item != nil {
+					if data, err := PersonalPrincipalToJSON(item); err == nil {
+						result[k] = data
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PersonalPrincipalsEntriesResponseToJSONPretty converts PersonalPrincipalsEntriesResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsEntriesResponseToJSONPretty(v *PersonalPrincipalsEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsentriesresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalsentriesresponseJSON{
+		Entries: func() map[string]json.RawMessage {
+			if len(v.Entries) == 0 {
+				return nil
+			}
+			result := make(map[string]json.RawMessage, len(v.Entries))
+			for k, item := range v.Entries {
+				if item != nil {
+					if data, err := PersonalPrincipalToJSON(item); err == nil {
+						result[k] = data
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PersonalPrincipalsEntriesResponseFromBytes creates PersonalPrincipalsEntriesResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PersonalPrincipalsEntriesResponseFromBytes(data []byte) (*PersonalPrincipalsEntriesResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PersonalPrincipalsEntriesResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsEntriesResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsEntriesResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PersonalPrincipalsEntriesResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PersonalPrincipalsEntriesResponse: unsupported format or invalid data")
+}
+
+// PersonalPrincipalsEntriesResponseFromJSON creates PersonalPrincipalsEntriesResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PersonalPrincipalsEntriesResponseFromJSON(data []byte) (*PersonalPrincipalsEntriesResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw personalprincipalsentriesresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PersonalPrincipalsEntriesResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PersonalPrincipalsEntriesResponse{}
+	// Parse map field: Entries
+	if len(raw.Entries) > 0 {
+		result.Entries = make(map[string]*PersonalPrincipal, len(raw.Entries))
+		for k, v := range raw.Entries {
+			if len(v) > 0 {
+				mapKey := k
+				parsed, err := PersonalPrincipalFromJSON(v)
+				if err == nil {
+					result.Entries[mapKey] = parsed
+				}
+			}
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PersonalPrincipalsEntriesResponseToYAML converts PersonalPrincipalsEntriesResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PersonalPrincipalsEntriesResponseToYAML(v *PersonalPrincipalsEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsentriesresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsEntriesResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PersonalPrincipalsEntriesResponseToTOML converts PersonalPrincipalsEntriesResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PersonalPrincipalsEntriesResponseToTOML(v *PersonalPrincipalsEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsentriesresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsEntriesResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PersonalPrincipalsKeysResponseJSON represents PersonalPrincipalsKeysResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type personalprincipalskeysresponseJSON struct {
+	Keys    []string `json:"keys,omitempty"`
+	TraceId string   `json:"trace_id,omitempty"`
+	Noop    bool     `json:"noop,omitempty"`
+}
+
+// PersonalPrincipalsKeysResponseToJSON converts PersonalPrincipalsKeysResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsKeysResponseToJSON(v *PersonalPrincipalsKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalskeysresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalskeysresponseJSON{
+		Keys:    v.Keys,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PersonalPrincipalsKeysResponseToJSONPretty converts PersonalPrincipalsKeysResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsKeysResponseToJSONPretty(v *PersonalPrincipalsKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalskeysresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalskeysresponseJSON{
+		Keys:    v.Keys,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PersonalPrincipalsKeysResponseFromBytes creates PersonalPrincipalsKeysResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PersonalPrincipalsKeysResponseFromBytes(data []byte) (*PersonalPrincipalsKeysResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PersonalPrincipalsKeysResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsKeysResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsKeysResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PersonalPrincipalsKeysResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PersonalPrincipalsKeysResponse: unsupported format or invalid data")
+}
+
+// PersonalPrincipalsKeysResponseFromJSON creates PersonalPrincipalsKeysResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PersonalPrincipalsKeysResponseFromJSON(data []byte) (*PersonalPrincipalsKeysResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw personalprincipalskeysresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PersonalPrincipalsKeysResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PersonalPrincipalsKeysResponse{}
+	result.Keys = raw.Keys
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PersonalPrincipalsKeysResponseToYAML converts PersonalPrincipalsKeysResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PersonalPrincipalsKeysResponseToYAML(v *PersonalPrincipalsKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalskeysresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsKeysResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PersonalPrincipalsKeysResponseToTOML converts PersonalPrincipalsKeysResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PersonalPrincipalsKeysResponseToTOML(v *PersonalPrincipalsKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalskeysresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsKeysResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PersonalPrincipalsSizeResponseJSON represents PersonalPrincipalsSizeResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type personalprincipalssizeresponseJSON struct {
+	Size    int32  `json:"size,omitempty"`
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// PersonalPrincipalsSizeResponseToJSON converts PersonalPrincipalsSizeResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsSizeResponseToJSON(v *PersonalPrincipalsSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalssizeresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalssizeresponseJSON{
+		Size:    v.Size,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PersonalPrincipalsSizeResponseToJSONPretty converts PersonalPrincipalsSizeResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsSizeResponseToJSONPretty(v *PersonalPrincipalsSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalssizeresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalssizeresponseJSON{
+		Size:    v.Size,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PersonalPrincipalsSizeResponseFromBytes creates PersonalPrincipalsSizeResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PersonalPrincipalsSizeResponseFromBytes(data []byte) (*PersonalPrincipalsSizeResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PersonalPrincipalsSizeResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsSizeResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsSizeResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PersonalPrincipalsSizeResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PersonalPrincipalsSizeResponse: unsupported format or invalid data")
+}
+
+// PersonalPrincipalsSizeResponseFromJSON creates PersonalPrincipalsSizeResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PersonalPrincipalsSizeResponseFromJSON(data []byte) (*PersonalPrincipalsSizeResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw personalprincipalssizeresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PersonalPrincipalsSizeResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PersonalPrincipalsSizeResponse{}
+	result.Size = raw.Size
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PersonalPrincipalsSizeResponseToYAML converts PersonalPrincipalsSizeResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PersonalPrincipalsSizeResponseToYAML(v *PersonalPrincipalsSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalssizeresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsSizeResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PersonalPrincipalsSizeResponseToTOML converts PersonalPrincipalsSizeResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PersonalPrincipalsSizeResponseToTOML(v *PersonalPrincipalsSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalssizeresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsSizeResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PersonalPrincipalsQueryRequestJSON represents PersonalPrincipalsQueryRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type personalprincipalsqueryrequestJSON struct {
+	Query   json.RawMessage `json:"query,omitempty"`
+	TraceId string          `json:"trace_id,omitempty"`
+	Noop    bool            `json:"noop,omitempty"`
+}
+
+// PersonalPrincipalsQueryRequestToJSON converts PersonalPrincipalsQueryRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsQueryRequestToJSON(v *PersonalPrincipalsQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsqueryrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalsqueryrequestJSON{
+		Query: func() json.RawMessage {
+			if v.Query == nil {
+				return nil
+			}
+			data, _ := CollectionQueryToJSON(v.Query)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PersonalPrincipalsQueryRequestToJSONPretty converts PersonalPrincipalsQueryRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsQueryRequestToJSONPretty(v *PersonalPrincipalsQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsqueryrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalsqueryrequestJSON{
+		Query: func() json.RawMessage {
+			if v.Query == nil {
+				return nil
+			}
+			data, _ := CollectionQueryToJSON(v.Query)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PersonalPrincipalsQueryRequestFromBytes creates PersonalPrincipalsQueryRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PersonalPrincipalsQueryRequestFromBytes(data []byte) (*PersonalPrincipalsQueryRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PersonalPrincipalsQueryRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsQueryRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsQueryRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PersonalPrincipalsQueryRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PersonalPrincipalsQueryRequest: unsupported format or invalid data")
+}
+
+// PersonalPrincipalsQueryRequestFromJSON creates PersonalPrincipalsQueryRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PersonalPrincipalsQueryRequestFromJSON(data []byte) (*PersonalPrincipalsQueryRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw personalprincipalsqueryrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PersonalPrincipalsQueryRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PersonalPrincipalsQueryRequest{}
+	// Parse message field: Query
+	if len(raw.Query) > 0 {
+		parsed, err := CollectionQueryFromJSON(raw.Query)
+		if err == nil {
+			result.Query = parsed
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PersonalPrincipalsQueryRequestToYAML converts PersonalPrincipalsQueryRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PersonalPrincipalsQueryRequestToYAML(v *PersonalPrincipalsQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsqueryrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsQueryRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PersonalPrincipalsQueryRequestToTOML converts PersonalPrincipalsQueryRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PersonalPrincipalsQueryRequestToTOML(v *PersonalPrincipalsQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsqueryrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsQueryRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PersonalPrincipalsQueryResponseJSON represents PersonalPrincipalsQueryResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type personalprincipalsqueryresponseJSON struct {
+	Results    []json.RawMessage `json:"results,omitempty"`
+	TotalCount int32             `json:"total_count,omitempty"`
+	TraceId    string            `json:"trace_id,omitempty"`
+	Noop       bool              `json:"noop,omitempty"`
+}
+
+// PersonalPrincipalsQueryResponseToJSON converts PersonalPrincipalsQueryResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsQueryResponseToJSON(v *PersonalPrincipalsQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsqueryresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalsqueryresponseJSON{
+		Results: func() []json.RawMessage {
+			if len(v.Results) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Results))
+			for _, item := range v.Results {
+				if item != nil {
+					if data, err := PersonalPrincipalToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TotalCount: v.TotalCount,
+		TraceId:    v.TraceId,
+		Noop:       v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PersonalPrincipalsQueryResponseToJSONPretty converts PersonalPrincipalsQueryResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PersonalPrincipalsQueryResponseToJSONPretty(v *PersonalPrincipalsQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsqueryresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := personalprincipalsqueryresponseJSON{
+		Results: func() []json.RawMessage {
+			if len(v.Results) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Results))
+			for _, item := range v.Results {
+				if item != nil {
+					if data, err := PersonalPrincipalToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TotalCount: v.TotalCount,
+		TraceId:    v.TraceId,
+		Noop:       v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PersonalPrincipalsQueryResponseFromBytes creates PersonalPrincipalsQueryResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PersonalPrincipalsQueryResponseFromBytes(data []byte) (*PersonalPrincipalsQueryResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PersonalPrincipalsQueryResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsQueryResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PersonalPrincipalsQueryResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PersonalPrincipalsQueryResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PersonalPrincipalsQueryResponse: unsupported format or invalid data")
+}
+
+// PersonalPrincipalsQueryResponseFromJSON creates PersonalPrincipalsQueryResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PersonalPrincipalsQueryResponseFromJSON(data []byte) (*PersonalPrincipalsQueryResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw personalprincipalsqueryresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PersonalPrincipalsQueryResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PersonalPrincipalsQueryResponse{}
+	// Parse repeated message field: Results
+	if len(raw.Results) > 0 {
+		result.Results = make([]*PersonalPrincipal, 0, len(raw.Results))
+		for _, itemJSON := range raw.Results {
+			if len(itemJSON) > 0 {
+				parsed, err := PersonalPrincipalFromJSON(itemJSON)
+				if err == nil {
+					result.Results = append(result.Results, parsed)
+				}
+			}
+		}
+	}
+	result.TotalCount = raw.TotalCount
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PersonalPrincipalsQueryResponseToYAML converts PersonalPrincipalsQueryResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PersonalPrincipalsQueryResponseToYAML(v *PersonalPrincipalsQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsqueryresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsQueryResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PersonalPrincipalsQueryResponseToTOML converts PersonalPrincipalsQueryResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PersonalPrincipalsQueryResponseToTOML(v *PersonalPrincipalsQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "personalprincipalsqueryresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PersonalPrincipalsQueryResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PeopleGetRequestJSON represents PeopleGetRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type peoplegetrequestJSON struct {
+	Key     string `json:"key,omitempty"`
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// PeopleGetRequestToJSON converts PeopleGetRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleGetRequestToJSON(v *PeopleGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplegetrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peoplegetrequestJSON{
+		Key:     v.Key,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PeopleGetRequestToJSONPretty converts PeopleGetRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleGetRequestToJSONPretty(v *PeopleGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplegetrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peoplegetrequestJSON{
+		Key:     v.Key,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PeopleGetRequestFromBytes creates PeopleGetRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PeopleGetRequestFromBytes(data []byte) (*PeopleGetRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PeopleGetRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PeopleGetRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PeopleGetRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PeopleGetRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PeopleGetRequest: unsupported format or invalid data")
+}
+
+// PeopleGetRequestFromJSON creates PeopleGetRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PeopleGetRequestFromJSON(data []byte) (*PeopleGetRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw peoplegetrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PeopleGetRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PeopleGetRequest{}
+	result.Key = raw.Key
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PeopleGetRequestToYAML converts PeopleGetRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PeopleGetRequestToYAML(v *PeopleGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplegetrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleGetRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PeopleGetRequestToTOML converts PeopleGetRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PeopleGetRequestToTOML(v *PeopleGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplegetrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleGetRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PeoplePutRequestJSON represents PeoplePutRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type peopleputrequestJSON struct {
+	Key         string          `json:"key,omitempty"`
+	Value       json.RawMessage `json:"value,omitempty"`
+	LockCounter int64           `json:"lock_counter,omitempty"`
+	TraceId     string          `json:"trace_id,omitempty"`
+	Noop        bool            `json:"noop,omitempty"`
+}
+
+// PeoplePutRequestToJSON converts PeoplePutRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeoplePutRequestToJSON(v *PeoplePutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peopleputrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peopleputrequestJSON{
+		Key: v.Key,
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := PersonToJSON(v.Value)
+			return data
+		}(),
+		LockCounter: v.LockCounter,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PeoplePutRequestToJSONPretty converts PeoplePutRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeoplePutRequestToJSONPretty(v *PeoplePutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peopleputrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peopleputrequestJSON{
+		Key: v.Key,
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := PersonToJSON(v.Value)
+			return data
+		}(),
+		LockCounter: v.LockCounter,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PeoplePutRequestFromBytes creates PeoplePutRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PeoplePutRequestFromBytes(data []byte) (*PeoplePutRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PeoplePutRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PeoplePutRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PeoplePutRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PeoplePutRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PeoplePutRequest: unsupported format or invalid data")
+}
+
+// PeoplePutRequestFromJSON creates PeoplePutRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PeoplePutRequestFromJSON(data []byte) (*PeoplePutRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw peopleputrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PeoplePutRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PeoplePutRequest{}
+	result.Key = raw.Key
+	// Parse message field: Value
+	if len(raw.Value) > 0 {
+		parsed, err := PersonFromJSON(raw.Value)
+		if err == nil {
+			result.Value = parsed
+		}
+	}
+	result.LockCounter = raw.LockCounter
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PeoplePutRequestToYAML converts PeoplePutRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PeoplePutRequestToYAML(v *PeoplePutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peopleputrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeoplePutRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PeoplePutRequestToTOML converts PeoplePutRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PeoplePutRequestToTOML(v *PeoplePutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peopleputrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeoplePutRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PeopleGetAllRequestJSON represents PeopleGetAllRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type peoplegetallrequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// PeopleGetAllRequestToJSON converts PeopleGetAllRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleGetAllRequestToJSON(v *PeopleGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplegetallrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peoplegetallrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PeopleGetAllRequestToJSONPretty converts PeopleGetAllRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleGetAllRequestToJSONPretty(v *PeopleGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplegetallrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peoplegetallrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PeopleGetAllRequestFromBytes creates PeopleGetAllRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PeopleGetAllRequestFromBytes(data []byte) (*PeopleGetAllRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PeopleGetAllRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PeopleGetAllRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PeopleGetAllRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PeopleGetAllRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PeopleGetAllRequest: unsupported format or invalid data")
+}
+
+// PeopleGetAllRequestFromJSON creates PeopleGetAllRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PeopleGetAllRequestFromJSON(data []byte) (*PeopleGetAllRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw peoplegetallrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PeopleGetAllRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PeopleGetAllRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PeopleGetAllRequestToYAML converts PeopleGetAllRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PeopleGetAllRequestToYAML(v *PeopleGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplegetallrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleGetAllRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PeopleGetAllRequestToTOML converts PeopleGetAllRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PeopleGetAllRequestToTOML(v *PeopleGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplegetallrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleGetAllRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PeopleKeysRequestJSON represents PeopleKeysRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type peoplekeysrequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// PeopleKeysRequestToJSON converts PeopleKeysRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleKeysRequestToJSON(v *PeopleKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplekeysrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peoplekeysrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PeopleKeysRequestToJSONPretty converts PeopleKeysRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleKeysRequestToJSONPretty(v *PeopleKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplekeysrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peoplekeysrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PeopleKeysRequestFromBytes creates PeopleKeysRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PeopleKeysRequestFromBytes(data []byte) (*PeopleKeysRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PeopleKeysRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PeopleKeysRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PeopleKeysRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PeopleKeysRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PeopleKeysRequest: unsupported format or invalid data")
+}
+
+// PeopleKeysRequestFromJSON creates PeopleKeysRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PeopleKeysRequestFromJSON(data []byte) (*PeopleKeysRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw peoplekeysrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PeopleKeysRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PeopleKeysRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PeopleKeysRequestToYAML converts PeopleKeysRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PeopleKeysRequestToYAML(v *PeopleKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplekeysrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleKeysRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PeopleKeysRequestToTOML converts PeopleKeysRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PeopleKeysRequestToTOML(v *PeopleKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplekeysrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleKeysRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PeopleSizeRequestJSON represents PeopleSizeRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type peoplesizerequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// PeopleSizeRequestToJSON converts PeopleSizeRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleSizeRequestToJSON(v *PeopleSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplesizerequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peoplesizerequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PeopleSizeRequestToJSONPretty converts PeopleSizeRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleSizeRequestToJSONPretty(v *PeopleSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplesizerequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peoplesizerequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PeopleSizeRequestFromBytes creates PeopleSizeRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PeopleSizeRequestFromBytes(data []byte) (*PeopleSizeRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PeopleSizeRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PeopleSizeRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PeopleSizeRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PeopleSizeRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PeopleSizeRequest: unsupported format or invalid data")
+}
+
+// PeopleSizeRequestFromJSON creates PeopleSizeRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PeopleSizeRequestFromJSON(data []byte) (*PeopleSizeRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw peoplesizerequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PeopleSizeRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PeopleSizeRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PeopleSizeRequestToYAML converts PeopleSizeRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PeopleSizeRequestToYAML(v *PeopleSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplesizerequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleSizeRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PeopleSizeRequestToTOML converts PeopleSizeRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PeopleSizeRequestToTOML(v *PeopleSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplesizerequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleSizeRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PeopleClearRequestJSON represents PeopleClearRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type peopleclearrequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// PeopleClearRequestToJSON converts PeopleClearRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleClearRequestToJSON(v *PeopleClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peopleclearrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peopleclearrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PeopleClearRequestToJSONPretty converts PeopleClearRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleClearRequestToJSONPretty(v *PeopleClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peopleclearrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peopleclearrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PeopleClearRequestFromBytes creates PeopleClearRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PeopleClearRequestFromBytes(data []byte) (*PeopleClearRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PeopleClearRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PeopleClearRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PeopleClearRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PeopleClearRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PeopleClearRequest: unsupported format or invalid data")
+}
+
+// PeopleClearRequestFromJSON creates PeopleClearRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PeopleClearRequestFromJSON(data []byte) (*PeopleClearRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw peopleclearrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PeopleClearRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PeopleClearRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PeopleClearRequestToYAML converts PeopleClearRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PeopleClearRequestToYAML(v *PeopleClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peopleclearrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleClearRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PeopleClearRequestToTOML converts PeopleClearRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PeopleClearRequestToTOML(v *PeopleClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peopleclearrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleClearRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PeopleValueResponseJSON represents PeopleValueResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type peoplevalueresponseJSON struct {
+	Value   json.RawMessage `json:"value,omitempty"`
+	Found   bool            `json:"found,omitempty"`
+	TraceId string          `json:"trace_id,omitempty"`
+	Noop    bool            `json:"noop,omitempty"`
+}
+
+// PeopleValueResponseToJSON converts PeopleValueResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleValueResponseToJSON(v *PeopleValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplevalueresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peoplevalueresponseJSON{
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := PersonToJSON(v.Value)
+			return data
+		}(),
+		Found:   v.Found,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PeopleValueResponseToJSONPretty converts PeopleValueResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleValueResponseToJSONPretty(v *PeopleValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplevalueresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peoplevalueresponseJSON{
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := PersonToJSON(v.Value)
+			return data
+		}(),
+		Found:   v.Found,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PeopleValueResponseFromBytes creates PeopleValueResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PeopleValueResponseFromBytes(data []byte) (*PeopleValueResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PeopleValueResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PeopleValueResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PeopleValueResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PeopleValueResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PeopleValueResponse: unsupported format or invalid data")
+}
+
+// PeopleValueResponseFromJSON creates PeopleValueResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PeopleValueResponseFromJSON(data []byte) (*PeopleValueResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw peoplevalueresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PeopleValueResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PeopleValueResponse{}
+	// Parse message field: Value
+	if len(raw.Value) > 0 {
+		parsed, err := PersonFromJSON(raw.Value)
+		if err == nil {
+			result.Value = parsed
+		}
+	}
+	result.Found = raw.Found
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PeopleValueResponseToYAML converts PeopleValueResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PeopleValueResponseToYAML(v *PeopleValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplevalueresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleValueResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PeopleValueResponseToTOML converts PeopleValueResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PeopleValueResponseToTOML(v *PeopleValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplevalueresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleValueResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PeopleEntriesResponseJSON represents PeopleEntriesResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type peopleentriesresponseJSON struct {
+	Entries map[string]json.RawMessage `json:"entries,omitempty"`
+	TraceId string                     `json:"trace_id,omitempty"`
+	Noop    bool                       `json:"noop,omitempty"`
+}
+
+// PeopleEntriesResponseToJSON converts PeopleEntriesResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleEntriesResponseToJSON(v *PeopleEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peopleentriesresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peopleentriesresponseJSON{
+		Entries: func() map[string]json.RawMessage {
+			if len(v.Entries) == 0 {
+				return nil
+			}
+			result := make(map[string]json.RawMessage, len(v.Entries))
+			for k, item := range v.Entries {
+				if item != nil {
+					if data, err := PersonToJSON(item); err == nil {
+						result[k] = data
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PeopleEntriesResponseToJSONPretty converts PeopleEntriesResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleEntriesResponseToJSONPretty(v *PeopleEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peopleentriesresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peopleentriesresponseJSON{
+		Entries: func() map[string]json.RawMessage {
+			if len(v.Entries) == 0 {
+				return nil
+			}
+			result := make(map[string]json.RawMessage, len(v.Entries))
+			for k, item := range v.Entries {
+				if item != nil {
+					if data, err := PersonToJSON(item); err == nil {
+						result[k] = data
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PeopleEntriesResponseFromBytes creates PeopleEntriesResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PeopleEntriesResponseFromBytes(data []byte) (*PeopleEntriesResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PeopleEntriesResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PeopleEntriesResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PeopleEntriesResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PeopleEntriesResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PeopleEntriesResponse: unsupported format or invalid data")
+}
+
+// PeopleEntriesResponseFromJSON creates PeopleEntriesResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PeopleEntriesResponseFromJSON(data []byte) (*PeopleEntriesResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw peopleentriesresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PeopleEntriesResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PeopleEntriesResponse{}
+	// Parse map field: Entries
+	if len(raw.Entries) > 0 {
+		result.Entries = make(map[string]*Person, len(raw.Entries))
+		for k, v := range raw.Entries {
+			if len(v) > 0 {
+				mapKey := k
+				parsed, err := PersonFromJSON(v)
+				if err == nil {
+					result.Entries[mapKey] = parsed
+				}
+			}
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PeopleEntriesResponseToYAML converts PeopleEntriesResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PeopleEntriesResponseToYAML(v *PeopleEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peopleentriesresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleEntriesResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PeopleEntriesResponseToTOML converts PeopleEntriesResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PeopleEntriesResponseToTOML(v *PeopleEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peopleentriesresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleEntriesResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PeopleKeysResponseJSON represents PeopleKeysResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type peoplekeysresponseJSON struct {
+	Keys    []string `json:"keys,omitempty"`
+	TraceId string   `json:"trace_id,omitempty"`
+	Noop    bool     `json:"noop,omitempty"`
+}
+
+// PeopleKeysResponseToJSON converts PeopleKeysResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleKeysResponseToJSON(v *PeopleKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplekeysresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peoplekeysresponseJSON{
+		Keys:    v.Keys,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PeopleKeysResponseToJSONPretty converts PeopleKeysResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleKeysResponseToJSONPretty(v *PeopleKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplekeysresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peoplekeysresponseJSON{
+		Keys:    v.Keys,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PeopleKeysResponseFromBytes creates PeopleKeysResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PeopleKeysResponseFromBytes(data []byte) (*PeopleKeysResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PeopleKeysResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PeopleKeysResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PeopleKeysResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PeopleKeysResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PeopleKeysResponse: unsupported format or invalid data")
+}
+
+// PeopleKeysResponseFromJSON creates PeopleKeysResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PeopleKeysResponseFromJSON(data []byte) (*PeopleKeysResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw peoplekeysresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PeopleKeysResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PeopleKeysResponse{}
+	result.Keys = raw.Keys
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PeopleKeysResponseToYAML converts PeopleKeysResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PeopleKeysResponseToYAML(v *PeopleKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplekeysresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleKeysResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PeopleKeysResponseToTOML converts PeopleKeysResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PeopleKeysResponseToTOML(v *PeopleKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplekeysresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleKeysResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PeopleSizeResponseJSON represents PeopleSizeResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type peoplesizeresponseJSON struct {
+	Size    int32  `json:"size,omitempty"`
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// PeopleSizeResponseToJSON converts PeopleSizeResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleSizeResponseToJSON(v *PeopleSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplesizeresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peoplesizeresponseJSON{
+		Size:    v.Size,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PeopleSizeResponseToJSONPretty converts PeopleSizeResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleSizeResponseToJSONPretty(v *PeopleSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplesizeresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peoplesizeresponseJSON{
+		Size:    v.Size,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PeopleSizeResponseFromBytes creates PeopleSizeResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PeopleSizeResponseFromBytes(data []byte) (*PeopleSizeResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PeopleSizeResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PeopleSizeResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PeopleSizeResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PeopleSizeResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PeopleSizeResponse: unsupported format or invalid data")
+}
+
+// PeopleSizeResponseFromJSON creates PeopleSizeResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PeopleSizeResponseFromJSON(data []byte) (*PeopleSizeResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw peoplesizeresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PeopleSizeResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PeopleSizeResponse{}
+	result.Size = raw.Size
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PeopleSizeResponseToYAML converts PeopleSizeResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PeopleSizeResponseToYAML(v *PeopleSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplesizeresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleSizeResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PeopleSizeResponseToTOML converts PeopleSizeResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PeopleSizeResponseToTOML(v *PeopleSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplesizeresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleSizeResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PeopleQueryRequestJSON represents PeopleQueryRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type peoplequeryrequestJSON struct {
+	Query   json.RawMessage `json:"query,omitempty"`
+	TraceId string          `json:"trace_id,omitempty"`
+	Noop    bool            `json:"noop,omitempty"`
+}
+
+// PeopleQueryRequestToJSON converts PeopleQueryRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleQueryRequestToJSON(v *PeopleQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplequeryrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peoplequeryrequestJSON{
+		Query: func() json.RawMessage {
+			if v.Query == nil {
+				return nil
+			}
+			data, _ := CollectionQueryToJSON(v.Query)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PeopleQueryRequestToJSONPretty converts PeopleQueryRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleQueryRequestToJSONPretty(v *PeopleQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplequeryrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peoplequeryrequestJSON{
+		Query: func() json.RawMessage {
+			if v.Query == nil {
+				return nil
+			}
+			data, _ := CollectionQueryToJSON(v.Query)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PeopleQueryRequestFromBytes creates PeopleQueryRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PeopleQueryRequestFromBytes(data []byte) (*PeopleQueryRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PeopleQueryRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PeopleQueryRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PeopleQueryRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PeopleQueryRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PeopleQueryRequest: unsupported format or invalid data")
+}
+
+// PeopleQueryRequestFromJSON creates PeopleQueryRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PeopleQueryRequestFromJSON(data []byte) (*PeopleQueryRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw peoplequeryrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PeopleQueryRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PeopleQueryRequest{}
+	// Parse message field: Query
+	if len(raw.Query) > 0 {
+		parsed, err := CollectionQueryFromJSON(raw.Query)
+		if err == nil {
+			result.Query = parsed
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PeopleQueryRequestToYAML converts PeopleQueryRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PeopleQueryRequestToYAML(v *PeopleQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplequeryrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleQueryRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PeopleQueryRequestToTOML converts PeopleQueryRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PeopleQueryRequestToTOML(v *PeopleQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplequeryrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleQueryRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PeopleQueryResponseJSON represents PeopleQueryResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type peoplequeryresponseJSON struct {
+	Results    []json.RawMessage `json:"results,omitempty"`
+	TotalCount int32             `json:"total_count,omitempty"`
+	TraceId    string            `json:"trace_id,omitempty"`
+	Noop       bool              `json:"noop,omitempty"`
+}
+
+// PeopleQueryResponseToJSON converts PeopleQueryResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleQueryResponseToJSON(v *PeopleQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplequeryresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peoplequeryresponseJSON{
+		Results: func() []json.RawMessage {
+			if len(v.Results) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Results))
+			for _, item := range v.Results {
+				if item != nil {
+					if data, err := PersonToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TotalCount: v.TotalCount,
+		TraceId:    v.TraceId,
+		Noop:       v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PeopleQueryResponseToJSONPretty converts PeopleQueryResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PeopleQueryResponseToJSONPretty(v *PeopleQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplequeryresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := peoplequeryresponseJSON{
+		Results: func() []json.RawMessage {
+			if len(v.Results) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Results))
+			for _, item := range v.Results {
+				if item != nil {
+					if data, err := PersonToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TotalCount: v.TotalCount,
+		TraceId:    v.TraceId,
+		Noop:       v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PeopleQueryResponseFromBytes creates PeopleQueryResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PeopleQueryResponseFromBytes(data []byte) (*PeopleQueryResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PeopleQueryResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PeopleQueryResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PeopleQueryResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PeopleQueryResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PeopleQueryResponse: unsupported format or invalid data")
+}
+
+// PeopleQueryResponseFromJSON creates PeopleQueryResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PeopleQueryResponseFromJSON(data []byte) (*PeopleQueryResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw peoplequeryresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PeopleQueryResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PeopleQueryResponse{}
+	// Parse repeated message field: Results
+	if len(raw.Results) > 0 {
+		result.Results = make([]*Person, 0, len(raw.Results))
+		for _, itemJSON := range raw.Results {
+			if len(itemJSON) > 0 {
+				parsed, err := PersonFromJSON(itemJSON)
+				if err == nil {
+					result.Results = append(result.Results, parsed)
+				}
+			}
+		}
+	}
+	result.TotalCount = raw.TotalCount
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PeopleQueryResponseToYAML converts PeopleQueryResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PeopleQueryResponseToYAML(v *PeopleQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplequeryresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleQueryResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PeopleQueryResponseToTOML converts PeopleQueryResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PeopleQueryResponseToTOML(v *PeopleQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "peoplequeryresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PeopleQueryResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// TenantUserLinksGetRequestJSON represents TenantUserLinksGetRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type tenantuserlinksgetrequestJSON struct {
+	Key     string `json:"key,omitempty"`
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// TenantUserLinksGetRequestToJSON converts TenantUserLinksGetRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksGetRequestToJSON(v *TenantUserLinksGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksgetrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksgetrequestJSON{
+		Key:     v.Key,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// TenantUserLinksGetRequestToJSONPretty converts TenantUserLinksGetRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksGetRequestToJSONPretty(v *TenantUserLinksGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksgetrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksgetrequestJSON{
+		Key:     v.Key,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// TenantUserLinksGetRequestFromBytes creates TenantUserLinksGetRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func TenantUserLinksGetRequestFromBytes(data []byte) (*TenantUserLinksGetRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := TenantUserLinksGetRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := TenantUserLinksGetRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := TenantUserLinksGetRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &TenantUserLinksGetRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse TenantUserLinksGetRequest: unsupported format or invalid data")
+}
+
+// TenantUserLinksGetRequestFromJSON creates TenantUserLinksGetRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func TenantUserLinksGetRequestFromJSON(data []byte) (*TenantUserLinksGetRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw tenantuserlinksgetrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &TenantUserLinksGetRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &TenantUserLinksGetRequest{}
+	result.Key = raw.Key
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// TenantUserLinksGetRequestToYAML converts TenantUserLinksGetRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func TenantUserLinksGetRequestToYAML(v *TenantUserLinksGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksgetrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksGetRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// TenantUserLinksGetRequestToTOML converts TenantUserLinksGetRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func TenantUserLinksGetRequestToTOML(v *TenantUserLinksGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksgetrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksGetRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// TenantUserLinksPutRequestJSON represents TenantUserLinksPutRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type tenantuserlinksputrequestJSON struct {
+	Key         string          `json:"key,omitempty"`
+	Value       json.RawMessage `json:"value,omitempty"`
+	LockCounter int64           `json:"lock_counter,omitempty"`
+	TraceId     string          `json:"trace_id,omitempty"`
+	Noop        bool            `json:"noop,omitempty"`
+}
+
+// TenantUserLinksPutRequestToJSON converts TenantUserLinksPutRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksPutRequestToJSON(v *TenantUserLinksPutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksputrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksputrequestJSON{
+		Key: v.Key,
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := TenantUserLinksToJSON(v.Value)
+			return data
+		}(),
+		LockCounter: v.LockCounter,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// TenantUserLinksPutRequestToJSONPretty converts TenantUserLinksPutRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksPutRequestToJSONPretty(v *TenantUserLinksPutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksputrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksputrequestJSON{
+		Key: v.Key,
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := TenantUserLinksToJSON(v.Value)
+			return data
+		}(),
+		LockCounter: v.LockCounter,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// TenantUserLinksPutRequestFromBytes creates TenantUserLinksPutRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func TenantUserLinksPutRequestFromBytes(data []byte) (*TenantUserLinksPutRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := TenantUserLinksPutRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := TenantUserLinksPutRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := TenantUserLinksPutRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &TenantUserLinksPutRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse TenantUserLinksPutRequest: unsupported format or invalid data")
+}
+
+// TenantUserLinksPutRequestFromJSON creates TenantUserLinksPutRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func TenantUserLinksPutRequestFromJSON(data []byte) (*TenantUserLinksPutRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw tenantuserlinksputrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &TenantUserLinksPutRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &TenantUserLinksPutRequest{}
+	result.Key = raw.Key
+	// Parse message field: Value
+	if len(raw.Value) > 0 {
+		parsed, err := TenantUserLinksFromJSON(raw.Value)
+		if err == nil {
+			result.Value = parsed
+		}
+	}
+	result.LockCounter = raw.LockCounter
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// TenantUserLinksPutRequestToYAML converts TenantUserLinksPutRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func TenantUserLinksPutRequestToYAML(v *TenantUserLinksPutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksputrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksPutRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// TenantUserLinksPutRequestToTOML converts TenantUserLinksPutRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func TenantUserLinksPutRequestToTOML(v *TenantUserLinksPutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksputrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksPutRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// TenantUserLinksGetAllRequestJSON represents TenantUserLinksGetAllRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type tenantuserlinksgetallrequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// TenantUserLinksGetAllRequestToJSON converts TenantUserLinksGetAllRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksGetAllRequestToJSON(v *TenantUserLinksGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksgetallrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksgetallrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// TenantUserLinksGetAllRequestToJSONPretty converts TenantUserLinksGetAllRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksGetAllRequestToJSONPretty(v *TenantUserLinksGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksgetallrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksgetallrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// TenantUserLinksGetAllRequestFromBytes creates TenantUserLinksGetAllRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func TenantUserLinksGetAllRequestFromBytes(data []byte) (*TenantUserLinksGetAllRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := TenantUserLinksGetAllRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := TenantUserLinksGetAllRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := TenantUserLinksGetAllRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &TenantUserLinksGetAllRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse TenantUserLinksGetAllRequest: unsupported format or invalid data")
+}
+
+// TenantUserLinksGetAllRequestFromJSON creates TenantUserLinksGetAllRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func TenantUserLinksGetAllRequestFromJSON(data []byte) (*TenantUserLinksGetAllRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw tenantuserlinksgetallrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &TenantUserLinksGetAllRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &TenantUserLinksGetAllRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// TenantUserLinksGetAllRequestToYAML converts TenantUserLinksGetAllRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func TenantUserLinksGetAllRequestToYAML(v *TenantUserLinksGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksgetallrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksGetAllRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// TenantUserLinksGetAllRequestToTOML converts TenantUserLinksGetAllRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func TenantUserLinksGetAllRequestToTOML(v *TenantUserLinksGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksgetallrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksGetAllRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// TenantUserLinksKeysRequestJSON represents TenantUserLinksKeysRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type tenantuserlinkskeysrequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// TenantUserLinksKeysRequestToJSON converts TenantUserLinksKeysRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksKeysRequestToJSON(v *TenantUserLinksKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkskeysrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinkskeysrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// TenantUserLinksKeysRequestToJSONPretty converts TenantUserLinksKeysRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksKeysRequestToJSONPretty(v *TenantUserLinksKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkskeysrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinkskeysrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// TenantUserLinksKeysRequestFromBytes creates TenantUserLinksKeysRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func TenantUserLinksKeysRequestFromBytes(data []byte) (*TenantUserLinksKeysRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := TenantUserLinksKeysRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := TenantUserLinksKeysRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := TenantUserLinksKeysRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &TenantUserLinksKeysRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse TenantUserLinksKeysRequest: unsupported format or invalid data")
+}
+
+// TenantUserLinksKeysRequestFromJSON creates TenantUserLinksKeysRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func TenantUserLinksKeysRequestFromJSON(data []byte) (*TenantUserLinksKeysRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw tenantuserlinkskeysrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &TenantUserLinksKeysRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &TenantUserLinksKeysRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// TenantUserLinksKeysRequestToYAML converts TenantUserLinksKeysRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func TenantUserLinksKeysRequestToYAML(v *TenantUserLinksKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkskeysrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksKeysRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// TenantUserLinksKeysRequestToTOML converts TenantUserLinksKeysRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func TenantUserLinksKeysRequestToTOML(v *TenantUserLinksKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkskeysrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksKeysRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// TenantUserLinksSizeRequestJSON represents TenantUserLinksSizeRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type tenantuserlinkssizerequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// TenantUserLinksSizeRequestToJSON converts TenantUserLinksSizeRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksSizeRequestToJSON(v *TenantUserLinksSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkssizerequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinkssizerequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// TenantUserLinksSizeRequestToJSONPretty converts TenantUserLinksSizeRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksSizeRequestToJSONPretty(v *TenantUserLinksSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkssizerequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinkssizerequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// TenantUserLinksSizeRequestFromBytes creates TenantUserLinksSizeRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func TenantUserLinksSizeRequestFromBytes(data []byte) (*TenantUserLinksSizeRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := TenantUserLinksSizeRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := TenantUserLinksSizeRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := TenantUserLinksSizeRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &TenantUserLinksSizeRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse TenantUserLinksSizeRequest: unsupported format or invalid data")
+}
+
+// TenantUserLinksSizeRequestFromJSON creates TenantUserLinksSizeRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func TenantUserLinksSizeRequestFromJSON(data []byte) (*TenantUserLinksSizeRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw tenantuserlinkssizerequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &TenantUserLinksSizeRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &TenantUserLinksSizeRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// TenantUserLinksSizeRequestToYAML converts TenantUserLinksSizeRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func TenantUserLinksSizeRequestToYAML(v *TenantUserLinksSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkssizerequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksSizeRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// TenantUserLinksSizeRequestToTOML converts TenantUserLinksSizeRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func TenantUserLinksSizeRequestToTOML(v *TenantUserLinksSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkssizerequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksSizeRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// TenantUserLinksClearRequestJSON represents TenantUserLinksClearRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type tenantuserlinksclearrequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// TenantUserLinksClearRequestToJSON converts TenantUserLinksClearRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksClearRequestToJSON(v *TenantUserLinksClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksclearrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksclearrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// TenantUserLinksClearRequestToJSONPretty converts TenantUserLinksClearRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksClearRequestToJSONPretty(v *TenantUserLinksClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksclearrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksclearrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// TenantUserLinksClearRequestFromBytes creates TenantUserLinksClearRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func TenantUserLinksClearRequestFromBytes(data []byte) (*TenantUserLinksClearRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := TenantUserLinksClearRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := TenantUserLinksClearRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := TenantUserLinksClearRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &TenantUserLinksClearRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse TenantUserLinksClearRequest: unsupported format or invalid data")
+}
+
+// TenantUserLinksClearRequestFromJSON creates TenantUserLinksClearRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func TenantUserLinksClearRequestFromJSON(data []byte) (*TenantUserLinksClearRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw tenantuserlinksclearrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &TenantUserLinksClearRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &TenantUserLinksClearRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// TenantUserLinksClearRequestToYAML converts TenantUserLinksClearRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func TenantUserLinksClearRequestToYAML(v *TenantUserLinksClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksclearrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksClearRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// TenantUserLinksClearRequestToTOML converts TenantUserLinksClearRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func TenantUserLinksClearRequestToTOML(v *TenantUserLinksClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksclearrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksClearRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// TenantUserLinksValueResponseJSON represents TenantUserLinksValueResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type tenantuserlinksvalueresponseJSON struct {
+	Value   json.RawMessage `json:"value,omitempty"`
+	Found   bool            `json:"found,omitempty"`
+	TraceId string          `json:"trace_id,omitempty"`
+	Noop    bool            `json:"noop,omitempty"`
+}
+
+// TenantUserLinksValueResponseToJSON converts TenantUserLinksValueResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksValueResponseToJSON(v *TenantUserLinksValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksvalueresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksvalueresponseJSON{
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := TenantUserLinksToJSON(v.Value)
+			return data
+		}(),
+		Found:   v.Found,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// TenantUserLinksValueResponseToJSONPretty converts TenantUserLinksValueResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksValueResponseToJSONPretty(v *TenantUserLinksValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksvalueresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksvalueresponseJSON{
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := TenantUserLinksToJSON(v.Value)
+			return data
+		}(),
+		Found:   v.Found,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// TenantUserLinksValueResponseFromBytes creates TenantUserLinksValueResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func TenantUserLinksValueResponseFromBytes(data []byte) (*TenantUserLinksValueResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := TenantUserLinksValueResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := TenantUserLinksValueResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := TenantUserLinksValueResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &TenantUserLinksValueResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse TenantUserLinksValueResponse: unsupported format or invalid data")
+}
+
+// TenantUserLinksValueResponseFromJSON creates TenantUserLinksValueResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func TenantUserLinksValueResponseFromJSON(data []byte) (*TenantUserLinksValueResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw tenantuserlinksvalueresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &TenantUserLinksValueResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &TenantUserLinksValueResponse{}
+	// Parse message field: Value
+	if len(raw.Value) > 0 {
+		parsed, err := TenantUserLinksFromJSON(raw.Value)
+		if err == nil {
+			result.Value = parsed
+		}
+	}
+	result.Found = raw.Found
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// TenantUserLinksValueResponseToYAML converts TenantUserLinksValueResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func TenantUserLinksValueResponseToYAML(v *TenantUserLinksValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksvalueresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksValueResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// TenantUserLinksValueResponseToTOML converts TenantUserLinksValueResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func TenantUserLinksValueResponseToTOML(v *TenantUserLinksValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksvalueresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksValueResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// TenantUserLinksEntriesResponseJSON represents TenantUserLinksEntriesResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type tenantuserlinksentriesresponseJSON struct {
+	Entries map[string]json.RawMessage `json:"entries,omitempty"`
+	TraceId string                     `json:"trace_id,omitempty"`
+	Noop    bool                       `json:"noop,omitempty"`
+}
+
+// TenantUserLinksEntriesResponseToJSON converts TenantUserLinksEntriesResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksEntriesResponseToJSON(v *TenantUserLinksEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksentriesresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksentriesresponseJSON{
+		Entries: func() map[string]json.RawMessage {
+			if len(v.Entries) == 0 {
+				return nil
+			}
+			result := make(map[string]json.RawMessage, len(v.Entries))
+			for k, item := range v.Entries {
+				if item != nil {
+					if data, err := TenantUserLinksToJSON(item); err == nil {
+						result[k] = data
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// TenantUserLinksEntriesResponseToJSONPretty converts TenantUserLinksEntriesResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksEntriesResponseToJSONPretty(v *TenantUserLinksEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksentriesresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksentriesresponseJSON{
+		Entries: func() map[string]json.RawMessage {
+			if len(v.Entries) == 0 {
+				return nil
+			}
+			result := make(map[string]json.RawMessage, len(v.Entries))
+			for k, item := range v.Entries {
+				if item != nil {
+					if data, err := TenantUserLinksToJSON(item); err == nil {
+						result[k] = data
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// TenantUserLinksEntriesResponseFromBytes creates TenantUserLinksEntriesResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func TenantUserLinksEntriesResponseFromBytes(data []byte) (*TenantUserLinksEntriesResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := TenantUserLinksEntriesResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := TenantUserLinksEntriesResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := TenantUserLinksEntriesResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &TenantUserLinksEntriesResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse TenantUserLinksEntriesResponse: unsupported format or invalid data")
+}
+
+// TenantUserLinksEntriesResponseFromJSON creates TenantUserLinksEntriesResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func TenantUserLinksEntriesResponseFromJSON(data []byte) (*TenantUserLinksEntriesResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw tenantuserlinksentriesresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &TenantUserLinksEntriesResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &TenantUserLinksEntriesResponse{}
+	// Parse map field: Entries
+	if len(raw.Entries) > 0 {
+		result.Entries = make(map[string]*TenantUserLinks, len(raw.Entries))
+		for k, v := range raw.Entries {
+			if len(v) > 0 {
+				mapKey := k
+				parsed, err := TenantUserLinksFromJSON(v)
+				if err == nil {
+					result.Entries[mapKey] = parsed
+				}
+			}
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// TenantUserLinksEntriesResponseToYAML converts TenantUserLinksEntriesResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func TenantUserLinksEntriesResponseToYAML(v *TenantUserLinksEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksentriesresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksEntriesResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// TenantUserLinksEntriesResponseToTOML converts TenantUserLinksEntriesResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func TenantUserLinksEntriesResponseToTOML(v *TenantUserLinksEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksentriesresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksEntriesResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// TenantUserLinksKeysResponseJSON represents TenantUserLinksKeysResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type tenantuserlinkskeysresponseJSON struct {
+	Keys    []string `json:"keys,omitempty"`
+	TraceId string   `json:"trace_id,omitempty"`
+	Noop    bool     `json:"noop,omitempty"`
+}
+
+// TenantUserLinksKeysResponseToJSON converts TenantUserLinksKeysResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksKeysResponseToJSON(v *TenantUserLinksKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkskeysresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinkskeysresponseJSON{
+		Keys:    v.Keys,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// TenantUserLinksKeysResponseToJSONPretty converts TenantUserLinksKeysResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksKeysResponseToJSONPretty(v *TenantUserLinksKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkskeysresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinkskeysresponseJSON{
+		Keys:    v.Keys,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// TenantUserLinksKeysResponseFromBytes creates TenantUserLinksKeysResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func TenantUserLinksKeysResponseFromBytes(data []byte) (*TenantUserLinksKeysResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := TenantUserLinksKeysResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := TenantUserLinksKeysResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := TenantUserLinksKeysResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &TenantUserLinksKeysResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse TenantUserLinksKeysResponse: unsupported format or invalid data")
+}
+
+// TenantUserLinksKeysResponseFromJSON creates TenantUserLinksKeysResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func TenantUserLinksKeysResponseFromJSON(data []byte) (*TenantUserLinksKeysResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw tenantuserlinkskeysresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &TenantUserLinksKeysResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &TenantUserLinksKeysResponse{}
+	result.Keys = raw.Keys
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// TenantUserLinksKeysResponseToYAML converts TenantUserLinksKeysResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func TenantUserLinksKeysResponseToYAML(v *TenantUserLinksKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkskeysresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksKeysResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// TenantUserLinksKeysResponseToTOML converts TenantUserLinksKeysResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func TenantUserLinksKeysResponseToTOML(v *TenantUserLinksKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkskeysresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksKeysResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// TenantUserLinksSizeResponseJSON represents TenantUserLinksSizeResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type tenantuserlinkssizeresponseJSON struct {
+	Size    int32  `json:"size,omitempty"`
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// TenantUserLinksSizeResponseToJSON converts TenantUserLinksSizeResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksSizeResponseToJSON(v *TenantUserLinksSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkssizeresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinkssizeresponseJSON{
+		Size:    v.Size,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// TenantUserLinksSizeResponseToJSONPretty converts TenantUserLinksSizeResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksSizeResponseToJSONPretty(v *TenantUserLinksSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkssizeresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinkssizeresponseJSON{
+		Size:    v.Size,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// TenantUserLinksSizeResponseFromBytes creates TenantUserLinksSizeResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func TenantUserLinksSizeResponseFromBytes(data []byte) (*TenantUserLinksSizeResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := TenantUserLinksSizeResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := TenantUserLinksSizeResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := TenantUserLinksSizeResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &TenantUserLinksSizeResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse TenantUserLinksSizeResponse: unsupported format or invalid data")
+}
+
+// TenantUserLinksSizeResponseFromJSON creates TenantUserLinksSizeResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func TenantUserLinksSizeResponseFromJSON(data []byte) (*TenantUserLinksSizeResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw tenantuserlinkssizeresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &TenantUserLinksSizeResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &TenantUserLinksSizeResponse{}
+	result.Size = raw.Size
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// TenantUserLinksSizeResponseToYAML converts TenantUserLinksSizeResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func TenantUserLinksSizeResponseToYAML(v *TenantUserLinksSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkssizeresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksSizeResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// TenantUserLinksSizeResponseToTOML converts TenantUserLinksSizeResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func TenantUserLinksSizeResponseToTOML(v *TenantUserLinksSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinkssizeresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksSizeResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// TenantUserLinksQueryRequestJSON represents TenantUserLinksQueryRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type tenantuserlinksqueryrequestJSON struct {
+	Query   json.RawMessage `json:"query,omitempty"`
+	TraceId string          `json:"trace_id,omitempty"`
+	Noop    bool            `json:"noop,omitempty"`
+}
+
+// TenantUserLinksQueryRequestToJSON converts TenantUserLinksQueryRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksQueryRequestToJSON(v *TenantUserLinksQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksqueryrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksqueryrequestJSON{
+		Query: func() json.RawMessage {
+			if v.Query == nil {
+				return nil
+			}
+			data, _ := CollectionQueryToJSON(v.Query)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// TenantUserLinksQueryRequestToJSONPretty converts TenantUserLinksQueryRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksQueryRequestToJSONPretty(v *TenantUserLinksQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksqueryrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksqueryrequestJSON{
+		Query: func() json.RawMessage {
+			if v.Query == nil {
+				return nil
+			}
+			data, _ := CollectionQueryToJSON(v.Query)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// TenantUserLinksQueryRequestFromBytes creates TenantUserLinksQueryRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func TenantUserLinksQueryRequestFromBytes(data []byte) (*TenantUserLinksQueryRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := TenantUserLinksQueryRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := TenantUserLinksQueryRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := TenantUserLinksQueryRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &TenantUserLinksQueryRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse TenantUserLinksQueryRequest: unsupported format or invalid data")
+}
+
+// TenantUserLinksQueryRequestFromJSON creates TenantUserLinksQueryRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func TenantUserLinksQueryRequestFromJSON(data []byte) (*TenantUserLinksQueryRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw tenantuserlinksqueryrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &TenantUserLinksQueryRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &TenantUserLinksQueryRequest{}
+	// Parse message field: Query
+	if len(raw.Query) > 0 {
+		parsed, err := CollectionQueryFromJSON(raw.Query)
+		if err == nil {
+			result.Query = parsed
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// TenantUserLinksQueryRequestToYAML converts TenantUserLinksQueryRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func TenantUserLinksQueryRequestToYAML(v *TenantUserLinksQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksqueryrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksQueryRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// TenantUserLinksQueryRequestToTOML converts TenantUserLinksQueryRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func TenantUserLinksQueryRequestToTOML(v *TenantUserLinksQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksqueryrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksQueryRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// TenantUserLinksQueryResponseJSON represents TenantUserLinksQueryResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type tenantuserlinksqueryresponseJSON struct {
+	Results    []json.RawMessage `json:"results,omitempty"`
+	TotalCount int32             `json:"total_count,omitempty"`
+	TraceId    string            `json:"trace_id,omitempty"`
+	Noop       bool              `json:"noop,omitempty"`
+}
+
+// TenantUserLinksQueryResponseToJSON converts TenantUserLinksQueryResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksQueryResponseToJSON(v *TenantUserLinksQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksqueryresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksqueryresponseJSON{
+		Results: func() []json.RawMessage {
+			if len(v.Results) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Results))
+			for _, item := range v.Results {
+				if item != nil {
+					if data, err := TenantUserLinksToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TotalCount: v.TotalCount,
+		TraceId:    v.TraceId,
+		Noop:       v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// TenantUserLinksQueryResponseToJSONPretty converts TenantUserLinksQueryResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func TenantUserLinksQueryResponseToJSONPretty(v *TenantUserLinksQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksqueryresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := tenantuserlinksqueryresponseJSON{
+		Results: func() []json.RawMessage {
+			if len(v.Results) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Results))
+			for _, item := range v.Results {
+				if item != nil {
+					if data, err := TenantUserLinksToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TotalCount: v.TotalCount,
+		TraceId:    v.TraceId,
+		Noop:       v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// TenantUserLinksQueryResponseFromBytes creates TenantUserLinksQueryResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func TenantUserLinksQueryResponseFromBytes(data []byte) (*TenantUserLinksQueryResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := TenantUserLinksQueryResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := TenantUserLinksQueryResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := TenantUserLinksQueryResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &TenantUserLinksQueryResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse TenantUserLinksQueryResponse: unsupported format or invalid data")
+}
+
+// TenantUserLinksQueryResponseFromJSON creates TenantUserLinksQueryResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func TenantUserLinksQueryResponseFromJSON(data []byte) (*TenantUserLinksQueryResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw tenantuserlinksqueryresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &TenantUserLinksQueryResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &TenantUserLinksQueryResponse{}
+	// Parse repeated message field: Results
+	if len(raw.Results) > 0 {
+		result.Results = make([]*TenantUserLinks, 0, len(raw.Results))
+		for _, itemJSON := range raw.Results {
+			if len(itemJSON) > 0 {
+				parsed, err := TenantUserLinksFromJSON(itemJSON)
+				if err == nil {
+					result.Results = append(result.Results, parsed)
+				}
+			}
+		}
+	}
+	result.TotalCount = raw.TotalCount
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// TenantUserLinksQueryResponseToYAML converts TenantUserLinksQueryResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func TenantUserLinksQueryResponseToYAML(v *TenantUserLinksQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksqueryresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksQueryResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// TenantUserLinksQueryResponseToTOML converts TenantUserLinksQueryResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func TenantUserLinksQueryResponseToTOML(v *TenantUserLinksQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "tenantuserlinksqueryresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := TenantUserLinksQueryResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PendingApprovalsGetRequestJSON represents PendingApprovalsGetRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type pendingapprovalsgetrequestJSON struct {
+	Key     string `json:"key,omitempty"`
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// PendingApprovalsGetRequestToJSON converts PendingApprovalsGetRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsGetRequestToJSON(v *PendingApprovalsGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsgetrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalsgetrequestJSON{
+		Key:     v.Key,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PendingApprovalsGetRequestToJSONPretty converts PendingApprovalsGetRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsGetRequestToJSONPretty(v *PendingApprovalsGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsgetrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalsgetrequestJSON{
+		Key:     v.Key,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PendingApprovalsGetRequestFromBytes creates PendingApprovalsGetRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PendingApprovalsGetRequestFromBytes(data []byte) (*PendingApprovalsGetRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PendingApprovalsGetRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PendingApprovalsGetRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PendingApprovalsGetRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PendingApprovalsGetRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PendingApprovalsGetRequest: unsupported format or invalid data")
+}
+
+// PendingApprovalsGetRequestFromJSON creates PendingApprovalsGetRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PendingApprovalsGetRequestFromJSON(data []byte) (*PendingApprovalsGetRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw pendingapprovalsgetrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PendingApprovalsGetRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PendingApprovalsGetRequest{}
+	result.Key = raw.Key
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PendingApprovalsGetRequestToYAML converts PendingApprovalsGetRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PendingApprovalsGetRequestToYAML(v *PendingApprovalsGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsgetrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsGetRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PendingApprovalsGetRequestToTOML converts PendingApprovalsGetRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PendingApprovalsGetRequestToTOML(v *PendingApprovalsGetRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsgetrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsGetRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PendingApprovalsPutRequestJSON represents PendingApprovalsPutRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type pendingapprovalsputrequestJSON struct {
+	Key         string          `json:"key,omitempty"`
+	Value       json.RawMessage `json:"value,omitempty"`
+	LockCounter int64           `json:"lock_counter,omitempty"`
+	TraceId     string          `json:"trace_id,omitempty"`
+	Noop        bool            `json:"noop,omitempty"`
+}
+
+// PendingApprovalsPutRequestToJSON converts PendingApprovalsPutRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsPutRequestToJSON(v *PendingApprovalsPutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsputrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalsputrequestJSON{
+		Key: v.Key,
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := PendingApprovalToJSON(v.Value)
+			return data
+		}(),
+		LockCounter: v.LockCounter,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PendingApprovalsPutRequestToJSONPretty converts PendingApprovalsPutRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsPutRequestToJSONPretty(v *PendingApprovalsPutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsputrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalsputrequestJSON{
+		Key: v.Key,
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := PendingApprovalToJSON(v.Value)
+			return data
+		}(),
+		LockCounter: v.LockCounter,
+		TraceId:     v.TraceId,
+		Noop:        v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PendingApprovalsPutRequestFromBytes creates PendingApprovalsPutRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PendingApprovalsPutRequestFromBytes(data []byte) (*PendingApprovalsPutRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PendingApprovalsPutRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PendingApprovalsPutRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PendingApprovalsPutRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PendingApprovalsPutRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PendingApprovalsPutRequest: unsupported format or invalid data")
+}
+
+// PendingApprovalsPutRequestFromJSON creates PendingApprovalsPutRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PendingApprovalsPutRequestFromJSON(data []byte) (*PendingApprovalsPutRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw pendingapprovalsputrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PendingApprovalsPutRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PendingApprovalsPutRequest{}
+	result.Key = raw.Key
+	// Parse message field: Value
+	if len(raw.Value) > 0 {
+		parsed, err := PendingApprovalFromJSON(raw.Value)
+		if err == nil {
+			result.Value = parsed
+		}
+	}
+	result.LockCounter = raw.LockCounter
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PendingApprovalsPutRequestToYAML converts PendingApprovalsPutRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PendingApprovalsPutRequestToYAML(v *PendingApprovalsPutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsputrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsPutRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PendingApprovalsPutRequestToTOML converts PendingApprovalsPutRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PendingApprovalsPutRequestToTOML(v *PendingApprovalsPutRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsputrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsPutRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PendingApprovalsGetAllRequestJSON represents PendingApprovalsGetAllRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type pendingapprovalsgetallrequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// PendingApprovalsGetAllRequestToJSON converts PendingApprovalsGetAllRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsGetAllRequestToJSON(v *PendingApprovalsGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsgetallrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalsgetallrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PendingApprovalsGetAllRequestToJSONPretty converts PendingApprovalsGetAllRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsGetAllRequestToJSONPretty(v *PendingApprovalsGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsgetallrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalsgetallrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PendingApprovalsGetAllRequestFromBytes creates PendingApprovalsGetAllRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PendingApprovalsGetAllRequestFromBytes(data []byte) (*PendingApprovalsGetAllRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PendingApprovalsGetAllRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PendingApprovalsGetAllRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PendingApprovalsGetAllRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PendingApprovalsGetAllRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PendingApprovalsGetAllRequest: unsupported format or invalid data")
+}
+
+// PendingApprovalsGetAllRequestFromJSON creates PendingApprovalsGetAllRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PendingApprovalsGetAllRequestFromJSON(data []byte) (*PendingApprovalsGetAllRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw pendingapprovalsgetallrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PendingApprovalsGetAllRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PendingApprovalsGetAllRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PendingApprovalsGetAllRequestToYAML converts PendingApprovalsGetAllRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PendingApprovalsGetAllRequestToYAML(v *PendingApprovalsGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsgetallrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsGetAllRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PendingApprovalsGetAllRequestToTOML converts PendingApprovalsGetAllRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PendingApprovalsGetAllRequestToTOML(v *PendingApprovalsGetAllRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsgetallrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsGetAllRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PendingApprovalsKeysRequestJSON represents PendingApprovalsKeysRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type pendingapprovalskeysrequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// PendingApprovalsKeysRequestToJSON converts PendingApprovalsKeysRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsKeysRequestToJSON(v *PendingApprovalsKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalskeysrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalskeysrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PendingApprovalsKeysRequestToJSONPretty converts PendingApprovalsKeysRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsKeysRequestToJSONPretty(v *PendingApprovalsKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalskeysrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalskeysrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PendingApprovalsKeysRequestFromBytes creates PendingApprovalsKeysRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PendingApprovalsKeysRequestFromBytes(data []byte) (*PendingApprovalsKeysRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PendingApprovalsKeysRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PendingApprovalsKeysRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PendingApprovalsKeysRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PendingApprovalsKeysRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PendingApprovalsKeysRequest: unsupported format or invalid data")
+}
+
+// PendingApprovalsKeysRequestFromJSON creates PendingApprovalsKeysRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PendingApprovalsKeysRequestFromJSON(data []byte) (*PendingApprovalsKeysRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw pendingapprovalskeysrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PendingApprovalsKeysRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PendingApprovalsKeysRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PendingApprovalsKeysRequestToYAML converts PendingApprovalsKeysRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PendingApprovalsKeysRequestToYAML(v *PendingApprovalsKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalskeysrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsKeysRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PendingApprovalsKeysRequestToTOML converts PendingApprovalsKeysRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PendingApprovalsKeysRequestToTOML(v *PendingApprovalsKeysRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalskeysrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsKeysRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PendingApprovalsSizeRequestJSON represents PendingApprovalsSizeRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type pendingapprovalssizerequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// PendingApprovalsSizeRequestToJSON converts PendingApprovalsSizeRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsSizeRequestToJSON(v *PendingApprovalsSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalssizerequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalssizerequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PendingApprovalsSizeRequestToJSONPretty converts PendingApprovalsSizeRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsSizeRequestToJSONPretty(v *PendingApprovalsSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalssizerequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalssizerequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PendingApprovalsSizeRequestFromBytes creates PendingApprovalsSizeRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PendingApprovalsSizeRequestFromBytes(data []byte) (*PendingApprovalsSizeRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PendingApprovalsSizeRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PendingApprovalsSizeRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PendingApprovalsSizeRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PendingApprovalsSizeRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PendingApprovalsSizeRequest: unsupported format or invalid data")
+}
+
+// PendingApprovalsSizeRequestFromJSON creates PendingApprovalsSizeRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PendingApprovalsSizeRequestFromJSON(data []byte) (*PendingApprovalsSizeRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw pendingapprovalssizerequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PendingApprovalsSizeRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PendingApprovalsSizeRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PendingApprovalsSizeRequestToYAML converts PendingApprovalsSizeRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PendingApprovalsSizeRequestToYAML(v *PendingApprovalsSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalssizerequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsSizeRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PendingApprovalsSizeRequestToTOML converts PendingApprovalsSizeRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PendingApprovalsSizeRequestToTOML(v *PendingApprovalsSizeRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalssizerequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsSizeRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PendingApprovalsClearRequestJSON represents PendingApprovalsClearRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type pendingapprovalsclearrequestJSON struct {
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// PendingApprovalsClearRequestToJSON converts PendingApprovalsClearRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsClearRequestToJSON(v *PendingApprovalsClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsclearrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalsclearrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PendingApprovalsClearRequestToJSONPretty converts PendingApprovalsClearRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsClearRequestToJSONPretty(v *PendingApprovalsClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsclearrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalsclearrequestJSON{
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PendingApprovalsClearRequestFromBytes creates PendingApprovalsClearRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PendingApprovalsClearRequestFromBytes(data []byte) (*PendingApprovalsClearRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PendingApprovalsClearRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PendingApprovalsClearRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PendingApprovalsClearRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PendingApprovalsClearRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PendingApprovalsClearRequest: unsupported format or invalid data")
+}
+
+// PendingApprovalsClearRequestFromJSON creates PendingApprovalsClearRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PendingApprovalsClearRequestFromJSON(data []byte) (*PendingApprovalsClearRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw pendingapprovalsclearrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PendingApprovalsClearRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PendingApprovalsClearRequest{}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PendingApprovalsClearRequestToYAML converts PendingApprovalsClearRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PendingApprovalsClearRequestToYAML(v *PendingApprovalsClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsclearrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsClearRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PendingApprovalsClearRequestToTOML converts PendingApprovalsClearRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PendingApprovalsClearRequestToTOML(v *PendingApprovalsClearRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsclearrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsClearRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PendingApprovalsValueResponseJSON represents PendingApprovalsValueResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type pendingapprovalsvalueresponseJSON struct {
+	Value   json.RawMessage `json:"value,omitempty"`
+	Found   bool            `json:"found,omitempty"`
+	TraceId string          `json:"trace_id,omitempty"`
+	Noop    bool            `json:"noop,omitempty"`
+}
+
+// PendingApprovalsValueResponseToJSON converts PendingApprovalsValueResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsValueResponseToJSON(v *PendingApprovalsValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsvalueresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalsvalueresponseJSON{
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := PendingApprovalToJSON(v.Value)
+			return data
+		}(),
+		Found:   v.Found,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PendingApprovalsValueResponseToJSONPretty converts PendingApprovalsValueResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsValueResponseToJSONPretty(v *PendingApprovalsValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsvalueresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalsvalueresponseJSON{
+		Value: func() json.RawMessage {
+			if v.Value == nil {
+				return nil
+			}
+			data, _ := PendingApprovalToJSON(v.Value)
+			return data
+		}(),
+		Found:   v.Found,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PendingApprovalsValueResponseFromBytes creates PendingApprovalsValueResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PendingApprovalsValueResponseFromBytes(data []byte) (*PendingApprovalsValueResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PendingApprovalsValueResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PendingApprovalsValueResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PendingApprovalsValueResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PendingApprovalsValueResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PendingApprovalsValueResponse: unsupported format or invalid data")
+}
+
+// PendingApprovalsValueResponseFromJSON creates PendingApprovalsValueResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PendingApprovalsValueResponseFromJSON(data []byte) (*PendingApprovalsValueResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw pendingapprovalsvalueresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PendingApprovalsValueResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PendingApprovalsValueResponse{}
+	// Parse message field: Value
+	if len(raw.Value) > 0 {
+		parsed, err := PendingApprovalFromJSON(raw.Value)
+		if err == nil {
+			result.Value = parsed
+		}
+	}
+	result.Found = raw.Found
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PendingApprovalsValueResponseToYAML converts PendingApprovalsValueResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PendingApprovalsValueResponseToYAML(v *PendingApprovalsValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsvalueresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsValueResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PendingApprovalsValueResponseToTOML converts PendingApprovalsValueResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PendingApprovalsValueResponseToTOML(v *PendingApprovalsValueResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsvalueresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsValueResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PendingApprovalsEntriesResponseJSON represents PendingApprovalsEntriesResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type pendingapprovalsentriesresponseJSON struct {
+	Entries map[string]json.RawMessage `json:"entries,omitempty"`
+	TraceId string                     `json:"trace_id,omitempty"`
+	Noop    bool                       `json:"noop,omitempty"`
+}
+
+// PendingApprovalsEntriesResponseToJSON converts PendingApprovalsEntriesResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsEntriesResponseToJSON(v *PendingApprovalsEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsentriesresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalsentriesresponseJSON{
+		Entries: func() map[string]json.RawMessage {
+			if len(v.Entries) == 0 {
+				return nil
+			}
+			result := make(map[string]json.RawMessage, len(v.Entries))
+			for k, item := range v.Entries {
+				if item != nil {
+					if data, err := PendingApprovalToJSON(item); err == nil {
+						result[k] = data
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PendingApprovalsEntriesResponseToJSONPretty converts PendingApprovalsEntriesResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsEntriesResponseToJSONPretty(v *PendingApprovalsEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsentriesresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalsentriesresponseJSON{
+		Entries: func() map[string]json.RawMessage {
+			if len(v.Entries) == 0 {
+				return nil
+			}
+			result := make(map[string]json.RawMessage, len(v.Entries))
+			for k, item := range v.Entries {
+				if item != nil {
+					if data, err := PendingApprovalToJSON(item); err == nil {
+						result[k] = data
+					}
+				}
+			}
+			return result
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PendingApprovalsEntriesResponseFromBytes creates PendingApprovalsEntriesResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PendingApprovalsEntriesResponseFromBytes(data []byte) (*PendingApprovalsEntriesResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PendingApprovalsEntriesResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PendingApprovalsEntriesResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PendingApprovalsEntriesResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PendingApprovalsEntriesResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PendingApprovalsEntriesResponse: unsupported format or invalid data")
+}
+
+// PendingApprovalsEntriesResponseFromJSON creates PendingApprovalsEntriesResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PendingApprovalsEntriesResponseFromJSON(data []byte) (*PendingApprovalsEntriesResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw pendingapprovalsentriesresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PendingApprovalsEntriesResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PendingApprovalsEntriesResponse{}
+	// Parse map field: Entries
+	if len(raw.Entries) > 0 {
+		result.Entries = make(map[string]*PendingApproval, len(raw.Entries))
+		for k, v := range raw.Entries {
+			if len(v) > 0 {
+				mapKey := k
+				parsed, err := PendingApprovalFromJSON(v)
+				if err == nil {
+					result.Entries[mapKey] = parsed
+				}
+			}
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PendingApprovalsEntriesResponseToYAML converts PendingApprovalsEntriesResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PendingApprovalsEntriesResponseToYAML(v *PendingApprovalsEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsentriesresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsEntriesResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PendingApprovalsEntriesResponseToTOML converts PendingApprovalsEntriesResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PendingApprovalsEntriesResponseToTOML(v *PendingApprovalsEntriesResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsentriesresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsEntriesResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PendingApprovalsKeysResponseJSON represents PendingApprovalsKeysResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type pendingapprovalskeysresponseJSON struct {
+	Keys    []string `json:"keys,omitempty"`
+	TraceId string   `json:"trace_id,omitempty"`
+	Noop    bool     `json:"noop,omitempty"`
+}
+
+// PendingApprovalsKeysResponseToJSON converts PendingApprovalsKeysResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsKeysResponseToJSON(v *PendingApprovalsKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalskeysresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalskeysresponseJSON{
+		Keys:    v.Keys,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PendingApprovalsKeysResponseToJSONPretty converts PendingApprovalsKeysResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsKeysResponseToJSONPretty(v *PendingApprovalsKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalskeysresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalskeysresponseJSON{
+		Keys:    v.Keys,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PendingApprovalsKeysResponseFromBytes creates PendingApprovalsKeysResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PendingApprovalsKeysResponseFromBytes(data []byte) (*PendingApprovalsKeysResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PendingApprovalsKeysResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PendingApprovalsKeysResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PendingApprovalsKeysResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PendingApprovalsKeysResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PendingApprovalsKeysResponse: unsupported format or invalid data")
+}
+
+// PendingApprovalsKeysResponseFromJSON creates PendingApprovalsKeysResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PendingApprovalsKeysResponseFromJSON(data []byte) (*PendingApprovalsKeysResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw pendingapprovalskeysresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PendingApprovalsKeysResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PendingApprovalsKeysResponse{}
+	result.Keys = raw.Keys
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PendingApprovalsKeysResponseToYAML converts PendingApprovalsKeysResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PendingApprovalsKeysResponseToYAML(v *PendingApprovalsKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalskeysresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsKeysResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PendingApprovalsKeysResponseToTOML converts PendingApprovalsKeysResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PendingApprovalsKeysResponseToTOML(v *PendingApprovalsKeysResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalskeysresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsKeysResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PendingApprovalsSizeResponseJSON represents PendingApprovalsSizeResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type pendingapprovalssizeresponseJSON struct {
+	Size    int32  `json:"size,omitempty"`
+	TraceId string `json:"trace_id,omitempty"`
+	Noop    bool   `json:"noop,omitempty"`
+}
+
+// PendingApprovalsSizeResponseToJSON converts PendingApprovalsSizeResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsSizeResponseToJSON(v *PendingApprovalsSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalssizeresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalssizeresponseJSON{
+		Size:    v.Size,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PendingApprovalsSizeResponseToJSONPretty converts PendingApprovalsSizeResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsSizeResponseToJSONPretty(v *PendingApprovalsSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalssizeresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalssizeresponseJSON{
+		Size:    v.Size,
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PendingApprovalsSizeResponseFromBytes creates PendingApprovalsSizeResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PendingApprovalsSizeResponseFromBytes(data []byte) (*PendingApprovalsSizeResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PendingApprovalsSizeResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PendingApprovalsSizeResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PendingApprovalsSizeResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PendingApprovalsSizeResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PendingApprovalsSizeResponse: unsupported format or invalid data")
+}
+
+// PendingApprovalsSizeResponseFromJSON creates PendingApprovalsSizeResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PendingApprovalsSizeResponseFromJSON(data []byte) (*PendingApprovalsSizeResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw pendingapprovalssizeresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PendingApprovalsSizeResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PendingApprovalsSizeResponse{}
+	result.Size = raw.Size
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PendingApprovalsSizeResponseToYAML converts PendingApprovalsSizeResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PendingApprovalsSizeResponseToYAML(v *PendingApprovalsSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalssizeresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsSizeResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PendingApprovalsSizeResponseToTOML converts PendingApprovalsSizeResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PendingApprovalsSizeResponseToTOML(v *PendingApprovalsSizeResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalssizeresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsSizeResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PendingApprovalsQueryRequestJSON represents PendingApprovalsQueryRequest in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type pendingapprovalsqueryrequestJSON struct {
+	Query   json.RawMessage `json:"query,omitempty"`
+	TraceId string          `json:"trace_id,omitempty"`
+	Noop    bool            `json:"noop,omitempty"`
+}
+
+// PendingApprovalsQueryRequestToJSON converts PendingApprovalsQueryRequest to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsQueryRequestToJSON(v *PendingApprovalsQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsqueryrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalsqueryrequestJSON{
+		Query: func() json.RawMessage {
+			if v.Query == nil {
+				return nil
+			}
+			data, _ := CollectionQueryToJSON(v.Query)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PendingApprovalsQueryRequestToJSONPretty converts PendingApprovalsQueryRequest to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsQueryRequestToJSONPretty(v *PendingApprovalsQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsqueryrequest is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalsqueryrequestJSON{
+		Query: func() json.RawMessage {
+			if v.Query == nil {
+				return nil
+			}
+			data, _ := CollectionQueryToJSON(v.Query)
+			return data
+		}(),
+		TraceId: v.TraceId,
+		Noop:    v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PendingApprovalsQueryRequestFromBytes creates PendingApprovalsQueryRequest from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PendingApprovalsQueryRequestFromBytes(data []byte) (*PendingApprovalsQueryRequest, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PendingApprovalsQueryRequestFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PendingApprovalsQueryRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PendingApprovalsQueryRequestFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PendingApprovalsQueryRequest{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PendingApprovalsQueryRequest: unsupported format or invalid data")
+}
+
+// PendingApprovalsQueryRequestFromJSON creates PendingApprovalsQueryRequest from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PendingApprovalsQueryRequestFromJSON(data []byte) (*PendingApprovalsQueryRequest, error) {
+	// Unmarshal into helper struct with string enums
+	var raw pendingapprovalsqueryrequestJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PendingApprovalsQueryRequest{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PendingApprovalsQueryRequest{}
+	// Parse message field: Query
+	if len(raw.Query) > 0 {
+		parsed, err := CollectionQueryFromJSON(raw.Query)
+		if err == nil {
+			result.Query = parsed
+		}
+	}
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PendingApprovalsQueryRequestToYAML converts PendingApprovalsQueryRequest to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PendingApprovalsQueryRequestToYAML(v *PendingApprovalsQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsqueryrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsQueryRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PendingApprovalsQueryRequestToTOML converts PendingApprovalsQueryRequest to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PendingApprovalsQueryRequestToTOML(v *PendingApprovalsQueryRequest) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsqueryrequest is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsQueryRequestToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
+// PendingApprovalsQueryResponseJSON represents PendingApprovalsQueryResponse in external JSON format (with string enums)
+// MARKER: JSON helper struct generated from serial.go
+type pendingapprovalsqueryresponseJSON struct {
+	Results    []json.RawMessage `json:"results,omitempty"`
+	TotalCount int32             `json:"total_count,omitempty"`
+	TraceId    string            `json:"trace_id,omitempty"`
+	Noop       bool              `json:"noop,omitempty"`
+}
+
+// PendingApprovalsQueryResponseToJSON converts PendingApprovalsQueryResponse to JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsQueryResponseToJSON(v *PendingApprovalsQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsqueryresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalsqueryresponseJSON{
+		Results: func() []json.RawMessage {
+			if len(v.Results) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Results))
+			for _, item := range v.Results {
+				if item != nil {
+					if data, err := PendingApprovalToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TotalCount: v.TotalCount,
+		TraceId:    v.TraceId,
+		Noop:       v.Noop,
+	}
+	return json.Marshal(helper)
+}
+
+// PendingApprovalsQueryResponseToJSONPretty converts PendingApprovalsQueryResponse to indented JSON bytes.
+// Uses custom JSON helper for friendly enum strings and proper int64 handling.
+func PendingApprovalsQueryResponseToJSONPretty(v *PendingApprovalsQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsqueryresponse is nil")
+	}
+	// Convert to JSON helper struct with string enums
+	helper := pendingapprovalsqueryresponseJSON{
+		Results: func() []json.RawMessage {
+			if len(v.Results) == 0 {
+				return nil
+			}
+			result := make([]json.RawMessage, 0, len(v.Results))
+			for _, item := range v.Results {
+				if item != nil {
+					if data, err := PendingApprovalToJSON(item); err == nil {
+						result = append(result, data)
+					}
+				}
+			}
+			return result
+		}(),
+		TotalCount: v.TotalCount,
+		TraceId:    v.TraceId,
+		Noop:       v.Noop,
+	}
+	return json.MarshalIndent(helper, "", "  ")
+}
+
+// PendingApprovalsQueryResponseFromBytes creates PendingApprovalsQueryResponse from bytes, auto-detecting the format.
+// Supports JSON, YAML, TOML, and binary protobuf formats.
+func PendingApprovalsQueryResponseFromBytes(data []byte) (*PendingApprovalsQueryResponse, error) {
+	// Trim leading whitespace to check format
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "empty data")
+	}
+	// Try JSON first (most common, starts with { or [)
+	if trimmed[0] == '{' || trimmed[0] == '[' {
+		if result, err := PendingApprovalsQueryResponseFromJSON(data); err == nil {
+			return result, nil
+		}
+	}
+	// Try TOML (try before YAML since YAML is more permissive)
+	var tomlObj any
+	if err := toml.Unmarshal(data, &tomlObj); err == nil {
+		// Convert TOML to JSON, then parse
+		jsonData, err := json.Marshal(tomlObj)
+		if err == nil {
+			if result, err := PendingApprovalsQueryResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try YAML
+	var yamlObj any
+	if err := yaml.Unmarshal(data, &yamlObj); err == nil {
+		// Convert YAML to JSON, then parse
+		jsonData, err := json.Marshal(yamlObj)
+		if err == nil {
+			if result, err := PendingApprovalsQueryResponseFromJSON(jsonData); err == nil {
+				return result, nil
+			}
+		}
+	}
+	// Try binary protobuf
+	v := &PendingApprovalsQueryResponse{}
+	if err := proto.Unmarshal(data, v); err == nil {
+		return v, nil
+	}
+	return nil, protoerrors.NewErrMissingInvalidData(nil, "failed to parse PendingApprovalsQueryResponse: unsupported format or invalid data")
+}
+
+// PendingApprovalsQueryResponseFromJSON creates PendingApprovalsQueryResponse from JSON bytes.
+// Uses standard encoding/json and custom enum parsers for external JSON compatibility.
+func PendingApprovalsQueryResponseFromJSON(data []byte) (*PendingApprovalsQueryResponse, error) {
+	// Unmarshal into helper struct with string enums
+	var raw pendingapprovalsqueryresponseJSON
+	if err := json.Unmarshal(data, &raw); err != nil {
+		// Fall back to protojson which handles proto3 JSON conventions
+		// (string-encoded int64/uint64, standard enum names, etc.)
+		v := &PendingApprovalsQueryResponse{}
+		if pErr := protojson.Unmarshal(data, v); pErr != nil {
+			return nil, err
+		}
+		return v, nil
+	}
+	// Build result with parsed enums
+	result := &PendingApprovalsQueryResponse{}
+	// Parse repeated message field: Results
+	if len(raw.Results) > 0 {
+		result.Results = make([]*PendingApproval, 0, len(raw.Results))
+		for _, itemJSON := range raw.Results {
+			if len(itemJSON) > 0 {
+				parsed, err := PendingApprovalFromJSON(itemJSON)
+				if err == nil {
+					result.Results = append(result.Results, parsed)
+				}
+			}
+		}
+	}
+	result.TotalCount = raw.TotalCount
+	result.TraceId = raw.TraceId
+	result.Noop = raw.Noop
+	return result, nil
+}
+
+// PendingApprovalsQueryResponseToYAML converts PendingApprovalsQueryResponse to YAML bytes.
+// Converts to JSON first, then to YAML for proper protobuf handling.
+func PendingApprovalsQueryResponseToYAML(v *PendingApprovalsQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsqueryresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsQueryResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to YAML, preserving integer precision
+	dec := json.NewDecoder(bytes.NewReader(jsonData))
+	dec.UseNumber()
+	var obj any
+	if err := dec.Decode(&obj); err != nil {
+		return nil, err
+	}
+	return yaml.Marshal(convertJSONNumbers(obj))
+}
+
+// PendingApprovalsQueryResponseToTOML converts PendingApprovalsQueryResponse to TOML bytes.
+// Converts to JSON first, then to TOML for proper protobuf handling.
+func PendingApprovalsQueryResponseToTOML(v *PendingApprovalsQueryResponse) ([]byte, error) {
+	if v == nil {
+		return nil, protoerrors.NewErrMissingInvalidData(nil, "pendingapprovalsqueryresponse is nil")
+	}
+	// Convert to JSON first
+	jsonData, err := PendingApprovalsQueryResponseToJSON(v)
+	if err != nil {
+		return nil, err
+	}
+	// Convert JSON to TOML
+	var obj any
+	if err := json.Unmarshal(jsonData, &obj); err != nil {
+		return nil, err
+	}
+	return toml.Marshal(obj)
+}
+
 // CaCertsGetRequestJSON represents CaCertsGetRequest in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type cacertsgetrequestJSON struct {
@@ -61760,8 +75179,7 @@ func ConfigToEnvVar(v *Config) map[string]string {
 			result[k] = val
 		}
 	}
-	result["PROTO_SERVICES_KERNEL_CONFIG_PERSISTENCE_DIR"] = v.PersistenceDir
-	result["PROTO_SERVICES_KERNEL_CONFIG_PERSISTENCE_FORMAT"] = outputformat.OutputFormatToString(v.PersistenceFormat)
+	result["PROTO_SERVICES_KERNEL_CONFIG_DISK_DIR"] = v.DiskDir
 	if v.HazelcastListener != nil {
 		for k, val := range host.HostToEnvVar(v.HazelcastListener) {
 			result[k] = val
@@ -61845,15 +75263,8 @@ func ConfigFromEnvVar(env map[string]string) (*Config, error) {
 	} else if sub != nil {
 		result.Logger = sub
 	}
-	if val, ok := env["PROTO_SERVICES_KERNEL_CONFIG_PERSISTENCE_DIR"]; ok && val != "" {
-		result.PersistenceDir = val
-	}
-	if val, ok := env["PROTO_SERVICES_KERNEL_CONFIG_PERSISTENCE_FORMAT"]; ok && val != "" {
-		parsed, err := outputformat.ParseOutputFormat(val)
-		if err != nil {
-			return nil, err
-		}
-		result.PersistenceFormat = parsed
+	if val, ok := env["PROTO_SERVICES_KERNEL_CONFIG_DISK_DIR"]; ok && val != "" {
+		result.DiskDir = val
 	}
 	if sub, err := host.HostFromEnvVar(env); err != nil {
 		return nil, err
@@ -62577,12 +75988,20 @@ func DelegateToEnvVar(v *Delegate) map[string]string {
 	}
 	result := make(map[string]string)
 	result["PROTO_SERVICES_KERNEL_DELEGATE_NAME"] = v.Name
+	result["PROTO_SERVICES_KERNEL_DELEGATE_TENANT_NAMESPACE"] = v.TenantNamespace
 	if len(v.AuthorizedServices) > 0 {
 		parts := make([]string, len(v.AuthorizedServices))
 		for i, val := range v.AuthorizedServices {
 			parts[i] = services.ServiceNameToString(val)
 		}
 		result["PROTO_SERVICES_KERNEL_DELEGATE_AUTHORIZED_SERVICES"] = strings.Join(parts, ",")
+	}
+	if len(v.AuthBrokerKinds) > 0 {
+		parts := make([]string, len(v.AuthBrokerKinds))
+		for i, val := range v.AuthBrokerKinds {
+			parts[i] = tokenrequest.AuthBrokerKindToString(val)
+		}
+		result["PROTO_SERVICES_KERNEL_DELEGATE_AUTH_BROKER_KINDS"] = strings.Join(parts, ",")
 	}
 	result["PROTO_SERVICES_KERNEL_DELEGATE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_KERNEL_DELEGATE_NOOP"] = strconv.FormatBool(v.Noop)
@@ -62595,6 +76014,9 @@ func DelegateFromEnvVar(env map[string]string) (*Delegate, error) {
 	if val, ok := env["PROTO_SERVICES_KERNEL_DELEGATE_NAME"]; ok && val != "" {
 		result.Name = val
 	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_DELEGATE_TENANT_NAMESPACE"]; ok && val != "" {
+		result.TenantNamespace = val
+	}
 	if val, ok := env["PROTO_SERVICES_KERNEL_DELEGATE_AUTHORIZED_SERVICES"]; ok && val != "" {
 		parts := strings.Split(val, ",")
 		result.AuthorizedServices = make([]services.ServiceName, 0, len(parts))
@@ -62604,6 +76026,17 @@ func DelegateFromEnvVar(env map[string]string) (*Delegate, error) {
 				return nil, err
 			}
 			result.AuthorizedServices = append(result.AuthorizedServices, parsed)
+		}
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_DELEGATE_AUTH_BROKER_KINDS"]; ok && val != "" {
+		parts := strings.Split(val, ",")
+		result.AuthBrokerKinds = make([]tokenrequest.AuthBrokerKind, 0, len(parts))
+		for _, p := range parts {
+			parsed, err := tokenrequest.ParseAuthBrokerKind(strings.TrimSpace(p))
+			if err != nil {
+				return nil, err
+			}
+			result.AuthBrokerKinds = append(result.AuthBrokerKinds, parsed)
 		}
 	}
 	if val, ok := env["PROTO_SERVICES_KERNEL_DELEGATE_TRACE_ID"]; ok && val != "" {
@@ -62966,6 +76399,1085 @@ func WorkloadStateFromEnvVar(env map[string]string) (*WorkloadState, error) {
 	return result, nil
 }
 
+// PeopleIdpCredentialToEnvVar converts PeopleIdpCredential to environment variable key-value pairs.
+func PeopleIdpCredentialToEnvVar(v *PeopleIdpCredential) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PEOPLE_IDP_CREDENTIAL_PROVIDER"] = PeopleIdpProviderToString(v.Provider)
+	result["PROTO_SERVICES_KERNEL_PEOPLE_IDP_CREDENTIAL_CLIENT_ID"] = v.ClientId
+	result["PROTO_SERVICES_KERNEL_PEOPLE_IDP_CREDENTIAL_CLIENT_SECRET"] = v.ClientSecret
+	result["PROTO_SERVICES_KERNEL_PEOPLE_IDP_CREDENTIAL_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PEOPLE_IDP_CREDENTIAL_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PeopleIdpCredentialFromEnvVar creates PeopleIdpCredential from environment variable key-value pairs.
+func PeopleIdpCredentialFromEnvVar(env map[string]string) (*PeopleIdpCredential, error) {
+	result := &PeopleIdpCredential{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_IDP_CREDENTIAL_PROVIDER"]; ok && val != "" {
+		parsed, err := ParsePeopleIdpProvider(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Provider = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_IDP_CREDENTIAL_CLIENT_ID"]; ok && val != "" {
+		result.ClientId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_IDP_CREDENTIAL_CLIENT_SECRET"]; ok && val != "" {
+		result.ClientSecret = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_IDP_CREDENTIAL_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_IDP_CREDENTIAL_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PersonToEnvVar converts Person to environment variable key-value pairs.
+func PersonToEnvVar(v *Person) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PERSON_USER_ID"] = v.UserId
+	result["PROTO_SERVICES_KERNEL_PERSON_PROVIDER"] = PeopleIdpProviderToString(v.Provider)
+	result["PROTO_SERVICES_KERNEL_PERSON_PROVIDER_SUBJECT"] = v.ProviderSubject
+	result["PROTO_SERVICES_KERNEL_PERSON_CREATED_AT_MS"] = strconv.FormatInt(v.CreatedAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_PERSON_DISABLED_AT_MS"] = strconv.FormatInt(v.DisabledAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_PERSON_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PERSON_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PersonFromEnvVar creates Person from environment variable key-value pairs.
+func PersonFromEnvVar(env map[string]string) (*Person, error) {
+	result := &Person{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSON_USER_ID"]; ok && val != "" {
+		result.UserId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSON_PROVIDER"]; ok && val != "" {
+		parsed, err := ParsePeopleIdpProvider(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Provider = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSON_PROVIDER_SUBJECT"]; ok && val != "" {
+		result.ProviderSubject = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSON_CREATED_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.CreatedAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSON_DISABLED_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.DisabledAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSON_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSON_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PersonalCredentialToEnvVar converts PersonalCredential to environment variable key-value pairs.
+func PersonalCredentialToEnvVar(v *PersonalCredential) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_CREDENTIAL_CREDENTIAL_ID"] = v.CredentialId
+	if v.PublicKey != nil {
+		for k, val := range jwk.JwkToEnvVar(v.PublicKey) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_KERNEL_PERSONAL_CREDENTIAL_LABEL"] = v.Label
+	result["PROTO_SERVICES_KERNEL_PERSONAL_CREDENTIAL_PLATFORM_SYNCED"] = strconv.FormatBool(v.PlatformSynced)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_CREDENTIAL_CREATED_AT_MS"] = strconv.FormatInt(v.CreatedAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_CREDENTIAL_REVOKED_AT_MS"] = strconv.FormatInt(v.RevokedAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_CREDENTIAL_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PERSONAL_CREDENTIAL_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PersonalCredentialFromEnvVar creates PersonalCredential from environment variable key-value pairs.
+func PersonalCredentialFromEnvVar(env map[string]string) (*PersonalCredential, error) {
+	result := &PersonalCredential{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_CREDENTIAL_CREDENTIAL_ID"]; ok && val != "" {
+		result.CredentialId = val
+	}
+	if sub, err := jwk.JwkFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.PublicKey = sub
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_CREDENTIAL_LABEL"]; ok && val != "" {
+		result.Label = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_CREDENTIAL_PLATFORM_SYNCED"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.PlatformSynced = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_CREDENTIAL_CREATED_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.CreatedAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_CREDENTIAL_REVOKED_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.RevokedAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_CREDENTIAL_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_CREDENTIAL_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// TenantMembershipToEnvVar converts TenantMembership to environment variable key-value pairs.
+func TenantMembershipToEnvVar(v *TenantMembership) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_TENANT_MEMBERSHIP_TENANT_NAMESPACE"] = v.TenantNamespace
+	result["PROTO_SERVICES_KERNEL_TENANT_MEMBERSHIP_PROOF_KIND"] = MembershipProofKindToString(v.ProofKind)
+	result["PROTO_SERVICES_KERNEL_TENANT_MEMBERSHIP_CUSTOMER"] = strconv.FormatBool(v.Customer)
+	result["PROTO_SERVICES_KERNEL_TENANT_MEMBERSHIP_PROOF_REFERENCE"] = v.ProofReference
+	result["PROTO_SERVICES_KERNEL_TENANT_MEMBERSHIP_CREATED_AT_MS"] = strconv.FormatInt(v.CreatedAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_TENANT_MEMBERSHIP_EXPIRES_AT_MS"] = strconv.FormatInt(v.ExpiresAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_TENANT_MEMBERSHIP_REVOKED_AT_MS"] = strconv.FormatInt(v.RevokedAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_TENANT_MEMBERSHIP_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_TENANT_MEMBERSHIP_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// TenantMembershipFromEnvVar creates TenantMembership from environment variable key-value pairs.
+func TenantMembershipFromEnvVar(env map[string]string) (*TenantMembership, error) {
+	result := &TenantMembership{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_MEMBERSHIP_TENANT_NAMESPACE"]; ok && val != "" {
+		result.TenantNamespace = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_MEMBERSHIP_PROOF_KIND"]; ok && val != "" {
+		parsed, err := ParseMembershipProofKind(val)
+		if err != nil {
+			return nil, err
+		}
+		result.ProofKind = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_MEMBERSHIP_CUSTOMER"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Customer = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_MEMBERSHIP_PROOF_REFERENCE"]; ok && val != "" {
+		result.ProofReference = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_MEMBERSHIP_CREATED_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.CreatedAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_MEMBERSHIP_EXPIRES_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.ExpiresAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_MEMBERSHIP_REVOKED_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.RevokedAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_MEMBERSHIP_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_MEMBERSHIP_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PersonalPrincipalToEnvVar converts PersonalPrincipal to environment variable key-value pairs.
+func PersonalPrincipalToEnvVar(v *PersonalPrincipal) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPAL_PRINCIPAL_ID"] = v.PrincipalId
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPAL_CREATED_AT_MS"] = strconv.FormatInt(v.CreatedAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPAL_DISABLED_AT_MS"] = strconv.FormatInt(v.DisabledAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPAL_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPAL_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PersonalPrincipalFromEnvVar creates PersonalPrincipal from environment variable key-value pairs.
+func PersonalPrincipalFromEnvVar(env map[string]string) (*PersonalPrincipal, error) {
+	result := &PersonalPrincipal{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPAL_PRINCIPAL_ID"]; ok && val != "" {
+		result.PrincipalId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPAL_CREATED_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.CreatedAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPAL_DISABLED_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.DisabledAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPAL_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPAL_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// TenantUserLinkToEnvVar converts TenantUserLink to environment variable key-value pairs.
+func TenantUserLinkToEnvVar(v *TenantUserLink) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_PEER_NAMESPACE"] = v.PeerNamespace
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_PEER_SUBJECT"] = v.PeerSubject
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_CREATED_AT_MS"] = strconv.FormatInt(v.CreatedAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_REVOKED_AT_MS"] = strconv.FormatInt(v.RevokedAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// TenantUserLinkFromEnvVar creates TenantUserLink from environment variable key-value pairs.
+func TenantUserLinkFromEnvVar(env map[string]string) (*TenantUserLink, error) {
+	result := &TenantUserLink{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_PEER_NAMESPACE"]; ok && val != "" {
+		result.PeerNamespace = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_PEER_SUBJECT"]; ok && val != "" {
+		result.PeerSubject = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_CREATED_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.CreatedAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_REVOKED_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.RevokedAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// TenantUserLinksToEnvVar converts TenantUserLinks to environment variable key-value pairs.
+func TenantUserLinksToEnvVar(v *TenantUserLinks) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_USER_KEY"] = v.UserKey
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// TenantUserLinksFromEnvVar creates TenantUserLinks from environment variable key-value pairs.
+func TenantUserLinksFromEnvVar(env map[string]string) (*TenantUserLinks, error) {
+	result := &TenantUserLinks{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_USER_KEY"]; ok && val != "" {
+		result.UserKey = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PrincipalStateToEnvVar converts PrincipalState to environment variable key-value pairs.
+func PrincipalStateToEnvVar(v *PrincipalState) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PRINCIPAL_STATE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PRINCIPAL_STATE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PrincipalStateFromEnvVar creates PrincipalState from environment variable key-value pairs.
+func PrincipalStateFromEnvVar(env map[string]string) (*PrincipalState, error) {
+	result := &PrincipalState{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PRINCIPAL_STATE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PRINCIPAL_STATE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// RevokeTenantUserLinkRequestToEnvVar converts RevokeTenantUserLinkRequest to environment variable key-value pairs.
+func RevokeTenantUserLinkRequestToEnvVar(v *RevokeTenantUserLinkRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_REVOKE_TENANT_USER_LINK_REQUEST_PEER_NAMESPACE"] = v.PeerNamespace
+	result["PROTO_SERVICES_KERNEL_REVOKE_TENANT_USER_LINK_REQUEST_PEER_SUBJECT"] = v.PeerSubject
+	result["PROTO_SERVICES_KERNEL_REVOKE_TENANT_USER_LINK_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_REVOKE_TENANT_USER_LINK_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// RevokeTenantUserLinkRequestFromEnvVar creates RevokeTenantUserLinkRequest from environment variable key-value pairs.
+func RevokeTenantUserLinkRequestFromEnvVar(env map[string]string) (*RevokeTenantUserLinkRequest, error) {
+	result := &RevokeTenantUserLinkRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_REVOKE_TENANT_USER_LINK_REQUEST_PEER_NAMESPACE"]; ok && val != "" {
+		result.PeerNamespace = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_REVOKE_TENANT_USER_LINK_REQUEST_PEER_SUBJECT"]; ok && val != "" {
+		result.PeerSubject = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_REVOKE_TENANT_USER_LINK_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_REVOKE_TENANT_USER_LINK_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// RevokeTenantUserLinkResponseToEnvVar converts RevokeTenantUserLinkResponse to environment variable key-value pairs.
+func RevokeTenantUserLinkResponseToEnvVar(v *RevokeTenantUserLinkResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_REVOKE_TENANT_USER_LINK_RESPONSE_REVOKED_AT_MS"] = strconv.FormatInt(v.RevokedAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_REVOKE_TENANT_USER_LINK_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_REVOKE_TENANT_USER_LINK_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// RevokeTenantUserLinkResponseFromEnvVar creates RevokeTenantUserLinkResponse from environment variable key-value pairs.
+func RevokeTenantUserLinkResponseFromEnvVar(env map[string]string) (*RevokeTenantUserLinkResponse, error) {
+	result := &RevokeTenantUserLinkResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_REVOKE_TENANT_USER_LINK_RESPONSE_REVOKED_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.RevokedAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_REVOKE_TENANT_USER_LINK_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_REVOKE_TENANT_USER_LINK_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// GetMyIdentityRequestToEnvVar converts GetMyIdentityRequest to environment variable key-value pairs.
+func GetMyIdentityRequestToEnvVar(v *GetMyIdentityRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_GET_MY_IDENTITY_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_GET_MY_IDENTITY_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// GetMyIdentityRequestFromEnvVar creates GetMyIdentityRequest from environment variable key-value pairs.
+func GetMyIdentityRequestFromEnvVar(env map[string]string) (*GetMyIdentityRequest, error) {
+	result := &GetMyIdentityRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_GET_MY_IDENTITY_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_GET_MY_IDENTITY_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// GetMyIdentityResponseToEnvVar converts GetMyIdentityResponse to environment variable key-value pairs.
+func GetMyIdentityResponseToEnvVar(v *GetMyIdentityResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_GET_MY_IDENTITY_RESPONSE_PRINCIPAL_ID"] = v.PrincipalId
+	result["PROTO_SERVICES_KERNEL_GET_MY_IDENTITY_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_GET_MY_IDENTITY_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// GetMyIdentityResponseFromEnvVar creates GetMyIdentityResponse from environment variable key-value pairs.
+func GetMyIdentityResponseFromEnvVar(env map[string]string) (*GetMyIdentityResponse, error) {
+	result := &GetMyIdentityResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_GET_MY_IDENTITY_RESPONSE_PRINCIPAL_ID"]; ok && val != "" {
+		result.PrincipalId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_GET_MY_IDENTITY_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_GET_MY_IDENTITY_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// CreatePersonalPrincipalRequestToEnvVar converts CreatePersonalPrincipalRequest to environment variable key-value pairs.
+func CreatePersonalPrincipalRequestToEnvVar(v *CreatePersonalPrincipalRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_CREATE_PERSONAL_PRINCIPAL_REQUEST_PROOF_TOKEN"] = v.ProofToken
+	if v.PublicKey != nil {
+		for k, val := range jwk.JwkToEnvVar(v.PublicKey) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_KERNEL_CREATE_PERSONAL_PRINCIPAL_REQUEST_LABEL"] = v.Label
+	result["PROTO_SERVICES_KERNEL_CREATE_PERSONAL_PRINCIPAL_REQUEST_PLATFORM_SYNCED"] = strconv.FormatBool(v.PlatformSynced)
+	result["PROTO_SERVICES_KERNEL_CREATE_PERSONAL_PRINCIPAL_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_CREATE_PERSONAL_PRINCIPAL_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// CreatePersonalPrincipalRequestFromEnvVar creates CreatePersonalPrincipalRequest from environment variable key-value pairs.
+func CreatePersonalPrincipalRequestFromEnvVar(env map[string]string) (*CreatePersonalPrincipalRequest, error) {
+	result := &CreatePersonalPrincipalRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_PERSONAL_PRINCIPAL_REQUEST_PROOF_TOKEN"]; ok && val != "" {
+		result.ProofToken = val
+	}
+	if sub, err := jwk.JwkFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.PublicKey = sub
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_PERSONAL_PRINCIPAL_REQUEST_LABEL"]; ok && val != "" {
+		result.Label = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_PERSONAL_PRINCIPAL_REQUEST_PLATFORM_SYNCED"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.PlatformSynced = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_PERSONAL_PRINCIPAL_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_PERSONAL_PRINCIPAL_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// CreatePersonalPrincipalResponseToEnvVar converts CreatePersonalPrincipalResponse to environment variable key-value pairs.
+func CreatePersonalPrincipalResponseToEnvVar(v *CreatePersonalPrincipalResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_CREATE_PERSONAL_PRINCIPAL_RESPONSE_PRINCIPAL_ID"] = v.PrincipalId
+	result["PROTO_SERVICES_KERNEL_CREATE_PERSONAL_PRINCIPAL_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_CREATE_PERSONAL_PRINCIPAL_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// CreatePersonalPrincipalResponseFromEnvVar creates CreatePersonalPrincipalResponse from environment variable key-value pairs.
+func CreatePersonalPrincipalResponseFromEnvVar(env map[string]string) (*CreatePersonalPrincipalResponse, error) {
+	result := &CreatePersonalPrincipalResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_PERSONAL_PRINCIPAL_RESPONSE_PRINCIPAL_ID"]; ok && val != "" {
+		result.PrincipalId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_PERSONAL_PRINCIPAL_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_PERSONAL_PRINCIPAL_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// WebauthnAssertionToEnvVar converts WebauthnAssertion to environment variable key-value pairs.
+func WebauthnAssertionToEnvVar(v *WebauthnAssertion) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_WEBAUTHN_ASSERTION_CREDENTIAL_ID"] = v.CredentialId
+	result["PROTO_SERVICES_KERNEL_WEBAUTHN_ASSERTION_AUTHENTICATOR_DATA"] = base64.StdEncoding.EncodeToString(v.AuthenticatorData)
+	result["PROTO_SERVICES_KERNEL_WEBAUTHN_ASSERTION_CLIENT_DATA_JSON"] = base64.StdEncoding.EncodeToString(v.ClientDataJson)
+	result["PROTO_SERVICES_KERNEL_WEBAUTHN_ASSERTION_SIGNATURE"] = base64.StdEncoding.EncodeToString(v.Signature)
+	result["PROTO_SERVICES_KERNEL_WEBAUTHN_ASSERTION_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_WEBAUTHN_ASSERTION_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// WebauthnAssertionFromEnvVar creates WebauthnAssertion from environment variable key-value pairs.
+func WebauthnAssertionFromEnvVar(env map[string]string) (*WebauthnAssertion, error) {
+	result := &WebauthnAssertion{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_WEBAUTHN_ASSERTION_CREDENTIAL_ID"]; ok && val != "" {
+		result.CredentialId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_WEBAUTHN_ASSERTION_AUTHENTICATOR_DATA"]; ok && val != "" {
+		parsed, err := base64.StdEncoding.DecodeString(val)
+		if err != nil {
+			return nil, err
+		}
+		result.AuthenticatorData = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_WEBAUTHN_ASSERTION_CLIENT_DATA_JSON"]; ok && val != "" {
+		parsed, err := base64.StdEncoding.DecodeString(val)
+		if err != nil {
+			return nil, err
+		}
+		result.ClientDataJson = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_WEBAUTHN_ASSERTION_SIGNATURE"]; ok && val != "" {
+		parsed, err := base64.StdEncoding.DecodeString(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Signature = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_WEBAUTHN_ASSERTION_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_WEBAUTHN_ASSERTION_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// TenantUserLinkSideToEnvVar converts TenantUserLinkSide to environment variable key-value pairs.
+func TenantUserLinkSideToEnvVar(v *TenantUserLinkSide) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_SIDE_SUBJECT"] = v.Subject
+	if v.DeviceAssertion != nil {
+		for k, val := range WebauthnAssertionToEnvVar(v.DeviceAssertion) {
+			result[k] = val
+		}
+	}
+	if v.DevicePublicKey != nil {
+		for k, val := range jwk.JwkToEnvVar(v.DevicePublicKey) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_SIDE_DEVICE_LABEL"] = v.DeviceLabel
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_SIDE_DEVICE_PLATFORM_SYNCED"] = strconv.FormatBool(v.DevicePlatformSynced)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_SIDE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_SIDE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// TenantUserLinkSideFromEnvVar creates TenantUserLinkSide from environment variable key-value pairs.
+func TenantUserLinkSideFromEnvVar(env map[string]string) (*TenantUserLinkSide, error) {
+	result := &TenantUserLinkSide{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_SIDE_SUBJECT"]; ok && val != "" {
+		result.Subject = val
+	}
+	if sub, err := WebauthnAssertionFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.DeviceAssertion = sub
+	}
+	if sub, err := jwk.JwkFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.DevicePublicKey = sub
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_SIDE_DEVICE_LABEL"]; ok && val != "" {
+		result.DeviceLabel = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_SIDE_DEVICE_PLATFORM_SYNCED"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.DevicePlatformSynced = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_SIDE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINK_SIDE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// CreateTenantUserLinkRequestToEnvVar converts CreateTenantUserLinkRequest to environment variable key-value pairs.
+func CreateTenantUserLinkRequestToEnvVar(v *CreateTenantUserLinkRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.A != nil {
+		for k, val := range TenantUserLinkSideToEnvVar(v.A) {
+			result[k] = val
+		}
+	}
+	if v.B != nil {
+		for k, val := range TenantUserLinkSideToEnvVar(v.B) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_KERNEL_CREATE_TENANT_USER_LINK_REQUEST_TRACE_ID"] = v.TraceId
+	return result
+}
+
+// CreateTenantUserLinkRequestFromEnvVar creates CreateTenantUserLinkRequest from environment variable key-value pairs.
+func CreateTenantUserLinkRequestFromEnvVar(env map[string]string) (*CreateTenantUserLinkRequest, error) {
+	result := &CreateTenantUserLinkRequest{}
+	if sub, err := TenantUserLinkSideFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.A = sub
+	}
+	if sub, err := TenantUserLinkSideFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.B = sub
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_TENANT_USER_LINK_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	return result, nil
+}
+
+// CreateTenantUserLinkResponseToEnvVar converts CreateTenantUserLinkResponse to environment variable key-value pairs.
+func CreateTenantUserLinkResponseToEnvVar(v *CreateTenantUserLinkResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_CREATE_TENANT_USER_LINK_RESPONSE_A_USER_KEY"] = v.AUserKey
+	result["PROTO_SERVICES_KERNEL_CREATE_TENANT_USER_LINK_RESPONSE_B_USER_KEY"] = v.BUserKey
+	result["PROTO_SERVICES_KERNEL_CREATE_TENANT_USER_LINK_RESPONSE_CREATED_AT_MS"] = strconv.FormatInt(v.CreatedAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_CREATE_TENANT_USER_LINK_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_CREATE_TENANT_USER_LINK_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// CreateTenantUserLinkResponseFromEnvVar creates CreateTenantUserLinkResponse from environment variable key-value pairs.
+func CreateTenantUserLinkResponseFromEnvVar(env map[string]string) (*CreateTenantUserLinkResponse, error) {
+	result := &CreateTenantUserLinkResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_TENANT_USER_LINK_RESPONSE_A_USER_KEY"]; ok && val != "" {
+		result.AUserKey = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_TENANT_USER_LINK_RESPONSE_B_USER_KEY"]; ok && val != "" {
+		result.BUserKey = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_TENANT_USER_LINK_RESPONSE_CREATED_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.CreatedAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_TENANT_USER_LINK_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_TENANT_USER_LINK_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PendingApprovalToEnvVar converts PendingApproval to environment variable key-value pairs.
+func PendingApprovalToEnvVar(v *PendingApproval) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVAL_APPROVAL_ID"] = v.ApprovalId
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVAL_PERSON_USER_KEY"] = v.PersonUserKey
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVAL_RPC_METHOD"] = v.RpcMethod
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVAL_REQUEST_HASH"] = base64.StdEncoding.EncodeToString(v.RequestHash)
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVAL_CREATED_AT_MS"] = strconv.FormatInt(v.CreatedAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVAL_EXPIRES_AT_MS"] = strconv.FormatInt(v.ExpiresAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVAL_CONSUMED_AT_MS"] = strconv.FormatInt(v.ConsumedAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVAL_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVAL_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PendingApprovalFromEnvVar creates PendingApproval from environment variable key-value pairs.
+func PendingApprovalFromEnvVar(env map[string]string) (*PendingApproval, error) {
+	result := &PendingApproval{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVAL_APPROVAL_ID"]; ok && val != "" {
+		result.ApprovalId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVAL_PERSON_USER_KEY"]; ok && val != "" {
+		result.PersonUserKey = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVAL_RPC_METHOD"]; ok && val != "" {
+		result.RpcMethod = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVAL_REQUEST_HASH"]; ok && val != "" {
+		parsed, err := base64.StdEncoding.DecodeString(val)
+		if err != nil {
+			return nil, err
+		}
+		result.RequestHash = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVAL_CREATED_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.CreatedAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVAL_EXPIRES_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.ExpiresAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVAL_CONSUMED_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.ConsumedAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVAL_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVAL_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// CreatePendingApprovalRequestToEnvVar converts CreatePendingApprovalRequest to environment variable key-value pairs.
+func CreatePendingApprovalRequestToEnvVar(v *CreatePendingApprovalRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_REQUEST_RPC_METHOD"] = v.RpcMethod
+	result["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_REQUEST_REQUEST_HASH"] = base64.StdEncoding.EncodeToString(v.RequestHash)
+	result["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_REQUEST_TTL_SECONDS"] = strconv.FormatInt(v.TtlSeconds, 10)
+	result["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// CreatePendingApprovalRequestFromEnvVar creates CreatePendingApprovalRequest from environment variable key-value pairs.
+func CreatePendingApprovalRequestFromEnvVar(env map[string]string) (*CreatePendingApprovalRequest, error) {
+	result := &CreatePendingApprovalRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_REQUEST_RPC_METHOD"]; ok && val != "" {
+		result.RpcMethod = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_REQUEST_REQUEST_HASH"]; ok && val != "" {
+		parsed, err := base64.StdEncoding.DecodeString(val)
+		if err != nil {
+			return nil, err
+		}
+		result.RequestHash = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_REQUEST_TTL_SECONDS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.TtlSeconds = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// CreatePendingApprovalResponseToEnvVar converts CreatePendingApprovalResponse to environment variable key-value pairs.
+func CreatePendingApprovalResponseToEnvVar(v *CreatePendingApprovalResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_RESPONSE_APPROVAL_ID"] = v.ApprovalId
+	result["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_RESPONSE_EXPIRES_AT_MS"] = strconv.FormatInt(v.ExpiresAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_RESPONSE_CHALLENGE"] = v.Challenge
+	result["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// CreatePendingApprovalResponseFromEnvVar creates CreatePendingApprovalResponse from environment variable key-value pairs.
+func CreatePendingApprovalResponseFromEnvVar(env map[string]string) (*CreatePendingApprovalResponse, error) {
+	result := &CreatePendingApprovalResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_RESPONSE_APPROVAL_ID"]; ok && val != "" {
+		result.ApprovalId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_RESPONSE_EXPIRES_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.ExpiresAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_RESPONSE_CHALLENGE"]; ok && val != "" {
+		result.Challenge = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_CREATE_PENDING_APPROVAL_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// BrokerPendingApprovalRequestToEnvVar converts BrokerPendingApprovalRequest to environment variable key-value pairs.
+func BrokerPendingApprovalRequestToEnvVar(v *BrokerPendingApprovalRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_REQUEST_APPROVAL_ID"] = v.ApprovalId
+	result["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_REQUEST_RPC_METHOD"] = v.RpcMethod
+	result["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_REQUEST_REQUEST_HASH"] = base64.StdEncoding.EncodeToString(v.RequestHash)
+	result["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_REQUEST_CALLER_NAMESPACE"] = v.CallerNamespace
+	result["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_REQUEST_CALLER_SUBJECT"] = v.CallerSubject
+	if v.DeviceAssertion != nil {
+		for k, val := range WebauthnAssertionToEnvVar(v.DeviceAssertion) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// BrokerPendingApprovalRequestFromEnvVar creates BrokerPendingApprovalRequest from environment variable key-value pairs.
+func BrokerPendingApprovalRequestFromEnvVar(env map[string]string) (*BrokerPendingApprovalRequest, error) {
+	result := &BrokerPendingApprovalRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_REQUEST_APPROVAL_ID"]; ok && val != "" {
+		result.ApprovalId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_REQUEST_RPC_METHOD"]; ok && val != "" {
+		result.RpcMethod = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_REQUEST_REQUEST_HASH"]; ok && val != "" {
+		parsed, err := base64.StdEncoding.DecodeString(val)
+		if err != nil {
+			return nil, err
+		}
+		result.RequestHash = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_REQUEST_CALLER_NAMESPACE"]; ok && val != "" {
+		result.CallerNamespace = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_REQUEST_CALLER_SUBJECT"]; ok && val != "" {
+		result.CallerSubject = val
+	}
+	if sub, err := WebauthnAssertionFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.DeviceAssertion = sub
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// BrokerPendingApprovalResponseToEnvVar converts BrokerPendingApprovalResponse to environment variable key-value pairs.
+func BrokerPendingApprovalResponseToEnvVar(v *BrokerPendingApprovalResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_RESPONSE_CONSUMED_AT_MS"] = strconv.FormatInt(v.ConsumedAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_RESPONSE_PERSON_USER_KEY"] = v.PersonUserKey
+	result["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_RESPONSE_DEVICE_NAMESPACE"] = v.DeviceNamespace
+	result["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// BrokerPendingApprovalResponseFromEnvVar creates BrokerPendingApprovalResponse from environment variable key-value pairs.
+func BrokerPendingApprovalResponseFromEnvVar(env map[string]string) (*BrokerPendingApprovalResponse, error) {
+	result := &BrokerPendingApprovalResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_RESPONSE_CONSUMED_AT_MS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.ConsumedAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_RESPONSE_PERSON_USER_KEY"]; ok && val != "" {
+		result.PersonUserKey = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_RESPONSE_DEVICE_NAMESPACE"]; ok && val != "" {
+		result.DeviceNamespace = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_BROKER_PENDING_APPROVAL_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
 // CaToEnvVar converts Ca to environment variable key-value pairs.
 func CaToEnvVar(v *Ca) map[string]string {
 	if v == nil {
@@ -63232,6 +77744,7 @@ func GrantToEnvVar(v *Grant) map[string]string {
 	result["PROTO_SERVICES_KERNEL_GRANT_CREATED_AT_MS"] = strconv.FormatInt(v.CreatedAtMs, 10)
 	result["PROTO_SERVICES_KERNEL_GRANT_EXPIRES_AT_MS"] = strconv.FormatInt(v.ExpiresAtMs, 10)
 	result["PROTO_SERVICES_KERNEL_GRANT_REVOKED_AT_MS"] = strconv.FormatInt(v.RevokedAtMs, 10)
+	result["PROTO_SERVICES_KERNEL_GRANT_DELEGATE_NAMESPACE"] = v.DelegateNamespace
 	result["PROTO_SERVICES_KERNEL_GRANT_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_KERNEL_GRANT_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -63274,6 +77787,9 @@ func GrantFromEnvVar(env map[string]string) (*Grant, error) {
 			return nil, err
 		}
 		result.RevokedAtMs = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_GRANT_DELEGATE_NAMESPACE"]; ok && val != "" {
+		result.DelegateNamespace = val
 	}
 	if val, ok := env["PROTO_SERVICES_KERNEL_GRANT_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -71169,6 +85685,1606 @@ func RevocationsQueryResponseFromEnvVar(env map[string]string) (*RevocationsQuer
 	return result, nil
 }
 
+// PersonalPrincipalsGetRequestToEnvVar converts PersonalPrincipalsGetRequest to environment variable key-value pairs.
+func PersonalPrincipalsGetRequestToEnvVar(v *PersonalPrincipalsGetRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_GET_REQUEST_KEY"] = v.Key
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_GET_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_GET_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PersonalPrincipalsGetRequestFromEnvVar creates PersonalPrincipalsGetRequest from environment variable key-value pairs.
+func PersonalPrincipalsGetRequestFromEnvVar(env map[string]string) (*PersonalPrincipalsGetRequest, error) {
+	result := &PersonalPrincipalsGetRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_GET_REQUEST_KEY"]; ok && val != "" {
+		result.Key = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_GET_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_GET_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PersonalPrincipalsPutRequestToEnvVar converts PersonalPrincipalsPutRequest to environment variable key-value pairs.
+func PersonalPrincipalsPutRequestToEnvVar(v *PersonalPrincipalsPutRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_PUT_REQUEST_KEY"] = v.Key
+	if v.Value != nil {
+		for k, val := range PersonalPrincipalToEnvVar(v.Value) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_PUT_REQUEST_LOCK_COUNTER"] = strconv.FormatInt(v.LockCounter, 10)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_PUT_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_PUT_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PersonalPrincipalsPutRequestFromEnvVar creates PersonalPrincipalsPutRequest from environment variable key-value pairs.
+func PersonalPrincipalsPutRequestFromEnvVar(env map[string]string) (*PersonalPrincipalsPutRequest, error) {
+	result := &PersonalPrincipalsPutRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_PUT_REQUEST_KEY"]; ok && val != "" {
+		result.Key = val
+	}
+	if sub, err := PersonalPrincipalFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Value = sub
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_PUT_REQUEST_LOCK_COUNTER"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.LockCounter = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_PUT_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_PUT_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PersonalPrincipalsGetAllRequestToEnvVar converts PersonalPrincipalsGetAllRequest to environment variable key-value pairs.
+func PersonalPrincipalsGetAllRequestToEnvVar(v *PersonalPrincipalsGetAllRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_GET_ALL_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_GET_ALL_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PersonalPrincipalsGetAllRequestFromEnvVar creates PersonalPrincipalsGetAllRequest from environment variable key-value pairs.
+func PersonalPrincipalsGetAllRequestFromEnvVar(env map[string]string) (*PersonalPrincipalsGetAllRequest, error) {
+	result := &PersonalPrincipalsGetAllRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_GET_ALL_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_GET_ALL_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PersonalPrincipalsKeysRequestToEnvVar converts PersonalPrincipalsKeysRequest to environment variable key-value pairs.
+func PersonalPrincipalsKeysRequestToEnvVar(v *PersonalPrincipalsKeysRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_KEYS_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_KEYS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PersonalPrincipalsKeysRequestFromEnvVar creates PersonalPrincipalsKeysRequest from environment variable key-value pairs.
+func PersonalPrincipalsKeysRequestFromEnvVar(env map[string]string) (*PersonalPrincipalsKeysRequest, error) {
+	result := &PersonalPrincipalsKeysRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_KEYS_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_KEYS_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PersonalPrincipalsSizeRequestToEnvVar converts PersonalPrincipalsSizeRequest to environment variable key-value pairs.
+func PersonalPrincipalsSizeRequestToEnvVar(v *PersonalPrincipalsSizeRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_SIZE_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_SIZE_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PersonalPrincipalsSizeRequestFromEnvVar creates PersonalPrincipalsSizeRequest from environment variable key-value pairs.
+func PersonalPrincipalsSizeRequestFromEnvVar(env map[string]string) (*PersonalPrincipalsSizeRequest, error) {
+	result := &PersonalPrincipalsSizeRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_SIZE_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_SIZE_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PersonalPrincipalsClearRequestToEnvVar converts PersonalPrincipalsClearRequest to environment variable key-value pairs.
+func PersonalPrincipalsClearRequestToEnvVar(v *PersonalPrincipalsClearRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_CLEAR_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_CLEAR_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PersonalPrincipalsClearRequestFromEnvVar creates PersonalPrincipalsClearRequest from environment variable key-value pairs.
+func PersonalPrincipalsClearRequestFromEnvVar(env map[string]string) (*PersonalPrincipalsClearRequest, error) {
+	result := &PersonalPrincipalsClearRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_CLEAR_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_CLEAR_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PersonalPrincipalsValueResponseToEnvVar converts PersonalPrincipalsValueResponse to environment variable key-value pairs.
+func PersonalPrincipalsValueResponseToEnvVar(v *PersonalPrincipalsValueResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.Value != nil {
+		for k, val := range PersonalPrincipalToEnvVar(v.Value) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_VALUE_RESPONSE_FOUND"] = strconv.FormatBool(v.Found)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_VALUE_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_VALUE_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PersonalPrincipalsValueResponseFromEnvVar creates PersonalPrincipalsValueResponse from environment variable key-value pairs.
+func PersonalPrincipalsValueResponseFromEnvVar(env map[string]string) (*PersonalPrincipalsValueResponse, error) {
+	result := &PersonalPrincipalsValueResponse{}
+	if sub, err := PersonalPrincipalFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Value = sub
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_VALUE_RESPONSE_FOUND"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Found = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_VALUE_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_VALUE_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PersonalPrincipalsEntriesResponseToEnvVar converts PersonalPrincipalsEntriesResponse to environment variable key-value pairs.
+func PersonalPrincipalsEntriesResponseToEnvVar(v *PersonalPrincipalsEntriesResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_ENTRIES_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_ENTRIES_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PersonalPrincipalsEntriesResponseFromEnvVar creates PersonalPrincipalsEntriesResponse from environment variable key-value pairs.
+func PersonalPrincipalsEntriesResponseFromEnvVar(env map[string]string) (*PersonalPrincipalsEntriesResponse, error) {
+	result := &PersonalPrincipalsEntriesResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_ENTRIES_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_ENTRIES_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PersonalPrincipalsKeysResponseToEnvVar converts PersonalPrincipalsKeysResponse to environment variable key-value pairs.
+func PersonalPrincipalsKeysResponseToEnvVar(v *PersonalPrincipalsKeysResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if len(v.Keys) > 0 {
+		result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_KEYS_RESPONSE_KEYS"] = strings.Join(v.Keys, ",")
+	}
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_KEYS_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_KEYS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PersonalPrincipalsKeysResponseFromEnvVar creates PersonalPrincipalsKeysResponse from environment variable key-value pairs.
+func PersonalPrincipalsKeysResponseFromEnvVar(env map[string]string) (*PersonalPrincipalsKeysResponse, error) {
+	result := &PersonalPrincipalsKeysResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_KEYS_RESPONSE_KEYS"]; ok && val != "" {
+		result.Keys = strings.Split(val, ",")
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_KEYS_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_KEYS_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PersonalPrincipalsSizeResponseToEnvVar converts PersonalPrincipalsSizeResponse to environment variable key-value pairs.
+func PersonalPrincipalsSizeResponseToEnvVar(v *PersonalPrincipalsSizeResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_SIZE_RESPONSE_SIZE"] = strconv.FormatInt(int64(v.Size), 10)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_SIZE_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_SIZE_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PersonalPrincipalsSizeResponseFromEnvVar creates PersonalPrincipalsSizeResponse from environment variable key-value pairs.
+func PersonalPrincipalsSizeResponseFromEnvVar(env map[string]string) (*PersonalPrincipalsSizeResponse, error) {
+	result := &PersonalPrincipalsSizeResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_SIZE_RESPONSE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.Size = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_SIZE_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_SIZE_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PersonalPrincipalsQueryRequestToEnvVar converts PersonalPrincipalsQueryRequest to environment variable key-value pairs.
+func PersonalPrincipalsQueryRequestToEnvVar(v *PersonalPrincipalsQueryRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.Query != nil {
+		for k, val := range CollectionQueryToEnvVar(v.Query) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_QUERY_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_QUERY_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PersonalPrincipalsQueryRequestFromEnvVar creates PersonalPrincipalsQueryRequest from environment variable key-value pairs.
+func PersonalPrincipalsQueryRequestFromEnvVar(env map[string]string) (*PersonalPrincipalsQueryRequest, error) {
+	result := &PersonalPrincipalsQueryRequest{}
+	if sub, err := CollectionQueryFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Query = sub
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_QUERY_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_QUERY_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PersonalPrincipalsQueryResponseToEnvVar converts PersonalPrincipalsQueryResponse to environment variable key-value pairs.
+func PersonalPrincipalsQueryResponseToEnvVar(v *PersonalPrincipalsQueryResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_QUERY_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(int64(v.TotalCount), 10)
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_QUERY_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_QUERY_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PersonalPrincipalsQueryResponseFromEnvVar creates PersonalPrincipalsQueryResponse from environment variable key-value pairs.
+func PersonalPrincipalsQueryResponseFromEnvVar(env map[string]string) (*PersonalPrincipalsQueryResponse, error) {
+	result := &PersonalPrincipalsQueryResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_QUERY_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_QUERY_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PERSONAL_PRINCIPALS_QUERY_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PeopleGetRequestToEnvVar converts PeopleGetRequest to environment variable key-value pairs.
+func PeopleGetRequestToEnvVar(v *PeopleGetRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PEOPLE_GET_REQUEST_KEY"] = v.Key
+	result["PROTO_SERVICES_KERNEL_PEOPLE_GET_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PEOPLE_GET_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PeopleGetRequestFromEnvVar creates PeopleGetRequest from environment variable key-value pairs.
+func PeopleGetRequestFromEnvVar(env map[string]string) (*PeopleGetRequest, error) {
+	result := &PeopleGetRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_GET_REQUEST_KEY"]; ok && val != "" {
+		result.Key = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_GET_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_GET_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PeoplePutRequestToEnvVar converts PeoplePutRequest to environment variable key-value pairs.
+func PeoplePutRequestToEnvVar(v *PeoplePutRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PEOPLE_PUT_REQUEST_KEY"] = v.Key
+	if v.Value != nil {
+		for k, val := range PersonToEnvVar(v.Value) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_KERNEL_PEOPLE_PUT_REQUEST_LOCK_COUNTER"] = strconv.FormatInt(v.LockCounter, 10)
+	result["PROTO_SERVICES_KERNEL_PEOPLE_PUT_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PEOPLE_PUT_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PeoplePutRequestFromEnvVar creates PeoplePutRequest from environment variable key-value pairs.
+func PeoplePutRequestFromEnvVar(env map[string]string) (*PeoplePutRequest, error) {
+	result := &PeoplePutRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_PUT_REQUEST_KEY"]; ok && val != "" {
+		result.Key = val
+	}
+	if sub, err := PersonFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Value = sub
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_PUT_REQUEST_LOCK_COUNTER"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.LockCounter = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_PUT_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_PUT_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PeopleGetAllRequestToEnvVar converts PeopleGetAllRequest to environment variable key-value pairs.
+func PeopleGetAllRequestToEnvVar(v *PeopleGetAllRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PEOPLE_GET_ALL_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PEOPLE_GET_ALL_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PeopleGetAllRequestFromEnvVar creates PeopleGetAllRequest from environment variable key-value pairs.
+func PeopleGetAllRequestFromEnvVar(env map[string]string) (*PeopleGetAllRequest, error) {
+	result := &PeopleGetAllRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_GET_ALL_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_GET_ALL_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PeopleKeysRequestToEnvVar converts PeopleKeysRequest to environment variable key-value pairs.
+func PeopleKeysRequestToEnvVar(v *PeopleKeysRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PEOPLE_KEYS_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PEOPLE_KEYS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PeopleKeysRequestFromEnvVar creates PeopleKeysRequest from environment variable key-value pairs.
+func PeopleKeysRequestFromEnvVar(env map[string]string) (*PeopleKeysRequest, error) {
+	result := &PeopleKeysRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_KEYS_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_KEYS_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PeopleSizeRequestToEnvVar converts PeopleSizeRequest to environment variable key-value pairs.
+func PeopleSizeRequestToEnvVar(v *PeopleSizeRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PEOPLE_SIZE_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PEOPLE_SIZE_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PeopleSizeRequestFromEnvVar creates PeopleSizeRequest from environment variable key-value pairs.
+func PeopleSizeRequestFromEnvVar(env map[string]string) (*PeopleSizeRequest, error) {
+	result := &PeopleSizeRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_SIZE_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_SIZE_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PeopleClearRequestToEnvVar converts PeopleClearRequest to environment variable key-value pairs.
+func PeopleClearRequestToEnvVar(v *PeopleClearRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PEOPLE_CLEAR_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PEOPLE_CLEAR_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PeopleClearRequestFromEnvVar creates PeopleClearRequest from environment variable key-value pairs.
+func PeopleClearRequestFromEnvVar(env map[string]string) (*PeopleClearRequest, error) {
+	result := &PeopleClearRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_CLEAR_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_CLEAR_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PeopleValueResponseToEnvVar converts PeopleValueResponse to environment variable key-value pairs.
+func PeopleValueResponseToEnvVar(v *PeopleValueResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.Value != nil {
+		for k, val := range PersonToEnvVar(v.Value) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_KERNEL_PEOPLE_VALUE_RESPONSE_FOUND"] = strconv.FormatBool(v.Found)
+	result["PROTO_SERVICES_KERNEL_PEOPLE_VALUE_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PEOPLE_VALUE_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PeopleValueResponseFromEnvVar creates PeopleValueResponse from environment variable key-value pairs.
+func PeopleValueResponseFromEnvVar(env map[string]string) (*PeopleValueResponse, error) {
+	result := &PeopleValueResponse{}
+	if sub, err := PersonFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Value = sub
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_VALUE_RESPONSE_FOUND"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Found = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_VALUE_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_VALUE_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PeopleEntriesResponseToEnvVar converts PeopleEntriesResponse to environment variable key-value pairs.
+func PeopleEntriesResponseToEnvVar(v *PeopleEntriesResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PEOPLE_ENTRIES_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PEOPLE_ENTRIES_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PeopleEntriesResponseFromEnvVar creates PeopleEntriesResponse from environment variable key-value pairs.
+func PeopleEntriesResponseFromEnvVar(env map[string]string) (*PeopleEntriesResponse, error) {
+	result := &PeopleEntriesResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_ENTRIES_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_ENTRIES_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PeopleKeysResponseToEnvVar converts PeopleKeysResponse to environment variable key-value pairs.
+func PeopleKeysResponseToEnvVar(v *PeopleKeysResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if len(v.Keys) > 0 {
+		result["PROTO_SERVICES_KERNEL_PEOPLE_KEYS_RESPONSE_KEYS"] = strings.Join(v.Keys, ",")
+	}
+	result["PROTO_SERVICES_KERNEL_PEOPLE_KEYS_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PEOPLE_KEYS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PeopleKeysResponseFromEnvVar creates PeopleKeysResponse from environment variable key-value pairs.
+func PeopleKeysResponseFromEnvVar(env map[string]string) (*PeopleKeysResponse, error) {
+	result := &PeopleKeysResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_KEYS_RESPONSE_KEYS"]; ok && val != "" {
+		result.Keys = strings.Split(val, ",")
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_KEYS_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_KEYS_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PeopleSizeResponseToEnvVar converts PeopleSizeResponse to environment variable key-value pairs.
+func PeopleSizeResponseToEnvVar(v *PeopleSizeResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PEOPLE_SIZE_RESPONSE_SIZE"] = strconv.FormatInt(int64(v.Size), 10)
+	result["PROTO_SERVICES_KERNEL_PEOPLE_SIZE_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PEOPLE_SIZE_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PeopleSizeResponseFromEnvVar creates PeopleSizeResponse from environment variable key-value pairs.
+func PeopleSizeResponseFromEnvVar(env map[string]string) (*PeopleSizeResponse, error) {
+	result := &PeopleSizeResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_SIZE_RESPONSE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.Size = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_SIZE_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_SIZE_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PeopleQueryRequestToEnvVar converts PeopleQueryRequest to environment variable key-value pairs.
+func PeopleQueryRequestToEnvVar(v *PeopleQueryRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.Query != nil {
+		for k, val := range CollectionQueryToEnvVar(v.Query) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_KERNEL_PEOPLE_QUERY_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PEOPLE_QUERY_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PeopleQueryRequestFromEnvVar creates PeopleQueryRequest from environment variable key-value pairs.
+func PeopleQueryRequestFromEnvVar(env map[string]string) (*PeopleQueryRequest, error) {
+	result := &PeopleQueryRequest{}
+	if sub, err := CollectionQueryFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Query = sub
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_QUERY_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_QUERY_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PeopleQueryResponseToEnvVar converts PeopleQueryResponse to environment variable key-value pairs.
+func PeopleQueryResponseToEnvVar(v *PeopleQueryResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PEOPLE_QUERY_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(int64(v.TotalCount), 10)
+	result["PROTO_SERVICES_KERNEL_PEOPLE_QUERY_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PEOPLE_QUERY_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PeopleQueryResponseFromEnvVar creates PeopleQueryResponse from environment variable key-value pairs.
+func PeopleQueryResponseFromEnvVar(env map[string]string) (*PeopleQueryResponse, error) {
+	result := &PeopleQueryResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_QUERY_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_QUERY_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PEOPLE_QUERY_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// TenantUserLinksGetRequestToEnvVar converts TenantUserLinksGetRequest to environment variable key-value pairs.
+func TenantUserLinksGetRequestToEnvVar(v *TenantUserLinksGetRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_GET_REQUEST_KEY"] = v.Key
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_GET_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_GET_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// TenantUserLinksGetRequestFromEnvVar creates TenantUserLinksGetRequest from environment variable key-value pairs.
+func TenantUserLinksGetRequestFromEnvVar(env map[string]string) (*TenantUserLinksGetRequest, error) {
+	result := &TenantUserLinksGetRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_GET_REQUEST_KEY"]; ok && val != "" {
+		result.Key = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_GET_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_GET_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// TenantUserLinksPutRequestToEnvVar converts TenantUserLinksPutRequest to environment variable key-value pairs.
+func TenantUserLinksPutRequestToEnvVar(v *TenantUserLinksPutRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_PUT_REQUEST_KEY"] = v.Key
+	if v.Value != nil {
+		for k, val := range TenantUserLinksToEnvVar(v.Value) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_PUT_REQUEST_LOCK_COUNTER"] = strconv.FormatInt(v.LockCounter, 10)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_PUT_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_PUT_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// TenantUserLinksPutRequestFromEnvVar creates TenantUserLinksPutRequest from environment variable key-value pairs.
+func TenantUserLinksPutRequestFromEnvVar(env map[string]string) (*TenantUserLinksPutRequest, error) {
+	result := &TenantUserLinksPutRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_PUT_REQUEST_KEY"]; ok && val != "" {
+		result.Key = val
+	}
+	if sub, err := TenantUserLinksFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Value = sub
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_PUT_REQUEST_LOCK_COUNTER"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.LockCounter = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_PUT_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_PUT_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// TenantUserLinksGetAllRequestToEnvVar converts TenantUserLinksGetAllRequest to environment variable key-value pairs.
+func TenantUserLinksGetAllRequestToEnvVar(v *TenantUserLinksGetAllRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_GET_ALL_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_GET_ALL_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// TenantUserLinksGetAllRequestFromEnvVar creates TenantUserLinksGetAllRequest from environment variable key-value pairs.
+func TenantUserLinksGetAllRequestFromEnvVar(env map[string]string) (*TenantUserLinksGetAllRequest, error) {
+	result := &TenantUserLinksGetAllRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_GET_ALL_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_GET_ALL_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// TenantUserLinksKeysRequestToEnvVar converts TenantUserLinksKeysRequest to environment variable key-value pairs.
+func TenantUserLinksKeysRequestToEnvVar(v *TenantUserLinksKeysRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_KEYS_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_KEYS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// TenantUserLinksKeysRequestFromEnvVar creates TenantUserLinksKeysRequest from environment variable key-value pairs.
+func TenantUserLinksKeysRequestFromEnvVar(env map[string]string) (*TenantUserLinksKeysRequest, error) {
+	result := &TenantUserLinksKeysRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_KEYS_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_KEYS_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// TenantUserLinksSizeRequestToEnvVar converts TenantUserLinksSizeRequest to environment variable key-value pairs.
+func TenantUserLinksSizeRequestToEnvVar(v *TenantUserLinksSizeRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_SIZE_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_SIZE_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// TenantUserLinksSizeRequestFromEnvVar creates TenantUserLinksSizeRequest from environment variable key-value pairs.
+func TenantUserLinksSizeRequestFromEnvVar(env map[string]string) (*TenantUserLinksSizeRequest, error) {
+	result := &TenantUserLinksSizeRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_SIZE_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_SIZE_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// TenantUserLinksClearRequestToEnvVar converts TenantUserLinksClearRequest to environment variable key-value pairs.
+func TenantUserLinksClearRequestToEnvVar(v *TenantUserLinksClearRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_CLEAR_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_CLEAR_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// TenantUserLinksClearRequestFromEnvVar creates TenantUserLinksClearRequest from environment variable key-value pairs.
+func TenantUserLinksClearRequestFromEnvVar(env map[string]string) (*TenantUserLinksClearRequest, error) {
+	result := &TenantUserLinksClearRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_CLEAR_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_CLEAR_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// TenantUserLinksValueResponseToEnvVar converts TenantUserLinksValueResponse to environment variable key-value pairs.
+func TenantUserLinksValueResponseToEnvVar(v *TenantUserLinksValueResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.Value != nil {
+		for k, val := range TenantUserLinksToEnvVar(v.Value) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_VALUE_RESPONSE_FOUND"] = strconv.FormatBool(v.Found)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_VALUE_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_VALUE_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// TenantUserLinksValueResponseFromEnvVar creates TenantUserLinksValueResponse from environment variable key-value pairs.
+func TenantUserLinksValueResponseFromEnvVar(env map[string]string) (*TenantUserLinksValueResponse, error) {
+	result := &TenantUserLinksValueResponse{}
+	if sub, err := TenantUserLinksFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Value = sub
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_VALUE_RESPONSE_FOUND"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Found = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_VALUE_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_VALUE_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// TenantUserLinksEntriesResponseToEnvVar converts TenantUserLinksEntriesResponse to environment variable key-value pairs.
+func TenantUserLinksEntriesResponseToEnvVar(v *TenantUserLinksEntriesResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_ENTRIES_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_ENTRIES_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// TenantUserLinksEntriesResponseFromEnvVar creates TenantUserLinksEntriesResponse from environment variable key-value pairs.
+func TenantUserLinksEntriesResponseFromEnvVar(env map[string]string) (*TenantUserLinksEntriesResponse, error) {
+	result := &TenantUserLinksEntriesResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_ENTRIES_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_ENTRIES_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// TenantUserLinksKeysResponseToEnvVar converts TenantUserLinksKeysResponse to environment variable key-value pairs.
+func TenantUserLinksKeysResponseToEnvVar(v *TenantUserLinksKeysResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if len(v.Keys) > 0 {
+		result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_KEYS_RESPONSE_KEYS"] = strings.Join(v.Keys, ",")
+	}
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_KEYS_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_KEYS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// TenantUserLinksKeysResponseFromEnvVar creates TenantUserLinksKeysResponse from environment variable key-value pairs.
+func TenantUserLinksKeysResponseFromEnvVar(env map[string]string) (*TenantUserLinksKeysResponse, error) {
+	result := &TenantUserLinksKeysResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_KEYS_RESPONSE_KEYS"]; ok && val != "" {
+		result.Keys = strings.Split(val, ",")
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_KEYS_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_KEYS_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// TenantUserLinksSizeResponseToEnvVar converts TenantUserLinksSizeResponse to environment variable key-value pairs.
+func TenantUserLinksSizeResponseToEnvVar(v *TenantUserLinksSizeResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_SIZE_RESPONSE_SIZE"] = strconv.FormatInt(int64(v.Size), 10)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_SIZE_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_SIZE_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// TenantUserLinksSizeResponseFromEnvVar creates TenantUserLinksSizeResponse from environment variable key-value pairs.
+func TenantUserLinksSizeResponseFromEnvVar(env map[string]string) (*TenantUserLinksSizeResponse, error) {
+	result := &TenantUserLinksSizeResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_SIZE_RESPONSE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.Size = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_SIZE_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_SIZE_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// TenantUserLinksQueryRequestToEnvVar converts TenantUserLinksQueryRequest to environment variable key-value pairs.
+func TenantUserLinksQueryRequestToEnvVar(v *TenantUserLinksQueryRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.Query != nil {
+		for k, val := range CollectionQueryToEnvVar(v.Query) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_QUERY_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_QUERY_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// TenantUserLinksQueryRequestFromEnvVar creates TenantUserLinksQueryRequest from environment variable key-value pairs.
+func TenantUserLinksQueryRequestFromEnvVar(env map[string]string) (*TenantUserLinksQueryRequest, error) {
+	result := &TenantUserLinksQueryRequest{}
+	if sub, err := CollectionQueryFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Query = sub
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_QUERY_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_QUERY_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// TenantUserLinksQueryResponseToEnvVar converts TenantUserLinksQueryResponse to environment variable key-value pairs.
+func TenantUserLinksQueryResponseToEnvVar(v *TenantUserLinksQueryResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_QUERY_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(int64(v.TotalCount), 10)
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_QUERY_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_QUERY_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// TenantUserLinksQueryResponseFromEnvVar creates TenantUserLinksQueryResponse from environment variable key-value pairs.
+func TenantUserLinksQueryResponseFromEnvVar(env map[string]string) (*TenantUserLinksQueryResponse, error) {
+	result := &TenantUserLinksQueryResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_QUERY_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_QUERY_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_TENANT_USER_LINKS_QUERY_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PendingApprovalsGetRequestToEnvVar converts PendingApprovalsGetRequest to environment variable key-value pairs.
+func PendingApprovalsGetRequestToEnvVar(v *PendingApprovalsGetRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_GET_REQUEST_KEY"] = v.Key
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_GET_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_GET_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PendingApprovalsGetRequestFromEnvVar creates PendingApprovalsGetRequest from environment variable key-value pairs.
+func PendingApprovalsGetRequestFromEnvVar(env map[string]string) (*PendingApprovalsGetRequest, error) {
+	result := &PendingApprovalsGetRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_GET_REQUEST_KEY"]; ok && val != "" {
+		result.Key = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_GET_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_GET_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PendingApprovalsPutRequestToEnvVar converts PendingApprovalsPutRequest to environment variable key-value pairs.
+func PendingApprovalsPutRequestToEnvVar(v *PendingApprovalsPutRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_PUT_REQUEST_KEY"] = v.Key
+	if v.Value != nil {
+		for k, val := range PendingApprovalToEnvVar(v.Value) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_PUT_REQUEST_LOCK_COUNTER"] = strconv.FormatInt(v.LockCounter, 10)
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_PUT_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_PUT_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PendingApprovalsPutRequestFromEnvVar creates PendingApprovalsPutRequest from environment variable key-value pairs.
+func PendingApprovalsPutRequestFromEnvVar(env map[string]string) (*PendingApprovalsPutRequest, error) {
+	result := &PendingApprovalsPutRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_PUT_REQUEST_KEY"]; ok && val != "" {
+		result.Key = val
+	}
+	if sub, err := PendingApprovalFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Value = sub
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_PUT_REQUEST_LOCK_COUNTER"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.LockCounter = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_PUT_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_PUT_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PendingApprovalsGetAllRequestToEnvVar converts PendingApprovalsGetAllRequest to environment variable key-value pairs.
+func PendingApprovalsGetAllRequestToEnvVar(v *PendingApprovalsGetAllRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_GET_ALL_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_GET_ALL_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PendingApprovalsGetAllRequestFromEnvVar creates PendingApprovalsGetAllRequest from environment variable key-value pairs.
+func PendingApprovalsGetAllRequestFromEnvVar(env map[string]string) (*PendingApprovalsGetAllRequest, error) {
+	result := &PendingApprovalsGetAllRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_GET_ALL_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_GET_ALL_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PendingApprovalsKeysRequestToEnvVar converts PendingApprovalsKeysRequest to environment variable key-value pairs.
+func PendingApprovalsKeysRequestToEnvVar(v *PendingApprovalsKeysRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_KEYS_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_KEYS_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PendingApprovalsKeysRequestFromEnvVar creates PendingApprovalsKeysRequest from environment variable key-value pairs.
+func PendingApprovalsKeysRequestFromEnvVar(env map[string]string) (*PendingApprovalsKeysRequest, error) {
+	result := &PendingApprovalsKeysRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_KEYS_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_KEYS_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PendingApprovalsSizeRequestToEnvVar converts PendingApprovalsSizeRequest to environment variable key-value pairs.
+func PendingApprovalsSizeRequestToEnvVar(v *PendingApprovalsSizeRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_SIZE_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_SIZE_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PendingApprovalsSizeRequestFromEnvVar creates PendingApprovalsSizeRequest from environment variable key-value pairs.
+func PendingApprovalsSizeRequestFromEnvVar(env map[string]string) (*PendingApprovalsSizeRequest, error) {
+	result := &PendingApprovalsSizeRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_SIZE_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_SIZE_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PendingApprovalsClearRequestToEnvVar converts PendingApprovalsClearRequest to environment variable key-value pairs.
+func PendingApprovalsClearRequestToEnvVar(v *PendingApprovalsClearRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_CLEAR_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_CLEAR_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PendingApprovalsClearRequestFromEnvVar creates PendingApprovalsClearRequest from environment variable key-value pairs.
+func PendingApprovalsClearRequestFromEnvVar(env map[string]string) (*PendingApprovalsClearRequest, error) {
+	result := &PendingApprovalsClearRequest{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_CLEAR_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_CLEAR_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PendingApprovalsValueResponseToEnvVar converts PendingApprovalsValueResponse to environment variable key-value pairs.
+func PendingApprovalsValueResponseToEnvVar(v *PendingApprovalsValueResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.Value != nil {
+		for k, val := range PendingApprovalToEnvVar(v.Value) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_VALUE_RESPONSE_FOUND"] = strconv.FormatBool(v.Found)
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_VALUE_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_VALUE_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PendingApprovalsValueResponseFromEnvVar creates PendingApprovalsValueResponse from environment variable key-value pairs.
+func PendingApprovalsValueResponseFromEnvVar(env map[string]string) (*PendingApprovalsValueResponse, error) {
+	result := &PendingApprovalsValueResponse{}
+	if sub, err := PendingApprovalFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Value = sub
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_VALUE_RESPONSE_FOUND"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Found = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_VALUE_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_VALUE_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PendingApprovalsEntriesResponseToEnvVar converts PendingApprovalsEntriesResponse to environment variable key-value pairs.
+func PendingApprovalsEntriesResponseToEnvVar(v *PendingApprovalsEntriesResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_ENTRIES_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_ENTRIES_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PendingApprovalsEntriesResponseFromEnvVar creates PendingApprovalsEntriesResponse from environment variable key-value pairs.
+func PendingApprovalsEntriesResponseFromEnvVar(env map[string]string) (*PendingApprovalsEntriesResponse, error) {
+	result := &PendingApprovalsEntriesResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_ENTRIES_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_ENTRIES_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PendingApprovalsKeysResponseToEnvVar converts PendingApprovalsKeysResponse to environment variable key-value pairs.
+func PendingApprovalsKeysResponseToEnvVar(v *PendingApprovalsKeysResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if len(v.Keys) > 0 {
+		result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_KEYS_RESPONSE_KEYS"] = strings.Join(v.Keys, ",")
+	}
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_KEYS_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_KEYS_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PendingApprovalsKeysResponseFromEnvVar creates PendingApprovalsKeysResponse from environment variable key-value pairs.
+func PendingApprovalsKeysResponseFromEnvVar(env map[string]string) (*PendingApprovalsKeysResponse, error) {
+	result := &PendingApprovalsKeysResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_KEYS_RESPONSE_KEYS"]; ok && val != "" {
+		result.Keys = strings.Split(val, ",")
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_KEYS_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_KEYS_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PendingApprovalsSizeResponseToEnvVar converts PendingApprovalsSizeResponse to environment variable key-value pairs.
+func PendingApprovalsSizeResponseToEnvVar(v *PendingApprovalsSizeResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_SIZE_RESPONSE_SIZE"] = strconv.FormatInt(int64(v.Size), 10)
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_SIZE_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_SIZE_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PendingApprovalsSizeResponseFromEnvVar creates PendingApprovalsSizeResponse from environment variable key-value pairs.
+func PendingApprovalsSizeResponseFromEnvVar(env map[string]string) (*PendingApprovalsSizeResponse, error) {
+	result := &PendingApprovalsSizeResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_SIZE_RESPONSE_SIZE"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.Size = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_SIZE_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_SIZE_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PendingApprovalsQueryRequestToEnvVar converts PendingApprovalsQueryRequest to environment variable key-value pairs.
+func PendingApprovalsQueryRequestToEnvVar(v *PendingApprovalsQueryRequest) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	if v.Query != nil {
+		for k, val := range CollectionQueryToEnvVar(v.Query) {
+			result[k] = val
+		}
+	}
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_QUERY_REQUEST_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_QUERY_REQUEST_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PendingApprovalsQueryRequestFromEnvVar creates PendingApprovalsQueryRequest from environment variable key-value pairs.
+func PendingApprovalsQueryRequestFromEnvVar(env map[string]string) (*PendingApprovalsQueryRequest, error) {
+	result := &PendingApprovalsQueryRequest{}
+	if sub, err := CollectionQueryFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.Query = sub
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_QUERY_REQUEST_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_QUERY_REQUEST_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
+// PendingApprovalsQueryResponseToEnvVar converts PendingApprovalsQueryResponse to environment variable key-value pairs.
+func PendingApprovalsQueryResponseToEnvVar(v *PendingApprovalsQueryResponse) map[string]string {
+	if v == nil {
+		return nil
+	}
+	result := make(map[string]string)
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_QUERY_RESPONSE_TOTAL_COUNT"] = strconv.FormatInt(int64(v.TotalCount), 10)
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_QUERY_RESPONSE_TRACE_ID"] = v.TraceId
+	result["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_QUERY_RESPONSE_NOOP"] = strconv.FormatBool(v.Noop)
+	return result
+}
+
+// PendingApprovalsQueryResponseFromEnvVar creates PendingApprovalsQueryResponse from environment variable key-value pairs.
+func PendingApprovalsQueryResponseFromEnvVar(env map[string]string) (*PendingApprovalsQueryResponse, error) {
+	result := &PendingApprovalsQueryResponse{}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_QUERY_RESPONSE_TOTAL_COUNT"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.TotalCount = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_QUERY_RESPONSE_TRACE_ID"]; ok && val != "" {
+		result.TraceId = val
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_PENDING_APPROVALS_QUERY_RESPONSE_NOOP"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Noop = parsed
+	}
+	return result, nil
+}
+
 // CaCertsGetRequestToEnvVar converts CaCertsGetRequest to environment variable key-value pairs.
 func CaCertsGetRequestToEnvVar(v *CaCertsGetRequest) map[string]string {
 	if v == nil {
@@ -73340,14 +89456,19 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Grants exceeds max size of 4096, got: %d", len(m.Grants))
 	}
 
+	// Validate PeopleIdpCredentials (assert_max_size: 2)
+	if len(m.PeopleIdpCredentials) > 2 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PeopleIdpCredentials exceeds max size of 2, got: %d", len(m.PeopleIdpCredentials))
+	}
+
 	// Validate ClusterName (default max size: 32768 bytes)
 	if len(m.ClusterName) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ClusterName exceeds max size of 32768 bytes, got: %d", len(m.ClusterName))
 	}
 
-	// Validate PersistenceDir (default max size: 32768 bytes)
-	if len(m.PersistenceDir) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field PersistenceDir exceeds max size of 32768 bytes, got: %d", len(m.PersistenceDir))
+	// Validate DiskDir (default max size: 32768 bytes)
+	if len(m.DiskDir) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field DiskDir exceeds max size of 32768 bytes, got: %d", len(m.DiskDir))
 	}
 
 	// Validate Fqdn (default max size: 32768 bytes)
@@ -73363,11 +89484,6 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
-	}
-
-	// Validate PersistenceFormat enum value is known
-	if _, ok := outputformat.OutputFormat_name[int32(m.PersistenceFormat)]; !ok {
-		return protoerrors.NewErrMissingInvalidData(nil, "field PersistenceFormat has unknown enum value %d", int32(m.PersistenceFormat))
 	}
 
 	// Validate Listener nested message
@@ -73475,6 +89591,13 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		}
 	}
 
+	// Validate PeopleIdpCredentials nested messages
+	for i, val := range m.PeopleIdpCredentials {
+		if err := ValidatePeopleIdpCredentialWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field PeopleIdpCredentials[%d] validation failed", i)
+		}
+	}
+
 	return nil
 }
 
@@ -73494,9 +89617,9 @@ func ValidateIdentityWithDepth(m *Identity, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate VerifyingKeys (assert_max_size: 16)
-	if len(m.VerifyingKeys) > 16 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field VerifyingKeys exceeds max size of 16, got: %d", len(m.VerifyingKeys))
+	// Validate VerifyingKeys (assert_max_size: 128)
+	if len(m.VerifyingKeys) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field VerifyingKeys exceeds max size of 128, got: %d", len(m.VerifyingKeys))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -74136,6 +90259,11 @@ func ValidateDelegateWithDepth(m *Delegate, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Name is required")
 	}
 
+	// Validate TenantNamespace (assert_max_size: 512 bytes)
+	if len(m.TenantNamespace) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TenantNamespace exceeds max size of 512 bytes, got: %d", len(m.TenantNamespace))
+	}
+
 	// Validate CloudIdentities (assert_max_size: 8)
 	if len(m.CloudIdentities) > 8 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field CloudIdentities exceeds max size of 8, got: %d", len(m.CloudIdentities))
@@ -74154,6 +90282,11 @@ func ValidateDelegateWithDepth(m *Delegate, depth int) error {
 	// Validate CustomClaims (assert_max_size: 20)
 	if len(m.CustomClaims) > 20 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field CustomClaims exceeds max size of 20, got: %d", len(m.CustomClaims))
+	}
+
+	// Validate AuthBrokerKinds (assert_max_size: 8)
+	if len(m.AuthBrokerKinds) > 8 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field AuthBrokerKinds exceeds max size of 8, got: %d", len(m.AuthBrokerKinds))
 	}
 
 	// Validate CustomClaims keys (default max size: 32768 bytes)
@@ -74184,6 +90317,13 @@ func ValidateDelegateWithDepth(m *Delegate, depth int) error {
 	for i, val := range m.AuthorizedServices {
 		if _, ok := services.ServiceName_name[int32(val)]; !ok {
 			return protoerrors.NewErrMissingInvalidData(nil, "field AuthorizedServices[%d] has unknown enum value %d", i, int32(val))
+		}
+	}
+
+	// Validate AuthBrokerKinds enum values are known
+	for i, val := range m.AuthBrokerKinds {
+		if _, ok := tokenrequest.AuthBrokerKind_name[int32(val)]; !ok {
+			return protoerrors.NewErrMissingInvalidData(nil, "field AuthBrokerKinds[%d] has unknown enum value %d", i, int32(val))
 		}
 	}
 
@@ -74727,6 +90867,1229 @@ func ValidateWorkloadStateWithDepth(m *WorkloadState, depth int) error {
 	return nil
 }
 
+// ValidatePeopleIdpCredential validates all fields in PeopleIdpCredential according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePeopleIdpCredential(m *PeopleIdpCredential) error {
+	return ValidatePeopleIdpCredentialWithDepth(m, 0)
+}
+
+// ValidatePeopleIdpCredentialWithDepth validates PeopleIdpCredential and carries nested-message depth across
+// generated package boundaries.
+func ValidatePeopleIdpCredentialWithDepth(m *PeopleIdpCredential, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Provider (assert_enum_defined)
+	if m.Provider == 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Provider must be defined")
+	}
+
+	// Validate ClientId (assert_min_size: 1 bytes)
+	if len(m.ClientId) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ClientId below min size of 1 bytes, got: %d", len(m.ClientId))
+	}
+
+	// Validate ClientId (assert_required)
+	if m.ClientId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ClientId is required")
+	}
+
+	// Validate ClientSecret (assert_min_size: 1 bytes)
+	if len(m.ClientSecret) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ClientSecret below min size of 1 bytes, got: %d", len(m.ClientSecret))
+	}
+
+	// Validate ClientSecret (assert_required)
+	if m.ClientSecret == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ClientSecret is required")
+	}
+
+	// Validate ClientId (default max size: 32768 bytes)
+	if len(m.ClientId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ClientId exceeds max size of 32768 bytes, got: %d", len(m.ClientId))
+	}
+
+	// Validate ClientSecret (default max size: 32768 bytes)
+	if len(m.ClientSecret) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ClientSecret exceeds max size of 32768 bytes, got: %d", len(m.ClientSecret))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Provider enum value is known
+	if _, ok := PeopleIdpProvider_name[int32(m.Provider)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Provider has unknown enum value %d", int32(m.Provider))
+	}
+
+	return nil
+}
+
+// ValidatePerson validates all fields in Person according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePerson(m *Person) error {
+	return ValidatePersonWithDepth(m, 0)
+}
+
+// ValidatePersonWithDepth validates Person and carries nested-message depth across
+// generated package boundaries.
+func ValidatePersonWithDepth(m *Person, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate UserId (assert_max_size: 128 bytes)
+	if len(m.UserId) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field UserId exceeds max size of 128 bytes, got: %d", len(m.UserId))
+	}
+
+	// Validate UserId (assert_min_size: 1 bytes)
+	if len(m.UserId) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field UserId below min size of 1 bytes, got: %d", len(m.UserId))
+	}
+
+	// Validate UserId (assert_required)
+	if m.UserId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field UserId is required")
+	}
+
+	// Validate Provider (assert_enum_defined)
+	if m.Provider == 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Provider must be defined")
+	}
+
+	// Validate ProviderSubject (assert_max_size: 128 bytes)
+	if len(m.ProviderSubject) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProviderSubject exceeds max size of 128 bytes, got: %d", len(m.ProviderSubject))
+	}
+
+	// Validate ProviderSubject (assert_required)
+	if m.ProviderSubject == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProviderSubject is required")
+	}
+
+	// Validate CreatedAtMs (assert_ge: 0)
+	if m.CreatedAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CreatedAtMs must be >= 0, got: %v", m.CreatedAtMs)
+	}
+	// Validate DisabledAtMs (assert_ge: 0)
+	if m.DisabledAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field DisabledAtMs must be >= 0, got: %v", m.DisabledAtMs)
+	}
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Provider enum value is known
+	if _, ok := PeopleIdpProvider_name[int32(m.Provider)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Provider has unknown enum value %d", int32(m.Provider))
+	}
+
+	return nil
+}
+
+// ValidatePersonalCredential validates all fields in PersonalCredential according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePersonalCredential(m *PersonalCredential) error {
+	return ValidatePersonalCredentialWithDepth(m, 0)
+}
+
+// ValidatePersonalCredentialWithDepth validates PersonalCredential and carries nested-message depth across
+// generated package boundaries.
+func ValidatePersonalCredentialWithDepth(m *PersonalCredential, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate CredentialId (assert_max_size: 128 bytes)
+	if len(m.CredentialId) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CredentialId exceeds max size of 128 bytes, got: %d", len(m.CredentialId))
+	}
+
+	// Validate CredentialId (assert_required)
+	if m.CredentialId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CredentialId is required")
+	}
+
+	// Validate PublicKey (assert_required)
+	if m.PublicKey == nil {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PublicKey is required")
+	}
+
+	// Validate Label (assert_max_size: 128 bytes)
+	if len(m.Label) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Label exceeds max size of 128 bytes, got: %d", len(m.Label))
+	}
+
+	// Validate CreatedAtMs (assert_ge: 0)
+	if m.CreatedAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CreatedAtMs must be >= 0, got: %v", m.CreatedAtMs)
+	}
+	// Validate RevokedAtMs (assert_ge: 0)
+	if m.RevokedAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RevokedAtMs must be >= 0, got: %v", m.RevokedAtMs)
+	}
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate PublicKey nested message
+	if m.PublicKey != nil {
+		if err := jwk.ValidateJwkWithDepth(m.PublicKey, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field PublicKey validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidateTenantMembership validates all fields in TenantMembership according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateTenantMembership(m *TenantMembership) error {
+	return ValidateTenantMembershipWithDepth(m, 0)
+}
+
+// ValidateTenantMembershipWithDepth validates TenantMembership and carries nested-message depth across
+// generated package boundaries.
+func ValidateTenantMembershipWithDepth(m *TenantMembership, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TenantNamespace (assert_max_size: 512 bytes)
+	if len(m.TenantNamespace) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TenantNamespace exceeds max size of 512 bytes, got: %d", len(m.TenantNamespace))
+	}
+
+	// Validate TenantNamespace (assert_required)
+	if m.TenantNamespace == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TenantNamespace is required")
+	}
+
+	// Validate ProofKind (assert_enum_defined)
+	if m.ProofKind == 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProofKind must be defined")
+	}
+
+	// Validate ProofReference (assert_max_size: 512 bytes)
+	if len(m.ProofReference) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProofReference exceeds max size of 512 bytes, got: %d", len(m.ProofReference))
+	}
+
+	// Validate CreatedAtMs (assert_ge: 0)
+	if m.CreatedAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CreatedAtMs must be >= 0, got: %v", m.CreatedAtMs)
+	}
+	// Validate ExpiresAtMs (assert_ge: 0)
+	if m.ExpiresAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ExpiresAtMs must be >= 0, got: %v", m.ExpiresAtMs)
+	}
+	// Validate RevokedAtMs (assert_ge: 0)
+	if m.RevokedAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RevokedAtMs must be >= 0, got: %v", m.RevokedAtMs)
+	}
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate ProofKind enum value is known
+	if _, ok := MembershipProofKind_name[int32(m.ProofKind)]; !ok {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProofKind has unknown enum value %d", int32(m.ProofKind))
+	}
+
+	return nil
+}
+
+// ValidatePersonalPrincipal validates all fields in PersonalPrincipal according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePersonalPrincipal(m *PersonalPrincipal) error {
+	return ValidatePersonalPrincipalWithDepth(m, 0)
+}
+
+// ValidatePersonalPrincipalWithDepth validates PersonalPrincipal and carries nested-message depth across
+// generated package boundaries.
+func ValidatePersonalPrincipalWithDepth(m *PersonalPrincipal, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate PrincipalId (assert_max_size: 128 bytes)
+	if len(m.PrincipalId) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PrincipalId exceeds max size of 128 bytes, got: %d", len(m.PrincipalId))
+	}
+
+	// Validate PrincipalId (assert_min_size: 1 bytes)
+	if len(m.PrincipalId) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PrincipalId below min size of 1 bytes, got: %d", len(m.PrincipalId))
+	}
+
+	// Validate PrincipalId (assert_required)
+	if m.PrincipalId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PrincipalId is required")
+	}
+
+	// Validate Credentials (assert_max_size: 16)
+	if len(m.Credentials) > 16 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Credentials exceeds max size of 16, got: %d", len(m.Credentials))
+	}
+
+	// Validate Memberships (assert_max_size: 64)
+	if len(m.Memberships) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Memberships exceeds max size of 64, got: %d", len(m.Memberships))
+	}
+
+	// Validate CreatedAtMs (assert_ge: 0)
+	if m.CreatedAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CreatedAtMs must be >= 0, got: %v", m.CreatedAtMs)
+	}
+	// Validate DisabledAtMs (assert_ge: 0)
+	if m.DisabledAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field DisabledAtMs must be >= 0, got: %v", m.DisabledAtMs)
+	}
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Credentials nested messages
+	for i, val := range m.Credentials {
+		if err := ValidatePersonalCredentialWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Credentials[%d] validation failed", i)
+		}
+	}
+
+	// Validate Memberships nested messages
+	for i, val := range m.Memberships {
+		if err := ValidateTenantMembershipWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Memberships[%d] validation failed", i)
+		}
+	}
+
+	return nil
+}
+
+// ValidateTenantUserLink validates all fields in TenantUserLink according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateTenantUserLink(m *TenantUserLink) error {
+	return ValidateTenantUserLinkWithDepth(m, 0)
+}
+
+// ValidateTenantUserLinkWithDepth validates TenantUserLink and carries nested-message depth across
+// generated package boundaries.
+func ValidateTenantUserLinkWithDepth(m *TenantUserLink, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate PeerNamespace (assert_max_size: 512 bytes)
+	if len(m.PeerNamespace) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PeerNamespace exceeds max size of 512 bytes, got: %d", len(m.PeerNamespace))
+	}
+
+	// Validate PeerNamespace (assert_required)
+	if m.PeerNamespace == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PeerNamespace is required")
+	}
+
+	// Validate PeerSubject (assert_max_size: 1024 bytes)
+	if len(m.PeerSubject) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PeerSubject exceeds max size of 1024 bytes, got: %d", len(m.PeerSubject))
+	}
+
+	// Validate PeerSubject (assert_required)
+	if m.PeerSubject == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PeerSubject is required")
+	}
+
+	// Validate CreatedAtMs (assert_ge: 0)
+	if m.CreatedAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CreatedAtMs must be >= 0, got: %v", m.CreatedAtMs)
+	}
+	// Validate RevokedAtMs (assert_ge: 0)
+	if m.RevokedAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RevokedAtMs must be >= 0, got: %v", m.RevokedAtMs)
+	}
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateTenantUserLinks validates all fields in TenantUserLinks according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateTenantUserLinks(m *TenantUserLinks) error {
+	return ValidateTenantUserLinksWithDepth(m, 0)
+}
+
+// ValidateTenantUserLinksWithDepth validates TenantUserLinks and carries nested-message depth across
+// generated package boundaries.
+func ValidateTenantUserLinksWithDepth(m *TenantUserLinks, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate UserKey (assert_max_size: 1024 bytes)
+	if len(m.UserKey) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field UserKey exceeds max size of 1024 bytes, got: %d", len(m.UserKey))
+	}
+
+	// Validate UserKey (assert_min_size: 1 bytes)
+	if len(m.UserKey) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field UserKey below min size of 1 bytes, got: %d", len(m.UserKey))
+	}
+
+	// Validate UserKey (assert_required)
+	if m.UserKey == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field UserKey is required")
+	}
+
+	// Validate Links (assert_max_size: 64)
+	if len(m.Links) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Links exceeds max size of 64, got: %d", len(m.Links))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Links nested messages
+	for i, val := range m.Links {
+		if err := ValidateTenantUserLinkWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Links[%d] validation failed", i)
+		}
+	}
+
+	return nil
+}
+
+// ValidatePrincipalState validates all fields in PrincipalState according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePrincipalState(m *PrincipalState) error {
+	return ValidatePrincipalStateWithDepth(m, 0)
+}
+
+// ValidatePrincipalStateWithDepth validates PrincipalState and carries nested-message depth across
+// generated package boundaries.
+func ValidatePrincipalStateWithDepth(m *PrincipalState, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate PersonalPrincipals (assert_max_size: 65536)
+	if len(m.PersonalPrincipals) > 65536 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PersonalPrincipals exceeds max size of 65536, got: %d", len(m.PersonalPrincipals))
+	}
+
+	// Validate People (assert_max_size: 65536)
+	if len(m.People) > 65536 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field People exceeds max size of 65536, got: %d", len(m.People))
+	}
+
+	// Validate TenantUserLinks (assert_max_size: 65536)
+	if len(m.TenantUserLinks) > 65536 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TenantUserLinks exceeds max size of 65536, got: %d", len(m.TenantUserLinks))
+	}
+
+	// Validate PendingApprovals (assert_max_size: 65536)
+	if len(m.PendingApprovals) > 65536 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PendingApprovals exceeds max size of 65536, got: %d", len(m.PendingApprovals))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate PersonalPrincipals nested messages
+	for i, val := range m.PersonalPrincipals {
+		if err := ValidatePersonalPrincipalWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field PersonalPrincipals[%d] validation failed", i)
+		}
+	}
+
+	// Validate People nested messages
+	for i, val := range m.People {
+		if err := ValidatePersonWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field People[%d] validation failed", i)
+		}
+	}
+
+	// Validate TenantUserLinks nested messages
+	for i, val := range m.TenantUserLinks {
+		if err := ValidateTenantUserLinksWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field TenantUserLinks[%d] validation failed", i)
+		}
+	}
+
+	// Validate PendingApprovals nested messages
+	for i, val := range m.PendingApprovals {
+		if err := ValidatePendingApprovalWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field PendingApprovals[%d] validation failed", i)
+		}
+	}
+
+	return nil
+}
+
+// ValidateRevokeTenantUserLinkRequest validates all fields in RevokeTenantUserLinkRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateRevokeTenantUserLinkRequest(m *RevokeTenantUserLinkRequest) error {
+	return ValidateRevokeTenantUserLinkRequestWithDepth(m, 0)
+}
+
+// ValidateRevokeTenantUserLinkRequestWithDepth validates RevokeTenantUserLinkRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateRevokeTenantUserLinkRequestWithDepth(m *RevokeTenantUserLinkRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate PeerNamespace (assert_max_size: 512 bytes)
+	if len(m.PeerNamespace) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PeerNamespace exceeds max size of 512 bytes, got: %d", len(m.PeerNamespace))
+	}
+
+	// Validate PeerNamespace (assert_required)
+	if m.PeerNamespace == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PeerNamespace is required")
+	}
+
+	// Validate PeerSubject (assert_max_size: 1024 bytes)
+	if len(m.PeerSubject) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PeerSubject exceeds max size of 1024 bytes, got: %d", len(m.PeerSubject))
+	}
+
+	// Validate PeerSubject (assert_required)
+	if m.PeerSubject == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PeerSubject is required")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateRevokeTenantUserLinkResponse validates all fields in RevokeTenantUserLinkResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateRevokeTenantUserLinkResponse(m *RevokeTenantUserLinkResponse) error {
+	return ValidateRevokeTenantUserLinkResponseWithDepth(m, 0)
+}
+
+// ValidateRevokeTenantUserLinkResponseWithDepth validates RevokeTenantUserLinkResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateRevokeTenantUserLinkResponseWithDepth(m *RevokeTenantUserLinkResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate RevokedAtMs (assert_ge: 0)
+	if m.RevokedAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RevokedAtMs must be >= 0, got: %v", m.RevokedAtMs)
+	}
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateGetMyIdentityRequest validates all fields in GetMyIdentityRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateGetMyIdentityRequest(m *GetMyIdentityRequest) error {
+	return ValidateGetMyIdentityRequestWithDepth(m, 0)
+}
+
+// ValidateGetMyIdentityRequestWithDepth validates GetMyIdentityRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateGetMyIdentityRequestWithDepth(m *GetMyIdentityRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateGetMyIdentityResponse validates all fields in GetMyIdentityResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateGetMyIdentityResponse(m *GetMyIdentityResponse) error {
+	return ValidateGetMyIdentityResponseWithDepth(m, 0)
+}
+
+// ValidateGetMyIdentityResponseWithDepth validates GetMyIdentityResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateGetMyIdentityResponseWithDepth(m *GetMyIdentityResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate PrincipalId (assert_max_size: 128 bytes)
+	if len(m.PrincipalId) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PrincipalId exceeds max size of 128 bytes, got: %d", len(m.PrincipalId))
+	}
+
+	// Validate Memberships (assert_max_size: 64)
+	if len(m.Memberships) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Memberships exceeds max size of 64, got: %d", len(m.Memberships))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Memberships nested messages
+	for i, val := range m.Memberships {
+		if err := ValidateTenantMembershipWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Memberships[%d] validation failed", i)
+		}
+	}
+
+	return nil
+}
+
+// ValidateCreatePersonalPrincipalRequest validates all fields in CreatePersonalPrincipalRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateCreatePersonalPrincipalRequest(m *CreatePersonalPrincipalRequest) error {
+	return ValidateCreatePersonalPrincipalRequestWithDepth(m, 0)
+}
+
+// ValidateCreatePersonalPrincipalRequestWithDepth validates CreatePersonalPrincipalRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateCreatePersonalPrincipalRequestWithDepth(m *CreatePersonalPrincipalRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate ProofToken (assert_max_size: 8192 bytes)
+	if len(m.ProofToken) > 8192 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProofToken exceeds max size of 8192 bytes, got: %d", len(m.ProofToken))
+	}
+
+	// Validate ProofToken (assert_required)
+	if m.ProofToken == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ProofToken is required")
+	}
+
+	// Validate PublicKey (assert_required)
+	if m.PublicKey == nil {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PublicKey is required")
+	}
+
+	// Validate Label (assert_max_size: 128 bytes)
+	if len(m.Label) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Label exceeds max size of 128 bytes, got: %d", len(m.Label))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate PublicKey nested message
+	if m.PublicKey != nil {
+		if err := jwk.ValidateJwkWithDepth(m.PublicKey, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field PublicKey validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidateCreatePersonalPrincipalResponse validates all fields in CreatePersonalPrincipalResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateCreatePersonalPrincipalResponse(m *CreatePersonalPrincipalResponse) error {
+	return ValidateCreatePersonalPrincipalResponseWithDepth(m, 0)
+}
+
+// ValidateCreatePersonalPrincipalResponseWithDepth validates CreatePersonalPrincipalResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateCreatePersonalPrincipalResponseWithDepth(m *CreatePersonalPrincipalResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate PrincipalId (assert_max_size: 128 bytes)
+	if len(m.PrincipalId) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PrincipalId exceeds max size of 128 bytes, got: %d", len(m.PrincipalId))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateWebauthnAssertion validates all fields in WebauthnAssertion according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateWebauthnAssertion(m *WebauthnAssertion) error {
+	return ValidateWebauthnAssertionWithDepth(m, 0)
+}
+
+// ValidateWebauthnAssertionWithDepth validates WebauthnAssertion and carries nested-message depth across
+// generated package boundaries.
+func ValidateWebauthnAssertionWithDepth(m *WebauthnAssertion, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate CredentialId (assert_max_size: 1024 bytes)
+	if len(m.CredentialId) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CredentialId exceeds max size of 1024 bytes, got: %d", len(m.CredentialId))
+	}
+
+	// Validate CredentialId (assert_required)
+	if m.CredentialId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CredentialId is required")
+	}
+
+	// Validate AuthenticatorData (assert_max_size: 2048 bytes)
+	if len(m.AuthenticatorData) > 2048 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field AuthenticatorData exceeds max size of 2048 bytes, got: %d", len(m.AuthenticatorData))
+	}
+
+	// Validate AuthenticatorData (assert_required)
+	if len(m.AuthenticatorData) == 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field AuthenticatorData is required")
+	}
+
+	// Validate ClientDataJson (assert_max_size: 4096 bytes)
+	if len(m.ClientDataJson) > 4096 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ClientDataJson exceeds max size of 4096 bytes, got: %d", len(m.ClientDataJson))
+	}
+
+	// Validate ClientDataJson (assert_required)
+	if len(m.ClientDataJson) == 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ClientDataJson is required")
+	}
+
+	// Validate Signature (assert_max_size: 2048 bytes)
+	if len(m.Signature) > 2048 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Signature exceeds max size of 2048 bytes, got: %d", len(m.Signature))
+	}
+
+	// Validate Signature (assert_required)
+	if len(m.Signature) == 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Signature is required")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateTenantUserLinkSide validates all fields in TenantUserLinkSide according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateTenantUserLinkSide(m *TenantUserLinkSide) error {
+	return ValidateTenantUserLinkSideWithDepth(m, 0)
+}
+
+// ValidateTenantUserLinkSideWithDepth validates TenantUserLinkSide and carries nested-message depth across
+// generated package boundaries.
+func ValidateTenantUserLinkSideWithDepth(m *TenantUserLinkSide, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Subject (assert_max_size: 1024 bytes)
+	if len(m.Subject) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Subject exceeds max size of 1024 bytes, got: %d", len(m.Subject))
+	}
+
+	// Validate DeviceLabel (assert_max_size: 128 bytes)
+	if len(m.DeviceLabel) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field DeviceLabel exceeds max size of 128 bytes, got: %d", len(m.DeviceLabel))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate DeviceAssertion nested message
+	if m.DeviceAssertion != nil {
+		if err := ValidateWebauthnAssertionWithDepth(m.DeviceAssertion, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field DeviceAssertion validation failed")
+		}
+	}
+
+	// Validate DevicePublicKey nested message
+	if m.DevicePublicKey != nil {
+		if err := jwk.ValidateJwkWithDepth(m.DevicePublicKey, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field DevicePublicKey validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidateCreateTenantUserLinkRequest validates all fields in CreateTenantUserLinkRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateCreateTenantUserLinkRequest(m *CreateTenantUserLinkRequest) error {
+	return ValidateCreateTenantUserLinkRequestWithDepth(m, 0)
+}
+
+// ValidateCreateTenantUserLinkRequestWithDepth validates CreateTenantUserLinkRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateCreateTenantUserLinkRequestWithDepth(m *CreateTenantUserLinkRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate A (assert_required)
+	if m.A == nil {
+		return protoerrors.NewErrMissingInvalidData(nil, "field A is required")
+	}
+
+	// Validate B (assert_required)
+	if m.B == nil {
+		return protoerrors.NewErrMissingInvalidData(nil, "field B is required")
+	}
+
+	// Validate TraceId (assert_max_size: 128 bytes)
+	if len(m.TraceId) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 128 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate A nested message
+	if m.A != nil {
+		if err := ValidateTenantUserLinkSideWithDepth(m.A, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field A validation failed")
+		}
+	}
+
+	// Validate B nested message
+	if m.B != nil {
+		if err := ValidateTenantUserLinkSideWithDepth(m.B, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field B validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidateCreateTenantUserLinkResponse validates all fields in CreateTenantUserLinkResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateCreateTenantUserLinkResponse(m *CreateTenantUserLinkResponse) error {
+	return ValidateCreateTenantUserLinkResponseWithDepth(m, 0)
+}
+
+// ValidateCreateTenantUserLinkResponseWithDepth validates CreateTenantUserLinkResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateCreateTenantUserLinkResponseWithDepth(m *CreateTenantUserLinkResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate AUserKey (assert_max_size: 1024 bytes)
+	if len(m.AUserKey) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field AUserKey exceeds max size of 1024 bytes, got: %d", len(m.AUserKey))
+	}
+
+	// Validate BUserKey (assert_max_size: 1024 bytes)
+	if len(m.BUserKey) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field BUserKey exceeds max size of 1024 bytes, got: %d", len(m.BUserKey))
+	}
+
+	// Validate CreatedAtMs (assert_ge: 0)
+	if m.CreatedAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CreatedAtMs must be >= 0, got: %v", m.CreatedAtMs)
+	}
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePendingApproval validates all fields in PendingApproval according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePendingApproval(m *PendingApproval) error {
+	return ValidatePendingApprovalWithDepth(m, 0)
+}
+
+// ValidatePendingApprovalWithDepth validates PendingApproval and carries nested-message depth across
+// generated package boundaries.
+func ValidatePendingApprovalWithDepth(m *PendingApproval, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate ApprovalId (assert_max_size: 128 bytes)
+	if len(m.ApprovalId) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ApprovalId exceeds max size of 128 bytes, got: %d", len(m.ApprovalId))
+	}
+
+	// Validate ApprovalId (assert_min_size: 1 bytes)
+	if len(m.ApprovalId) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ApprovalId below min size of 1 bytes, got: %d", len(m.ApprovalId))
+	}
+
+	// Validate ApprovalId (assert_required)
+	if m.ApprovalId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ApprovalId is required")
+	}
+
+	// Validate PersonUserKey (assert_max_size: 1024 bytes)
+	if len(m.PersonUserKey) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PersonUserKey exceeds max size of 1024 bytes, got: %d", len(m.PersonUserKey))
+	}
+
+	// Validate PersonUserKey (assert_required)
+	if m.PersonUserKey == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PersonUserKey is required")
+	}
+
+	// Validate RpcMethod (assert_max_size: 256 bytes)
+	if len(m.RpcMethod) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RpcMethod exceeds max size of 256 bytes, got: %d", len(m.RpcMethod))
+	}
+
+	// Validate RpcMethod (assert_min_size: 1 bytes)
+	if len(m.RpcMethod) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RpcMethod below min size of 1 bytes, got: %d", len(m.RpcMethod))
+	}
+
+	// Validate RpcMethod (assert_required)
+	if m.RpcMethod == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RpcMethod is required")
+	}
+
+	// Validate RequestHash (assert_max_size: 64 bytes)
+	if len(m.RequestHash) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RequestHash exceeds max size of 64 bytes, got: %d", len(m.RequestHash))
+	}
+
+	// Validate RequestHash (assert_required)
+	if len(m.RequestHash) == 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RequestHash is required")
+	}
+
+	// Validate CreatedAtMs (assert_ge: 0)
+	if m.CreatedAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CreatedAtMs must be >= 0, got: %v", m.CreatedAtMs)
+	}
+	// Validate ExpiresAtMs (assert_ge: 0)
+	if m.ExpiresAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ExpiresAtMs must be >= 0, got: %v", m.ExpiresAtMs)
+	}
+	// Validate ConsumedAtMs (assert_ge: 0)
+	if m.ConsumedAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ConsumedAtMs must be >= 0, got: %v", m.ConsumedAtMs)
+	}
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateCreatePendingApprovalRequest validates all fields in CreatePendingApprovalRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateCreatePendingApprovalRequest(m *CreatePendingApprovalRequest) error {
+	return ValidateCreatePendingApprovalRequestWithDepth(m, 0)
+}
+
+// ValidateCreatePendingApprovalRequestWithDepth validates CreatePendingApprovalRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateCreatePendingApprovalRequestWithDepth(m *CreatePendingApprovalRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate RpcMethod (assert_max_size: 256 bytes)
+	if len(m.RpcMethod) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RpcMethod exceeds max size of 256 bytes, got: %d", len(m.RpcMethod))
+	}
+
+	// Validate RpcMethod (assert_min_size: 1 bytes)
+	if len(m.RpcMethod) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RpcMethod below min size of 1 bytes, got: %d", len(m.RpcMethod))
+	}
+
+	// Validate RpcMethod (assert_required)
+	if m.RpcMethod == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RpcMethod is required")
+	}
+
+	// Validate RequestHash (assert_max_size: 64 bytes)
+	if len(m.RequestHash) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RequestHash exceeds max size of 64 bytes, got: %d", len(m.RequestHash))
+	}
+
+	// Validate RequestHash (assert_required)
+	if len(m.RequestHash) == 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RequestHash is required")
+	}
+
+	// Validate TtlSeconds (assert_ge: 0)
+	if m.TtlSeconds < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TtlSeconds must be >= 0, got: %v", m.TtlSeconds)
+	}
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateCreatePendingApprovalResponse validates all fields in CreatePendingApprovalResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateCreatePendingApprovalResponse(m *CreatePendingApprovalResponse) error {
+	return ValidateCreatePendingApprovalResponseWithDepth(m, 0)
+}
+
+// ValidateCreatePendingApprovalResponseWithDepth validates CreatePendingApprovalResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateCreatePendingApprovalResponseWithDepth(m *CreatePendingApprovalResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate ApprovalId (assert_max_size: 128 bytes)
+	if len(m.ApprovalId) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ApprovalId exceeds max size of 128 bytes, got: %d", len(m.ApprovalId))
+	}
+
+	// Validate ExpiresAtMs (assert_ge: 0)
+	if m.ExpiresAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ExpiresAtMs must be >= 0, got: %v", m.ExpiresAtMs)
+	}
+	// Validate Challenge (assert_max_size: 128 bytes)
+	if len(m.Challenge) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Challenge exceeds max size of 128 bytes, got: %d", len(m.Challenge))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateBrokerPendingApprovalRequest validates all fields in BrokerPendingApprovalRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateBrokerPendingApprovalRequest(m *BrokerPendingApprovalRequest) error {
+	return ValidateBrokerPendingApprovalRequestWithDepth(m, 0)
+}
+
+// ValidateBrokerPendingApprovalRequestWithDepth validates BrokerPendingApprovalRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateBrokerPendingApprovalRequestWithDepth(m *BrokerPendingApprovalRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate ApprovalId (assert_max_size: 128 bytes)
+	if len(m.ApprovalId) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ApprovalId exceeds max size of 128 bytes, got: %d", len(m.ApprovalId))
+	}
+
+	// Validate ApprovalId (assert_min_size: 1 bytes)
+	if len(m.ApprovalId) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ApprovalId below min size of 1 bytes, got: %d", len(m.ApprovalId))
+	}
+
+	// Validate ApprovalId (assert_required)
+	if m.ApprovalId == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ApprovalId is required")
+	}
+
+	// Validate RpcMethod (assert_max_size: 256 bytes)
+	if len(m.RpcMethod) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RpcMethod exceeds max size of 256 bytes, got: %d", len(m.RpcMethod))
+	}
+
+	// Validate RpcMethod (assert_min_size: 1 bytes)
+	if len(m.RpcMethod) < 1 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RpcMethod below min size of 1 bytes, got: %d", len(m.RpcMethod))
+	}
+
+	// Validate RpcMethod (assert_required)
+	if m.RpcMethod == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RpcMethod is required")
+	}
+
+	// Validate RequestHash (assert_max_size: 64 bytes)
+	if len(m.RequestHash) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RequestHash exceeds max size of 64 bytes, got: %d", len(m.RequestHash))
+	}
+
+	// Validate RequestHash (assert_required)
+	if len(m.RequestHash) == 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field RequestHash is required")
+	}
+
+	// Validate CallerNamespace (assert_max_size: 512 bytes)
+	if len(m.CallerNamespace) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CallerNamespace exceeds max size of 512 bytes, got: %d", len(m.CallerNamespace))
+	}
+
+	// Validate CallerNamespace (assert_required)
+	if m.CallerNamespace == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CallerNamespace is required")
+	}
+
+	// Validate CallerSubject (assert_max_size: 1024 bytes)
+	if len(m.CallerSubject) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CallerSubject exceeds max size of 1024 bytes, got: %d", len(m.CallerSubject))
+	}
+
+	// Validate CallerSubject (assert_required)
+	if m.CallerSubject == "" {
+		return protoerrors.NewErrMissingInvalidData(nil, "field CallerSubject is required")
+	}
+
+	// Validate DeviceAssertion (assert_required)
+	if m.DeviceAssertion == nil {
+		return protoerrors.NewErrMissingInvalidData(nil, "field DeviceAssertion is required")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate DeviceAssertion nested message
+	if m.DeviceAssertion != nil {
+		if err := ValidateWebauthnAssertionWithDepth(m.DeviceAssertion, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field DeviceAssertion validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidateBrokerPendingApprovalResponse validates all fields in BrokerPendingApprovalResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateBrokerPendingApprovalResponse(m *BrokerPendingApprovalResponse) error {
+	return ValidateBrokerPendingApprovalResponseWithDepth(m, 0)
+}
+
+// ValidateBrokerPendingApprovalResponseWithDepth validates BrokerPendingApprovalResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateBrokerPendingApprovalResponseWithDepth(m *BrokerPendingApprovalResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate ConsumedAtMs (assert_ge: 0)
+	if m.ConsumedAtMs < 0 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ConsumedAtMs must be >= 0, got: %v", m.ConsumedAtMs)
+	}
+	// Validate PersonUserKey (assert_max_size: 1024 bytes)
+	if len(m.PersonUserKey) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PersonUserKey exceeds max size of 1024 bytes, got: %d", len(m.PersonUserKey))
+	}
+
+	// Validate DeviceNamespace (assert_max_size: 512 bytes)
+	if len(m.DeviceNamespace) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field DeviceNamespace exceeds max size of 512 bytes, got: %d", len(m.DeviceNamespace))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
 // ValidateCa validates all fields in Ca according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateCa(m *Ca) error {
@@ -75076,6 +92439,11 @@ func ValidateGrantWithDepth(m *Grant, depth int) error {
 	if m.RevokedAtMs < 0 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field RevokedAtMs must be >= 0, got: %v", m.RevokedAtMs)
 	}
+	// Validate DelegateNamespace (assert_max_size: 512 bytes)
+	if len(m.DelegateNamespace) > 512 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field DelegateNamespace exceeds max size of 512 bytes, got: %d", len(m.DelegateNamespace))
+	}
+
 	// Validate Id (default max size: 32768 bytes)
 	if len(m.Id) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Id exceeds max size of 32768 bytes, got: %d", len(m.Id))
@@ -75151,9 +92519,9 @@ func ValidateKernelDiskStateWithDepth(m *KernelDiskState, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field SigningKeys exceeds max size of 8, got: %d", len(m.SigningKeys))
 	}
 
-	// Validate VerifyingKeys (assert_max_size: 32)
-	if len(m.VerifyingKeys) > 32 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field VerifyingKeys exceeds max size of 32, got: %d", len(m.VerifyingKeys))
+	// Validate VerifyingKeys (assert_max_size: 128)
+	if len(m.VerifyingKeys) > 128 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field VerifyingKeys exceeds max size of 128, got: %d", len(m.VerifyingKeys))
 	}
 
 	// Validate CaCerts (assert_max_size: 16)
@@ -75189,6 +92557,21 @@ func ValidateKernelDiskStateWithDepth(m *KernelDiskState, depth int) error {
 	// Validate Grants (assert_max_size: 4096)
 	if len(m.Grants) > 4096 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Grants exceeds max size of 4096, got: %d", len(m.Grants))
+	}
+
+	// Validate PersonalPrincipals (assert_max_size: 65536)
+	if len(m.PersonalPrincipals) > 65536 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field PersonalPrincipals exceeds max size of 65536, got: %d", len(m.PersonalPrincipals))
+	}
+
+	// Validate People (assert_max_size: 65536)
+	if len(m.People) > 65536 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field People exceeds max size of 65536, got: %d", len(m.People))
+	}
+
+	// Validate TenantUserLinks (assert_max_size: 65536)
+	if len(m.TenantUserLinks) > 65536 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TenantUserLinks exceeds max size of 65536, got: %d", len(m.TenantUserLinks))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -75256,6 +92639,27 @@ func ValidateKernelDiskStateWithDepth(m *KernelDiskState, depth int) error {
 	for i, val := range m.Grants {
 		if err := ValidateGrantWithDepth(val, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field Grants[%d] validation failed", i)
+		}
+	}
+
+	// Validate PersonalPrincipals nested messages
+	for i, val := range m.PersonalPrincipals {
+		if err := ValidatePersonalPrincipalWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field PersonalPrincipals[%d] validation failed", i)
+		}
+	}
+
+	// Validate People nested messages
+	for i, val := range m.People {
+		if err := ValidatePersonWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field People[%d] validation failed", i)
+		}
+	}
+
+	// Validate TenantUserLinks nested messages
+	for i, val := range m.TenantUserLinks {
+		if err := ValidateTenantUserLinksWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field TenantUserLinks[%d] validation failed", i)
 		}
 	}
 
@@ -82446,6 +99850,1454 @@ func ValidateRevocationsQueryResponseWithDepth(m *RevocationsQueryResponse, dept
 	return nil
 }
 
+// ValidatePersonalPrincipalsGetRequest validates all fields in PersonalPrincipalsGetRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePersonalPrincipalsGetRequest(m *PersonalPrincipalsGetRequest) error {
+	return ValidatePersonalPrincipalsGetRequestWithDepth(m, 0)
+}
+
+// ValidatePersonalPrincipalsGetRequestWithDepth validates PersonalPrincipalsGetRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePersonalPrincipalsGetRequestWithDepth(m *PersonalPrincipalsGetRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Key (default max size: 32768 bytes)
+	if len(m.Key) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key exceeds max size of 32768 bytes, got: %d", len(m.Key))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePersonalPrincipalsPutRequest validates all fields in PersonalPrincipalsPutRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePersonalPrincipalsPutRequest(m *PersonalPrincipalsPutRequest) error {
+	return ValidatePersonalPrincipalsPutRequestWithDepth(m, 0)
+}
+
+// ValidatePersonalPrincipalsPutRequestWithDepth validates PersonalPrincipalsPutRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePersonalPrincipalsPutRequestWithDepth(m *PersonalPrincipalsPutRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Key (default max size: 32768 bytes)
+	if len(m.Key) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key exceeds max size of 32768 bytes, got: %d", len(m.Key))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Value nested message
+	if m.Value != nil {
+		if err := ValidatePersonalPrincipalWithDepth(m.Value, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Value validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidatePersonalPrincipalsGetAllRequest validates all fields in PersonalPrincipalsGetAllRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePersonalPrincipalsGetAllRequest(m *PersonalPrincipalsGetAllRequest) error {
+	return ValidatePersonalPrincipalsGetAllRequestWithDepth(m, 0)
+}
+
+// ValidatePersonalPrincipalsGetAllRequestWithDepth validates PersonalPrincipalsGetAllRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePersonalPrincipalsGetAllRequestWithDepth(m *PersonalPrincipalsGetAllRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePersonalPrincipalsKeysRequest validates all fields in PersonalPrincipalsKeysRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePersonalPrincipalsKeysRequest(m *PersonalPrincipalsKeysRequest) error {
+	return ValidatePersonalPrincipalsKeysRequestWithDepth(m, 0)
+}
+
+// ValidatePersonalPrincipalsKeysRequestWithDepth validates PersonalPrincipalsKeysRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePersonalPrincipalsKeysRequestWithDepth(m *PersonalPrincipalsKeysRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePersonalPrincipalsSizeRequest validates all fields in PersonalPrincipalsSizeRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePersonalPrincipalsSizeRequest(m *PersonalPrincipalsSizeRequest) error {
+	return ValidatePersonalPrincipalsSizeRequestWithDepth(m, 0)
+}
+
+// ValidatePersonalPrincipalsSizeRequestWithDepth validates PersonalPrincipalsSizeRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePersonalPrincipalsSizeRequestWithDepth(m *PersonalPrincipalsSizeRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePersonalPrincipalsClearRequest validates all fields in PersonalPrincipalsClearRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePersonalPrincipalsClearRequest(m *PersonalPrincipalsClearRequest) error {
+	return ValidatePersonalPrincipalsClearRequestWithDepth(m, 0)
+}
+
+// ValidatePersonalPrincipalsClearRequestWithDepth validates PersonalPrincipalsClearRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePersonalPrincipalsClearRequestWithDepth(m *PersonalPrincipalsClearRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePersonalPrincipalsValueResponse validates all fields in PersonalPrincipalsValueResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePersonalPrincipalsValueResponse(m *PersonalPrincipalsValueResponse) error {
+	return ValidatePersonalPrincipalsValueResponseWithDepth(m, 0)
+}
+
+// ValidatePersonalPrincipalsValueResponseWithDepth validates PersonalPrincipalsValueResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidatePersonalPrincipalsValueResponseWithDepth(m *PersonalPrincipalsValueResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Value nested message
+	if m.Value != nil {
+		if err := ValidatePersonalPrincipalWithDepth(m.Value, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Value validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidatePersonalPrincipalsEntriesResponse validates all fields in PersonalPrincipalsEntriesResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePersonalPrincipalsEntriesResponse(m *PersonalPrincipalsEntriesResponse) error {
+	return ValidatePersonalPrincipalsEntriesResponseWithDepth(m, 0)
+}
+
+// ValidatePersonalPrincipalsEntriesResponseWithDepth validates PersonalPrincipalsEntriesResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidatePersonalPrincipalsEntriesResponseWithDepth(m *PersonalPrincipalsEntriesResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Entries (default max size: 1024 elements)
+	if len(m.Entries) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Entries exceeds max size of 1024 elements, got: %d", len(m.Entries))
+	}
+
+	// Validate Entries keys (default max size: 32768 bytes)
+	for key := range m.Entries {
+		if len(key) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field Entries key exceeds max size of 32768 bytes, got: %d", len(key))
+		}
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Entries message values
+	for key, val := range m.Entries {
+		if err := ValidatePersonalPrincipalWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Entries[%v] validation failed", key)
+		}
+	}
+
+	return nil
+}
+
+// ValidatePersonalPrincipalsKeysResponse validates all fields in PersonalPrincipalsKeysResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePersonalPrincipalsKeysResponse(m *PersonalPrincipalsKeysResponse) error {
+	return ValidatePersonalPrincipalsKeysResponseWithDepth(m, 0)
+}
+
+// ValidatePersonalPrincipalsKeysResponseWithDepth validates PersonalPrincipalsKeysResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidatePersonalPrincipalsKeysResponseWithDepth(m *PersonalPrincipalsKeysResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Keys (default max size: 1024 elements)
+	if len(m.Keys) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Keys exceeds max size of 1024 elements, got: %d", len(m.Keys))
+	}
+
+	// Validate Keys elements (default max size: 32768 bytes)
+	for i, val := range m.Keys {
+		if len(val) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field Keys[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
+		}
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePersonalPrincipalsSizeResponse validates all fields in PersonalPrincipalsSizeResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePersonalPrincipalsSizeResponse(m *PersonalPrincipalsSizeResponse) error {
+	return ValidatePersonalPrincipalsSizeResponseWithDepth(m, 0)
+}
+
+// ValidatePersonalPrincipalsSizeResponseWithDepth validates PersonalPrincipalsSizeResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidatePersonalPrincipalsSizeResponseWithDepth(m *PersonalPrincipalsSizeResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePersonalPrincipalsQueryRequest validates all fields in PersonalPrincipalsQueryRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePersonalPrincipalsQueryRequest(m *PersonalPrincipalsQueryRequest) error {
+	return ValidatePersonalPrincipalsQueryRequestWithDepth(m, 0)
+}
+
+// ValidatePersonalPrincipalsQueryRequestWithDepth validates PersonalPrincipalsQueryRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePersonalPrincipalsQueryRequestWithDepth(m *PersonalPrincipalsQueryRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Query nested message
+	if m.Query != nil {
+		if err := ValidateCollectionQueryWithDepth(m.Query, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Query validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidatePersonalPrincipalsQueryResponse validates all fields in PersonalPrincipalsQueryResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePersonalPrincipalsQueryResponse(m *PersonalPrincipalsQueryResponse) error {
+	return ValidatePersonalPrincipalsQueryResponseWithDepth(m, 0)
+}
+
+// ValidatePersonalPrincipalsQueryResponseWithDepth validates PersonalPrincipalsQueryResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidatePersonalPrincipalsQueryResponseWithDepth(m *PersonalPrincipalsQueryResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Results (default max size: 1024 elements)
+	if len(m.Results) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Results exceeds max size of 1024 elements, got: %d", len(m.Results))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Results nested messages
+	for i, val := range m.Results {
+		if err := ValidatePersonalPrincipalWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Results[%d] validation failed", i)
+		}
+	}
+
+	return nil
+}
+
+// ValidatePeopleGetRequest validates all fields in PeopleGetRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePeopleGetRequest(m *PeopleGetRequest) error {
+	return ValidatePeopleGetRequestWithDepth(m, 0)
+}
+
+// ValidatePeopleGetRequestWithDepth validates PeopleGetRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePeopleGetRequestWithDepth(m *PeopleGetRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Key (default max size: 32768 bytes)
+	if len(m.Key) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key exceeds max size of 32768 bytes, got: %d", len(m.Key))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePeoplePutRequest validates all fields in PeoplePutRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePeoplePutRequest(m *PeoplePutRequest) error {
+	return ValidatePeoplePutRequestWithDepth(m, 0)
+}
+
+// ValidatePeoplePutRequestWithDepth validates PeoplePutRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePeoplePutRequestWithDepth(m *PeoplePutRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Key (default max size: 32768 bytes)
+	if len(m.Key) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key exceeds max size of 32768 bytes, got: %d", len(m.Key))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Value nested message
+	if m.Value != nil {
+		if err := ValidatePersonWithDepth(m.Value, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Value validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidatePeopleGetAllRequest validates all fields in PeopleGetAllRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePeopleGetAllRequest(m *PeopleGetAllRequest) error {
+	return ValidatePeopleGetAllRequestWithDepth(m, 0)
+}
+
+// ValidatePeopleGetAllRequestWithDepth validates PeopleGetAllRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePeopleGetAllRequestWithDepth(m *PeopleGetAllRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePeopleKeysRequest validates all fields in PeopleKeysRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePeopleKeysRequest(m *PeopleKeysRequest) error {
+	return ValidatePeopleKeysRequestWithDepth(m, 0)
+}
+
+// ValidatePeopleKeysRequestWithDepth validates PeopleKeysRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePeopleKeysRequestWithDepth(m *PeopleKeysRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePeopleSizeRequest validates all fields in PeopleSizeRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePeopleSizeRequest(m *PeopleSizeRequest) error {
+	return ValidatePeopleSizeRequestWithDepth(m, 0)
+}
+
+// ValidatePeopleSizeRequestWithDepth validates PeopleSizeRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePeopleSizeRequestWithDepth(m *PeopleSizeRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePeopleClearRequest validates all fields in PeopleClearRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePeopleClearRequest(m *PeopleClearRequest) error {
+	return ValidatePeopleClearRequestWithDepth(m, 0)
+}
+
+// ValidatePeopleClearRequestWithDepth validates PeopleClearRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePeopleClearRequestWithDepth(m *PeopleClearRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePeopleValueResponse validates all fields in PeopleValueResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePeopleValueResponse(m *PeopleValueResponse) error {
+	return ValidatePeopleValueResponseWithDepth(m, 0)
+}
+
+// ValidatePeopleValueResponseWithDepth validates PeopleValueResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidatePeopleValueResponseWithDepth(m *PeopleValueResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Value nested message
+	if m.Value != nil {
+		if err := ValidatePersonWithDepth(m.Value, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Value validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidatePeopleEntriesResponse validates all fields in PeopleEntriesResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePeopleEntriesResponse(m *PeopleEntriesResponse) error {
+	return ValidatePeopleEntriesResponseWithDepth(m, 0)
+}
+
+// ValidatePeopleEntriesResponseWithDepth validates PeopleEntriesResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidatePeopleEntriesResponseWithDepth(m *PeopleEntriesResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Entries (default max size: 1024 elements)
+	if len(m.Entries) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Entries exceeds max size of 1024 elements, got: %d", len(m.Entries))
+	}
+
+	// Validate Entries keys (default max size: 32768 bytes)
+	for key := range m.Entries {
+		if len(key) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field Entries key exceeds max size of 32768 bytes, got: %d", len(key))
+		}
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Entries message values
+	for key, val := range m.Entries {
+		if err := ValidatePersonWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Entries[%v] validation failed", key)
+		}
+	}
+
+	return nil
+}
+
+// ValidatePeopleKeysResponse validates all fields in PeopleKeysResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePeopleKeysResponse(m *PeopleKeysResponse) error {
+	return ValidatePeopleKeysResponseWithDepth(m, 0)
+}
+
+// ValidatePeopleKeysResponseWithDepth validates PeopleKeysResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidatePeopleKeysResponseWithDepth(m *PeopleKeysResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Keys (default max size: 1024 elements)
+	if len(m.Keys) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Keys exceeds max size of 1024 elements, got: %d", len(m.Keys))
+	}
+
+	// Validate Keys elements (default max size: 32768 bytes)
+	for i, val := range m.Keys {
+		if len(val) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field Keys[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
+		}
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePeopleSizeResponse validates all fields in PeopleSizeResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePeopleSizeResponse(m *PeopleSizeResponse) error {
+	return ValidatePeopleSizeResponseWithDepth(m, 0)
+}
+
+// ValidatePeopleSizeResponseWithDepth validates PeopleSizeResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidatePeopleSizeResponseWithDepth(m *PeopleSizeResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePeopleQueryRequest validates all fields in PeopleQueryRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePeopleQueryRequest(m *PeopleQueryRequest) error {
+	return ValidatePeopleQueryRequestWithDepth(m, 0)
+}
+
+// ValidatePeopleQueryRequestWithDepth validates PeopleQueryRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePeopleQueryRequestWithDepth(m *PeopleQueryRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Query nested message
+	if m.Query != nil {
+		if err := ValidateCollectionQueryWithDepth(m.Query, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Query validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidatePeopleQueryResponse validates all fields in PeopleQueryResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePeopleQueryResponse(m *PeopleQueryResponse) error {
+	return ValidatePeopleQueryResponseWithDepth(m, 0)
+}
+
+// ValidatePeopleQueryResponseWithDepth validates PeopleQueryResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidatePeopleQueryResponseWithDepth(m *PeopleQueryResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Results (default max size: 1024 elements)
+	if len(m.Results) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Results exceeds max size of 1024 elements, got: %d", len(m.Results))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Results nested messages
+	for i, val := range m.Results {
+		if err := ValidatePersonWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Results[%d] validation failed", i)
+		}
+	}
+
+	return nil
+}
+
+// ValidateTenantUserLinksGetRequest validates all fields in TenantUserLinksGetRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateTenantUserLinksGetRequest(m *TenantUserLinksGetRequest) error {
+	return ValidateTenantUserLinksGetRequestWithDepth(m, 0)
+}
+
+// ValidateTenantUserLinksGetRequestWithDepth validates TenantUserLinksGetRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateTenantUserLinksGetRequestWithDepth(m *TenantUserLinksGetRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Key (default max size: 32768 bytes)
+	if len(m.Key) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key exceeds max size of 32768 bytes, got: %d", len(m.Key))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateTenantUserLinksPutRequest validates all fields in TenantUserLinksPutRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateTenantUserLinksPutRequest(m *TenantUserLinksPutRequest) error {
+	return ValidateTenantUserLinksPutRequestWithDepth(m, 0)
+}
+
+// ValidateTenantUserLinksPutRequestWithDepth validates TenantUserLinksPutRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateTenantUserLinksPutRequestWithDepth(m *TenantUserLinksPutRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Key (default max size: 32768 bytes)
+	if len(m.Key) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key exceeds max size of 32768 bytes, got: %d", len(m.Key))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Value nested message
+	if m.Value != nil {
+		if err := ValidateTenantUserLinksWithDepth(m.Value, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Value validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidateTenantUserLinksGetAllRequest validates all fields in TenantUserLinksGetAllRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateTenantUserLinksGetAllRequest(m *TenantUserLinksGetAllRequest) error {
+	return ValidateTenantUserLinksGetAllRequestWithDepth(m, 0)
+}
+
+// ValidateTenantUserLinksGetAllRequestWithDepth validates TenantUserLinksGetAllRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateTenantUserLinksGetAllRequestWithDepth(m *TenantUserLinksGetAllRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateTenantUserLinksKeysRequest validates all fields in TenantUserLinksKeysRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateTenantUserLinksKeysRequest(m *TenantUserLinksKeysRequest) error {
+	return ValidateTenantUserLinksKeysRequestWithDepth(m, 0)
+}
+
+// ValidateTenantUserLinksKeysRequestWithDepth validates TenantUserLinksKeysRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateTenantUserLinksKeysRequestWithDepth(m *TenantUserLinksKeysRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateTenantUserLinksSizeRequest validates all fields in TenantUserLinksSizeRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateTenantUserLinksSizeRequest(m *TenantUserLinksSizeRequest) error {
+	return ValidateTenantUserLinksSizeRequestWithDepth(m, 0)
+}
+
+// ValidateTenantUserLinksSizeRequestWithDepth validates TenantUserLinksSizeRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateTenantUserLinksSizeRequestWithDepth(m *TenantUserLinksSizeRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateTenantUserLinksClearRequest validates all fields in TenantUserLinksClearRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateTenantUserLinksClearRequest(m *TenantUserLinksClearRequest) error {
+	return ValidateTenantUserLinksClearRequestWithDepth(m, 0)
+}
+
+// ValidateTenantUserLinksClearRequestWithDepth validates TenantUserLinksClearRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateTenantUserLinksClearRequestWithDepth(m *TenantUserLinksClearRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateTenantUserLinksValueResponse validates all fields in TenantUserLinksValueResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateTenantUserLinksValueResponse(m *TenantUserLinksValueResponse) error {
+	return ValidateTenantUserLinksValueResponseWithDepth(m, 0)
+}
+
+// ValidateTenantUserLinksValueResponseWithDepth validates TenantUserLinksValueResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateTenantUserLinksValueResponseWithDepth(m *TenantUserLinksValueResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Value nested message
+	if m.Value != nil {
+		if err := ValidateTenantUserLinksWithDepth(m.Value, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Value validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidateTenantUserLinksEntriesResponse validates all fields in TenantUserLinksEntriesResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateTenantUserLinksEntriesResponse(m *TenantUserLinksEntriesResponse) error {
+	return ValidateTenantUserLinksEntriesResponseWithDepth(m, 0)
+}
+
+// ValidateTenantUserLinksEntriesResponseWithDepth validates TenantUserLinksEntriesResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateTenantUserLinksEntriesResponseWithDepth(m *TenantUserLinksEntriesResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Entries (default max size: 1024 elements)
+	if len(m.Entries) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Entries exceeds max size of 1024 elements, got: %d", len(m.Entries))
+	}
+
+	// Validate Entries keys (default max size: 32768 bytes)
+	for key := range m.Entries {
+		if len(key) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field Entries key exceeds max size of 32768 bytes, got: %d", len(key))
+		}
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Entries message values
+	for key, val := range m.Entries {
+		if err := ValidateTenantUserLinksWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Entries[%v] validation failed", key)
+		}
+	}
+
+	return nil
+}
+
+// ValidateTenantUserLinksKeysResponse validates all fields in TenantUserLinksKeysResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateTenantUserLinksKeysResponse(m *TenantUserLinksKeysResponse) error {
+	return ValidateTenantUserLinksKeysResponseWithDepth(m, 0)
+}
+
+// ValidateTenantUserLinksKeysResponseWithDepth validates TenantUserLinksKeysResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateTenantUserLinksKeysResponseWithDepth(m *TenantUserLinksKeysResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Keys (default max size: 1024 elements)
+	if len(m.Keys) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Keys exceeds max size of 1024 elements, got: %d", len(m.Keys))
+	}
+
+	// Validate Keys elements (default max size: 32768 bytes)
+	for i, val := range m.Keys {
+		if len(val) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field Keys[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
+		}
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateTenantUserLinksSizeResponse validates all fields in TenantUserLinksSizeResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateTenantUserLinksSizeResponse(m *TenantUserLinksSizeResponse) error {
+	return ValidateTenantUserLinksSizeResponseWithDepth(m, 0)
+}
+
+// ValidateTenantUserLinksSizeResponseWithDepth validates TenantUserLinksSizeResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateTenantUserLinksSizeResponseWithDepth(m *TenantUserLinksSizeResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidateTenantUserLinksQueryRequest validates all fields in TenantUserLinksQueryRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateTenantUserLinksQueryRequest(m *TenantUserLinksQueryRequest) error {
+	return ValidateTenantUserLinksQueryRequestWithDepth(m, 0)
+}
+
+// ValidateTenantUserLinksQueryRequestWithDepth validates TenantUserLinksQueryRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidateTenantUserLinksQueryRequestWithDepth(m *TenantUserLinksQueryRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Query nested message
+	if m.Query != nil {
+		if err := ValidateCollectionQueryWithDepth(m.Query, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Query validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidateTenantUserLinksQueryResponse validates all fields in TenantUserLinksQueryResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidateTenantUserLinksQueryResponse(m *TenantUserLinksQueryResponse) error {
+	return ValidateTenantUserLinksQueryResponseWithDepth(m, 0)
+}
+
+// ValidateTenantUserLinksQueryResponseWithDepth validates TenantUserLinksQueryResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidateTenantUserLinksQueryResponseWithDepth(m *TenantUserLinksQueryResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Results (default max size: 1024 elements)
+	if len(m.Results) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Results exceeds max size of 1024 elements, got: %d", len(m.Results))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Results nested messages
+	for i, val := range m.Results {
+		if err := ValidateTenantUserLinksWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Results[%d] validation failed", i)
+		}
+	}
+
+	return nil
+}
+
+// ValidatePendingApprovalsGetRequest validates all fields in PendingApprovalsGetRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePendingApprovalsGetRequest(m *PendingApprovalsGetRequest) error {
+	return ValidatePendingApprovalsGetRequestWithDepth(m, 0)
+}
+
+// ValidatePendingApprovalsGetRequestWithDepth validates PendingApprovalsGetRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePendingApprovalsGetRequestWithDepth(m *PendingApprovalsGetRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Key (default max size: 32768 bytes)
+	if len(m.Key) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key exceeds max size of 32768 bytes, got: %d", len(m.Key))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePendingApprovalsPutRequest validates all fields in PendingApprovalsPutRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePendingApprovalsPutRequest(m *PendingApprovalsPutRequest) error {
+	return ValidatePendingApprovalsPutRequestWithDepth(m, 0)
+}
+
+// ValidatePendingApprovalsPutRequestWithDepth validates PendingApprovalsPutRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePendingApprovalsPutRequestWithDepth(m *PendingApprovalsPutRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Key (default max size: 32768 bytes)
+	if len(m.Key) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Key exceeds max size of 32768 bytes, got: %d", len(m.Key))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Value nested message
+	if m.Value != nil {
+		if err := ValidatePendingApprovalWithDepth(m.Value, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Value validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidatePendingApprovalsGetAllRequest validates all fields in PendingApprovalsGetAllRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePendingApprovalsGetAllRequest(m *PendingApprovalsGetAllRequest) error {
+	return ValidatePendingApprovalsGetAllRequestWithDepth(m, 0)
+}
+
+// ValidatePendingApprovalsGetAllRequestWithDepth validates PendingApprovalsGetAllRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePendingApprovalsGetAllRequestWithDepth(m *PendingApprovalsGetAllRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePendingApprovalsKeysRequest validates all fields in PendingApprovalsKeysRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePendingApprovalsKeysRequest(m *PendingApprovalsKeysRequest) error {
+	return ValidatePendingApprovalsKeysRequestWithDepth(m, 0)
+}
+
+// ValidatePendingApprovalsKeysRequestWithDepth validates PendingApprovalsKeysRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePendingApprovalsKeysRequestWithDepth(m *PendingApprovalsKeysRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePendingApprovalsSizeRequest validates all fields in PendingApprovalsSizeRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePendingApprovalsSizeRequest(m *PendingApprovalsSizeRequest) error {
+	return ValidatePendingApprovalsSizeRequestWithDepth(m, 0)
+}
+
+// ValidatePendingApprovalsSizeRequestWithDepth validates PendingApprovalsSizeRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePendingApprovalsSizeRequestWithDepth(m *PendingApprovalsSizeRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePendingApprovalsClearRequest validates all fields in PendingApprovalsClearRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePendingApprovalsClearRequest(m *PendingApprovalsClearRequest) error {
+	return ValidatePendingApprovalsClearRequestWithDepth(m, 0)
+}
+
+// ValidatePendingApprovalsClearRequestWithDepth validates PendingApprovalsClearRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePendingApprovalsClearRequestWithDepth(m *PendingApprovalsClearRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePendingApprovalsValueResponse validates all fields in PendingApprovalsValueResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePendingApprovalsValueResponse(m *PendingApprovalsValueResponse) error {
+	return ValidatePendingApprovalsValueResponseWithDepth(m, 0)
+}
+
+// ValidatePendingApprovalsValueResponseWithDepth validates PendingApprovalsValueResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidatePendingApprovalsValueResponseWithDepth(m *PendingApprovalsValueResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Value nested message
+	if m.Value != nil {
+		if err := ValidatePendingApprovalWithDepth(m.Value, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Value validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidatePendingApprovalsEntriesResponse validates all fields in PendingApprovalsEntriesResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePendingApprovalsEntriesResponse(m *PendingApprovalsEntriesResponse) error {
+	return ValidatePendingApprovalsEntriesResponseWithDepth(m, 0)
+}
+
+// ValidatePendingApprovalsEntriesResponseWithDepth validates PendingApprovalsEntriesResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidatePendingApprovalsEntriesResponseWithDepth(m *PendingApprovalsEntriesResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Entries (default max size: 1024 elements)
+	if len(m.Entries) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Entries exceeds max size of 1024 elements, got: %d", len(m.Entries))
+	}
+
+	// Validate Entries keys (default max size: 32768 bytes)
+	for key := range m.Entries {
+		if len(key) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field Entries key exceeds max size of 32768 bytes, got: %d", len(key))
+		}
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Entries message values
+	for key, val := range m.Entries {
+		if err := ValidatePendingApprovalWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Entries[%v] validation failed", key)
+		}
+	}
+
+	return nil
+}
+
+// ValidatePendingApprovalsKeysResponse validates all fields in PendingApprovalsKeysResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePendingApprovalsKeysResponse(m *PendingApprovalsKeysResponse) error {
+	return ValidatePendingApprovalsKeysResponseWithDepth(m, 0)
+}
+
+// ValidatePendingApprovalsKeysResponseWithDepth validates PendingApprovalsKeysResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidatePendingApprovalsKeysResponseWithDepth(m *PendingApprovalsKeysResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Keys (default max size: 1024 elements)
+	if len(m.Keys) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Keys exceeds max size of 1024 elements, got: %d", len(m.Keys))
+	}
+
+	// Validate Keys elements (default max size: 32768 bytes)
+	for i, val := range m.Keys {
+		if len(val) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field Keys[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
+		}
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePendingApprovalsSizeResponse validates all fields in PendingApprovalsSizeResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePendingApprovalsSizeResponse(m *PendingApprovalsSizeResponse) error {
+	return ValidatePendingApprovalsSizeResponseWithDepth(m, 0)
+}
+
+// ValidatePendingApprovalsSizeResponseWithDepth validates PendingApprovalsSizeResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidatePendingApprovalsSizeResponseWithDepth(m *PendingApprovalsSizeResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	return nil
+}
+
+// ValidatePendingApprovalsQueryRequest validates all fields in PendingApprovalsQueryRequest according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePendingApprovalsQueryRequest(m *PendingApprovalsQueryRequest) error {
+	return ValidatePendingApprovalsQueryRequestWithDepth(m, 0)
+}
+
+// ValidatePendingApprovalsQueryRequestWithDepth validates PendingApprovalsQueryRequest and carries nested-message depth across
+// generated package boundaries.
+func ValidatePendingApprovalsQueryRequestWithDepth(m *PendingApprovalsQueryRequest, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Query nested message
+	if m.Query != nil {
+		if err := ValidateCollectionQueryWithDepth(m.Query, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Query validation failed")
+		}
+	}
+
+	return nil
+}
+
+// ValidatePendingApprovalsQueryResponse validates all fields in PendingApprovalsQueryResponse according to their annotations.
+// Returns a BlueErr if validation fails, or nil if all validations pass.
+func ValidatePendingApprovalsQueryResponse(m *PendingApprovalsQueryResponse) error {
+	return ValidatePendingApprovalsQueryResponseWithDepth(m, 0)
+}
+
+// ValidatePendingApprovalsQueryResponseWithDepth validates PendingApprovalsQueryResponse and carries nested-message depth across
+// generated package boundaries.
+func ValidatePendingApprovalsQueryResponseWithDepth(m *PendingApprovalsQueryResponse, depth int) error {
+	if m == nil {
+		return nil
+	}
+	if depth > 24 {
+		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Results (default max size: 1024 elements)
+	if len(m.Results) > 1024 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Results exceeds max size of 1024 elements, got: %d", len(m.Results))
+	}
+
+	// Validate TraceId (default max size: 32768 bytes)
+	if len(m.TraceId) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
+	}
+
+	// Validate Results nested messages
+	for i, val := range m.Results {
+		if err := ValidatePendingApprovalWithDepth(val, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field Results[%d] validation failed", i)
+		}
+	}
+
+	return nil
+}
+
 // ValidateCaCertsGetRequest validates all fields in CaCertsGetRequest according to their annotations.
 // Returns a BlueErr if validation fails, or nil if all validations pass.
 func ValidateCaCertsGetRequest(m *CaCertsGetRequest) error {
@@ -84289,7 +103141,7 @@ const (
 	MinDataCopies                      int64  = 3
 	DefaultListenerPort                int64  = 5000
 	DefaultPartitionCount              int64  = 271
-	DefaultPersistenceDir              string = "data/kernel"
+	DefaultDiskDir                     string = "data/kernel"
 	DefaultHazelcastListenerPort       int64  = 5001
 	DefaultKeyRotationIntervalSeconds  int64  = 86400
 	DefaultDefaultTokenExpirySeconds   int64  = 3600
@@ -84310,7 +103162,7 @@ const (
 const (
 	MaxSizeConfigClusterName                                       int = 32768
 	MaxSizeConfigMembers                                           int = 32
-	MaxSizeConfigPersistenceDir                                    int = 32768
+	MaxSizeConfigDiskDir                                           int = 32768
 	MaxSizeConfigClusterCa                                         int = 16
 	MaxSizeConfigTrustedCas                                        int = 16
 	MaxSizeConfigDelegates                                         int = 128
@@ -84320,8 +103172,9 @@ const (
 	MaxSizeConfigSpiffeTrustDomain                                 int = 256
 	MaxSizeConfigLocationPath                                      int = 256
 	MaxSizeConfigGrants                                            int = 4096
+	MaxSizeConfigPeopleIdpCredentials                              int = 2
 	MaxSizeConfigTraceId                                           int = 32768
-	MaxSizeIdentityVerifyingKeys                                   int = 16
+	MaxSizeIdentityVerifyingKeys                                   int = 128
 	MaxSizeIdentityTraceId                                         int = 32768
 	MaxSizeIdentityfqdnFqdn                                        int = 32768
 	MaxSizeIdentityfqdnTraceId                                     int = 32768
@@ -84356,10 +103209,12 @@ const (
 	MaxSizeKubernetesserviceaccountmatcherKubernetesServiceAccount int = 32768
 	MaxSizeKubernetesserviceaccountmatcherTraceId                  int = 32768
 	MaxSizeDelegateName                                            int = 32768
+	MaxSizeDelegateTenantNamespace                                 int = 512
 	MaxSizeDelegateCloudIdentities                                 int = 8
 	MaxSizeDelegateKubernetesServiceAccounts                       int = 8
 	MaxSizeDelegateAuthorizedServices                              int = 64
 	MaxSizeDelegateCustomClaims                                    int = 20
+	MaxSizeDelegateAuthBrokerKinds                                 int = 8
 	MaxSizeDelegateTraceId                                         int = 32768
 	MaxSizeClusterNodeMetrics                                      int = 32
 	MaxSizeClusterGrpcStats                                        int = 32
@@ -84393,6 +103248,78 @@ const (
 	MaxSizeWorkloadstateLocalities                                 int = 1024
 	MaxSizeWorkloadstateRevocations                                int = 4096
 	MaxSizeWorkloadstateTraceId                                    int = 32768
+	MaxSizePeopleidpcredentialClientId                             int = 32768
+	MaxSizePeopleidpcredentialClientSecret                         int = 32768
+	MaxSizePeopleidpcredentialTraceId                              int = 32768
+	MaxSizePersonUserId                                            int = 128
+	MaxSizePersonProviderSubject                                   int = 128
+	MaxSizePersonTraceId                                           int = 32768
+	MaxSizePersonalcredentialCredentialId                          int = 128
+	MaxSizePersonalcredentialLabel                                 int = 128
+	MaxSizePersonalcredentialTraceId                               int = 32768
+	MaxSizeTenantmembershipTenantNamespace                         int = 512
+	MaxSizeTenantmembershipProofReference                          int = 512
+	MaxSizeTenantmembershipTraceId                                 int = 32768
+	MaxSizePersonalprincipalPrincipalId                            int = 128
+	MaxSizePersonalprincipalCredentials                            int = 16
+	MaxSizePersonalprincipalMemberships                            int = 64
+	MaxSizePersonalprincipalTraceId                                int = 32768
+	MaxSizeTenantuserlinkPeerNamespace                             int = 512
+	MaxSizeTenantuserlinkPeerSubject                               int = 1024
+	MaxSizeTenantuserlinkTraceId                                   int = 32768
+	MaxSizeTenantuserlinksUserKey                                  int = 1024
+	MaxSizeTenantuserlinksLinks                                    int = 64
+	MaxSizeTenantuserlinksTraceId                                  int = 32768
+	MaxSizePrincipalstatePersonalPrincipals                        int = 65536
+	MaxSizePrincipalstatePeople                                    int = 65536
+	MaxSizePrincipalstateTenantUserLinks                           int = 65536
+	MaxSizePrincipalstatePendingApprovals                          int = 65536
+	MaxSizePrincipalstateTraceId                                   int = 32768
+	MaxSizeRevoketenantuserlinkrequestPeerNamespace                int = 512
+	MaxSizeRevoketenantuserlinkrequestPeerSubject                  int = 1024
+	MaxSizeRevoketenantuserlinkrequestTraceId                      int = 32768
+	MaxSizeRevoketenantuserlinkresponseTraceId                     int = 32768
+	MaxSizeGetmyidentityrequestTraceId                             int = 32768
+	MaxSizeGetmyidentityresponsePrincipalId                        int = 128
+	MaxSizeGetmyidentityresponseMemberships                        int = 64
+	MaxSizeGetmyidentityresponseTraceId                            int = 32768
+	MaxSizeCreatepersonalprincipalrequestProofToken                int = 8192
+	MaxSizeCreatepersonalprincipalrequestLabel                     int = 128
+	MaxSizeCreatepersonalprincipalrequestTraceId                   int = 32768
+	MaxSizeCreatepersonalprincipalresponsePrincipalId              int = 128
+	MaxSizeCreatepersonalprincipalresponseTraceId                  int = 32768
+	MaxSizeWebauthnassertionCredentialId                           int = 1024
+	MaxSizeWebauthnassertionAuthenticatorData                      int = 2048
+	MaxSizeWebauthnassertionClientDataJson                         int = 4096
+	MaxSizeWebauthnassertionSignature                              int = 2048
+	MaxSizeWebauthnassertionTraceId                                int = 32768
+	MaxSizeTenantuserlinksideSubject                               int = 1024
+	MaxSizeTenantuserlinksideDeviceLabel                           int = 128
+	MaxSizeTenantuserlinksideTraceId                               int = 32768
+	MaxSizeCreatetenantuserlinkrequestTraceId                      int = 128
+	MaxSizeCreatetenantuserlinkresponseAUserKey                    int = 1024
+	MaxSizeCreatetenantuserlinkresponseBUserKey                    int = 1024
+	MaxSizeCreatetenantuserlinkresponseTraceId                     int = 32768
+	MaxSizePendingapprovalApprovalId                               int = 128
+	MaxSizePendingapprovalPersonUserKey                            int = 1024
+	MaxSizePendingapprovalRpcMethod                                int = 256
+	MaxSizePendingapprovalRequestHash                              int = 64
+	MaxSizePendingapprovalTraceId                                  int = 32768
+	MaxSizeCreatependingapprovalrequestRpcMethod                   int = 256
+	MaxSizeCreatependingapprovalrequestRequestHash                 int = 64
+	MaxSizeCreatependingapprovalrequestTraceId                     int = 32768
+	MaxSizeCreatependingapprovalresponseApprovalId                 int = 128
+	MaxSizeCreatependingapprovalresponseChallenge                  int = 128
+	MaxSizeCreatependingapprovalresponseTraceId                    int = 32768
+	MaxSizeBrokerpendingapprovalrequestApprovalId                  int = 128
+	MaxSizeBrokerpendingapprovalrequestRpcMethod                   int = 256
+	MaxSizeBrokerpendingapprovalrequestRequestHash                 int = 64
+	MaxSizeBrokerpendingapprovalrequestCallerNamespace             int = 512
+	MaxSizeBrokerpendingapprovalrequestCallerSubject               int = 1024
+	MaxSizeBrokerpendingapprovalrequestTraceId                     int = 32768
+	MaxSizeBrokerpendingapprovalresponsePersonUserKey              int = 1024
+	MaxSizeBrokerpendingapprovalresponseDeviceNamespace            int = 512
+	MaxSizeBrokerpendingapprovalresponseTraceId                    int = 32768
 	MaxSizeCaCaCerts                                               int = 16
 	MaxSizeCaServiceCas                                            int = 64
 	MaxSizeCaTraceId                                               int = 32768
@@ -84411,11 +103338,12 @@ const (
 	MaxSizeGrantId                                                 int = 32768
 	MaxSizeGrantDelegateName                                       int = 512
 	MaxSizeGrantSubject                                            int = 512
+	MaxSizeGrantDelegateNamespace                                  int = 512
 	MaxSizeGrantTraceId                                            int = 32768
 	MaxSizeGrantrevokerequestGrantId                               int = 512
 	MaxSizeGrantrevokerequestTraceId                               int = 32768
 	MaxSizeKerneldiskstateSigningKeys                              int = 8
-	MaxSizeKerneldiskstateVerifyingKeys                            int = 32
+	MaxSizeKerneldiskstateVerifyingKeys                            int = 128
 	MaxSizeKerneldiskstateCaCerts                                  int = 16
 	MaxSizeKerneldiskstateServiceCas                               int = 64
 	MaxSizeKerneldiskstateTenants                                  int = 4096
@@ -84423,6 +103351,9 @@ const (
 	MaxSizeKerneldiskstateProjectConfigs                           int = 4096
 	MaxSizeKerneldiskstateWorkloadRevocations                      int = 4096
 	MaxSizeKerneldiskstateGrants                                   int = 4096
+	MaxSizeKerneldiskstatePersonalPrincipals                       int = 65536
+	MaxSizeKerneldiskstatePeople                                   int = 65536
+	MaxSizeKerneldiskstateTenantUserLinks                          int = 65536
 	MaxSizeKerneldiskstateTraceId                                  int = 32768
 	MaxSizeCreatetenantrequestTenantNamespace                      int = 256
 	MaxSizeCreatetenantrequestTraceId                              int = 32768
@@ -84769,6 +103700,74 @@ const (
 	MaxSizeRevocationsqueryrequestTraceId                          int = 32768
 	MaxSizeRevocationsqueryresponseResults                         int = 1024
 	MaxSizeRevocationsqueryresponseTraceId                         int = 32768
+	MaxSizePersonalprincipalsgetrequestKey                         int = 32768
+	MaxSizePersonalprincipalsgetrequestTraceId                     int = 32768
+	MaxSizePersonalprincipalsputrequestKey                         int = 32768
+	MaxSizePersonalprincipalsputrequestTraceId                     int = 32768
+	MaxSizePersonalprincipalsgetallrequestTraceId                  int = 32768
+	MaxSizePersonalprincipalskeysrequestTraceId                    int = 32768
+	MaxSizePersonalprincipalssizerequestTraceId                    int = 32768
+	MaxSizePersonalprincipalsclearrequestTraceId                   int = 32768
+	MaxSizePersonalprincipalsvalueresponseTraceId                  int = 32768
+	MaxSizePersonalprincipalsentriesresponseEntries                int = 1024
+	MaxSizePersonalprincipalsentriesresponseTraceId                int = 32768
+	MaxSizePersonalprincipalskeysresponseKeys                      int = 1024
+	MaxSizePersonalprincipalskeysresponseTraceId                   int = 32768
+	MaxSizePersonalprincipalssizeresponseTraceId                   int = 32768
+	MaxSizePersonalprincipalsqueryrequestTraceId                   int = 32768
+	MaxSizePersonalprincipalsqueryresponseResults                  int = 1024
+	MaxSizePersonalprincipalsqueryresponseTraceId                  int = 32768
+	MaxSizePeoplegetrequestKey                                     int = 32768
+	MaxSizePeoplegetrequestTraceId                                 int = 32768
+	MaxSizePeopleputrequestKey                                     int = 32768
+	MaxSizePeopleputrequestTraceId                                 int = 32768
+	MaxSizePeoplegetallrequestTraceId                              int = 32768
+	MaxSizePeoplekeysrequestTraceId                                int = 32768
+	MaxSizePeoplesizerequestTraceId                                int = 32768
+	MaxSizePeopleclearrequestTraceId                               int = 32768
+	MaxSizePeoplevalueresponseTraceId                              int = 32768
+	MaxSizePeopleentriesresponseEntries                            int = 1024
+	MaxSizePeopleentriesresponseTraceId                            int = 32768
+	MaxSizePeoplekeysresponseKeys                                  int = 1024
+	MaxSizePeoplekeysresponseTraceId                               int = 32768
+	MaxSizePeoplesizeresponseTraceId                               int = 32768
+	MaxSizePeoplequeryrequestTraceId                               int = 32768
+	MaxSizePeoplequeryresponseResults                              int = 1024
+	MaxSizePeoplequeryresponseTraceId                              int = 32768
+	MaxSizeTenantuserlinksgetrequestKey                            int = 32768
+	MaxSizeTenantuserlinksgetrequestTraceId                        int = 32768
+	MaxSizeTenantuserlinksputrequestKey                            int = 32768
+	MaxSizeTenantuserlinksputrequestTraceId                        int = 32768
+	MaxSizeTenantuserlinksgetallrequestTraceId                     int = 32768
+	MaxSizeTenantuserlinkskeysrequestTraceId                       int = 32768
+	MaxSizeTenantuserlinkssizerequestTraceId                       int = 32768
+	MaxSizeTenantuserlinksclearrequestTraceId                      int = 32768
+	MaxSizeTenantuserlinksvalueresponseTraceId                     int = 32768
+	MaxSizeTenantuserlinksentriesresponseEntries                   int = 1024
+	MaxSizeTenantuserlinksentriesresponseTraceId                   int = 32768
+	MaxSizeTenantuserlinkskeysresponseKeys                         int = 1024
+	MaxSizeTenantuserlinkskeysresponseTraceId                      int = 32768
+	MaxSizeTenantuserlinkssizeresponseTraceId                      int = 32768
+	MaxSizeTenantuserlinksqueryrequestTraceId                      int = 32768
+	MaxSizeTenantuserlinksqueryresponseResults                     int = 1024
+	MaxSizeTenantuserlinksqueryresponseTraceId                     int = 32768
+	MaxSizePendingapprovalsgetrequestKey                           int = 32768
+	MaxSizePendingapprovalsgetrequestTraceId                       int = 32768
+	MaxSizePendingapprovalsputrequestKey                           int = 32768
+	MaxSizePendingapprovalsputrequestTraceId                       int = 32768
+	MaxSizePendingapprovalsgetallrequestTraceId                    int = 32768
+	MaxSizePendingapprovalskeysrequestTraceId                      int = 32768
+	MaxSizePendingapprovalssizerequestTraceId                      int = 32768
+	MaxSizePendingapprovalsclearrequestTraceId                     int = 32768
+	MaxSizePendingapprovalsvalueresponseTraceId                    int = 32768
+	MaxSizePendingapprovalsentriesresponseEntries                  int = 1024
+	MaxSizePendingapprovalsentriesresponseTraceId                  int = 32768
+	MaxSizePendingapprovalskeysresponseKeys                        int = 1024
+	MaxSizePendingapprovalskeysresponseTraceId                     int = 32768
+	MaxSizePendingapprovalssizeresponseTraceId                     int = 32768
+	MaxSizePendingapprovalsqueryrequestTraceId                     int = 32768
+	MaxSizePendingapprovalsqueryresponseResults                    int = 1024
+	MaxSizePendingapprovalsqueryresponseTraceId                    int = 32768
 	MaxSizeCacertsgetrequestKey                                    int = 32768
 	MaxSizeCacertsgetrequestTraceId                                int = 32768
 	MaxSizeCacertsputrequestKey                                    int = 32768
@@ -84868,8 +103867,8 @@ func ConfigDefaults(v *Config) {
 	if v.PartitionCount == 0 {
 		v.PartitionCount = int32(DefaultPartitionCount)
 	}
-	if v.PersistenceDir == "" {
-		v.PersistenceDir = DefaultPersistenceDir
+	if v.DiskDir == "" {
+		v.DiskDir = DefaultDiskDir
 	}
 	if v.KeyRotationIntervalSeconds == 0 {
 		v.KeyRotationIntervalSeconds = DefaultKeyRotationIntervalSeconds
@@ -85180,6 +104179,245 @@ func WorkloadRevocationDefaults(v *WorkloadRevocation) {
 // ============================================================
 // WorkloadStateDefaults applies field-level default values to zero-valued fields.
 func WorkloadStateDefaults(v *WorkloadState) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PeopleIdpCredential
+// ============================================================
+// PeopleIdpCredentialDefaults applies field-level default values to zero-valued fields.
+func PeopleIdpCredentialDefaults(v *PeopleIdpCredential) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: Person
+// ============================================================
+// PersonDefaults applies field-level default values to zero-valued fields.
+func PersonDefaults(v *Person) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PersonalCredential
+// ============================================================
+// PersonalCredentialDefaults applies field-level default values to zero-valued fields.
+func PersonalCredentialDefaults(v *PersonalCredential) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: TenantMembership
+// ============================================================
+// TenantMembershipDefaults applies field-level default values to zero-valued fields.
+func TenantMembershipDefaults(v *TenantMembership) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PersonalPrincipal
+// ============================================================
+// PersonalPrincipalDefaults applies field-level default values to zero-valued fields.
+func PersonalPrincipalDefaults(v *PersonalPrincipal) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: TenantUserLink
+// ============================================================
+// TenantUserLinkDefaults applies field-level default values to zero-valued fields.
+func TenantUserLinkDefaults(v *TenantUserLink) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: TenantUserLinks
+// ============================================================
+// TenantUserLinksDefaults applies field-level default values to zero-valued fields.
+func TenantUserLinksDefaults(v *TenantUserLinks) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PrincipalState
+// ============================================================
+// PrincipalStateDefaults applies field-level default values to zero-valued fields.
+func PrincipalStateDefaults(v *PrincipalState) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: RevokeTenantUserLinkRequest
+// ============================================================
+// RevokeTenantUserLinkRequestDefaults applies field-level default values to zero-valued fields.
+func RevokeTenantUserLinkRequestDefaults(v *RevokeTenantUserLinkRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: RevokeTenantUserLinkResponse
+// ============================================================
+// RevokeTenantUserLinkResponseDefaults applies field-level default values to zero-valued fields.
+func RevokeTenantUserLinkResponseDefaults(v *RevokeTenantUserLinkResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: GetMyIdentityRequest
+// ============================================================
+// GetMyIdentityRequestDefaults applies field-level default values to zero-valued fields.
+func GetMyIdentityRequestDefaults(v *GetMyIdentityRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: GetMyIdentityResponse
+// ============================================================
+// GetMyIdentityResponseDefaults applies field-level default values to zero-valued fields.
+func GetMyIdentityResponseDefaults(v *GetMyIdentityResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: CreatePersonalPrincipalRequest
+// ============================================================
+// CreatePersonalPrincipalRequestDefaults applies field-level default values to zero-valued fields.
+func CreatePersonalPrincipalRequestDefaults(v *CreatePersonalPrincipalRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: CreatePersonalPrincipalResponse
+// ============================================================
+// CreatePersonalPrincipalResponseDefaults applies field-level default values to zero-valued fields.
+func CreatePersonalPrincipalResponseDefaults(v *CreatePersonalPrincipalResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: WebauthnAssertion
+// ============================================================
+// WebauthnAssertionDefaults applies field-level default values to zero-valued fields.
+func WebauthnAssertionDefaults(v *WebauthnAssertion) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: TenantUserLinkSide
+// ============================================================
+// TenantUserLinkSideDefaults applies field-level default values to zero-valued fields.
+func TenantUserLinkSideDefaults(v *TenantUserLinkSide) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: CreateTenantUserLinkRequest
+// ============================================================
+// CreateTenantUserLinkRequestDefaults applies field-level default values to zero-valued fields.
+func CreateTenantUserLinkRequestDefaults(v *CreateTenantUserLinkRequest) {
+	if v == nil {
+		return
+	}
+	if v.A == nil {
+		v.A = &TenantUserLinkSide{}
+	}
+	if v.B == nil {
+		v.B = &TenantUserLinkSide{}
+	}
+}
+
+// ============================================================
+// TypeDefaults: CreateTenantUserLinkResponse
+// ============================================================
+// CreateTenantUserLinkResponseDefaults applies field-level default values to zero-valued fields.
+func CreateTenantUserLinkResponseDefaults(v *CreateTenantUserLinkResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PendingApproval
+// ============================================================
+// PendingApprovalDefaults applies field-level default values to zero-valued fields.
+func PendingApprovalDefaults(v *PendingApproval) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: CreatePendingApprovalRequest
+// ============================================================
+// CreatePendingApprovalRequestDefaults applies field-level default values to zero-valued fields.
+func CreatePendingApprovalRequestDefaults(v *CreatePendingApprovalRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: CreatePendingApprovalResponse
+// ============================================================
+// CreatePendingApprovalResponseDefaults applies field-level default values to zero-valued fields.
+func CreatePendingApprovalResponseDefaults(v *CreatePendingApprovalResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: BrokerPendingApprovalRequest
+// ============================================================
+// BrokerPendingApprovalRequestDefaults applies field-level default values to zero-valued fields.
+func BrokerPendingApprovalRequestDefaults(v *BrokerPendingApprovalRequest) {
+	if v == nil {
+		return
+	}
+	if v.DeviceAssertion == nil {
+		v.DeviceAssertion = &WebauthnAssertion{}
+	}
+}
+
+// ============================================================
+// TypeDefaults: BrokerPendingApprovalResponse
+// ============================================================
+// BrokerPendingApprovalResponseDefaults applies field-level default values to zero-valued fields.
+func BrokerPendingApprovalResponseDefaults(v *BrokerPendingApprovalResponse) {
 	if v == nil {
 		return
 	}
@@ -87619,6 +106857,486 @@ func RevocationsQueryResponseDefaults(v *RevocationsQueryResponse) {
 }
 
 // ============================================================
+// TypeDefaults: PersonalPrincipalsGetRequest
+// ============================================================
+// PersonalPrincipalsGetRequestDefaults applies field-level default values to zero-valued fields.
+func PersonalPrincipalsGetRequestDefaults(v *PersonalPrincipalsGetRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PersonalPrincipalsPutRequest
+// ============================================================
+// PersonalPrincipalsPutRequestDefaults applies field-level default values to zero-valued fields.
+func PersonalPrincipalsPutRequestDefaults(v *PersonalPrincipalsPutRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PersonalPrincipalsGetAllRequest
+// ============================================================
+// PersonalPrincipalsGetAllRequestDefaults applies field-level default values to zero-valued fields.
+func PersonalPrincipalsGetAllRequestDefaults(v *PersonalPrincipalsGetAllRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PersonalPrincipalsKeysRequest
+// ============================================================
+// PersonalPrincipalsKeysRequestDefaults applies field-level default values to zero-valued fields.
+func PersonalPrincipalsKeysRequestDefaults(v *PersonalPrincipalsKeysRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PersonalPrincipalsSizeRequest
+// ============================================================
+// PersonalPrincipalsSizeRequestDefaults applies field-level default values to zero-valued fields.
+func PersonalPrincipalsSizeRequestDefaults(v *PersonalPrincipalsSizeRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PersonalPrincipalsClearRequest
+// ============================================================
+// PersonalPrincipalsClearRequestDefaults applies field-level default values to zero-valued fields.
+func PersonalPrincipalsClearRequestDefaults(v *PersonalPrincipalsClearRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PersonalPrincipalsValueResponse
+// ============================================================
+// PersonalPrincipalsValueResponseDefaults applies field-level default values to zero-valued fields.
+func PersonalPrincipalsValueResponseDefaults(v *PersonalPrincipalsValueResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PersonalPrincipalsEntriesResponse
+// ============================================================
+// PersonalPrincipalsEntriesResponseDefaults applies field-level default values to zero-valued fields.
+func PersonalPrincipalsEntriesResponseDefaults(v *PersonalPrincipalsEntriesResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PersonalPrincipalsKeysResponse
+// ============================================================
+// PersonalPrincipalsKeysResponseDefaults applies field-level default values to zero-valued fields.
+func PersonalPrincipalsKeysResponseDefaults(v *PersonalPrincipalsKeysResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PersonalPrincipalsSizeResponse
+// ============================================================
+// PersonalPrincipalsSizeResponseDefaults applies field-level default values to zero-valued fields.
+func PersonalPrincipalsSizeResponseDefaults(v *PersonalPrincipalsSizeResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PersonalPrincipalsQueryRequest
+// ============================================================
+// PersonalPrincipalsQueryRequestDefaults applies field-level default values to zero-valued fields.
+func PersonalPrincipalsQueryRequestDefaults(v *PersonalPrincipalsQueryRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PersonalPrincipalsQueryResponse
+// ============================================================
+// PersonalPrincipalsQueryResponseDefaults applies field-level default values to zero-valued fields.
+func PersonalPrincipalsQueryResponseDefaults(v *PersonalPrincipalsQueryResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PeopleGetRequest
+// ============================================================
+// PeopleGetRequestDefaults applies field-level default values to zero-valued fields.
+func PeopleGetRequestDefaults(v *PeopleGetRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PeoplePutRequest
+// ============================================================
+// PeoplePutRequestDefaults applies field-level default values to zero-valued fields.
+func PeoplePutRequestDefaults(v *PeoplePutRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PeopleGetAllRequest
+// ============================================================
+// PeopleGetAllRequestDefaults applies field-level default values to zero-valued fields.
+func PeopleGetAllRequestDefaults(v *PeopleGetAllRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PeopleKeysRequest
+// ============================================================
+// PeopleKeysRequestDefaults applies field-level default values to zero-valued fields.
+func PeopleKeysRequestDefaults(v *PeopleKeysRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PeopleSizeRequest
+// ============================================================
+// PeopleSizeRequestDefaults applies field-level default values to zero-valued fields.
+func PeopleSizeRequestDefaults(v *PeopleSizeRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PeopleClearRequest
+// ============================================================
+// PeopleClearRequestDefaults applies field-level default values to zero-valued fields.
+func PeopleClearRequestDefaults(v *PeopleClearRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PeopleValueResponse
+// ============================================================
+// PeopleValueResponseDefaults applies field-level default values to zero-valued fields.
+func PeopleValueResponseDefaults(v *PeopleValueResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PeopleEntriesResponse
+// ============================================================
+// PeopleEntriesResponseDefaults applies field-level default values to zero-valued fields.
+func PeopleEntriesResponseDefaults(v *PeopleEntriesResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PeopleKeysResponse
+// ============================================================
+// PeopleKeysResponseDefaults applies field-level default values to zero-valued fields.
+func PeopleKeysResponseDefaults(v *PeopleKeysResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PeopleSizeResponse
+// ============================================================
+// PeopleSizeResponseDefaults applies field-level default values to zero-valued fields.
+func PeopleSizeResponseDefaults(v *PeopleSizeResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PeopleQueryRequest
+// ============================================================
+// PeopleQueryRequestDefaults applies field-level default values to zero-valued fields.
+func PeopleQueryRequestDefaults(v *PeopleQueryRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PeopleQueryResponse
+// ============================================================
+// PeopleQueryResponseDefaults applies field-level default values to zero-valued fields.
+func PeopleQueryResponseDefaults(v *PeopleQueryResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: TenantUserLinksGetRequest
+// ============================================================
+// TenantUserLinksGetRequestDefaults applies field-level default values to zero-valued fields.
+func TenantUserLinksGetRequestDefaults(v *TenantUserLinksGetRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: TenantUserLinksPutRequest
+// ============================================================
+// TenantUserLinksPutRequestDefaults applies field-level default values to zero-valued fields.
+func TenantUserLinksPutRequestDefaults(v *TenantUserLinksPutRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: TenantUserLinksGetAllRequest
+// ============================================================
+// TenantUserLinksGetAllRequestDefaults applies field-level default values to zero-valued fields.
+func TenantUserLinksGetAllRequestDefaults(v *TenantUserLinksGetAllRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: TenantUserLinksKeysRequest
+// ============================================================
+// TenantUserLinksKeysRequestDefaults applies field-level default values to zero-valued fields.
+func TenantUserLinksKeysRequestDefaults(v *TenantUserLinksKeysRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: TenantUserLinksSizeRequest
+// ============================================================
+// TenantUserLinksSizeRequestDefaults applies field-level default values to zero-valued fields.
+func TenantUserLinksSizeRequestDefaults(v *TenantUserLinksSizeRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: TenantUserLinksClearRequest
+// ============================================================
+// TenantUserLinksClearRequestDefaults applies field-level default values to zero-valued fields.
+func TenantUserLinksClearRequestDefaults(v *TenantUserLinksClearRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: TenantUserLinksValueResponse
+// ============================================================
+// TenantUserLinksValueResponseDefaults applies field-level default values to zero-valued fields.
+func TenantUserLinksValueResponseDefaults(v *TenantUserLinksValueResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: TenantUserLinksEntriesResponse
+// ============================================================
+// TenantUserLinksEntriesResponseDefaults applies field-level default values to zero-valued fields.
+func TenantUserLinksEntriesResponseDefaults(v *TenantUserLinksEntriesResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: TenantUserLinksKeysResponse
+// ============================================================
+// TenantUserLinksKeysResponseDefaults applies field-level default values to zero-valued fields.
+func TenantUserLinksKeysResponseDefaults(v *TenantUserLinksKeysResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: TenantUserLinksSizeResponse
+// ============================================================
+// TenantUserLinksSizeResponseDefaults applies field-level default values to zero-valued fields.
+func TenantUserLinksSizeResponseDefaults(v *TenantUserLinksSizeResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: TenantUserLinksQueryRequest
+// ============================================================
+// TenantUserLinksQueryRequestDefaults applies field-level default values to zero-valued fields.
+func TenantUserLinksQueryRequestDefaults(v *TenantUserLinksQueryRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: TenantUserLinksQueryResponse
+// ============================================================
+// TenantUserLinksQueryResponseDefaults applies field-level default values to zero-valued fields.
+func TenantUserLinksQueryResponseDefaults(v *TenantUserLinksQueryResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PendingApprovalsGetRequest
+// ============================================================
+// PendingApprovalsGetRequestDefaults applies field-level default values to zero-valued fields.
+func PendingApprovalsGetRequestDefaults(v *PendingApprovalsGetRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PendingApprovalsPutRequest
+// ============================================================
+// PendingApprovalsPutRequestDefaults applies field-level default values to zero-valued fields.
+func PendingApprovalsPutRequestDefaults(v *PendingApprovalsPutRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PendingApprovalsGetAllRequest
+// ============================================================
+// PendingApprovalsGetAllRequestDefaults applies field-level default values to zero-valued fields.
+func PendingApprovalsGetAllRequestDefaults(v *PendingApprovalsGetAllRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PendingApprovalsKeysRequest
+// ============================================================
+// PendingApprovalsKeysRequestDefaults applies field-level default values to zero-valued fields.
+func PendingApprovalsKeysRequestDefaults(v *PendingApprovalsKeysRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PendingApprovalsSizeRequest
+// ============================================================
+// PendingApprovalsSizeRequestDefaults applies field-level default values to zero-valued fields.
+func PendingApprovalsSizeRequestDefaults(v *PendingApprovalsSizeRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PendingApprovalsClearRequest
+// ============================================================
+// PendingApprovalsClearRequestDefaults applies field-level default values to zero-valued fields.
+func PendingApprovalsClearRequestDefaults(v *PendingApprovalsClearRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PendingApprovalsValueResponse
+// ============================================================
+// PendingApprovalsValueResponseDefaults applies field-level default values to zero-valued fields.
+func PendingApprovalsValueResponseDefaults(v *PendingApprovalsValueResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PendingApprovalsEntriesResponse
+// ============================================================
+// PendingApprovalsEntriesResponseDefaults applies field-level default values to zero-valued fields.
+func PendingApprovalsEntriesResponseDefaults(v *PendingApprovalsEntriesResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PendingApprovalsKeysResponse
+// ============================================================
+// PendingApprovalsKeysResponseDefaults applies field-level default values to zero-valued fields.
+func PendingApprovalsKeysResponseDefaults(v *PendingApprovalsKeysResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PendingApprovalsSizeResponse
+// ============================================================
+// PendingApprovalsSizeResponseDefaults applies field-level default values to zero-valued fields.
+func PendingApprovalsSizeResponseDefaults(v *PendingApprovalsSizeResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PendingApprovalsQueryRequest
+// ============================================================
+// PendingApprovalsQueryRequestDefaults applies field-level default values to zero-valued fields.
+func PendingApprovalsQueryRequestDefaults(v *PendingApprovalsQueryRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeDefaults: PendingApprovalsQueryResponse
+// ============================================================
+// PendingApprovalsQueryResponseDefaults applies field-level default values to zero-valued fields.
+func PendingApprovalsQueryResponseDefaults(v *PendingApprovalsQueryResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
 // TypeDefaults: CaCertsGetRequest
 // ============================================================
 // CaCertsGetRequestDefaults applies field-level default values to zero-valued fields.
@@ -88240,8 +107958,8 @@ func ConfigUndefaults(v *Config) {
 	if v.PartitionCount == int32(DefaultPartitionCount) {
 		v.PartitionCount = 0
 	}
-	if v.PersistenceDir == DefaultPersistenceDir {
-		v.PersistenceDir = ""
+	if v.DiskDir == DefaultDiskDir {
+		v.DiskDir = ""
 	}
 	if v.KeyRotationIntervalSeconds == DefaultKeyRotationIntervalSeconds {
 		v.KeyRotationIntervalSeconds = 0
@@ -88579,6 +108297,259 @@ func WorkloadRevocationUndefaults(v *WorkloadRevocation) {
 // WorkloadStateUndefaults resets fields that match their default values back to zero.
 // Use before persisting to store only explicit user overrides.
 func WorkloadStateUndefaults(v *WorkloadState) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PeopleIdpCredential
+// ============================================================
+// PeopleIdpCredentialUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PeopleIdpCredentialUndefaults(v *PeopleIdpCredential) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: Person
+// ============================================================
+// PersonUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PersonUndefaults(v *Person) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PersonalCredential
+// ============================================================
+// PersonalCredentialUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PersonalCredentialUndefaults(v *PersonalCredential) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: TenantMembership
+// ============================================================
+// TenantMembershipUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func TenantMembershipUndefaults(v *TenantMembership) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PersonalPrincipal
+// ============================================================
+// PersonalPrincipalUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PersonalPrincipalUndefaults(v *PersonalPrincipal) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: TenantUserLink
+// ============================================================
+// TenantUserLinkUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func TenantUserLinkUndefaults(v *TenantUserLink) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: TenantUserLinks
+// ============================================================
+// TenantUserLinksUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func TenantUserLinksUndefaults(v *TenantUserLinks) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PrincipalState
+// ============================================================
+// PrincipalStateUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PrincipalStateUndefaults(v *PrincipalState) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: RevokeTenantUserLinkRequest
+// ============================================================
+// RevokeTenantUserLinkRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func RevokeTenantUserLinkRequestUndefaults(v *RevokeTenantUserLinkRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: RevokeTenantUserLinkResponse
+// ============================================================
+// RevokeTenantUserLinkResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func RevokeTenantUserLinkResponseUndefaults(v *RevokeTenantUserLinkResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: GetMyIdentityRequest
+// ============================================================
+// GetMyIdentityRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func GetMyIdentityRequestUndefaults(v *GetMyIdentityRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: GetMyIdentityResponse
+// ============================================================
+// GetMyIdentityResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func GetMyIdentityResponseUndefaults(v *GetMyIdentityResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: CreatePersonalPrincipalRequest
+// ============================================================
+// CreatePersonalPrincipalRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func CreatePersonalPrincipalRequestUndefaults(v *CreatePersonalPrincipalRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: CreatePersonalPrincipalResponse
+// ============================================================
+// CreatePersonalPrincipalResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func CreatePersonalPrincipalResponseUndefaults(v *CreatePersonalPrincipalResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: WebauthnAssertion
+// ============================================================
+// WebauthnAssertionUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func WebauthnAssertionUndefaults(v *WebauthnAssertion) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: TenantUserLinkSide
+// ============================================================
+// TenantUserLinkSideUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func TenantUserLinkSideUndefaults(v *TenantUserLinkSide) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: CreateTenantUserLinkRequest
+// ============================================================
+// CreateTenantUserLinkRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func CreateTenantUserLinkRequestUndefaults(v *CreateTenantUserLinkRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: CreateTenantUserLinkResponse
+// ============================================================
+// CreateTenantUserLinkResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func CreateTenantUserLinkResponseUndefaults(v *CreateTenantUserLinkResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PendingApproval
+// ============================================================
+// PendingApprovalUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PendingApprovalUndefaults(v *PendingApproval) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: CreatePendingApprovalRequest
+// ============================================================
+// CreatePendingApprovalRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func CreatePendingApprovalRequestUndefaults(v *CreatePendingApprovalRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: CreatePendingApprovalResponse
+// ============================================================
+// CreatePendingApprovalResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func CreatePendingApprovalResponseUndefaults(v *CreatePendingApprovalResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: BrokerPendingApprovalRequest
+// ============================================================
+// BrokerPendingApprovalRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func BrokerPendingApprovalRequestUndefaults(v *BrokerPendingApprovalRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: BrokerPendingApprovalResponse
+// ============================================================
+// BrokerPendingApprovalResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func BrokerPendingApprovalResponseUndefaults(v *BrokerPendingApprovalResponse) {
 	if v == nil {
 		return
 	}
@@ -91258,6 +111229,534 @@ func RevocationsQueryResponseUndefaults(v *RevocationsQueryResponse) {
 }
 
 // ============================================================
+// TypeUndefaults: PersonalPrincipalsGetRequest
+// ============================================================
+// PersonalPrincipalsGetRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PersonalPrincipalsGetRequestUndefaults(v *PersonalPrincipalsGetRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PersonalPrincipalsPutRequest
+// ============================================================
+// PersonalPrincipalsPutRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PersonalPrincipalsPutRequestUndefaults(v *PersonalPrincipalsPutRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PersonalPrincipalsGetAllRequest
+// ============================================================
+// PersonalPrincipalsGetAllRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PersonalPrincipalsGetAllRequestUndefaults(v *PersonalPrincipalsGetAllRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PersonalPrincipalsKeysRequest
+// ============================================================
+// PersonalPrincipalsKeysRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PersonalPrincipalsKeysRequestUndefaults(v *PersonalPrincipalsKeysRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PersonalPrincipalsSizeRequest
+// ============================================================
+// PersonalPrincipalsSizeRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PersonalPrincipalsSizeRequestUndefaults(v *PersonalPrincipalsSizeRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PersonalPrincipalsClearRequest
+// ============================================================
+// PersonalPrincipalsClearRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PersonalPrincipalsClearRequestUndefaults(v *PersonalPrincipalsClearRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PersonalPrincipalsValueResponse
+// ============================================================
+// PersonalPrincipalsValueResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PersonalPrincipalsValueResponseUndefaults(v *PersonalPrincipalsValueResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PersonalPrincipalsEntriesResponse
+// ============================================================
+// PersonalPrincipalsEntriesResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PersonalPrincipalsEntriesResponseUndefaults(v *PersonalPrincipalsEntriesResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PersonalPrincipalsKeysResponse
+// ============================================================
+// PersonalPrincipalsKeysResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PersonalPrincipalsKeysResponseUndefaults(v *PersonalPrincipalsKeysResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PersonalPrincipalsSizeResponse
+// ============================================================
+// PersonalPrincipalsSizeResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PersonalPrincipalsSizeResponseUndefaults(v *PersonalPrincipalsSizeResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PersonalPrincipalsQueryRequest
+// ============================================================
+// PersonalPrincipalsQueryRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PersonalPrincipalsQueryRequestUndefaults(v *PersonalPrincipalsQueryRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PersonalPrincipalsQueryResponse
+// ============================================================
+// PersonalPrincipalsQueryResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PersonalPrincipalsQueryResponseUndefaults(v *PersonalPrincipalsQueryResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PeopleGetRequest
+// ============================================================
+// PeopleGetRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PeopleGetRequestUndefaults(v *PeopleGetRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PeoplePutRequest
+// ============================================================
+// PeoplePutRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PeoplePutRequestUndefaults(v *PeoplePutRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PeopleGetAllRequest
+// ============================================================
+// PeopleGetAllRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PeopleGetAllRequestUndefaults(v *PeopleGetAllRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PeopleKeysRequest
+// ============================================================
+// PeopleKeysRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PeopleKeysRequestUndefaults(v *PeopleKeysRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PeopleSizeRequest
+// ============================================================
+// PeopleSizeRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PeopleSizeRequestUndefaults(v *PeopleSizeRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PeopleClearRequest
+// ============================================================
+// PeopleClearRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PeopleClearRequestUndefaults(v *PeopleClearRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PeopleValueResponse
+// ============================================================
+// PeopleValueResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PeopleValueResponseUndefaults(v *PeopleValueResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PeopleEntriesResponse
+// ============================================================
+// PeopleEntriesResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PeopleEntriesResponseUndefaults(v *PeopleEntriesResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PeopleKeysResponse
+// ============================================================
+// PeopleKeysResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PeopleKeysResponseUndefaults(v *PeopleKeysResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PeopleSizeResponse
+// ============================================================
+// PeopleSizeResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PeopleSizeResponseUndefaults(v *PeopleSizeResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PeopleQueryRequest
+// ============================================================
+// PeopleQueryRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PeopleQueryRequestUndefaults(v *PeopleQueryRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PeopleQueryResponse
+// ============================================================
+// PeopleQueryResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PeopleQueryResponseUndefaults(v *PeopleQueryResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: TenantUserLinksGetRequest
+// ============================================================
+// TenantUserLinksGetRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func TenantUserLinksGetRequestUndefaults(v *TenantUserLinksGetRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: TenantUserLinksPutRequest
+// ============================================================
+// TenantUserLinksPutRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func TenantUserLinksPutRequestUndefaults(v *TenantUserLinksPutRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: TenantUserLinksGetAllRequest
+// ============================================================
+// TenantUserLinksGetAllRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func TenantUserLinksGetAllRequestUndefaults(v *TenantUserLinksGetAllRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: TenantUserLinksKeysRequest
+// ============================================================
+// TenantUserLinksKeysRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func TenantUserLinksKeysRequestUndefaults(v *TenantUserLinksKeysRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: TenantUserLinksSizeRequest
+// ============================================================
+// TenantUserLinksSizeRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func TenantUserLinksSizeRequestUndefaults(v *TenantUserLinksSizeRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: TenantUserLinksClearRequest
+// ============================================================
+// TenantUserLinksClearRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func TenantUserLinksClearRequestUndefaults(v *TenantUserLinksClearRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: TenantUserLinksValueResponse
+// ============================================================
+// TenantUserLinksValueResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func TenantUserLinksValueResponseUndefaults(v *TenantUserLinksValueResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: TenantUserLinksEntriesResponse
+// ============================================================
+// TenantUserLinksEntriesResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func TenantUserLinksEntriesResponseUndefaults(v *TenantUserLinksEntriesResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: TenantUserLinksKeysResponse
+// ============================================================
+// TenantUserLinksKeysResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func TenantUserLinksKeysResponseUndefaults(v *TenantUserLinksKeysResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: TenantUserLinksSizeResponse
+// ============================================================
+// TenantUserLinksSizeResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func TenantUserLinksSizeResponseUndefaults(v *TenantUserLinksSizeResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: TenantUserLinksQueryRequest
+// ============================================================
+// TenantUserLinksQueryRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func TenantUserLinksQueryRequestUndefaults(v *TenantUserLinksQueryRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: TenantUserLinksQueryResponse
+// ============================================================
+// TenantUserLinksQueryResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func TenantUserLinksQueryResponseUndefaults(v *TenantUserLinksQueryResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PendingApprovalsGetRequest
+// ============================================================
+// PendingApprovalsGetRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PendingApprovalsGetRequestUndefaults(v *PendingApprovalsGetRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PendingApprovalsPutRequest
+// ============================================================
+// PendingApprovalsPutRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PendingApprovalsPutRequestUndefaults(v *PendingApprovalsPutRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PendingApprovalsGetAllRequest
+// ============================================================
+// PendingApprovalsGetAllRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PendingApprovalsGetAllRequestUndefaults(v *PendingApprovalsGetAllRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PendingApprovalsKeysRequest
+// ============================================================
+// PendingApprovalsKeysRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PendingApprovalsKeysRequestUndefaults(v *PendingApprovalsKeysRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PendingApprovalsSizeRequest
+// ============================================================
+// PendingApprovalsSizeRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PendingApprovalsSizeRequestUndefaults(v *PendingApprovalsSizeRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PendingApprovalsClearRequest
+// ============================================================
+// PendingApprovalsClearRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PendingApprovalsClearRequestUndefaults(v *PendingApprovalsClearRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PendingApprovalsValueResponse
+// ============================================================
+// PendingApprovalsValueResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PendingApprovalsValueResponseUndefaults(v *PendingApprovalsValueResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PendingApprovalsEntriesResponse
+// ============================================================
+// PendingApprovalsEntriesResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PendingApprovalsEntriesResponseUndefaults(v *PendingApprovalsEntriesResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PendingApprovalsKeysResponse
+// ============================================================
+// PendingApprovalsKeysResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PendingApprovalsKeysResponseUndefaults(v *PendingApprovalsKeysResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PendingApprovalsSizeResponse
+// ============================================================
+// PendingApprovalsSizeResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PendingApprovalsSizeResponseUndefaults(v *PendingApprovalsSizeResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PendingApprovalsQueryRequest
+// ============================================================
+// PendingApprovalsQueryRequestUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PendingApprovalsQueryRequestUndefaults(v *PendingApprovalsQueryRequest) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
+// TypeUndefaults: PendingApprovalsQueryResponse
+// ============================================================
+// PendingApprovalsQueryResponseUndefaults resets fields that match their default values back to zero.
+// Use before persisting to store only explicit user overrides.
+func PendingApprovalsQueryResponseUndefaults(v *PendingApprovalsQueryResponse) {
+	if v == nil {
+		return
+	}
+}
+
+// ============================================================
 // TypeUndefaults: CaCertsGetRequest
 // ============================================================
 // CaCertsGetRequestUndefaults resets fields that match their default values back to zero.
@@ -91954,11 +112453,8 @@ func MergeConfig(dst, src *Config) {
 	if dst.Logger == nil {
 		dst.Logger = src.Logger
 	}
-	if dst.PersistenceDir == "" {
-		dst.PersistenceDir = src.PersistenceDir
-	}
-	if dst.PersistenceFormat == 0 {
-		dst.PersistenceFormat = src.PersistenceFormat
+	if dst.DiskDir == "" {
+		dst.DiskDir = src.DiskDir
 	}
 	if dst.HazelcastListener == nil {
 		dst.HazelcastListener = src.HazelcastListener
@@ -92031,6 +112527,9 @@ func MergeConfig(dst, src *Config) {
 	}
 	if dst.RatisListener == nil {
 		dst.RatisListener = src.RatisListener
+	}
+	if len(dst.PeopleIdpCredentials) == 0 {
+		dst.PeopleIdpCredentials = src.PeopleIdpCredentials
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -92358,6 +112857,9 @@ func MergeDelegate(dst, src *Delegate) {
 	if dst.Name == "" {
 		dst.Name = src.Name
 	}
+	if dst.TenantNamespace == "" {
+		dst.TenantNamespace = src.TenantNamespace
+	}
 	if len(dst.CloudIdentities) == 0 {
 		dst.CloudIdentities = src.CloudIdentities
 	}
@@ -92369,6 +112871,9 @@ func MergeDelegate(dst, src *Delegate) {
 	}
 	if len(dst.CustomClaims) == 0 {
 		dst.CustomClaims = src.CustomClaims
+	}
+	if len(dst.AuthBrokerKinds) == 0 {
+		dst.AuthBrokerKinds = src.AuthBrokerKinds
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -92597,6 +113102,559 @@ func MergeWorkloadState(dst, src *WorkloadState) {
 }
 
 // ============================================================
+// Merge: PeopleIdpCredential
+// ============================================================
+// MergePeopleIdpCredential fills zero-valued fields in dst from src.
+func MergePeopleIdpCredential(dst, src *PeopleIdpCredential) {
+	if dst.Provider == 0 {
+		dst.Provider = src.Provider
+	}
+	if dst.ClientId == "" {
+		dst.ClientId = src.ClientId
+	}
+	if dst.ClientSecret == "" {
+		dst.ClientSecret = src.ClientSecret
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: Person
+// ============================================================
+// MergePerson fills zero-valued fields in dst from src.
+func MergePerson(dst, src *Person) {
+	if dst.UserId == "" {
+		dst.UserId = src.UserId
+	}
+	if dst.Provider == 0 {
+		dst.Provider = src.Provider
+	}
+	if dst.ProviderSubject == "" {
+		dst.ProviderSubject = src.ProviderSubject
+	}
+	if dst.CreatedAtMs == 0 {
+		dst.CreatedAtMs = src.CreatedAtMs
+	}
+	if dst.DisabledAtMs == 0 {
+		dst.DisabledAtMs = src.DisabledAtMs
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PersonalCredential
+// ============================================================
+// MergePersonalCredential fills zero-valued fields in dst from src.
+func MergePersonalCredential(dst, src *PersonalCredential) {
+	if dst.CredentialId == "" {
+		dst.CredentialId = src.CredentialId
+	}
+	if dst.PublicKey == nil {
+		dst.PublicKey = src.PublicKey
+	}
+	if dst.Label == "" {
+		dst.Label = src.Label
+	}
+	if !dst.PlatformSynced {
+		dst.PlatformSynced = src.PlatformSynced
+	}
+	if dst.CreatedAtMs == 0 {
+		dst.CreatedAtMs = src.CreatedAtMs
+	}
+	if dst.RevokedAtMs == 0 {
+		dst.RevokedAtMs = src.RevokedAtMs
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: TenantMembership
+// ============================================================
+// MergeTenantMembership fills zero-valued fields in dst from src.
+func MergeTenantMembership(dst, src *TenantMembership) {
+	if dst.TenantNamespace == "" {
+		dst.TenantNamespace = src.TenantNamespace
+	}
+	if dst.ProofKind == 0 {
+		dst.ProofKind = src.ProofKind
+	}
+	if !dst.Customer {
+		dst.Customer = src.Customer
+	}
+	if dst.ProofReference == "" {
+		dst.ProofReference = src.ProofReference
+	}
+	if dst.CreatedAtMs == 0 {
+		dst.CreatedAtMs = src.CreatedAtMs
+	}
+	if dst.ExpiresAtMs == 0 {
+		dst.ExpiresAtMs = src.ExpiresAtMs
+	}
+	if dst.RevokedAtMs == 0 {
+		dst.RevokedAtMs = src.RevokedAtMs
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PersonalPrincipal
+// ============================================================
+// MergePersonalPrincipal fills zero-valued fields in dst from src.
+func MergePersonalPrincipal(dst, src *PersonalPrincipal) {
+	if dst.PrincipalId == "" {
+		dst.PrincipalId = src.PrincipalId
+	}
+	if len(dst.Credentials) == 0 {
+		dst.Credentials = src.Credentials
+	}
+	if len(dst.Memberships) == 0 {
+		dst.Memberships = src.Memberships
+	}
+	if dst.CreatedAtMs == 0 {
+		dst.CreatedAtMs = src.CreatedAtMs
+	}
+	if dst.DisabledAtMs == 0 {
+		dst.DisabledAtMs = src.DisabledAtMs
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: TenantUserLink
+// ============================================================
+// MergeTenantUserLink fills zero-valued fields in dst from src.
+func MergeTenantUserLink(dst, src *TenantUserLink) {
+	if dst.PeerNamespace == "" {
+		dst.PeerNamespace = src.PeerNamespace
+	}
+	if dst.PeerSubject == "" {
+		dst.PeerSubject = src.PeerSubject
+	}
+	if dst.CreatedAtMs == 0 {
+		dst.CreatedAtMs = src.CreatedAtMs
+	}
+	if dst.RevokedAtMs == 0 {
+		dst.RevokedAtMs = src.RevokedAtMs
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: TenantUserLinks
+// ============================================================
+// MergeTenantUserLinks fills zero-valued fields in dst from src.
+func MergeTenantUserLinks(dst, src *TenantUserLinks) {
+	if dst.UserKey == "" {
+		dst.UserKey = src.UserKey
+	}
+	if len(dst.Links) == 0 {
+		dst.Links = src.Links
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PrincipalState
+// ============================================================
+// MergePrincipalState fills zero-valued fields in dst from src.
+func MergePrincipalState(dst, src *PrincipalState) {
+	if len(dst.PersonalPrincipals) == 0 {
+		dst.PersonalPrincipals = src.PersonalPrincipals
+	}
+	if len(dst.People) == 0 {
+		dst.People = src.People
+	}
+	if len(dst.TenantUserLinks) == 0 {
+		dst.TenantUserLinks = src.TenantUserLinks
+	}
+	if len(dst.PendingApprovals) == 0 {
+		dst.PendingApprovals = src.PendingApprovals
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: RevokeTenantUserLinkRequest
+// ============================================================
+// MergeRevokeTenantUserLinkRequest fills zero-valued fields in dst from src.
+func MergeRevokeTenantUserLinkRequest(dst, src *RevokeTenantUserLinkRequest) {
+	if dst.PeerNamespace == "" {
+		dst.PeerNamespace = src.PeerNamespace
+	}
+	if dst.PeerSubject == "" {
+		dst.PeerSubject = src.PeerSubject
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: RevokeTenantUserLinkResponse
+// ============================================================
+// MergeRevokeTenantUserLinkResponse fills zero-valued fields in dst from src.
+func MergeRevokeTenantUserLinkResponse(dst, src *RevokeTenantUserLinkResponse) {
+	if dst.RevokedAtMs == 0 {
+		dst.RevokedAtMs = src.RevokedAtMs
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: GetMyIdentityRequest
+// ============================================================
+// MergeGetMyIdentityRequest fills zero-valued fields in dst from src.
+func MergeGetMyIdentityRequest(dst, src *GetMyIdentityRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: GetMyIdentityResponse
+// ============================================================
+// MergeGetMyIdentityResponse fills zero-valued fields in dst from src.
+func MergeGetMyIdentityResponse(dst, src *GetMyIdentityResponse) {
+	if dst.PrincipalId == "" {
+		dst.PrincipalId = src.PrincipalId
+	}
+	if len(dst.Memberships) == 0 {
+		dst.Memberships = src.Memberships
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: CreatePersonalPrincipalRequest
+// ============================================================
+// MergeCreatePersonalPrincipalRequest fills zero-valued fields in dst from src.
+func MergeCreatePersonalPrincipalRequest(dst, src *CreatePersonalPrincipalRequest) {
+	if dst.ProofToken == "" {
+		dst.ProofToken = src.ProofToken
+	}
+	if dst.PublicKey == nil {
+		dst.PublicKey = src.PublicKey
+	}
+	if dst.Label == "" {
+		dst.Label = src.Label
+	}
+	if !dst.PlatformSynced {
+		dst.PlatformSynced = src.PlatformSynced
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: CreatePersonalPrincipalResponse
+// ============================================================
+// MergeCreatePersonalPrincipalResponse fills zero-valued fields in dst from src.
+func MergeCreatePersonalPrincipalResponse(dst, src *CreatePersonalPrincipalResponse) {
+	if dst.PrincipalId == "" {
+		dst.PrincipalId = src.PrincipalId
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: WebauthnAssertion
+// ============================================================
+// MergeWebauthnAssertion fills zero-valued fields in dst from src.
+func MergeWebauthnAssertion(dst, src *WebauthnAssertion) {
+	if dst.CredentialId == "" {
+		dst.CredentialId = src.CredentialId
+	}
+	if len(dst.AuthenticatorData) == 0 {
+		dst.AuthenticatorData = src.AuthenticatorData
+	}
+	if len(dst.ClientDataJson) == 0 {
+		dst.ClientDataJson = src.ClientDataJson
+	}
+	if len(dst.Signature) == 0 {
+		dst.Signature = src.Signature
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: TenantUserLinkSide
+// ============================================================
+// MergeTenantUserLinkSide fills zero-valued fields in dst from src.
+func MergeTenantUserLinkSide(dst, src *TenantUserLinkSide) {
+	if dst.Claims == nil {
+		dst.Claims = src.Claims
+	}
+	if dst.Subject == "" {
+		dst.Subject = src.Subject
+	}
+	if dst.DeviceAssertion == nil {
+		dst.DeviceAssertion = src.DeviceAssertion
+	} else if src.DeviceAssertion != nil {
+		MergeWebauthnAssertion(dst.DeviceAssertion, src.DeviceAssertion)
+	}
+	if dst.DevicePublicKey == nil {
+		dst.DevicePublicKey = src.DevicePublicKey
+	}
+	if dst.DeviceLabel == "" {
+		dst.DeviceLabel = src.DeviceLabel
+	}
+	if !dst.DevicePlatformSynced {
+		dst.DevicePlatformSynced = src.DevicePlatformSynced
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: CreateTenantUserLinkRequest
+// ============================================================
+// MergeCreateTenantUserLinkRequest fills zero-valued fields in dst from src.
+func MergeCreateTenantUserLinkRequest(dst, src *CreateTenantUserLinkRequest) {
+	if dst.A == nil {
+		dst.A = src.A
+	} else if src.A != nil {
+		MergeTenantUserLinkSide(dst.A, src.A)
+	}
+	if dst.B == nil {
+		dst.B = src.B
+	} else if src.B != nil {
+		MergeTenantUserLinkSide(dst.B, src.B)
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+}
+
+// ============================================================
+// Merge: CreateTenantUserLinkResponse
+// ============================================================
+// MergeCreateTenantUserLinkResponse fills zero-valued fields in dst from src.
+func MergeCreateTenantUserLinkResponse(dst, src *CreateTenantUserLinkResponse) {
+	if dst.AUserKey == "" {
+		dst.AUserKey = src.AUserKey
+	}
+	if dst.BUserKey == "" {
+		dst.BUserKey = src.BUserKey
+	}
+	if dst.CreatedAtMs == 0 {
+		dst.CreatedAtMs = src.CreatedAtMs
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PendingApproval
+// ============================================================
+// MergePendingApproval fills zero-valued fields in dst from src.
+func MergePendingApproval(dst, src *PendingApproval) {
+	if dst.ApprovalId == "" {
+		dst.ApprovalId = src.ApprovalId
+	}
+	if dst.PersonUserKey == "" {
+		dst.PersonUserKey = src.PersonUserKey
+	}
+	if dst.RpcMethod == "" {
+		dst.RpcMethod = src.RpcMethod
+	}
+	if len(dst.RequestHash) == 0 {
+		dst.RequestHash = src.RequestHash
+	}
+	if dst.CreatedAtMs == 0 {
+		dst.CreatedAtMs = src.CreatedAtMs
+	}
+	if dst.ExpiresAtMs == 0 {
+		dst.ExpiresAtMs = src.ExpiresAtMs
+	}
+	if dst.ConsumedAtMs == 0 {
+		dst.ConsumedAtMs = src.ConsumedAtMs
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: CreatePendingApprovalRequest
+// ============================================================
+// MergeCreatePendingApprovalRequest fills zero-valued fields in dst from src.
+func MergeCreatePendingApprovalRequest(dst, src *CreatePendingApprovalRequest) {
+	if dst.RpcMethod == "" {
+		dst.RpcMethod = src.RpcMethod
+	}
+	if len(dst.RequestHash) == 0 {
+		dst.RequestHash = src.RequestHash
+	}
+	if dst.TtlSeconds == 0 {
+		dst.TtlSeconds = src.TtlSeconds
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: CreatePendingApprovalResponse
+// ============================================================
+// MergeCreatePendingApprovalResponse fills zero-valued fields in dst from src.
+func MergeCreatePendingApprovalResponse(dst, src *CreatePendingApprovalResponse) {
+	if dst.ApprovalId == "" {
+		dst.ApprovalId = src.ApprovalId
+	}
+	if dst.ExpiresAtMs == 0 {
+		dst.ExpiresAtMs = src.ExpiresAtMs
+	}
+	if dst.Challenge == "" {
+		dst.Challenge = src.Challenge
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: BrokerPendingApprovalRequest
+// ============================================================
+// MergeBrokerPendingApprovalRequest fills zero-valued fields in dst from src.
+func MergeBrokerPendingApprovalRequest(dst, src *BrokerPendingApprovalRequest) {
+	if dst.ApprovalId == "" {
+		dst.ApprovalId = src.ApprovalId
+	}
+	if dst.RpcMethod == "" {
+		dst.RpcMethod = src.RpcMethod
+	}
+	if len(dst.RequestHash) == 0 {
+		dst.RequestHash = src.RequestHash
+	}
+	if dst.CallerNamespace == "" {
+		dst.CallerNamespace = src.CallerNamespace
+	}
+	if dst.CallerSubject == "" {
+		dst.CallerSubject = src.CallerSubject
+	}
+	if dst.DeviceAssertion == nil {
+		dst.DeviceAssertion = src.DeviceAssertion
+	} else if src.DeviceAssertion != nil {
+		MergeWebauthnAssertion(dst.DeviceAssertion, src.DeviceAssertion)
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: BrokerPendingApprovalResponse
+// ============================================================
+// MergeBrokerPendingApprovalResponse fills zero-valued fields in dst from src.
+func MergeBrokerPendingApprovalResponse(dst, src *BrokerPendingApprovalResponse) {
+	if dst.ConsumedAtMs == 0 {
+		dst.ConsumedAtMs = src.ConsumedAtMs
+	}
+	if dst.PersonUserKey == "" {
+		dst.PersonUserKey = src.PersonUserKey
+	}
+	if dst.DeviceNamespace == "" {
+		dst.DeviceNamespace = src.DeviceNamespace
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
 // Merge: Ca
 // ============================================================
 // MergeCa fills zero-valued fields in dst from src.
@@ -92765,6 +113823,9 @@ func MergeGrant(dst, src *Grant) {
 	if dst.RevokedAtMs == 0 {
 		dst.RevokedAtMs = src.RevokedAtMs
 	}
+	if dst.DelegateNamespace == "" {
+		dst.DelegateNamespace = src.DelegateNamespace
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -92820,6 +113881,15 @@ func MergeKernelDiskState(dst, src *KernelDiskState) {
 	}
 	if len(dst.Grants) == 0 {
 		dst.Grants = src.Grants
+	}
+	if len(dst.PersonalPrincipals) == 0 {
+		dst.PersonalPrincipals = src.PersonalPrincipals
+	}
+	if len(dst.People) == 0 {
+		dst.People = src.People
+	}
+	if len(dst.TenantUserLinks) == 0 {
+		dst.TenantUserLinks = src.TenantUserLinks
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -96662,6 +117732,830 @@ func MergeRevocationsQueryRequest(dst, src *RevocationsQueryRequest) {
 // ============================================================
 // MergeRevocationsQueryResponse fills zero-valued fields in dst from src.
 func MergeRevocationsQueryResponse(dst, src *RevocationsQueryResponse) {
+	if len(dst.Results) == 0 {
+		dst.Results = src.Results
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PersonalPrincipalsGetRequest
+// ============================================================
+// MergePersonalPrincipalsGetRequest fills zero-valued fields in dst from src.
+func MergePersonalPrincipalsGetRequest(dst, src *PersonalPrincipalsGetRequest) {
+	if dst.Key == "" {
+		dst.Key = src.Key
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PersonalPrincipalsPutRequest
+// ============================================================
+// MergePersonalPrincipalsPutRequest fills zero-valued fields in dst from src.
+func MergePersonalPrincipalsPutRequest(dst, src *PersonalPrincipalsPutRequest) {
+	if dst.Key == "" {
+		dst.Key = src.Key
+	}
+	if dst.Value == nil {
+		dst.Value = src.Value
+	} else if src.Value != nil {
+		MergePersonalPrincipal(dst.Value, src.Value)
+	}
+	if dst.LockCounter == 0 {
+		dst.LockCounter = src.LockCounter
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PersonalPrincipalsGetAllRequest
+// ============================================================
+// MergePersonalPrincipalsGetAllRequest fills zero-valued fields in dst from src.
+func MergePersonalPrincipalsGetAllRequest(dst, src *PersonalPrincipalsGetAllRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PersonalPrincipalsKeysRequest
+// ============================================================
+// MergePersonalPrincipalsKeysRequest fills zero-valued fields in dst from src.
+func MergePersonalPrincipalsKeysRequest(dst, src *PersonalPrincipalsKeysRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PersonalPrincipalsSizeRequest
+// ============================================================
+// MergePersonalPrincipalsSizeRequest fills zero-valued fields in dst from src.
+func MergePersonalPrincipalsSizeRequest(dst, src *PersonalPrincipalsSizeRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PersonalPrincipalsClearRequest
+// ============================================================
+// MergePersonalPrincipalsClearRequest fills zero-valued fields in dst from src.
+func MergePersonalPrincipalsClearRequest(dst, src *PersonalPrincipalsClearRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PersonalPrincipalsValueResponse
+// ============================================================
+// MergePersonalPrincipalsValueResponse fills zero-valued fields in dst from src.
+func MergePersonalPrincipalsValueResponse(dst, src *PersonalPrincipalsValueResponse) {
+	if dst.Value == nil {
+		dst.Value = src.Value
+	} else if src.Value != nil {
+		MergePersonalPrincipal(dst.Value, src.Value)
+	}
+	if !dst.Found {
+		dst.Found = src.Found
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PersonalPrincipalsEntriesResponse
+// ============================================================
+// MergePersonalPrincipalsEntriesResponse fills zero-valued fields in dst from src.
+func MergePersonalPrincipalsEntriesResponse(dst, src *PersonalPrincipalsEntriesResponse) {
+	if len(dst.Entries) == 0 {
+		dst.Entries = src.Entries
+	} else {
+		for k, srcVal := range src.Entries {
+			if dstVal, ok := dst.Entries[k]; ok {
+				MergePersonalPrincipal(dstVal, srcVal)
+			} else {
+				dst.Entries[k] = srcVal
+			}
+		}
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PersonalPrincipalsKeysResponse
+// ============================================================
+// MergePersonalPrincipalsKeysResponse fills zero-valued fields in dst from src.
+func MergePersonalPrincipalsKeysResponse(dst, src *PersonalPrincipalsKeysResponse) {
+	if len(dst.Keys) == 0 {
+		dst.Keys = src.Keys
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PersonalPrincipalsSizeResponse
+// ============================================================
+// MergePersonalPrincipalsSizeResponse fills zero-valued fields in dst from src.
+func MergePersonalPrincipalsSizeResponse(dst, src *PersonalPrincipalsSizeResponse) {
+	if dst.Size == 0 {
+		dst.Size = src.Size
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PersonalPrincipalsQueryRequest
+// ============================================================
+// MergePersonalPrincipalsQueryRequest fills zero-valued fields in dst from src.
+func MergePersonalPrincipalsQueryRequest(dst, src *PersonalPrincipalsQueryRequest) {
+	if dst.Query == nil {
+		dst.Query = src.Query
+	} else if src.Query != nil {
+		MergeCollectionQuery(dst.Query, src.Query)
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PersonalPrincipalsQueryResponse
+// ============================================================
+// MergePersonalPrincipalsQueryResponse fills zero-valued fields in dst from src.
+func MergePersonalPrincipalsQueryResponse(dst, src *PersonalPrincipalsQueryResponse) {
+	if len(dst.Results) == 0 {
+		dst.Results = src.Results
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PeopleGetRequest
+// ============================================================
+// MergePeopleGetRequest fills zero-valued fields in dst from src.
+func MergePeopleGetRequest(dst, src *PeopleGetRequest) {
+	if dst.Key == "" {
+		dst.Key = src.Key
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PeoplePutRequest
+// ============================================================
+// MergePeoplePutRequest fills zero-valued fields in dst from src.
+func MergePeoplePutRequest(dst, src *PeoplePutRequest) {
+	if dst.Key == "" {
+		dst.Key = src.Key
+	}
+	if dst.Value == nil {
+		dst.Value = src.Value
+	} else if src.Value != nil {
+		MergePerson(dst.Value, src.Value)
+	}
+	if dst.LockCounter == 0 {
+		dst.LockCounter = src.LockCounter
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PeopleGetAllRequest
+// ============================================================
+// MergePeopleGetAllRequest fills zero-valued fields in dst from src.
+func MergePeopleGetAllRequest(dst, src *PeopleGetAllRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PeopleKeysRequest
+// ============================================================
+// MergePeopleKeysRequest fills zero-valued fields in dst from src.
+func MergePeopleKeysRequest(dst, src *PeopleKeysRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PeopleSizeRequest
+// ============================================================
+// MergePeopleSizeRequest fills zero-valued fields in dst from src.
+func MergePeopleSizeRequest(dst, src *PeopleSizeRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PeopleClearRequest
+// ============================================================
+// MergePeopleClearRequest fills zero-valued fields in dst from src.
+func MergePeopleClearRequest(dst, src *PeopleClearRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PeopleValueResponse
+// ============================================================
+// MergePeopleValueResponse fills zero-valued fields in dst from src.
+func MergePeopleValueResponse(dst, src *PeopleValueResponse) {
+	if dst.Value == nil {
+		dst.Value = src.Value
+	} else if src.Value != nil {
+		MergePerson(dst.Value, src.Value)
+	}
+	if !dst.Found {
+		dst.Found = src.Found
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PeopleEntriesResponse
+// ============================================================
+// MergePeopleEntriesResponse fills zero-valued fields in dst from src.
+func MergePeopleEntriesResponse(dst, src *PeopleEntriesResponse) {
+	if len(dst.Entries) == 0 {
+		dst.Entries = src.Entries
+	} else {
+		for k, srcVal := range src.Entries {
+			if dstVal, ok := dst.Entries[k]; ok {
+				MergePerson(dstVal, srcVal)
+			} else {
+				dst.Entries[k] = srcVal
+			}
+		}
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PeopleKeysResponse
+// ============================================================
+// MergePeopleKeysResponse fills zero-valued fields in dst from src.
+func MergePeopleKeysResponse(dst, src *PeopleKeysResponse) {
+	if len(dst.Keys) == 0 {
+		dst.Keys = src.Keys
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PeopleSizeResponse
+// ============================================================
+// MergePeopleSizeResponse fills zero-valued fields in dst from src.
+func MergePeopleSizeResponse(dst, src *PeopleSizeResponse) {
+	if dst.Size == 0 {
+		dst.Size = src.Size
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PeopleQueryRequest
+// ============================================================
+// MergePeopleQueryRequest fills zero-valued fields in dst from src.
+func MergePeopleQueryRequest(dst, src *PeopleQueryRequest) {
+	if dst.Query == nil {
+		dst.Query = src.Query
+	} else if src.Query != nil {
+		MergeCollectionQuery(dst.Query, src.Query)
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PeopleQueryResponse
+// ============================================================
+// MergePeopleQueryResponse fills zero-valued fields in dst from src.
+func MergePeopleQueryResponse(dst, src *PeopleQueryResponse) {
+	if len(dst.Results) == 0 {
+		dst.Results = src.Results
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: TenantUserLinksGetRequest
+// ============================================================
+// MergeTenantUserLinksGetRequest fills zero-valued fields in dst from src.
+func MergeTenantUserLinksGetRequest(dst, src *TenantUserLinksGetRequest) {
+	if dst.Key == "" {
+		dst.Key = src.Key
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: TenantUserLinksPutRequest
+// ============================================================
+// MergeTenantUserLinksPutRequest fills zero-valued fields in dst from src.
+func MergeTenantUserLinksPutRequest(dst, src *TenantUserLinksPutRequest) {
+	if dst.Key == "" {
+		dst.Key = src.Key
+	}
+	if dst.Value == nil {
+		dst.Value = src.Value
+	} else if src.Value != nil {
+		MergeTenantUserLinks(dst.Value, src.Value)
+	}
+	if dst.LockCounter == 0 {
+		dst.LockCounter = src.LockCounter
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: TenantUserLinksGetAllRequest
+// ============================================================
+// MergeTenantUserLinksGetAllRequest fills zero-valued fields in dst from src.
+func MergeTenantUserLinksGetAllRequest(dst, src *TenantUserLinksGetAllRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: TenantUserLinksKeysRequest
+// ============================================================
+// MergeTenantUserLinksKeysRequest fills zero-valued fields in dst from src.
+func MergeTenantUserLinksKeysRequest(dst, src *TenantUserLinksKeysRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: TenantUserLinksSizeRequest
+// ============================================================
+// MergeTenantUserLinksSizeRequest fills zero-valued fields in dst from src.
+func MergeTenantUserLinksSizeRequest(dst, src *TenantUserLinksSizeRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: TenantUserLinksClearRequest
+// ============================================================
+// MergeTenantUserLinksClearRequest fills zero-valued fields in dst from src.
+func MergeTenantUserLinksClearRequest(dst, src *TenantUserLinksClearRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: TenantUserLinksValueResponse
+// ============================================================
+// MergeTenantUserLinksValueResponse fills zero-valued fields in dst from src.
+func MergeTenantUserLinksValueResponse(dst, src *TenantUserLinksValueResponse) {
+	if dst.Value == nil {
+		dst.Value = src.Value
+	} else if src.Value != nil {
+		MergeTenantUserLinks(dst.Value, src.Value)
+	}
+	if !dst.Found {
+		dst.Found = src.Found
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: TenantUserLinksEntriesResponse
+// ============================================================
+// MergeTenantUserLinksEntriesResponse fills zero-valued fields in dst from src.
+func MergeTenantUserLinksEntriesResponse(dst, src *TenantUserLinksEntriesResponse) {
+	if len(dst.Entries) == 0 {
+		dst.Entries = src.Entries
+	} else {
+		for k, srcVal := range src.Entries {
+			if dstVal, ok := dst.Entries[k]; ok {
+				MergeTenantUserLinks(dstVal, srcVal)
+			} else {
+				dst.Entries[k] = srcVal
+			}
+		}
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: TenantUserLinksKeysResponse
+// ============================================================
+// MergeTenantUserLinksKeysResponse fills zero-valued fields in dst from src.
+func MergeTenantUserLinksKeysResponse(dst, src *TenantUserLinksKeysResponse) {
+	if len(dst.Keys) == 0 {
+		dst.Keys = src.Keys
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: TenantUserLinksSizeResponse
+// ============================================================
+// MergeTenantUserLinksSizeResponse fills zero-valued fields in dst from src.
+func MergeTenantUserLinksSizeResponse(dst, src *TenantUserLinksSizeResponse) {
+	if dst.Size == 0 {
+		dst.Size = src.Size
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: TenantUserLinksQueryRequest
+// ============================================================
+// MergeTenantUserLinksQueryRequest fills zero-valued fields in dst from src.
+func MergeTenantUserLinksQueryRequest(dst, src *TenantUserLinksQueryRequest) {
+	if dst.Query == nil {
+		dst.Query = src.Query
+	} else if src.Query != nil {
+		MergeCollectionQuery(dst.Query, src.Query)
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: TenantUserLinksQueryResponse
+// ============================================================
+// MergeTenantUserLinksQueryResponse fills zero-valued fields in dst from src.
+func MergeTenantUserLinksQueryResponse(dst, src *TenantUserLinksQueryResponse) {
+	if len(dst.Results) == 0 {
+		dst.Results = src.Results
+	}
+	if dst.TotalCount == 0 {
+		dst.TotalCount = src.TotalCount
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PendingApprovalsGetRequest
+// ============================================================
+// MergePendingApprovalsGetRequest fills zero-valued fields in dst from src.
+func MergePendingApprovalsGetRequest(dst, src *PendingApprovalsGetRequest) {
+	if dst.Key == "" {
+		dst.Key = src.Key
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PendingApprovalsPutRequest
+// ============================================================
+// MergePendingApprovalsPutRequest fills zero-valued fields in dst from src.
+func MergePendingApprovalsPutRequest(dst, src *PendingApprovalsPutRequest) {
+	if dst.Key == "" {
+		dst.Key = src.Key
+	}
+	if dst.Value == nil {
+		dst.Value = src.Value
+	} else if src.Value != nil {
+		MergePendingApproval(dst.Value, src.Value)
+	}
+	if dst.LockCounter == 0 {
+		dst.LockCounter = src.LockCounter
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PendingApprovalsGetAllRequest
+// ============================================================
+// MergePendingApprovalsGetAllRequest fills zero-valued fields in dst from src.
+func MergePendingApprovalsGetAllRequest(dst, src *PendingApprovalsGetAllRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PendingApprovalsKeysRequest
+// ============================================================
+// MergePendingApprovalsKeysRequest fills zero-valued fields in dst from src.
+func MergePendingApprovalsKeysRequest(dst, src *PendingApprovalsKeysRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PendingApprovalsSizeRequest
+// ============================================================
+// MergePendingApprovalsSizeRequest fills zero-valued fields in dst from src.
+func MergePendingApprovalsSizeRequest(dst, src *PendingApprovalsSizeRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PendingApprovalsClearRequest
+// ============================================================
+// MergePendingApprovalsClearRequest fills zero-valued fields in dst from src.
+func MergePendingApprovalsClearRequest(dst, src *PendingApprovalsClearRequest) {
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PendingApprovalsValueResponse
+// ============================================================
+// MergePendingApprovalsValueResponse fills zero-valued fields in dst from src.
+func MergePendingApprovalsValueResponse(dst, src *PendingApprovalsValueResponse) {
+	if dst.Value == nil {
+		dst.Value = src.Value
+	} else if src.Value != nil {
+		MergePendingApproval(dst.Value, src.Value)
+	}
+	if !dst.Found {
+		dst.Found = src.Found
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PendingApprovalsEntriesResponse
+// ============================================================
+// MergePendingApprovalsEntriesResponse fills zero-valued fields in dst from src.
+func MergePendingApprovalsEntriesResponse(dst, src *PendingApprovalsEntriesResponse) {
+	if len(dst.Entries) == 0 {
+		dst.Entries = src.Entries
+	} else {
+		for k, srcVal := range src.Entries {
+			if dstVal, ok := dst.Entries[k]; ok {
+				MergePendingApproval(dstVal, srcVal)
+			} else {
+				dst.Entries[k] = srcVal
+			}
+		}
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PendingApprovalsKeysResponse
+// ============================================================
+// MergePendingApprovalsKeysResponse fills zero-valued fields in dst from src.
+func MergePendingApprovalsKeysResponse(dst, src *PendingApprovalsKeysResponse) {
+	if len(dst.Keys) == 0 {
+		dst.Keys = src.Keys
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PendingApprovalsSizeResponse
+// ============================================================
+// MergePendingApprovalsSizeResponse fills zero-valued fields in dst from src.
+func MergePendingApprovalsSizeResponse(dst, src *PendingApprovalsSizeResponse) {
+	if dst.Size == 0 {
+		dst.Size = src.Size
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PendingApprovalsQueryRequest
+// ============================================================
+// MergePendingApprovalsQueryRequest fills zero-valued fields in dst from src.
+func MergePendingApprovalsQueryRequest(dst, src *PendingApprovalsQueryRequest) {
+	if dst.Query == nil {
+		dst.Query = src.Query
+	} else if src.Query != nil {
+		MergeCollectionQuery(dst.Query, src.Query)
+	}
+	if dst.TraceId == "" {
+		dst.TraceId = src.TraceId
+	}
+	if !dst.Noop {
+		dst.Noop = src.Noop
+	}
+}
+
+// ============================================================
+// Merge: PendingApprovalsQueryResponse
+// ============================================================
+// MergePendingApprovalsQueryResponse fills zero-valued fields in dst from src.
+func MergePendingApprovalsQueryResponse(dst, src *PendingApprovalsQueryResponse) {
 	if len(dst.Results) == 0 {
 		dst.Results = src.Results
 	}

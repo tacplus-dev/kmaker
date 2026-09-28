@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -28,10 +28,10 @@ import (
 	"strings"
 
 	"github.com/pelletier/go-toml/v2"
-	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/errors"
-	host "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/host"
-	logger "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/logger"
-	x509 "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/x509"
+	protoerrors "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/errors"
+	host "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/host"
+	logger "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/logger"
+	x509 "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"gopkg.in/yaml.v3"
@@ -1954,7 +1954,7 @@ func ValidateMapEmptyWithDepth(m *MapEmpty, depth int) error {
 const (
 	DefaultPort                      int64  = 8443
 	DefaultListenerPort              int64  = 8443
-	DefaultSpiffePrefix              string = "local/dev"
+	DefaultSpiffePrefix              string = "local.dev"
 	DefaultTokenAudience             string = "kmaker"
 	DefaultKernelCertLifetimeSeconds int64  = 86400
 	DefaultHealthProbePort           int64  = 8444

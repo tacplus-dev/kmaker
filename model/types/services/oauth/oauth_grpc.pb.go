@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -23,7 +23,8 @@ package oauth
 
 import (
 	context "context"
-	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
+	mcp "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/mcp"
+	trace "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -147,11 +148,12 @@ var Session_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	Auth_ListProviders_FullMethodName      = "/oauth.Auth/ListProviders"
-	Auth_Authorize_FullMethodName          = "/oauth.Auth/Authorize"
-	Auth_MintCallbackTokens_FullMethodName = "/oauth.Auth/MintCallbackTokens"
-	Auth_RevokeSession_FullMethodName      = "/oauth.Auth/RevokeSession"
-	Auth_BrokerCliAuth_FullMethodName      = "/oauth.Auth/BrokerCliAuth"
+	Auth_ListProviders_FullMethodName        = "/oauth.Auth/ListProviders"
+	Auth_Authorize_FullMethodName            = "/oauth.Auth/Authorize"
+	Auth_MintCallbackTokens_FullMethodName   = "/oauth.Auth/MintCallbackTokens"
+	Auth_RevokeSession_FullMethodName        = "/oauth.Auth/RevokeSession"
+	Auth_BrokerCliAuth_FullMethodName        = "/oauth.Auth/BrokerCliAuth"
+	Auth_BrokerAuthMcpSession_FullMethodName = "/oauth.Auth/BrokerAuthMcpSession"
 )
 
 // AuthClient is the client API for Auth service.
@@ -175,6 +177,16 @@ type AuthClient interface {
 	// and session_id is in the URL. OAuth forwards the authenticated identity
 	// to kernel's CliTokenBroker for nonce completion and token minting.
 	BrokerCliAuth(ctx context.Context, in *CompleteCliAuthRequest, opts ...grpc.CallOption) (*CompleteCliAuthResponse, error)
+	// BrokerAuthMcpSession carries one Model Context Protocol session for Auth over a
+	// single bidirectional stream: one complete JSON-RPC frame per stream message,
+	// request frames in and response frames out, for the life of the session.
+	//
+	// Generated, never declared: Auth has at least one RPC_PRINCIPAL_MCP rpc, and this
+	// is the only channel those tools are reachable through. Bidirectional because an
+	// MCP session is stateful — it opens with an initialize handshake and holds the
+	// negotiated protocol version after it — so a unary call would repeat that
+	// handshake per tool call.
+	BrokerAuthMcpSession(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[mcp.McpRequest, mcp.McpResponse], error)
 }
 
 type authClient struct {
@@ -235,6 +247,19 @@ func (c *authClient) BrokerCliAuth(ctx context.Context, in *CompleteCliAuthReque
 	return out, nil
 }
 
+func (c *authClient) BrokerAuthMcpSession(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[mcp.McpRequest, mcp.McpResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &Auth_ServiceDesc.Streams[0], Auth_BrokerAuthMcpSession_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[mcp.McpRequest, mcp.McpResponse]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Auth_BrokerAuthMcpSessionClient = grpc.BidiStreamingClient[mcp.McpRequest, mcp.McpResponse]
+
 // AuthServer is the server API for Auth service.
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility.
@@ -256,6 +281,16 @@ type AuthServer interface {
 	// and session_id is in the URL. OAuth forwards the authenticated identity
 	// to kernel's CliTokenBroker for nonce completion and token minting.
 	BrokerCliAuth(context.Context, *CompleteCliAuthRequest) (*CompleteCliAuthResponse, error)
+	// BrokerAuthMcpSession carries one Model Context Protocol session for Auth over a
+	// single bidirectional stream: one complete JSON-RPC frame per stream message,
+	// request frames in and response frames out, for the life of the session.
+	//
+	// Generated, never declared: Auth has at least one RPC_PRINCIPAL_MCP rpc, and this
+	// is the only channel those tools are reachable through. Bidirectional because an
+	// MCP session is stateful — it opens with an initialize handshake and holds the
+	// negotiated protocol version after it — so a unary call would repeat that
+	// handshake per tool call.
+	BrokerAuthMcpSession(grpc.BidiStreamingServer[mcp.McpRequest, mcp.McpResponse]) error
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -280,6 +315,9 @@ func (UnimplementedAuthServer) RevokeSession(context.Context, *LogoutRequest) (*
 }
 func (UnimplementedAuthServer) BrokerCliAuth(context.Context, *CompleteCliAuthRequest) (*CompleteCliAuthResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method BrokerCliAuth not implemented")
+}
+func (UnimplementedAuthServer) BrokerAuthMcpSession(grpc.BidiStreamingServer[mcp.McpRequest, mcp.McpResponse]) error {
+	return status.Error(codes.Unimplemented, "method BrokerAuthMcpSession not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
 func (UnimplementedAuthServer) testEmbeddedByValue()              {}
@@ -392,6 +430,13 @@ func _Auth_BrokerCliAuth_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Auth_BrokerAuthMcpSession_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(AuthServer).BrokerAuthMcpSession(&grpc.GenericServerStream[mcp.McpRequest, mcp.McpResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Auth_BrokerAuthMcpSessionServer = grpc.BidiStreamingServer[mcp.McpRequest, mcp.McpResponse]
+
 // Auth_ServiceDesc is the grpc.ServiceDesc for Auth service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -420,7 +465,14 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Auth_BrokerCliAuth_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "BrokerAuthMcpSession",
+			Handler:       _Auth_BrokerAuthMcpSession_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "services/oauth.proto",
 }
 

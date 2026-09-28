@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -29,7 +29,7 @@ import (
 	"strings"
 
 	"github.com/pelletier/go-toml/v2"
-	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/errors"
+	protoerrors "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/errors"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	anypb "google.golang.org/protobuf/types/known/anypb"
@@ -2992,7 +2992,7 @@ func AdminCpuMetricsToTOML(v *AdminCpuMetrics) ([]byte, error) {
 // AdminDiskMetricsJSON represents AdminDiskMetrics in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type admindiskmetricsJSON struct {
-	PersistenceDir       string `json:"persistence_dir,omitempty"`
+	DiskDir              string `json:"disk_dir,omitempty"`
 	TotalBytes           int64  `json:"total_bytes,omitempty"`
 	UsableBytes          int64  `json:"usable_bytes,omitempty"`
 	UsedBytes            int64  `json:"used_bytes,omitempty"`
@@ -3009,7 +3009,7 @@ func AdminDiskMetricsToJSON(v *AdminDiskMetrics) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := admindiskmetricsJSON{
-		PersistenceDir:       v.PersistenceDir,
+		DiskDir:              v.DiskDir,
 		TotalBytes:           v.TotalBytes,
 		UsableBytes:          v.UsableBytes,
 		UsedBytes:            v.UsedBytes,
@@ -3028,7 +3028,7 @@ func AdminDiskMetricsToJSONPretty(v *AdminDiskMetrics) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := admindiskmetricsJSON{
-		PersistenceDir:       v.PersistenceDir,
+		DiskDir:              v.DiskDir,
 		TotalBytes:           v.TotalBytes,
 		UsableBytes:          v.UsableBytes,
 		UsedBytes:            v.UsedBytes,
@@ -3099,7 +3099,7 @@ func AdminDiskMetricsFromJSON(data []byte) (*AdminDiskMetrics, error) {
 	}
 	// Build result with parsed enums
 	result := &AdminDiskMetrics{}
-	result.PersistenceDir = raw.PersistenceDir
+	result.DiskDir = raw.DiskDir
 	result.TotalBytes = raw.TotalBytes
 	result.UsableBytes = raw.UsableBytes
 	result.UsedBytes = raw.UsedBytes
@@ -3752,7 +3752,7 @@ func AdminGrpcStatsToTOML(v *AdminGrpcStats) ([]byte, error) {
 type adminpersistencestatusJSON struct {
 	NodeId             string `json:"node_id,omitempty"`
 	Enabled            bool   `json:"enabled,omitempty"`
-	PersistenceDir     string `json:"persistence_dir,omitempty"`
+	DiskDir            string `json:"disk_dir,omitempty"`
 	RedoLogEntryCount  int64  `json:"redo_log_entry_count,omitempty"`
 	RedoLogSizeBytes   int64  `json:"redo_log_size_bytes,omitempty"`
 	LastDumpTimeMs     int64  `json:"last_dump_time_ms,omitempty"`
@@ -3773,7 +3773,7 @@ func AdminPersistenceStatusToJSON(v *AdminPersistenceStatus) ([]byte, error) {
 	helper := adminpersistencestatusJSON{
 		NodeId:             v.NodeId,
 		Enabled:            v.Enabled,
-		PersistenceDir:     v.PersistenceDir,
+		DiskDir:            v.DiskDir,
 		RedoLogEntryCount:  v.RedoLogEntryCount,
 		RedoLogSizeBytes:   v.RedoLogSizeBytes,
 		LastDumpTimeMs:     v.LastDumpTimeMs,
@@ -3796,7 +3796,7 @@ func AdminPersistenceStatusToJSONPretty(v *AdminPersistenceStatus) ([]byte, erro
 	helper := adminpersistencestatusJSON{
 		NodeId:             v.NodeId,
 		Enabled:            v.Enabled,
-		PersistenceDir:     v.PersistenceDir,
+		DiskDir:            v.DiskDir,
 		RedoLogEntryCount:  v.RedoLogEntryCount,
 		RedoLogSizeBytes:   v.RedoLogSizeBytes,
 		LastDumpTimeMs:     v.LastDumpTimeMs,
@@ -3871,7 +3871,7 @@ func AdminPersistenceStatusFromJSON(data []byte) (*AdminPersistenceStatus, error
 	result := &AdminPersistenceStatus{}
 	result.NodeId = raw.NodeId
 	result.Enabled = raw.Enabled
-	result.PersistenceDir = raw.PersistenceDir
+	result.DiskDir = raw.DiskDir
 	result.RedoLogEntryCount = raw.RedoLogEntryCount
 	result.RedoLogSizeBytes = raw.RedoLogSizeBytes
 	result.LastDumpTimeMs = raw.LastDumpTimeMs
@@ -7520,7 +7520,7 @@ func AdminDiskMetricsToEnvVar(v *AdminDiskMetrics) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_COMMON_HAZELCAST_ADMIN_DISK_METRICS_PERSISTENCE_DIR"] = v.PersistenceDir
+	result["PROTO_COMMON_HAZELCAST_ADMIN_DISK_METRICS_DISK_DIR"] = v.DiskDir
 	result["PROTO_COMMON_HAZELCAST_ADMIN_DISK_METRICS_TOTAL_BYTES"] = strconv.FormatInt(v.TotalBytes, 10)
 	result["PROTO_COMMON_HAZELCAST_ADMIN_DISK_METRICS_USABLE_BYTES"] = strconv.FormatInt(v.UsableBytes, 10)
 	result["PROTO_COMMON_HAZELCAST_ADMIN_DISK_METRICS_USED_BYTES"] = strconv.FormatInt(v.UsedBytes, 10)
@@ -7533,8 +7533,8 @@ func AdminDiskMetricsToEnvVar(v *AdminDiskMetrics) map[string]string {
 // AdminDiskMetricsFromEnvVar creates AdminDiskMetrics from environment variable key-value pairs.
 func AdminDiskMetricsFromEnvVar(env map[string]string) (*AdminDiskMetrics, error) {
 	result := &AdminDiskMetrics{}
-	if val, ok := env["PROTO_COMMON_HAZELCAST_ADMIN_DISK_METRICS_PERSISTENCE_DIR"]; ok && val != "" {
-		result.PersistenceDir = val
+	if val, ok := env["PROTO_COMMON_HAZELCAST_ADMIN_DISK_METRICS_DISK_DIR"]; ok && val != "" {
+		result.DiskDir = val
 	}
 	if val, ok := env["PROTO_COMMON_HAZELCAST_ADMIN_DISK_METRICS_TOTAL_BYTES"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 64)
@@ -7950,7 +7950,7 @@ func AdminPersistenceStatusToEnvVar(v *AdminPersistenceStatus) map[string]string
 	result := make(map[string]string)
 	result["PROTO_COMMON_HAZELCAST_ADMIN_PERSISTENCE_STATUS_NODE_ID"] = v.NodeId
 	result["PROTO_COMMON_HAZELCAST_ADMIN_PERSISTENCE_STATUS_ENABLED"] = strconv.FormatBool(v.Enabled)
-	result["PROTO_COMMON_HAZELCAST_ADMIN_PERSISTENCE_STATUS_PERSISTENCE_DIR"] = v.PersistenceDir
+	result["PROTO_COMMON_HAZELCAST_ADMIN_PERSISTENCE_STATUS_DISK_DIR"] = v.DiskDir
 	result["PROTO_COMMON_HAZELCAST_ADMIN_PERSISTENCE_STATUS_REDO_LOG_ENTRY_COUNT"] = strconv.FormatInt(v.RedoLogEntryCount, 10)
 	result["PROTO_COMMON_HAZELCAST_ADMIN_PERSISTENCE_STATUS_REDO_LOG_SIZE_BYTES"] = strconv.FormatInt(v.RedoLogSizeBytes, 10)
 	result["PROTO_COMMON_HAZELCAST_ADMIN_PERSISTENCE_STATUS_LAST_DUMP_TIME_MS"] = strconv.FormatInt(v.LastDumpTimeMs, 10)
@@ -7975,8 +7975,8 @@ func AdminPersistenceStatusFromEnvVar(env map[string]string) (*AdminPersistenceS
 		}
 		result.Enabled = parsed
 	}
-	if val, ok := env["PROTO_COMMON_HAZELCAST_ADMIN_PERSISTENCE_STATUS_PERSISTENCE_DIR"]; ok && val != "" {
-		result.PersistenceDir = val
+	if val, ok := env["PROTO_COMMON_HAZELCAST_ADMIN_PERSISTENCE_STATUS_DISK_DIR"]; ok && val != "" {
+		result.DiskDir = val
 	}
 	if val, ok := env["PROTO_COMMON_HAZELCAST_ADMIN_PERSISTENCE_STATUS_REDO_LOG_ENTRY_COUNT"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 64)
@@ -9890,9 +9890,9 @@ func ValidateAdminDiskMetricsWithDepth(m *AdminDiskMetrics, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
 	}
 
-	// Validate PersistenceDir (default max size: 32768 bytes)
-	if len(m.PersistenceDir) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field PersistenceDir exceeds max size of 32768 bytes, got: %d", len(m.PersistenceDir))
+	// Validate DiskDir (default max size: 32768 bytes)
+	if len(m.DiskDir) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field DiskDir exceeds max size of 32768 bytes, got: %d", len(m.DiskDir))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -10073,9 +10073,9 @@ func ValidateAdminPersistenceStatusWithDepth(m *AdminPersistenceStatus, depth in
 		return protoerrors.NewErrMissingInvalidData(nil, "field NodeId exceeds max size of 32768 bytes, got: %d", len(m.NodeId))
 	}
 
-	// Validate PersistenceDir (default max size: 32768 bytes)
-	if len(m.PersistenceDir) > 32768 {
-		return protoerrors.NewErrMissingInvalidData(nil, "field PersistenceDir exceeds max size of 32768 bytes, got: %d", len(m.PersistenceDir))
+	// Validate DiskDir (default max size: 32768 bytes)
+	if len(m.DiskDir) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field DiskDir exceeds max size of 32768 bytes, got: %d", len(m.DiskDir))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -10860,7 +10860,7 @@ const (
 	MaxSizeAdminnodemetricsTraceId                      int = 32768
 	MaxSizeAdminmemorymetricsTraceId                    int = 32768
 	MaxSizeAdmincpumetricsTraceId                       int = 32768
-	MaxSizeAdmindiskmetricsPersistenceDir               int = 32768
+	MaxSizeAdmindiskmetricsDiskDir                      int = 32768
 	MaxSizeAdmindiskmetricsTraceId                      int = 32768
 	MaxSizeAdmingraphinfoQualifiedName                  int = 32768
 	MaxSizeAdmingraphinfoStateRoot                      int = 32768
@@ -10878,7 +10878,7 @@ const (
 	MaxSizeAdmingrpcstatsPerMethodCounts                int = 512
 	MaxSizeAdmingrpcstatsTraceId                        int = 32768
 	MaxSizeAdminpersistencestatusNodeId                 int = 32768
-	MaxSizeAdminpersistencestatusPersistenceDir         int = 32768
+	MaxSizeAdminpersistencestatusDiskDir                int = 32768
 	MaxSizeAdminpersistencestatusTraceId                int = 32768
 	MaxSizeAdminnetworkstatsNodeId                      int = 32768
 	MaxSizeAdminnetworkstatsGrpcListenAddress           int = 32768
@@ -12057,8 +12057,8 @@ func MergeAdminCpuMetrics(dst, src *AdminCpuMetrics) {
 // ============================================================
 // MergeAdminDiskMetrics fills zero-valued fields in dst from src.
 func MergeAdminDiskMetrics(dst, src *AdminDiskMetrics) {
-	if dst.PersistenceDir == "" {
-		dst.PersistenceDir = src.PersistenceDir
+	if dst.DiskDir == "" {
+		dst.DiskDir = src.DiskDir
 	}
 	if dst.TotalBytes == 0 {
 		dst.TotalBytes = src.TotalBytes
@@ -12256,8 +12256,8 @@ func MergeAdminPersistenceStatus(dst, src *AdminPersistenceStatus) {
 	if !dst.Enabled {
 		dst.Enabled = src.Enabled
 	}
-	if dst.PersistenceDir == "" {
-		dst.PersistenceDir = src.PersistenceDir
+	if dst.DiskDir == "" {
+		dst.DiskDir = src.DiskDir
 	}
 	if dst.RedoLogEntryCount == 0 {
 		dst.RedoLogEntryCount = src.RedoLogEntryCount

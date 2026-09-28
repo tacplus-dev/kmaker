@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -22,12 +22,12 @@
 package gateway
 
 import (
-	host "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/host"
-	jwk "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/jwk"
-	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
-	tokenrequest "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/tokenrequest"
-	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
-	x509 "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/x509"
+	host "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/host"
+	jwk "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/jwk"
+	_ "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/spec"
+	tokenrequest "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/tokenrequest"
+	trace "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
+	x509 "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -312,9 +312,34 @@ type Config struct {
 	// connecting to the gateway's external HTTPS endpoint. Served via PublicCa
 	// so clients (schematicctl, webapp) can configure TLS trust automatically.
 	// Required in CERT_CHAIN mode. Omit in LETSENCRYPT mode (publicly trusted).
-	RootCa        []*x509.X509Cert `protobuf:"bytes,11,rep,name=root_ca,json=rootCa,proto3" json:"root_ca,omitempty"`
-	TraceId       string           `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool             `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	RootCa []*x509.X509Cert `protobuf:"bytes,11,rep,name=root_ca,json=rootCa,proto3" json:"root_ca,omitempty"`
+	// http_listener is the PLAINTEXT listener behind the edge's port 80. The
+	// gateway owns port 80 as well as 443: one LoadBalancer carries both, so
+	// there is no second externally-exposed Service to reach the ACME responder
+	// with.
+	//
+	// On this listener the gateway does exactly three things:
+	//   - GET/HEAD /.well-known/acme-challenge/* is proxied to acme_backend
+	//   - any other GET/HEAD gets a 301 to the same path on https://
+	//   - any other method gets a 405
+	//
+	// Empty disables the listener — nothing binds. It has no declared default
+	// because the answer depends on external_tls_mode, which tacplus cannot
+	// express as a conditional default: the operator sets it (to 0.0.0.0:8080,
+	// the container-side port the LoadBalancer's port 80 targets) exactly when
+	// external_tls_mode = LETSENCRYPT, and leaves it empty otherwise.
+	HttpListener *host.Host `protobuf:"bytes,12,opt,name=http_listener,json=httpListener,proto3" json:"http_listener,omitempty"`
+	// acme_backend is the IN-CLUSTER address of the letsencrypt service's
+	// HTTP-01 responder — its own http_listener, reachable on the letsencrypt
+	// ClusterIP Service. The gateway is the only thing that reaches it; the
+	// responder is no longer exposed outside the cluster.
+	//
+	// Empty while http_listener is set means challenge requests are answered
+	// 503: the redirect and 405 halves still work, but no certificate can be
+	// issued. Set together with http_listener.
+	AcmeBackend   *host.Host `protobuf:"bytes,13,opt,name=acme_backend,json=acmeBackend,proto3" json:"acme_backend,omitempty"`
+	TraceId       string     `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool       `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -422,6 +447,20 @@ func (x *Config) GetExternalKeyPem() string {
 func (x *Config) GetRootCa() []*x509.X509Cert {
 	if x != nil {
 		return x.RootCa
+	}
+	return nil
+}
+
+func (x *Config) GetHttpListener() *host.Host {
+	if x != nil {
+		return x.HttpListener
+	}
+	return nil
+}
+
+func (x *Config) GetAcmeBackend() *host.Host {
+	if x != nil {
+		return x.AcmeBackend
 	}
 	return nil
 }
@@ -620,7 +659,7 @@ var File_services_gateway_proto protoreflect.FileDescriptor
 
 const file_services_gateway_proto_rawDesc = "" +
 	"\n" +
-	"\x16services/gateway.proto\x12\agateway\x1a\x0esys/spec.proto\x1a\x0esys/host.proto\x1a\rsys/jwk.proto\x1a\x0esys/x509.proto\x1a\x16sys/tokenrequest.proto\x1a\x0fsys/trace.proto\"\xbb\x05\n" +
+	"\x16services/gateway.proto\x12\agateway\x1a\x0esys/spec.proto\x1a\x0esys/host.proto\x1a\rsys/jwk.proto\x1a\x0esys/x509.proto\x1a\x16sys/tokenrequest.proto\x1a\x0fsys/trace.proto\"\x9b\x06\n" +
 	"\x06Config\x12E\n" +
 	"\x1chealth_poll_interval_seconds\x18\x01 \x01(\x03B\x04\x90\xa8\x1d\x05R\x19healthPollIntervalSeconds\x12%\n" +
 	"\venable_http\x18\x02 \x01(\bB\x04\xa0\xa8\x1d\x01R\n" +
@@ -639,7 +678,11 @@ const file_services_gateway_proto_rawDesc = "" +
 	"\x11external_cert_pem\x18\t \x01(\tR\x0fexternalCertPem\x12(\n" +
 	"\x10external_key_pem\x18\n" +
 	" \x01(\tR\x0eexternalKeyPem\x12-\n" +
-	"\aroot_ca\x18\v \x03(\v2\x0e.x509.X509CertB\x04\xb8\xa8\x1d\x04R\x06rootCa\x12\x1a\n" +
+	"\aroot_ca\x18\v \x03(\v2\x0e.x509.X509CertB\x04\xb8\xa8\x1d\x04R\x06rootCa\x12/\n" +
+	"\rhttp_listener\x18\f \x01(\v2\n" +
+	".host.HostR\fhttpListener\x12-\n" +
+	"\facme_backend\x18\r \x01(\v2\n" +
+	".host.HostR\vacmeBackend\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:>Ҩ\x1d\t\n" +
 	"\agatewayʪ\x1d-\n" +
@@ -699,10 +742,10 @@ const file_services_gateway_proto_rawDesc = "" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x0f.gateway.Config\x12-\n" +
 	"\tSetConfig\x12\x0f.gateway.Config\x1a\x0f.gateway.Config\x125\n" +
 	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x0f.gateway.Config0\x01\x1a\r\xea\x97\"\t\n" +
-	"\agatewayB\xa9\x01ڵ\x18\x04 \x01(\x01\xe2\xb5\x18\x1e\n" +
+	"\agatewayB\x9e\x01ڵ\x18\x04 \x01(\x01\xe2\xb5\x18\x1e\n" +
 	"\x1cletsencrypt.LetsEncryptState\xe2\xb5\x18\v\n" +
 	"\tkernel.Ca\x92\xb6\x18\r\n" +
-	"\vkernel.MintZ]gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gatewayb\x06proto3"
+	"\vkernel.MintZRgitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/gatewayb\x06proto3"
 
 var (
 	file_services_gateway_proto_rawDescOnce sync.Once
@@ -742,29 +785,31 @@ var file_services_gateway_proto_depIdxs = []int32{
 	8,  // 1: gateway.Config.quic_listener:type_name -> host.Host
 	0,  // 2: gateway.Config.external_tls_mode:type_name -> gateway.ExternalTlsMode
 	9,  // 3: gateway.Config.root_ca:type_name -> x509.X509Cert
-	9,  // 4: gateway.PublicCaResponse.certs:type_name -> x509.X509Cert
-	4,  // 5: gateway.GatewayConfigState.config:type_name -> gateway.Config
-	10, // 6: gateway.Mint.GetOpenIdConfig:input_type -> trace.TraceRequest
-	10, // 7: gateway.Mint.ListJwks:input_type -> trace.TraceRequest
-	11, // 8: gateway.Mint.MintToken:input_type -> tokenrequest.TokenMintRequest
-	12, // 9: gateway.Mint.MintX509Cert:input_type -> tokenrequest.X509MintRequest
-	10, // 10: gateway.Mint.ListPublicCa:input_type -> trace.TraceRequest
-	10, // 11: gateway.GatewayConfigStateService.GetConfig:input_type -> trace.TraceRequest
-	4,  // 12: gateway.GatewayConfigStateService.SetConfig:input_type -> gateway.Config
-	10, // 13: gateway.GatewayConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	13, // 14: gateway.Mint.GetOpenIdConfig:output_type -> jwk.OpenIdConfiguration
-	14, // 15: gateway.Mint.ListJwks:output_type -> jwk.Jwks
-	15, // 16: gateway.Mint.MintToken:output_type -> tokenrequest.TokenMintResponse
-	16, // 17: gateway.Mint.MintX509Cert:output_type -> x509.X509CertChain
-	5,  // 18: gateway.Mint.ListPublicCa:output_type -> gateway.PublicCaResponse
-	4,  // 19: gateway.GatewayConfigStateService.GetConfig:output_type -> gateway.Config
-	4,  // 20: gateway.GatewayConfigStateService.SetConfig:output_type -> gateway.Config
-	4,  // 21: gateway.GatewayConfigStateService.WatchConfig:output_type -> gateway.Config
-	14, // [14:22] is the sub-list for method output_type
-	6,  // [6:14] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	8,  // 4: gateway.Config.http_listener:type_name -> host.Host
+	8,  // 5: gateway.Config.acme_backend:type_name -> host.Host
+	9,  // 6: gateway.PublicCaResponse.certs:type_name -> x509.X509Cert
+	4,  // 7: gateway.GatewayConfigState.config:type_name -> gateway.Config
+	10, // 8: gateway.Mint.GetOpenIdConfig:input_type -> trace.TraceRequest
+	10, // 9: gateway.Mint.ListJwks:input_type -> trace.TraceRequest
+	11, // 10: gateway.Mint.MintToken:input_type -> tokenrequest.TokenMintRequest
+	12, // 11: gateway.Mint.MintX509Cert:input_type -> tokenrequest.X509MintRequest
+	10, // 12: gateway.Mint.ListPublicCa:input_type -> trace.TraceRequest
+	10, // 13: gateway.GatewayConfigStateService.GetConfig:input_type -> trace.TraceRequest
+	4,  // 14: gateway.GatewayConfigStateService.SetConfig:input_type -> gateway.Config
+	10, // 15: gateway.GatewayConfigStateService.WatchConfig:input_type -> trace.TraceRequest
+	13, // 16: gateway.Mint.GetOpenIdConfig:output_type -> jwk.OpenIdConfiguration
+	14, // 17: gateway.Mint.ListJwks:output_type -> jwk.Jwks
+	15, // 18: gateway.Mint.MintToken:output_type -> tokenrequest.TokenMintResponse
+	16, // 19: gateway.Mint.MintX509Cert:output_type -> x509.X509CertChain
+	5,  // 20: gateway.Mint.ListPublicCa:output_type -> gateway.PublicCaResponse
+	4,  // 21: gateway.GatewayConfigStateService.GetConfig:output_type -> gateway.Config
+	4,  // 22: gateway.GatewayConfigStateService.SetConfig:output_type -> gateway.Config
+	4,  // 23: gateway.GatewayConfigStateService.WatchConfig:output_type -> gateway.Config
+	16, // [16:24] is the sub-list for method output_type
+	8,  // [8:16] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_services_gateway_proto_init() }

@@ -4,7 +4,7 @@
 syntax = "proto3";
 
 package tenant_config;
-option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/tenant_config";
+option go_package = "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/tenant_config";
 
 import "sys/spec.proto";
 import "common/credentials.proto";

@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -28,11 +28,11 @@ import (
 	"strings"
 
 	"github.com/pelletier/go-toml/v2"
-	credentials "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/common/credentials"
-	kmaker "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
-	oauth "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/oauth"
-	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/errors"
-	x509 "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/x509"
+	credentials "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/common/credentials"
+	kmaker "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker"
+	oauth "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/oauth"
+	protoerrors "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/errors"
+	x509 "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"gopkg.in/yaml.v3"
@@ -434,6 +434,7 @@ func OperatorConfigStateServiceRpcIdToSpecName(v OperatorConfigStateServiceRpcId
 type tlsconfigJSON struct {
 	Letsencrypt bool            `json:"letsencrypt,omitempty"`
 	Ca          json.RawMessage `json:"ca,omitempty"`
+	Email       string          `json:"email,omitempty"`
 	TraceId     string          `json:"trace_id,omitempty"`
 	Noop        bool            `json:"noop,omitempty"`
 }
@@ -454,6 +455,7 @@ func TLSConfigToJSON(v *TLSConfig) ([]byte, error) {
 			data, _ := x509.X509CertChainToJSON(v.Ca)
 			return data
 		}(),
+		Email:   v.Email,
 		TraceId: v.TraceId,
 		Noop:    v.Noop,
 	}
@@ -476,6 +478,7 @@ func TLSConfigToJSONPretty(v *TLSConfig) ([]byte, error) {
 			data, _ := x509.X509CertChainToJSON(v.Ca)
 			return data
 		}(),
+		Email:   v.Email,
 		TraceId: v.TraceId,
 		Noop:    v.Noop,
 	}
@@ -550,6 +553,7 @@ func TLSConfigFromJSON(data []byte) (*TLSConfig, error) {
 			result.Ca = parsed
 		}
 	}
+	result.Email = raw.Email
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -598,19 +602,24 @@ func TLSConfigToTOML(v *TLSConfig) ([]byte, error) {
 // TopologyJSON represents Topology in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type topologyJSON struct {
-	KernelNodes   int32            `json:"kernel_nodes,omitempty"`
-	SentinelNodes int32            `json:"sentinel_nodes,omitempty"`
-	EventbusNodes int32            `json:"eventbus_nodes,omitempty"`
-	GatewayNodes  int32            `json:"gateway_nodes,omitempty"`
-	OauthNodes    int32            `json:"oauth_nodes,omitempty"`
-	OpaNodes      int32            `json:"opa_nodes,omitempty"`
-	StratumNodes  int32            `json:"stratum_nodes,omitempty"`
-	SamlNodes     int32            `json:"saml_nodes,omitempty"`
-	KmakerNodes   int32            `json:"kmaker_nodes,omitempty"`
-	EchoNodes     int32            `json:"echo_nodes,omitempty"`
-	AppServices   map[string]int32 `json:"app_services,omitempty"`
-	TraceId       string           `json:"trace_id,omitempty"`
-	Noop          bool             `json:"noop,omitempty"`
+	KernelNodes        int32            `json:"kernel_nodes,omitempty"`
+	SentinelNodes      int32            `json:"sentinel_nodes,omitempty"`
+	EventbusNodes      int32            `json:"eventbus_nodes,omitempty"`
+	GatewayNodes       int32            `json:"gateway_nodes,omitempty"`
+	OauthNodes         int32            `json:"oauth_nodes,omitempty"`
+	OpaNodes           int32            `json:"opa_nodes,omitempty"`
+	StratumNodes       int32            `json:"stratum_nodes,omitempty"`
+	StratumSearchNodes int32            `json:"stratum_search_nodes,omitempty"`
+	SamlNodes          int32            `json:"saml_nodes,omitempty"`
+	KmakerNodes        int32            `json:"kmaker_nodes,omitempty"`
+	EchoNodes          int32            `json:"echo_nodes,omitempty"`
+	MessagingNodes     int32            `json:"messaging_nodes,omitempty"`
+	MailboxNodes       int32            `json:"mailbox_nodes,omitempty"`
+	PersonalauthNodes  int32            `json:"personalauth_nodes,omitempty"`
+	BlobstoreNodes     int32            `json:"blobstore_nodes,omitempty"`
+	AppServices        map[string]int32 `json:"app_services,omitempty"`
+	TraceId            string           `json:"trace_id,omitempty"`
+	Noop               bool             `json:"noop,omitempty"`
 }
 
 // TopologyToJSON converts Topology to JSON bytes.
@@ -621,19 +630,24 @@ func TopologyToJSON(v *Topology) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := topologyJSON{
-		KernelNodes:   v.KernelNodes,
-		SentinelNodes: v.SentinelNodes,
-		EventbusNodes: v.EventbusNodes,
-		GatewayNodes:  v.GatewayNodes,
-		OauthNodes:    v.OauthNodes,
-		OpaNodes:      v.OpaNodes,
-		StratumNodes:  v.StratumNodes,
-		SamlNodes:     v.SamlNodes,
-		KmakerNodes:   v.KmakerNodes,
-		EchoNodes:     v.EchoNodes,
-		AppServices:   v.AppServices,
-		TraceId:       v.TraceId,
-		Noop:          v.Noop,
+		KernelNodes:        v.KernelNodes,
+		SentinelNodes:      v.SentinelNodes,
+		EventbusNodes:      v.EventbusNodes,
+		GatewayNodes:       v.GatewayNodes,
+		OauthNodes:         v.OauthNodes,
+		OpaNodes:           v.OpaNodes,
+		StratumNodes:       v.StratumNodes,
+		StratumSearchNodes: v.StratumSearchNodes,
+		SamlNodes:          v.SamlNodes,
+		KmakerNodes:        v.KmakerNodes,
+		EchoNodes:          v.EchoNodes,
+		MessagingNodes:     v.MessagingNodes,
+		MailboxNodes:       v.MailboxNodes,
+		PersonalauthNodes:  v.PersonalauthNodes,
+		BlobstoreNodes:     v.BlobstoreNodes,
+		AppServices:        v.AppServices,
+		TraceId:            v.TraceId,
+		Noop:               v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -646,19 +660,24 @@ func TopologyToJSONPretty(v *Topology) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := topologyJSON{
-		KernelNodes:   v.KernelNodes,
-		SentinelNodes: v.SentinelNodes,
-		EventbusNodes: v.EventbusNodes,
-		GatewayNodes:  v.GatewayNodes,
-		OauthNodes:    v.OauthNodes,
-		OpaNodes:      v.OpaNodes,
-		StratumNodes:  v.StratumNodes,
-		SamlNodes:     v.SamlNodes,
-		KmakerNodes:   v.KmakerNodes,
-		EchoNodes:     v.EchoNodes,
-		AppServices:   v.AppServices,
-		TraceId:       v.TraceId,
-		Noop:          v.Noop,
+		KernelNodes:        v.KernelNodes,
+		SentinelNodes:      v.SentinelNodes,
+		EventbusNodes:      v.EventbusNodes,
+		GatewayNodes:       v.GatewayNodes,
+		OauthNodes:         v.OauthNodes,
+		OpaNodes:           v.OpaNodes,
+		StratumNodes:       v.StratumNodes,
+		StratumSearchNodes: v.StratumSearchNodes,
+		SamlNodes:          v.SamlNodes,
+		KmakerNodes:        v.KmakerNodes,
+		EchoNodes:          v.EchoNodes,
+		MessagingNodes:     v.MessagingNodes,
+		MailboxNodes:       v.MailboxNodes,
+		PersonalauthNodes:  v.PersonalauthNodes,
+		BlobstoreNodes:     v.BlobstoreNodes,
+		AppServices:        v.AppServices,
+		TraceId:            v.TraceId,
+		Noop:               v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -730,9 +749,14 @@ func TopologyFromJSON(data []byte) (*Topology, error) {
 	result.OauthNodes = raw.OauthNodes
 	result.OpaNodes = raw.OpaNodes
 	result.StratumNodes = raw.StratumNodes
+	result.StratumSearchNodes = raw.StratumSearchNodes
 	result.SamlNodes = raw.SamlNodes
 	result.KmakerNodes = raw.KmakerNodes
 	result.EchoNodes = raw.EchoNodes
+	result.MessagingNodes = raw.MessagingNodes
+	result.MailboxNodes = raw.MailboxNodes
+	result.PersonalauthNodes = raw.PersonalauthNodes
+	result.BlobstoreNodes = raw.BlobstoreNodes
 	result.AppServices = raw.AppServices
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
@@ -782,12 +806,16 @@ func TopologyToTOML(v *Topology) ([]byte, error) {
 // OptionalServicesJSON represents OptionalServices in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type optionalservicesJSON struct {
-	Saml     bool   `json:"saml,omitempty"`
-	Oauth    bool   `json:"oauth,omitempty"`
-	Keycloak bool   `json:"keycloak,omitempty"`
-	Echo     bool   `json:"echo,omitempty"`
-	TraceId  string `json:"trace_id,omitempty"`
-	Noop     bool   `json:"noop,omitempty"`
+	Saml         bool   `json:"saml,omitempty"`
+	Oauth        bool   `json:"oauth,omitempty"`
+	Keycloak     bool   `json:"keycloak,omitempty"`
+	Echo         bool   `json:"echo,omitempty"`
+	Messaging    bool   `json:"messaging,omitempty"`
+	Mailbox      bool   `json:"mailbox,omitempty"`
+	Personalauth bool   `json:"personalauth,omitempty"`
+	Blobstore    bool   `json:"blobstore,omitempty"`
+	TraceId      string `json:"trace_id,omitempty"`
+	Noop         bool   `json:"noop,omitempty"`
 }
 
 // OptionalServicesToJSON converts OptionalServices to JSON bytes.
@@ -798,12 +826,16 @@ func OptionalServicesToJSON(v *OptionalServices) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := optionalservicesJSON{
-		Saml:     v.Saml,
-		Oauth:    v.Oauth,
-		Keycloak: v.Keycloak,
-		Echo:     v.Echo,
-		TraceId:  v.TraceId,
-		Noop:     v.Noop,
+		Saml:         v.Saml,
+		Oauth:        v.Oauth,
+		Keycloak:     v.Keycloak,
+		Echo:         v.Echo,
+		Messaging:    v.Messaging,
+		Mailbox:      v.Mailbox,
+		Personalauth: v.Personalauth,
+		Blobstore:    v.Blobstore,
+		TraceId:      v.TraceId,
+		Noop:         v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -816,12 +848,16 @@ func OptionalServicesToJSONPretty(v *OptionalServices) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := optionalservicesJSON{
-		Saml:     v.Saml,
-		Oauth:    v.Oauth,
-		Keycloak: v.Keycloak,
-		Echo:     v.Echo,
-		TraceId:  v.TraceId,
-		Noop:     v.Noop,
+		Saml:         v.Saml,
+		Oauth:        v.Oauth,
+		Keycloak:     v.Keycloak,
+		Echo:         v.Echo,
+		Messaging:    v.Messaging,
+		Mailbox:      v.Mailbox,
+		Personalauth: v.Personalauth,
+		Blobstore:    v.Blobstore,
+		TraceId:      v.TraceId,
+		Noop:         v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -890,6 +926,10 @@ func OptionalServicesFromJSON(data []byte) (*OptionalServices, error) {
 	result.Oauth = raw.Oauth
 	result.Keycloak = raw.Keycloak
 	result.Echo = raw.Echo
+	result.Messaging = raw.Messaging
+	result.Mailbox = raw.Mailbox
+	result.Personalauth = raw.Personalauth
+	result.Blobstore = raw.Blobstore
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -1327,6 +1367,8 @@ type configJSON struct {
 	Kmaker                json.RawMessage   `json:"kmaker,omitempty"`
 	LlmCredential         string            `json:"llm_credential,omitempty"`
 	LlmCredentialServices []string          `json:"llm_credential_services,omitempty"`
+	Tenants               []string          `json:"tenants,omitempty"`
+	ExternalIp            string            `json:"external_ip,omitempty"`
 	TraceId               string            `json:"trace_id,omitempty"`
 	Noop                  bool              `json:"noop,omitempty"`
 }
@@ -1407,6 +1449,8 @@ func ConfigToJSON(v *Config) ([]byte, error) {
 		}(),
 		LlmCredential:         v.LlmCredential,
 		LlmCredentialServices: v.LlmCredentialServices,
+		Tenants:               v.Tenants,
+		ExternalIp:            v.ExternalIp,
 		TraceId:               v.TraceId,
 		Noop:                  v.Noop,
 	}
@@ -1489,6 +1533,8 @@ func ConfigToJSONPretty(v *Config) ([]byte, error) {
 		}(),
 		LlmCredential:         v.LlmCredential,
 		LlmCredentialServices: v.LlmCredentialServices,
+		Tenants:               v.Tenants,
+		ExternalIp:            v.ExternalIp,
 		TraceId:               v.TraceId,
 		Noop:                  v.Noop,
 	}
@@ -1626,6 +1672,8 @@ func ConfigFromJSON(data []byte) (*Config, error) {
 	}
 	result.LlmCredential = raw.LlmCredential
 	result.LlmCredentialServices = raw.LlmCredentialServices
+	result.Tenants = raw.Tenants
+	result.ExternalIp = raw.ExternalIp
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -2017,6 +2065,7 @@ func TLSConfigToEnvVar(v *TLSConfig) map[string]string {
 			result[k] = val
 		}
 	}
+	result["PROTO_SERVICES_OPERATOR_TLS_CONFIG_EMAIL"] = v.Email
 	result["PROTO_SERVICES_OPERATOR_TLS_CONFIG_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_OPERATOR_TLS_CONFIG_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -2036,6 +2085,9 @@ func TLSConfigFromEnvVar(env map[string]string) (*TLSConfig, error) {
 		return nil, err
 	} else if sub != nil {
 		result.Ca = sub
+	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_TLS_CONFIG_EMAIL"]; ok && val != "" {
+		result.Email = val
 	}
 	if val, ok := env["PROTO_SERVICES_OPERATOR_TLS_CONFIG_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -2063,9 +2115,14 @@ func TopologyToEnvVar(v *Topology) map[string]string {
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_OAUTH_NODES"] = strconv.FormatInt(int64(v.OauthNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_OPA_NODES"] = strconv.FormatInt(int64(v.OpaNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_STRATUM_NODES"] = strconv.FormatInt(int64(v.StratumNodes), 10)
+	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_STRATUM_SEARCH_NODES"] = strconv.FormatInt(int64(v.StratumSearchNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_SAML_NODES"] = strconv.FormatInt(int64(v.SamlNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_KMAKER_NODES"] = strconv.FormatInt(int64(v.KmakerNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_ECHO_NODES"] = strconv.FormatInt(int64(v.EchoNodes), 10)
+	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_MESSAGING_NODES"] = strconv.FormatInt(int64(v.MessagingNodes), 10)
+	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_MAILBOX_NODES"] = strconv.FormatInt(int64(v.MailboxNodes), 10)
+	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_PERSONALAUTH_NODES"] = strconv.FormatInt(int64(v.PersonalauthNodes), 10)
+	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_BLOBSTORE_NODES"] = strconv.FormatInt(int64(v.BlobstoreNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -2123,6 +2180,13 @@ func TopologyFromEnvVar(env map[string]string) (*Topology, error) {
 		}
 		result.StratumNodes = int32(parsed)
 	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_TOPOLOGY_STRATUM_SEARCH_NODES"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.StratumSearchNodes = int32(parsed)
+	}
 	if val, ok := env["PROTO_SERVICES_OPERATOR_TOPOLOGY_SAML_NODES"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 32)
 		if err != nil {
@@ -2143,6 +2207,34 @@ func TopologyFromEnvVar(env map[string]string) (*Topology, error) {
 			return nil, err
 		}
 		result.EchoNodes = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_TOPOLOGY_MESSAGING_NODES"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.MessagingNodes = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_TOPOLOGY_MAILBOX_NODES"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.MailboxNodes = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_TOPOLOGY_PERSONALAUTH_NODES"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.PersonalauthNodes = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_TOPOLOGY_BLOBSTORE_NODES"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		result.BlobstoreNodes = int32(parsed)
 	}
 	if val, ok := env["PROTO_SERVICES_OPERATOR_TOPOLOGY_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -2167,6 +2259,10 @@ func OptionalServicesToEnvVar(v *OptionalServices) map[string]string {
 	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_OAUTH"] = strconv.FormatBool(v.Oauth)
 	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_KEYCLOAK"] = strconv.FormatBool(v.Keycloak)
 	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_ECHO"] = strconv.FormatBool(v.Echo)
+	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_MESSAGING"] = strconv.FormatBool(v.Messaging)
+	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_MAILBOX"] = strconv.FormatBool(v.Mailbox)
+	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_PERSONALAUTH"] = strconv.FormatBool(v.Personalauth)
+	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_BLOBSTORE"] = strconv.FormatBool(v.Blobstore)
 	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -2202,6 +2298,34 @@ func OptionalServicesFromEnvVar(env map[string]string) (*OptionalServices, error
 			return nil, err
 		}
 		result.Echo = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_MESSAGING"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Messaging = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_MAILBOX"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Mailbox = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_PERSONALAUTH"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Personalauth = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_BLOBSTORE"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Blobstore = parsed
 	}
 	if val, ok := env["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -2323,6 +2447,10 @@ func ConfigToEnvVar(v *Config) map[string]string {
 	if len(v.LlmCredentialServices) > 0 {
 		result["PROTO_SERVICES_OPERATOR_CONFIG_LLM_CREDENTIAL_SERVICES"] = strings.Join(v.LlmCredentialServices, ",")
 	}
+	if len(v.Tenants) > 0 {
+		result["PROTO_SERVICES_OPERATOR_CONFIG_TENANTS"] = strings.Join(v.Tenants, ",")
+	}
+	result["PROTO_SERVICES_OPERATOR_CONFIG_EXTERNAL_IP"] = v.ExternalIp
 	result["PROTO_SERVICES_OPERATOR_CONFIG_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_OPERATOR_CONFIG_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -2412,6 +2540,12 @@ func ConfigFromEnvVar(env map[string]string) (*Config, error) {
 	}
 	if val, ok := env["PROTO_SERVICES_OPERATOR_CONFIG_LLM_CREDENTIAL_SERVICES"]; ok && val != "" {
 		result.LlmCredentialServices = strings.Split(val, ",")
+	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_CONFIG_TENANTS"]; ok && val != "" {
+		result.Tenants = strings.Split(val, ",")
+	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_CONFIG_EXTERNAL_IP"]; ok && val != "" {
+		result.ExternalIp = val
 	}
 	if val, ok := env["PROTO_SERVICES_OPERATOR_CONFIG_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -2507,6 +2641,11 @@ func ValidateTLSConfigWithDepth(m *TLSConfig, depth int) error {
 	}
 	if depth > 24 {
 		return protoerrors.NewErrMissingInvalidData(nil, "message nesting exceeds max depth of 24")
+	}
+
+	// Validate Email (default max size: 32768 bytes)
+	if len(m.Email) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Email exceeds max size of 32768 bytes, got: %d", len(m.Email))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -2703,10 +2842,22 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field LlmCredentialServices exceeds max size of 64, got: %d", len(m.LlmCredentialServices))
 	}
 
+	// Validate Tenants (assert_max_size: 64)
+	if len(m.Tenants) > 64 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field Tenants exceeds max size of 64, got: %d", len(m.Tenants))
+	}
+
 	// Validate LlmCredentialServices elements (default max size: 32768 bytes)
 	for i, val := range m.LlmCredentialServices {
 		if len(val) > 32768 {
 			return protoerrors.NewErrMissingInvalidData(nil, "field LlmCredentialServices[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
+		}
+	}
+
+	// Validate Tenants elements (default max size: 32768 bytes)
+	for i, val := range m.Tenants {
+		if len(val) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field Tenants[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
 		}
 	}
 
@@ -2743,6 +2894,11 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 	// Validate LlmCredential (default max size: 32768 bytes)
 	if len(m.LlmCredential) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field LlmCredential exceeds max size of 32768 bytes, got: %d", len(m.LlmCredential))
+	}
+
+	// Validate ExternalIp (default max size: 32768 bytes)
+	if len(m.ExternalIp) > 32768 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ExternalIp exceeds max size of 32768 bytes, got: %d", len(m.ExternalIp))
 	}
 
 	// Validate TraceId (default max size: 32768 bytes)
@@ -2866,27 +3022,32 @@ func ValidateMapEmptyWithDepth(m *MapEmpty, depth int) error {
 // Constants
 // ============================================================
 const (
-	DefaultKernelNodes   int64  = 3
-	DefaultSentinelNodes int64  = 3
-	DefaultEventbusNodes int64  = 3
-	DefaultOauthNodes    int64  = 3
-	DefaultOpaNodes      int64  = 3
-	DefaultStratumNodes  int64  = 3
-	DefaultSamlNodes     int64  = 3
-	DefaultKmakerNodes   int64  = 3
-	DefaultEchoNodes     int64  = 1
-	DefaultOauth         bool   = true
-	DefaultKeycloak      bool   = true
-	DefaultPort          int64  = 443
-	DefaultNamespace     string = "schematic"
-	DefaultOutputDir     string = "charts"
-	DefaultSpiffePrefix  string = "local/dev"
+	DefaultKernelNodes       int64  = 3
+	DefaultSentinelNodes     int64  = 3
+	DefaultEventbusNodes     int64  = 3
+	DefaultOauthNodes        int64  = 3
+	DefaultOpaNodes          int64  = 3
+	DefaultStratumNodes      int64  = 3
+	DefaultSamlNodes         int64  = 3
+	DefaultKmakerNodes       int64  = 3
+	DefaultEchoNodes         int64  = 1
+	DefaultMessagingNodes    int64  = 1
+	DefaultMailboxNodes      int64  = 1
+	DefaultPersonalauthNodes int64  = 3
+	DefaultBlobstoreNodes    int64  = 2
+	DefaultOauth             bool   = true
+	DefaultKeycloak          bool   = true
+	DefaultPort              int64  = 443
+	DefaultNamespace         string = "schematic"
+	DefaultOutputDir         string = "charts"
+	DefaultSpiffePrefix      string = "local.dev"
 )
 
 // ============================================================
 // Capacity Constants (for utilization monitoring)
 // ============================================================
 const (
+	MaxSizeTlsconfigEmail              int = 32768
 	MaxSizeTlsconfigTraceId            int = 32768
 	MaxSizeTopologyAppServices         int = 64
 	MaxSizeTopologyTraceId             int = 32768
@@ -2905,6 +3066,8 @@ const (
 	MaxSizeConfigRootCredPairs         int = 64
 	MaxSizeConfigLlmCredential         int = 32768
 	MaxSizeConfigLlmCredentialServices int = 64
+	MaxSizeConfigTenants               int = 64
+	MaxSizeConfigExternalIp            int = 32768
 	MaxSizeConfigTraceId               int = 32768
 	MaxSizeOperatorconfigstateTraceId  int = 32768
 	MaxSizeMapemptyTraceId             int = 32768
@@ -2954,6 +3117,18 @@ func TopologyDefaults(v *Topology) {
 	}
 	if v.EchoNodes == 0 {
 		v.EchoNodes = int32(DefaultEchoNodes)
+	}
+	if v.MessagingNodes == 0 {
+		v.MessagingNodes = int32(DefaultMessagingNodes)
+	}
+	if v.MailboxNodes == 0 {
+		v.MailboxNodes = int32(DefaultMailboxNodes)
+	}
+	if v.PersonalauthNodes == 0 {
+		v.PersonalauthNodes = int32(DefaultPersonalauthNodes)
+	}
+	if v.BlobstoreNodes == 0 {
+		v.BlobstoreNodes = int32(DefaultBlobstoreNodes)
 	}
 }
 
@@ -3081,6 +3256,18 @@ func TopologyUndefaults(v *Topology) {
 	if v.EchoNodes == int32(DefaultEchoNodes) {
 		v.EchoNodes = 0
 	}
+	if v.MessagingNodes == int32(DefaultMessagingNodes) {
+		v.MessagingNodes = 0
+	}
+	if v.MailboxNodes == int32(DefaultMailboxNodes) {
+		v.MailboxNodes = 0
+	}
+	if v.PersonalauthNodes == int32(DefaultPersonalauthNodes) {
+		v.PersonalauthNodes = 0
+	}
+	if v.BlobstoreNodes == int32(DefaultBlobstoreNodes) {
+		v.BlobstoreNodes = 0
+	}
 }
 
 // ============================================================
@@ -3176,6 +3363,9 @@ func MergeTLSConfig(dst, src *TLSConfig) {
 	if dst.Ca == nil {
 		dst.Ca = src.Ca
 	}
+	if dst.Email == "" {
+		dst.Email = src.Email
+	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
 	}
@@ -3210,6 +3400,9 @@ func MergeTopology(dst, src *Topology) {
 	if dst.StratumNodes == 0 {
 		dst.StratumNodes = src.StratumNodes
 	}
+	if dst.StratumSearchNodes == 0 {
+		dst.StratumSearchNodes = src.StratumSearchNodes
+	}
 	if dst.SamlNodes == 0 {
 		dst.SamlNodes = src.SamlNodes
 	}
@@ -3218,6 +3411,18 @@ func MergeTopology(dst, src *Topology) {
 	}
 	if dst.EchoNodes == 0 {
 		dst.EchoNodes = src.EchoNodes
+	}
+	if dst.MessagingNodes == 0 {
+		dst.MessagingNodes = src.MessagingNodes
+	}
+	if dst.MailboxNodes == 0 {
+		dst.MailboxNodes = src.MailboxNodes
+	}
+	if dst.PersonalauthNodes == 0 {
+		dst.PersonalauthNodes = src.PersonalauthNodes
+	}
+	if dst.BlobstoreNodes == 0 {
+		dst.BlobstoreNodes = src.BlobstoreNodes
 	}
 	if len(dst.AppServices) == 0 {
 		dst.AppServices = src.AppServices
@@ -3246,6 +3451,18 @@ func MergeOptionalServices(dst, src *OptionalServices) {
 	}
 	if !dst.Echo {
 		dst.Echo = src.Echo
+	}
+	if !dst.Messaging {
+		dst.Messaging = src.Messaging
+	}
+	if !dst.Mailbox {
+		dst.Mailbox = src.Mailbox
+	}
+	if !dst.Personalauth {
+		dst.Personalauth = src.Personalauth
+	}
+	if !dst.Blobstore {
+		dst.Blobstore = src.Blobstore
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
@@ -3358,6 +3575,12 @@ func MergeConfig(dst, src *Config) {
 	}
 	if len(dst.LlmCredentialServices) == 0 {
 		dst.LlmCredentialServices = src.LlmCredentialServices
+	}
+	if len(dst.Tenants) == 0 {
+		dst.Tenants = src.Tenants
+	}
+	if dst.ExternalIp == "" {
+		dst.ExternalIp = src.ExternalIp
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

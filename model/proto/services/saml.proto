@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -48,10 +48,11 @@
 syntax = "proto3";
 
 package samlsvc;
-option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/samlsvc";
+option go_package = "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/samlsvc";
 
 import "sys/spec.proto";
 import "sys/saml.proto";
+import "sys/mcp.proto";
 import "sys/trace.proto";
 
 // ============================================================================
@@ -189,6 +190,18 @@ service Outbound {
   // Used by UIs to render SP selection.
   rpc ListSPs(ListSPsRequest) returns (ListSPsResponse) {
   }
+
+  // BrokerOutboundMcpSession carries one Model Context Protocol session for Outbound over a
+  // single bidirectional stream: one complete JSON-RPC frame per stream message,
+  // request frames in and response frames out, for the life of the session.
+  //
+  // Generated, never declared: Outbound has at least one RPC_PRINCIPAL_MCP rpc, and this
+  // is the only channel those tools are reachable through. Bidirectional because an
+  // MCP session is stateful — it opens with an initialize handshake and holds the
+  // negotiated protocol version after it — so a unary call would repeat that
+  // handshake per tool call.
+  rpc BrokerOutboundMcpSession(stream mcp.McpRequest) returns (stream mcp.McpResponse) {
+  }
 }
 
 // ============================================================================
@@ -210,6 +223,18 @@ service Metadata {
   // GetIdpDescriptor returns the parsed EntityDescriptor for a named inbound IDP.
   // Returns the cached entry if available, or fetches and caches it now.
   rpc GetIdpDescriptor(GetDescriptorRequest) returns (GetDescriptorResponse) {
+  }
+
+  // BrokerMetadataMcpSession carries one Model Context Protocol session for Metadata over a
+  // single bidirectional stream: one complete JSON-RPC frame per stream message,
+  // request frames in and response frames out, for the life of the session.
+  //
+  // Generated, never declared: Metadata has at least one RPC_PRINCIPAL_MCP rpc, and this
+  // is the only channel those tools are reachable through. Bidirectional because an
+  // MCP session is stateful — it opens with an initialize handshake and holds the
+  // negotiated protocol version after it — so a unary call would repeat that
+  // handshake per tool call.
+  rpc BrokerMetadataMcpSession(stream mcp.McpRequest) returns (stream mcp.McpResponse) {
   }
 }
 
@@ -415,6 +440,7 @@ enum OutboundRpcId {
   OUTBOUND_RPC_ID_ALL_EXECUTORS = 3;
   OUTBOUND_RPC_ID_MINT_ASSERTION = 4;
   OUTBOUND_RPC_ID_LIST_S_PS = 5;
+  OUTBOUND_RPC_ID_BROKER_OUTBOUND_MCP_SESSION = 6;
 }
 
 enum MetadataRpcId {
@@ -425,6 +451,7 @@ enum MetadataRpcId {
   METADATA_RPC_ID_GET_IDP_METADATA = 4;
   METADATA_RPC_ID_GET_SP_METADATA = 5;
   METADATA_RPC_ID_GET_IDP_DESCRIPTOR = 6;
+  METADATA_RPC_ID_BROKER_METADATA_MCP_SESSION = 7;
 }
 
 enum SamlConfigStateServiceRpcId {

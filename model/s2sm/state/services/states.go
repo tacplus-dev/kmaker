@@ -11,9 +11,9 @@ import (
 	"context"
 	"fmt"
 
-	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/servicemanager"
-	kmaker_config_state_state "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/s2sm/state/services/kmaker_config_state"
-	service_health_state "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/s2sm/state/services/service_health"
+	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/servicemanager"
+	kmaker_config_state_state "gitlab.com/seabeam/schematic/platform/services/kmaker/model/s2sm/state/services/kmaker_config_state"
+	service_health_state "gitlab.com/seabeam/schematic/platform/services/kmaker/model/s2sm/state/services/service_health"
 )
 
 // StateClients provides typed access to per-service state clients in the services group.

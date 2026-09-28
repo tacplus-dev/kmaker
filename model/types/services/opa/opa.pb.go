@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -22,9 +22,9 @@
 package opa
 
 import (
-	opalib "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/opalib"
-	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
-	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
+	opalib "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/opalib"
+	_ "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/spec"
+	trace "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -513,7 +513,7 @@ type Config struct {
 	// an allow/deny decision plus the resolved destination URL.
 	ProxyPolicy *opalib.OpaPolicy `protobuf:"bytes,3,opt,name=proxy_policy,json=proxyPolicy,proto3" json:"proxy_policy,omitempty"`
 	// tenant_entitlements_policies holds one entitlements policy per project
-	// namespace (full path, e.g. "/local/dev/drpepper"). Kernel reconciles each
+	// namespace (full path, e.g. "/tenants/drpepper"). Kernel reconciles each
 	// tenant_config's OpaTenantConfig into this list; EvalEntitlement dispatches
 	// on the caller's namespace, falling back to entitlements_policy (cluster
 	// root) when absent. (repeated-entry, not map<> — map<> round-trips badly
@@ -2330,8 +2330,8 @@ const file_services_opa_proto_rawDesc = "" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\v.opa.Config\x12%\n" +
 	"\tSetConfig\x12\v.opa.Config\x1a\v.opa.Config\x121\n" +
 	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\v.opa.Config0\x01\x1a\t\xea\x97\"\x05\n" +
-	"\x03opaBt\x92\xb5\x18\x11\n" +
-	"\fDEFAULT_PORT\x10\xfbAڵ\x18\x00ZYgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/opab\x06proto3"
+	"\x03opaBi\x92\xb5\x18\x11\n" +
+	"\fDEFAULT_PORT\x10\xfbAڵ\x18\x00ZNgitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/opab\x06proto3"
 
 var (
 	file_services_opa_proto_rawDescOnce sync.Once

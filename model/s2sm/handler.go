@@ -10,9 +10,9 @@ package sm
 import (
 	"context"
 
-	kmaker_fe "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/s2sm/grpc/servers/services/kmaker"
-	kmaker_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
-	healthreport_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/healthreport"
+	kmaker_fe "gitlab.com/seabeam/schematic/platform/services/kmaker/model/s2sm/grpc/servers/services/kmaker"
+	kmaker_pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker"
+	healthreport_pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/healthreport"
 	"google.golang.org/grpc"
 )
 

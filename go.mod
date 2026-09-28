@@ -1,4 +1,4 @@
-module gitlab.com/secondstarcavalier/schematic/platform/services/kmaker
+module gitlab.com/seabeam/schematic/platform/services/kmaker
 
 go 1.25.5
 

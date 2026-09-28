@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -37,7 +37,7 @@
 syntax = "proto3";
 
 package stratum;
-option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/stratum";
+option go_package = "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/stratum";
 
 import "sys/spec.proto";
 import "sys/healthreport.proto";
@@ -76,6 +76,18 @@ message Config {
   // A session is considered active if its last event was within this window.
   // Default: 900 (15 min). Min: 30.
   int32 active_session_idle_seconds = 7;
+
+  // warm_window_seconds is the memory-residency window for warm-tiered records:
+  // rows younger than this are served from memory, rows older than it are served
+  // from the on-disk warm tier. It is the default applied to a record type that
+  // declares the warm residency preset without a window_seconds of its own.
+  //
+  // It must be SHORTER than retention_days or the disk tier is never reached:
+  // retention deletes a row before it is ever old enough to age out of memory,
+  // and the "still queryable, only slower" promise the disk tier exists to keep
+  // never applies to anything. Default: 604800 (7 days), which leaves rows aged
+  // 7-90 days served from disk under the 90-day retention default. Min: 60.
+  int64 warm_window_seconds = 8;
   string trace_id = 200;
   bool noop = 201;
 }

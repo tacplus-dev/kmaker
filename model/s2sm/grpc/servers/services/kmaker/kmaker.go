@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 
 package kmaker
 
@@ -17,15 +17,16 @@ import (
 	"sync"
 	"time"
 
-	types "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
+	wrapperToken "gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/token"
+	types "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker"
 
 	"go.uber.org/zap"
 
-	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/am"
-	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/servicemanager"
+	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/am"
+	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/servicemanager"
 
-	trace_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
-	x509_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/x509"
+	trace_pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
+	x509_pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -47,9 +48,9 @@ type Kmaker struct {
 	types.UnimplementedKmakerServer
 	handler                   KmakerHandler
 	mu                        sync.RWMutex
-	authorizeFunc             func(ctx context.Context, fullMethod string, req any) error
-	authenticateFunc          func(ctx context.Context) error
-	authenticateAtOrBelowFunc func(ctx context.Context, targetNamespace string) error
+	authorizeFunc             func(ctx context.Context, fullMethod string, req any) (*wrapperToken.TokenWrapper, error)
+	authenticateFunc          func(ctx context.Context) (*wrapperToken.TokenWrapper, error)
+	authenticateAtOrBelowFunc func(ctx context.Context, targetNamespace string) (*wrapperToken.TokenWrapper, error)
 	emitter                   *am.Emitter
 	instanceId                string
 	tracePublish              func(ctx context.Context, event *trace_pb.TraceEvent)
@@ -119,8 +120,9 @@ func (p *Kmaker) publishTrace(ctx context.Context, event *trace_pb.TraceEvent) {
 	}
 }
 
-// SetAuthorizeFunc sets the authorization function.
-func (p *Kmaker) SetAuthorizeFunc(f func(ctx context.Context, fullMethod string, req any) error) {
+// SetAuthorizeFunc sets the authorization function. It returns the token the
+// check verified, which becomes the caller identity handed to the handler.
+func (p *Kmaker) SetAuthorizeFunc(f func(ctx context.Context, fullMethod string, req any) (*wrapperToken.TokenWrapper, error)) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	p.authorizeFunc = f
@@ -128,7 +130,7 @@ func (p *Kmaker) SetAuthorizeFunc(f func(ctx context.Context, fullMethod string,
 
 // SetAuthenticateFunc sets the authentication-only function used to verify a
 // stream token before per-message namespace authorization.
-func (p *Kmaker) SetAuthenticateFunc(f func(ctx context.Context) error) {
+func (p *Kmaker) SetAuthenticateFunc(f func(ctx context.Context) (*wrapperToken.TokenWrapper, error)) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	p.authenticateFunc = f
@@ -136,7 +138,7 @@ func (p *Kmaker) SetAuthenticateFunc(f func(ctx context.Context) error) {
 
 // SetAuthenticateAtOrBelowFunc sets the authentication + fixed namespace check
 // function used by auth_any_user methods.
-func (p *Kmaker) SetAuthenticateAtOrBelowFunc(f func(ctx context.Context, targetNamespace string) error) {
+func (p *Kmaker) SetAuthenticateAtOrBelowFunc(f func(ctx context.Context, targetNamespace string) (*wrapperToken.TokenWrapper, error)) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	p.authenticateAtOrBelowFunc = f
@@ -153,12 +155,14 @@ func (p *Kmaker) HasAuthorizer() bool {
 // func was wired, every (non-auth_disabled) RPC is rejected. auth_disabled
 // methods skip this call entirely (by annotation), so reaching here with a nil
 // func means a token-auth method was left unwired — that must never silently pass.
-func (p *Kmaker) authorize(ctx context.Context, fullMethod string, req any) error {
+// It returns the verified token so the caller identity the handler receives
+// comes from this very check rather than a second, independent lookup.
+func (p *Kmaker) authorize(ctx context.Context, fullMethod string, req any) (*wrapperToken.TokenWrapper, error) {
 	p.mu.RLock()
 	f := p.authorizeFunc
 	p.mu.RUnlock()
 	if f == nil {
-		return fmt.Errorf("authorizer not configured for %q — auth is mandatory and cannot be disabled", fullMethod)
+		return nil, fmt.Errorf("authorizer not configured for %q — auth is mandatory and cannot be disabled", fullMethod)
 	}
 	return f(ctx, fullMethod, req)
 }
@@ -166,24 +170,24 @@ func (p *Kmaker) authorize(ctx context.Context, fullMethod string, req any) erro
 // authenticate checks token signature, audience, and expiry only. It is used as
 // a stream-open preflight before per-message namespace authorization.
 // Fail-closed: a nil authenticate func rejects rather than allows.
-func (p *Kmaker) authenticate(ctx context.Context) error {
+func (p *Kmaker) authenticate(ctx context.Context) (*wrapperToken.TokenWrapper, error) {
 	p.mu.RLock()
 	f := p.authenticateFunc
 	p.mu.RUnlock()
 	if f == nil {
-		return fmt.Errorf("authenticator not configured — auth is mandatory and cannot be disabled")
+		return nil, fmt.Errorf("authenticator not configured — auth is mandatory and cannot be disabled")
 	}
 	return f(ctx)
 }
 
 // authenticateAtOrBelow checks token signature/audience and then enforces a
 // fixed namespace target. Empty targetNamespace defaults to "/" in the authorizer.
-func (p *Kmaker) authenticateAtOrBelow(ctx context.Context, targetNamespace string) error {
+func (p *Kmaker) authenticateAtOrBelow(ctx context.Context, targetNamespace string) (*wrapperToken.TokenWrapper, error) {
 	p.mu.RLock()
 	f := p.authenticateAtOrBelowFunc
 	p.mu.RUnlock()
 	if f == nil {
-		return fmt.Errorf("authenticator not configured — auth is mandatory and cannot be disabled")
+		return nil, fmt.Errorf("authenticator not configured — auth is mandatory and cannot be disabled")
 	}
 	return f(ctx, targetNamespace)
 }
@@ -208,11 +212,34 @@ func (s KmakerValidatingServerStreamingServer[T]) Send(msg *T) error {
 	return s.ServerStreamingServer.Send(msg)
 }
 
+// KmakerGuardedServerStreamingServer refuses a frame its guard rejects,
+// carrying the guard's own status code through (a (spec.min_group_size) frame is
+// PermissionDenied, not a validation Internal). Unlike a filtering delegate it
+// withholds nothing: a stream that went quiet at exactly the threshold would
+// disclose the crossing by its silence.
+type KmakerGuardedServerStreamingServer[T any] struct {
+	grpc.ServerStreamingServer[T]
+	guard func(*T) error
+}
+
+func (s KmakerGuardedServerStreamingServer[T]) Send(msg *T) error {
+	if s.guard != nil {
+		if err := s.guard(msg); err != nil {
+			return err
+		}
+	}
+	return s.ServerStreamingServer.Send(msg)
+}
+
 type KmakerValidatingClientStreamingServer[Req, Res any] struct {
 	grpc.ClientStreamingServer[Req, Res]
 	authorizeReq func(*Req) error
-	validateReq  func(*Req) error
-	validateRes  func(*Res) error
+	// scopeReq is the per-message (spec.principal)/(spec.namespace) stamp-or-refuse.
+	// A request stream is not one request: the check runs on every inbound
+	// message, so a later one cannot name a principal an earlier one did not.
+	scopeReq    func(*Req) error
+	validateReq func(*Req) error
+	validateRes func(*Res) error
 }
 
 func (s KmakerValidatingClientStreamingServer[Req, Res]) Recv() (*Req, error) {
@@ -222,6 +249,11 @@ func (s KmakerValidatingClientStreamingServer[Req, Res]) Recv() (*Req, error) {
 	}
 	if s.authorizeReq != nil {
 		if err := s.authorizeReq(msg); err != nil {
+			return nil, err
+		}
+	}
+	if s.scopeReq != nil {
+		if err := s.scopeReq(msg); err != nil {
 			return nil, err
 		}
 	}
@@ -245,8 +277,12 @@ func (s KmakerValidatingClientStreamingServer[Req, Res]) SendAndClose(msg *Res) 
 type KmakerValidatingBidiStreamingServer[Req, Res any] struct {
 	grpc.BidiStreamingServer[Req, Res]
 	authorizeReq func(*Req) error
-	validateReq  func(*Req) error
-	validateRes  func(*Res) error
+	// scopeReq is the per-message (spec.principal)/(spec.namespace) stamp-or-refuse.
+	// A request stream is not one request: the check runs on every inbound
+	// message, so a later one cannot name a principal an earlier one did not.
+	scopeReq    func(*Req) error
+	validateReq func(*Req) error
+	validateRes func(*Res) error
 }
 
 func (s KmakerValidatingBidiStreamingServer[Req, Res]) Recv() (*Req, error) {
@@ -256,6 +292,11 @@ func (s KmakerValidatingBidiStreamingServer[Req, Res]) Recv() (*Req, error) {
 	}
 	if s.authorizeReq != nil {
 		if err := s.authorizeReq(msg); err != nil {
+			return nil, err
+		}
+	}
+	if s.scopeReq != nil {
+		if err := s.scopeReq(msg); err != nil {
 			return nil, err
 		}
 	}
@@ -299,21 +340,12 @@ func (p *Kmaker) MintKernelCert(ctx context.Context, req *types.MintKernelCertRe
 		}
 	}
 
-	// Extract caller identity and request ID from context
+	// No caller identity: auth is disabled for this method, so no token was verified.
 	requestID := servicemanager.RequestIDFromContext(ctx)
 	var caller *servicemanager.Caller
-	if tok := servicemanager.TokenFromContext(ctx); tok != nil {
-		caller = servicemanager.NewCaller(tok, requestID)
-		zap.L().Debug("rpc",
-			zap.String("method", "/services"+types.Kmaker_MintKernelCert_FullMethodName),
-			zap.String("request_id", requestID),
-			zap.String("sub", tok.GetSubject()),
-			zap.String("aud", tok.GetAudience()))
-	} else {
-		zap.L().Debug("rpc (no token)",
-			zap.String("method", "/services"+types.Kmaker_MintKernelCert_FullMethodName),
-			zap.String("request_id", requestID))
-	}
+	zap.L().Debug("rpc (no token)",
+		zap.String("method", "/services"+types.Kmaker_MintKernelCert_FullMethodName),
+		zap.String("request_id", requestID))
 	// Call the handler
 	resp, err := p.handler.MintKernelCert(sanitizeContext(ctx), caller, req)
 	if err != nil {

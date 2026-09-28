@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -28,8 +28,8 @@ import (
 	"strings"
 
 	"github.com/pelletier/go-toml/v2"
-	hazelcast "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/common/hazelcast"
-	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/errors"
+	hazelcast "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/common/hazelcast"
+	protoerrors "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/errors"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"gopkg.in/yaml.v3"
@@ -267,12 +267,13 @@ func DashboardRpcIdValues() []DashboardRpcId {
 		DashboardRpcId_DASHBOARD_RPC_ID_LIST_MAP_STATS,
 		DashboardRpcId_DASHBOARD_RPC_ID_GET_DASHBOARD,
 		DashboardRpcId_DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD,
+		DashboardRpcId_DASHBOARD_RPC_ID_BROKER_DASHBOARD_MCP_SESSION,
 	}
 }
 
 // DashboardRpcIdStringValues returns all valid DashboardRpcId names as strings
 func DashboardRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "get-cluster-info", "get-cluster-health", "list-node-metrics", "list-grpc-stats", "list-persistence-status", "list-network-stats", "list-thread-info", "list-token-cache-stats", "list-map-stats", "get-dashboard", "subscribe-dashboard"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "get-cluster-info", "get-cluster-health", "list-node-metrics", "list-grpc-stats", "list-persistence-status", "list-network-stats", "list-thread-info", "list-token-cache-stats", "list-map-stats", "get-dashboard", "subscribe-dashboard", "broker-dashboard-mcp-session"}
 }
 
 // ParseDashboardRpcId converts a string to a DashboardRpcId enum value
@@ -311,6 +312,8 @@ func ParseDashboardRpcId(s string) (DashboardRpcId, error) {
 		return DashboardRpcId_DASHBOARD_RPC_ID_GET_DASHBOARD, nil
 	case "subscribe-dashboard", "dashboard-rpc-id-subscribe-dashboard":
 		return DashboardRpcId_DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD, nil
+	case "broker-dashboard-mcp-session", "dashboard-rpc-id-broker-dashboard-mcp-session":
+		return DashboardRpcId_DASHBOARD_RPC_ID_BROKER_DASHBOARD_MCP_SESSION, nil
 	default:
 		return DashboardRpcId_DASHBOARD_RPC_ID_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid dashboardrpcid %s, expecting one of: %v", s, DashboardRpcIdStringValues())
 	}
@@ -369,6 +372,8 @@ func DashboardRpcIdToString(v DashboardRpcId) string {
 		return "get-dashboard"
 	case DashboardRpcId_DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD:
 		return "subscribe-dashboard"
+	case DashboardRpcId_DASHBOARD_RPC_ID_BROKER_DASHBOARD_MCP_SESSION:
+		return "broker-dashboard-mcp-session"
 	default:
 		return ""
 	}
@@ -419,6 +424,8 @@ func ParseDashboardRpcIdLiberal(s string) DashboardRpcId {
 		return DashboardRpcId_DASHBOARD_RPC_ID_GET_DASHBOARD
 	case "subscribe-dashboard", "dashboard-rpc-id-subscribe-dashboard":
 		return DashboardRpcId_DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD
+	case "broker-dashboard-mcp-session", "dashboard-rpc-id-broker-dashboard-mcp-session":
+		return DashboardRpcId_DASHBOARD_RPC_ID_BROKER_DASHBOARD_MCP_SESSION
 	default:
 		return DashboardRpcId_DASHBOARD_RPC_ID_UNSPECIFIED
 	}
@@ -457,6 +464,8 @@ func DashboardRpcIdToSpecName(v DashboardRpcId) string {
 		return "DASHBOARD_RPC_ID_GET_DASHBOARD"
 	case DashboardRpcId_DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD:
 		return "DASHBOARD_RPC_ID_SUBSCRIBE_DASHBOARD"
+	case DashboardRpcId_DASHBOARD_RPC_ID_BROKER_DASHBOARD_MCP_SESSION:
+		return "DASHBOARD_RPC_ID_BROKER_DASHBOARD_MCP_SESSION"
 	default:
 		return ""
 	}

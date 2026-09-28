@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -32,7 +32,7 @@
 syntax = "proto3";
 
 package opa;
-option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/opa";
+option go_package = "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/opa";
 
 import "sys/spec.proto";
 import "sys/opalib.proto";
@@ -54,7 +54,7 @@ message Config {
   opalib.OpaPolicy proxy_policy = 3;
 
   // tenant_entitlements_policies holds one entitlements policy per project
-  // namespace (full path, e.g. "/local/dev/drpepper"). Kernel reconciles each
+  // namespace (full path, e.g. "/tenants/drpepper"). Kernel reconciles each
   // tenant_config's OpaTenantConfig into this list; EvalEntitlement dispatches
   // on the caller's namespace, falling back to entitlements_policy (cluster
   // root) when absent. (repeated-entry, not map<> — map<> round-trips badly

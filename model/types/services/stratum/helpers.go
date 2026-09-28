@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -28,8 +28,8 @@ import (
 	"strings"
 
 	"github.com/pelletier/go-toml/v2"
-	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/errors"
-	healthreport "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/healthreport"
+	protoerrors "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/errors"
+	healthreport "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/healthreport"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"gopkg.in/yaml.v3"
@@ -322,6 +322,7 @@ type configJSON struct {
 	RetentionDays            int32  `json:"retention_days,omitempty"`
 	CleanupIntervalSeconds   int64  `json:"cleanup_interval_seconds,omitempty"`
 	ActiveSessionIdleSeconds int32  `json:"active_session_idle_seconds,omitempty"`
+	WarmWindowSeconds        int64  `json:"warm_window_seconds,omitempty"`
 	TraceId                  string `json:"trace_id,omitempty"`
 	Noop                     bool   `json:"noop,omitempty"`
 }
@@ -340,6 +341,7 @@ func ConfigToJSON(v *Config) ([]byte, error) {
 		RetentionDays:            v.RetentionDays,
 		CleanupIntervalSeconds:   v.CleanupIntervalSeconds,
 		ActiveSessionIdleSeconds: v.ActiveSessionIdleSeconds,
+		WarmWindowSeconds:        v.WarmWindowSeconds,
 		TraceId:                  v.TraceId,
 		Noop:                     v.Noop,
 	}
@@ -360,6 +362,7 @@ func ConfigToJSONPretty(v *Config) ([]byte, error) {
 		RetentionDays:            v.RetentionDays,
 		CleanupIntervalSeconds:   v.CleanupIntervalSeconds,
 		ActiveSessionIdleSeconds: v.ActiveSessionIdleSeconds,
+		WarmWindowSeconds:        v.WarmWindowSeconds,
 		TraceId:                  v.TraceId,
 		Noop:                     v.Noop,
 	}
@@ -432,6 +435,7 @@ func ConfigFromJSON(data []byte) (*Config, error) {
 	result.RetentionDays = raw.RetentionDays
 	result.CleanupIntervalSeconds = raw.CleanupIntervalSeconds
 	result.ActiveSessionIdleSeconds = raw.ActiveSessionIdleSeconds
+	result.WarmWindowSeconds = raw.WarmWindowSeconds
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -1145,6 +1149,7 @@ func ConfigToEnvVar(v *Config) map[string]string {
 	result["PROTO_SERVICES_STRATUM_CONFIG_RETENTION_DAYS"] = strconv.FormatInt(int64(v.RetentionDays), 10)
 	result["PROTO_SERVICES_STRATUM_CONFIG_CLEANUP_INTERVAL_SECONDS"] = strconv.FormatInt(v.CleanupIntervalSeconds, 10)
 	result["PROTO_SERVICES_STRATUM_CONFIG_ACTIVE_SESSION_IDLE_SECONDS"] = strconv.FormatInt(int64(v.ActiveSessionIdleSeconds), 10)
+	result["PROTO_SERVICES_STRATUM_CONFIG_WARM_WINDOW_SECONDS"] = strconv.FormatInt(v.WarmWindowSeconds, 10)
 	result["PROTO_SERVICES_STRATUM_CONFIG_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_STRATUM_CONFIG_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -1194,6 +1199,13 @@ func ConfigFromEnvVar(env map[string]string) (*Config, error) {
 			return nil, err
 		}
 		result.ActiveSessionIdleSeconds = int32(parsed)
+	}
+	if val, ok := env["PROTO_SERVICES_STRATUM_CONFIG_WARM_WINDOW_SECONDS"]; ok && val != "" {
+		parsed, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result.WarmWindowSeconds = parsed
 	}
 	if val, ok := env["PROTO_SERVICES_STRATUM_CONFIG_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -1419,6 +1431,10 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 	if m.ActiveSessionIdleSeconds < 30 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field ActiveSessionIdleSeconds must be >= 30, got: %v", m.ActiveSessionIdleSeconds)
 	}
+	// Validate WarmWindowSeconds (assert_ge: 60)
+	if m.WarmWindowSeconds < 60 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field WarmWindowSeconds must be >= 60, got: %v", m.WarmWindowSeconds)
+	}
 	// Validate TraceId (default max size: 32768 bytes)
 	if len(m.TraceId) > 32768 {
 		return protoerrors.NewErrMissingInvalidData(nil, "field TraceId exceeds max size of 32768 bytes, got: %d", len(m.TraceId))
@@ -1548,6 +1564,7 @@ const (
 	DefaultRetentionDays            int64 = 90
 	DefaultCleanupIntervalSeconds   int64 = 3600
 	DefaultActiveSessionIdleSeconds int64 = 900
+	DefaultWarmWindowSeconds        int64 = 604800
 )
 
 // ============================================================
@@ -1586,6 +1603,9 @@ func ConfigDefaults(v *Config) {
 	}
 	if v.ActiveSessionIdleSeconds == 0 {
 		v.ActiveSessionIdleSeconds = int32(DefaultActiveSessionIdleSeconds)
+	}
+	if v.WarmWindowSeconds == 0 {
+		v.WarmWindowSeconds = DefaultWarmWindowSeconds
 	}
 }
 
@@ -1659,6 +1679,9 @@ func ConfigUndefaults(v *Config) {
 	if v.ActiveSessionIdleSeconds == int32(DefaultActiveSessionIdleSeconds) {
 		v.ActiveSessionIdleSeconds = 0
 	}
+	if v.WarmWindowSeconds == DefaultWarmWindowSeconds {
+		v.WarmWindowSeconds = 0
+	}
 }
 
 // ============================================================
@@ -1730,6 +1753,9 @@ func MergeConfig(dst, src *Config) {
 	}
 	if dst.ActiveSessionIdleSeconds == 0 {
 		dst.ActiveSessionIdleSeconds = src.ActiveSessionIdleSeconds
+	}
+	if dst.WarmWindowSeconds == 0 {
+		dst.WarmWindowSeconds = src.WarmWindowSeconds
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

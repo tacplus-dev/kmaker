@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -23,7 +23,8 @@ package letsencrypt
 
 import (
 	context "context"
-	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
+	eventbus_support "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/eventbus_support"
+	trace "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -224,6 +225,147 @@ var LetsEncryptStateService_ServiceDesc = grpc.ServiceDesc{
 			StreamName:    "WatchCertData",
 			Handler:       _LetsEncryptStateService_WatchCertData_Handler,
 			ServerStreams: true,
+		},
+	},
+	Metadata: "services/letsencrypt.proto",
+}
+
+const (
+	LetsEncryptCertBusStateService_PublishToStream_FullMethodName   = "/letsencrypt.LetsEncryptCertBusStateService/PublishToStream"
+	LetsEncryptCertBusStateService_SubscribeToStream_FullMethodName = "/letsencrypt.LetsEncryptCertBusStateService/SubscribeToStream"
+)
+
+// LetsEncryptCertBusStateServiceClient is the client API for LetsEncryptCertBusStateService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// ============================================================================
+// Auto-generated State Service (tacplus)
+// ============================================================================
+// tacplus:generated-service state
+type LetsEncryptCertBusStateServiceClient interface {
+	// Topic: Stream
+	PublishToStream(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[LetsEncryptCert, eventbus_support.PublishResponse], error)
+	SubscribeToStream(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[eventbus_support.SubscribeRequest, LetsEncryptCertBusStreamSubscribeRecord], error)
+}
+
+type letsEncryptCertBusStateServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewLetsEncryptCertBusStateServiceClient(cc grpc.ClientConnInterface) LetsEncryptCertBusStateServiceClient {
+	return &letsEncryptCertBusStateServiceClient{cc}
+}
+
+func (c *letsEncryptCertBusStateServiceClient) PublishToStream(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[LetsEncryptCert, eventbus_support.PublishResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &LetsEncryptCertBusStateService_ServiceDesc.Streams[0], LetsEncryptCertBusStateService_PublishToStream_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[LetsEncryptCert, eventbus_support.PublishResponse]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type LetsEncryptCertBusStateService_PublishToStreamClient = grpc.BidiStreamingClient[LetsEncryptCert, eventbus_support.PublishResponse]
+
+func (c *letsEncryptCertBusStateServiceClient) SubscribeToStream(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[eventbus_support.SubscribeRequest, LetsEncryptCertBusStreamSubscribeRecord], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &LetsEncryptCertBusStateService_ServiceDesc.Streams[1], LetsEncryptCertBusStateService_SubscribeToStream_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[eventbus_support.SubscribeRequest, LetsEncryptCertBusStreamSubscribeRecord]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type LetsEncryptCertBusStateService_SubscribeToStreamClient = grpc.BidiStreamingClient[eventbus_support.SubscribeRequest, LetsEncryptCertBusStreamSubscribeRecord]
+
+// LetsEncryptCertBusStateServiceServer is the server API for LetsEncryptCertBusStateService service.
+// All implementations must embed UnimplementedLetsEncryptCertBusStateServiceServer
+// for forward compatibility.
+//
+// ============================================================================
+// Auto-generated State Service (tacplus)
+// ============================================================================
+// tacplus:generated-service state
+type LetsEncryptCertBusStateServiceServer interface {
+	// Topic: Stream
+	PublishToStream(grpc.BidiStreamingServer[LetsEncryptCert, eventbus_support.PublishResponse]) error
+	SubscribeToStream(grpc.BidiStreamingServer[eventbus_support.SubscribeRequest, LetsEncryptCertBusStreamSubscribeRecord]) error
+	mustEmbedUnimplementedLetsEncryptCertBusStateServiceServer()
+}
+
+// UnimplementedLetsEncryptCertBusStateServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedLetsEncryptCertBusStateServiceServer struct{}
+
+func (UnimplementedLetsEncryptCertBusStateServiceServer) PublishToStream(grpc.BidiStreamingServer[LetsEncryptCert, eventbus_support.PublishResponse]) error {
+	return status.Error(codes.Unimplemented, "method PublishToStream not implemented")
+}
+func (UnimplementedLetsEncryptCertBusStateServiceServer) SubscribeToStream(grpc.BidiStreamingServer[eventbus_support.SubscribeRequest, LetsEncryptCertBusStreamSubscribeRecord]) error {
+	return status.Error(codes.Unimplemented, "method SubscribeToStream not implemented")
+}
+func (UnimplementedLetsEncryptCertBusStateServiceServer) mustEmbedUnimplementedLetsEncryptCertBusStateServiceServer() {
+}
+func (UnimplementedLetsEncryptCertBusStateServiceServer) testEmbeddedByValue() {}
+
+// UnsafeLetsEncryptCertBusStateServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to LetsEncryptCertBusStateServiceServer will
+// result in compilation errors.
+type UnsafeLetsEncryptCertBusStateServiceServer interface {
+	mustEmbedUnimplementedLetsEncryptCertBusStateServiceServer()
+}
+
+func RegisterLetsEncryptCertBusStateServiceServer(s grpc.ServiceRegistrar, srv LetsEncryptCertBusStateServiceServer) {
+	// If the following call panics, it indicates UnimplementedLetsEncryptCertBusStateServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&LetsEncryptCertBusStateService_ServiceDesc, srv)
+}
+
+func _LetsEncryptCertBusStateService_PublishToStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(LetsEncryptCertBusStateServiceServer).PublishToStream(&grpc.GenericServerStream[LetsEncryptCert, eventbus_support.PublishResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type LetsEncryptCertBusStateService_PublishToStreamServer = grpc.BidiStreamingServer[LetsEncryptCert, eventbus_support.PublishResponse]
+
+func _LetsEncryptCertBusStateService_SubscribeToStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(LetsEncryptCertBusStateServiceServer).SubscribeToStream(&grpc.GenericServerStream[eventbus_support.SubscribeRequest, LetsEncryptCertBusStreamSubscribeRecord]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type LetsEncryptCertBusStateService_SubscribeToStreamServer = grpc.BidiStreamingServer[eventbus_support.SubscribeRequest, LetsEncryptCertBusStreamSubscribeRecord]
+
+// LetsEncryptCertBusStateService_ServiceDesc is the grpc.ServiceDesc for LetsEncryptCertBusStateService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var LetsEncryptCertBusStateService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "letsencrypt.LetsEncryptCertBusStateService",
+	HandlerType: (*LetsEncryptCertBusStateServiceServer)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "PublishToStream",
+			Handler:       _LetsEncryptCertBusStateService_PublishToStream_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "SubscribeToStream",
+			Handler:       _LetsEncryptCertBusStateService_SubscribeToStream_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
 		},
 	},
 	Metadata: "services/letsencrypt.proto",

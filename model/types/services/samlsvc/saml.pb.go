@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -22,9 +22,10 @@
 package samlsvc
 
 import (
-	saml "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/saml"
-	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
-	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
+	mcp "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/mcp"
+	saml "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/saml"
+	_ "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/spec"
+	trace "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -201,12 +202,13 @@ func (InboundRpcId) EnumDescriptor() ([]byte, []int) {
 type OutboundRpcId int32
 
 const (
-	OutboundRpcId_OUTBOUND_RPC_ID_UNSPECIFIED    OutboundRpcId = 0
-	OutboundRpcId_OUTBOUND_RPC_ID_ALL_ACCESSORS  OutboundRpcId = 1
-	OutboundRpcId_OUTBOUND_RPC_ID_ALL_MUTATORS   OutboundRpcId = 2
-	OutboundRpcId_OUTBOUND_RPC_ID_ALL_EXECUTORS  OutboundRpcId = 3
-	OutboundRpcId_OUTBOUND_RPC_ID_MINT_ASSERTION OutboundRpcId = 4
-	OutboundRpcId_OUTBOUND_RPC_ID_LIST_S_PS      OutboundRpcId = 5
+	OutboundRpcId_OUTBOUND_RPC_ID_UNSPECIFIED                 OutboundRpcId = 0
+	OutboundRpcId_OUTBOUND_RPC_ID_ALL_ACCESSORS               OutboundRpcId = 1
+	OutboundRpcId_OUTBOUND_RPC_ID_ALL_MUTATORS                OutboundRpcId = 2
+	OutboundRpcId_OUTBOUND_RPC_ID_ALL_EXECUTORS               OutboundRpcId = 3
+	OutboundRpcId_OUTBOUND_RPC_ID_MINT_ASSERTION              OutboundRpcId = 4
+	OutboundRpcId_OUTBOUND_RPC_ID_LIST_S_PS                   OutboundRpcId = 5
+	OutboundRpcId_OUTBOUND_RPC_ID_BROKER_OUTBOUND_MCP_SESSION OutboundRpcId = 6
 )
 
 // Enum value maps for OutboundRpcId.
@@ -218,14 +220,16 @@ var (
 		3: "OUTBOUND_RPC_ID_ALL_EXECUTORS",
 		4: "OUTBOUND_RPC_ID_MINT_ASSERTION",
 		5: "OUTBOUND_RPC_ID_LIST_S_PS",
+		6: "OUTBOUND_RPC_ID_BROKER_OUTBOUND_MCP_SESSION",
 	}
 	OutboundRpcId_value = map[string]int32{
-		"OUTBOUND_RPC_ID_UNSPECIFIED":    0,
-		"OUTBOUND_RPC_ID_ALL_ACCESSORS":  1,
-		"OUTBOUND_RPC_ID_ALL_MUTATORS":   2,
-		"OUTBOUND_RPC_ID_ALL_EXECUTORS":  3,
-		"OUTBOUND_RPC_ID_MINT_ASSERTION": 4,
-		"OUTBOUND_RPC_ID_LIST_S_PS":      5,
+		"OUTBOUND_RPC_ID_UNSPECIFIED":                 0,
+		"OUTBOUND_RPC_ID_ALL_ACCESSORS":               1,
+		"OUTBOUND_RPC_ID_ALL_MUTATORS":                2,
+		"OUTBOUND_RPC_ID_ALL_EXECUTORS":               3,
+		"OUTBOUND_RPC_ID_MINT_ASSERTION":              4,
+		"OUTBOUND_RPC_ID_LIST_S_PS":                   5,
+		"OUTBOUND_RPC_ID_BROKER_OUTBOUND_MCP_SESSION": 6,
 	}
 )
 
@@ -259,13 +263,14 @@ func (OutboundRpcId) EnumDescriptor() ([]byte, []int) {
 type MetadataRpcId int32
 
 const (
-	MetadataRpcId_METADATA_RPC_ID_UNSPECIFIED        MetadataRpcId = 0
-	MetadataRpcId_METADATA_RPC_ID_ALL_ACCESSORS      MetadataRpcId = 1
-	MetadataRpcId_METADATA_RPC_ID_ALL_MUTATORS       MetadataRpcId = 2
-	MetadataRpcId_METADATA_RPC_ID_ALL_EXECUTORS      MetadataRpcId = 3
-	MetadataRpcId_METADATA_RPC_ID_GET_IDP_METADATA   MetadataRpcId = 4
-	MetadataRpcId_METADATA_RPC_ID_GET_SP_METADATA    MetadataRpcId = 5
-	MetadataRpcId_METADATA_RPC_ID_GET_IDP_DESCRIPTOR MetadataRpcId = 6
+	MetadataRpcId_METADATA_RPC_ID_UNSPECIFIED                 MetadataRpcId = 0
+	MetadataRpcId_METADATA_RPC_ID_ALL_ACCESSORS               MetadataRpcId = 1
+	MetadataRpcId_METADATA_RPC_ID_ALL_MUTATORS                MetadataRpcId = 2
+	MetadataRpcId_METADATA_RPC_ID_ALL_EXECUTORS               MetadataRpcId = 3
+	MetadataRpcId_METADATA_RPC_ID_GET_IDP_METADATA            MetadataRpcId = 4
+	MetadataRpcId_METADATA_RPC_ID_GET_SP_METADATA             MetadataRpcId = 5
+	MetadataRpcId_METADATA_RPC_ID_GET_IDP_DESCRIPTOR          MetadataRpcId = 6
+	MetadataRpcId_METADATA_RPC_ID_BROKER_METADATA_MCP_SESSION MetadataRpcId = 7
 )
 
 // Enum value maps for MetadataRpcId.
@@ -278,15 +283,17 @@ var (
 		4: "METADATA_RPC_ID_GET_IDP_METADATA",
 		5: "METADATA_RPC_ID_GET_SP_METADATA",
 		6: "METADATA_RPC_ID_GET_IDP_DESCRIPTOR",
+		7: "METADATA_RPC_ID_BROKER_METADATA_MCP_SESSION",
 	}
 	MetadataRpcId_value = map[string]int32{
-		"METADATA_RPC_ID_UNSPECIFIED":        0,
-		"METADATA_RPC_ID_ALL_ACCESSORS":      1,
-		"METADATA_RPC_ID_ALL_MUTATORS":       2,
-		"METADATA_RPC_ID_ALL_EXECUTORS":      3,
-		"METADATA_RPC_ID_GET_IDP_METADATA":   4,
-		"METADATA_RPC_ID_GET_SP_METADATA":    5,
-		"METADATA_RPC_ID_GET_IDP_DESCRIPTOR": 6,
+		"METADATA_RPC_ID_UNSPECIFIED":                 0,
+		"METADATA_RPC_ID_ALL_ACCESSORS":               1,
+		"METADATA_RPC_ID_ALL_MUTATORS":                2,
+		"METADATA_RPC_ID_ALL_EXECUTORS":               3,
+		"METADATA_RPC_ID_GET_IDP_METADATA":            4,
+		"METADATA_RPC_ID_GET_SP_METADATA":             5,
+		"METADATA_RPC_ID_GET_IDP_DESCRIPTOR":          6,
+		"METADATA_RPC_ID_BROKER_METADATA_MCP_SESSION": 7,
 	}
 )
 
@@ -1740,7 +1747,7 @@ var File_services_saml_proto protoreflect.FileDescriptor
 
 const file_services_saml_proto_rawDesc = "" +
 	"\n" +
-	"\x13services/saml.proto\x12\asamlsvc\x1a\x0esys/spec.proto\x1a\x0esys/saml.proto\x1a\x0fsys/trace.proto\"\xa7\x03\n" +
+	"\x13services/saml.proto\x12\asamlsvc\x1a\x0esys/spec.proto\x1a\x0esys/saml.proto\x1a\rsys/mcp.proto\x1a\x0fsys/trace.proto\"\xa7\x03\n" +
 	"\x06Config\x12%\n" +
 	"\tentity_id\x18\x01 \x01(\tB\b\x88\xa6\x1d\x01\xa8\xa6\x1d\x02R\bentityId\x12#\n" +
 	"\bbase_url\x18\x02 \x01(\tB\b\x88\xa6\x1d\x01\xa8\xa6\x1d\x02R\abaseUrl\x12=\n" +
@@ -1879,14 +1886,15 @@ const file_services_saml_proto_rawDesc = "" +
 	"\x1bINBOUND_RPC_ID_ALL_MUTATORS\x10\x02\x12 \n" +
 	"\x1cINBOUND_RPC_ID_ALL_EXECUTORS\x10\x03\x12\"\n" +
 	"\x1eINBOUND_RPC_ID_MINT_ACS_TOKENS\x10\x04\x12\x1c\n" +
-	"\x18INBOUND_RPC_ID_AUTHORIZE\x10\x05*\xdb\x01\n" +
+	"\x18INBOUND_RPC_ID_AUTHORIZE\x10\x05*\x8c\x02\n" +
 	"\rOutboundRpcId\x12\x1f\n" +
 	"\x1bOUTBOUND_RPC_ID_UNSPECIFIED\x10\x00\x12!\n" +
 	"\x1dOUTBOUND_RPC_ID_ALL_ACCESSORS\x10\x01\x12 \n" +
 	"\x1cOUTBOUND_RPC_ID_ALL_MUTATORS\x10\x02\x12!\n" +
 	"\x1dOUTBOUND_RPC_ID_ALL_EXECUTORS\x10\x03\x12\"\n" +
 	"\x1eOUTBOUND_RPC_ID_MINT_ASSERTION\x10\x04\x12\x1d\n" +
-	"\x19OUTBOUND_RPC_ID_LIST_S_PS\x10\x05*\x8b\x02\n" +
+	"\x19OUTBOUND_RPC_ID_LIST_S_PS\x10\x05\x12/\n" +
+	"+OUTBOUND_RPC_ID_BROKER_OUTBOUND_MCP_SESSION\x10\x06*\xbc\x02\n" +
 	"\rMetadataRpcId\x12\x1f\n" +
 	"\x1bMETADATA_RPC_ID_UNSPECIFIED\x10\x00\x12!\n" +
 	"\x1dMETADATA_RPC_ID_ALL_ACCESSORS\x10\x01\x12 \n" +
@@ -1894,7 +1902,8 @@ const file_services_saml_proto_rawDesc = "" +
 	"\x1dMETADATA_RPC_ID_ALL_EXECUTORS\x10\x03\x12$\n" +
 	" METADATA_RPC_ID_GET_IDP_METADATA\x10\x04\x12#\n" +
 	"\x1fMETADATA_RPC_ID_GET_SP_METADATA\x10\x05\x12&\n" +
-	"\"METADATA_RPC_ID_GET_IDP_DESCRIPTOR\x10\x06*\xff\x02\n" +
+	"\"METADATA_RPC_ID_GET_IDP_DESCRIPTOR\x10\x06\x12/\n" +
+	"+METADATA_RPC_ID_BROKER_METADATA_MCP_SESSION\x10\a*\xff\x02\n" +
 	"\x1bSamlConfigStateServiceRpcId\x120\n" +
 	",SAML_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x122\n" +
 	".SAML_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x121\n" +
@@ -1905,24 +1914,26 @@ const file_services_saml_proto_rawDesc = "" +
 	"-SAML_CONFIG_STATE_SERVICE_RPC_ID_WATCH_CONFIG\x10\x062\xb1\x01\n" +
 	"\aInbound\x12G\n" +
 	"\rMintAcsTokens\x12\x13.samlsvc.AcsRequest\x1a\x14.samlsvc.AcsResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x04\x12W\n" +
-	"\tAuthorize\x12\x1d.samlsvc.SamlAuthorizeRequest\x1a\x1e.samlsvc.SamlAuthorizeResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x1a\x04\xf2\x97\"\x002\xd1\x01\n" +
+	"\tAuthorize\x12\x1d.samlsvc.SamlAuthorizeRequest\x1a\x1e.samlsvc.SamlAuthorizeResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x1a\x04\xf2\x97\"\x002\xa1\x02\n" +
 	"\bOutbound\x12[\n" +
 	"\rMintAssertion\x12\x1d.samlsvc.MintAssertionRequest\x1a\x1e.samlsvc.MintAssertionResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x02\x12b\n" +
 	"\aListSPs\x12\x17.samlsvc.ListSPsRequest\x1a\x18.samlsvc.ListSPsResponse\"$ʈ'\x03\n" +
-	"\x01\x01\xf2\x88'\x0e\b\x01\x12\bsp_index\x18\x10\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x1a\x04\xf2\x97\"\x002\xa5\x02\n" +
+	"\x01\x01\xf2\x88'\x0e\b\x01\x12\bsp_index\x18\x10\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x12N\n" +
+	"\x18BrokerOutboundMcpSession\x12\x0f.mcp.McpRequest\x1a\x10.mcp.McpResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x03(\x010\x01\x1a\x04\xf2\x97\"\x002\xf5\x02\n" +
 	"\bMetadata\x12Y\n" +
 	"\x0eGetIdpMetadata\x12\x18.samlsvc.MetadataRequest\x1a\x19.samlsvc.MetadataResponse\"\x12ʈ'\x03\n" +
 	"\x01\x01\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x12X\n" +
 	"\rGetSpMetadata\x12\x18.samlsvc.MetadataRequest\x1a\x19.samlsvc.MetadataResponse\"\x12ʈ'\x03\n" +
 	"\x01\x01\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x01\x12^\n" +
-	"\x10GetIdpDescriptor\x12\x1d.samlsvc.GetDescriptorRequest\x1a\x1e.samlsvc.GetDescriptorResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x02\x1a\x04\xf2\x97\"\x002\xc0\x01\n" +
+	"\x10GetIdpDescriptor\x12\x1d.samlsvc.GetDescriptorRequest\x1a\x1e.samlsvc.GetDescriptorResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x02\x12N\n" +
+	"\x18BrokerMetadataMcpSession\x12\x0f.mcp.McpRequest\x1a\x10.mcp.McpResponse\"\v\xfa\x88'\a\b\x01\x10\x01\x1a\x01\x03(\x010\x01\x1a\x04\xf2\x97\"\x002\xc0\x01\n" +
 	"\x16SamlConfigStateService\x121\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x0f.samlsvc.Config\x12-\n" +
 	"\tSetConfig\x12\x0f.samlsvc.Config\x1a\x0f.samlsvc.Config\x125\n" +
 	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x0f.samlsvc.Config0\x01\x1a\r\xea\x97\"\t\n" +
-	"\asamlsvcB\x89\x01\x92\xb5\x18\x11\n" +
+	"\asamlsvcB~\x92\xb5\x18\x11\n" +
 	"\fDEFAULT_PORT\x10\xfbAڵ\x18\x00\x92\xb6\x18\r\n" +
-	"\vkernel.MintZ]gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/samlsvcb\x06proto3"
+	"\vkernel.MintZRgitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/samlsvcb\x06proto3"
 
 var (
 	file_services_saml_proto_rawDescOnce sync.Once
@@ -1965,7 +1976,9 @@ var file_services_saml_proto_goTypes = []any{
 	nil,                               // 23: samlsvc.IdpConfig.AttributeMapEntry
 	nil,                               // 24: samlsvc.SpConfig.AttributeMapEntry
 	(*saml.SamlEntityDescriptor)(nil), // 25: saml.SamlEntityDescriptor
-	(*trace.TraceRequest)(nil),        // 26: trace.TraceRequest
+	(*mcp.McpRequest)(nil),            // 26: mcp.McpRequest
+	(*trace.TraceRequest)(nil),        // 27: trace.TraceRequest
+	(*mcp.McpResponse)(nil),           // 28: mcp.McpResponse
 }
 var file_services_saml_proto_depIdxs = []int32{
 	6,  // 0: samlsvc.Config.idp_providers:type_name -> samlsvc.IdpConfig
@@ -1979,24 +1992,28 @@ var file_services_saml_proto_depIdxs = []int32{
 	10, // 8: samlsvc.Inbound.Authorize:input_type -> samlsvc.SamlAuthorizeRequest
 	12, // 9: samlsvc.Outbound.MintAssertion:input_type -> samlsvc.MintAssertionRequest
 	14, // 10: samlsvc.Outbound.ListSPs:input_type -> samlsvc.ListSPsRequest
-	17, // 11: samlsvc.Metadata.GetIdpMetadata:input_type -> samlsvc.MetadataRequest
-	17, // 12: samlsvc.Metadata.GetSpMetadata:input_type -> samlsvc.MetadataRequest
-	19, // 13: samlsvc.Metadata.GetIdpDescriptor:input_type -> samlsvc.GetDescriptorRequest
-	26, // 14: samlsvc.SamlConfigStateService.GetConfig:input_type -> trace.TraceRequest
-	5,  // 15: samlsvc.SamlConfigStateService.SetConfig:input_type -> samlsvc.Config
-	26, // 16: samlsvc.SamlConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	9,  // 17: samlsvc.Inbound.MintAcsTokens:output_type -> samlsvc.AcsResponse
-	11, // 18: samlsvc.Inbound.Authorize:output_type -> samlsvc.SamlAuthorizeResponse
-	13, // 19: samlsvc.Outbound.MintAssertion:output_type -> samlsvc.MintAssertionResponse
-	15, // 20: samlsvc.Outbound.ListSPs:output_type -> samlsvc.ListSPsResponse
-	18, // 21: samlsvc.Metadata.GetIdpMetadata:output_type -> samlsvc.MetadataResponse
-	18, // 22: samlsvc.Metadata.GetSpMetadata:output_type -> samlsvc.MetadataResponse
-	20, // 23: samlsvc.Metadata.GetIdpDescriptor:output_type -> samlsvc.GetDescriptorResponse
-	5,  // 24: samlsvc.SamlConfigStateService.GetConfig:output_type -> samlsvc.Config
-	5,  // 25: samlsvc.SamlConfigStateService.SetConfig:output_type -> samlsvc.Config
-	5,  // 26: samlsvc.SamlConfigStateService.WatchConfig:output_type -> samlsvc.Config
-	17, // [17:27] is the sub-list for method output_type
-	7,  // [7:17] is the sub-list for method input_type
+	26, // 11: samlsvc.Outbound.BrokerOutboundMcpSession:input_type -> mcp.McpRequest
+	17, // 12: samlsvc.Metadata.GetIdpMetadata:input_type -> samlsvc.MetadataRequest
+	17, // 13: samlsvc.Metadata.GetSpMetadata:input_type -> samlsvc.MetadataRequest
+	19, // 14: samlsvc.Metadata.GetIdpDescriptor:input_type -> samlsvc.GetDescriptorRequest
+	26, // 15: samlsvc.Metadata.BrokerMetadataMcpSession:input_type -> mcp.McpRequest
+	27, // 16: samlsvc.SamlConfigStateService.GetConfig:input_type -> trace.TraceRequest
+	5,  // 17: samlsvc.SamlConfigStateService.SetConfig:input_type -> samlsvc.Config
+	27, // 18: samlsvc.SamlConfigStateService.WatchConfig:input_type -> trace.TraceRequest
+	9,  // 19: samlsvc.Inbound.MintAcsTokens:output_type -> samlsvc.AcsResponse
+	11, // 20: samlsvc.Inbound.Authorize:output_type -> samlsvc.SamlAuthorizeResponse
+	13, // 21: samlsvc.Outbound.MintAssertion:output_type -> samlsvc.MintAssertionResponse
+	15, // 22: samlsvc.Outbound.ListSPs:output_type -> samlsvc.ListSPsResponse
+	28, // 23: samlsvc.Outbound.BrokerOutboundMcpSession:output_type -> mcp.McpResponse
+	18, // 24: samlsvc.Metadata.GetIdpMetadata:output_type -> samlsvc.MetadataResponse
+	18, // 25: samlsvc.Metadata.GetSpMetadata:output_type -> samlsvc.MetadataResponse
+	20, // 26: samlsvc.Metadata.GetIdpDescriptor:output_type -> samlsvc.GetDescriptorResponse
+	28, // 27: samlsvc.Metadata.BrokerMetadataMcpSession:output_type -> mcp.McpResponse
+	5,  // 28: samlsvc.SamlConfigStateService.GetConfig:output_type -> samlsvc.Config
+	5,  // 29: samlsvc.SamlConfigStateService.SetConfig:output_type -> samlsvc.Config
+	5,  // 30: samlsvc.SamlConfigStateService.WatchConfig:output_type -> samlsvc.Config
+	19, // [19:31] is the sub-list for method output_type
+	7,  // [7:19] is the sub-list for method input_type
 	7,  // [7:7] is the sub-list for extension type_name
 	7,  // [7:7] is the sub-list for extension extendee
 	0,  // [0:7] is the sub-list for field type_name

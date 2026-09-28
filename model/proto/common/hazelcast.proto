@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -32,7 +32,7 @@
 syntax = "proto3";
 
 package hazelcast;
-option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/common/hazelcast";
+option go_package = "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/common/hazelcast";
 
 import "google/protobuf/any.proto";
 
@@ -271,9 +271,9 @@ message AdminCpuMetrics {
   bool noop = 201;
 }
 
-// AdminDiskMetrics captures disk usage for the persistence directory.
+// AdminDiskMetrics captures disk usage for a node's on-disk directory.
 message AdminDiskMetrics {
-  string persistence_dir = 1;
+  string disk_dir = 1;
   int64 total_bytes = 2;
   int64 usable_bytes = 3;
   int64 used_bytes = 4;
@@ -385,7 +385,7 @@ message AdminGrpcStats {
 message AdminPersistenceStatus {
   string node_id = 1;
   bool enabled = 2;
-  string persistence_dir = 3;
+  string disk_dir = 3;
   int64 redo_log_entry_count = 4;
   int64 redo_log_size_bytes = 5;
   int64 last_dump_time_ms = 6;

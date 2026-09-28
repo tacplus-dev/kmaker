@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -22,12 +22,14 @@
 package letsencrypt
 
 import (
-	host "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/host"
-	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
-	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
-	x509 "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/x509"
+	eventbus_support "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/eventbus_support"
+	host "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/host"
+	_ "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/spec"
+	trace "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
+	x509 "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -47,34 +49,46 @@ const (
 type TypeID int32
 
 const (
-	TypeID_TYPE_ID_UNSPECIFIED              TypeID = 0
-	TypeID_TYPE_ID_CONFIG                   TypeID = 1
-	TypeID_TYPE_ID_LETS_ENCRYPT_STATE       TypeID = 2
-	TypeID_TYPE_ID_LETS_ENCRYPT_CERT_DATA   TypeID = 3
-	TypeID_TYPE_ID_CERT_MAGIC_STATE         TypeID = 4
-	TypeID_TYPE_ID_LETSENCRYPT_CONFIG_STATE TypeID = 5
-	TypeID_TYPE_ID_MAP_EMPTY                TypeID = 6
+	TypeID_TYPE_ID_UNSPECIFIED                                   TypeID = 0
+	TypeID_TYPE_ID_CONFIG                                        TypeID = 1
+	TypeID_TYPE_ID_LETS_ENCRYPT_STATE                            TypeID = 2
+	TypeID_TYPE_ID_LETS_ENCRYPT_CERT_DATA                        TypeID = 3
+	TypeID_TYPE_ID_CERT_MAGIC_STATE                              TypeID = 4
+	TypeID_TYPE_ID_LETS_ENCRYPT_CERT                             TypeID = 5
+	TypeID_TYPE_ID_LETS_ENCRYPT_CERT_BUS                         TypeID = 6
+	TypeID_TYPE_ID_LETSENCRYPT_CONFIG_STATE                      TypeID = 7
+	TypeID_TYPE_ID_LETS_ENCRYPT_CERT_BUS_STREAM_SUBSCRIBE_RECORD TypeID = 8
+	TypeID_TYPE_ID_MAP_EMPTY                                     TypeID = 9
+	TypeID_TYPE_ID_EVENT_BUS_RECORD_META                         TypeID = 10
 )
 
 // Enum value maps for TypeID.
 var (
 	TypeID_name = map[int32]string{
-		0: "TYPE_ID_UNSPECIFIED",
-		1: "TYPE_ID_CONFIG",
-		2: "TYPE_ID_LETS_ENCRYPT_STATE",
-		3: "TYPE_ID_LETS_ENCRYPT_CERT_DATA",
-		4: "TYPE_ID_CERT_MAGIC_STATE",
-		5: "TYPE_ID_LETSENCRYPT_CONFIG_STATE",
-		6: "TYPE_ID_MAP_EMPTY",
+		0:  "TYPE_ID_UNSPECIFIED",
+		1:  "TYPE_ID_CONFIG",
+		2:  "TYPE_ID_LETS_ENCRYPT_STATE",
+		3:  "TYPE_ID_LETS_ENCRYPT_CERT_DATA",
+		4:  "TYPE_ID_CERT_MAGIC_STATE",
+		5:  "TYPE_ID_LETS_ENCRYPT_CERT",
+		6:  "TYPE_ID_LETS_ENCRYPT_CERT_BUS",
+		7:  "TYPE_ID_LETSENCRYPT_CONFIG_STATE",
+		8:  "TYPE_ID_LETS_ENCRYPT_CERT_BUS_STREAM_SUBSCRIBE_RECORD",
+		9:  "TYPE_ID_MAP_EMPTY",
+		10: "TYPE_ID_EVENT_BUS_RECORD_META",
 	}
 	TypeID_value = map[string]int32{
-		"TYPE_ID_UNSPECIFIED":              0,
-		"TYPE_ID_CONFIG":                   1,
-		"TYPE_ID_LETS_ENCRYPT_STATE":       2,
-		"TYPE_ID_LETS_ENCRYPT_CERT_DATA":   3,
-		"TYPE_ID_CERT_MAGIC_STATE":         4,
-		"TYPE_ID_LETSENCRYPT_CONFIG_STATE": 5,
-		"TYPE_ID_MAP_EMPTY":                6,
+		"TYPE_ID_UNSPECIFIED":                                   0,
+		"TYPE_ID_CONFIG":                                        1,
+		"TYPE_ID_LETS_ENCRYPT_STATE":                            2,
+		"TYPE_ID_LETS_ENCRYPT_CERT_DATA":                        3,
+		"TYPE_ID_CERT_MAGIC_STATE":                              4,
+		"TYPE_ID_LETS_ENCRYPT_CERT":                             5,
+		"TYPE_ID_LETS_ENCRYPT_CERT_BUS":                         6,
+		"TYPE_ID_LETSENCRYPT_CONFIG_STATE":                      7,
+		"TYPE_ID_LETS_ENCRYPT_CERT_BUS_STREAM_SUBSCRIBE_RECORD": 8,
+		"TYPE_ID_MAP_EMPTY":                                     9,
+		"TYPE_ID_EVENT_BUS_RECORD_META":                         10,
 	}
 )
 
@@ -166,6 +180,64 @@ func (LetsEncryptStateServiceRpcId) EnumDescriptor() ([]byte, []int) {
 	return file_services_letsencrypt_proto_rawDescGZIP(), []int{1}
 }
 
+type LetsEncryptCertBusStateServiceRpcId int32
+
+const (
+	LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_UNSPECIFIED         LetsEncryptCertBusStateServiceRpcId = 0
+	LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_ACCESSORS       LetsEncryptCertBusStateServiceRpcId = 1
+	LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_MUTATORS        LetsEncryptCertBusStateServiceRpcId = 2
+	LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_EXECUTORS       LetsEncryptCertBusStateServiceRpcId = 3
+	LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_PUBLISH_TO_STREAM   LetsEncryptCertBusStateServiceRpcId = 4
+	LetsEncryptCertBusStateServiceRpcId_LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_SUBSCRIBE_TO_STREAM LetsEncryptCertBusStateServiceRpcId = 5
+)
+
+// Enum value maps for LetsEncryptCertBusStateServiceRpcId.
+var (
+	LetsEncryptCertBusStateServiceRpcId_name = map[int32]string{
+		0: "LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_UNSPECIFIED",
+		1: "LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_ACCESSORS",
+		2: "LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_MUTATORS",
+		3: "LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_EXECUTORS",
+		4: "LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_PUBLISH_TO_STREAM",
+		5: "LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_SUBSCRIBE_TO_STREAM",
+	}
+	LetsEncryptCertBusStateServiceRpcId_value = map[string]int32{
+		"LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_UNSPECIFIED":         0,
+		"LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_ACCESSORS":       1,
+		"LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_MUTATORS":        2,
+		"LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_EXECUTORS":       3,
+		"LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_PUBLISH_TO_STREAM":   4,
+		"LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_SUBSCRIBE_TO_STREAM": 5,
+	}
+)
+
+func (x LetsEncryptCertBusStateServiceRpcId) Enum() *LetsEncryptCertBusStateServiceRpcId {
+	p := new(LetsEncryptCertBusStateServiceRpcId)
+	*p = x
+	return p
+}
+
+func (x LetsEncryptCertBusStateServiceRpcId) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (LetsEncryptCertBusStateServiceRpcId) Descriptor() protoreflect.EnumDescriptor {
+	return file_services_letsencrypt_proto_enumTypes[2].Descriptor()
+}
+
+func (LetsEncryptCertBusStateServiceRpcId) Type() protoreflect.EnumType {
+	return &file_services_letsencrypt_proto_enumTypes[2]
+}
+
+func (x LetsEncryptCertBusStateServiceRpcId) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use LetsEncryptCertBusStateServiceRpcId.Descriptor instead.
+func (LetsEncryptCertBusStateServiceRpcId) EnumDescriptor() ([]byte, []int) {
+	return file_services_letsencrypt_proto_rawDescGZIP(), []int{2}
+}
+
 type LetsencryptConfigStateServiceRpcId int32
 
 const (
@@ -211,11 +283,11 @@ func (x LetsencryptConfigStateServiceRpcId) String() string {
 }
 
 func (LetsencryptConfigStateServiceRpcId) Descriptor() protoreflect.EnumDescriptor {
-	return file_services_letsencrypt_proto_enumTypes[2].Descriptor()
+	return file_services_letsencrypt_proto_enumTypes[3].Descriptor()
 }
 
 func (LetsencryptConfigStateServiceRpcId) Type() protoreflect.EnumType {
-	return &file_services_letsencrypt_proto_enumTypes[2]
+	return &file_services_letsencrypt_proto_enumTypes[3]
 }
 
 func (x LetsencryptConfigStateServiceRpcId) Number() protoreflect.EnumNumber {
@@ -224,7 +296,7 @@ func (x LetsencryptConfigStateServiceRpcId) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use LetsencryptConfigStateServiceRpcId.Descriptor instead.
 func (LetsencryptConfigStateServiceRpcId) EnumDescriptor() ([]byte, []int) {
-	return file_services_letsencrypt_proto_rawDescGZIP(), []int{2}
+	return file_services_letsencrypt_proto_rawDescGZIP(), []int{3}
 }
 
 type Config struct {
@@ -235,15 +307,18 @@ type Config struct {
 	// NOTES: needs email assertion
 	LetsEncryptEmail string `protobuf:"bytes,1,opt,name=lets_encrypt_email,json=letsEncryptEmail,proto3" json:"lets_encrypt_email,omitempty"`
 	// http_listener is the bind address for the HTTP server used for ACME HTTP-01
-	// challenge responses. Must be reachable on port 80 from the internet.
-	// Default port 80.
+	// challenge responses. IN-CLUSTER ONLY: the gateway owns the edge's port 80
+	// and proxies /.well-known/acme-challenge/* here, so this listener needs no
+	// externally-exposed Service of its own — only a ClusterIP the gateway can
+	// reach. Default port 80.
 	HttpListener *host.Host `protobuf:"bytes,2,opt,name=http_listener,json=httpListener,proto3" json:"http_listener,omitempty"`
 	// renewal_check_interval_seconds is how often to check if the certificate
 	// needs renewal (seconds). Default: 3600 (1 hour).
 	RenewalCheckIntervalSeconds int64 `protobuf:"varint,3,opt,name=renewal_check_interval_seconds,json=renewalCheckIntervalSeconds,proto3" json:"renewal_check_interval_seconds,omitempty"`
 	// hostnames is the list of domain names to include as SANs on the
 	// Let's Encrypt certificate (e.g. ["api.schematic.io", "console.schematic.io"]).
-	// All hostnames must be reachable on port 80 for HTTP-01 challenge validation.
+	// All hostnames must resolve to the gateway's external address, which is what
+	// answers on port 80 for HTTP-01 challenge validation.
 	Hostnames     []string `protobuf:"bytes,4,rep,name=hostnames,proto3" json:"hostnames,omitempty"`
 	TraceId       string   `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool     `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
@@ -330,6 +405,15 @@ type LetsEncryptState struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// cert_data is the singleton holding the current certificate and
 	// CertMagic internal state. Written atomically on each renewal.
+	//
+	// MEMORY ONLY. It carried (spec.persistence) until 2026-09-25; kernel no
+	// longer does durability at all (decisions/
+	// kernel-no-durability-user-data-to-stratum-2026-09-25.md), and tacplus now
+	// refuses the flag on a kernel-labelled state root. The durable copy is the
+	// LetsEncryptCert record below, and this field is its LIVE MIRROR: written
+	// after the record on every obtain and renewal, repopulated from the record
+	// on start. A total kernel restart empties it and the next letsencrypt start
+	// fills it again from stratum without an ACME call.
 	CertData      *LetsEncryptCertData `protobuf:"bytes,1,opt,name=cert_data,json=certData,proto3" json:"cert_data,omitempty"`
 	TraceId       string               `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
 	Noop          bool                 `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
@@ -570,6 +654,243 @@ func (x *CertMagicState) GetNoop() bool {
 	return false
 }
 
+// LetsEncryptCert is the cluster's Let's Encrypt certificate set, held durably
+// by stratum. It is the ONLY durable copy: LetsEncryptState above is a live
+// in-memory mirror of it, kept for the gateway's benefit, and kernel is not a
+// durability layer (decisions/
+// kernel-no-durability-user-data-to-stratum-2026-09-25.md item 4).
+//
+// The write order is the whole design: obtain or renew -> write THIS record ->
+// write LetsEncryptState.cert_data. A crash between the two costs nothing but a
+// stale mirror, which the next start rebuilds from here. The reverse order would
+// make a mirror that outlives its own durable copy, which is the shape the
+// kernel-persistence experiment had.
+//
+// ONE ROW PER HOSTNAME SET, not one row per issuance: certmagic manages a single
+// multi-SAN certificate for Config.hostnames, so a renewal REPLACES this row
+// rather than appending beside it (hence MUTABILITY_CRUD, the default). The
+// record is not an issuance log and must not become one — the previous
+// certificate is of no use to anyone once the new one is live.
+//
+// THE ACME ACCOUNT TRAVELS WITH IT. certmagic_state below is the whole storage
+// tree, account registration and account key included, so the account is durable
+// for exactly as long as the certificate it issued is. Splitting the account into
+// a record of its own would let the two get out of step, and an account that
+// outlives nothing is one more ACME registration against Let's Encrypt's 10 new
+// registrations per 3 hours per IP.
+type LetsEncryptCert struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// cert_set_id identifies the hostname set this certificate covers — a stable
+	// digest of the sorted, comma-joined Config.hostnames list. Derived, never
+	// configured: two pods reading the same config must compute the same key.
+	CertSetId string `protobuf:"bytes,1,opt,name=cert_set_id,json=certSetId,proto3" json:"cert_set_id,omitempty"`
+	// tls_cert is the certificate chain and private key, in the SAME type
+	// LetsEncryptCertData.tls_cert holds, so the mirror write is a field copy and
+	// not a conversion.
+	//
+	// NOT assert_required, for the same reason LetsEncryptCertData.tls_cert stopped
+	// being required in 7ba5060: the FIRST write of this row happens before any
+	// certificate exists. certmagic registers the ACME account minutes before
+	// issuance completes, and that account has to become durable at once — Let's
+	// Encrypt allows 10 new registrations per 3 hours per IP, which a crash-loop
+	// that re-registers on every boot exhausts. So the account flush writes this
+	// row with certmagic_state and no tls_cert, and the obtain fills it in. A row
+	// with no tls_cert means "the account is durable, the certificate is not yet".
+	TlsCert *x509.X509CertChain `protobuf:"bytes,2,opt,name=tls_cert,json=tlsCert,proto3" json:"tls_cert,omitempty"`
+	// certmagic_state is the serialized CertMagic storage tree — ACME account,
+	// certificate metadata and cached certificates. Restoring it is what lets a
+	// start with a valid certificate skip ACME entirely.
+	CertmagicState *CertMagicState `protobuf:"bytes,3,opt,name=certmagic_state,json=certmagicState,proto3" json:"certmagic_state,omitempty"`
+	// hostnames are the names the certificate was issued for, in the sorted order
+	// cert_set_id was computed over. Carried as well as digested because a digest
+	// cannot be read by a human debugging which certificate is live.
+	Hostnames []string `protobuf:"bytes,4,rep,name=hostnames,proto3" json:"hostnames,omitempty"`
+	// issued_at is the leaf certificate's NotBefore, Unix seconds.
+	//
+	// issued_at/expires_at are DERIVED from the leaf in tls_cert, which is the
+	// authority on both and is what the start-up expiry check actually parses.
+	// They are carried anyway, for the one thing a parse cannot serve: answering
+	// "when does the cluster's certificate expire" from the query plane without
+	// pulling and decoding a certificate chain per row. x509.X509CertChain carries
+	// neither timestamp itself (it is chain + key + id and nothing else), so there
+	// is no field here duplicating one there.
+	IssuedAt int64 `protobuf:"varint,5,opt,name=issued_at,json=issuedAt,proto3" json:"issued_at,omitempty"`
+	// expires_at is the leaf certificate's NotAfter, Unix seconds. See issued_at.
+	ExpiresAt int64 `protobuf:"varint,6,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
+	// spiffe_id is the record's owner — letsencrypt's own workload identity, the
+	// only writer this record has.
+	SpiffeId string `protobuf:"bytes,7,opt,name=spiffe_id,json=spiffeId,proto3" json:"spiffe_id,omitempty"`
+	// namespace is the row's owning namespace — the generated tenant backstop.
+	// A cluster's TLS certificate is platform data, so this is root ("/") in
+	// practice; the annotation is mandatory on every record regardless.
+	Namespace     string `protobuf:"bytes,8,opt,name=namespace,proto3" json:"namespace,omitempty"`
+	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LetsEncryptCert) Reset() {
+	*x = LetsEncryptCert{}
+	mi := &file_services_letsencrypt_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LetsEncryptCert) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LetsEncryptCert) ProtoMessage() {}
+
+func (x *LetsEncryptCert) ProtoReflect() protoreflect.Message {
+	mi := &file_services_letsencrypt_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LetsEncryptCert.ProtoReflect.Descriptor instead.
+func (*LetsEncryptCert) Descriptor() ([]byte, []int) {
+	return file_services_letsencrypt_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *LetsEncryptCert) GetCertSetId() string {
+	if x != nil {
+		return x.CertSetId
+	}
+	return ""
+}
+
+func (x *LetsEncryptCert) GetTlsCert() *x509.X509CertChain {
+	if x != nil {
+		return x.TlsCert
+	}
+	return nil
+}
+
+func (x *LetsEncryptCert) GetCertmagicState() *CertMagicState {
+	if x != nil {
+		return x.CertmagicState
+	}
+	return nil
+}
+
+func (x *LetsEncryptCert) GetHostnames() []string {
+	if x != nil {
+		return x.Hostnames
+	}
+	return nil
+}
+
+func (x *LetsEncryptCert) GetIssuedAt() int64 {
+	if x != nil {
+		return x.IssuedAt
+	}
+	return 0
+}
+
+func (x *LetsEncryptCert) GetExpiresAt() int64 {
+	if x != nil {
+		return x.ExpiresAt
+	}
+	return 0
+}
+
+func (x *LetsEncryptCert) GetSpiffeId() string {
+	if x != nil {
+		return x.SpiffeId
+	}
+	return ""
+}
+
+func (x *LetsEncryptCert) GetNamespace() string {
+	if x != nil {
+		return x.Namespace
+	}
+	return ""
+}
+
+func (x *LetsEncryptCert) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *LetsEncryptCert) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
+// tacplus:generated EventBus topic wrapper for LetsEncryptCert.
+type LetsEncryptCertBus struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Stream        *LetsEncryptCert       `protobuf:"bytes,1,opt,name=stream,proto3" json:"stream,omitempty"`
+	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool                   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LetsEncryptCertBus) Reset() {
+	*x = LetsEncryptCertBus{}
+	mi := &file_services_letsencrypt_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LetsEncryptCertBus) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LetsEncryptCertBus) ProtoMessage() {}
+
+func (x *LetsEncryptCertBus) ProtoReflect() protoreflect.Message {
+	mi := &file_services_letsencrypt_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LetsEncryptCertBus.ProtoReflect.Descriptor instead.
+func (*LetsEncryptCertBus) Descriptor() ([]byte, []int) {
+	return file_services_letsencrypt_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *LetsEncryptCertBus) GetStream() *LetsEncryptCert {
+	if x != nil {
+		return x.Stream
+	}
+	return nil
+}
+
+func (x *LetsEncryptCertBus) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *LetsEncryptCertBus) GetNoop() bool {
+	if x != nil {
+		return x.Noop
+	}
+	return false
+}
+
 // LetsencryptConfigState is the state boundary for letsencrypt service configuration.
 // Auto-injected by tacplus from (spec.grpc_config) annotation.
 type LetsencryptConfigState struct {
@@ -583,7 +904,7 @@ type LetsencryptConfigState struct {
 
 func (x *LetsencryptConfigState) Reset() {
 	*x = LetsencryptConfigState{}
-	mi := &file_services_letsencrypt_proto_msgTypes[4]
+	mi := &file_services_letsencrypt_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -595,7 +916,7 @@ func (x *LetsencryptConfigState) String() string {
 func (*LetsencryptConfigState) ProtoMessage() {}
 
 func (x *LetsencryptConfigState) ProtoReflect() protoreflect.Message {
-	mi := &file_services_letsencrypt_proto_msgTypes[4]
+	mi := &file_services_letsencrypt_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -608,7 +929,7 @@ func (x *LetsencryptConfigState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LetsencryptConfigState.ProtoReflect.Descriptor instead.
 func (*LetsencryptConfigState) Descriptor() ([]byte, []int) {
-	return file_services_letsencrypt_proto_rawDescGZIP(), []int{4}
+	return file_services_letsencrypt_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *LetsencryptConfigState) GetConfig() *Config {
@@ -632,6 +953,58 @@ func (x *LetsencryptConfigState) GetNoop() bool {
 	return false
 }
 
+type LetsEncryptCertBusStreamSubscribeRecord struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Meta          *EventBusRecordMeta    `protobuf:"bytes,1,opt,name=meta,proto3" json:"meta,omitempty"`
+	Payload       *LetsEncryptCert       `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LetsEncryptCertBusStreamSubscribeRecord) Reset() {
+	*x = LetsEncryptCertBusStreamSubscribeRecord{}
+	mi := &file_services_letsencrypt_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LetsEncryptCertBusStreamSubscribeRecord) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LetsEncryptCertBusStreamSubscribeRecord) ProtoMessage() {}
+
+func (x *LetsEncryptCertBusStreamSubscribeRecord) ProtoReflect() protoreflect.Message {
+	mi := &file_services_letsencrypt_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LetsEncryptCertBusStreamSubscribeRecord.ProtoReflect.Descriptor instead.
+func (*LetsEncryptCertBusStreamSubscribeRecord) Descriptor() ([]byte, []int) {
+	return file_services_letsencrypt_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *LetsEncryptCertBusStreamSubscribeRecord) GetMeta() *EventBusRecordMeta {
+	if x != nil {
+		return x.Meta
+	}
+	return nil
+}
+
+func (x *LetsEncryptCertBusStreamSubscribeRecord) GetPayload() *LetsEncryptCert {
+	if x != nil {
+		return x.Payload
+	}
+	return nil
+}
+
 type MapEmpty struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TraceId       string                 `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -642,7 +1015,7 @@ type MapEmpty struct {
 
 func (x *MapEmpty) Reset() {
 	*x = MapEmpty{}
-	mi := &file_services_letsencrypt_proto_msgTypes[5]
+	mi := &file_services_letsencrypt_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -654,7 +1027,7 @@ func (x *MapEmpty) String() string {
 func (*MapEmpty) ProtoMessage() {}
 
 func (x *MapEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_services_letsencrypt_proto_msgTypes[5]
+	mi := &file_services_letsencrypt_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -667,7 +1040,7 @@ func (x *MapEmpty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MapEmpty.ProtoReflect.Descriptor instead.
 func (*MapEmpty) Descriptor() ([]byte, []int) {
-	return file_services_letsencrypt_proto_rawDescGZIP(), []int{5}
+	return file_services_letsencrypt_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *MapEmpty) GetTraceId() string {
@@ -684,11 +1057,87 @@ func (x *MapEmpty) GetNoop() bool {
 	return false
 }
 
+type EventBusRecordMeta struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Key           []byte                 `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	Topic         string                 `protobuf:"bytes,2,opt,name=topic,proto3" json:"topic,omitempty"`
+	Partition     int32                  `protobuf:"varint,3,opt,name=partition,proto3" json:"partition,omitempty"`
+	Offset        int64                  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`
+	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EventBusRecordMeta) Reset() {
+	*x = EventBusRecordMeta{}
+	mi := &file_services_letsencrypt_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EventBusRecordMeta) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EventBusRecordMeta) ProtoMessage() {}
+
+func (x *EventBusRecordMeta) ProtoReflect() protoreflect.Message {
+	mi := &file_services_letsencrypt_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EventBusRecordMeta.ProtoReflect.Descriptor instead.
+func (*EventBusRecordMeta) Descriptor() ([]byte, []int) {
+	return file_services_letsencrypt_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *EventBusRecordMeta) GetKey() []byte {
+	if x != nil {
+		return x.Key
+	}
+	return nil
+}
+
+func (x *EventBusRecordMeta) GetTopic() string {
+	if x != nil {
+		return x.Topic
+	}
+	return ""
+}
+
+func (x *EventBusRecordMeta) GetPartition() int32 {
+	if x != nil {
+		return x.Partition
+	}
+	return 0
+}
+
+func (x *EventBusRecordMeta) GetOffset() int64 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
+}
+
+func (x *EventBusRecordMeta) GetTimestamp() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Timestamp
+	}
+	return nil
+}
+
 var File_services_letsencrypt_proto protoreflect.FileDescriptor
 
 const file_services_letsencrypt_proto_rawDesc = "" +
 	"\n" +
-	"\x1aservices/letsencrypt.proto\x12\vletsencrypt\x1a\x0esys/spec.proto\x1a\x0esys/host.proto\x1a\x0esys/x509.proto\x1a\x0fsys/trace.proto\"\xb0\x02\n" +
+	"\x1aservices/letsencrypt.proto\x12\vletsencrypt\x1a\x0esys/spec.proto\x1a\x0esys/host.proto\x1a\x0esys/x509.proto\x1a\x0fsys/trace.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a generated/eventbus_support.proto\"\xdb\x02\n" +
 	"\x06Config\x12,\n" +
 	"\x12lets_encrypt_email\x18\x01 \x01(\tR\x10letsEncryptEmail\x12@\n" +
 	"\rhttp_listener\x18\x02 \x01(\v2\n" +
@@ -697,15 +1146,16 @@ const file_services_letsencrypt_proto_rawDesc = "" +
 	"\x1erenewal_check_interval_seconds\x18\x03 \x01(\x03B\x05\x90\xa8\x1d\x90\x1cR\x1brenewalCheckIntervalSeconds\x12&\n" +
 	"\thostnames\x18\x04 \x03(\tB\b\x88\xa6\x1d\x01\xb8\xa8\x1d\x10R\thostnames\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x11Ҩ\x1d\r\n" +
-	"\vletsencrypt\"\x98\x01\n" +
-	"\x10LetsEncryptState\x12C\n" +
-	"\tcert_data\x18\x01 \x01(\v2 .letsencrypt.LetsEncryptCertDataB\x04\xe0\xb6\x18\x01R\bcertData\x12\x1a\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:<Ҩ\x1d\r\n" +
+	"\vletsencryptʪ\x1d'\n" +
+	"%letsencrypt.LetsEncryptCertBus.stream\"\x92\x01\n" +
+	"\x10LetsEncryptState\x12=\n" +
+	"\tcert_data\x18\x01 \x01(\v2 .letsencrypt.LetsEncryptCertDataR\bcertData\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0e\x9a\xa8\x1d\n" +
-	"\x1a\x06kernel(\x01\"\x8f\x02\n" +
-	"\x13LetsEncryptCertData\x124\n" +
-	"\btls_cert\x18\x01 \x01(\v2\x13.x509.X509CertChainB\x04\x88\xa6\x1d\x01R\atlsCert\x12J\n" +
+	"\x1a\x06kernel(\x01\"\x89\x02\n" +
+	"\x13LetsEncryptCertData\x12.\n" +
+	"\btls_cert\x18\x01 \x01(\v2\x13.x509.X509CertChainR\atlsCert\x12J\n" +
 	"\x0fcertmagic_state\x18\x02 \x01(\v2\x1b.letsencrypt.CertMagicStateB\x04\x88\xa6\x1d\x01R\x0ecertmagicState\x12!\n" +
 	"\flast_renewed\x18\x03 \x01(\x03R\vlastRenewed\x12\"\n" +
 	"\thostnames\x18\x04 \x03(\tB\x04\xb8\xa8\x1d@R\thostnames\x12\x1a\n" +
@@ -720,23 +1170,60 @@ const file_services_letsencrypt_proto_rawDesc = "" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\x1aX\n" +
 	"\rChildrenEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x121\n" +
-	"\x05value\x18\x02 \x01(\v2\x1b.letsencrypt.CertMagicStateR\x05value:\x028\x01\"\xa2\x01\n" +
+	"\x05value\x18\x02 \x01(\v2\x1b.letsencrypt.CertMagicStateR\x05value:\x028\x01\"\x91\x04\n" +
+	"\x0fLetsEncryptCert\x121\n" +
+	"\vcert_set_id\x18\x01 \x01(\tB\x11е\x18\x01\x88\xa6\x1d\x01\xb8\xa8\x1d\x80\x01\xa0\xa9\x1d\x01R\tcertSetId\x12.\n" +
+	"\btls_cert\x18\x02 \x01(\v2\x13.x509.X509CertChainR\atlsCert\x12J\n" +
+	"\x0fcertmagic_state\x18\x03 \x01(\v2\x1b.letsencrypt.CertMagicStateB\x04\x88\xa6\x1d\x01R\x0ecertmagicState\x12&\n" +
+	"\thostnames\x18\x04 \x03(\tB\b\x88\xa6\x1d\x01\xb8\xa8\x1d\x10R\thostnames\x12!\n" +
+	"\tissued_at\x18\x05 \x01(\x03B\x04\xb0\xa7\x1d\x00R\bissuedAt\x12)\n" +
+	"\n" +
+	"expires_at\x18\x06 \x01(\x03B\n" +
+	"\xb0\xa7\x1d\x00\x82\xab\x1d\x02\b\x02R\texpiresAt\x12,\n" +
+	"\tspiffe_id\x18\a \x01(\tB\x0f\xb8\xa8\x1d\x80\b\xe8\xaa\x1d\x01\x82\xab\x1d\x02\b\x01R\bspiffeId\x12'\n" +
+	"\tnamespace\x18\b \x01(\tB\t\xb8\xa8\x1d\x80\x02\xc0\xab\x1d\x01R\tnamespace\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:Q\x8a\xaa\x1dM\n" +
+	"\vcert_set_id\x12\tspiffe_id\"\r\n" +
+	"\vletsencrypt:\n" +
+	"\b\x80\xce\xda\x03\x10\x80\x9a\x9e\x01J\t\n" +
+	"\astratumR\r\n" +
+	"\vletsencrypt\"\x93\x01\n" +
+	"\x12LetsEncryptCertBus\x12:\n" +
+	"\x06stream\x18\x01 \x01(\v2\x1c.letsencrypt.LetsEncryptCertB\x04\x88\xb6\x18\x01R\x06stream\x12\x1a\n" +
+	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x10\xe2\xa9\x1d\f\n" +
+	"\beventbus\x18\x01\"\xa2\x01\n" +
 	"\x16LetsencryptConfigState\x121\n" +
 	"\x06config\x18\x01 \x01(\v2\x13.letsencrypt.ConfigB\x04\xe0\xb6\x18\x01R\x06config\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:$\x9a\xa8\x1d \n" +
-	"\x16LetsencryptConfigState\x1a\x06kernel\";\n" +
+	"\x16LetsencryptConfigState\x1a\x06kernel\"\x96\x01\n" +
+	"'LetsEncryptCertBusStreamSubscribeRecord\x123\n" +
+	"\x04meta\x18\x01 \x01(\v2\x1f.letsencrypt.EventBusRecordMetaR\x04meta\x126\n" +
+	"\apayload\x18\x02 \x01(\v2\x1c.letsencrypt.LetsEncryptCertR\apayload\";\n" +
 	"\bMapEmpty\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop*\xd4\x01\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\xac\x01\n" +
+	"\x12EventBusRecordMeta\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\fR\x03key\x12\x14\n" +
+	"\x05topic\x18\x02 \x01(\tR\x05topic\x12\x1c\n" +
+	"\tpartition\x18\x03 \x01(\x05R\tpartition\x12\x16\n" +
+	"\x06offset\x18\x04 \x01(\x03R\x06offset\x128\n" +
+	"\ttimestamp\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp*\xf4\x02\n" +
 	"\x06TypeID\x12\x17\n" +
 	"\x13TYPE_ID_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eTYPE_ID_CONFIG\x10\x01\x12\x1e\n" +
 	"\x1aTYPE_ID_LETS_ENCRYPT_STATE\x10\x02\x12\"\n" +
 	"\x1eTYPE_ID_LETS_ENCRYPT_CERT_DATA\x10\x03\x12\x1c\n" +
-	"\x18TYPE_ID_CERT_MAGIC_STATE\x10\x04\x12$\n" +
-	" TYPE_ID_LETSENCRYPT_CONFIG_STATE\x10\x05\x12\x15\n" +
-	"\x11TYPE_ID_MAP_EMPTY\x10\x06*\x90\x03\n" +
+	"\x18TYPE_ID_CERT_MAGIC_STATE\x10\x04\x12\x1d\n" +
+	"\x19TYPE_ID_LETS_ENCRYPT_CERT\x10\x05\x12!\n" +
+	"\x1dTYPE_ID_LETS_ENCRYPT_CERT_BUS\x10\x06\x12$\n" +
+	" TYPE_ID_LETSENCRYPT_CONFIG_STATE\x10\a\x129\n" +
+	"5TYPE_ID_LETS_ENCRYPT_CERT_BUS_STREAM_SUBSCRIBE_RECORD\x10\b\x12\x15\n" +
+	"\x11TYPE_ID_MAP_EMPTY\x10\t\x12!\n" +
+	"\x1dTYPE_ID_EVENT_BUS_RECORD_META\x10\n" +
+	"*\x90\x03\n" +
 	"\x1cLetsEncryptStateServiceRpcId\x121\n" +
 	"-LETS_ENCRYPT_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x123\n" +
 	"/LETS_ENCRYPT_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x122\n" +
@@ -744,7 +1231,14 @@ const file_services_letsencrypt_proto_rawDesc = "" +
 	"/LETS_ENCRYPT_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x123\n" +
 	"/LETS_ENCRYPT_STATE_SERVICE_RPC_ID_GET_CERT_DATA\x10\x04\x123\n" +
 	"/LETS_ENCRYPT_STATE_SERVICE_RPC_ID_SET_CERT_DATA\x10\x05\x125\n" +
-	"1LETS_ENCRYPT_STATE_SERVICE_RPC_ID_WATCH_CERT_DATA\x10\x06*\xb7\x03\n" +
+	"1LETS_ENCRYPT_STATE_SERVICE_RPC_ID_WATCH_CERT_DATA\x10\x06*\xa0\x03\n" +
+	"#LetsEncryptCertBusStateServiceRpcId\x12:\n" +
+	"6LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x12<\n" +
+	"8LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x12;\n" +
+	"7LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_MUTATORS\x10\x02\x12<\n" +
+	"8LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_ALL_EXECUTORS\x10\x03\x12@\n" +
+	"<LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_PUBLISH_TO_STREAM\x10\x04\x12B\n" +
+	">LETS_ENCRYPT_CERT_BUS_STATE_SERVICE_RPC_ID_SUBSCRIBE_TO_STREAM\x10\x05*\xb7\x03\n" +
 	"\"LetsencryptConfigStateServiceRpcId\x127\n" +
 	"3LETSENCRYPT_CONFIG_STATE_SERVICE_RPC_ID_UNSPECIFIED\x10\x00\x129\n" +
 	"5LETSENCRYPT_CONFIG_STATE_SERVICE_RPC_ID_ALL_ACCESSORS\x10\x01\x128\n" +
@@ -758,13 +1252,18 @@ const file_services_letsencrypt_proto_rawDesc = "" +
 	"\vSetCertData\x12 .letsencrypt.LetsEncryptCertData\x1a .letsencrypt.LetsEncryptCertData\x12H\n" +
 	"\rWatchCertData\x12\x13.trace.TraceRequest\x1a .letsencrypt.LetsEncryptCertData0\x01\x1a\x1a\xea\x97\"\x16\n" +
 	"\vletsencrypt\n" +
-	"\agateway2\xdb\x01\n" +
+	"\agateway2\xb1\x02\n" +
+	"\x1eLetsEncryptCertBusStateService\x12k\n" +
+	"\x0fPublishToStream\x12\x1c.letsencrypt.LetsEncryptCert\x1a!.eventbus_support.PublishResponse\"\x13\xfa\x88'\x0f\b\x02\"\vletsencrypt(\x010\x01\x12\x82\x01\n" +
+	"\x11SubscribeToStream\x12\".eventbus_support.SubscribeRequest\x1a4.letsencrypt.LetsEncryptCertBusStreamSubscribeRecord\"\x0f\xfa\x88'\v\b\x02\"\astratum(\x010\x01\x1a\x1d\xe2\x97\"\beventbus\xea\x97\"\r\n" +
+	"\vletsencrypt2\xdb\x01\n" +
 	"\x1dLetsencryptConfigStateService\x125\n" +
 	"\tGetConfig\x12\x13.trace.TraceRequest\x1a\x13.letsencrypt.Config\x125\n" +
 	"\tSetConfig\x12\x13.letsencrypt.Config\x1a\x13.letsencrypt.Config\x129\n" +
 	"\vWatchConfig\x12\x13.trace.TraceRequest\x1a\x13.letsencrypt.Config0\x01\x1a\x11\xea\x97\"\r\n" +
-	"\vletsencryptB|ڵ\x18\x00\xe2\xb5\x18\x11\n" +
-	"\x0fkernel.IdentityZagitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/letsencryptb\x06proto3"
+	"\vletsencryptB\x92\x01ڵ\x18\x00\xe2\xb5\x18\x11\n" +
+	"\x0fkernel.IdentityҶ\x18\x1d\n" +
+	"\x1bletsencrypt.LetsEncryptCertZVgitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/letsencryptb\x06proto3"
 
 var (
 	file_services_letsencrypt_proto_rawDescOnce sync.Once
@@ -778,48 +1277,66 @@ func file_services_letsencrypt_proto_rawDescGZIP() []byte {
 	return file_services_letsencrypt_proto_rawDescData
 }
 
-var file_services_letsencrypt_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_services_letsencrypt_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_services_letsencrypt_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
+var file_services_letsencrypt_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_services_letsencrypt_proto_goTypes = []any{
-	(TypeID)(0),                             // 0: letsencrypt.TypeID
-	(LetsEncryptStateServiceRpcId)(0),       // 1: letsencrypt.LetsEncryptStateServiceRpcId
-	(LetsencryptConfigStateServiceRpcId)(0), // 2: letsencrypt.LetsencryptConfigStateServiceRpcId
-	(*Config)(nil),                          // 3: letsencrypt.Config
-	(*LetsEncryptState)(nil),                // 4: letsencrypt.LetsEncryptState
-	(*LetsEncryptCertData)(nil),             // 5: letsencrypt.LetsEncryptCertData
-	(*CertMagicState)(nil),                  // 6: letsencrypt.CertMagicState
-	(*LetsencryptConfigState)(nil),          // 7: letsencrypt.LetsencryptConfigState
-	(*MapEmpty)(nil),                        // 8: letsencrypt.MapEmpty
-	nil,                                     // 9: letsencrypt.CertMagicState.ChildrenEntry
-	(*host.Host)(nil),                       // 10: host.Host
-	(*x509.X509CertChain)(nil),              // 11: x509.X509CertChain
-	(*trace.TraceRequest)(nil),              // 12: trace.TraceRequest
+	(TypeID)(0),                                     // 0: letsencrypt.TypeID
+	(LetsEncryptStateServiceRpcId)(0),               // 1: letsencrypt.LetsEncryptStateServiceRpcId
+	(LetsEncryptCertBusStateServiceRpcId)(0),        // 2: letsencrypt.LetsEncryptCertBusStateServiceRpcId
+	(LetsencryptConfigStateServiceRpcId)(0),         // 3: letsencrypt.LetsencryptConfigStateServiceRpcId
+	(*Config)(nil),                                  // 4: letsencrypt.Config
+	(*LetsEncryptState)(nil),                        // 5: letsencrypt.LetsEncryptState
+	(*LetsEncryptCertData)(nil),                     // 6: letsencrypt.LetsEncryptCertData
+	(*CertMagicState)(nil),                          // 7: letsencrypt.CertMagicState
+	(*LetsEncryptCert)(nil),                         // 8: letsencrypt.LetsEncryptCert
+	(*LetsEncryptCertBus)(nil),                      // 9: letsencrypt.LetsEncryptCertBus
+	(*LetsencryptConfigState)(nil),                  // 10: letsencrypt.LetsencryptConfigState
+	(*LetsEncryptCertBusStreamSubscribeRecord)(nil), // 11: letsencrypt.LetsEncryptCertBusStreamSubscribeRecord
+	(*MapEmpty)(nil),                                // 12: letsencrypt.MapEmpty
+	(*EventBusRecordMeta)(nil),                      // 13: letsencrypt.EventBusRecordMeta
+	nil,                                             // 14: letsencrypt.CertMagicState.ChildrenEntry
+	(*host.Host)(nil),                               // 15: host.Host
+	(*x509.X509CertChain)(nil),                      // 16: x509.X509CertChain
+	(*timestamppb.Timestamp)(nil),                   // 17: google.protobuf.Timestamp
+	(*trace.TraceRequest)(nil),                      // 18: trace.TraceRequest
+	(*eventbus_support.SubscribeRequest)(nil),       // 19: eventbus_support.SubscribeRequest
+	(*eventbus_support.PublishResponse)(nil),        // 20: eventbus_support.PublishResponse
 }
 var file_services_letsencrypt_proto_depIdxs = []int32{
-	10, // 0: letsencrypt.Config.http_listener:type_name -> host.Host
-	5,  // 1: letsencrypt.LetsEncryptState.cert_data:type_name -> letsencrypt.LetsEncryptCertData
-	11, // 2: letsencrypt.LetsEncryptCertData.tls_cert:type_name -> x509.X509CertChain
-	6,  // 3: letsencrypt.LetsEncryptCertData.certmagic_state:type_name -> letsencrypt.CertMagicState
-	9,  // 4: letsencrypt.CertMagicState.children:type_name -> letsencrypt.CertMagicState.ChildrenEntry
-	3,  // 5: letsencrypt.LetsencryptConfigState.config:type_name -> letsencrypt.Config
-	6,  // 6: letsencrypt.CertMagicState.ChildrenEntry.value:type_name -> letsencrypt.CertMagicState
-	12, // 7: letsencrypt.LetsEncryptStateService.GetCertData:input_type -> trace.TraceRequest
-	5,  // 8: letsencrypt.LetsEncryptStateService.SetCertData:input_type -> letsencrypt.LetsEncryptCertData
-	12, // 9: letsencrypt.LetsEncryptStateService.WatchCertData:input_type -> trace.TraceRequest
-	12, // 10: letsencrypt.LetsencryptConfigStateService.GetConfig:input_type -> trace.TraceRequest
-	3,  // 11: letsencrypt.LetsencryptConfigStateService.SetConfig:input_type -> letsencrypt.Config
-	12, // 12: letsencrypt.LetsencryptConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	5,  // 13: letsencrypt.LetsEncryptStateService.GetCertData:output_type -> letsencrypt.LetsEncryptCertData
-	5,  // 14: letsencrypt.LetsEncryptStateService.SetCertData:output_type -> letsencrypt.LetsEncryptCertData
-	5,  // 15: letsencrypt.LetsEncryptStateService.WatchCertData:output_type -> letsencrypt.LetsEncryptCertData
-	3,  // 16: letsencrypt.LetsencryptConfigStateService.GetConfig:output_type -> letsencrypt.Config
-	3,  // 17: letsencrypt.LetsencryptConfigStateService.SetConfig:output_type -> letsencrypt.Config
-	3,  // 18: letsencrypt.LetsencryptConfigStateService.WatchConfig:output_type -> letsencrypt.Config
-	13, // [13:19] is the sub-list for method output_type
-	7,  // [7:13] is the sub-list for method input_type
-	7,  // [7:7] is the sub-list for extension type_name
-	7,  // [7:7] is the sub-list for extension extendee
-	0,  // [0:7] is the sub-list for field type_name
+	15, // 0: letsencrypt.Config.http_listener:type_name -> host.Host
+	6,  // 1: letsencrypt.LetsEncryptState.cert_data:type_name -> letsencrypt.LetsEncryptCertData
+	16, // 2: letsencrypt.LetsEncryptCertData.tls_cert:type_name -> x509.X509CertChain
+	7,  // 3: letsencrypt.LetsEncryptCertData.certmagic_state:type_name -> letsencrypt.CertMagicState
+	14, // 4: letsencrypt.CertMagicState.children:type_name -> letsencrypt.CertMagicState.ChildrenEntry
+	16, // 5: letsencrypt.LetsEncryptCert.tls_cert:type_name -> x509.X509CertChain
+	7,  // 6: letsencrypt.LetsEncryptCert.certmagic_state:type_name -> letsencrypt.CertMagicState
+	8,  // 7: letsencrypt.LetsEncryptCertBus.stream:type_name -> letsencrypt.LetsEncryptCert
+	4,  // 8: letsencrypt.LetsencryptConfigState.config:type_name -> letsencrypt.Config
+	13, // 9: letsencrypt.LetsEncryptCertBusStreamSubscribeRecord.meta:type_name -> letsencrypt.EventBusRecordMeta
+	8,  // 10: letsencrypt.LetsEncryptCertBusStreamSubscribeRecord.payload:type_name -> letsencrypt.LetsEncryptCert
+	17, // 11: letsencrypt.EventBusRecordMeta.timestamp:type_name -> google.protobuf.Timestamp
+	7,  // 12: letsencrypt.CertMagicState.ChildrenEntry.value:type_name -> letsencrypt.CertMagicState
+	18, // 13: letsencrypt.LetsEncryptStateService.GetCertData:input_type -> trace.TraceRequest
+	6,  // 14: letsencrypt.LetsEncryptStateService.SetCertData:input_type -> letsencrypt.LetsEncryptCertData
+	18, // 15: letsencrypt.LetsEncryptStateService.WatchCertData:input_type -> trace.TraceRequest
+	8,  // 16: letsencrypt.LetsEncryptCertBusStateService.PublishToStream:input_type -> letsencrypt.LetsEncryptCert
+	19, // 17: letsencrypt.LetsEncryptCertBusStateService.SubscribeToStream:input_type -> eventbus_support.SubscribeRequest
+	18, // 18: letsencrypt.LetsencryptConfigStateService.GetConfig:input_type -> trace.TraceRequest
+	4,  // 19: letsencrypt.LetsencryptConfigStateService.SetConfig:input_type -> letsencrypt.Config
+	18, // 20: letsencrypt.LetsencryptConfigStateService.WatchConfig:input_type -> trace.TraceRequest
+	6,  // 21: letsencrypt.LetsEncryptStateService.GetCertData:output_type -> letsencrypt.LetsEncryptCertData
+	6,  // 22: letsencrypt.LetsEncryptStateService.SetCertData:output_type -> letsencrypt.LetsEncryptCertData
+	6,  // 23: letsencrypt.LetsEncryptStateService.WatchCertData:output_type -> letsencrypt.LetsEncryptCertData
+	20, // 24: letsencrypt.LetsEncryptCertBusStateService.PublishToStream:output_type -> eventbus_support.PublishResponse
+	11, // 25: letsencrypt.LetsEncryptCertBusStateService.SubscribeToStream:output_type -> letsencrypt.LetsEncryptCertBusStreamSubscribeRecord
+	4,  // 26: letsencrypt.LetsencryptConfigStateService.GetConfig:output_type -> letsencrypt.Config
+	4,  // 27: letsencrypt.LetsencryptConfigStateService.SetConfig:output_type -> letsencrypt.Config
+	4,  // 28: letsencrypt.LetsencryptConfigStateService.WatchConfig:output_type -> letsencrypt.Config
+	21, // [21:29] is the sub-list for method output_type
+	13, // [13:21] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_services_letsencrypt_proto_init() }
@@ -832,10 +1349,10 @@ func file_services_letsencrypt_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_services_letsencrypt_proto_rawDesc), len(file_services_letsencrypt_proto_rawDesc)),
-			NumEnums:      3,
-			NumMessages:   7,
+			NumEnums:      4,
+			NumMessages:   11,
 			NumExtensions: 0,
-			NumServices:   2,
+			NumServices:   3,
 		},
 		GoTypes:           file_services_letsencrypt_proto_goTypes,
 		DependencyIndexes: file_services_letsencrypt_proto_depIdxs,

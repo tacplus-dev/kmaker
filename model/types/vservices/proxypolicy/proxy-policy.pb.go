@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -22,8 +22,8 @@
 package proxypolicy
 
 import (
-	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
-	token "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/token"
+	_ "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/spec"
+	token "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/token"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	structpb "google.golang.org/protobuf/types/known/structpb"
@@ -397,8 +397,8 @@ const file_vservices_proxy_policy_proto_rawDesc = "" +
 	"\x1dOPA_EVAL_RPC_ID_ALL_EXECUTORS\x10\x03\x12%\n" +
 	"!OPA_EVAL_RPC_ID_EVAL_PROXY_POLICY\x10\x042i\n" +
 	"\aOpaEval\x12X\n" +
-	"\x0fEvalProxyPolicy\x12!.proxypolicy.ProxyPolicyEvalInput\x1a\".proxypolicy.ProxyPolicyEvalResult\x1a\x04\xea\x97\"\x00Bu\xb2\xb6\x18\r\n" +
-	"\vproxypolicyZbgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/vservices/proxypolicyb\x06proto3"
+	"\x0fEvalProxyPolicy\x12!.proxypolicy.ProxyPolicyEvalInput\x1a\".proxypolicy.ProxyPolicyEvalResult\x1a\x04\xea\x97\"\x00Bj\xb2\xb6\x18\r\n" +
+	"\vproxypolicyZWgitlab.com/seabeam/schematic/platform/services/kmaker/model/types/vservices/proxypolicyb\x06proto3"
 
 var (
 	file_vservices_proxy_policy_proto_rawDescOnce sync.Once

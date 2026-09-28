@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -23,7 +23,8 @@ package samlsvc
 
 import (
 	context "context"
-	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
+	mcp "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/mcp"
+	trace "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -187,8 +188,9 @@ var Inbound_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	Outbound_MintAssertion_FullMethodName = "/samlsvc.Outbound/MintAssertion"
-	Outbound_ListSPs_FullMethodName       = "/samlsvc.Outbound/ListSPs"
+	Outbound_MintAssertion_FullMethodName            = "/samlsvc.Outbound/MintAssertion"
+	Outbound_ListSPs_FullMethodName                  = "/samlsvc.Outbound/ListSPs"
+	Outbound_BrokerOutboundMcpSession_FullMethodName = "/samlsvc.Outbound/BrokerOutboundMcpSession"
 )
 
 // OutboundClient is the client API for Outbound service.
@@ -204,6 +206,16 @@ type OutboundClient interface {
 	// ListSPs returns the configured outbound SP providers.
 	// Used by UIs to render SP selection.
 	ListSPs(ctx context.Context, in *ListSPsRequest, opts ...grpc.CallOption) (*ListSPsResponse, error)
+	// BrokerOutboundMcpSession carries one Model Context Protocol session for Outbound over a
+	// single bidirectional stream: one complete JSON-RPC frame per stream message,
+	// request frames in and response frames out, for the life of the session.
+	//
+	// Generated, never declared: Outbound has at least one RPC_PRINCIPAL_MCP rpc, and this
+	// is the only channel those tools are reachable through. Bidirectional because an
+	// MCP session is stateful — it opens with an initialize handshake and holds the
+	// negotiated protocol version after it — so a unary call would repeat that
+	// handshake per tool call.
+	BrokerOutboundMcpSession(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[mcp.McpRequest, mcp.McpResponse], error)
 }
 
 type outboundClient struct {
@@ -234,6 +246,19 @@ func (c *outboundClient) ListSPs(ctx context.Context, in *ListSPsRequest, opts .
 	return out, nil
 }
 
+func (c *outboundClient) BrokerOutboundMcpSession(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[mcp.McpRequest, mcp.McpResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &Outbound_ServiceDesc.Streams[0], Outbound_BrokerOutboundMcpSession_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[mcp.McpRequest, mcp.McpResponse]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Outbound_BrokerOutboundMcpSessionClient = grpc.BidiStreamingClient[mcp.McpRequest, mcp.McpResponse]
+
 // OutboundServer is the server API for Outbound service.
 // All implementations must embed UnimplementedOutboundServer
 // for forward compatibility.
@@ -247,6 +272,16 @@ type OutboundServer interface {
 	// ListSPs returns the configured outbound SP providers.
 	// Used by UIs to render SP selection.
 	ListSPs(context.Context, *ListSPsRequest) (*ListSPsResponse, error)
+	// BrokerOutboundMcpSession carries one Model Context Protocol session for Outbound over a
+	// single bidirectional stream: one complete JSON-RPC frame per stream message,
+	// request frames in and response frames out, for the life of the session.
+	//
+	// Generated, never declared: Outbound has at least one RPC_PRINCIPAL_MCP rpc, and this
+	// is the only channel those tools are reachable through. Bidirectional because an
+	// MCP session is stateful — it opens with an initialize handshake and holds the
+	// negotiated protocol version after it — so a unary call would repeat that
+	// handshake per tool call.
+	BrokerOutboundMcpSession(grpc.BidiStreamingServer[mcp.McpRequest, mcp.McpResponse]) error
 	mustEmbedUnimplementedOutboundServer()
 }
 
@@ -262,6 +297,9 @@ func (UnimplementedOutboundServer) MintAssertion(context.Context, *MintAssertion
 }
 func (UnimplementedOutboundServer) ListSPs(context.Context, *ListSPsRequest) (*ListSPsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSPs not implemented")
+}
+func (UnimplementedOutboundServer) BrokerOutboundMcpSession(grpc.BidiStreamingServer[mcp.McpRequest, mcp.McpResponse]) error {
+	return status.Error(codes.Unimplemented, "method BrokerOutboundMcpSession not implemented")
 }
 func (UnimplementedOutboundServer) mustEmbedUnimplementedOutboundServer() {}
 func (UnimplementedOutboundServer) testEmbeddedByValue()                  {}
@@ -320,6 +358,13 @@ func _Outbound_ListSPs_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Outbound_BrokerOutboundMcpSession_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(OutboundServer).BrokerOutboundMcpSession(&grpc.GenericServerStream[mcp.McpRequest, mcp.McpResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Outbound_BrokerOutboundMcpSessionServer = grpc.BidiStreamingServer[mcp.McpRequest, mcp.McpResponse]
+
 // Outbound_ServiceDesc is the grpc.ServiceDesc for Outbound service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -336,14 +381,22 @@ var Outbound_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Outbound_ListSPs_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "BrokerOutboundMcpSession",
+			Handler:       _Outbound_BrokerOutboundMcpSession_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "services/saml.proto",
 }
 
 const (
-	Metadata_GetIdpMetadata_FullMethodName   = "/samlsvc.Metadata/GetIdpMetadata"
-	Metadata_GetSpMetadata_FullMethodName    = "/samlsvc.Metadata/GetSpMetadata"
-	Metadata_GetIdpDescriptor_FullMethodName = "/samlsvc.Metadata/GetIdpDescriptor"
+	Metadata_GetIdpMetadata_FullMethodName           = "/samlsvc.Metadata/GetIdpMetadata"
+	Metadata_GetSpMetadata_FullMethodName            = "/samlsvc.Metadata/GetSpMetadata"
+	Metadata_GetIdpDescriptor_FullMethodName         = "/samlsvc.Metadata/GetIdpDescriptor"
+	Metadata_BrokerMetadataMcpSession_FullMethodName = "/samlsvc.Metadata/BrokerMetadataMcpSession"
 )
 
 // MetadataClient is the client API for Metadata service.
@@ -359,6 +412,16 @@ type MetadataClient interface {
 	// GetIdpDescriptor returns the parsed EntityDescriptor for a named inbound IDP.
 	// Returns the cached entry if available, or fetches and caches it now.
 	GetIdpDescriptor(ctx context.Context, in *GetDescriptorRequest, opts ...grpc.CallOption) (*GetDescriptorResponse, error)
+	// BrokerMetadataMcpSession carries one Model Context Protocol session for Metadata over a
+	// single bidirectional stream: one complete JSON-RPC frame per stream message,
+	// request frames in and response frames out, for the life of the session.
+	//
+	// Generated, never declared: Metadata has at least one RPC_PRINCIPAL_MCP rpc, and this
+	// is the only channel those tools are reachable through. Bidirectional because an
+	// MCP session is stateful — it opens with an initialize handshake and holds the
+	// negotiated protocol version after it — so a unary call would repeat that
+	// handshake per tool call.
+	BrokerMetadataMcpSession(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[mcp.McpRequest, mcp.McpResponse], error)
 }
 
 type metadataClient struct {
@@ -399,6 +462,19 @@ func (c *metadataClient) GetIdpDescriptor(ctx context.Context, in *GetDescriptor
 	return out, nil
 }
 
+func (c *metadataClient) BrokerMetadataMcpSession(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[mcp.McpRequest, mcp.McpResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &Metadata_ServiceDesc.Streams[0], Metadata_BrokerMetadataMcpSession_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[mcp.McpRequest, mcp.McpResponse]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Metadata_BrokerMetadataMcpSessionClient = grpc.BidiStreamingClient[mcp.McpRequest, mcp.McpResponse]
+
 // MetadataServer is the server API for Metadata service.
 // All implementations must embed UnimplementedMetadataServer
 // for forward compatibility.
@@ -412,6 +488,16 @@ type MetadataServer interface {
 	// GetIdpDescriptor returns the parsed EntityDescriptor for a named inbound IDP.
 	// Returns the cached entry if available, or fetches and caches it now.
 	GetIdpDescriptor(context.Context, *GetDescriptorRequest) (*GetDescriptorResponse, error)
+	// BrokerMetadataMcpSession carries one Model Context Protocol session for Metadata over a
+	// single bidirectional stream: one complete JSON-RPC frame per stream message,
+	// request frames in and response frames out, for the life of the session.
+	//
+	// Generated, never declared: Metadata has at least one RPC_PRINCIPAL_MCP rpc, and this
+	// is the only channel those tools are reachable through. Bidirectional because an
+	// MCP session is stateful — it opens with an initialize handshake and holds the
+	// negotiated protocol version after it — so a unary call would repeat that
+	// handshake per tool call.
+	BrokerMetadataMcpSession(grpc.BidiStreamingServer[mcp.McpRequest, mcp.McpResponse]) error
 	mustEmbedUnimplementedMetadataServer()
 }
 
@@ -430,6 +516,9 @@ func (UnimplementedMetadataServer) GetSpMetadata(context.Context, *MetadataReque
 }
 func (UnimplementedMetadataServer) GetIdpDescriptor(context.Context, *GetDescriptorRequest) (*GetDescriptorResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetIdpDescriptor not implemented")
+}
+func (UnimplementedMetadataServer) BrokerMetadataMcpSession(grpc.BidiStreamingServer[mcp.McpRequest, mcp.McpResponse]) error {
+	return status.Error(codes.Unimplemented, "method BrokerMetadataMcpSession not implemented")
 }
 func (UnimplementedMetadataServer) mustEmbedUnimplementedMetadataServer() {}
 func (UnimplementedMetadataServer) testEmbeddedByValue()                  {}
@@ -506,6 +595,13 @@ func _Metadata_GetIdpDescriptor_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Metadata_BrokerMetadataMcpSession_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(MetadataServer).BrokerMetadataMcpSession(&grpc.GenericServerStream[mcp.McpRequest, mcp.McpResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Metadata_BrokerMetadataMcpSessionServer = grpc.BidiStreamingServer[mcp.McpRequest, mcp.McpResponse]
+
 // Metadata_ServiceDesc is the grpc.ServiceDesc for Metadata service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -526,7 +622,14 @@ var Metadata_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Metadata_GetIdpDescriptor_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "BrokerMetadataMcpSession",
+			Handler:       _Metadata_BrokerMetadataMcpSession_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "services/saml.proto",
 }
 

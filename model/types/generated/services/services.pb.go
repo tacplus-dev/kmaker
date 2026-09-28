@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -41,23 +41,34 @@ const (
 type ServiceName int32
 
 const (
-	ServiceName_SERVICE_NAME_UNSPECIFIED ServiceName = 0
-	ServiceName_SERVICE_NAME_SENTINEL    ServiceName = 5
-	ServiceName_SERVICE_NAME_GATEWAY     ServiceName = 7
-	ServiceName_SERVICE_NAME_KERNEL      ServiceName = 8
-	ServiceName_SERVICE_NAME_LETSENCRYPT ServiceName = 9
-	ServiceName_SERVICE_NAME_EVENTBUS    ServiceName = 18
-	ServiceName_SERVICE_NAME_OAUTH       ServiceName = 21
-	ServiceName_SERVICE_NAME_OPA         ServiceName = 29
-	ServiceName_SERVICE_NAME_STRATUM     ServiceName = 34
-	ServiceName_SERVICE_NAME_KMAKER      ServiceName = 49
-	ServiceName_SERVICE_NAME_SAMLSVC     ServiceName = 51
-	ServiceName_SERVICE_NAME_MESSAGING   ServiceName = 53
-	ServiceName_SERVICE_NAME_SCOTTYAGENT ServiceName = 54
-	ServiceName_SERVICE_NAME_MAILBOX     ServiceName = 55
-	ServiceName_SERVICE_NAME_LLMSETTINGS ServiceName = 56
-	ServiceName_SERVICE_NAME_SCOTTY      ServiceName = 70
-	ServiceName_SERVICE_NAME_ANY         ServiceName = 99 // wildcard: allow any service
+	ServiceName_SERVICE_NAME_UNSPECIFIED    ServiceName = 0
+	ServiceName_SERVICE_NAME_SENTINEL       ServiceName = 5
+	ServiceName_SERVICE_NAME_GATEWAY        ServiceName = 7
+	ServiceName_SERVICE_NAME_KERNEL         ServiceName = 8
+	ServiceName_SERVICE_NAME_LETSENCRYPT    ServiceName = 9
+	ServiceName_SERVICE_NAME_EVENTBUS       ServiceName = 18
+	ServiceName_SERVICE_NAME_OAUTH          ServiceName = 21
+	ServiceName_SERVICE_NAME_OPA            ServiceName = 29
+	ServiceName_SERVICE_NAME_STRATUM        ServiceName = 34
+	ServiceName_SERVICE_NAME_SAML           ServiceName = 38
+	ServiceName_SERVICE_NAME_OPERATOR       ServiceName = 47
+	ServiceName_SERVICE_NAME_KMAKER         ServiceName = 49
+	ServiceName_SERVICE_NAME_SAMLSVC        ServiceName = 51
+	ServiceName_SERVICE_NAME_MESSAGING      ServiceName = 53
+	ServiceName_SERVICE_NAME_SCOTTYAGENT    ServiceName = 54
+	ServiceName_SERVICE_NAME_MAILBOX        ServiceName = 55
+	ServiceName_SERVICE_NAME_LLMSETTINGS    ServiceName = 56
+	ServiceName_SERVICE_NAME_PERSONALAUTH   ServiceName = 57
+	ServiceName_SERVICE_NAME_BLOBSTORE      ServiceName = 58
+	ServiceName_SERVICE_NAME_SCOTTY         ServiceName = 70
+	ServiceName_SERVICE_NAME_SCOTTYPERSONAL ServiceName = 72
+	ServiceName_SERVICE_NAME_WORK           ServiceName = 73
+	ServiceName_SERVICE_NAME_WEATHER        ServiceName = 74
+	ServiceName_SERVICE_NAME_LLMPROXY       ServiceName = 75
+	ServiceName_SERVICE_NAME_PROFILE        ServiceName = 76
+	ServiceName_SERVICE_NAME_DOCMANAGER     ServiceName = 80
+	ServiceName_SERVICE_NAME_REVEILLE       ServiceName = 81
+	ServiceName_SERVICE_NAME_ANY            ServiceName = 99 // wildcard: allow any service
 )
 
 // Enum value maps for ServiceName.
@@ -72,33 +83,55 @@ var (
 		21: "SERVICE_NAME_OAUTH",
 		29: "SERVICE_NAME_OPA",
 		34: "SERVICE_NAME_STRATUM",
+		38: "SERVICE_NAME_SAML",
+		47: "SERVICE_NAME_OPERATOR",
 		49: "SERVICE_NAME_KMAKER",
 		51: "SERVICE_NAME_SAMLSVC",
 		53: "SERVICE_NAME_MESSAGING",
 		54: "SERVICE_NAME_SCOTTYAGENT",
 		55: "SERVICE_NAME_MAILBOX",
 		56: "SERVICE_NAME_LLMSETTINGS",
+		57: "SERVICE_NAME_PERSONALAUTH",
+		58: "SERVICE_NAME_BLOBSTORE",
 		70: "SERVICE_NAME_SCOTTY",
+		72: "SERVICE_NAME_SCOTTYPERSONAL",
+		73: "SERVICE_NAME_WORK",
+		74: "SERVICE_NAME_WEATHER",
+		75: "SERVICE_NAME_LLMPROXY",
+		76: "SERVICE_NAME_PROFILE",
+		80: "SERVICE_NAME_DOCMANAGER",
+		81: "SERVICE_NAME_REVEILLE",
 		99: "SERVICE_NAME_ANY",
 	}
 	ServiceName_value = map[string]int32{
-		"SERVICE_NAME_UNSPECIFIED": 0,
-		"SERVICE_NAME_SENTINEL":    5,
-		"SERVICE_NAME_GATEWAY":     7,
-		"SERVICE_NAME_KERNEL":      8,
-		"SERVICE_NAME_LETSENCRYPT": 9,
-		"SERVICE_NAME_EVENTBUS":    18,
-		"SERVICE_NAME_OAUTH":       21,
-		"SERVICE_NAME_OPA":         29,
-		"SERVICE_NAME_STRATUM":     34,
-		"SERVICE_NAME_KMAKER":      49,
-		"SERVICE_NAME_SAMLSVC":     51,
-		"SERVICE_NAME_MESSAGING":   53,
-		"SERVICE_NAME_SCOTTYAGENT": 54,
-		"SERVICE_NAME_MAILBOX":     55,
-		"SERVICE_NAME_LLMSETTINGS": 56,
-		"SERVICE_NAME_SCOTTY":      70,
-		"SERVICE_NAME_ANY":         99,
+		"SERVICE_NAME_UNSPECIFIED":    0,
+		"SERVICE_NAME_SENTINEL":       5,
+		"SERVICE_NAME_GATEWAY":        7,
+		"SERVICE_NAME_KERNEL":         8,
+		"SERVICE_NAME_LETSENCRYPT":    9,
+		"SERVICE_NAME_EVENTBUS":       18,
+		"SERVICE_NAME_OAUTH":          21,
+		"SERVICE_NAME_OPA":            29,
+		"SERVICE_NAME_STRATUM":        34,
+		"SERVICE_NAME_SAML":           38,
+		"SERVICE_NAME_OPERATOR":       47,
+		"SERVICE_NAME_KMAKER":         49,
+		"SERVICE_NAME_SAMLSVC":        51,
+		"SERVICE_NAME_MESSAGING":      53,
+		"SERVICE_NAME_SCOTTYAGENT":    54,
+		"SERVICE_NAME_MAILBOX":        55,
+		"SERVICE_NAME_LLMSETTINGS":    56,
+		"SERVICE_NAME_PERSONALAUTH":   57,
+		"SERVICE_NAME_BLOBSTORE":      58,
+		"SERVICE_NAME_SCOTTY":         70,
+		"SERVICE_NAME_SCOTTYPERSONAL": 72,
+		"SERVICE_NAME_WORK":           73,
+		"SERVICE_NAME_WEATHER":        74,
+		"SERVICE_NAME_LLMPROXY":       75,
+		"SERVICE_NAME_PROFILE":        76,
+		"SERVICE_NAME_DOCMANAGER":     80,
+		"SERVICE_NAME_REVEILLE":       81,
+		"SERVICE_NAME_ANY":            99,
 	}
 )
 
@@ -132,19 +165,20 @@ func (ServiceName) EnumDescriptor() ([]byte, []int) {
 type SentinelRPCs int32
 
 const (
-	SentinelRPCs_SENTINEL_RPCS_UNSPECIFIED             SentinelRPCs = 0
-	SentinelRPCs_SENTINEL_RPCS_GET_CLUSTER_INFO        SentinelRPCs = 1
-	SentinelRPCs_SENTINEL_RPCS_GET_CLUSTER_HEALTH      SentinelRPCs = 2
-	SentinelRPCs_SENTINEL_RPCS_LIST_NODE_METRICS       SentinelRPCs = 3
-	SentinelRPCs_SENTINEL_RPCS_LIST_GRPC_STATS         SentinelRPCs = 4
-	SentinelRPCs_SENTINEL_RPCS_LIST_PERSISTENCE_STATUS SentinelRPCs = 5
-	SentinelRPCs_SENTINEL_RPCS_LIST_NETWORK_STATS      SentinelRPCs = 6
-	SentinelRPCs_SENTINEL_RPCS_LIST_THREAD_INFO        SentinelRPCs = 7
-	SentinelRPCs_SENTINEL_RPCS_LIST_TOKEN_CACHE_STATS  SentinelRPCs = 8
-	SentinelRPCs_SENTINEL_RPCS_LIST_MAP_STATS          SentinelRPCs = 9
-	SentinelRPCs_SENTINEL_RPCS_GET_DASHBOARD           SentinelRPCs = 10
-	SentinelRPCs_SENTINEL_RPCS_SUBSCRIBE_DASHBOARD     SentinelRPCs = 11
-	SentinelRPCs_SENTINEL_RPCS_ANY                     SentinelRPCs = 99 // wildcard: allow any RPC
+	SentinelRPCs_SENTINEL_RPCS_UNSPECIFIED                  SentinelRPCs = 0
+	SentinelRPCs_SENTINEL_RPCS_GET_CLUSTER_INFO             SentinelRPCs = 1
+	SentinelRPCs_SENTINEL_RPCS_GET_CLUSTER_HEALTH           SentinelRPCs = 2
+	SentinelRPCs_SENTINEL_RPCS_LIST_NODE_METRICS            SentinelRPCs = 3
+	SentinelRPCs_SENTINEL_RPCS_LIST_GRPC_STATS              SentinelRPCs = 4
+	SentinelRPCs_SENTINEL_RPCS_LIST_PERSISTENCE_STATUS      SentinelRPCs = 5
+	SentinelRPCs_SENTINEL_RPCS_LIST_NETWORK_STATS           SentinelRPCs = 6
+	SentinelRPCs_SENTINEL_RPCS_LIST_THREAD_INFO             SentinelRPCs = 7
+	SentinelRPCs_SENTINEL_RPCS_LIST_TOKEN_CACHE_STATS       SentinelRPCs = 8
+	SentinelRPCs_SENTINEL_RPCS_LIST_MAP_STATS               SentinelRPCs = 9
+	SentinelRPCs_SENTINEL_RPCS_GET_DASHBOARD                SentinelRPCs = 10
+	SentinelRPCs_SENTINEL_RPCS_SUBSCRIBE_DASHBOARD          SentinelRPCs = 11
+	SentinelRPCs_SENTINEL_RPCS_BROKER_DASHBOARD_MCP_SESSION SentinelRPCs = 12
+	SentinelRPCs_SENTINEL_RPCS_ANY                          SentinelRPCs = 99 // wildcard: allow any RPC
 )
 
 // Enum value maps for SentinelRPCs.
@@ -162,22 +196,24 @@ var (
 		9:  "SENTINEL_RPCS_LIST_MAP_STATS",
 		10: "SENTINEL_RPCS_GET_DASHBOARD",
 		11: "SENTINEL_RPCS_SUBSCRIBE_DASHBOARD",
+		12: "SENTINEL_RPCS_BROKER_DASHBOARD_MCP_SESSION",
 		99: "SENTINEL_RPCS_ANY",
 	}
 	SentinelRPCs_value = map[string]int32{
-		"SENTINEL_RPCS_UNSPECIFIED":             0,
-		"SENTINEL_RPCS_GET_CLUSTER_INFO":        1,
-		"SENTINEL_RPCS_GET_CLUSTER_HEALTH":      2,
-		"SENTINEL_RPCS_LIST_NODE_METRICS":       3,
-		"SENTINEL_RPCS_LIST_GRPC_STATS":         4,
-		"SENTINEL_RPCS_LIST_PERSISTENCE_STATUS": 5,
-		"SENTINEL_RPCS_LIST_NETWORK_STATS":      6,
-		"SENTINEL_RPCS_LIST_THREAD_INFO":        7,
-		"SENTINEL_RPCS_LIST_TOKEN_CACHE_STATS":  8,
-		"SENTINEL_RPCS_LIST_MAP_STATS":          9,
-		"SENTINEL_RPCS_GET_DASHBOARD":           10,
-		"SENTINEL_RPCS_SUBSCRIBE_DASHBOARD":     11,
-		"SENTINEL_RPCS_ANY":                     99,
+		"SENTINEL_RPCS_UNSPECIFIED":                  0,
+		"SENTINEL_RPCS_GET_CLUSTER_INFO":             1,
+		"SENTINEL_RPCS_GET_CLUSTER_HEALTH":           2,
+		"SENTINEL_RPCS_LIST_NODE_METRICS":            3,
+		"SENTINEL_RPCS_LIST_GRPC_STATS":              4,
+		"SENTINEL_RPCS_LIST_PERSISTENCE_STATUS":      5,
+		"SENTINEL_RPCS_LIST_NETWORK_STATS":           6,
+		"SENTINEL_RPCS_LIST_THREAD_INFO":             7,
+		"SENTINEL_RPCS_LIST_TOKEN_CACHE_STATS":       8,
+		"SENTINEL_RPCS_LIST_MAP_STATS":               9,
+		"SENTINEL_RPCS_GET_DASHBOARD":                10,
+		"SENTINEL_RPCS_SUBSCRIBE_DASHBOARD":          11,
+		"SENTINEL_RPCS_BROKER_DASHBOARD_MCP_SESSION": 12,
+		"SENTINEL_RPCS_ANY":                          99,
 	}
 )
 
@@ -272,46 +308,64 @@ func (GatewayRPCs) EnumDescriptor() ([]byte, []int) {
 type KernelRPCs int32
 
 const (
-	KernelRPCs_KERNEL_RPCS_UNSPECIFIED           KernelRPCs = 0
-	KernelRPCs_KERNEL_RPCS_CREATE_TENANT         KernelRPCs = 1
-	KernelRPCs_KERNEL_RPCS_DELETE_TENANT         KernelRPCs = 2
-	KernelRPCs_KERNEL_RPCS_LIST_TENANTS          KernelRPCs = 3
-	KernelRPCs_KERNEL_RPCS_GET_TENANT_CONFIG     KernelRPCs = 4
-	KernelRPCs_KERNEL_RPCS_UPDATE_TENANT_CONFIG  KernelRPCs = 5
-	KernelRPCs_KERNEL_RPCS_GET_PROJECT_CONFIG    KernelRPCs = 6
-	KernelRPCs_KERNEL_RPCS_UPDATE_PROJECT_CONFIG KernelRPCs = 7
-	KernelRPCs_KERNEL_RPCS_LIST_PROJECTS         KernelRPCs = 8
-	KernelRPCs_KERNEL_RPCS_DELETE_PROJECT        KernelRPCs = 9
-	KernelRPCs_KERNEL_RPCS_ANY                   KernelRPCs = 99 // wildcard: allow any RPC
+	KernelRPCs_KERNEL_RPCS_UNSPECIFIED                          KernelRPCs = 0
+	KernelRPCs_KERNEL_RPCS_MINT_DELEGATE_OFFLINE_TOKEN          KernelRPCs = 1
+	KernelRPCs_KERNEL_RPCS_GET_MY_IDENTITY                      KernelRPCs = 2
+	KernelRPCs_KERNEL_RPCS_REVOKE_TENANT_USER_LINK              KernelRPCs = 3
+	KernelRPCs_KERNEL_RPCS_CREATE_PENDING_APPROVAL              KernelRPCs = 4
+	KernelRPCs_KERNEL_RPCS_BROKER_PERSONAL_IDENTITY_MCP_SESSION KernelRPCs = 5
+	KernelRPCs_KERNEL_RPCS_CREATE_TENANT                        KernelRPCs = 6
+	KernelRPCs_KERNEL_RPCS_DELETE_TENANT                        KernelRPCs = 7
+	KernelRPCs_KERNEL_RPCS_LIST_TENANTS                         KernelRPCs = 8
+	KernelRPCs_KERNEL_RPCS_GET_TENANT_CONFIG                    KernelRPCs = 9
+	KernelRPCs_KERNEL_RPCS_UPDATE_TENANT_CONFIG                 KernelRPCs = 10
+	KernelRPCs_KERNEL_RPCS_GET_PROJECT_CONFIG                   KernelRPCs = 11
+	KernelRPCs_KERNEL_RPCS_UPDATE_PROJECT_CONFIG                KernelRPCs = 12
+	KernelRPCs_KERNEL_RPCS_LIST_PROJECTS                        KernelRPCs = 13
+	KernelRPCs_KERNEL_RPCS_DELETE_PROJECT                       KernelRPCs = 14
+	KernelRPCs_KERNEL_RPCS_BROKER_TENANT_ADMIN_MCP_SESSION      KernelRPCs = 15
+	KernelRPCs_KERNEL_RPCS_ANY                                  KernelRPCs = 99 // wildcard: allow any RPC
 )
 
 // Enum value maps for KernelRPCs.
 var (
 	KernelRPCs_name = map[int32]string{
 		0:  "KERNEL_RPCS_UNSPECIFIED",
-		1:  "KERNEL_RPCS_CREATE_TENANT",
-		2:  "KERNEL_RPCS_DELETE_TENANT",
-		3:  "KERNEL_RPCS_LIST_TENANTS",
-		4:  "KERNEL_RPCS_GET_TENANT_CONFIG",
-		5:  "KERNEL_RPCS_UPDATE_TENANT_CONFIG",
-		6:  "KERNEL_RPCS_GET_PROJECT_CONFIG",
-		7:  "KERNEL_RPCS_UPDATE_PROJECT_CONFIG",
-		8:  "KERNEL_RPCS_LIST_PROJECTS",
-		9:  "KERNEL_RPCS_DELETE_PROJECT",
+		1:  "KERNEL_RPCS_MINT_DELEGATE_OFFLINE_TOKEN",
+		2:  "KERNEL_RPCS_GET_MY_IDENTITY",
+		3:  "KERNEL_RPCS_REVOKE_TENANT_USER_LINK",
+		4:  "KERNEL_RPCS_CREATE_PENDING_APPROVAL",
+		5:  "KERNEL_RPCS_BROKER_PERSONAL_IDENTITY_MCP_SESSION",
+		6:  "KERNEL_RPCS_CREATE_TENANT",
+		7:  "KERNEL_RPCS_DELETE_TENANT",
+		8:  "KERNEL_RPCS_LIST_TENANTS",
+		9:  "KERNEL_RPCS_GET_TENANT_CONFIG",
+		10: "KERNEL_RPCS_UPDATE_TENANT_CONFIG",
+		11: "KERNEL_RPCS_GET_PROJECT_CONFIG",
+		12: "KERNEL_RPCS_UPDATE_PROJECT_CONFIG",
+		13: "KERNEL_RPCS_LIST_PROJECTS",
+		14: "KERNEL_RPCS_DELETE_PROJECT",
+		15: "KERNEL_RPCS_BROKER_TENANT_ADMIN_MCP_SESSION",
 		99: "KERNEL_RPCS_ANY",
 	}
 	KernelRPCs_value = map[string]int32{
-		"KERNEL_RPCS_UNSPECIFIED":           0,
-		"KERNEL_RPCS_CREATE_TENANT":         1,
-		"KERNEL_RPCS_DELETE_TENANT":         2,
-		"KERNEL_RPCS_LIST_TENANTS":          3,
-		"KERNEL_RPCS_GET_TENANT_CONFIG":     4,
-		"KERNEL_RPCS_UPDATE_TENANT_CONFIG":  5,
-		"KERNEL_RPCS_GET_PROJECT_CONFIG":    6,
-		"KERNEL_RPCS_UPDATE_PROJECT_CONFIG": 7,
-		"KERNEL_RPCS_LIST_PROJECTS":         8,
-		"KERNEL_RPCS_DELETE_PROJECT":        9,
-		"KERNEL_RPCS_ANY":                   99,
+		"KERNEL_RPCS_UNSPECIFIED":                          0,
+		"KERNEL_RPCS_MINT_DELEGATE_OFFLINE_TOKEN":          1,
+		"KERNEL_RPCS_GET_MY_IDENTITY":                      2,
+		"KERNEL_RPCS_REVOKE_TENANT_USER_LINK":              3,
+		"KERNEL_RPCS_CREATE_PENDING_APPROVAL":              4,
+		"KERNEL_RPCS_BROKER_PERSONAL_IDENTITY_MCP_SESSION": 5,
+		"KERNEL_RPCS_CREATE_TENANT":                        6,
+		"KERNEL_RPCS_DELETE_TENANT":                        7,
+		"KERNEL_RPCS_LIST_TENANTS":                         8,
+		"KERNEL_RPCS_GET_TENANT_CONFIG":                    9,
+		"KERNEL_RPCS_UPDATE_TENANT_CONFIG":                 10,
+		"KERNEL_RPCS_GET_PROJECT_CONFIG":                   11,
+		"KERNEL_RPCS_UPDATE_PROJECT_CONFIG":                12,
+		"KERNEL_RPCS_LIST_PROJECTS":                        13,
+		"KERNEL_RPCS_DELETE_PROJECT":                       14,
+		"KERNEL_RPCS_BROKER_TENANT_ADMIN_MCP_SESSION":      15,
+		"KERNEL_RPCS_ANY":                                  99,
 	}
 )
 
@@ -394,14 +448,15 @@ func (EventbusRPCs) EnumDescriptor() ([]byte, []int) {
 type OauthRPCs int32
 
 const (
-	OauthRPCs_OAUTH_RPCS_UNSPECIFIED          OauthRPCs = 0
-	OauthRPCs_OAUTH_RPCS_BROKER_SESSION       OauthRPCs = 1
-	OauthRPCs_OAUTH_RPCS_LIST_PROVIDERS       OauthRPCs = 2
-	OauthRPCs_OAUTH_RPCS_AUTHORIZE            OauthRPCs = 3
-	OauthRPCs_OAUTH_RPCS_MINT_CALLBACK_TOKENS OauthRPCs = 4
-	OauthRPCs_OAUTH_RPCS_REVOKE_SESSION       OauthRPCs = 5
-	OauthRPCs_OAUTH_RPCS_BROKER_CLI_AUTH      OauthRPCs = 6
-	OauthRPCs_OAUTH_RPCS_ANY                  OauthRPCs = 99 // wildcard: allow any RPC
+	OauthRPCs_OAUTH_RPCS_UNSPECIFIED             OauthRPCs = 0
+	OauthRPCs_OAUTH_RPCS_BROKER_SESSION          OauthRPCs = 1
+	OauthRPCs_OAUTH_RPCS_LIST_PROVIDERS          OauthRPCs = 2
+	OauthRPCs_OAUTH_RPCS_AUTHORIZE               OauthRPCs = 3
+	OauthRPCs_OAUTH_RPCS_MINT_CALLBACK_TOKENS    OauthRPCs = 4
+	OauthRPCs_OAUTH_RPCS_REVOKE_SESSION          OauthRPCs = 5
+	OauthRPCs_OAUTH_RPCS_BROKER_CLI_AUTH         OauthRPCs = 6
+	OauthRPCs_OAUTH_RPCS_BROKER_AUTH_MCP_SESSION OauthRPCs = 7
+	OauthRPCs_OAUTH_RPCS_ANY                     OauthRPCs = 99 // wildcard: allow any RPC
 )
 
 // Enum value maps for OauthRPCs.
@@ -414,17 +469,19 @@ var (
 		4:  "OAUTH_RPCS_MINT_CALLBACK_TOKENS",
 		5:  "OAUTH_RPCS_REVOKE_SESSION",
 		6:  "OAUTH_RPCS_BROKER_CLI_AUTH",
+		7:  "OAUTH_RPCS_BROKER_AUTH_MCP_SESSION",
 		99: "OAUTH_RPCS_ANY",
 	}
 	OauthRPCs_value = map[string]int32{
-		"OAUTH_RPCS_UNSPECIFIED":          0,
-		"OAUTH_RPCS_BROKER_SESSION":       1,
-		"OAUTH_RPCS_LIST_PROVIDERS":       2,
-		"OAUTH_RPCS_AUTHORIZE":            3,
-		"OAUTH_RPCS_MINT_CALLBACK_TOKENS": 4,
-		"OAUTH_RPCS_REVOKE_SESSION":       5,
-		"OAUTH_RPCS_BROKER_CLI_AUTH":      6,
-		"OAUTH_RPCS_ANY":                  99,
+		"OAUTH_RPCS_UNSPECIFIED":             0,
+		"OAUTH_RPCS_BROKER_SESSION":          1,
+		"OAUTH_RPCS_LIST_PROVIDERS":          2,
+		"OAUTH_RPCS_AUTHORIZE":               3,
+		"OAUTH_RPCS_MINT_CALLBACK_TOKENS":    4,
+		"OAUTH_RPCS_REVOKE_SESSION":          5,
+		"OAUTH_RPCS_BROKER_CLI_AUTH":         6,
+		"OAUTH_RPCS_BROKER_AUTH_MCP_SESSION": 7,
+		"OAUTH_RPCS_ANY":                     99,
 	}
 )
 
@@ -458,15 +515,17 @@ func (OauthRPCs) EnumDescriptor() ([]byte, []int) {
 type SamlRPCs int32
 
 const (
-	SamlRPCs_SAML_RPCS_UNSPECIFIED        SamlRPCs = 0
-	SamlRPCs_SAML_RPCS_MINT_ACS_TOKENS    SamlRPCs = 1
-	SamlRPCs_SAML_RPCS_AUTHORIZE          SamlRPCs = 2
-	SamlRPCs_SAML_RPCS_MINT_ASSERTION     SamlRPCs = 3
-	SamlRPCs_SAML_RPCS_LIST_S_PS          SamlRPCs = 4
-	SamlRPCs_SAML_RPCS_GET_IDP_METADATA   SamlRPCs = 5
-	SamlRPCs_SAML_RPCS_GET_SP_METADATA    SamlRPCs = 6
-	SamlRPCs_SAML_RPCS_GET_IDP_DESCRIPTOR SamlRPCs = 7
-	SamlRPCs_SAML_RPCS_ANY                SamlRPCs = 99 // wildcard: allow any RPC
+	SamlRPCs_SAML_RPCS_UNSPECIFIED                 SamlRPCs = 0
+	SamlRPCs_SAML_RPCS_MINT_ACS_TOKENS             SamlRPCs = 1
+	SamlRPCs_SAML_RPCS_AUTHORIZE                   SamlRPCs = 2
+	SamlRPCs_SAML_RPCS_MINT_ASSERTION              SamlRPCs = 3
+	SamlRPCs_SAML_RPCS_LIST_S_PS                   SamlRPCs = 4
+	SamlRPCs_SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION SamlRPCs = 5
+	SamlRPCs_SAML_RPCS_GET_IDP_METADATA            SamlRPCs = 6
+	SamlRPCs_SAML_RPCS_GET_SP_METADATA             SamlRPCs = 7
+	SamlRPCs_SAML_RPCS_GET_IDP_DESCRIPTOR          SamlRPCs = 8
+	SamlRPCs_SAML_RPCS_BROKER_METADATA_MCP_SESSION SamlRPCs = 9
+	SamlRPCs_SAML_RPCS_ANY                         SamlRPCs = 99 // wildcard: allow any RPC
 )
 
 // Enum value maps for SamlRPCs.
@@ -477,21 +536,25 @@ var (
 		2:  "SAML_RPCS_AUTHORIZE",
 		3:  "SAML_RPCS_MINT_ASSERTION",
 		4:  "SAML_RPCS_LIST_S_PS",
-		5:  "SAML_RPCS_GET_IDP_METADATA",
-		6:  "SAML_RPCS_GET_SP_METADATA",
-		7:  "SAML_RPCS_GET_IDP_DESCRIPTOR",
+		5:  "SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION",
+		6:  "SAML_RPCS_GET_IDP_METADATA",
+		7:  "SAML_RPCS_GET_SP_METADATA",
+		8:  "SAML_RPCS_GET_IDP_DESCRIPTOR",
+		9:  "SAML_RPCS_BROKER_METADATA_MCP_SESSION",
 		99: "SAML_RPCS_ANY",
 	}
 	SamlRPCs_value = map[string]int32{
-		"SAML_RPCS_UNSPECIFIED":        0,
-		"SAML_RPCS_MINT_ACS_TOKENS":    1,
-		"SAML_RPCS_AUTHORIZE":          2,
-		"SAML_RPCS_MINT_ASSERTION":     3,
-		"SAML_RPCS_LIST_S_PS":          4,
-		"SAML_RPCS_GET_IDP_METADATA":   5,
-		"SAML_RPCS_GET_SP_METADATA":    6,
-		"SAML_RPCS_GET_IDP_DESCRIPTOR": 7,
-		"SAML_RPCS_ANY":                99,
+		"SAML_RPCS_UNSPECIFIED":                 0,
+		"SAML_RPCS_MINT_ACS_TOKENS":             1,
+		"SAML_RPCS_AUTHORIZE":                   2,
+		"SAML_RPCS_MINT_ASSERTION":              3,
+		"SAML_RPCS_LIST_S_PS":                   4,
+		"SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION": 5,
+		"SAML_RPCS_GET_IDP_METADATA":            6,
+		"SAML_RPCS_GET_SP_METADATA":             7,
+		"SAML_RPCS_GET_IDP_DESCRIPTOR":          8,
+		"SAML_RPCS_BROKER_METADATA_MCP_SESSION": 9,
+		"SAML_RPCS_ANY":                         99,
 	}
 )
 
@@ -525,9 +588,10 @@ func (SamlRPCs) EnumDescriptor() ([]byte, []int) {
 type MessagingRPCs int32
 
 const (
-	MessagingRPCs_MESSAGING_RPCS_UNSPECIFIED  MessagingRPCs = 0
-	MessagingRPCs_MESSAGING_RPCS_SEND_MESSAGE MessagingRPCs = 1
-	MessagingRPCs_MESSAGING_RPCS_ANY          MessagingRPCs = 99 // wildcard: allow any RPC
+	MessagingRPCs_MESSAGING_RPCS_UNSPECIFIED                  MessagingRPCs = 0
+	MessagingRPCs_MESSAGING_RPCS_SEND_MESSAGE                 MessagingRPCs = 1
+	MessagingRPCs_MESSAGING_RPCS_BROKER_MESSAGING_MCP_SESSION MessagingRPCs = 2
+	MessagingRPCs_MESSAGING_RPCS_ANY                          MessagingRPCs = 99 // wildcard: allow any RPC
 )
 
 // Enum value maps for MessagingRPCs.
@@ -535,12 +599,14 @@ var (
 	MessagingRPCs_name = map[int32]string{
 		0:  "MESSAGING_RPCS_UNSPECIFIED",
 		1:  "MESSAGING_RPCS_SEND_MESSAGE",
+		2:  "MESSAGING_RPCS_BROKER_MESSAGING_MCP_SESSION",
 		99: "MESSAGING_RPCS_ANY",
 	}
 	MessagingRPCs_value = map[string]int32{
-		"MESSAGING_RPCS_UNSPECIFIED":  0,
-		"MESSAGING_RPCS_SEND_MESSAGE": 1,
-		"MESSAGING_RPCS_ANY":          99,
+		"MESSAGING_RPCS_UNSPECIFIED":                  0,
+		"MESSAGING_RPCS_SEND_MESSAGE":                 1,
+		"MESSAGING_RPCS_BROKER_MESSAGING_MCP_SESSION": 2,
+		"MESSAGING_RPCS_ANY":                          99,
 	}
 )
 
@@ -626,10 +692,11 @@ func (ScottyagentRPCs) EnumDescriptor() ([]byte, []int) {
 type MailboxRPCs int32
 
 const (
-	MailboxRPCs_MAILBOX_RPCS_UNSPECIFIED      MailboxRPCs = 0
-	MailboxRPCs_MAILBOX_RPCS_LIST_HELD_MAIL   MailboxRPCs = 1
-	MailboxRPCs_MAILBOX_RPCS_UPDATE_HELD_MAIL MailboxRPCs = 2
-	MailboxRPCs_MAILBOX_RPCS_ANY              MailboxRPCs = 99 // wildcard: allow any RPC
+	MailboxRPCs_MAILBOX_RPCS_UNSPECIFIED                MailboxRPCs = 0
+	MailboxRPCs_MAILBOX_RPCS_LIST_HELD_MAIL             MailboxRPCs = 1
+	MailboxRPCs_MAILBOX_RPCS_UPDATE_HELD_MAIL           MailboxRPCs = 2
+	MailboxRPCs_MAILBOX_RPCS_BROKER_MAILBOX_MCP_SESSION MailboxRPCs = 3
+	MailboxRPCs_MAILBOX_RPCS_ANY                        MailboxRPCs = 99 // wildcard: allow any RPC
 )
 
 // Enum value maps for MailboxRPCs.
@@ -638,13 +705,15 @@ var (
 		0:  "MAILBOX_RPCS_UNSPECIFIED",
 		1:  "MAILBOX_RPCS_LIST_HELD_MAIL",
 		2:  "MAILBOX_RPCS_UPDATE_HELD_MAIL",
+		3:  "MAILBOX_RPCS_BROKER_MAILBOX_MCP_SESSION",
 		99: "MAILBOX_RPCS_ANY",
 	}
 	MailboxRPCs_value = map[string]int32{
-		"MAILBOX_RPCS_UNSPECIFIED":      0,
-		"MAILBOX_RPCS_LIST_HELD_MAIL":   1,
-		"MAILBOX_RPCS_UPDATE_HELD_MAIL": 2,
-		"MAILBOX_RPCS_ANY":              99,
+		"MAILBOX_RPCS_UNSPECIFIED":                0,
+		"MAILBOX_RPCS_LIST_HELD_MAIL":             1,
+		"MAILBOX_RPCS_UPDATE_HELD_MAIL":           2,
+		"MAILBOX_RPCS_BROKER_MAILBOX_MCP_SESSION": 3,
+		"MAILBOX_RPCS_ANY":                        99,
 	}
 )
 
@@ -678,10 +747,11 @@ func (MailboxRPCs) EnumDescriptor() ([]byte, []int) {
 type LlmsettingsRPCs int32
 
 const (
-	LlmsettingsRPCs_LLMSETTINGS_RPCS_UNSPECIFIED          LlmsettingsRPCs = 0
-	LlmsettingsRPCs_LLMSETTINGS_RPCS_LIST_MY_LLM_SETTINGS LlmsettingsRPCs = 1
-	LlmsettingsRPCs_LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS  LlmsettingsRPCs = 2
-	LlmsettingsRPCs_LLMSETTINGS_RPCS_ANY                  LlmsettingsRPCs = 99 // wildcard: allow any RPC
+	LlmsettingsRPCs_LLMSETTINGS_RPCS_UNSPECIFIED                     LlmsettingsRPCs = 0
+	LlmsettingsRPCs_LLMSETTINGS_RPCS_LIST_MY_LLM_SETTINGS            LlmsettingsRPCs = 1
+	LlmsettingsRPCs_LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS             LlmsettingsRPCs = 2
+	LlmsettingsRPCs_LLMSETTINGS_RPCS_BROKER_LLM_SETTINGS_MCP_SESSION LlmsettingsRPCs = 3
+	LlmsettingsRPCs_LLMSETTINGS_RPCS_ANY                             LlmsettingsRPCs = 99 // wildcard: allow any RPC
 )
 
 // Enum value maps for LlmsettingsRPCs.
@@ -690,13 +760,15 @@ var (
 		0:  "LLMSETTINGS_RPCS_UNSPECIFIED",
 		1:  "LLMSETTINGS_RPCS_LIST_MY_LLM_SETTINGS",
 		2:  "LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS",
+		3:  "LLMSETTINGS_RPCS_BROKER_LLM_SETTINGS_MCP_SESSION",
 		99: "LLMSETTINGS_RPCS_ANY",
 	}
 	LlmsettingsRPCs_value = map[string]int32{
-		"LLMSETTINGS_RPCS_UNSPECIFIED":          0,
-		"LLMSETTINGS_RPCS_LIST_MY_LLM_SETTINGS": 1,
-		"LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS":  2,
-		"LLMSETTINGS_RPCS_ANY":                  99,
+		"LLMSETTINGS_RPCS_UNSPECIFIED":                     0,
+		"LLMSETTINGS_RPCS_LIST_MY_LLM_SETTINGS":            1,
+		"LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS":             2,
+		"LLMSETTINGS_RPCS_BROKER_LLM_SETTINGS_MCP_SESSION": 3,
+		"LLMSETTINGS_RPCS_ANY":                             99,
 	}
 )
 
@@ -725,6 +797,58 @@ func (x LlmsettingsRPCs) Number() protoreflect.EnumNumber {
 // Deprecated: Use LlmsettingsRPCs.Descriptor instead.
 func (LlmsettingsRPCs) EnumDescriptor() ([]byte, []int) {
 	return file_generated_services_proto_rawDescGZIP(), []int{10}
+}
+
+type PersonalauthRPCs int32
+
+const (
+	PersonalauthRPCs_PERSONALAUTH_RPCS_UNSPECIFIED             PersonalauthRPCs = 0
+	PersonalauthRPCs_PERSONALAUTH_RPCS_CREATE_DEVICE_PRINCIPAL PersonalauthRPCs = 1
+	PersonalauthRPCs_PERSONALAUTH_RPCS_MINT_DEVICE_TOKENS      PersonalauthRPCs = 2
+	PersonalauthRPCs_PERSONALAUTH_RPCS_ANY                     PersonalauthRPCs = 99 // wildcard: allow any RPC
+)
+
+// Enum value maps for PersonalauthRPCs.
+var (
+	PersonalauthRPCs_name = map[int32]string{
+		0:  "PERSONALAUTH_RPCS_UNSPECIFIED",
+		1:  "PERSONALAUTH_RPCS_CREATE_DEVICE_PRINCIPAL",
+		2:  "PERSONALAUTH_RPCS_MINT_DEVICE_TOKENS",
+		99: "PERSONALAUTH_RPCS_ANY",
+	}
+	PersonalauthRPCs_value = map[string]int32{
+		"PERSONALAUTH_RPCS_UNSPECIFIED":             0,
+		"PERSONALAUTH_RPCS_CREATE_DEVICE_PRINCIPAL": 1,
+		"PERSONALAUTH_RPCS_MINT_DEVICE_TOKENS":      2,
+		"PERSONALAUTH_RPCS_ANY":                     99,
+	}
+)
+
+func (x PersonalauthRPCs) Enum() *PersonalauthRPCs {
+	p := new(PersonalauthRPCs)
+	*p = x
+	return p
+}
+
+func (x PersonalauthRPCs) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (PersonalauthRPCs) Descriptor() protoreflect.EnumDescriptor {
+	return file_generated_services_proto_enumTypes[11].Descriptor()
+}
+
+func (PersonalauthRPCs) Type() protoreflect.EnumType {
+	return &file_generated_services_proto_enumTypes[11]
+}
+
+func (x PersonalauthRPCs) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use PersonalauthRPCs.Descriptor instead.
+func (PersonalauthRPCs) EnumDescriptor() ([]byte, []int) {
+	return file_generated_services_proto_rawDescGZIP(), []int{11}
 }
 
 type ScottyRPCs int32
@@ -799,11 +923,11 @@ func (x ScottyRPCs) String() string {
 }
 
 func (ScottyRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[11].Descriptor()
+	return file_generated_services_proto_enumTypes[12].Descriptor()
 }
 
 func (ScottyRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[11]
+	return &file_generated_services_proto_enumTypes[12]
 }
 
 func (x ScottyRPCs) Number() protoreflect.EnumNumber {
@@ -812,7 +936,371 @@ func (x ScottyRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ScottyRPCs.Descriptor instead.
 func (ScottyRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{11}
+	return file_generated_services_proto_rawDescGZIP(), []int{12}
+}
+
+type ScottypersonalRPCs int32
+
+const (
+	ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UNSPECIFIED                        ScottypersonalRPCs = 0
+	ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_CHAT                        ScottypersonalRPCs = 1
+	ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_GET_CHAT                           ScottypersonalRPCs = 2
+	ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_CHAT                        ScottypersonalRPCs = 3
+	ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_CHAT_MEMBERSHIPS              ScottypersonalRPCs = 4
+	ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_CHAT_MEMBERSHIP             ScottypersonalRPCs = 5
+	ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE                ScottypersonalRPCs = 6
+	ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_CHAT_EVENTS                   ScottypersonalRPCs = 7
+	ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_MY_SESSION_STATE              ScottypersonalRPCs = 8
+	ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_MY_SESSION_STATE            ScottypersonalRPCs = 9
+	ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_LIST_MY_CHAT_HISTORY               ScottypersonalRPCs = 10
+	ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_TICKET_FROM_CHAT            ScottypersonalRPCs = 11
+	ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE_MOVE           ScottypersonalRPCs = 12
+	ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_UPDATE_MY_CHAT_MEMBERSHIP          ScottypersonalRPCs = 13
+	ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_GET_MY_ROUTING_MAP                 ScottypersonalRPCs = 14
+	ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_BROKER_SCOTTY_PERSONAL_MCP_SESSION ScottypersonalRPCs = 15
+	ScottypersonalRPCs_SCOTTYPERSONAL_RPCS_ANY                                ScottypersonalRPCs = 99 // wildcard: allow any RPC
+)
+
+// Enum value maps for ScottypersonalRPCs.
+var (
+	ScottypersonalRPCs_name = map[int32]string{
+		0:  "SCOTTYPERSONAL_RPCS_UNSPECIFIED",
+		1:  "SCOTTYPERSONAL_RPCS_CREATE_CHAT",
+		2:  "SCOTTYPERSONAL_RPCS_GET_CHAT",
+		3:  "SCOTTYPERSONAL_RPCS_UPDATE_CHAT",
+		4:  "SCOTTYPERSONAL_RPCS_LIST_CHAT_MEMBERSHIPS",
+		5:  "SCOTTYPERSONAL_RPCS_UPDATE_CHAT_MEMBERSHIP",
+		6:  "SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE",
+		7:  "SCOTTYPERSONAL_RPCS_LIST_CHAT_EVENTS",
+		8:  "SCOTTYPERSONAL_RPCS_LIST_MY_SESSION_STATE",
+		9:  "SCOTTYPERSONAL_RPCS_UPDATE_MY_SESSION_STATE",
+		10: "SCOTTYPERSONAL_RPCS_LIST_MY_CHAT_HISTORY",
+		11: "SCOTTYPERSONAL_RPCS_CREATE_TICKET_FROM_CHAT",
+		12: "SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE_MOVE",
+		13: "SCOTTYPERSONAL_RPCS_UPDATE_MY_CHAT_MEMBERSHIP",
+		14: "SCOTTYPERSONAL_RPCS_GET_MY_ROUTING_MAP",
+		15: "SCOTTYPERSONAL_RPCS_BROKER_SCOTTY_PERSONAL_MCP_SESSION",
+		99: "SCOTTYPERSONAL_RPCS_ANY",
+	}
+	ScottypersonalRPCs_value = map[string]int32{
+		"SCOTTYPERSONAL_RPCS_UNSPECIFIED":                        0,
+		"SCOTTYPERSONAL_RPCS_CREATE_CHAT":                        1,
+		"SCOTTYPERSONAL_RPCS_GET_CHAT":                           2,
+		"SCOTTYPERSONAL_RPCS_UPDATE_CHAT":                        3,
+		"SCOTTYPERSONAL_RPCS_LIST_CHAT_MEMBERSHIPS":              4,
+		"SCOTTYPERSONAL_RPCS_UPDATE_CHAT_MEMBERSHIP":             5,
+		"SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE":                6,
+		"SCOTTYPERSONAL_RPCS_LIST_CHAT_EVENTS":                   7,
+		"SCOTTYPERSONAL_RPCS_LIST_MY_SESSION_STATE":              8,
+		"SCOTTYPERSONAL_RPCS_UPDATE_MY_SESSION_STATE":            9,
+		"SCOTTYPERSONAL_RPCS_LIST_MY_CHAT_HISTORY":               10,
+		"SCOTTYPERSONAL_RPCS_CREATE_TICKET_FROM_CHAT":            11,
+		"SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE_MOVE":           12,
+		"SCOTTYPERSONAL_RPCS_UPDATE_MY_CHAT_MEMBERSHIP":          13,
+		"SCOTTYPERSONAL_RPCS_GET_MY_ROUTING_MAP":                 14,
+		"SCOTTYPERSONAL_RPCS_BROKER_SCOTTY_PERSONAL_MCP_SESSION": 15,
+		"SCOTTYPERSONAL_RPCS_ANY":                                99,
+	}
+)
+
+func (x ScottypersonalRPCs) Enum() *ScottypersonalRPCs {
+	p := new(ScottypersonalRPCs)
+	*p = x
+	return p
+}
+
+func (x ScottypersonalRPCs) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ScottypersonalRPCs) Descriptor() protoreflect.EnumDescriptor {
+	return file_generated_services_proto_enumTypes[13].Descriptor()
+}
+
+func (ScottypersonalRPCs) Type() protoreflect.EnumType {
+	return &file_generated_services_proto_enumTypes[13]
+}
+
+func (x ScottypersonalRPCs) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ScottypersonalRPCs.Descriptor instead.
+func (ScottypersonalRPCs) EnumDescriptor() ([]byte, []int) {
+	return file_generated_services_proto_rawDescGZIP(), []int{13}
+}
+
+type WorkRPCs int32
+
+const (
+	WorkRPCs_WORK_RPCS_UNSPECIFIED             WorkRPCs = 0
+	WorkRPCs_WORK_RPCS_CREATE_JOB              WorkRPCs = 1
+	WorkRPCs_WORK_RPCS_GET_JOB                 WorkRPCs = 2
+	WorkRPCs_WORK_RPCS_LIST_JOBS               WorkRPCs = 3
+	WorkRPCs_WORK_RPCS_UPDATE_JOB              WorkRPCs = 4
+	WorkRPCs_WORK_RPCS_CREATE_TASK             WorkRPCs = 5
+	WorkRPCs_WORK_RPCS_LIST_TASKS              WorkRPCs = 6
+	WorkRPCs_WORK_RPCS_UPDATE_TASK             WorkRPCs = 7
+	WorkRPCs_WORK_RPCS_CREATE_PARTNER          WorkRPCs = 8
+	WorkRPCs_WORK_RPCS_GET_PARTNER             WorkRPCs = 9
+	WorkRPCs_WORK_RPCS_LIST_PARTNERS           WorkRPCs = 10
+	WorkRPCs_WORK_RPCS_UPDATE_PARTNER          WorkRPCs = 11
+	WorkRPCs_WORK_RPCS_CREATE_PERMIT           WorkRPCs = 12
+	WorkRPCs_WORK_RPCS_LIST_PERMITS            WorkRPCs = 13
+	WorkRPCs_WORK_RPCS_UPDATE_PERMIT           WorkRPCs = 14
+	WorkRPCs_WORK_RPCS_CREATE_EQUIPMENT        WorkRPCs = 15
+	WorkRPCs_WORK_RPCS_GET_EQUIPMENT           WorkRPCs = 16
+	WorkRPCs_WORK_RPCS_LIST_EQUIPMENT          WorkRPCs = 17
+	WorkRPCs_WORK_RPCS_UPDATE_EQUIPMENT        WorkRPCs = 18
+	WorkRPCs_WORK_RPCS_CREATE_RFP              WorkRPCs = 19
+	WorkRPCs_WORK_RPCS_LIST_RFPS               WorkRPCs = 20
+	WorkRPCs_WORK_RPCS_UPDATE_RFP              WorkRPCs = 21
+	WorkRPCs_WORK_RPCS_CREATE_MY_TASK          WorkRPCs = 22
+	WorkRPCs_WORK_RPCS_UPDATE_MY_TASK          WorkRPCs = 23
+	WorkRPCs_WORK_RPCS_GET_MY_JOB              WorkRPCs = 24
+	WorkRPCs_WORK_RPCS_LIST_MY_JOBS            WorkRPCs = 25
+	WorkRPCs_WORK_RPCS_LIST_MY_LAPSING_PERMITS WorkRPCs = 26
+	WorkRPCs_WORK_RPCS_UPDATE_MY_JOB           WorkRPCs = 27
+	WorkRPCs_WORK_RPCS_CREATE_MY_PERMIT        WorkRPCs = 28
+	WorkRPCs_WORK_RPCS_GET_MY_EQUIPMENT        WorkRPCs = 29
+	WorkRPCs_WORK_RPCS_BROKER_WORK_MCP_SESSION WorkRPCs = 30
+	WorkRPCs_WORK_RPCS_ANY                     WorkRPCs = 99 // wildcard: allow any RPC
+)
+
+// Enum value maps for WorkRPCs.
+var (
+	WorkRPCs_name = map[int32]string{
+		0:  "WORK_RPCS_UNSPECIFIED",
+		1:  "WORK_RPCS_CREATE_JOB",
+		2:  "WORK_RPCS_GET_JOB",
+		3:  "WORK_RPCS_LIST_JOBS",
+		4:  "WORK_RPCS_UPDATE_JOB",
+		5:  "WORK_RPCS_CREATE_TASK",
+		6:  "WORK_RPCS_LIST_TASKS",
+		7:  "WORK_RPCS_UPDATE_TASK",
+		8:  "WORK_RPCS_CREATE_PARTNER",
+		9:  "WORK_RPCS_GET_PARTNER",
+		10: "WORK_RPCS_LIST_PARTNERS",
+		11: "WORK_RPCS_UPDATE_PARTNER",
+		12: "WORK_RPCS_CREATE_PERMIT",
+		13: "WORK_RPCS_LIST_PERMITS",
+		14: "WORK_RPCS_UPDATE_PERMIT",
+		15: "WORK_RPCS_CREATE_EQUIPMENT",
+		16: "WORK_RPCS_GET_EQUIPMENT",
+		17: "WORK_RPCS_LIST_EQUIPMENT",
+		18: "WORK_RPCS_UPDATE_EQUIPMENT",
+		19: "WORK_RPCS_CREATE_RFP",
+		20: "WORK_RPCS_LIST_RFPS",
+		21: "WORK_RPCS_UPDATE_RFP",
+		22: "WORK_RPCS_CREATE_MY_TASK",
+		23: "WORK_RPCS_UPDATE_MY_TASK",
+		24: "WORK_RPCS_GET_MY_JOB",
+		25: "WORK_RPCS_LIST_MY_JOBS",
+		26: "WORK_RPCS_LIST_MY_LAPSING_PERMITS",
+		27: "WORK_RPCS_UPDATE_MY_JOB",
+		28: "WORK_RPCS_CREATE_MY_PERMIT",
+		29: "WORK_RPCS_GET_MY_EQUIPMENT",
+		30: "WORK_RPCS_BROKER_WORK_MCP_SESSION",
+		99: "WORK_RPCS_ANY",
+	}
+	WorkRPCs_value = map[string]int32{
+		"WORK_RPCS_UNSPECIFIED":             0,
+		"WORK_RPCS_CREATE_JOB":              1,
+		"WORK_RPCS_GET_JOB":                 2,
+		"WORK_RPCS_LIST_JOBS":               3,
+		"WORK_RPCS_UPDATE_JOB":              4,
+		"WORK_RPCS_CREATE_TASK":             5,
+		"WORK_RPCS_LIST_TASKS":              6,
+		"WORK_RPCS_UPDATE_TASK":             7,
+		"WORK_RPCS_CREATE_PARTNER":          8,
+		"WORK_RPCS_GET_PARTNER":             9,
+		"WORK_RPCS_LIST_PARTNERS":           10,
+		"WORK_RPCS_UPDATE_PARTNER":          11,
+		"WORK_RPCS_CREATE_PERMIT":           12,
+		"WORK_RPCS_LIST_PERMITS":            13,
+		"WORK_RPCS_UPDATE_PERMIT":           14,
+		"WORK_RPCS_CREATE_EQUIPMENT":        15,
+		"WORK_RPCS_GET_EQUIPMENT":           16,
+		"WORK_RPCS_LIST_EQUIPMENT":          17,
+		"WORK_RPCS_UPDATE_EQUIPMENT":        18,
+		"WORK_RPCS_CREATE_RFP":              19,
+		"WORK_RPCS_LIST_RFPS":               20,
+		"WORK_RPCS_UPDATE_RFP":              21,
+		"WORK_RPCS_CREATE_MY_TASK":          22,
+		"WORK_RPCS_UPDATE_MY_TASK":          23,
+		"WORK_RPCS_GET_MY_JOB":              24,
+		"WORK_RPCS_LIST_MY_JOBS":            25,
+		"WORK_RPCS_LIST_MY_LAPSING_PERMITS": 26,
+		"WORK_RPCS_UPDATE_MY_JOB":           27,
+		"WORK_RPCS_CREATE_MY_PERMIT":        28,
+		"WORK_RPCS_GET_MY_EQUIPMENT":        29,
+		"WORK_RPCS_BROKER_WORK_MCP_SESSION": 30,
+		"WORK_RPCS_ANY":                     99,
+	}
+)
+
+func (x WorkRPCs) Enum() *WorkRPCs {
+	p := new(WorkRPCs)
+	*p = x
+	return p
+}
+
+func (x WorkRPCs) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (WorkRPCs) Descriptor() protoreflect.EnumDescriptor {
+	return file_generated_services_proto_enumTypes[14].Descriptor()
+}
+
+func (WorkRPCs) Type() protoreflect.EnumType {
+	return &file_generated_services_proto_enumTypes[14]
+}
+
+func (x WorkRPCs) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use WorkRPCs.Descriptor instead.
+func (WorkRPCs) EnumDescriptor() ([]byte, []int) {
+	return file_generated_services_proto_rawDescGZIP(), []int{14}
+}
+
+type ProfileRPCs int32
+
+const (
+	ProfileRPCs_PROFILE_RPCS_UNSPECIFIED                ProfileRPCs = 0
+	ProfileRPCs_PROFILE_RPCS_GET_PROFILE                ProfileRPCs = 1
+	ProfileRPCs_PROFILE_RPCS_UPDATE_PREFERENCES         ProfileRPCs = 2
+	ProfileRPCs_PROFILE_RPCS_LIST_RULES                 ProfileRPCs = 3
+	ProfileRPCs_PROFILE_RPCS_GET_RULE                   ProfileRPCs = 4
+	ProfileRPCs_PROFILE_RPCS_CREATE_RULE                ProfileRPCs = 5
+	ProfileRPCs_PROFILE_RPCS_UPDATE_RULE                ProfileRPCs = 6
+	ProfileRPCs_PROFILE_RPCS_UPDATE_RULE_POSITION       ProfileRPCs = 7
+	ProfileRPCs_PROFILE_RPCS_DELETE_RULE                ProfileRPCs = 8
+	ProfileRPCs_PROFILE_RPCS_BROKER_PROFILE_MCP_SESSION ProfileRPCs = 9
+	ProfileRPCs_PROFILE_RPCS_ANY                        ProfileRPCs = 99 // wildcard: allow any RPC
+)
+
+// Enum value maps for ProfileRPCs.
+var (
+	ProfileRPCs_name = map[int32]string{
+		0:  "PROFILE_RPCS_UNSPECIFIED",
+		1:  "PROFILE_RPCS_GET_PROFILE",
+		2:  "PROFILE_RPCS_UPDATE_PREFERENCES",
+		3:  "PROFILE_RPCS_LIST_RULES",
+		4:  "PROFILE_RPCS_GET_RULE",
+		5:  "PROFILE_RPCS_CREATE_RULE",
+		6:  "PROFILE_RPCS_UPDATE_RULE",
+		7:  "PROFILE_RPCS_UPDATE_RULE_POSITION",
+		8:  "PROFILE_RPCS_DELETE_RULE",
+		9:  "PROFILE_RPCS_BROKER_PROFILE_MCP_SESSION",
+		99: "PROFILE_RPCS_ANY",
+	}
+	ProfileRPCs_value = map[string]int32{
+		"PROFILE_RPCS_UNSPECIFIED":                0,
+		"PROFILE_RPCS_GET_PROFILE":                1,
+		"PROFILE_RPCS_UPDATE_PREFERENCES":         2,
+		"PROFILE_RPCS_LIST_RULES":                 3,
+		"PROFILE_RPCS_GET_RULE":                   4,
+		"PROFILE_RPCS_CREATE_RULE":                5,
+		"PROFILE_RPCS_UPDATE_RULE":                6,
+		"PROFILE_RPCS_UPDATE_RULE_POSITION":       7,
+		"PROFILE_RPCS_DELETE_RULE":                8,
+		"PROFILE_RPCS_BROKER_PROFILE_MCP_SESSION": 9,
+		"PROFILE_RPCS_ANY":                        99,
+	}
+)
+
+func (x ProfileRPCs) Enum() *ProfileRPCs {
+	p := new(ProfileRPCs)
+	*p = x
+	return p
+}
+
+func (x ProfileRPCs) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ProfileRPCs) Descriptor() protoreflect.EnumDescriptor {
+	return file_generated_services_proto_enumTypes[15].Descriptor()
+}
+
+func (ProfileRPCs) Type() protoreflect.EnumType {
+	return &file_generated_services_proto_enumTypes[15]
+}
+
+func (x ProfileRPCs) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ProfileRPCs.Descriptor instead.
+func (ProfileRPCs) EnumDescriptor() ([]byte, []int) {
+	return file_generated_services_proto_rawDescGZIP(), []int{15}
+}
+
+type DocmanagerRPCs int32
+
+const (
+	DocmanagerRPCs_DOCMANAGER_RPCS_UNSPECIFIED                    DocmanagerRPCs = 0
+	DocmanagerRPCs_DOCMANAGER_RPCS_CREATE_INGEST                  DocmanagerRPCs = 1
+	DocmanagerRPCs_DOCMANAGER_RPCS_GET_DOC_FILE_METADATA          DocmanagerRPCs = 2
+	DocmanagerRPCs_DOCMANAGER_RPCS_LIST_DOC_FILE_METADATA         DocmanagerRPCs = 3
+	DocmanagerRPCs_DOCMANAGER_RPCS_CREATE_DOC_FILE_LINK           DocmanagerRPCs = 4
+	DocmanagerRPCs_DOCMANAGER_RPCS_UPDATE_DOC_FILE_LOCATION       DocmanagerRPCs = 5
+	DocmanagerRPCs_DOCMANAGER_RPCS_BROKER_DOC_MANAGER_MCP_SESSION DocmanagerRPCs = 6
+	DocmanagerRPCs_DOCMANAGER_RPCS_ANY                            DocmanagerRPCs = 99 // wildcard: allow any RPC
+)
+
+// Enum value maps for DocmanagerRPCs.
+var (
+	DocmanagerRPCs_name = map[int32]string{
+		0:  "DOCMANAGER_RPCS_UNSPECIFIED",
+		1:  "DOCMANAGER_RPCS_CREATE_INGEST",
+		2:  "DOCMANAGER_RPCS_GET_DOC_FILE_METADATA",
+		3:  "DOCMANAGER_RPCS_LIST_DOC_FILE_METADATA",
+		4:  "DOCMANAGER_RPCS_CREATE_DOC_FILE_LINK",
+		5:  "DOCMANAGER_RPCS_UPDATE_DOC_FILE_LOCATION",
+		6:  "DOCMANAGER_RPCS_BROKER_DOC_MANAGER_MCP_SESSION",
+		99: "DOCMANAGER_RPCS_ANY",
+	}
+	DocmanagerRPCs_value = map[string]int32{
+		"DOCMANAGER_RPCS_UNSPECIFIED":                    0,
+		"DOCMANAGER_RPCS_CREATE_INGEST":                  1,
+		"DOCMANAGER_RPCS_GET_DOC_FILE_METADATA":          2,
+		"DOCMANAGER_RPCS_LIST_DOC_FILE_METADATA":         3,
+		"DOCMANAGER_RPCS_CREATE_DOC_FILE_LINK":           4,
+		"DOCMANAGER_RPCS_UPDATE_DOC_FILE_LOCATION":       5,
+		"DOCMANAGER_RPCS_BROKER_DOC_MANAGER_MCP_SESSION": 6,
+		"DOCMANAGER_RPCS_ANY":                            99,
+	}
+)
+
+func (x DocmanagerRPCs) Enum() *DocmanagerRPCs {
+	p := new(DocmanagerRPCs)
+	*p = x
+	return p
+}
+
+func (x DocmanagerRPCs) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (DocmanagerRPCs) Descriptor() protoreflect.EnumDescriptor {
+	return file_generated_services_proto_enumTypes[16].Descriptor()
+}
+
+func (DocmanagerRPCs) Type() protoreflect.EnumType {
+	return &file_generated_services_proto_enumTypes[16]
+}
+
+func (x DocmanagerRPCs) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use DocmanagerRPCs.Descriptor instead.
+func (DocmanagerRPCs) EnumDescriptor() ([]byte, []int) {
+	return file_generated_services_proto_rawDescGZIP(), []int{16}
 }
 
 // agentsensor (vservice, hosted by eventbus)
@@ -852,11 +1340,11 @@ func (x AgentsensorRPCs) String() string {
 }
 
 func (AgentsensorRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[12].Descriptor()
+	return file_generated_services_proto_enumTypes[17].Descriptor()
 }
 
 func (AgentsensorRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[12]
+	return &file_generated_services_proto_enumTypes[17]
 }
 
 func (x AgentsensorRPCs) Number() protoreflect.EnumNumber {
@@ -865,7 +1353,7 @@ func (x AgentsensorRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use AgentsensorRPCs.Descriptor instead.
 func (AgentsensorRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{12}
+	return file_generated_services_proto_rawDescGZIP(), []int{17}
 }
 
 // query (trait, hosted by stratum)
@@ -899,11 +1387,11 @@ func (x QueryRPCs) String() string {
 }
 
 func (QueryRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[13].Descriptor()
+	return file_generated_services_proto_enumTypes[18].Descriptor()
 }
 
 func (QueryRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[13]
+	return &file_generated_services_proto_enumTypes[18]
 }
 
 func (x QueryRPCs) Number() protoreflect.EnumNumber {
@@ -912,14 +1400,14 @@ func (x QueryRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use QueryRPCs.Descriptor instead.
 func (QueryRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{13}
+	return file_generated_services_proto_rawDescGZIP(), []int{18}
 }
 
 var File_generated_services_proto protoreflect.FileDescriptor
 
 const file_generated_services_proto_rawDesc = "" +
 	"\n" +
-	"\x18generated/services.proto\x12\bservices*\xce\x03\n" +
+	"\x18generated/services.proto\x12\bservices*\xfa\x05\n" +
 	"\vServiceName\x12\x1c\n" +
 	"\x18SERVICE_NAME_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15SERVICE_NAME_SENTINEL\x10\x05\x12\x18\n" +
@@ -929,15 +1417,26 @@ const file_generated_services_proto_rawDesc = "" +
 	"\x15SERVICE_NAME_EVENTBUS\x10\x12\x12\x16\n" +
 	"\x12SERVICE_NAME_OAUTH\x10\x15\x12\x14\n" +
 	"\x10SERVICE_NAME_OPA\x10\x1d\x12\x18\n" +
-	"\x14SERVICE_NAME_STRATUM\x10\"\x12\x17\n" +
+	"\x14SERVICE_NAME_STRATUM\x10\"\x12\x15\n" +
+	"\x11SERVICE_NAME_SAML\x10&\x12\x19\n" +
+	"\x15SERVICE_NAME_OPERATOR\x10/\x12\x17\n" +
 	"\x13SERVICE_NAME_KMAKER\x101\x12\x18\n" +
 	"\x14SERVICE_NAME_SAMLSVC\x103\x12\x1a\n" +
 	"\x16SERVICE_NAME_MESSAGING\x105\x12\x1c\n" +
 	"\x18SERVICE_NAME_SCOTTYAGENT\x106\x12\x18\n" +
 	"\x14SERVICE_NAME_MAILBOX\x107\x12\x1c\n" +
-	"\x18SERVICE_NAME_LLMSETTINGS\x108\x12\x17\n" +
-	"\x13SERVICE_NAME_SCOTTY\x10F\x12\x14\n" +
-	"\x10SERVICE_NAME_ANY\x10c*\xdf\x03\n" +
+	"\x18SERVICE_NAME_LLMSETTINGS\x108\x12\x1d\n" +
+	"\x19SERVICE_NAME_PERSONALAUTH\x109\x12\x1a\n" +
+	"\x16SERVICE_NAME_BLOBSTORE\x10:\x12\x17\n" +
+	"\x13SERVICE_NAME_SCOTTY\x10F\x12\x1f\n" +
+	"\x1bSERVICE_NAME_SCOTTYPERSONAL\x10H\x12\x15\n" +
+	"\x11SERVICE_NAME_WORK\x10I\x12\x18\n" +
+	"\x14SERVICE_NAME_WEATHER\x10J\x12\x19\n" +
+	"\x15SERVICE_NAME_LLMPROXY\x10K\x12\x18\n" +
+	"\x14SERVICE_NAME_PROFILE\x10L\x12\x1b\n" +
+	"\x17SERVICE_NAME_DOCMANAGER\x10P\x12\x19\n" +
+	"\x15SERVICE_NAME_REVEILLE\x10Q\x12\x14\n" +
+	"\x10SERVICE_NAME_ANY\x10c*\x8f\x04\n" +
 	"\fSentinelRPCs\x12\x1d\n" +
 	"\x19SENTINEL_RPCS_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1eSENTINEL_RPCS_GET_CLUSTER_INFO\x10\x01\x12$\n" +
@@ -951,7 +1450,8 @@ const file_generated_services_proto_rawDesc = "" +
 	"\x1cSENTINEL_RPCS_LIST_MAP_STATS\x10\t\x12\x1f\n" +
 	"\x1bSENTINEL_RPCS_GET_DASHBOARD\x10\n" +
 	"\x12%\n" +
-	"!SENTINEL_RPCS_SUBSCRIBE_DASHBOARD\x10\v\x12\x15\n" +
+	"!SENTINEL_RPCS_SUBSCRIBE_DASHBOARD\x10\v\x12.\n" +
+	"*SENTINEL_RPCS_BROKER_DASHBOARD_MCP_SESSION\x10\f\x12\x15\n" +
 	"\x11SENTINEL_RPCS_ANY\x10c*\xe1\x01\n" +
 	"\vGatewayRPCs\x12\x1c\n" +
 	"\x18GATEWAY_RPCS_UNSPECIFIED\x10\x00\x12#\n" +
@@ -960,24 +1460,31 @@ const file_generated_services_proto_rawDesc = "" +
 	"\x17GATEWAY_RPCS_MINT_TOKEN\x10\x03\x12\x1f\n" +
 	"\x1bGATEWAY_RPCS_MINT_X509_CERT\x10\x04\x12\x1f\n" +
 	"\x1bGATEWAY_RPCS_LIST_PUBLIC_CA\x10\x05\x12\x14\n" +
-	"\x10GATEWAY_RPCS_ANY\x10c*\xed\x02\n" +
+	"\x10GATEWAY_RPCS_ANY\x10c*\xf4\x04\n" +
 	"\n" +
 	"KernelRPCs\x12\x1b\n" +
-	"\x17KERNEL_RPCS_UNSPECIFIED\x10\x00\x12\x1d\n" +
-	"\x19KERNEL_RPCS_CREATE_TENANT\x10\x01\x12\x1d\n" +
-	"\x19KERNEL_RPCS_DELETE_TENANT\x10\x02\x12\x1c\n" +
-	"\x18KERNEL_RPCS_LIST_TENANTS\x10\x03\x12!\n" +
-	"\x1dKERNEL_RPCS_GET_TENANT_CONFIG\x10\x04\x12$\n" +
-	" KERNEL_RPCS_UPDATE_TENANT_CONFIG\x10\x05\x12\"\n" +
-	"\x1eKERNEL_RPCS_GET_PROJECT_CONFIG\x10\x06\x12%\n" +
-	"!KERNEL_RPCS_UPDATE_PROJECT_CONFIG\x10\a\x12\x1d\n" +
-	"\x19KERNEL_RPCS_LIST_PROJECTS\x10\b\x12\x1e\n" +
-	"\x1aKERNEL_RPCS_DELETE_PROJECT\x10\t\x12\x13\n" +
+	"\x17KERNEL_RPCS_UNSPECIFIED\x10\x00\x12+\n" +
+	"'KERNEL_RPCS_MINT_DELEGATE_OFFLINE_TOKEN\x10\x01\x12\x1f\n" +
+	"\x1bKERNEL_RPCS_GET_MY_IDENTITY\x10\x02\x12'\n" +
+	"#KERNEL_RPCS_REVOKE_TENANT_USER_LINK\x10\x03\x12'\n" +
+	"#KERNEL_RPCS_CREATE_PENDING_APPROVAL\x10\x04\x124\n" +
+	"0KERNEL_RPCS_BROKER_PERSONAL_IDENTITY_MCP_SESSION\x10\x05\x12\x1d\n" +
+	"\x19KERNEL_RPCS_CREATE_TENANT\x10\x06\x12\x1d\n" +
+	"\x19KERNEL_RPCS_DELETE_TENANT\x10\a\x12\x1c\n" +
+	"\x18KERNEL_RPCS_LIST_TENANTS\x10\b\x12!\n" +
+	"\x1dKERNEL_RPCS_GET_TENANT_CONFIG\x10\t\x12$\n" +
+	" KERNEL_RPCS_UPDATE_TENANT_CONFIG\x10\n" +
+	"\x12\"\n" +
+	"\x1eKERNEL_RPCS_GET_PROJECT_CONFIG\x10\v\x12%\n" +
+	"!KERNEL_RPCS_UPDATE_PROJECT_CONFIG\x10\f\x12\x1d\n" +
+	"\x19KERNEL_RPCS_LIST_PROJECTS\x10\r\x12\x1e\n" +
+	"\x1aKERNEL_RPCS_DELETE_PROJECT\x10\x0e\x12/\n" +
+	"+KERNEL_RPCS_BROKER_TENANT_ADMIN_MCP_SESSION\x10\x0f\x12\x13\n" +
 	"\x0fKERNEL_RPCS_ANY\x10c*g\n" +
 	"\fEventbusRPCs\x12\x1d\n" +
 	"\x19EVENTBUS_RPCS_UNSPECIFIED\x10\x00\x12!\n" +
 	"\x1dEVENTBUS_RPCS_SUBSCRIBE_TRACE\x10\x01\x12\x15\n" +
-	"\x11EVENTBUS_RPCS_ANY\x10c*\xf7\x01\n" +
+	"\x11EVENTBUS_RPCS_ANY\x10c*\x9f\x02\n" +
 	"\tOauthRPCs\x12\x1a\n" +
 	"\x16OAUTH_RPCS_UNSPECIFIED\x10\x00\x12\x1d\n" +
 	"\x19OAUTH_RPCS_BROKER_SESSION\x10\x01\x12\x1d\n" +
@@ -985,37 +1492,48 @@ const file_generated_services_proto_rawDesc = "" +
 	"\x14OAUTH_RPCS_AUTHORIZE\x10\x03\x12#\n" +
 	"\x1fOAUTH_RPCS_MINT_CALLBACK_TOKENS\x10\x04\x12\x1d\n" +
 	"\x19OAUTH_RPCS_REVOKE_SESSION\x10\x05\x12\x1e\n" +
-	"\x1aOAUTH_RPCS_BROKER_CLI_AUTH\x10\x06\x12\x12\n" +
-	"\x0eOAUTH_RPCS_ANY\x10c*\x88\x02\n" +
+	"\x1aOAUTH_RPCS_BROKER_CLI_AUTH\x10\x06\x12&\n" +
+	"\"OAUTH_RPCS_BROKER_AUTH_MCP_SESSION\x10\a\x12\x12\n" +
+	"\x0eOAUTH_RPCS_ANY\x10c*\xde\x02\n" +
 	"\bSamlRPCs\x12\x19\n" +
 	"\x15SAML_RPCS_UNSPECIFIED\x10\x00\x12\x1d\n" +
 	"\x19SAML_RPCS_MINT_ACS_TOKENS\x10\x01\x12\x17\n" +
 	"\x13SAML_RPCS_AUTHORIZE\x10\x02\x12\x1c\n" +
 	"\x18SAML_RPCS_MINT_ASSERTION\x10\x03\x12\x17\n" +
-	"\x13SAML_RPCS_LIST_S_PS\x10\x04\x12\x1e\n" +
-	"\x1aSAML_RPCS_GET_IDP_METADATA\x10\x05\x12\x1d\n" +
-	"\x19SAML_RPCS_GET_SP_METADATA\x10\x06\x12 \n" +
-	"\x1cSAML_RPCS_GET_IDP_DESCRIPTOR\x10\a\x12\x11\n" +
-	"\rSAML_RPCS_ANY\x10c*h\n" +
+	"\x13SAML_RPCS_LIST_S_PS\x10\x04\x12)\n" +
+	"%SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION\x10\x05\x12\x1e\n" +
+	"\x1aSAML_RPCS_GET_IDP_METADATA\x10\x06\x12\x1d\n" +
+	"\x19SAML_RPCS_GET_SP_METADATA\x10\a\x12 \n" +
+	"\x1cSAML_RPCS_GET_IDP_DESCRIPTOR\x10\b\x12)\n" +
+	"%SAML_RPCS_BROKER_METADATA_MCP_SESSION\x10\t\x12\x11\n" +
+	"\rSAML_RPCS_ANY\x10c*\x99\x01\n" +
 	"\rMessagingRPCs\x12\x1e\n" +
 	"\x1aMESSAGING_RPCS_UNSPECIFIED\x10\x00\x12\x1f\n" +
-	"\x1bMESSAGING_RPCS_SEND_MESSAGE\x10\x01\x12\x16\n" +
+	"\x1bMESSAGING_RPCS_SEND_MESSAGE\x10\x01\x12/\n" +
+	"+MESSAGING_RPCS_BROKER_MESSAGING_MCP_SESSION\x10\x02\x12\x16\n" +
 	"\x12MESSAGING_RPCS_ANY\x10c*\xad\x01\n" +
 	"\x0fScottyagentRPCs\x12 \n" +
 	"\x1cSCOTTYAGENT_RPCS_UNSPECIFIED\x10\x00\x12(\n" +
 	"$SCOTTYAGENT_RPCS_LIST_MY_AGENT_STATE\x10\x01\x124\n" +
 	"0SCOTTYAGENT_RPCS_BROKER_SCOTTY_AGENT_MCP_SESSION\x10\x02\x12\x18\n" +
-	"\x14SCOTTYAGENT_RPCS_ANY\x10c*\x85\x01\n" +
+	"\x14SCOTTYAGENT_RPCS_ANY\x10c*\xb2\x01\n" +
 	"\vMailboxRPCs\x12\x1c\n" +
 	"\x18MAILBOX_RPCS_UNSPECIFIED\x10\x00\x12\x1f\n" +
 	"\x1bMAILBOX_RPCS_LIST_HELD_MAIL\x10\x01\x12!\n" +
-	"\x1dMAILBOX_RPCS_UPDATE_HELD_MAIL\x10\x02\x12\x14\n" +
-	"\x10MAILBOX_RPCS_ANY\x10c*\xa2\x01\n" +
+	"\x1dMAILBOX_RPCS_UPDATE_HELD_MAIL\x10\x02\x12+\n" +
+	"'MAILBOX_RPCS_BROKER_MAILBOX_MCP_SESSION\x10\x03\x12\x14\n" +
+	"\x10MAILBOX_RPCS_ANY\x10c*\xd8\x01\n" +
 	"\x0fLlmsettingsRPCs\x12 \n" +
 	"\x1cLLMSETTINGS_RPCS_UNSPECIFIED\x10\x00\x12)\n" +
 	"%LLMSETTINGS_RPCS_LIST_MY_LLM_SETTINGS\x10\x01\x12(\n" +
-	"$LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS\x10\x02\x12\x18\n" +
-	"\x14LLMSETTINGS_RPCS_ANY\x10c*\xa3\x04\n" +
+	"$LLMSETTINGS_RPCS_UPDATE_LLM_SETTINGS\x10\x02\x124\n" +
+	"0LLMSETTINGS_RPCS_BROKER_LLM_SETTINGS_MCP_SESSION\x10\x03\x12\x18\n" +
+	"\x14LLMSETTINGS_RPCS_ANY\x10c*\xa9\x01\n" +
+	"\x10PersonalauthRPCs\x12!\n" +
+	"\x1dPERSONALAUTH_RPCS_UNSPECIFIED\x10\x00\x12-\n" +
+	")PERSONALAUTH_RPCS_CREATE_DEVICE_PRINCIPAL\x10\x01\x12(\n" +
+	"$PERSONALAUTH_RPCS_MINT_DEVICE_TOKENS\x10\x02\x12\x19\n" +
+	"\x15PERSONALAUTH_RPCS_ANY\x10c*\xa3\x04\n" +
 	"\n" +
 	"ScottyRPCs\x12\x1b\n" +
 	"\x17SCOTTY_RPCS_UNSPECIFIED\x10\x00\x12\x1c\n" +
@@ -1034,7 +1552,81 @@ const file_generated_services_proto_rawDesc = "" +
 	"!SCOTTY_RPCS_CREATE_TICKET_COMMENT\x10\f\x12#\n" +
 	"\x1fSCOTTY_RPCS_GET_MY_TICKET_AUDIT\x10\r\x12)\n" +
 	"%SCOTTY_RPCS_BROKER_SCOTTY_MCP_SESSION\x10\x0e\x12\x13\n" +
-	"\x0fSCOTTY_RPCS_ANY\x10c*\xdd\x01\n" +
+	"\x0fSCOTTY_RPCS_ANY\x10c*\x84\x06\n" +
+	"\x12ScottypersonalRPCs\x12#\n" +
+	"\x1fSCOTTYPERSONAL_RPCS_UNSPECIFIED\x10\x00\x12#\n" +
+	"\x1fSCOTTYPERSONAL_RPCS_CREATE_CHAT\x10\x01\x12 \n" +
+	"\x1cSCOTTYPERSONAL_RPCS_GET_CHAT\x10\x02\x12#\n" +
+	"\x1fSCOTTYPERSONAL_RPCS_UPDATE_CHAT\x10\x03\x12-\n" +
+	")SCOTTYPERSONAL_RPCS_LIST_CHAT_MEMBERSHIPS\x10\x04\x12.\n" +
+	"*SCOTTYPERSONAL_RPCS_UPDATE_CHAT_MEMBERSHIP\x10\x05\x12+\n" +
+	"'SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE\x10\x06\x12(\n" +
+	"$SCOTTYPERSONAL_RPCS_LIST_CHAT_EVENTS\x10\a\x12-\n" +
+	")SCOTTYPERSONAL_RPCS_LIST_MY_SESSION_STATE\x10\b\x12/\n" +
+	"+SCOTTYPERSONAL_RPCS_UPDATE_MY_SESSION_STATE\x10\t\x12,\n" +
+	"(SCOTTYPERSONAL_RPCS_LIST_MY_CHAT_HISTORY\x10\n" +
+	"\x12/\n" +
+	"+SCOTTYPERSONAL_RPCS_CREATE_TICKET_FROM_CHAT\x10\v\x120\n" +
+	",SCOTTYPERSONAL_RPCS_CREATE_CHAT_MESSAGE_MOVE\x10\f\x121\n" +
+	"-SCOTTYPERSONAL_RPCS_UPDATE_MY_CHAT_MEMBERSHIP\x10\r\x12*\n" +
+	"&SCOTTYPERSONAL_RPCS_GET_MY_ROUTING_MAP\x10\x0e\x12:\n" +
+	"6SCOTTYPERSONAL_RPCS_BROKER_SCOTTY_PERSONAL_MCP_SESSION\x10\x0f\x12\x1b\n" +
+	"\x17SCOTTYPERSONAL_RPCS_ANY\x10c*\x9b\a\n" +
+	"\bWorkRPCs\x12\x19\n" +
+	"\x15WORK_RPCS_UNSPECIFIED\x10\x00\x12\x18\n" +
+	"\x14WORK_RPCS_CREATE_JOB\x10\x01\x12\x15\n" +
+	"\x11WORK_RPCS_GET_JOB\x10\x02\x12\x17\n" +
+	"\x13WORK_RPCS_LIST_JOBS\x10\x03\x12\x18\n" +
+	"\x14WORK_RPCS_UPDATE_JOB\x10\x04\x12\x19\n" +
+	"\x15WORK_RPCS_CREATE_TASK\x10\x05\x12\x18\n" +
+	"\x14WORK_RPCS_LIST_TASKS\x10\x06\x12\x19\n" +
+	"\x15WORK_RPCS_UPDATE_TASK\x10\a\x12\x1c\n" +
+	"\x18WORK_RPCS_CREATE_PARTNER\x10\b\x12\x19\n" +
+	"\x15WORK_RPCS_GET_PARTNER\x10\t\x12\x1b\n" +
+	"\x17WORK_RPCS_LIST_PARTNERS\x10\n" +
+	"\x12\x1c\n" +
+	"\x18WORK_RPCS_UPDATE_PARTNER\x10\v\x12\x1b\n" +
+	"\x17WORK_RPCS_CREATE_PERMIT\x10\f\x12\x1a\n" +
+	"\x16WORK_RPCS_LIST_PERMITS\x10\r\x12\x1b\n" +
+	"\x17WORK_RPCS_UPDATE_PERMIT\x10\x0e\x12\x1e\n" +
+	"\x1aWORK_RPCS_CREATE_EQUIPMENT\x10\x0f\x12\x1b\n" +
+	"\x17WORK_RPCS_GET_EQUIPMENT\x10\x10\x12\x1c\n" +
+	"\x18WORK_RPCS_LIST_EQUIPMENT\x10\x11\x12\x1e\n" +
+	"\x1aWORK_RPCS_UPDATE_EQUIPMENT\x10\x12\x12\x18\n" +
+	"\x14WORK_RPCS_CREATE_RFP\x10\x13\x12\x17\n" +
+	"\x13WORK_RPCS_LIST_RFPS\x10\x14\x12\x18\n" +
+	"\x14WORK_RPCS_UPDATE_RFP\x10\x15\x12\x1c\n" +
+	"\x18WORK_RPCS_CREATE_MY_TASK\x10\x16\x12\x1c\n" +
+	"\x18WORK_RPCS_UPDATE_MY_TASK\x10\x17\x12\x18\n" +
+	"\x14WORK_RPCS_GET_MY_JOB\x10\x18\x12\x1a\n" +
+	"\x16WORK_RPCS_LIST_MY_JOBS\x10\x19\x12%\n" +
+	"!WORK_RPCS_LIST_MY_LAPSING_PERMITS\x10\x1a\x12\x1b\n" +
+	"\x17WORK_RPCS_UPDATE_MY_JOB\x10\x1b\x12\x1e\n" +
+	"\x1aWORK_RPCS_CREATE_MY_PERMIT\x10\x1c\x12\x1e\n" +
+	"\x1aWORK_RPCS_GET_MY_EQUIPMENT\x10\x1d\x12%\n" +
+	"!WORK_RPCS_BROKER_WORK_MCP_SESSION\x10\x1e\x12\x11\n" +
+	"\rWORK_RPCS_ANY\x10c*\xea\x02\n" +
+	"\vProfileRPCs\x12\x1c\n" +
+	"\x18PROFILE_RPCS_UNSPECIFIED\x10\x00\x12\x1c\n" +
+	"\x18PROFILE_RPCS_GET_PROFILE\x10\x01\x12#\n" +
+	"\x1fPROFILE_RPCS_UPDATE_PREFERENCES\x10\x02\x12\x1b\n" +
+	"\x17PROFILE_RPCS_LIST_RULES\x10\x03\x12\x19\n" +
+	"\x15PROFILE_RPCS_GET_RULE\x10\x04\x12\x1c\n" +
+	"\x18PROFILE_RPCS_CREATE_RULE\x10\x05\x12\x1c\n" +
+	"\x18PROFILE_RPCS_UPDATE_RULE\x10\x06\x12%\n" +
+	"!PROFILE_RPCS_UPDATE_RULE_POSITION\x10\a\x12\x1c\n" +
+	"\x18PROFILE_RPCS_DELETE_RULE\x10\b\x12+\n" +
+	"'PROFILE_RPCS_BROKER_PROFILE_MCP_SESSION\x10\t\x12\x14\n" +
+	"\x10PROFILE_RPCS_ANY\x10c*\xd0\x02\n" +
+	"\x0eDocmanagerRPCs\x12\x1f\n" +
+	"\x1bDOCMANAGER_RPCS_UNSPECIFIED\x10\x00\x12!\n" +
+	"\x1dDOCMANAGER_RPCS_CREATE_INGEST\x10\x01\x12)\n" +
+	"%DOCMANAGER_RPCS_GET_DOC_FILE_METADATA\x10\x02\x12*\n" +
+	"&DOCMANAGER_RPCS_LIST_DOC_FILE_METADATA\x10\x03\x12(\n" +
+	"$DOCMANAGER_RPCS_CREATE_DOC_FILE_LINK\x10\x04\x12,\n" +
+	"(DOCMANAGER_RPCS_UPDATE_DOC_FILE_LOCATION\x10\x05\x122\n" +
+	".DOCMANAGER_RPCS_BROKER_DOC_MANAGER_MCP_SESSION\x10\x06\x12\x17\n" +
+	"\x13DOCMANAGER_RPCS_ANY\x10c*\xdd\x01\n" +
 	"\x0fAgentsensorRPCs\x12 \n" +
 	"\x1cAGENTSENSOR_RPCS_UNSPECIFIED\x10\x00\x12E\n" +
 	"AAGENTSENSOR_RPCS_PUBLISH_AGENTSENSOR_AGENT_EVENT_BUS_EVENT_STREAM\x10\x01\x12G\n" +
@@ -1042,7 +1634,7 @@ const file_generated_services_proto_rawDesc = "" +
 	"\x14AGENTSENSOR_RPCS_ANY\x10c*;\n" +
 	"\tQueryRPCs\x12\x1a\n" +
 	"\x16QUERY_RPCS_UNSPECIFIED\x10\x00\x12\x12\n" +
-	"\x0eQUERY_RPCS_ANY\x10cBaZ_gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/servicesb\x06proto3"
+	"\x0eQUERY_RPCS_ANY\x10cBVZTgitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/servicesb\x06proto3"
 
 var (
 	file_generated_services_proto_rawDescOnce sync.Once
@@ -1056,22 +1648,27 @@ func file_generated_services_proto_rawDescGZIP() []byte {
 	return file_generated_services_proto_rawDescData
 }
 
-var file_generated_services_proto_enumTypes = make([]protoimpl.EnumInfo, 14)
+var file_generated_services_proto_enumTypes = make([]protoimpl.EnumInfo, 19)
 var file_generated_services_proto_goTypes = []any{
-	(ServiceName)(0),     // 0: services.ServiceName
-	(SentinelRPCs)(0),    // 1: services.SentinelRPCs
-	(GatewayRPCs)(0),     // 2: services.GatewayRPCs
-	(KernelRPCs)(0),      // 3: services.KernelRPCs
-	(EventbusRPCs)(0),    // 4: services.EventbusRPCs
-	(OauthRPCs)(0),       // 5: services.OauthRPCs
-	(SamlRPCs)(0),        // 6: services.SamlRPCs
-	(MessagingRPCs)(0),   // 7: services.MessagingRPCs
-	(ScottyagentRPCs)(0), // 8: services.ScottyagentRPCs
-	(MailboxRPCs)(0),     // 9: services.MailboxRPCs
-	(LlmsettingsRPCs)(0), // 10: services.LlmsettingsRPCs
-	(ScottyRPCs)(0),      // 11: services.ScottyRPCs
-	(AgentsensorRPCs)(0), // 12: services.AgentsensorRPCs
-	(QueryRPCs)(0),       // 13: services.QueryRPCs
+	(ServiceName)(0),        // 0: services.ServiceName
+	(SentinelRPCs)(0),       // 1: services.SentinelRPCs
+	(GatewayRPCs)(0),        // 2: services.GatewayRPCs
+	(KernelRPCs)(0),         // 3: services.KernelRPCs
+	(EventbusRPCs)(0),       // 4: services.EventbusRPCs
+	(OauthRPCs)(0),          // 5: services.OauthRPCs
+	(SamlRPCs)(0),           // 6: services.SamlRPCs
+	(MessagingRPCs)(0),      // 7: services.MessagingRPCs
+	(ScottyagentRPCs)(0),    // 8: services.ScottyagentRPCs
+	(MailboxRPCs)(0),        // 9: services.MailboxRPCs
+	(LlmsettingsRPCs)(0),    // 10: services.LlmsettingsRPCs
+	(PersonalauthRPCs)(0),   // 11: services.PersonalauthRPCs
+	(ScottyRPCs)(0),         // 12: services.ScottyRPCs
+	(ScottypersonalRPCs)(0), // 13: services.ScottypersonalRPCs
+	(WorkRPCs)(0),           // 14: services.WorkRPCs
+	(ProfileRPCs)(0),        // 15: services.ProfileRPCs
+	(DocmanagerRPCs)(0),     // 16: services.DocmanagerRPCs
+	(AgentsensorRPCs)(0),    // 17: services.AgentsensorRPCs
+	(QueryRPCs)(0),          // 18: services.QueryRPCs
 }
 var file_generated_services_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -1091,7 +1688,7 @@ func file_generated_services_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_generated_services_proto_rawDesc), len(file_generated_services_proto_rawDesc)),
-			NumEnums:      14,
+			NumEnums:      19,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,

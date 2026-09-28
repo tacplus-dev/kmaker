@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -28,9 +28,9 @@ import (
 	"strings"
 
 	"github.com/pelletier/go-toml/v2"
-	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/errors"
-	host "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/host"
-	x509 "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/x509"
+	protoerrors "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/errors"
+	host "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/host"
+	x509 "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"gopkg.in/yaml.v3"
@@ -581,6 +581,8 @@ type configJSON struct {
 	ExternalCertPem           string            `json:"external_cert_pem,omitempty"`
 	ExternalKeyPem            string            `json:"external_key_pem,omitempty"`
 	RootCa                    []json.RawMessage `json:"root_ca,omitempty"`
+	HttpListener              json.RawMessage   `json:"http_listener,omitempty"`
+	AcmeBackend               json.RawMessage   `json:"acme_backend,omitempty"`
 	TraceId                   string            `json:"trace_id,omitempty"`
 	Noop                      bool              `json:"noop,omitempty"`
 }
@@ -628,6 +630,20 @@ func ConfigToJSON(v *Config) ([]byte, error) {
 				}
 			}
 			return result
+		}(),
+		HttpListener: func() json.RawMessage {
+			if v.HttpListener == nil {
+				return nil
+			}
+			data, _ := host.HostToJSON(v.HttpListener)
+			return data
+		}(),
+		AcmeBackend: func() json.RawMessage {
+			if v.AcmeBackend == nil {
+				return nil
+			}
+			data, _ := host.HostToJSON(v.AcmeBackend)
+			return data
 		}(),
 		TraceId: v.TraceId,
 		Noop:    v.Noop,
@@ -678,6 +694,20 @@ func ConfigToJSONPretty(v *Config) ([]byte, error) {
 				}
 			}
 			return result
+		}(),
+		HttpListener: func() json.RawMessage {
+			if v.HttpListener == nil {
+				return nil
+			}
+			data, _ := host.HostToJSON(v.HttpListener)
+			return data
+		}(),
+		AcmeBackend: func() json.RawMessage {
+			if v.AcmeBackend == nil {
+				return nil
+			}
+			data, _ := host.HostToJSON(v.AcmeBackend)
+			return data
 		}(),
 		TraceId: v.TraceId,
 		Noop:    v.Noop,
@@ -782,6 +812,20 @@ func ConfigFromJSON(data []byte) (*Config, error) {
 					result.RootCa = append(result.RootCa, parsed)
 				}
 			}
+		}
+	}
+	// Parse message field: HttpListener
+	if len(raw.HttpListener) > 0 {
+		parsed, err := host.HostFromJSON(raw.HttpListener)
+		if err == nil {
+			result.HttpListener = parsed
+		}
+	}
+	// Parse message field: AcmeBackend
+	if len(raw.AcmeBackend) > 0 {
+		parsed, err := host.HostFromJSON(raw.AcmeBackend)
+		if err == nil {
+			result.AcmeBackend = parsed
 		}
 	}
 	result.TraceId = raw.TraceId
@@ -1370,6 +1414,16 @@ func ConfigToEnvVar(v *Config) map[string]string {
 	}
 	result["PROTO_SERVICES_GATEWAY_CONFIG_EXTERNAL_CERT_PEM"] = v.ExternalCertPem
 	result["PROTO_SERVICES_GATEWAY_CONFIG_EXTERNAL_KEY_PEM"] = v.ExternalKeyPem
+	if v.HttpListener != nil {
+		for k, val := range host.HostToEnvVar(v.HttpListener) {
+			result[k] = val
+		}
+	}
+	if v.AcmeBackend != nil {
+		for k, val := range host.HostToEnvVar(v.AcmeBackend) {
+			result[k] = val
+		}
+	}
 	result["PROTO_SERVICES_GATEWAY_CONFIG_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_GATEWAY_CONFIG_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -1431,6 +1485,16 @@ func ConfigFromEnvVar(env map[string]string) (*Config, error) {
 	}
 	if val, ok := env["PROTO_SERVICES_GATEWAY_CONFIG_EXTERNAL_KEY_PEM"]; ok && val != "" {
 		result.ExternalKeyPem = val
+	}
+	if sub, err := host.HostFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.HttpListener = sub
+	}
+	if sub, err := host.HostFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.AcmeBackend = sub
 	}
 	if val, ok := env["PROTO_SERVICES_GATEWAY_CONFIG_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -1610,6 +1674,20 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 	for i, val := range m.RootCa {
 		if err := x509.ValidateX509CertWithDepth(val, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field RootCa[%d] validation failed", i)
+		}
+	}
+
+	// Validate HttpListener nested message
+	if m.HttpListener != nil {
+		if err := host.ValidateHostWithDepth(m.HttpListener, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field HttpListener validation failed")
+		}
+	}
+
+	// Validate AcmeBackend nested message
+	if m.AcmeBackend != nil {
+		if err := host.ValidateHostWithDepth(m.AcmeBackend, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field AcmeBackend validation failed")
 		}
 	}
 
@@ -1897,6 +1975,12 @@ func MergeConfig(dst, src *Config) {
 	}
 	if len(dst.RootCa) == 0 {
 		dst.RootCa = src.RootCa
+	}
+	if dst.HttpListener == nil {
+		dst.HttpListener = src.HttpListener
+	}
+	if dst.AcmeBackend == nil {
+		dst.AcmeBackend = src.AcmeBackend
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

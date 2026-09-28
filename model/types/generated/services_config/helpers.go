@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -26,22 +26,31 @@ import (
 	"encoding/json"
 
 	"github.com/pelletier/go-toml/v2"
-	eventbus "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/eventbus"
-	gateway "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gateway"
-	kmaker "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
-	letsencrypt "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/letsencrypt"
-	llmsettings "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/llmsettings"
-	mailbox "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/mailbox"
-	messaging "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/messaging"
-	oauth "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/oauth"
-	opa "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/opa"
-	operator "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/operator"
-	samlsvc "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/samlsvc"
-	scotty "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/scotty"
-	scottyagent "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/scottyagent"
-	sentinel "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/sentinel"
-	stratum "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/stratum"
-	protoerrors "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/errors"
+	blobstore "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/blobstore"
+	docmanager "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/docmanager"
+	eventbus "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/eventbus"
+	gateway "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/gateway"
+	kmaker "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker"
+	letsencrypt "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/letsencrypt"
+	llmproxy "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/llmproxy"
+	llmsettings "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/llmsettings"
+	mailbox "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/mailbox"
+	messaging "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/messaging"
+	oauth "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/oauth"
+	opa "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/opa"
+	operator "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/operator"
+	personalauth "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/personalauth"
+	profile "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/profile"
+	reveille "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/reveille"
+	samlsvc "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/samlsvc"
+	scotty "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/scotty"
+	scottyagent "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/scottyagent"
+	scottypersonal "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/scottypersonal"
+	sentinel "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/sentinel"
+	stratum "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/stratum"
+	weather "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/weather"
+	work "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/work"
+	protoerrors "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/errors"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"gopkg.in/yaml.v3"
@@ -54,21 +63,30 @@ import (
 // ServicesJSON represents Services in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type servicesJSON struct {
-	SentinelConfig    json.RawMessage `json:"sentinel_config,omitempty"`
-	GatewayConfig     json.RawMessage `json:"gateway_config,omitempty"`
-	LetsencryptConfig json.RawMessage `json:"letsencrypt_config,omitempty"`
-	EventbusConfig    json.RawMessage `json:"eventbus_config,omitempty"`
-	OauthConfig       json.RawMessage `json:"oauth_config,omitempty"`
-	OpaConfig         json.RawMessage `json:"opa_config,omitempty"`
-	StratumConfig     json.RawMessage `json:"stratum_config,omitempty"`
-	SamlConfig        json.RawMessage `json:"saml_config,omitempty"`
-	OperatorConfig    json.RawMessage `json:"operator_config,omitempty"`
-	KmakerConfig      json.RawMessage `json:"kmaker_config,omitempty"`
-	MessagingConfig   json.RawMessage `json:"messaging_config,omitempty"`
-	ScottyagentConfig json.RawMessage `json:"scottyagent_config,omitempty"`
-	MailboxConfig     json.RawMessage `json:"mailbox_config,omitempty"`
-	LlmsettingsConfig json.RawMessage `json:"llmsettings_config,omitempty"`
-	ScottyConfig      json.RawMessage `json:"scotty_config,omitempty"`
+	SentinelConfig       json.RawMessage `json:"sentinel_config,omitempty"`
+	GatewayConfig        json.RawMessage `json:"gateway_config,omitempty"`
+	LetsencryptConfig    json.RawMessage `json:"letsencrypt_config,omitempty"`
+	EventbusConfig       json.RawMessage `json:"eventbus_config,omitempty"`
+	OauthConfig          json.RawMessage `json:"oauth_config,omitempty"`
+	OpaConfig            json.RawMessage `json:"opa_config,omitempty"`
+	StratumConfig        json.RawMessage `json:"stratum_config,omitempty"`
+	SamlConfig           json.RawMessage `json:"saml_config,omitempty"`
+	OperatorConfig       json.RawMessage `json:"operator_config,omitempty"`
+	KmakerConfig         json.RawMessage `json:"kmaker_config,omitempty"`
+	MessagingConfig      json.RawMessage `json:"messaging_config,omitempty"`
+	ScottyagentConfig    json.RawMessage `json:"scottyagent_config,omitempty"`
+	MailboxConfig        json.RawMessage `json:"mailbox_config,omitempty"`
+	LlmsettingsConfig    json.RawMessage `json:"llmsettings_config,omitempty"`
+	PersonalauthConfig   json.RawMessage `json:"personalauth_config,omitempty"`
+	BlobstoreConfig      json.RawMessage `json:"blobstore_config,omitempty"`
+	ScottyConfig         json.RawMessage `json:"scotty_config,omitempty"`
+	ScottypersonalConfig json.RawMessage `json:"scottypersonal_config,omitempty"`
+	WorkConfig           json.RawMessage `json:"work_config,omitempty"`
+	WeatherConfig        json.RawMessage `json:"weather_config,omitempty"`
+	LlmproxyConfig       json.RawMessage `json:"llmproxy_config,omitempty"`
+	ProfileConfig        json.RawMessage `json:"profile_config,omitempty"`
+	DocmanagerConfig     json.RawMessage `json:"docmanager_config,omitempty"`
+	ReveilleConfig       json.RawMessage `json:"reveille_config,omitempty"`
 }
 
 // ServicesToJSON converts Services to JSON bytes.
@@ -177,11 +195,74 @@ func ServicesToJSON(v *Services) ([]byte, error) {
 			data, _ := llmsettings.ConfigToJSON(v.LlmsettingsConfig)
 			return data
 		}(),
+		PersonalauthConfig: func() json.RawMessage {
+			if v.PersonalauthConfig == nil {
+				return nil
+			}
+			data, _ := personalauth.ConfigToJSON(v.PersonalauthConfig)
+			return data
+		}(),
+		BlobstoreConfig: func() json.RawMessage {
+			if v.BlobstoreConfig == nil {
+				return nil
+			}
+			data, _ := blobstore.ConfigToJSON(v.BlobstoreConfig)
+			return data
+		}(),
 		ScottyConfig: func() json.RawMessage {
 			if v.ScottyConfig == nil {
 				return nil
 			}
 			data, _ := scotty.ConfigToJSON(v.ScottyConfig)
+			return data
+		}(),
+		ScottypersonalConfig: func() json.RawMessage {
+			if v.ScottypersonalConfig == nil {
+				return nil
+			}
+			data, _ := scottypersonal.ConfigToJSON(v.ScottypersonalConfig)
+			return data
+		}(),
+		WorkConfig: func() json.RawMessage {
+			if v.WorkConfig == nil {
+				return nil
+			}
+			data, _ := work.ConfigToJSON(v.WorkConfig)
+			return data
+		}(),
+		WeatherConfig: func() json.RawMessage {
+			if v.WeatherConfig == nil {
+				return nil
+			}
+			data, _ := weather.ConfigToJSON(v.WeatherConfig)
+			return data
+		}(),
+		LlmproxyConfig: func() json.RawMessage {
+			if v.LlmproxyConfig == nil {
+				return nil
+			}
+			data, _ := llmproxy.ConfigToJSON(v.LlmproxyConfig)
+			return data
+		}(),
+		ProfileConfig: func() json.RawMessage {
+			if v.ProfileConfig == nil {
+				return nil
+			}
+			data, _ := profile.ConfigToJSON(v.ProfileConfig)
+			return data
+		}(),
+		DocmanagerConfig: func() json.RawMessage {
+			if v.DocmanagerConfig == nil {
+				return nil
+			}
+			data, _ := docmanager.ConfigToJSON(v.DocmanagerConfig)
+			return data
+		}(),
+		ReveilleConfig: func() json.RawMessage {
+			if v.ReveilleConfig == nil {
+				return nil
+			}
+			data, _ := reveille.ConfigToJSON(v.ReveilleConfig)
 			return data
 		}(),
 	}
@@ -294,11 +375,74 @@ func ServicesToJSONPretty(v *Services) ([]byte, error) {
 			data, _ := llmsettings.ConfigToJSON(v.LlmsettingsConfig)
 			return data
 		}(),
+		PersonalauthConfig: func() json.RawMessage {
+			if v.PersonalauthConfig == nil {
+				return nil
+			}
+			data, _ := personalauth.ConfigToJSON(v.PersonalauthConfig)
+			return data
+		}(),
+		BlobstoreConfig: func() json.RawMessage {
+			if v.BlobstoreConfig == nil {
+				return nil
+			}
+			data, _ := blobstore.ConfigToJSON(v.BlobstoreConfig)
+			return data
+		}(),
 		ScottyConfig: func() json.RawMessage {
 			if v.ScottyConfig == nil {
 				return nil
 			}
 			data, _ := scotty.ConfigToJSON(v.ScottyConfig)
+			return data
+		}(),
+		ScottypersonalConfig: func() json.RawMessage {
+			if v.ScottypersonalConfig == nil {
+				return nil
+			}
+			data, _ := scottypersonal.ConfigToJSON(v.ScottypersonalConfig)
+			return data
+		}(),
+		WorkConfig: func() json.RawMessage {
+			if v.WorkConfig == nil {
+				return nil
+			}
+			data, _ := work.ConfigToJSON(v.WorkConfig)
+			return data
+		}(),
+		WeatherConfig: func() json.RawMessage {
+			if v.WeatherConfig == nil {
+				return nil
+			}
+			data, _ := weather.ConfigToJSON(v.WeatherConfig)
+			return data
+		}(),
+		LlmproxyConfig: func() json.RawMessage {
+			if v.LlmproxyConfig == nil {
+				return nil
+			}
+			data, _ := llmproxy.ConfigToJSON(v.LlmproxyConfig)
+			return data
+		}(),
+		ProfileConfig: func() json.RawMessage {
+			if v.ProfileConfig == nil {
+				return nil
+			}
+			data, _ := profile.ConfigToJSON(v.ProfileConfig)
+			return data
+		}(),
+		DocmanagerConfig: func() json.RawMessage {
+			if v.DocmanagerConfig == nil {
+				return nil
+			}
+			data, _ := docmanager.ConfigToJSON(v.DocmanagerConfig)
+			return data
+		}(),
+		ReveilleConfig: func() json.RawMessage {
+			if v.ReveilleConfig == nil {
+				return nil
+			}
+			data, _ := reveille.ConfigToJSON(v.ReveilleConfig)
 			return data
 		}(),
 	}
@@ -463,11 +607,74 @@ func ServicesFromJSON(data []byte) (*Services, error) {
 			result.LlmsettingsConfig = parsed
 		}
 	}
+	// Parse message field: PersonalauthConfig
+	if len(raw.PersonalauthConfig) > 0 {
+		parsed, err := personalauth.ConfigFromJSON(raw.PersonalauthConfig)
+		if err == nil {
+			result.PersonalauthConfig = parsed
+		}
+	}
+	// Parse message field: BlobstoreConfig
+	if len(raw.BlobstoreConfig) > 0 {
+		parsed, err := blobstore.ConfigFromJSON(raw.BlobstoreConfig)
+		if err == nil {
+			result.BlobstoreConfig = parsed
+		}
+	}
 	// Parse message field: ScottyConfig
 	if len(raw.ScottyConfig) > 0 {
 		parsed, err := scotty.ConfigFromJSON(raw.ScottyConfig)
 		if err == nil {
 			result.ScottyConfig = parsed
+		}
+	}
+	// Parse message field: ScottypersonalConfig
+	if len(raw.ScottypersonalConfig) > 0 {
+		parsed, err := scottypersonal.ConfigFromJSON(raw.ScottypersonalConfig)
+		if err == nil {
+			result.ScottypersonalConfig = parsed
+		}
+	}
+	// Parse message field: WorkConfig
+	if len(raw.WorkConfig) > 0 {
+		parsed, err := work.ConfigFromJSON(raw.WorkConfig)
+		if err == nil {
+			result.WorkConfig = parsed
+		}
+	}
+	// Parse message field: WeatherConfig
+	if len(raw.WeatherConfig) > 0 {
+		parsed, err := weather.ConfigFromJSON(raw.WeatherConfig)
+		if err == nil {
+			result.WeatherConfig = parsed
+		}
+	}
+	// Parse message field: LlmproxyConfig
+	if len(raw.LlmproxyConfig) > 0 {
+		parsed, err := llmproxy.ConfigFromJSON(raw.LlmproxyConfig)
+		if err == nil {
+			result.LlmproxyConfig = parsed
+		}
+	}
+	// Parse message field: ProfileConfig
+	if len(raw.ProfileConfig) > 0 {
+		parsed, err := profile.ConfigFromJSON(raw.ProfileConfig)
+		if err == nil {
+			result.ProfileConfig = parsed
+		}
+	}
+	// Parse message field: DocmanagerConfig
+	if len(raw.DocmanagerConfig) > 0 {
+		parsed, err := docmanager.ConfigFromJSON(raw.DocmanagerConfig)
+		if err == nil {
+			result.DocmanagerConfig = parsed
+		}
+	}
+	// Parse message field: ReveilleConfig
+	if len(raw.ReveilleConfig) > 0 {
+		parsed, err := reveille.ConfigFromJSON(raw.ReveilleConfig)
+		if err == nil {
+			result.ReveilleConfig = parsed
 		}
 	}
 	return result, nil
@@ -621,8 +828,53 @@ func ServicesToEnvVar(v *Services) map[string]string {
 			result[k] = val
 		}
 	}
+	if v.PersonalauthConfig != nil {
+		for k, val := range personalauth.ConfigToEnvVar(v.PersonalauthConfig) {
+			result[k] = val
+		}
+	}
+	if v.BlobstoreConfig != nil {
+		for k, val := range blobstore.ConfigToEnvVar(v.BlobstoreConfig) {
+			result[k] = val
+		}
+	}
 	if v.ScottyConfig != nil {
 		for k, val := range scotty.ConfigToEnvVar(v.ScottyConfig) {
+			result[k] = val
+		}
+	}
+	if v.ScottypersonalConfig != nil {
+		for k, val := range scottypersonal.ConfigToEnvVar(v.ScottypersonalConfig) {
+			result[k] = val
+		}
+	}
+	if v.WorkConfig != nil {
+		for k, val := range work.ConfigToEnvVar(v.WorkConfig) {
+			result[k] = val
+		}
+	}
+	if v.WeatherConfig != nil {
+		for k, val := range weather.ConfigToEnvVar(v.WeatherConfig) {
+			result[k] = val
+		}
+	}
+	if v.LlmproxyConfig != nil {
+		for k, val := range llmproxy.ConfigToEnvVar(v.LlmproxyConfig) {
+			result[k] = val
+		}
+	}
+	if v.ProfileConfig != nil {
+		for k, val := range profile.ConfigToEnvVar(v.ProfileConfig) {
+			result[k] = val
+		}
+	}
+	if v.DocmanagerConfig != nil {
+		for k, val := range docmanager.ConfigToEnvVar(v.DocmanagerConfig) {
+			result[k] = val
+		}
+	}
+	if v.ReveilleConfig != nil {
+		for k, val := range reveille.ConfigToEnvVar(v.ReveilleConfig) {
 			result[k] = val
 		}
 	}
@@ -702,10 +954,55 @@ func ServicesFromEnvVar(env map[string]string) (*Services, error) {
 	} else if sub != nil {
 		result.LlmsettingsConfig = sub
 	}
+	if sub, err := personalauth.ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.PersonalauthConfig = sub
+	}
+	if sub, err := blobstore.ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.BlobstoreConfig = sub
+	}
 	if sub, err := scotty.ConfigFromEnvVar(env); err != nil {
 		return nil, err
 	} else if sub != nil {
 		result.ScottyConfig = sub
+	}
+	if sub, err := scottypersonal.ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.ScottypersonalConfig = sub
+	}
+	if sub, err := work.ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.WorkConfig = sub
+	}
+	if sub, err := weather.ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.WeatherConfig = sub
+	}
+	if sub, err := llmproxy.ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.LlmproxyConfig = sub
+	}
+	if sub, err := profile.ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.ProfileConfig = sub
+	}
+	if sub, err := docmanager.ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.DocmanagerConfig = sub
+	}
+	if sub, err := reveille.ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.ReveilleConfig = sub
 	}
 	return result, nil
 }
@@ -827,10 +1124,73 @@ func ValidateServicesWithDepth(m *Services, depth int) error {
 		}
 	}
 
+	// Validate PersonalauthConfig nested message
+	if m.PersonalauthConfig != nil {
+		if err := personalauth.ValidateConfigWithDepth(m.PersonalauthConfig, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field PersonalauthConfig validation failed")
+		}
+	}
+
+	// Validate BlobstoreConfig nested message
+	if m.BlobstoreConfig != nil {
+		if err := blobstore.ValidateConfigWithDepth(m.BlobstoreConfig, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field BlobstoreConfig validation failed")
+		}
+	}
+
 	// Validate ScottyConfig nested message
 	if m.ScottyConfig != nil {
 		if err := scotty.ValidateConfigWithDepth(m.ScottyConfig, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field ScottyConfig validation failed")
+		}
+	}
+
+	// Validate ScottypersonalConfig nested message
+	if m.ScottypersonalConfig != nil {
+		if err := scottypersonal.ValidateConfigWithDepth(m.ScottypersonalConfig, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field ScottypersonalConfig validation failed")
+		}
+	}
+
+	// Validate WorkConfig nested message
+	if m.WorkConfig != nil {
+		if err := work.ValidateConfigWithDepth(m.WorkConfig, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field WorkConfig validation failed")
+		}
+	}
+
+	// Validate WeatherConfig nested message
+	if m.WeatherConfig != nil {
+		if err := weather.ValidateConfigWithDepth(m.WeatherConfig, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field WeatherConfig validation failed")
+		}
+	}
+
+	// Validate LlmproxyConfig nested message
+	if m.LlmproxyConfig != nil {
+		if err := llmproxy.ValidateConfigWithDepth(m.LlmproxyConfig, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field LlmproxyConfig validation failed")
+		}
+	}
+
+	// Validate ProfileConfig nested message
+	if m.ProfileConfig != nil {
+		if err := profile.ValidateConfigWithDepth(m.ProfileConfig, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field ProfileConfig validation failed")
+		}
+	}
+
+	// Validate DocmanagerConfig nested message
+	if m.DocmanagerConfig != nil {
+		if err := docmanager.ValidateConfigWithDepth(m.DocmanagerConfig, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field DocmanagerConfig validation failed")
+		}
+	}
+
+	// Validate ReveilleConfig nested message
+	if m.ReveilleConfig != nil {
+		if err := reveille.ValidateConfigWithDepth(m.ReveilleConfig, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field ReveilleConfig validation failed")
 		}
 	}
 
@@ -905,7 +1265,34 @@ func MergeServices(dst, src *Services) {
 	if dst.LlmsettingsConfig == nil {
 		dst.LlmsettingsConfig = src.LlmsettingsConfig
 	}
+	if dst.PersonalauthConfig == nil {
+		dst.PersonalauthConfig = src.PersonalauthConfig
+	}
+	if dst.BlobstoreConfig == nil {
+		dst.BlobstoreConfig = src.BlobstoreConfig
+	}
 	if dst.ScottyConfig == nil {
 		dst.ScottyConfig = src.ScottyConfig
+	}
+	if dst.ScottypersonalConfig == nil {
+		dst.ScottypersonalConfig = src.ScottypersonalConfig
+	}
+	if dst.WorkConfig == nil {
+		dst.WorkConfig = src.WorkConfig
+	}
+	if dst.WeatherConfig == nil {
+		dst.WeatherConfig = src.WeatherConfig
+	}
+	if dst.LlmproxyConfig == nil {
+		dst.LlmproxyConfig = src.LlmproxyConfig
+	}
+	if dst.ProfileConfig == nil {
+		dst.ProfileConfig = src.ProfileConfig
+	}
+	if dst.DocmanagerConfig == nil {
+		dst.DocmanagerConfig = src.DocmanagerConfig
+	}
+	if dst.ReveilleConfig == nil {
+		dst.ReveilleConfig = src.ReveilleConfig
 	}
 }

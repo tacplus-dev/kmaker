@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -22,8 +22,8 @@
 package userentitlements
 
 import (
-	entitlements "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/entitlements"
-	_ "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/spec"
+	entitlements "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/entitlements"
+	_ "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/spec"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	structpb "google.golang.org/protobuf/types/known/structpb"
@@ -154,7 +154,7 @@ type EntitlementEvalInput struct {
 	// claims are the IDP-provided identity claims (e.g. email, groups, roles).
 	// Uses google.protobuf.Struct to preserve native JSON types (arrays, objects, booleans).
 	Claims *structpb.Struct `protobuf:"bytes,1,opt,name=claims,proto3" json:"claims,omitempty"`
-	// namespace is the caller's project namespace (e.g. "/local/dev/drpepper").
+	// namespace is the caller's project namespace (e.g. "/tenants/drpepper").
 	// OPA dispatches on it to run that project's policy. Empty = cluster-root policy.
 	Namespace     string `protobuf:"bytes,2,opt,name=namespace,proto3" json:"namespace,omitempty"`
 	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
@@ -234,7 +234,7 @@ type EntitlementEvalResult struct {
 	// Intended for admin users only.
 	AllEntitlements bool `protobuf:"varint,2,opt,name=all_entitlements,json=allEntitlements,proto3" json:"all_entitlements,omitempty"`
 	// namespace is the tenant namespace the policy assigns to this caller, as a
-	// leading-slash absolute path (e.g. "/local/dev/acme"). IDP+OPA live at the
+	// leading-slash absolute path (e.g. "/tenants/acme"). IDP+OPA live at the
 	// tenant level, so this is the tenant subtree the caller's issuer/claims map
 	// to. When empty, kernel falls back to the cluster-root namespace.
 	Namespace string `protobuf:"bytes,3,opt,name=namespace,proto3" json:"namespace,omitempty"`
@@ -363,7 +363,7 @@ const file_vservices_entitlements_proto_rawDesc = "" +
 	"\x1dOPA_EVAL_RPC_ID_ALL_EXECUTORS\x10\x03\x12$\n" +
 	" OPA_EVAL_RPC_ID_EVAL_ENTITLEMENT\x10\x042s\n" +
 	"\aOpaEval\x12b\n" +
-	"\x0fEvalEntitlement\x12&.userentitlements.EntitlementEvalInput\x1a'.userentitlements.EntitlementEvalResult\x1a\x04\xea\x97\"\x00BiZggitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/vservices/userentitlementsb\x06proto3"
+	"\x0fEvalEntitlement\x12&.userentitlements.EntitlementEvalInput\x1a'.userentitlements.EntitlementEvalResult\x1a\x04\xea\x97\"\x00B^Z\\gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/vservices/userentitlementsb\x06proto3"
 
 var (
 	file_vservices_entitlements_proto_rawDescOnce sync.Once

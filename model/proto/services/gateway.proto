@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -23,7 +23,7 @@
 
 syntax = "proto3";
 package gateway;
-option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/gateway";
+option go_package = "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/gateway";
 
 import "sys/spec.proto";
 import "sys/host.proto";
@@ -89,6 +89,33 @@ message Config {
   // so clients (schematicctl, webapp) can configure TLS trust automatically.
   // Required in CERT_CHAIN mode. Omit in LETSENCRYPT mode (publicly trusted).
   repeated x509.X509Cert root_ca = 11;
+
+  // http_listener is the PLAINTEXT listener behind the edge's port 80. The
+  // gateway owns port 80 as well as 443: one LoadBalancer carries both, so
+  // there is no second externally-exposed Service to reach the ACME responder
+  // with.
+  //
+  // On this listener the gateway does exactly three things:
+  //   - GET/HEAD /.well-known/acme-challenge/* is proxied to acme_backend
+  //   - any other GET/HEAD gets a 301 to the same path on https://
+  //   - any other method gets a 405
+  //
+  // Empty disables the listener — nothing binds. It has no declared default
+  // because the answer depends on external_tls_mode, which tacplus cannot
+  // express as a conditional default: the operator sets it (to 0.0.0.0:8080,
+  // the container-side port the LoadBalancer's port 80 targets) exactly when
+  // external_tls_mode = LETSENCRYPT, and leaves it empty otherwise.
+  host.Host http_listener = 12;
+
+  // acme_backend is the IN-CLUSTER address of the letsencrypt service's
+  // HTTP-01 responder — its own http_listener, reachable on the letsencrypt
+  // ClusterIP Service. The gateway is the only thing that reaches it; the
+  // responder is no longer exposed outside the cluster.
+  //
+  // Empty while http_listener is set means challenge requests are answered
+  // 503: the redirect and 405 halves still work, but no certificate can be
+  // issued. Set together with http_listener.
+  host.Host acme_backend = 13;
   string trace_id = 200;
   bool noop = 201;
 }

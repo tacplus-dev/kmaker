@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -23,10 +23,10 @@ package gateway
 
 import (
 	context "context"
-	jwk "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/jwk"
-	tokenrequest "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/tokenrequest"
-	trace "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
-	x509 "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/x509"
+	jwk "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/jwk"
+	tokenrequest "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/tokenrequest"
+	trace "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
+	x509 "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"

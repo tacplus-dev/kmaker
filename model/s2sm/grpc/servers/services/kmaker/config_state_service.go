@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 
 package kmaker
 
@@ -17,15 +17,16 @@ import (
 	"sync"
 	"time"
 
-	types "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker"
+	wrapperToken "gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/token"
+	types "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker"
 
 	"go.uber.org/zap"
 
-	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/am"
-	grpcserver "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/grpcserver"
-	"gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/chassis/servicemanager"
+	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/am"
+	grpcserver "gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/grpcserver"
+	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/servicemanager"
 
-	trace_pb "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/sys/trace"
+	trace_pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/trace"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -49,9 +50,9 @@ type KmakerConfigStateService struct {
 	types.UnimplementedKmakerConfigStateServiceServer
 	handler                   KmakerConfigStateServiceHandler
 	mu                        sync.RWMutex
-	authorizeFunc             func(ctx context.Context, fullMethod string, req any) error
-	authenticateFunc          func(ctx context.Context) error
-	authenticateAtOrBelowFunc func(ctx context.Context, targetNamespace string) error
+	authorizeFunc             func(ctx context.Context, fullMethod string, req any) (*wrapperToken.TokenWrapper, error)
+	authenticateFunc          func(ctx context.Context) (*wrapperToken.TokenWrapper, error)
+	authenticateAtOrBelowFunc func(ctx context.Context, targetNamespace string) (*wrapperToken.TokenWrapper, error)
 	emitter                   *am.Emitter
 	instanceId                string
 	tracePublish              func(ctx context.Context, event *trace_pb.TraceEvent)
@@ -121,8 +122,9 @@ func (p *KmakerConfigStateService) publishTrace(ctx context.Context, event *trac
 	}
 }
 
-// SetAuthorizeFunc sets the authorization function.
-func (p *KmakerConfigStateService) SetAuthorizeFunc(f func(ctx context.Context, fullMethod string, req any) error) {
+// SetAuthorizeFunc sets the authorization function. It returns the token the
+// check verified, which becomes the caller identity handed to the handler.
+func (p *KmakerConfigStateService) SetAuthorizeFunc(f func(ctx context.Context, fullMethod string, req any) (*wrapperToken.TokenWrapper, error)) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	p.authorizeFunc = f
@@ -130,7 +132,7 @@ func (p *KmakerConfigStateService) SetAuthorizeFunc(f func(ctx context.Context, 
 
 // SetAuthenticateFunc sets the authentication-only function used to verify a
 // stream token before per-message namespace authorization.
-func (p *KmakerConfigStateService) SetAuthenticateFunc(f func(ctx context.Context) error) {
+func (p *KmakerConfigStateService) SetAuthenticateFunc(f func(ctx context.Context) (*wrapperToken.TokenWrapper, error)) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	p.authenticateFunc = f
@@ -138,7 +140,7 @@ func (p *KmakerConfigStateService) SetAuthenticateFunc(f func(ctx context.Contex
 
 // SetAuthenticateAtOrBelowFunc sets the authentication + fixed namespace check
 // function used by auth_any_user methods.
-func (p *KmakerConfigStateService) SetAuthenticateAtOrBelowFunc(f func(ctx context.Context, targetNamespace string) error) {
+func (p *KmakerConfigStateService) SetAuthenticateAtOrBelowFunc(f func(ctx context.Context, targetNamespace string) (*wrapperToken.TokenWrapper, error)) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	p.authenticateAtOrBelowFunc = f
@@ -155,12 +157,14 @@ func (p *KmakerConfigStateService) HasAuthorizer() bool {
 // func was wired, every (non-auth_disabled) RPC is rejected. auth_disabled
 // methods skip this call entirely (by annotation), so reaching here with a nil
 // func means a token-auth method was left unwired — that must never silently pass.
-func (p *KmakerConfigStateService) authorize(ctx context.Context, fullMethod string, req any) error {
+// It returns the verified token so the caller identity the handler receives
+// comes from this very check rather than a second, independent lookup.
+func (p *KmakerConfigStateService) authorize(ctx context.Context, fullMethod string, req any) (*wrapperToken.TokenWrapper, error) {
 	p.mu.RLock()
 	f := p.authorizeFunc
 	p.mu.RUnlock()
 	if f == nil {
-		return fmt.Errorf("authorizer not configured for %q — auth is mandatory and cannot be disabled", fullMethod)
+		return nil, fmt.Errorf("authorizer not configured for %q — auth is mandatory and cannot be disabled", fullMethod)
 	}
 	return f(ctx, fullMethod, req)
 }
@@ -168,24 +172,24 @@ func (p *KmakerConfigStateService) authorize(ctx context.Context, fullMethod str
 // authenticate checks token signature, audience, and expiry only. It is used as
 // a stream-open preflight before per-message namespace authorization.
 // Fail-closed: a nil authenticate func rejects rather than allows.
-func (p *KmakerConfigStateService) authenticate(ctx context.Context) error {
+func (p *KmakerConfigStateService) authenticate(ctx context.Context) (*wrapperToken.TokenWrapper, error) {
 	p.mu.RLock()
 	f := p.authenticateFunc
 	p.mu.RUnlock()
 	if f == nil {
-		return fmt.Errorf("authenticator not configured — auth is mandatory and cannot be disabled")
+		return nil, fmt.Errorf("authenticator not configured — auth is mandatory and cannot be disabled")
 	}
 	return f(ctx)
 }
 
 // authenticateAtOrBelow checks token signature/audience and then enforces a
 // fixed namespace target. Empty targetNamespace defaults to "/" in the authorizer.
-func (p *KmakerConfigStateService) authenticateAtOrBelow(ctx context.Context, targetNamespace string) error {
+func (p *KmakerConfigStateService) authenticateAtOrBelow(ctx context.Context, targetNamespace string) (*wrapperToken.TokenWrapper, error) {
 	p.mu.RLock()
 	f := p.authenticateAtOrBelowFunc
 	p.mu.RUnlock()
 	if f == nil {
-		return fmt.Errorf("authenticator not configured — auth is mandatory and cannot be disabled")
+		return nil, fmt.Errorf("authenticator not configured — auth is mandatory and cannot be disabled")
 	}
 	return f(ctx, targetNamespace)
 }
@@ -210,11 +214,34 @@ func (s KmakerConfigStateServiceValidatingServerStreamingServer[T]) Send(msg *T)
 	return s.ServerStreamingServer.Send(msg)
 }
 
+// KmakerConfigStateServiceGuardedServerStreamingServer refuses a frame its guard rejects,
+// carrying the guard's own status code through (a (spec.min_group_size) frame is
+// PermissionDenied, not a validation Internal). Unlike a filtering delegate it
+// withholds nothing: a stream that went quiet at exactly the threshold would
+// disclose the crossing by its silence.
+type KmakerConfigStateServiceGuardedServerStreamingServer[T any] struct {
+	grpc.ServerStreamingServer[T]
+	guard func(*T) error
+}
+
+func (s KmakerConfigStateServiceGuardedServerStreamingServer[T]) Send(msg *T) error {
+	if s.guard != nil {
+		if err := s.guard(msg); err != nil {
+			return err
+		}
+	}
+	return s.ServerStreamingServer.Send(msg)
+}
+
 type KmakerConfigStateServiceValidatingClientStreamingServer[Req, Res any] struct {
 	grpc.ClientStreamingServer[Req, Res]
 	authorizeReq func(*Req) error
-	validateReq  func(*Req) error
-	validateRes  func(*Res) error
+	// scopeReq is the per-message (spec.principal)/(spec.namespace) stamp-or-refuse.
+	// A request stream is not one request: the check runs on every inbound
+	// message, so a later one cannot name a principal an earlier one did not.
+	scopeReq    func(*Req) error
+	validateReq func(*Req) error
+	validateRes func(*Res) error
 }
 
 func (s KmakerConfigStateServiceValidatingClientStreamingServer[Req, Res]) Recv() (*Req, error) {
@@ -224,6 +251,11 @@ func (s KmakerConfigStateServiceValidatingClientStreamingServer[Req, Res]) Recv(
 	}
 	if s.authorizeReq != nil {
 		if err := s.authorizeReq(msg); err != nil {
+			return nil, err
+		}
+	}
+	if s.scopeReq != nil {
+		if err := s.scopeReq(msg); err != nil {
 			return nil, err
 		}
 	}
@@ -247,8 +279,12 @@ func (s KmakerConfigStateServiceValidatingClientStreamingServer[Req, Res]) SendA
 type KmakerConfigStateServiceValidatingBidiStreamingServer[Req, Res any] struct {
 	grpc.BidiStreamingServer[Req, Res]
 	authorizeReq func(*Req) error
-	validateReq  func(*Req) error
-	validateRes  func(*Res) error
+	// scopeReq is the per-message (spec.principal)/(spec.namespace) stamp-or-refuse.
+	// A request stream is not one request: the check runs on every inbound
+	// message, so a later one cannot name a principal an earlier one did not.
+	scopeReq    func(*Req) error
+	validateReq func(*Req) error
+	validateRes func(*Res) error
 }
 
 func (s KmakerConfigStateServiceValidatingBidiStreamingServer[Req, Res]) Recv() (*Req, error) {
@@ -258,6 +294,11 @@ func (s KmakerConfigStateServiceValidatingBidiStreamingServer[Req, Res]) Recv() 
 	}
 	if s.authorizeReq != nil {
 		if err := s.authorizeReq(msg); err != nil {
+			return nil, err
+		}
+	}
+	if s.scopeReq != nil {
+		if err := s.scopeReq(msg); err != nil {
 			return nil, err
 		}
 	}
@@ -285,7 +326,8 @@ func (p *KmakerConfigStateService) GetConfig(ctx context.Context, req *trace_pb.
 	isTracing := req.TraceId != ""
 	isNoop := isTracing && req.Noop
 
-	if err := p.authorize(ctx, "/services"+types.KmakerConfigStateService_GetConfig_FullMethodName, req); err != nil {
+	authTok, err := p.authorize(ctx, "/services"+types.KmakerConfigStateService_GetConfig_FullMethodName, req)
+	if err != nil {
 		return nil, err
 	}
 	if isTracing {
@@ -300,16 +342,16 @@ func (p *KmakerConfigStateService) GetConfig(ctx context.Context, req *trace_pb.
 		}
 	}
 
-	// Extract caller identity and request ID from context
+	// Caller identity is the token the auth check above verified.
 	requestID := servicemanager.RequestIDFromContext(ctx)
 	var caller *servicemanager.Caller
-	if tok := servicemanager.TokenFromContext(ctx); tok != nil {
-		caller = servicemanager.NewCaller(tok, requestID)
+	if authTok != nil {
+		caller = servicemanager.NewCaller(authTok, requestID)
 		zap.L().Debug("rpc",
 			zap.String("method", "/services"+types.KmakerConfigStateService_GetConfig_FullMethodName),
 			zap.String("request_id", requestID),
-			zap.String("sub", tok.GetSubject()),
-			zap.String("aud", tok.GetAudience()))
+			zap.String("sub", authTok.GetSubject()),
+			zap.String("aud", authTok.GetAudience()))
 	} else {
 		zap.L().Debug("rpc (no token)",
 			zap.String("method", "/services"+types.KmakerConfigStateService_GetConfig_FullMethodName),
@@ -363,7 +405,8 @@ func (p *KmakerConfigStateService) SetConfig(ctx context.Context, req *types.Con
 	isTracing := req.TraceId != ""
 	isNoop := isTracing && req.Noop
 
-	if err := p.authorize(ctx, "/services"+types.KmakerConfigStateService_SetConfig_FullMethodName, req); err != nil {
+	authTok, err := p.authorize(ctx, "/services"+types.KmakerConfigStateService_SetConfig_FullMethodName, req)
+	if err != nil {
 		return nil, err
 	}
 	// Validate request before invoking the handler.
@@ -383,16 +426,16 @@ func (p *KmakerConfigStateService) SetConfig(ctx context.Context, req *types.Con
 		}
 	}
 
-	// Extract caller identity and request ID from context
+	// Caller identity is the token the auth check above verified.
 	requestID := servicemanager.RequestIDFromContext(ctx)
 	var caller *servicemanager.Caller
-	if tok := servicemanager.TokenFromContext(ctx); tok != nil {
-		caller = servicemanager.NewCaller(tok, requestID)
+	if authTok != nil {
+		caller = servicemanager.NewCaller(authTok, requestID)
 		zap.L().Debug("rpc",
 			zap.String("method", "/services"+types.KmakerConfigStateService_SetConfig_FullMethodName),
 			zap.String("request_id", requestID),
-			zap.String("sub", tok.GetSubject()),
-			zap.String("aud", tok.GetAudience()))
+			zap.String("sub", authTok.GetSubject()),
+			zap.String("aud", authTok.GetAudience()))
 	} else {
 		zap.L().Debug("rpc (no token)",
 			zap.String("method", "/services"+types.KmakerConfigStateService_SetConfig_FullMethodName),
@@ -442,19 +485,20 @@ func (p *KmakerConfigStateService) SetConfig(ctx context.Context, req *types.Con
 
 // WatchConfig implements KmakerConfigStateService.WatchConfig (server streaming)
 func (p *KmakerConfigStateService) WatchConfig(req *trace_pb.TraceRequest, stream grpc.ServerStreamingServer[types.Config]) error {
-	if err := p.authorize(stream.Context(), "/services"+types.KmakerConfigStateService_WatchConfig_FullMethodName, req); err != nil {
+	authTok, err := p.authorize(stream.Context(), "/services"+types.KmakerConfigStateService_WatchConfig_FullMethodName, req)
+	if err != nil {
 		return err
 	}
-	// Extract caller identity and request ID from context
+	// Caller identity is the token the auth check above verified.
 	requestID := servicemanager.RequestIDFromContext(stream.Context())
 	var caller *servicemanager.Caller
-	if tok := servicemanager.TokenFromContext(stream.Context()); tok != nil {
-		caller = servicemanager.NewCaller(tok, requestID)
+	if authTok != nil {
+		caller = servicemanager.NewCaller(authTok, requestID)
 		zap.L().Debug("rpc",
 			zap.String("method", "/services"+types.KmakerConfigStateService_WatchConfig_FullMethodName),
 			zap.String("request_id", requestID),
-			zap.String("sub", tok.GetSubject()),
-			zap.String("aud", tok.GetAudience()))
+			zap.String("sub", authTok.GetSubject()),
+			zap.String("aud", authTok.GetAudience()))
 	} else {
 		zap.L().Debug("rpc (no token)",
 			zap.String("method", "/services"+types.KmakerConfigStateService_WatchConfig_FullMethodName),
@@ -466,7 +510,7 @@ func (p *KmakerConfigStateService) WatchConfig(req *trace_pb.TraceRequest, strea
 // RegisterKmakerConfigStateServiceMethodAuth registers per-method auth_services patterns with the Authorizer.
 // Called by ServiceManager after creating the Authorizer.
 func RegisterKmakerConfigStateServiceMethodAuth(auth grpcserver.Authorizer) {
-	auth.SetMethodAuth("GetConfig", []string{"kmaker"})
-	auth.SetMethodAuth("SetConfig", []string{"kmaker"})
-	auth.SetMethodAuth("WatchConfig", []string{"kmaker"})
+	auth.SetMethodAuth("kmaker.KmakerConfigStateService/GetConfig", []string{"kmaker"})
+	auth.SetMethodAuth("kmaker.KmakerConfigStateService/SetConfig", []string{"kmaker"})
+	auth.SetMethodAuth("kmaker.KmakerConfigStateService/WatchConfig", []string{"kmaker"})
 }

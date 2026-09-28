@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -29,7 +29,7 @@
 syntax = "proto3";
 
 package kmaker;
-option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/services/kmaker";
+option go_package = "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker";
 
 import "sys/spec.proto";
 import "sys/host.proto";
@@ -57,8 +57,10 @@ message Config {
   // by a Kubernetes Secret owned by operator.
   x509.X509CertChain signing_ca = 5;
 
-  // spiffe_prefix is the deployment prefix for kernel SPIFFE URI SANs.
-  // Certificates minted here receive spiffe://<spiffe_prefix>/kernel.
+  // spiffe_prefix is the SPIFFE trust domain for kernel SPIFFE URI SANs: the
+  // URI authority, so it must not contain '/'. Certificates minted here
+  // receive spiffe://<spiffe_prefix>/kernel. Operator supplies this from
+  // operator.Config.spiffe_prefix.
   string spiffe_prefix = 6;
 
   // token_audience is the required Kubernetes TokenReview audience.

@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -31,7 +31,7 @@
 syntax = "proto3";
 
 package userentitlements;
-option go_package = "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/vservices/userentitlements";
+option go_package = "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/vservices/userentitlements";
 
 import "sys/spec.proto";
 import "generated/entitlements.proto";
@@ -45,7 +45,7 @@ message EntitlementEvalInput {
   // Uses google.protobuf.Struct to preserve native JSON types (arrays, objects, booleans).
   google.protobuf.Struct claims = 1;
 
-  // namespace is the caller's project namespace (e.g. "/local/dev/drpepper").
+  // namespace is the caller's project namespace (e.g. "/tenants/drpepper").
   // OPA dispatches on it to run that project's policy. Empty = cluster-root policy.
   string namespace = 2;
   string trace_id = 200;
@@ -66,7 +66,7 @@ message EntitlementEvalResult {
   bool all_entitlements = 2;
 
   // namespace is the tenant namespace the policy assigns to this caller, as a
-  // leading-slash absolute path (e.g. "/local/dev/acme"). IDP+OPA live at the
+  // leading-slash absolute path (e.g. "/tenants/acme"). IDP+OPA live at the
   // tenant level, so this is the tenant subtree the caller's issuer/claims map
   // to. When empty, kernel falls back to the cluster-root namespace.
   string namespace = 3;

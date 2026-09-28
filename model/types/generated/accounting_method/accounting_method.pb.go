@@ -7,7 +7,7 @@
 //
 // IMPORTANT FOR AGENTS: Do NOT modify this generated code.
 // If changes are needed, update the tacplus compiler at:
-// gitlab.com/secondstarcavalier/schematic/tacplus
+// gitlab.com/seabeam/schematic/tacplus
 //
 // PUBLIC SURFACE CONTRACT:
 // Generated raw transport clients and internal wiring are tacplus implementation details.
@@ -22,7 +22,7 @@
 package accounting_method
 
 import (
-	services "gitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/services"
+	services "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/services"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -41,20 +41,25 @@ const (
 // Only one field will be set — the rest default to 0 (UNSPECIFIED)
 // and are not encoded by proto3, so there is no overhead.
 type AccountingMethod struct {
-	state         protoimpl.MessageState   `protogen:"open.v1"`
-	Sentinel      services.SentinelRPCs    `protobuf:"varint,5,opt,name=sentinel,proto3,enum=services.SentinelRPCs" json:"sentinel,omitempty"`
-	Gateway       services.GatewayRPCs     `protobuf:"varint,7,opt,name=gateway,proto3,enum=services.GatewayRPCs" json:"gateway,omitempty"`
-	Kernel        services.KernelRPCs      `protobuf:"varint,8,opt,name=kernel,proto3,enum=services.KernelRPCs" json:"kernel,omitempty"`
-	Eventbus      services.EventbusRPCs    `protobuf:"varint,18,opt,name=eventbus,proto3,enum=services.EventbusRPCs" json:"eventbus,omitempty"`
-	Oauth         services.OauthRPCs       `protobuf:"varint,21,opt,name=oauth,proto3,enum=services.OauthRPCs" json:"oauth,omitempty"`
-	Saml          services.SamlRPCs        `protobuf:"varint,38,opt,name=saml,proto3,enum=services.SamlRPCs" json:"saml,omitempty"`
-	Messaging     services.MessagingRPCs   `protobuf:"varint,53,opt,name=messaging,proto3,enum=services.MessagingRPCs" json:"messaging,omitempty"`
-	Scottyagent   services.ScottyagentRPCs `protobuf:"varint,54,opt,name=scottyagent,proto3,enum=services.ScottyagentRPCs" json:"scottyagent,omitempty"`
-	Mailbox       services.MailboxRPCs     `protobuf:"varint,55,opt,name=mailbox,proto3,enum=services.MailboxRPCs" json:"mailbox,omitempty"`
-	Llmsettings   services.LlmsettingsRPCs `protobuf:"varint,56,opt,name=llmsettings,proto3,enum=services.LlmsettingsRPCs" json:"llmsettings,omitempty"`
-	Scotty        services.ScottyRPCs      `protobuf:"varint,70,opt,name=scotty,proto3,enum=services.ScottyRPCs" json:"scotty,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState      `protogen:"open.v1"`
+	Sentinel       services.SentinelRPCs       `protobuf:"varint,5,opt,name=sentinel,proto3,enum=services.SentinelRPCs" json:"sentinel,omitempty"`
+	Gateway        services.GatewayRPCs        `protobuf:"varint,7,opt,name=gateway,proto3,enum=services.GatewayRPCs" json:"gateway,omitempty"`
+	Kernel         services.KernelRPCs         `protobuf:"varint,8,opt,name=kernel,proto3,enum=services.KernelRPCs" json:"kernel,omitempty"`
+	Eventbus       services.EventbusRPCs       `protobuf:"varint,18,opt,name=eventbus,proto3,enum=services.EventbusRPCs" json:"eventbus,omitempty"`
+	Oauth          services.OauthRPCs          `protobuf:"varint,21,opt,name=oauth,proto3,enum=services.OauthRPCs" json:"oauth,omitempty"`
+	Saml           services.SamlRPCs           `protobuf:"varint,38,opt,name=saml,proto3,enum=services.SamlRPCs" json:"saml,omitempty"`
+	Messaging      services.MessagingRPCs      `protobuf:"varint,53,opt,name=messaging,proto3,enum=services.MessagingRPCs" json:"messaging,omitempty"`
+	Scottyagent    services.ScottyagentRPCs    `protobuf:"varint,54,opt,name=scottyagent,proto3,enum=services.ScottyagentRPCs" json:"scottyagent,omitempty"`
+	Mailbox        services.MailboxRPCs        `protobuf:"varint,55,opt,name=mailbox,proto3,enum=services.MailboxRPCs" json:"mailbox,omitempty"`
+	Llmsettings    services.LlmsettingsRPCs    `protobuf:"varint,56,opt,name=llmsettings,proto3,enum=services.LlmsettingsRPCs" json:"llmsettings,omitempty"`
+	Personalauth   services.PersonalauthRPCs   `protobuf:"varint,57,opt,name=personalauth,proto3,enum=services.PersonalauthRPCs" json:"personalauth,omitempty"`
+	Scotty         services.ScottyRPCs         `protobuf:"varint,70,opt,name=scotty,proto3,enum=services.ScottyRPCs" json:"scotty,omitempty"`
+	Scottypersonal services.ScottypersonalRPCs `protobuf:"varint,72,opt,name=scottypersonal,proto3,enum=services.ScottypersonalRPCs" json:"scottypersonal,omitempty"`
+	Work           services.WorkRPCs           `protobuf:"varint,73,opt,name=work,proto3,enum=services.WorkRPCs" json:"work,omitempty"`
+	Profile        services.ProfileRPCs        `protobuf:"varint,76,opt,name=profile,proto3,enum=services.ProfileRPCs" json:"profile,omitempty"`
+	Docmanager     services.DocmanagerRPCs     `protobuf:"varint,80,opt,name=docmanager,proto3,enum=services.DocmanagerRPCs" json:"docmanager,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *AccountingMethod) Reset() {
@@ -157,6 +162,13 @@ func (x *AccountingMethod) GetLlmsettings() services.LlmsettingsRPCs {
 	return services.LlmsettingsRPCs(0)
 }
 
+func (x *AccountingMethod) GetPersonalauth() services.PersonalauthRPCs {
+	if x != nil {
+		return x.Personalauth
+	}
+	return services.PersonalauthRPCs(0)
+}
+
 func (x *AccountingMethod) GetScotty() services.ScottyRPCs {
 	if x != nil {
 		return x.Scotty
@@ -164,11 +176,39 @@ func (x *AccountingMethod) GetScotty() services.ScottyRPCs {
 	return services.ScottyRPCs(0)
 }
 
+func (x *AccountingMethod) GetScottypersonal() services.ScottypersonalRPCs {
+	if x != nil {
+		return x.Scottypersonal
+	}
+	return services.ScottypersonalRPCs(0)
+}
+
+func (x *AccountingMethod) GetWork() services.WorkRPCs {
+	if x != nil {
+		return x.Work
+	}
+	return services.WorkRPCs(0)
+}
+
+func (x *AccountingMethod) GetProfile() services.ProfileRPCs {
+	if x != nil {
+		return x.Profile
+	}
+	return services.ProfileRPCs(0)
+}
+
+func (x *AccountingMethod) GetDocmanager() services.DocmanagerRPCs {
+	if x != nil {
+		return x.Docmanager
+	}
+	return services.DocmanagerRPCs(0)
+}
+
 var File_generated_accounting_method_proto protoreflect.FileDescriptor
 
 const file_generated_accounting_method_proto_rawDesc = "" +
 	"\n" +
-	"!generated/accounting_method.proto\x12\x11accounting_method\x1a\x18generated/services.proto\"\xbc\x04\n" +
+	"!generated/accounting_method.proto\x12\x11accounting_method\x1a\x18generated/services.proto\"\xd5\x06\n" +
 	"\x10AccountingMethod\x122\n" +
 	"\bsentinel\x18\x05 \x01(\x0e2\x16.services.SentinelRPCsR\bsentinel\x12/\n" +
 	"\agateway\x18\a \x01(\x0e2\x15.services.GatewayRPCsR\agateway\x12,\n" +
@@ -179,8 +219,15 @@ const file_generated_accounting_method_proto_rawDesc = "" +
 	"\tmessaging\x185 \x01(\x0e2\x17.services.MessagingRPCsR\tmessaging\x12;\n" +
 	"\vscottyagent\x186 \x01(\x0e2\x19.services.ScottyagentRPCsR\vscottyagent\x12/\n" +
 	"\amailbox\x187 \x01(\x0e2\x15.services.MailboxRPCsR\amailbox\x12;\n" +
-	"\vllmsettings\x188 \x01(\x0e2\x19.services.LlmsettingsRPCsR\vllmsettings\x12,\n" +
-	"\x06scotty\x18F \x01(\x0e2\x14.services.ScottyRPCsR\x06scottyBjZhgitlab.com/secondstarcavalier/schematic/platform/services/kmaker/model/types/generated/accounting_methodb\x06proto3"
+	"\vllmsettings\x188 \x01(\x0e2\x19.services.LlmsettingsRPCsR\vllmsettings\x12>\n" +
+	"\fpersonalauth\x189 \x01(\x0e2\x1a.services.PersonalauthRPCsR\fpersonalauth\x12,\n" +
+	"\x06scotty\x18F \x01(\x0e2\x14.services.ScottyRPCsR\x06scotty\x12D\n" +
+	"\x0escottypersonal\x18H \x01(\x0e2\x1c.services.ScottypersonalRPCsR\x0escottypersonal\x12&\n" +
+	"\x04work\x18I \x01(\x0e2\x12.services.WorkRPCsR\x04work\x12/\n" +
+	"\aprofile\x18L \x01(\x0e2\x15.services.ProfileRPCsR\aprofile\x128\n" +
+	"\n" +
+	"docmanager\x18P \x01(\x0e2\x18.services.DocmanagerRPCsR\n" +
+	"docmanagerB_Z]gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/accounting_methodb\x06proto3"
 
 var (
 	file_generated_accounting_method_proto_rawDescOnce sync.Once
@@ -196,18 +243,23 @@ func file_generated_accounting_method_proto_rawDescGZIP() []byte {
 
 var file_generated_accounting_method_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_generated_accounting_method_proto_goTypes = []any{
-	(*AccountingMethod)(nil),      // 0: accounting_method.AccountingMethod
-	(services.SentinelRPCs)(0),    // 1: services.SentinelRPCs
-	(services.GatewayRPCs)(0),     // 2: services.GatewayRPCs
-	(services.KernelRPCs)(0),      // 3: services.KernelRPCs
-	(services.EventbusRPCs)(0),    // 4: services.EventbusRPCs
-	(services.OauthRPCs)(0),       // 5: services.OauthRPCs
-	(services.SamlRPCs)(0),        // 6: services.SamlRPCs
-	(services.MessagingRPCs)(0),   // 7: services.MessagingRPCs
-	(services.ScottyagentRPCs)(0), // 8: services.ScottyagentRPCs
-	(services.MailboxRPCs)(0),     // 9: services.MailboxRPCs
-	(services.LlmsettingsRPCs)(0), // 10: services.LlmsettingsRPCs
-	(services.ScottyRPCs)(0),      // 11: services.ScottyRPCs
+	(*AccountingMethod)(nil),         // 0: accounting_method.AccountingMethod
+	(services.SentinelRPCs)(0),       // 1: services.SentinelRPCs
+	(services.GatewayRPCs)(0),        // 2: services.GatewayRPCs
+	(services.KernelRPCs)(0),         // 3: services.KernelRPCs
+	(services.EventbusRPCs)(0),       // 4: services.EventbusRPCs
+	(services.OauthRPCs)(0),          // 5: services.OauthRPCs
+	(services.SamlRPCs)(0),           // 6: services.SamlRPCs
+	(services.MessagingRPCs)(0),      // 7: services.MessagingRPCs
+	(services.ScottyagentRPCs)(0),    // 8: services.ScottyagentRPCs
+	(services.MailboxRPCs)(0),        // 9: services.MailboxRPCs
+	(services.LlmsettingsRPCs)(0),    // 10: services.LlmsettingsRPCs
+	(services.PersonalauthRPCs)(0),   // 11: services.PersonalauthRPCs
+	(services.ScottyRPCs)(0),         // 12: services.ScottyRPCs
+	(services.ScottypersonalRPCs)(0), // 13: services.ScottypersonalRPCs
+	(services.WorkRPCs)(0),           // 14: services.WorkRPCs
+	(services.ProfileRPCs)(0),        // 15: services.ProfileRPCs
+	(services.DocmanagerRPCs)(0),     // 16: services.DocmanagerRPCs
 }
 var file_generated_accounting_method_proto_depIdxs = []int32{
 	1,  // 0: accounting_method.AccountingMethod.sentinel:type_name -> services.SentinelRPCs
@@ -220,12 +272,17 @@ var file_generated_accounting_method_proto_depIdxs = []int32{
 	8,  // 7: accounting_method.AccountingMethod.scottyagent:type_name -> services.ScottyagentRPCs
 	9,  // 8: accounting_method.AccountingMethod.mailbox:type_name -> services.MailboxRPCs
 	10, // 9: accounting_method.AccountingMethod.llmsettings:type_name -> services.LlmsettingsRPCs
-	11, // 10: accounting_method.AccountingMethod.scotty:type_name -> services.ScottyRPCs
-	11, // [11:11] is the sub-list for method output_type
-	11, // [11:11] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	11, // 10: accounting_method.AccountingMethod.personalauth:type_name -> services.PersonalauthRPCs
+	12, // 11: accounting_method.AccountingMethod.scotty:type_name -> services.ScottyRPCs
+	13, // 12: accounting_method.AccountingMethod.scottypersonal:type_name -> services.ScottypersonalRPCs
+	14, // 13: accounting_method.AccountingMethod.work:type_name -> services.WorkRPCs
+	15, // 14: accounting_method.AccountingMethod.profile:type_name -> services.ProfileRPCs
+	16, // 15: accounting_method.AccountingMethod.docmanager:type_name -> services.DocmanagerRPCs
+	16, // [16:16] is the sub-list for method output_type
+	16, // [16:16] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_generated_accounting_method_proto_init() }
