@@ -103136,7 +103136,6 @@ func ValidateMapEmptyWithDepth(m *MapEmpty, depth int) error {
 // Constants
 // ============================================================
 const (
-	RestRootPath                       string = "/api/v1"
 	SigningKeyFile                     string = "signing_key.json"
 	MinDataCopies                      int64  = 3
 	DefaultListenerPort                int64  = 5000

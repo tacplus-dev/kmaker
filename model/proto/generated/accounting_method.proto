@@ -16,7 +16,6 @@ message AccountingMethod {
   services.KernelRPCs kernel = 8;
   services.EventbusRPCs eventbus = 18;
   services.OauthRPCs oauth = 21;
-  services.SamlRPCs saml = 38;
   services.MessagingRPCs messaging = 53;
   services.ScottyagentRPCs scottyagent = 54;
   services.MailboxRPCs mailbox = 55;

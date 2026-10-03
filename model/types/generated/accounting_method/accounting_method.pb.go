@@ -47,7 +47,6 @@ type AccountingMethod struct {
 	Kernel         services.KernelRPCs         `protobuf:"varint,8,opt,name=kernel,proto3,enum=services.KernelRPCs" json:"kernel,omitempty"`
 	Eventbus       services.EventbusRPCs       `protobuf:"varint,18,opt,name=eventbus,proto3,enum=services.EventbusRPCs" json:"eventbus,omitempty"`
 	Oauth          services.OauthRPCs          `protobuf:"varint,21,opt,name=oauth,proto3,enum=services.OauthRPCs" json:"oauth,omitempty"`
-	Saml           services.SamlRPCs           `protobuf:"varint,38,opt,name=saml,proto3,enum=services.SamlRPCs" json:"saml,omitempty"`
 	Messaging      services.MessagingRPCs      `protobuf:"varint,53,opt,name=messaging,proto3,enum=services.MessagingRPCs" json:"messaging,omitempty"`
 	Scottyagent    services.ScottyagentRPCs    `protobuf:"varint,54,opt,name=scottyagent,proto3,enum=services.ScottyagentRPCs" json:"scottyagent,omitempty"`
 	Mailbox        services.MailboxRPCs        `protobuf:"varint,55,opt,name=mailbox,proto3,enum=services.MailboxRPCs" json:"mailbox,omitempty"`
@@ -127,13 +126,6 @@ func (x *AccountingMethod) GetOauth() services.OauthRPCs {
 	return services.OauthRPCs(0)
 }
 
-func (x *AccountingMethod) GetSaml() services.SamlRPCs {
-	if x != nil {
-		return x.Saml
-	}
-	return services.SamlRPCs(0)
-}
-
 func (x *AccountingMethod) GetMessaging() services.MessagingRPCs {
 	if x != nil {
 		return x.Messaging
@@ -208,14 +200,13 @@ var File_generated_accounting_method_proto protoreflect.FileDescriptor
 
 const file_generated_accounting_method_proto_rawDesc = "" +
 	"\n" +
-	"!generated/accounting_method.proto\x12\x11accounting_method\x1a\x18generated/services.proto\"\xd5\x06\n" +
+	"!generated/accounting_method.proto\x12\x11accounting_method\x1a\x18generated/services.proto\"\xad\x06\n" +
 	"\x10AccountingMethod\x122\n" +
 	"\bsentinel\x18\x05 \x01(\x0e2\x16.services.SentinelRPCsR\bsentinel\x12/\n" +
 	"\agateway\x18\a \x01(\x0e2\x15.services.GatewayRPCsR\agateway\x12,\n" +
 	"\x06kernel\x18\b \x01(\x0e2\x14.services.KernelRPCsR\x06kernel\x122\n" +
 	"\beventbus\x18\x12 \x01(\x0e2\x16.services.EventbusRPCsR\beventbus\x12)\n" +
-	"\x05oauth\x18\x15 \x01(\x0e2\x13.services.OauthRPCsR\x05oauth\x12&\n" +
-	"\x04saml\x18& \x01(\x0e2\x12.services.SamlRPCsR\x04saml\x125\n" +
+	"\x05oauth\x18\x15 \x01(\x0e2\x13.services.OauthRPCsR\x05oauth\x125\n" +
 	"\tmessaging\x185 \x01(\x0e2\x17.services.MessagingRPCsR\tmessaging\x12;\n" +
 	"\vscottyagent\x186 \x01(\x0e2\x19.services.ScottyagentRPCsR\vscottyagent\x12/\n" +
 	"\amailbox\x187 \x01(\x0e2\x15.services.MailboxRPCsR\amailbox\x12;\n" +
@@ -249,17 +240,16 @@ var file_generated_accounting_method_proto_goTypes = []any{
 	(services.KernelRPCs)(0),         // 3: services.KernelRPCs
 	(services.EventbusRPCs)(0),       // 4: services.EventbusRPCs
 	(services.OauthRPCs)(0),          // 5: services.OauthRPCs
-	(services.SamlRPCs)(0),           // 6: services.SamlRPCs
-	(services.MessagingRPCs)(0),      // 7: services.MessagingRPCs
-	(services.ScottyagentRPCs)(0),    // 8: services.ScottyagentRPCs
-	(services.MailboxRPCs)(0),        // 9: services.MailboxRPCs
-	(services.LlmsettingsRPCs)(0),    // 10: services.LlmsettingsRPCs
-	(services.PersonalauthRPCs)(0),   // 11: services.PersonalauthRPCs
-	(services.ScottyRPCs)(0),         // 12: services.ScottyRPCs
-	(services.ScottypersonalRPCs)(0), // 13: services.ScottypersonalRPCs
-	(services.WorkRPCs)(0),           // 14: services.WorkRPCs
-	(services.ProfileRPCs)(0),        // 15: services.ProfileRPCs
-	(services.DocmanagerRPCs)(0),     // 16: services.DocmanagerRPCs
+	(services.MessagingRPCs)(0),      // 6: services.MessagingRPCs
+	(services.ScottyagentRPCs)(0),    // 7: services.ScottyagentRPCs
+	(services.MailboxRPCs)(0),        // 8: services.MailboxRPCs
+	(services.LlmsettingsRPCs)(0),    // 9: services.LlmsettingsRPCs
+	(services.PersonalauthRPCs)(0),   // 10: services.PersonalauthRPCs
+	(services.ScottyRPCs)(0),         // 11: services.ScottyRPCs
+	(services.ScottypersonalRPCs)(0), // 12: services.ScottypersonalRPCs
+	(services.WorkRPCs)(0),           // 13: services.WorkRPCs
+	(services.ProfileRPCs)(0),        // 14: services.ProfileRPCs
+	(services.DocmanagerRPCs)(0),     // 15: services.DocmanagerRPCs
 }
 var file_generated_accounting_method_proto_depIdxs = []int32{
 	1,  // 0: accounting_method.AccountingMethod.sentinel:type_name -> services.SentinelRPCs
@@ -267,22 +257,21 @@ var file_generated_accounting_method_proto_depIdxs = []int32{
 	3,  // 2: accounting_method.AccountingMethod.kernel:type_name -> services.KernelRPCs
 	4,  // 3: accounting_method.AccountingMethod.eventbus:type_name -> services.EventbusRPCs
 	5,  // 4: accounting_method.AccountingMethod.oauth:type_name -> services.OauthRPCs
-	6,  // 5: accounting_method.AccountingMethod.saml:type_name -> services.SamlRPCs
-	7,  // 6: accounting_method.AccountingMethod.messaging:type_name -> services.MessagingRPCs
-	8,  // 7: accounting_method.AccountingMethod.scottyagent:type_name -> services.ScottyagentRPCs
-	9,  // 8: accounting_method.AccountingMethod.mailbox:type_name -> services.MailboxRPCs
-	10, // 9: accounting_method.AccountingMethod.llmsettings:type_name -> services.LlmsettingsRPCs
-	11, // 10: accounting_method.AccountingMethod.personalauth:type_name -> services.PersonalauthRPCs
-	12, // 11: accounting_method.AccountingMethod.scotty:type_name -> services.ScottyRPCs
-	13, // 12: accounting_method.AccountingMethod.scottypersonal:type_name -> services.ScottypersonalRPCs
-	14, // 13: accounting_method.AccountingMethod.work:type_name -> services.WorkRPCs
-	15, // 14: accounting_method.AccountingMethod.profile:type_name -> services.ProfileRPCs
-	16, // 15: accounting_method.AccountingMethod.docmanager:type_name -> services.DocmanagerRPCs
-	16, // [16:16] is the sub-list for method output_type
-	16, // [16:16] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	6,  // 5: accounting_method.AccountingMethod.messaging:type_name -> services.MessagingRPCs
+	7,  // 6: accounting_method.AccountingMethod.scottyagent:type_name -> services.ScottyagentRPCs
+	8,  // 7: accounting_method.AccountingMethod.mailbox:type_name -> services.MailboxRPCs
+	9,  // 8: accounting_method.AccountingMethod.llmsettings:type_name -> services.LlmsettingsRPCs
+	10, // 9: accounting_method.AccountingMethod.personalauth:type_name -> services.PersonalauthRPCs
+	11, // 10: accounting_method.AccountingMethod.scotty:type_name -> services.ScottyRPCs
+	12, // 11: accounting_method.AccountingMethod.scottypersonal:type_name -> services.ScottypersonalRPCs
+	13, // 12: accounting_method.AccountingMethod.work:type_name -> services.WorkRPCs
+	14, // 13: accounting_method.AccountingMethod.profile:type_name -> services.ProfileRPCs
+	15, // 14: accounting_method.AccountingMethod.docmanager:type_name -> services.DocmanagerRPCs
+	15, // [15:15] is the sub-list for method output_type
+	15, // [15:15] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_generated_accounting_method_proto_init() }

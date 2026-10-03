@@ -149,8 +149,12 @@ message Topology {
   // writes however many search members are running.
   int32 stratum_search_nodes = 22;
 
-  // saml_nodes is used when optional_services.saml = true.
-  int32 saml_nodes       = 13;
+  // 13 held saml_nodes. SAML went to the boneyard 2026-10-02 (D29 amendment 2)
+  // — removed from the product, proto deleted — so the topology cannot ask for
+  // replicas of it. Same treatment as timedb/graphdb above: reserved, not
+  // silently reused.
+  reserved 13;
+  reserved "saml_nodes";
 
   // kmaker_nodes is the number of bootstrap certificate authority replicas.
   // Kernel instances contact kmaker with Kubernetes projected service account
@@ -219,9 +223,10 @@ message OptionalServices {
   reserved 1, 2, 3, 4, 5;
   reserved "anthropic", "openai", "gitlab", "github", "mcp";
 
-  // SAML identity provider bridge — saml_nodes replicas when enabled.
-  // Disabled by default.
-  bool saml      = 6;
+  // 6 held saml, the SAML identity provider bridge. SAML went to the boneyard
+  // 2026-10-02 (D29 amendment 2): reserved, not silently reused.
+  reserved 6;
+  reserved "saml";
 
   // OAuth2/OIDC broker — oauth_nodes replicas when enabled.
   // Enabled by default.
@@ -442,6 +447,26 @@ message Config {
   // fine for local and dev clusters, but then the address changes on every
   // re-render and any DNS record pointing at it goes stale.
   string external_ip = 23;
+
+  // extra_hostnames are public names served IN ADDITION to fqdn (e.g. a second
+  // domain during a cutover). The operator renders fqdn followed by these into
+  // the gateway's external_hostnames and letsencrypt's hostnames. fqdn stays
+  // the primary name: the OIDC issuer and every other single-name use of fqdn
+  // ignore this field.
+  //
+  // Not usable until N-cert/SNI (option b) exists: certmagic issues one
+  // single-name certificate per name (not one multi-SAN cert), letsencrypt
+  // publishes only fqdn's, and the gateway has no SNI selection — an extra name
+  // is served fqdn's certificate and fails TLS name checks. Leave empty.
+  repeated string extra_hostnames = 24;
+
+  // image_digests pins service images by digest. Key is the image name (the
+  // registry project, equal to the service name for every platform service);
+  // value is a manifest digest "sha256:<hex>". A pinned image renders as
+  // <repository>@<digest> in place of <repository>:<tag>; an image with no
+  // entry keeps its tag. Loaded from images.yaml (written by
+  // scripts/promote.sh), not operator.yaml.
+  map<string, string> image_digests = 25;
   string trace_id = 200;
   bool noop = 201;
 }

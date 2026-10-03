@@ -82,7 +82,7 @@ message ProxyPolicyEvalResult {
   // external token's aud claim. The caller's original aud is always preserved —
   // OPA may only add audiences, never replace or remove the original.
   // Most policies leave this empty. Set it when the upstream requires a specific
-  // audience value (e.g. an OIDC client ID or SAML SP entity ID) in addition to
+  // audience value (e.g. an OIDC client ID) in addition to
   // the caller's existing aud.
   repeated string append_aud = 4;
 
@@ -94,7 +94,6 @@ message ProxyPolicyEvalResult {
 
   // auth_type determines the credential format kernel returns to the proxy.
   // TOKEN_TYPE_JWT (default): kernel returns a signed JWT in the response.
-  // TOKEN_TYPE_SAML: kernel returns a SAML assertion in the response.
   // Unset is treated as TOKEN_TYPE_JWT.
   token.TokenType auth_type = 6;
 

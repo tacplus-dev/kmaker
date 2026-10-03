@@ -351,8 +351,6 @@ type Topology struct {
 	// (stratum_nodes) only, and a cluster with fewer writers than the floor refuses
 	// writes however many search members are running.
 	StratumSearchNodes int32 `protobuf:"varint,22,opt,name=stratum_search_nodes,json=stratumSearchNodes,proto3" json:"stratum_search_nodes,omitempty"`
-	// saml_nodes is used when optional_services.saml = true.
-	SamlNodes int32 `protobuf:"varint,13,opt,name=saml_nodes,json=samlNodes,proto3" json:"saml_nodes,omitempty"`
 	// kmaker_nodes is the number of bootstrap certificate authority replicas.
 	// Kernel instances contact kmaker with Kubernetes projected service account
 	// tokens to obtain kernel certificates before kernel itself is available.
@@ -492,13 +490,6 @@ func (x *Topology) GetStratumSearchNodes() int32 {
 	return 0
 }
 
-func (x *Topology) GetSamlNodes() int32 {
-	if x != nil {
-		return x.SamlNodes
-	}
-	return 0
-}
-
 func (x *Topology) GetKmakerNodes() int32 {
 	if x != nil {
 		return x.KmakerNodes
@@ -565,9 +556,6 @@ func (x *Topology) GetNoop() bool {
 // OptionalServices controls which optional services are enabled.
 type OptionalServices struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// SAML identity provider bridge — saml_nodes replicas when enabled.
-	// Disabled by default.
-	Saml bool `protobuf:"varint,6,opt,name=saml,proto3" json:"saml,omitempty"`
 	// OAuth2/OIDC broker — oauth_nodes replicas when enabled.
 	// Enabled by default.
 	Oauth bool `protobuf:"varint,7,opt,name=oauth,proto3" json:"oauth,omitempty"`
@@ -633,13 +621,6 @@ func (x *OptionalServices) ProtoReflect() protoreflect.Message {
 // Deprecated: Use OptionalServices.ProtoReflect.Descriptor instead.
 func (*OptionalServices) Descriptor() ([]byte, []int) {
 	return file_services_operator_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *OptionalServices) GetSaml() bool {
-	if x != nil {
-		return x.Saml
-	}
-	return false
 }
 
 func (x *OptionalServices) GetOauth() bool {
@@ -945,9 +926,27 @@ type Config struct {
 	// Leave empty to let the provider assign an ephemeral address per Service —
 	// fine for local and dev clusters, but then the address changes on every
 	// re-render and any DNS record pointing at it goes stale.
-	ExternalIp    string `protobuf:"bytes,23,opt,name=external_ip,json=externalIp,proto3" json:"external_ip,omitempty"`
-	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	ExternalIp string `protobuf:"bytes,23,opt,name=external_ip,json=externalIp,proto3" json:"external_ip,omitempty"`
+	// extra_hostnames are public names served IN ADDITION to fqdn (e.g. a second
+	// domain during a cutover). The operator renders fqdn followed by these into
+	// the gateway's external_hostnames and letsencrypt's hostnames. fqdn stays
+	// the primary name: the OIDC issuer and every other single-name use of fqdn
+	// ignore this field.
+	//
+	// Not usable until N-cert/SNI (option b) exists: certmagic issues one
+	// single-name certificate per name (not one multi-SAN cert), letsencrypt
+	// publishes only fqdn's, and the gateway has no SNI selection — an extra name
+	// is served fqdn's certificate and fails TLS name checks. Leave empty.
+	ExtraHostnames []string `protobuf:"bytes,24,rep,name=extra_hostnames,json=extraHostnames,proto3" json:"extra_hostnames,omitempty"`
+	// image_digests pins service images by digest. Key is the image name (the
+	// registry project, equal to the service name for every platform service);
+	// value is a manifest digest "sha256:<hex>". A pinned image renders as
+	// <repository>@<digest> in place of <repository>:<tag>; an image with no
+	// entry keeps its tag. Loaded from images.yaml (written by
+	// scripts/promote.sh), not operator.yaml.
+	ImageDigests  map[string]string `protobuf:"bytes,25,rep,name=image_digests,json=imageDigests,proto3" json:"image_digests,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	TraceId       string            `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop          bool              `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1129,6 +1128,20 @@ func (x *Config) GetExternalIp() string {
 	return ""
 }
 
+func (x *Config) GetExtraHostnames() []string {
+	if x != nil {
+		return x.ExtraHostnames
+	}
+	return nil
+}
+
+func (x *Config) GetImageDigests() map[string]string {
+	if x != nil {
+		return x.ImageDigests
+	}
+	return nil
+}
+
 func (x *Config) GetTraceId() string {
 	if x != nil {
 		return x.TraceId
@@ -1267,7 +1280,7 @@ const file_services_operator_proto_rawDesc = "" +
 	"\x02ca\x18\x02 \x01(\v2\x13.x509.X509CertChainR\x02ca\x12\x14\n" +
 	"\x05email\x18\x03 \x01(\tR\x05email\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x9d\a\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\"\x8a\a\n" +
 	"\bTopology\x12'\n" +
 	"\fkernel_nodes\x18\x01 \x01(\x05B\x04\x90\xa8\x1d\x03R\vkernelNodes\x12+\n" +
 	"\x0esentinel_nodes\x18\x02 \x01(\x05B\x04\x90\xa8\x1d\x03R\rsentinelNodes\x12+\n" +
@@ -1277,9 +1290,7 @@ const file_services_operator_proto_rawDesc = "" +
 	"oauthNodes\x12!\n" +
 	"\topa_nodes\x18\a \x01(\x05B\x04\x90\xa8\x1d\x03R\bopaNodes\x12)\n" +
 	"\rstratum_nodes\x18\f \x01(\x05B\x04\x90\xa8\x1d\x03R\fstratumNodes\x120\n" +
-	"\x14stratum_search_nodes\x18\x16 \x01(\x05R\x12stratumSearchNodes\x12#\n" +
-	"\n" +
-	"saml_nodes\x18\r \x01(\x05B\x04\x90\xa8\x1d\x03R\tsamlNodes\x12'\n" +
+	"\x14stratum_search_nodes\x18\x16 \x01(\x05R\x12stratumSearchNodes\x12'\n" +
 	"\fkmaker_nodes\x18\x10 \x01(\x05B\x04\x90\xa8\x1d\x03R\vkmakerNodes\x12#\n" +
 	"\n" +
 	"echo_nodes\x18\x11 \x01(\x05B\x04\x90\xa8\x1d\x01R\techoNodes\x12-\n" +
@@ -1293,9 +1304,9 @@ const file_services_operator_proto_rawDesc = "" +
 	"\x10AppServicesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01J\x04\b\x06\x10\aJ\x04\b\b\x10\tJ\x04\b\t\x10\n" +
-	"J\x04\b\v\x10\fR\x10msggateway_nodesR\ftimedb_nodesR\rgraphdb_nodesR\vargus_nodes\"\xe9\x02\n" +
-	"\x10OptionalServices\x12\x12\n" +
-	"\x04saml\x18\x06 \x01(\bR\x04saml\x12\x1a\n" +
+	"J\x04\b\v\x10\fJ\x04\b\r\x10\x0eR\x10msggateway_nodesR\ftimedb_nodesR\rgraphdb_nodesR\vargus_nodesR\n" +
+	"saml_nodes\"\xe1\x02\n" +
+	"\x10OptionalServices\x12\x1a\n" +
 	"\x05oauth\x18\a \x01(\bB\x04\xa0\xa8\x1d\x01R\x05oauth\x12 \n" +
 	"\bkeycloak\x18\b \x01(\bB\x04\xa0\xa8\x1d\x01R\bkeycloak\x12\x12\n" +
 	"\x04echo\x18\t \x01(\bR\x04echo\x12\x1c\n" +
@@ -1305,7 +1316,7 @@ const file_services_operator_proto_rawDesc = "" +
 	"\fpersonalauth\x18\f \x01(\bR\fpersonalauth\x12\x1c\n" +
 	"\tblobstore\x18\r \x01(\bR\tblobstore\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopJ\x04\b\x01\x10\x02J\x04\b\x02\x10\x03J\x04\b\x03\x10\x04J\x04\b\x04\x10\x05J\x04\b\x05\x10\x06R\tanthropicR\x06openaiR\x06gitlabR\x06githubR\x03mcp\"\xea\x03\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopJ\x04\b\x01\x10\x02J\x04\b\x02\x10\x03J\x04\b\x03\x10\x04J\x04\b\x04\x10\x05J\x04\b\x05\x10\x06J\x04\b\x06\x10\aR\tanthropicR\x06openaiR\x06gitlabR\x06githubR\x03mcpR\x04saml\"\xea\x03\n" +
 	"\x03PKI\x12,\n" +
 	"\aroot_ca\x18\x01 \x01(\v2\x13.x509.X509CertChainR\x06rootCa\x122\n" +
 	"\n" +
@@ -1316,7 +1327,7 @@ const file_services_operator_proto_rawDesc = "" +
 	"\x0fedge_signing_ca\x18\x06 \x03(\v2\x13.x509.X509CertChainB\x05\xb8\xa8\x1d\x80\bR\redgeSigningCa\x12?\n" +
 	"\x11kmaker_signing_ca\x18\a \x01(\v2\x13.x509.X509CertChainR\x0fkmakerSigningCa\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopJ\x04\b\b\x10\tR\x13blobstore_token_key\"\xbb\a\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopJ\x04\b\b\x10\tR\x13blobstore_token_key\"\xfb\b\n" +
 	"\x06Config\x12*\n" +
 	"\x04mode\x18\x01 \x01(\x0e2\x16.operator.OperatorModeR\x04mode\x12\x12\n" +
 	"\x04fqdn\x18\x03 \x01(\tR\x04fqdn\x12\x19\n" +
@@ -1342,9 +1353,14 @@ const file_services_operator_proto_rawDesc = "" +
 	"\x17llm_credential_services\x18\x15 \x03(\tB\x04\xb8\xa8\x1d@R\x15llmCredentialServices\x12\x1e\n" +
 	"\atenants\x18\x16 \x03(\tB\x04\xb8\xa8\x1d@R\atenants\x12\x1f\n" +
 	"\vexternal_ip\x18\x17 \x01(\tR\n" +
-	"externalIp\x12\x1a\n" +
+	"externalIp\x12-\n" +
+	"\x0fextra_hostnames\x18\x18 \x03(\tB\x04\xb8\xa8\x1d\x10R\x0eextraHostnames\x12N\n" +
+	"\rimage_digests\x18\x19 \x03(\v2\".operator.Config.ImageDigestsEntryB\x05\xb8\xa8\x1d\x80\x02R\fimageDigests\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
-	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop:\x0eҨ\x1d\n" +
+	"\x04noop\x18\xc9\x01 \x01(\bR\x04noop\x1a?\n" +
+	"\x11ImageDigestsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:\x0eҨ\x1d\n" +
 	"\n" +
 	"\boperator\"\x99\x01\n" +
 	"\x13OperatorConfigState\x12.\n" +
@@ -1397,7 +1413,7 @@ func file_services_operator_proto_rawDescGZIP() []byte {
 }
 
 var file_services_operator_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_services_operator_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_services_operator_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_services_operator_proto_goTypes = []any{
 	(OperatorMode)(0),                    // 0: operator.OperatorMode
 	(TypeID)(0),                          // 1: operator.TypeID
@@ -1410,42 +1426,44 @@ var file_services_operator_proto_goTypes = []any{
 	(*OperatorConfigState)(nil),          // 8: operator.OperatorConfigState
 	(*MapEmpty)(nil),                     // 9: operator.MapEmpty
 	nil,                                  // 10: operator.Topology.AppServicesEntry
-	(*x509.X509CertChain)(nil),           // 11: x509.X509CertChain
-	(*credentials.CredPair)(nil),         // 12: credentials.CredPair
-	(*oauth.ClusterOAuthConfig)(nil),     // 13: oauth.ClusterOAuthConfig
-	(*kmaker.Config)(nil),                // 14: kmaker.Config
-	(*trace.TraceRequest)(nil),           // 15: trace.TraceRequest
+	nil,                                  // 11: operator.Config.ImageDigestsEntry
+	(*x509.X509CertChain)(nil),           // 12: x509.X509CertChain
+	(*credentials.CredPair)(nil),         // 13: credentials.CredPair
+	(*oauth.ClusterOAuthConfig)(nil),     // 14: oauth.ClusterOAuthConfig
+	(*kmaker.Config)(nil),                // 15: kmaker.Config
+	(*trace.TraceRequest)(nil),           // 16: trace.TraceRequest
 }
 var file_services_operator_proto_depIdxs = []int32{
-	11, // 0: operator.TLSConfig.ca:type_name -> x509.X509CertChain
+	12, // 0: operator.TLSConfig.ca:type_name -> x509.X509CertChain
 	10, // 1: operator.Topology.app_services:type_name -> operator.Topology.AppServicesEntry
-	11, // 2: operator.PKI.root_ca:type_name -> x509.X509CertChain
-	11, // 3: operator.PKI.cluster_ca:type_name -> x509.X509CertChain
-	11, // 4: operator.PKI.node_tls:type_name -> x509.X509CertChain
-	11, // 5: operator.PKI.node_signing_ca:type_name -> x509.X509CertChain
-	11, // 6: operator.PKI.edge_tls:type_name -> x509.X509CertChain
-	11, // 7: operator.PKI.edge_signing_ca:type_name -> x509.X509CertChain
-	11, // 8: operator.PKI.kmaker_signing_ca:type_name -> x509.X509CertChain
+	12, // 2: operator.PKI.root_ca:type_name -> x509.X509CertChain
+	12, // 3: operator.PKI.cluster_ca:type_name -> x509.X509CertChain
+	12, // 4: operator.PKI.node_tls:type_name -> x509.X509CertChain
+	12, // 5: operator.PKI.node_signing_ca:type_name -> x509.X509CertChain
+	12, // 6: operator.PKI.edge_tls:type_name -> x509.X509CertChain
+	12, // 7: operator.PKI.edge_signing_ca:type_name -> x509.X509CertChain
+	12, // 8: operator.PKI.kmaker_signing_ca:type_name -> x509.X509CertChain
 	0,  // 9: operator.Config.mode:type_name -> operator.OperatorMode
 	4,  // 10: operator.Config.topology:type_name -> operator.Topology
 	3,  // 11: operator.Config.tls:type_name -> operator.TLSConfig
 	6,  // 12: operator.Config.pki:type_name -> operator.PKI
 	5,  // 13: operator.Config.optional_services:type_name -> operator.OptionalServices
-	12, // 14: operator.Config.root_cred_pairs:type_name -> credentials.CredPair
-	13, // 15: operator.Config.cluster_oauth:type_name -> oauth.ClusterOAuthConfig
-	14, // 16: operator.Config.kmaker:type_name -> kmaker.Config
-	7,  // 17: operator.OperatorConfigState.config:type_name -> operator.Config
-	15, // 18: operator.OperatorConfigStateService.GetConfig:input_type -> trace.TraceRequest
-	7,  // 19: operator.OperatorConfigStateService.SetConfig:input_type -> operator.Config
-	15, // 20: operator.OperatorConfigStateService.WatchConfig:input_type -> trace.TraceRequest
-	7,  // 21: operator.OperatorConfigStateService.GetConfig:output_type -> operator.Config
-	7,  // 22: operator.OperatorConfigStateService.SetConfig:output_type -> operator.Config
-	7,  // 23: operator.OperatorConfigStateService.WatchConfig:output_type -> operator.Config
-	21, // [21:24] is the sub-list for method output_type
-	18, // [18:21] is the sub-list for method input_type
-	18, // [18:18] is the sub-list for extension type_name
-	18, // [18:18] is the sub-list for extension extendee
-	0,  // [0:18] is the sub-list for field type_name
+	13, // 14: operator.Config.root_cred_pairs:type_name -> credentials.CredPair
+	14, // 15: operator.Config.cluster_oauth:type_name -> oauth.ClusterOAuthConfig
+	15, // 16: operator.Config.kmaker:type_name -> kmaker.Config
+	11, // 17: operator.Config.image_digests:type_name -> operator.Config.ImageDigestsEntry
+	7,  // 18: operator.OperatorConfigState.config:type_name -> operator.Config
+	16, // 19: operator.OperatorConfigStateService.GetConfig:input_type -> trace.TraceRequest
+	7,  // 20: operator.OperatorConfigStateService.SetConfig:input_type -> operator.Config
+	16, // 21: operator.OperatorConfigStateService.WatchConfig:input_type -> trace.TraceRequest
+	7,  // 22: operator.OperatorConfigStateService.GetConfig:output_type -> operator.Config
+	7,  // 23: operator.OperatorConfigStateService.SetConfig:output_type -> operator.Config
+	7,  // 24: operator.OperatorConfigStateService.WatchConfig:output_type -> operator.Config
+	22, // [22:25] is the sub-list for method output_type
+	19, // [19:22] is the sub-list for method input_type
+	19, // [19:19] is the sub-list for extension type_name
+	19, // [19:19] is the sub-list for extension extendee
+	0,  // [0:19] is the sub-list for field type_name
 }
 
 func init() { file_services_operator_proto_init() }
@@ -1459,7 +1477,7 @@ func file_services_operator_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_services_operator_proto_rawDesc), len(file_services_operator_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   8,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

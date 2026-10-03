@@ -5415,7 +5415,7 @@ type Delegate struct {
 	// delegate is trusted to broker into Mint.MintUserToken. EMPTY — the default,
 	// and every delegate in the fleet today — means this delegate is NOT an auth
 	// broker and MintUserToken refuses it. This replaces the former hardcoded
-	// auth_services: ["oauth","saml"] allowlist on that RPC: who may attest a
+	// auth_services broker allowlist on that RPC: who may attest a
 	// human login is per-delegate runtime config, not a compile-time literal in
 	// this file.
 	AuthBrokerKinds []tokenrequest.AuthBrokerKind `protobuf:"varint,8,rep,packed,name=auth_broker_kinds,json=authBrokerKinds,proto3,enum=tokenrequest.AuthBrokerKind" json:"auth_broker_kinds,omitempty"`
@@ -33574,8 +33574,7 @@ const file_services_kernel_proto_rawDesc = "" +
 	"\x13WatchProjectConfigs\x12\x13.trace.TraceRequest\x1a%.kernel.ProjectConfigsEntriesResponse0\x01\x12^\n" +
 	"\x13QueryProjectConfigs\x12\".kernel.ProjectConfigsQueryRequest\x1a#.kernel.ProjectConfigsQueryResponse\x12e\n" +
 	"\x18WatchQueryProjectConfigs\x12\".kernel.ProjectConfigsQueryRequest\x1a#.kernel.ProjectConfigsQueryResponse0\x01\x1a\f\xea\x97\"\b\n" +
-	"\x06kernelB\x92\x02\x8a\xb5\x18\x19\n" +
-	"\x0eREST_ROOT_PATH\x12\a/api/v1\x8a\xb5\x18$\n" +
+	"\x06kernelB\xf5\x01\x8a\xb5\x18$\n" +
 	"\x10SIGNING_KEY_FILE\x12\x10signing_key.json\x92\xb5\x18\x13\n" +
 	"\x0fMIN_DATA_COPIES\x10\x03ڵ\x18\x04\x18\x010\x01\xea\xb5\x18,\n" +
 	"%userentitlements.EntitlementEvalInput\x12\x03opa\xea\xb5\x18'\n" +

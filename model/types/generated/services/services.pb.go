@@ -50,10 +50,8 @@ const (
 	ServiceName_SERVICE_NAME_OAUTH          ServiceName = 21
 	ServiceName_SERVICE_NAME_OPA            ServiceName = 29
 	ServiceName_SERVICE_NAME_STRATUM        ServiceName = 34
-	ServiceName_SERVICE_NAME_SAML           ServiceName = 38
 	ServiceName_SERVICE_NAME_OPERATOR       ServiceName = 47
 	ServiceName_SERVICE_NAME_KMAKER         ServiceName = 49
-	ServiceName_SERVICE_NAME_SAMLSVC        ServiceName = 51
 	ServiceName_SERVICE_NAME_MESSAGING      ServiceName = 53
 	ServiceName_SERVICE_NAME_SCOTTYAGENT    ServiceName = 54
 	ServiceName_SERVICE_NAME_MAILBOX        ServiceName = 55
@@ -66,6 +64,9 @@ const (
 	ServiceName_SERVICE_NAME_WEATHER        ServiceName = 74
 	ServiceName_SERVICE_NAME_LLMPROXY       ServiceName = 75
 	ServiceName_SERVICE_NAME_PROFILE        ServiceName = 76
+	ServiceName_SERVICE_NAME_BEAGLE         ServiceName = 77
+	ServiceName_SERVICE_NAME_OTTO           ServiceName = 78
+	ServiceName_SERVICE_NAME_TALLY          ServiceName = 79
 	ServiceName_SERVICE_NAME_DOCMANAGER     ServiceName = 80
 	ServiceName_SERVICE_NAME_REVEILLE       ServiceName = 81
 	ServiceName_SERVICE_NAME_ANY            ServiceName = 99 // wildcard: allow any service
@@ -83,10 +84,8 @@ var (
 		21: "SERVICE_NAME_OAUTH",
 		29: "SERVICE_NAME_OPA",
 		34: "SERVICE_NAME_STRATUM",
-		38: "SERVICE_NAME_SAML",
 		47: "SERVICE_NAME_OPERATOR",
 		49: "SERVICE_NAME_KMAKER",
-		51: "SERVICE_NAME_SAMLSVC",
 		53: "SERVICE_NAME_MESSAGING",
 		54: "SERVICE_NAME_SCOTTYAGENT",
 		55: "SERVICE_NAME_MAILBOX",
@@ -99,6 +98,9 @@ var (
 		74: "SERVICE_NAME_WEATHER",
 		75: "SERVICE_NAME_LLMPROXY",
 		76: "SERVICE_NAME_PROFILE",
+		77: "SERVICE_NAME_BEAGLE",
+		78: "SERVICE_NAME_OTTO",
+		79: "SERVICE_NAME_TALLY",
 		80: "SERVICE_NAME_DOCMANAGER",
 		81: "SERVICE_NAME_REVEILLE",
 		99: "SERVICE_NAME_ANY",
@@ -113,10 +115,8 @@ var (
 		"SERVICE_NAME_OAUTH":          21,
 		"SERVICE_NAME_OPA":            29,
 		"SERVICE_NAME_STRATUM":        34,
-		"SERVICE_NAME_SAML":           38,
 		"SERVICE_NAME_OPERATOR":       47,
 		"SERVICE_NAME_KMAKER":         49,
-		"SERVICE_NAME_SAMLSVC":        51,
 		"SERVICE_NAME_MESSAGING":      53,
 		"SERVICE_NAME_SCOTTYAGENT":    54,
 		"SERVICE_NAME_MAILBOX":        55,
@@ -129,6 +129,9 @@ var (
 		"SERVICE_NAME_WEATHER":        74,
 		"SERVICE_NAME_LLMPROXY":       75,
 		"SERVICE_NAME_PROFILE":        76,
+		"SERVICE_NAME_BEAGLE":         77,
+		"SERVICE_NAME_OTTO":           78,
+		"SERVICE_NAME_TALLY":          79,
 		"SERVICE_NAME_DOCMANAGER":     80,
 		"SERVICE_NAME_REVEILLE":       81,
 		"SERVICE_NAME_ANY":            99,
@@ -512,79 +515,6 @@ func (OauthRPCs) EnumDescriptor() ([]byte, []int) {
 	return file_generated_services_proto_rawDescGZIP(), []int{5}
 }
 
-type SamlRPCs int32
-
-const (
-	SamlRPCs_SAML_RPCS_UNSPECIFIED                 SamlRPCs = 0
-	SamlRPCs_SAML_RPCS_MINT_ACS_TOKENS             SamlRPCs = 1
-	SamlRPCs_SAML_RPCS_AUTHORIZE                   SamlRPCs = 2
-	SamlRPCs_SAML_RPCS_MINT_ASSERTION              SamlRPCs = 3
-	SamlRPCs_SAML_RPCS_LIST_S_PS                   SamlRPCs = 4
-	SamlRPCs_SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION SamlRPCs = 5
-	SamlRPCs_SAML_RPCS_GET_IDP_METADATA            SamlRPCs = 6
-	SamlRPCs_SAML_RPCS_GET_SP_METADATA             SamlRPCs = 7
-	SamlRPCs_SAML_RPCS_GET_IDP_DESCRIPTOR          SamlRPCs = 8
-	SamlRPCs_SAML_RPCS_BROKER_METADATA_MCP_SESSION SamlRPCs = 9
-	SamlRPCs_SAML_RPCS_ANY                         SamlRPCs = 99 // wildcard: allow any RPC
-)
-
-// Enum value maps for SamlRPCs.
-var (
-	SamlRPCs_name = map[int32]string{
-		0:  "SAML_RPCS_UNSPECIFIED",
-		1:  "SAML_RPCS_MINT_ACS_TOKENS",
-		2:  "SAML_RPCS_AUTHORIZE",
-		3:  "SAML_RPCS_MINT_ASSERTION",
-		4:  "SAML_RPCS_LIST_S_PS",
-		5:  "SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION",
-		6:  "SAML_RPCS_GET_IDP_METADATA",
-		7:  "SAML_RPCS_GET_SP_METADATA",
-		8:  "SAML_RPCS_GET_IDP_DESCRIPTOR",
-		9:  "SAML_RPCS_BROKER_METADATA_MCP_SESSION",
-		99: "SAML_RPCS_ANY",
-	}
-	SamlRPCs_value = map[string]int32{
-		"SAML_RPCS_UNSPECIFIED":                 0,
-		"SAML_RPCS_MINT_ACS_TOKENS":             1,
-		"SAML_RPCS_AUTHORIZE":                   2,
-		"SAML_RPCS_MINT_ASSERTION":              3,
-		"SAML_RPCS_LIST_S_PS":                   4,
-		"SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION": 5,
-		"SAML_RPCS_GET_IDP_METADATA":            6,
-		"SAML_RPCS_GET_SP_METADATA":             7,
-		"SAML_RPCS_GET_IDP_DESCRIPTOR":          8,
-		"SAML_RPCS_BROKER_METADATA_MCP_SESSION": 9,
-		"SAML_RPCS_ANY":                         99,
-	}
-)
-
-func (x SamlRPCs) Enum() *SamlRPCs {
-	p := new(SamlRPCs)
-	*p = x
-	return p
-}
-
-func (x SamlRPCs) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (SamlRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[6].Descriptor()
-}
-
-func (SamlRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[6]
-}
-
-func (x SamlRPCs) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use SamlRPCs.Descriptor instead.
-func (SamlRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{6}
-}
-
 type MessagingRPCs int32
 
 const (
@@ -621,11 +551,11 @@ func (x MessagingRPCs) String() string {
 }
 
 func (MessagingRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[7].Descriptor()
+	return file_generated_services_proto_enumTypes[6].Descriptor()
 }
 
 func (MessagingRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[7]
+	return &file_generated_services_proto_enumTypes[6]
 }
 
 func (x MessagingRPCs) Number() protoreflect.EnumNumber {
@@ -634,7 +564,7 @@ func (x MessagingRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use MessagingRPCs.Descriptor instead.
 func (MessagingRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{7}
+	return file_generated_services_proto_rawDescGZIP(), []int{6}
 }
 
 type ScottyagentRPCs int32
@@ -673,11 +603,11 @@ func (x ScottyagentRPCs) String() string {
 }
 
 func (ScottyagentRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[8].Descriptor()
+	return file_generated_services_proto_enumTypes[7].Descriptor()
 }
 
 func (ScottyagentRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[8]
+	return &file_generated_services_proto_enumTypes[7]
 }
 
 func (x ScottyagentRPCs) Number() protoreflect.EnumNumber {
@@ -686,7 +616,7 @@ func (x ScottyagentRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ScottyagentRPCs.Descriptor instead.
 func (ScottyagentRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{8}
+	return file_generated_services_proto_rawDescGZIP(), []int{7}
 }
 
 type MailboxRPCs int32
@@ -728,11 +658,11 @@ func (x MailboxRPCs) String() string {
 }
 
 func (MailboxRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[9].Descriptor()
+	return file_generated_services_proto_enumTypes[8].Descriptor()
 }
 
 func (MailboxRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[9]
+	return &file_generated_services_proto_enumTypes[8]
 }
 
 func (x MailboxRPCs) Number() protoreflect.EnumNumber {
@@ -741,7 +671,7 @@ func (x MailboxRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use MailboxRPCs.Descriptor instead.
 func (MailboxRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{9}
+	return file_generated_services_proto_rawDescGZIP(), []int{8}
 }
 
 type LlmsettingsRPCs int32
@@ -783,11 +713,11 @@ func (x LlmsettingsRPCs) String() string {
 }
 
 func (LlmsettingsRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[10].Descriptor()
+	return file_generated_services_proto_enumTypes[9].Descriptor()
 }
 
 func (LlmsettingsRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[10]
+	return &file_generated_services_proto_enumTypes[9]
 }
 
 func (x LlmsettingsRPCs) Number() protoreflect.EnumNumber {
@@ -796,7 +726,7 @@ func (x LlmsettingsRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use LlmsettingsRPCs.Descriptor instead.
 func (LlmsettingsRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{10}
+	return file_generated_services_proto_rawDescGZIP(), []int{9}
 }
 
 type PersonalauthRPCs int32
@@ -835,11 +765,11 @@ func (x PersonalauthRPCs) String() string {
 }
 
 func (PersonalauthRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[11].Descriptor()
+	return file_generated_services_proto_enumTypes[10].Descriptor()
 }
 
 func (PersonalauthRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[11]
+	return &file_generated_services_proto_enumTypes[10]
 }
 
 func (x PersonalauthRPCs) Number() protoreflect.EnumNumber {
@@ -848,7 +778,7 @@ func (x PersonalauthRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use PersonalauthRPCs.Descriptor instead.
 func (PersonalauthRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{11}
+	return file_generated_services_proto_rawDescGZIP(), []int{10}
 }
 
 type ScottyRPCs int32
@@ -923,11 +853,11 @@ func (x ScottyRPCs) String() string {
 }
 
 func (ScottyRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[12].Descriptor()
+	return file_generated_services_proto_enumTypes[11].Descriptor()
 }
 
 func (ScottyRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[12]
+	return &file_generated_services_proto_enumTypes[11]
 }
 
 func (x ScottyRPCs) Number() protoreflect.EnumNumber {
@@ -936,7 +866,7 @@ func (x ScottyRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ScottyRPCs.Descriptor instead.
 func (ScottyRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{12}
+	return file_generated_services_proto_rawDescGZIP(), []int{11}
 }
 
 type ScottypersonalRPCs int32
@@ -1014,11 +944,11 @@ func (x ScottypersonalRPCs) String() string {
 }
 
 func (ScottypersonalRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[13].Descriptor()
+	return file_generated_services_proto_enumTypes[12].Descriptor()
 }
 
 func (ScottypersonalRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[13]
+	return &file_generated_services_proto_enumTypes[12]
 }
 
 func (x ScottypersonalRPCs) Number() protoreflect.EnumNumber {
@@ -1027,7 +957,7 @@ func (x ScottypersonalRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ScottypersonalRPCs.Descriptor instead.
 func (ScottypersonalRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{13}
+	return file_generated_services_proto_rawDescGZIP(), []int{12}
 }
 
 type WorkRPCs int32
@@ -1150,11 +1080,11 @@ func (x WorkRPCs) String() string {
 }
 
 func (WorkRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[14].Descriptor()
+	return file_generated_services_proto_enumTypes[13].Descriptor()
 }
 
 func (WorkRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[14]
+	return &file_generated_services_proto_enumTypes[13]
 }
 
 func (x WorkRPCs) Number() protoreflect.EnumNumber {
@@ -1163,7 +1093,7 @@ func (x WorkRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use WorkRPCs.Descriptor instead.
 func (WorkRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{14}
+	return file_generated_services_proto_rawDescGZIP(), []int{13}
 }
 
 type ProfileRPCs int32
@@ -1223,11 +1153,11 @@ func (x ProfileRPCs) String() string {
 }
 
 func (ProfileRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[15].Descriptor()
+	return file_generated_services_proto_enumTypes[14].Descriptor()
 }
 
 func (ProfileRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[15]
+	return &file_generated_services_proto_enumTypes[14]
 }
 
 func (x ProfileRPCs) Number() protoreflect.EnumNumber {
@@ -1236,7 +1166,7 @@ func (x ProfileRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ProfileRPCs.Descriptor instead.
 func (ProfileRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{15}
+	return file_generated_services_proto_rawDescGZIP(), []int{14}
 }
 
 type DocmanagerRPCs int32
@@ -1287,11 +1217,11 @@ func (x DocmanagerRPCs) String() string {
 }
 
 func (DocmanagerRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[16].Descriptor()
+	return file_generated_services_proto_enumTypes[15].Descriptor()
 }
 
 func (DocmanagerRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[16]
+	return &file_generated_services_proto_enumTypes[15]
 }
 
 func (x DocmanagerRPCs) Number() protoreflect.EnumNumber {
@@ -1300,7 +1230,7 @@ func (x DocmanagerRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use DocmanagerRPCs.Descriptor instead.
 func (DocmanagerRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{16}
+	return file_generated_services_proto_rawDescGZIP(), []int{15}
 }
 
 // agentsensor (vservice, hosted by eventbus)
@@ -1340,11 +1270,11 @@ func (x AgentsensorRPCs) String() string {
 }
 
 func (AgentsensorRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[17].Descriptor()
+	return file_generated_services_proto_enumTypes[16].Descriptor()
 }
 
 func (AgentsensorRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[17]
+	return &file_generated_services_proto_enumTypes[16]
 }
 
 func (x AgentsensorRPCs) Number() protoreflect.EnumNumber {
@@ -1353,7 +1283,7 @@ func (x AgentsensorRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use AgentsensorRPCs.Descriptor instead.
 func (AgentsensorRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{17}
+	return file_generated_services_proto_rawDescGZIP(), []int{16}
 }
 
 // query (trait, hosted by stratum)
@@ -1387,11 +1317,11 @@ func (x QueryRPCs) String() string {
 }
 
 func (QueryRPCs) Descriptor() protoreflect.EnumDescriptor {
-	return file_generated_services_proto_enumTypes[18].Descriptor()
+	return file_generated_services_proto_enumTypes[17].Descriptor()
 }
 
 func (QueryRPCs) Type() protoreflect.EnumType {
-	return &file_generated_services_proto_enumTypes[18]
+	return &file_generated_services_proto_enumTypes[17]
 }
 
 func (x QueryRPCs) Number() protoreflect.EnumNumber {
@@ -1400,14 +1330,14 @@ func (x QueryRPCs) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use QueryRPCs.Descriptor instead.
 func (QueryRPCs) EnumDescriptor() ([]byte, []int) {
-	return file_generated_services_proto_rawDescGZIP(), []int{18}
+	return file_generated_services_proto_rawDescGZIP(), []int{17}
 }
 
 var File_generated_services_proto protoreflect.FileDescriptor
 
 const file_generated_services_proto_rawDesc = "" +
 	"\n" +
-	"\x18generated/services.proto\x12\bservices*\xfa\x05\n" +
+	"\x18generated/services.proto\x12\bservices*\x91\x06\n" +
 	"\vServiceName\x12\x1c\n" +
 	"\x18SERVICE_NAME_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15SERVICE_NAME_SENTINEL\x10\x05\x12\x18\n" +
@@ -1417,11 +1347,9 @@ const file_generated_services_proto_rawDesc = "" +
 	"\x15SERVICE_NAME_EVENTBUS\x10\x12\x12\x16\n" +
 	"\x12SERVICE_NAME_OAUTH\x10\x15\x12\x14\n" +
 	"\x10SERVICE_NAME_OPA\x10\x1d\x12\x18\n" +
-	"\x14SERVICE_NAME_STRATUM\x10\"\x12\x15\n" +
-	"\x11SERVICE_NAME_SAML\x10&\x12\x19\n" +
+	"\x14SERVICE_NAME_STRATUM\x10\"\x12\x19\n" +
 	"\x15SERVICE_NAME_OPERATOR\x10/\x12\x17\n" +
-	"\x13SERVICE_NAME_KMAKER\x101\x12\x18\n" +
-	"\x14SERVICE_NAME_SAMLSVC\x103\x12\x1a\n" +
+	"\x13SERVICE_NAME_KMAKER\x101\x12\x1a\n" +
 	"\x16SERVICE_NAME_MESSAGING\x105\x12\x1c\n" +
 	"\x18SERVICE_NAME_SCOTTYAGENT\x106\x12\x18\n" +
 	"\x14SERVICE_NAME_MAILBOX\x107\x12\x1c\n" +
@@ -1433,7 +1361,10 @@ const file_generated_services_proto_rawDesc = "" +
 	"\x11SERVICE_NAME_WORK\x10I\x12\x18\n" +
 	"\x14SERVICE_NAME_WEATHER\x10J\x12\x19\n" +
 	"\x15SERVICE_NAME_LLMPROXY\x10K\x12\x18\n" +
-	"\x14SERVICE_NAME_PROFILE\x10L\x12\x1b\n" +
+	"\x14SERVICE_NAME_PROFILE\x10L\x12\x17\n" +
+	"\x13SERVICE_NAME_BEAGLE\x10M\x12\x15\n" +
+	"\x11SERVICE_NAME_OTTO\x10N\x12\x16\n" +
+	"\x12SERVICE_NAME_TALLY\x10O\x12\x1b\n" +
 	"\x17SERVICE_NAME_DOCMANAGER\x10P\x12\x19\n" +
 	"\x15SERVICE_NAME_REVEILLE\x10Q\x12\x14\n" +
 	"\x10SERVICE_NAME_ANY\x10c*\x8f\x04\n" +
@@ -1494,19 +1425,7 @@ const file_generated_services_proto_rawDesc = "" +
 	"\x19OAUTH_RPCS_REVOKE_SESSION\x10\x05\x12\x1e\n" +
 	"\x1aOAUTH_RPCS_BROKER_CLI_AUTH\x10\x06\x12&\n" +
 	"\"OAUTH_RPCS_BROKER_AUTH_MCP_SESSION\x10\a\x12\x12\n" +
-	"\x0eOAUTH_RPCS_ANY\x10c*\xde\x02\n" +
-	"\bSamlRPCs\x12\x19\n" +
-	"\x15SAML_RPCS_UNSPECIFIED\x10\x00\x12\x1d\n" +
-	"\x19SAML_RPCS_MINT_ACS_TOKENS\x10\x01\x12\x17\n" +
-	"\x13SAML_RPCS_AUTHORIZE\x10\x02\x12\x1c\n" +
-	"\x18SAML_RPCS_MINT_ASSERTION\x10\x03\x12\x17\n" +
-	"\x13SAML_RPCS_LIST_S_PS\x10\x04\x12)\n" +
-	"%SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION\x10\x05\x12\x1e\n" +
-	"\x1aSAML_RPCS_GET_IDP_METADATA\x10\x06\x12\x1d\n" +
-	"\x19SAML_RPCS_GET_SP_METADATA\x10\a\x12 \n" +
-	"\x1cSAML_RPCS_GET_IDP_DESCRIPTOR\x10\b\x12)\n" +
-	"%SAML_RPCS_BROKER_METADATA_MCP_SESSION\x10\t\x12\x11\n" +
-	"\rSAML_RPCS_ANY\x10c*\x99\x01\n" +
+	"\x0eOAUTH_RPCS_ANY\x10c*\x99\x01\n" +
 	"\rMessagingRPCs\x12\x1e\n" +
 	"\x1aMESSAGING_RPCS_UNSPECIFIED\x10\x00\x12\x1f\n" +
 	"\x1bMESSAGING_RPCS_SEND_MESSAGE\x10\x01\x12/\n" +
@@ -1648,7 +1567,7 @@ func file_generated_services_proto_rawDescGZIP() []byte {
 	return file_generated_services_proto_rawDescData
 }
 
-var file_generated_services_proto_enumTypes = make([]protoimpl.EnumInfo, 19)
+var file_generated_services_proto_enumTypes = make([]protoimpl.EnumInfo, 18)
 var file_generated_services_proto_goTypes = []any{
 	(ServiceName)(0),        // 0: services.ServiceName
 	(SentinelRPCs)(0),       // 1: services.SentinelRPCs
@@ -1656,19 +1575,18 @@ var file_generated_services_proto_goTypes = []any{
 	(KernelRPCs)(0),         // 3: services.KernelRPCs
 	(EventbusRPCs)(0),       // 4: services.EventbusRPCs
 	(OauthRPCs)(0),          // 5: services.OauthRPCs
-	(SamlRPCs)(0),           // 6: services.SamlRPCs
-	(MessagingRPCs)(0),      // 7: services.MessagingRPCs
-	(ScottyagentRPCs)(0),    // 8: services.ScottyagentRPCs
-	(MailboxRPCs)(0),        // 9: services.MailboxRPCs
-	(LlmsettingsRPCs)(0),    // 10: services.LlmsettingsRPCs
-	(PersonalauthRPCs)(0),   // 11: services.PersonalauthRPCs
-	(ScottyRPCs)(0),         // 12: services.ScottyRPCs
-	(ScottypersonalRPCs)(0), // 13: services.ScottypersonalRPCs
-	(WorkRPCs)(0),           // 14: services.WorkRPCs
-	(ProfileRPCs)(0),        // 15: services.ProfileRPCs
-	(DocmanagerRPCs)(0),     // 16: services.DocmanagerRPCs
-	(AgentsensorRPCs)(0),    // 17: services.AgentsensorRPCs
-	(QueryRPCs)(0),          // 18: services.QueryRPCs
+	(MessagingRPCs)(0),      // 6: services.MessagingRPCs
+	(ScottyagentRPCs)(0),    // 7: services.ScottyagentRPCs
+	(MailboxRPCs)(0),        // 8: services.MailboxRPCs
+	(LlmsettingsRPCs)(0),    // 9: services.LlmsettingsRPCs
+	(PersonalauthRPCs)(0),   // 10: services.PersonalauthRPCs
+	(ScottyRPCs)(0),         // 11: services.ScottyRPCs
+	(ScottypersonalRPCs)(0), // 12: services.ScottypersonalRPCs
+	(WorkRPCs)(0),           // 13: services.WorkRPCs
+	(ProfileRPCs)(0),        // 14: services.ProfileRPCs
+	(DocmanagerRPCs)(0),     // 15: services.DocmanagerRPCs
+	(AgentsensorRPCs)(0),    // 16: services.AgentsensorRPCs
+	(QueryRPCs)(0),          // 17: services.QueryRPCs
 }
 var file_generated_services_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -1688,7 +1606,7 @@ func file_generated_services_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_generated_services_proto_rawDesc), len(file_generated_services_proto_rawDesc)),
-			NumEnums:      19,
+			NumEnums:      18,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,

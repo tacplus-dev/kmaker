@@ -45,7 +45,6 @@ type accountingmethodJSON struct {
 	Kernel         string `json:"kernel,omitempty"`
 	Eventbus       string `json:"eventbus,omitempty"`
 	Oauth          string `json:"oauth,omitempty"`
-	Saml           string `json:"saml,omitempty"`
 	Messaging      string `json:"messaging,omitempty"`
 	Scottyagent    string `json:"scottyagent,omitempty"`
 	Mailbox        string `json:"mailbox,omitempty"`
@@ -71,7 +70,6 @@ func AccountingMethodToJSON(v *AccountingMethod) ([]byte, error) {
 		Kernel:         services.KernelRPCsToString(v.Kernel),
 		Eventbus:       services.EventbusRPCsToString(v.Eventbus),
 		Oauth:          services.OauthRPCsToString(v.Oauth),
-		Saml:           services.SamlRPCsToString(v.Saml),
 		Messaging:      services.MessagingRPCsToString(v.Messaging),
 		Scottyagent:    services.ScottyagentRPCsToString(v.Scottyagent),
 		Mailbox:        services.MailboxRPCsToString(v.Mailbox),
@@ -99,7 +97,6 @@ func AccountingMethodToJSONPretty(v *AccountingMethod) ([]byte, error) {
 		Kernel:         services.KernelRPCsToString(v.Kernel),
 		Eventbus:       services.EventbusRPCsToString(v.Eventbus),
 		Oauth:          services.OauthRPCsToString(v.Oauth),
-		Saml:           services.SamlRPCsToString(v.Saml),
 		Messaging:      services.MessagingRPCsToString(v.Messaging),
 		Scottyagent:    services.ScottyagentRPCsToString(v.Scottyagent),
 		Mailbox:        services.MailboxRPCsToString(v.Mailbox),
@@ -202,12 +199,6 @@ func AccountingMethodFromJSON(data []byte) (*AccountingMethod, error) {
 	if raw.Oauth != "" {
 		if parsed, err := services.ParseOauthRPCs(raw.Oauth); err == nil {
 			result.Oauth = parsed
-		}
-	}
-	// Parse enum field: Saml
-	if raw.Saml != "" {
-		if parsed, err := services.ParseSamlRPCs(raw.Saml); err == nil {
-			result.Saml = parsed
 		}
 	}
 	// Parse enum field: Messaging
@@ -356,7 +347,6 @@ func AccountingMethodToEnvVar(v *AccountingMethod) map[string]string {
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_KERNEL"] = services.KernelRPCsToString(v.Kernel)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_EVENTBUS"] = services.EventbusRPCsToString(v.Eventbus)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_OAUTH"] = services.OauthRPCsToString(v.Oauth)
-	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SAML"] = services.SamlRPCsToString(v.Saml)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_MESSAGING"] = services.MessagingRPCsToString(v.Messaging)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SCOTTYAGENT"] = services.ScottyagentRPCsToString(v.Scottyagent)
 	result["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_MAILBOX"] = services.MailboxRPCsToString(v.Mailbox)
@@ -407,13 +397,6 @@ func AccountingMethodFromEnvVar(env map[string]string) (*AccountingMethod, error
 			return nil, err
 		}
 		result.Oauth = parsed
-	}
-	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_SAML"]; ok && val != "" {
-		parsed, err := services.ParseSamlRPCs(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Saml = parsed
 	}
 	if val, ok := env["PROTO_GENERATED_ACCOUNTING_METHOD_ACCOUNTING_METHOD_MESSAGING"]; ok && val != "" {
 		parsed, err := services.ParseMessagingRPCs(val)
@@ -532,11 +515,6 @@ func ValidateAccountingMethodWithDepth(m *AccountingMethod, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Oauth has unknown enum value %d", int32(m.Oauth))
 	}
 
-	// Validate Saml enum value is known
-	if _, ok := services.SamlRPCs_name[int32(m.Saml)]; !ok {
-		return protoerrors.NewErrMissingInvalidData(nil, "field Saml has unknown enum value %d", int32(m.Saml))
-	}
-
 	// Validate Messaging enum value is known
 	if _, ok := services.MessagingRPCs_name[int32(m.Messaging)]; !ok {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Messaging has unknown enum value %d", int32(m.Messaging))
@@ -630,9 +608,6 @@ func MergeAccountingMethod(dst, src *AccountingMethod) {
 	}
 	if dst.Oauth == 0 {
 		dst.Oauth = src.Oauth
-	}
-	if dst.Saml == 0 {
-		dst.Saml = src.Saml
 	}
 	if dst.Messaging == 0 {
 		dst.Messaging = src.Messaging

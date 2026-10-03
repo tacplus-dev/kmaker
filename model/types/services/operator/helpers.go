@@ -610,7 +610,6 @@ type topologyJSON struct {
 	OpaNodes           int32            `json:"opa_nodes,omitempty"`
 	StratumNodes       int32            `json:"stratum_nodes,omitempty"`
 	StratumSearchNodes int32            `json:"stratum_search_nodes,omitempty"`
-	SamlNodes          int32            `json:"saml_nodes,omitempty"`
 	KmakerNodes        int32            `json:"kmaker_nodes,omitempty"`
 	EchoNodes          int32            `json:"echo_nodes,omitempty"`
 	MessagingNodes     int32            `json:"messaging_nodes,omitempty"`
@@ -638,7 +637,6 @@ func TopologyToJSON(v *Topology) ([]byte, error) {
 		OpaNodes:           v.OpaNodes,
 		StratumNodes:       v.StratumNodes,
 		StratumSearchNodes: v.StratumSearchNodes,
-		SamlNodes:          v.SamlNodes,
 		KmakerNodes:        v.KmakerNodes,
 		EchoNodes:          v.EchoNodes,
 		MessagingNodes:     v.MessagingNodes,
@@ -668,7 +666,6 @@ func TopologyToJSONPretty(v *Topology) ([]byte, error) {
 		OpaNodes:           v.OpaNodes,
 		StratumNodes:       v.StratumNodes,
 		StratumSearchNodes: v.StratumSearchNodes,
-		SamlNodes:          v.SamlNodes,
 		KmakerNodes:        v.KmakerNodes,
 		EchoNodes:          v.EchoNodes,
 		MessagingNodes:     v.MessagingNodes,
@@ -750,7 +747,6 @@ func TopologyFromJSON(data []byte) (*Topology, error) {
 	result.OpaNodes = raw.OpaNodes
 	result.StratumNodes = raw.StratumNodes
 	result.StratumSearchNodes = raw.StratumSearchNodes
-	result.SamlNodes = raw.SamlNodes
 	result.KmakerNodes = raw.KmakerNodes
 	result.EchoNodes = raw.EchoNodes
 	result.MessagingNodes = raw.MessagingNodes
@@ -806,7 +802,6 @@ func TopologyToTOML(v *Topology) ([]byte, error) {
 // OptionalServicesJSON represents OptionalServices in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type optionalservicesJSON struct {
-	Saml         bool   `json:"saml,omitempty"`
 	Oauth        bool   `json:"oauth,omitempty"`
 	Keycloak     bool   `json:"keycloak,omitempty"`
 	Echo         bool   `json:"echo,omitempty"`
@@ -826,7 +821,6 @@ func OptionalServicesToJSON(v *OptionalServices) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := optionalservicesJSON{
-		Saml:         v.Saml,
 		Oauth:        v.Oauth,
 		Keycloak:     v.Keycloak,
 		Echo:         v.Echo,
@@ -848,7 +842,6 @@ func OptionalServicesToJSONPretty(v *OptionalServices) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := optionalservicesJSON{
-		Saml:         v.Saml,
 		Oauth:        v.Oauth,
 		Keycloak:     v.Keycloak,
 		Echo:         v.Echo,
@@ -922,7 +915,6 @@ func OptionalServicesFromJSON(data []byte) (*OptionalServices, error) {
 	}
 	// Build result with parsed enums
 	result := &OptionalServices{}
-	result.Saml = raw.Saml
 	result.Oauth = raw.Oauth
 	result.Keycloak = raw.Keycloak
 	result.Echo = raw.Echo
@@ -1369,6 +1361,8 @@ type configJSON struct {
 	LlmCredentialServices []string          `json:"llm_credential_services,omitempty"`
 	Tenants               []string          `json:"tenants,omitempty"`
 	ExternalIp            string            `json:"external_ip,omitempty"`
+	ExtraHostnames        []string          `json:"extra_hostnames,omitempty"`
+	ImageDigests          map[string]string `json:"image_digests,omitempty"`
 	TraceId               string            `json:"trace_id,omitempty"`
 	Noop                  bool              `json:"noop,omitempty"`
 }
@@ -1451,6 +1445,8 @@ func ConfigToJSON(v *Config) ([]byte, error) {
 		LlmCredentialServices: v.LlmCredentialServices,
 		Tenants:               v.Tenants,
 		ExternalIp:            v.ExternalIp,
+		ExtraHostnames:        v.ExtraHostnames,
+		ImageDigests:          v.ImageDigests,
 		TraceId:               v.TraceId,
 		Noop:                  v.Noop,
 	}
@@ -1535,6 +1531,8 @@ func ConfigToJSONPretty(v *Config) ([]byte, error) {
 		LlmCredentialServices: v.LlmCredentialServices,
 		Tenants:               v.Tenants,
 		ExternalIp:            v.ExternalIp,
+		ExtraHostnames:        v.ExtraHostnames,
+		ImageDigests:          v.ImageDigests,
 		TraceId:               v.TraceId,
 		Noop:                  v.Noop,
 	}
@@ -1674,6 +1672,8 @@ func ConfigFromJSON(data []byte) (*Config, error) {
 	result.LlmCredentialServices = raw.LlmCredentialServices
 	result.Tenants = raw.Tenants
 	result.ExternalIp = raw.ExternalIp
+	result.ExtraHostnames = raw.ExtraHostnames
+	result.ImageDigests = raw.ImageDigests
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -2116,7 +2116,6 @@ func TopologyToEnvVar(v *Topology) map[string]string {
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_OPA_NODES"] = strconv.FormatInt(int64(v.OpaNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_STRATUM_NODES"] = strconv.FormatInt(int64(v.StratumNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_STRATUM_SEARCH_NODES"] = strconv.FormatInt(int64(v.StratumSearchNodes), 10)
-	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_SAML_NODES"] = strconv.FormatInt(int64(v.SamlNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_KMAKER_NODES"] = strconv.FormatInt(int64(v.KmakerNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_ECHO_NODES"] = strconv.FormatInt(int64(v.EchoNodes), 10)
 	result["PROTO_SERVICES_OPERATOR_TOPOLOGY_MESSAGING_NODES"] = strconv.FormatInt(int64(v.MessagingNodes), 10)
@@ -2187,13 +2186,6 @@ func TopologyFromEnvVar(env map[string]string) (*Topology, error) {
 		}
 		result.StratumSearchNodes = int32(parsed)
 	}
-	if val, ok := env["PROTO_SERVICES_OPERATOR_TOPOLOGY_SAML_NODES"]; ok && val != "" {
-		parsed, err := strconv.ParseInt(val, 10, 32)
-		if err != nil {
-			return nil, err
-		}
-		result.SamlNodes = int32(parsed)
-	}
 	if val, ok := env["PROTO_SERVICES_OPERATOR_TOPOLOGY_KMAKER_NODES"]; ok && val != "" {
 		parsed, err := strconv.ParseInt(val, 10, 32)
 		if err != nil {
@@ -2255,7 +2247,6 @@ func OptionalServicesToEnvVar(v *OptionalServices) map[string]string {
 		return nil
 	}
 	result := make(map[string]string)
-	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_SAML"] = strconv.FormatBool(v.Saml)
 	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_OAUTH"] = strconv.FormatBool(v.Oauth)
 	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_KEYCLOAK"] = strconv.FormatBool(v.Keycloak)
 	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_ECHO"] = strconv.FormatBool(v.Echo)
@@ -2271,13 +2262,6 @@ func OptionalServicesToEnvVar(v *OptionalServices) map[string]string {
 // OptionalServicesFromEnvVar creates OptionalServices from environment variable key-value pairs.
 func OptionalServicesFromEnvVar(env map[string]string) (*OptionalServices, error) {
 	result := &OptionalServices{}
-	if val, ok := env["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_SAML"]; ok && val != "" {
-		parsed, err := strconv.ParseBool(val)
-		if err != nil {
-			return nil, err
-		}
-		result.Saml = parsed
-	}
 	if val, ok := env["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_OAUTH"]; ok && val != "" {
 		parsed, err := strconv.ParseBool(val)
 		if err != nil {
@@ -2451,6 +2435,9 @@ func ConfigToEnvVar(v *Config) map[string]string {
 		result["PROTO_SERVICES_OPERATOR_CONFIG_TENANTS"] = strings.Join(v.Tenants, ",")
 	}
 	result["PROTO_SERVICES_OPERATOR_CONFIG_EXTERNAL_IP"] = v.ExternalIp
+	if len(v.ExtraHostnames) > 0 {
+		result["PROTO_SERVICES_OPERATOR_CONFIG_EXTRA_HOSTNAMES"] = strings.Join(v.ExtraHostnames, ",")
+	}
 	result["PROTO_SERVICES_OPERATOR_CONFIG_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_OPERATOR_CONFIG_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -2546,6 +2533,9 @@ func ConfigFromEnvVar(env map[string]string) (*Config, error) {
 	}
 	if val, ok := env["PROTO_SERVICES_OPERATOR_CONFIG_EXTERNAL_IP"]; ok && val != "" {
 		result.ExternalIp = val
+	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_CONFIG_EXTRA_HOSTNAMES"]; ok && val != "" {
+		result.ExtraHostnames = strings.Split(val, ",")
 	}
 	if val, ok := env["PROTO_SERVICES_OPERATOR_CONFIG_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -2847,6 +2837,16 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field Tenants exceeds max size of 64, got: %d", len(m.Tenants))
 	}
 
+	// Validate ExtraHostnames (assert_max_size: 16)
+	if len(m.ExtraHostnames) > 16 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ExtraHostnames exceeds max size of 16, got: %d", len(m.ExtraHostnames))
+	}
+
+	// Validate ImageDigests (assert_max_size: 256)
+	if len(m.ImageDigests) > 256 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ImageDigests exceeds max size of 256, got: %d", len(m.ImageDigests))
+	}
+
 	// Validate LlmCredentialServices elements (default max size: 32768 bytes)
 	for i, val := range m.LlmCredentialServices {
 		if len(val) > 32768 {
@@ -2858,6 +2858,27 @@ func ValidateConfigWithDepth(m *Config, depth int) error {
 	for i, val := range m.Tenants {
 		if len(val) > 32768 {
 			return protoerrors.NewErrMissingInvalidData(nil, "field Tenants[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
+		}
+	}
+
+	// Validate ExtraHostnames elements (default max size: 32768 bytes)
+	for i, val := range m.ExtraHostnames {
+		if len(val) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field ExtraHostnames[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
+		}
+	}
+
+	// Validate ImageDigests keys (default max size: 32768 bytes)
+	for key := range m.ImageDigests {
+		if len(key) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field ImageDigests key exceeds max size of 32768 bytes, got: %d", len(key))
+		}
+	}
+
+	// Validate ImageDigests values (default max size: 32768 bytes)
+	for key, val := range m.ImageDigests {
+		if len(val) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field ImageDigests[%v] exceeds max size of 32768 bytes, got: %d", key, len(val))
 		}
 	}
 
@@ -3028,7 +3049,6 @@ const (
 	DefaultOauthNodes        int64  = 3
 	DefaultOpaNodes          int64  = 3
 	DefaultStratumNodes      int64  = 3
-	DefaultSamlNodes         int64  = 3
 	DefaultKmakerNodes       int64  = 3
 	DefaultEchoNodes         int64  = 1
 	DefaultMessagingNodes    int64  = 1
@@ -3068,6 +3088,8 @@ const (
 	MaxSizeConfigLlmCredentialServices int = 64
 	MaxSizeConfigTenants               int = 64
 	MaxSizeConfigExternalIp            int = 32768
+	MaxSizeConfigExtraHostnames        int = 16
+	MaxSizeConfigImageDigests          int = 256
 	MaxSizeConfigTraceId               int = 32768
 	MaxSizeOperatorconfigstateTraceId  int = 32768
 	MaxSizeMapemptyTraceId             int = 32768
@@ -3108,9 +3130,6 @@ func TopologyDefaults(v *Topology) {
 	}
 	if v.StratumNodes == 0 {
 		v.StratumNodes = int32(DefaultStratumNodes)
-	}
-	if v.SamlNodes == 0 {
-		v.SamlNodes = int32(DefaultSamlNodes)
 	}
 	if v.KmakerNodes == 0 {
 		v.KmakerNodes = int32(DefaultKmakerNodes)
@@ -3246,9 +3265,6 @@ func TopologyUndefaults(v *Topology) {
 	}
 	if v.StratumNodes == int32(DefaultStratumNodes) {
 		v.StratumNodes = 0
-	}
-	if v.SamlNodes == int32(DefaultSamlNodes) {
-		v.SamlNodes = 0
 	}
 	if v.KmakerNodes == int32(DefaultKmakerNodes) {
 		v.KmakerNodes = 0
@@ -3403,9 +3419,6 @@ func MergeTopology(dst, src *Topology) {
 	if dst.StratumSearchNodes == 0 {
 		dst.StratumSearchNodes = src.StratumSearchNodes
 	}
-	if dst.SamlNodes == 0 {
-		dst.SamlNodes = src.SamlNodes
-	}
 	if dst.KmakerNodes == 0 {
 		dst.KmakerNodes = src.KmakerNodes
 	}
@@ -3440,9 +3453,6 @@ func MergeTopology(dst, src *Topology) {
 // ============================================================
 // MergeOptionalServices fills zero-valued fields in dst from src.
 func MergeOptionalServices(dst, src *OptionalServices) {
-	if !dst.Saml {
-		dst.Saml = src.Saml
-	}
 	if !dst.Oauth {
 		dst.Oauth = src.Oauth
 	}
@@ -3581,6 +3591,12 @@ func MergeConfig(dst, src *Config) {
 	}
 	if dst.ExternalIp == "" {
 		dst.ExternalIp = src.ExternalIp
+	}
+	if len(dst.ExtraHostnames) == 0 {
+		dst.ExtraHostnames = src.ExtraHostnames
+	}
+	if len(dst.ImageDigests) == 0 {
+		dst.ImageDigests = src.ImageDigests
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

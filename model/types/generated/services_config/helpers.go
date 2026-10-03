@@ -26,6 +26,7 @@ import (
 	"encoding/json"
 
 	"github.com/pelletier/go-toml/v2"
+	beagle "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/beagle"
 	blobstore "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/blobstore"
 	docmanager "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/docmanager"
 	eventbus "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/eventbus"
@@ -39,15 +40,16 @@ import (
 	oauth "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/oauth"
 	opa "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/opa"
 	operator "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/operator"
+	otto "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/otto"
 	personalauth "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/personalauth"
 	profile "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/profile"
 	reveille "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/reveille"
-	samlsvc "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/samlsvc"
 	scotty "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/scotty"
 	scottyagent "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/scottyagent"
 	scottypersonal "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/scottypersonal"
 	sentinel "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/sentinel"
 	stratum "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/stratum"
+	tally "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/tally"
 	weather "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/weather"
 	work "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/work"
 	protoerrors "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/errors"
@@ -70,7 +72,6 @@ type servicesJSON struct {
 	OauthConfig          json.RawMessage `json:"oauth_config,omitempty"`
 	OpaConfig            json.RawMessage `json:"opa_config,omitempty"`
 	StratumConfig        json.RawMessage `json:"stratum_config,omitempty"`
-	SamlConfig           json.RawMessage `json:"saml_config,omitempty"`
 	OperatorConfig       json.RawMessage `json:"operator_config,omitempty"`
 	KmakerConfig         json.RawMessage `json:"kmaker_config,omitempty"`
 	MessagingConfig      json.RawMessage `json:"messaging_config,omitempty"`
@@ -85,6 +86,9 @@ type servicesJSON struct {
 	WeatherConfig        json.RawMessage `json:"weather_config,omitempty"`
 	LlmproxyConfig       json.RawMessage `json:"llmproxy_config,omitempty"`
 	ProfileConfig        json.RawMessage `json:"profile_config,omitempty"`
+	BeagleConfig         json.RawMessage `json:"beagle_config,omitempty"`
+	OttoConfig           json.RawMessage `json:"otto_config,omitempty"`
+	TallyConfig          json.RawMessage `json:"tally_config,omitempty"`
 	DocmanagerConfig     json.RawMessage `json:"docmanager_config,omitempty"`
 	ReveilleConfig       json.RawMessage `json:"reveille_config,omitempty"`
 }
@@ -144,13 +148,6 @@ func ServicesToJSON(v *Services) ([]byte, error) {
 				return nil
 			}
 			data, _ := stratum.ConfigToJSON(v.StratumConfig)
-			return data
-		}(),
-		SamlConfig: func() json.RawMessage {
-			if v.SamlConfig == nil {
-				return nil
-			}
-			data, _ := samlsvc.ConfigToJSON(v.SamlConfig)
 			return data
 		}(),
 		OperatorConfig: func() json.RawMessage {
@@ -249,6 +246,27 @@ func ServicesToJSON(v *Services) ([]byte, error) {
 				return nil
 			}
 			data, _ := profile.ConfigToJSON(v.ProfileConfig)
+			return data
+		}(),
+		BeagleConfig: func() json.RawMessage {
+			if v.BeagleConfig == nil {
+				return nil
+			}
+			data, _ := beagle.ConfigToJSON(v.BeagleConfig)
+			return data
+		}(),
+		OttoConfig: func() json.RawMessage {
+			if v.OttoConfig == nil {
+				return nil
+			}
+			data, _ := otto.ConfigToJSON(v.OttoConfig)
+			return data
+		}(),
+		TallyConfig: func() json.RawMessage {
+			if v.TallyConfig == nil {
+				return nil
+			}
+			data, _ := tally.ConfigToJSON(v.TallyConfig)
 			return data
 		}(),
 		DocmanagerConfig: func() json.RawMessage {
@@ -326,13 +344,6 @@ func ServicesToJSONPretty(v *Services) ([]byte, error) {
 			data, _ := stratum.ConfigToJSON(v.StratumConfig)
 			return data
 		}(),
-		SamlConfig: func() json.RawMessage {
-			if v.SamlConfig == nil {
-				return nil
-			}
-			data, _ := samlsvc.ConfigToJSON(v.SamlConfig)
-			return data
-		}(),
 		OperatorConfig: func() json.RawMessage {
 			if v.OperatorConfig == nil {
 				return nil
@@ -429,6 +440,27 @@ func ServicesToJSONPretty(v *Services) ([]byte, error) {
 				return nil
 			}
 			data, _ := profile.ConfigToJSON(v.ProfileConfig)
+			return data
+		}(),
+		BeagleConfig: func() json.RawMessage {
+			if v.BeagleConfig == nil {
+				return nil
+			}
+			data, _ := beagle.ConfigToJSON(v.BeagleConfig)
+			return data
+		}(),
+		OttoConfig: func() json.RawMessage {
+			if v.OttoConfig == nil {
+				return nil
+			}
+			data, _ := otto.ConfigToJSON(v.OttoConfig)
+			return data
+		}(),
+		TallyConfig: func() json.RawMessage {
+			if v.TallyConfig == nil {
+				return nil
+			}
+			data, _ := tally.ConfigToJSON(v.TallyConfig)
 			return data
 		}(),
 		DocmanagerConfig: func() json.RawMessage {
@@ -558,13 +590,6 @@ func ServicesFromJSON(data []byte) (*Services, error) {
 			result.StratumConfig = parsed
 		}
 	}
-	// Parse message field: SamlConfig
-	if len(raw.SamlConfig) > 0 {
-		parsed, err := samlsvc.ConfigFromJSON(raw.SamlConfig)
-		if err == nil {
-			result.SamlConfig = parsed
-		}
-	}
 	// Parse message field: OperatorConfig
 	if len(raw.OperatorConfig) > 0 {
 		parsed, err := operator.ConfigFromJSON(raw.OperatorConfig)
@@ -661,6 +686,27 @@ func ServicesFromJSON(data []byte) (*Services, error) {
 		parsed, err := profile.ConfigFromJSON(raw.ProfileConfig)
 		if err == nil {
 			result.ProfileConfig = parsed
+		}
+	}
+	// Parse message field: BeagleConfig
+	if len(raw.BeagleConfig) > 0 {
+		parsed, err := beagle.ConfigFromJSON(raw.BeagleConfig)
+		if err == nil {
+			result.BeagleConfig = parsed
+		}
+	}
+	// Parse message field: OttoConfig
+	if len(raw.OttoConfig) > 0 {
+		parsed, err := otto.ConfigFromJSON(raw.OttoConfig)
+		if err == nil {
+			result.OttoConfig = parsed
+		}
+	}
+	// Parse message field: TallyConfig
+	if len(raw.TallyConfig) > 0 {
+		parsed, err := tally.ConfigFromJSON(raw.TallyConfig)
+		if err == nil {
+			result.TallyConfig = parsed
 		}
 	}
 	// Parse message field: DocmanagerConfig
@@ -793,11 +839,6 @@ func ServicesToEnvVar(v *Services) map[string]string {
 			result[k] = val
 		}
 	}
-	if v.SamlConfig != nil {
-		for k, val := range samlsvc.ConfigToEnvVar(v.SamlConfig) {
-			result[k] = val
-		}
-	}
 	if v.OperatorConfig != nil {
 		for k, val := range operator.ConfigToEnvVar(v.OperatorConfig) {
 			result[k] = val
@@ -868,6 +909,21 @@ func ServicesToEnvVar(v *Services) map[string]string {
 			result[k] = val
 		}
 	}
+	if v.BeagleConfig != nil {
+		for k, val := range beagle.ConfigToEnvVar(v.BeagleConfig) {
+			result[k] = val
+		}
+	}
+	if v.OttoConfig != nil {
+		for k, val := range otto.ConfigToEnvVar(v.OttoConfig) {
+			result[k] = val
+		}
+	}
+	if v.TallyConfig != nil {
+		for k, val := range tally.ConfigToEnvVar(v.TallyConfig) {
+			result[k] = val
+		}
+	}
 	if v.DocmanagerConfig != nil {
 		for k, val := range docmanager.ConfigToEnvVar(v.DocmanagerConfig) {
 			result[k] = val
@@ -918,11 +974,6 @@ func ServicesFromEnvVar(env map[string]string) (*Services, error) {
 		return nil, err
 	} else if sub != nil {
 		result.StratumConfig = sub
-	}
-	if sub, err := samlsvc.ConfigFromEnvVar(env); err != nil {
-		return nil, err
-	} else if sub != nil {
-		result.SamlConfig = sub
 	}
 	if sub, err := operator.ConfigFromEnvVar(env); err != nil {
 		return nil, err
@@ -993,6 +1044,21 @@ func ServicesFromEnvVar(env map[string]string) (*Services, error) {
 		return nil, err
 	} else if sub != nil {
 		result.ProfileConfig = sub
+	}
+	if sub, err := beagle.ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.BeagleConfig = sub
+	}
+	if sub, err := otto.ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.OttoConfig = sub
+	}
+	if sub, err := tally.ConfigFromEnvVar(env); err != nil {
+		return nil, err
+	} else if sub != nil {
+		result.TallyConfig = sub
 	}
 	if sub, err := docmanager.ConfigFromEnvVar(env); err != nil {
 		return nil, err
@@ -1072,13 +1138,6 @@ func ValidateServicesWithDepth(m *Services, depth int) error {
 	if m.StratumConfig != nil {
 		if err := stratum.ValidateConfigWithDepth(m.StratumConfig, depth+1); err != nil {
 			return protoerrors.NewErrMissingInvalidData(err, "field StratumConfig validation failed")
-		}
-	}
-
-	// Validate SamlConfig nested message
-	if m.SamlConfig != nil {
-		if err := samlsvc.ValidateConfigWithDepth(m.SamlConfig, depth+1); err != nil {
-			return protoerrors.NewErrMissingInvalidData(err, "field SamlConfig validation failed")
 		}
 	}
 
@@ -1180,6 +1239,27 @@ func ValidateServicesWithDepth(m *Services, depth int) error {
 		}
 	}
 
+	// Validate BeagleConfig nested message
+	if m.BeagleConfig != nil {
+		if err := beagle.ValidateConfigWithDepth(m.BeagleConfig, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field BeagleConfig validation failed")
+		}
+	}
+
+	// Validate OttoConfig nested message
+	if m.OttoConfig != nil {
+		if err := otto.ValidateConfigWithDepth(m.OttoConfig, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field OttoConfig validation failed")
+		}
+	}
+
+	// Validate TallyConfig nested message
+	if m.TallyConfig != nil {
+		if err := tally.ValidateConfigWithDepth(m.TallyConfig, depth+1); err != nil {
+			return protoerrors.NewErrMissingInvalidData(err, "field TallyConfig validation failed")
+		}
+	}
+
 	// Validate DocmanagerConfig nested message
 	if m.DocmanagerConfig != nil {
 		if err := docmanager.ValidateConfigWithDepth(m.DocmanagerConfig, depth+1); err != nil {
@@ -1244,9 +1324,6 @@ func MergeServices(dst, src *Services) {
 	if dst.StratumConfig == nil {
 		dst.StratumConfig = src.StratumConfig
 	}
-	if dst.SamlConfig == nil {
-		dst.SamlConfig = src.SamlConfig
-	}
 	if dst.OperatorConfig == nil {
 		dst.OperatorConfig = src.OperatorConfig
 	}
@@ -1288,6 +1365,15 @@ func MergeServices(dst, src *Services) {
 	}
 	if dst.ProfileConfig == nil {
 		dst.ProfileConfig = src.ProfileConfig
+	}
+	if dst.BeagleConfig == nil {
+		dst.BeagleConfig = src.BeagleConfig
+	}
+	if dst.OttoConfig == nil {
+		dst.OttoConfig = src.OttoConfig
+	}
+	if dst.TallyConfig == nil {
+		dst.TallyConfig = src.TallyConfig
 	}
 	if dst.DocmanagerConfig == nil {
 		dst.DocmanagerConfig = src.DocmanagerConfig

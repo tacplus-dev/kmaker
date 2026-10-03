@@ -42,10 +42,8 @@ func ServiceNameValues() []ServiceName {
 		ServiceName_SERVICE_NAME_OAUTH,
 		ServiceName_SERVICE_NAME_OPA,
 		ServiceName_SERVICE_NAME_STRATUM,
-		ServiceName_SERVICE_NAME_SAML,
 		ServiceName_SERVICE_NAME_OPERATOR,
 		ServiceName_SERVICE_NAME_KMAKER,
-		ServiceName_SERVICE_NAME_SAMLSVC,
 		ServiceName_SERVICE_NAME_MESSAGING,
 		ServiceName_SERVICE_NAME_SCOTTYAGENT,
 		ServiceName_SERVICE_NAME_MAILBOX,
@@ -58,6 +56,9 @@ func ServiceNameValues() []ServiceName {
 		ServiceName_SERVICE_NAME_WEATHER,
 		ServiceName_SERVICE_NAME_LLMPROXY,
 		ServiceName_SERVICE_NAME_PROFILE,
+		ServiceName_SERVICE_NAME_BEAGLE,
+		ServiceName_SERVICE_NAME_OTTO,
+		ServiceName_SERVICE_NAME_TALLY,
 		ServiceName_SERVICE_NAME_DOCMANAGER,
 		ServiceName_SERVICE_NAME_REVEILLE,
 		ServiceName_SERVICE_NAME_ANY,
@@ -66,7 +67,7 @@ func ServiceNameValues() []ServiceName {
 
 // ServiceNameStringValues returns all valid ServiceName names as strings
 func ServiceNameStringValues() []string {
-	return []string{"sentinel", "gateway", "kernel", "letsencrypt", "eventbus", "oauth", "opa", "stratum", "saml", "operator", "kmaker", "samlsvc", "messaging", "scottyagent", "mailbox", "llmsettings", "personalauth", "blobstore", "scotty", "scottypersonal", "work", "weather", "llmproxy", "profile", "docmanager", "reveille", "any"}
+	return []string{"sentinel", "gateway", "kernel", "letsencrypt", "eventbus", "oauth", "opa", "stratum", "operator", "kmaker", "messaging", "scottyagent", "mailbox", "llmsettings", "personalauth", "blobstore", "scotty", "scottypersonal", "work", "weather", "llmproxy", "profile", "beagle", "otto", "tally", "docmanager", "reveille", "any"}
 }
 
 // ParseServiceName converts a string to a ServiceName enum value
@@ -93,14 +94,10 @@ func ParseServiceName(s string) (ServiceName, error) {
 		return ServiceName_SERVICE_NAME_OPA, nil
 	case "stratum", "service-name-stratum":
 		return ServiceName_SERVICE_NAME_STRATUM, nil
-	case "saml", "service-name-saml":
-		return ServiceName_SERVICE_NAME_SAML, nil
 	case "operator", "service-name-operator":
 		return ServiceName_SERVICE_NAME_OPERATOR, nil
 	case "kmaker", "service-name-kmaker":
 		return ServiceName_SERVICE_NAME_KMAKER, nil
-	case "samlsvc", "service-name-samlsvc":
-		return ServiceName_SERVICE_NAME_SAMLSVC, nil
 	case "messaging", "service-name-messaging":
 		return ServiceName_SERVICE_NAME_MESSAGING, nil
 	case "scottyagent", "service-name-scottyagent":
@@ -125,6 +122,12 @@ func ParseServiceName(s string) (ServiceName, error) {
 		return ServiceName_SERVICE_NAME_LLMPROXY, nil
 	case "profile", "service-name-profile":
 		return ServiceName_SERVICE_NAME_PROFILE, nil
+	case "beagle", "service-name-beagle":
+		return ServiceName_SERVICE_NAME_BEAGLE, nil
+	case "otto", "service-name-otto":
+		return ServiceName_SERVICE_NAME_OTTO, nil
+	case "tally", "service-name-tally":
+		return ServiceName_SERVICE_NAME_TALLY, nil
 	case "docmanager", "service-name-docmanager":
 		return ServiceName_SERVICE_NAME_DOCMANAGER, nil
 	case "reveille", "service-name-reveille":
@@ -177,14 +180,10 @@ func ServiceNameToString(v ServiceName) string {
 		return "opa"
 	case ServiceName_SERVICE_NAME_STRATUM:
 		return "stratum"
-	case ServiceName_SERVICE_NAME_SAML:
-		return "saml"
 	case ServiceName_SERVICE_NAME_OPERATOR:
 		return "operator"
 	case ServiceName_SERVICE_NAME_KMAKER:
 		return "kmaker"
-	case ServiceName_SERVICE_NAME_SAMLSVC:
-		return "samlsvc"
 	case ServiceName_SERVICE_NAME_MESSAGING:
 		return "messaging"
 	case ServiceName_SERVICE_NAME_SCOTTYAGENT:
@@ -209,6 +208,12 @@ func ServiceNameToString(v ServiceName) string {
 		return "llmproxy"
 	case ServiceName_SERVICE_NAME_PROFILE:
 		return "profile"
+	case ServiceName_SERVICE_NAME_BEAGLE:
+		return "beagle"
+	case ServiceName_SERVICE_NAME_OTTO:
+		return "otto"
+	case ServiceName_SERVICE_NAME_TALLY:
+		return "tally"
 	case ServiceName_SERVICE_NAME_DOCMANAGER:
 		return "docmanager"
 	case ServiceName_SERVICE_NAME_REVEILLE:
@@ -253,14 +258,10 @@ func ParseServiceNameLiberal(s string) ServiceName {
 		return ServiceName_SERVICE_NAME_OPA
 	case "stratum", "service-name-stratum":
 		return ServiceName_SERVICE_NAME_STRATUM
-	case "saml", "service-name-saml":
-		return ServiceName_SERVICE_NAME_SAML
 	case "operator", "service-name-operator":
 		return ServiceName_SERVICE_NAME_OPERATOR
 	case "kmaker", "service-name-kmaker":
 		return ServiceName_SERVICE_NAME_KMAKER
-	case "samlsvc", "service-name-samlsvc":
-		return ServiceName_SERVICE_NAME_SAMLSVC
 	case "messaging", "service-name-messaging":
 		return ServiceName_SERVICE_NAME_MESSAGING
 	case "scottyagent", "service-name-scottyagent":
@@ -285,6 +286,12 @@ func ParseServiceNameLiberal(s string) ServiceName {
 		return ServiceName_SERVICE_NAME_LLMPROXY
 	case "profile", "service-name-profile":
 		return ServiceName_SERVICE_NAME_PROFILE
+	case "beagle", "service-name-beagle":
+		return ServiceName_SERVICE_NAME_BEAGLE
+	case "otto", "service-name-otto":
+		return ServiceName_SERVICE_NAME_OTTO
+	case "tally", "service-name-tally":
+		return ServiceName_SERVICE_NAME_TALLY
 	case "docmanager", "service-name-docmanager":
 		return ServiceName_SERVICE_NAME_DOCMANAGER
 	case "reveille", "service-name-reveille":
@@ -317,14 +324,10 @@ func ServiceNameToSpecName(v ServiceName) string {
 		return "SERVICE_NAME_OPA"
 	case ServiceName_SERVICE_NAME_STRATUM:
 		return "SERVICE_NAME_STRATUM"
-	case ServiceName_SERVICE_NAME_SAML:
-		return "SERVICE_NAME_SAML"
 	case ServiceName_SERVICE_NAME_OPERATOR:
 		return "SERVICE_NAME_OPERATOR"
 	case ServiceName_SERVICE_NAME_KMAKER:
 		return "SERVICE_NAME_KMAKER"
-	case ServiceName_SERVICE_NAME_SAMLSVC:
-		return "SERVICE_NAME_SAMLSVC"
 	case ServiceName_SERVICE_NAME_MESSAGING:
 		return "SERVICE_NAME_MESSAGING"
 	case ServiceName_SERVICE_NAME_SCOTTYAGENT:
@@ -349,6 +352,12 @@ func ServiceNameToSpecName(v ServiceName) string {
 		return "SERVICE_NAME_LLMPROXY"
 	case ServiceName_SERVICE_NAME_PROFILE:
 		return "SERVICE_NAME_PROFILE"
+	case ServiceName_SERVICE_NAME_BEAGLE:
+		return "SERVICE_NAME_BEAGLE"
+	case ServiceName_SERVICE_NAME_OTTO:
+		return "SERVICE_NAME_OTTO"
+	case ServiceName_SERVICE_NAME_TALLY:
+		return "SERVICE_NAME_TALLY"
 	case ServiceName_SERVICE_NAME_DOCMANAGER:
 		return "SERVICE_NAME_DOCMANAGER"
 	case ServiceName_SERVICE_NAME_REVEILLE:
@@ -1190,182 +1199,6 @@ func OauthRPCsToSpecName(v OauthRPCs) string {
 		return "OAUTH_RPCS_BROKER_AUTH_MCP_SESSION"
 	case OauthRPCs_OAUTH_RPCS_ANY:
 		return "OAUTH_RPCS_ANY"
-	default:
-		return ""
-	}
-}
-
-// SamlRPCsValues returns all valid SamlRPCs values (excluding UNDEFINED)
-func SamlRPCsValues() []SamlRPCs {
-	return []SamlRPCs{
-		SamlRPCs_SAML_RPCS_MINT_ACS_TOKENS,
-		SamlRPCs_SAML_RPCS_AUTHORIZE,
-		SamlRPCs_SAML_RPCS_MINT_ASSERTION,
-		SamlRPCs_SAML_RPCS_LIST_S_PS,
-		SamlRPCs_SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION,
-		SamlRPCs_SAML_RPCS_GET_IDP_METADATA,
-		SamlRPCs_SAML_RPCS_GET_SP_METADATA,
-		SamlRPCs_SAML_RPCS_GET_IDP_DESCRIPTOR,
-		SamlRPCs_SAML_RPCS_BROKER_METADATA_MCP_SESSION,
-		SamlRPCs_SAML_RPCS_ANY,
-	}
-}
-
-// SamlRPCsStringValues returns all valid SamlRPCs names as strings
-func SamlRPCsStringValues() []string {
-	return []string{"saml-rpcs-mint-acs-tokens", "saml-rpcs-authorize", "saml-rpcs-mint-assertion", "saml-rpcs-list-s-ps", "saml-rpcs-broker-outbound-mcp-session", "saml-rpcs-get-idp-metadata", "saml-rpcs-get-sp-metadata", "saml-rpcs-get-idp-descriptor", "saml-rpcs-broker-metadata-mcp-session", "saml-rpcs-any"}
-}
-
-// ParseSamlRPCs converts a string to a SamlRPCs enum value
-// Accepts both hyphen and underscore formats for compatibility (case-insensitive)
-func ParseSamlRPCs(s string) (SamlRPCs, error) {
-	// Normalize: convert to lowercase and replace underscores with hyphens for case-insensitive comparison
-	normalized := strings.ReplaceAll(strings.ToLower(s), "_", "-")
-	switch normalized {
-	case "":
-		return SamlRPCs_SAML_RPCS_UNSPECIFIED, nil
-	case "saml-rpcs-mint-acs-tokens":
-		return SamlRPCs_SAML_RPCS_MINT_ACS_TOKENS, nil
-	case "saml-rpcs-authorize":
-		return SamlRPCs_SAML_RPCS_AUTHORIZE, nil
-	case "saml-rpcs-mint-assertion":
-		return SamlRPCs_SAML_RPCS_MINT_ASSERTION, nil
-	case "saml-rpcs-list-s-ps":
-		return SamlRPCs_SAML_RPCS_LIST_S_PS, nil
-	case "saml-rpcs-broker-outbound-mcp-session":
-		return SamlRPCs_SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION, nil
-	case "saml-rpcs-get-idp-metadata":
-		return SamlRPCs_SAML_RPCS_GET_IDP_METADATA, nil
-	case "saml-rpcs-get-sp-metadata":
-		return SamlRPCs_SAML_RPCS_GET_SP_METADATA, nil
-	case "saml-rpcs-get-idp-descriptor":
-		return SamlRPCs_SAML_RPCS_GET_IDP_DESCRIPTOR, nil
-	case "saml-rpcs-broker-metadata-mcp-session":
-		return SamlRPCs_SAML_RPCS_BROKER_METADATA_MCP_SESSION, nil
-	case "saml-rpcs-any":
-		return SamlRPCs_SAML_RPCS_ANY, nil
-	default:
-		return SamlRPCs_SAML_RPCS_UNSPECIFIED, protoerrors.NewErrMissingInvalidData(nil, "invalid samlrpcs %s, expecting one of: %v", s, SamlRPCsStringValues())
-	}
-}
-
-// ParseSamlRPCss converts a comma-separated string to a slice of SamlRPCs enum values
-// Returns an error if any value is invalid
-func ParseSamlRPCss(s string) ([]SamlRPCs, error) {
-	if s == "" {
-		return nil, nil
-	}
-	parts := strings.Split(s, ",")
-	result := make([]SamlRPCs, 0, len(parts))
-	for _, part := range parts {
-		trimmed := strings.TrimSpace(part)
-		if trimmed == "" {
-			continue
-		}
-		val, err := ParseSamlRPCs(trimmed)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, val)
-	}
-	return result, nil
-}
-
-// SamlRPCsToString converts a SamlRPCs to its lowercase string representation
-func SamlRPCsToString(v SamlRPCs) string {
-	switch v {
-	case SamlRPCs_SAML_RPCS_MINT_ACS_TOKENS:
-		return "saml-rpcs-mint-acs-tokens"
-	case SamlRPCs_SAML_RPCS_AUTHORIZE:
-		return "saml-rpcs-authorize"
-	case SamlRPCs_SAML_RPCS_MINT_ASSERTION:
-		return "saml-rpcs-mint-assertion"
-	case SamlRPCs_SAML_RPCS_LIST_S_PS:
-		return "saml-rpcs-list-s-ps"
-	case SamlRPCs_SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION:
-		return "saml-rpcs-broker-outbound-mcp-session"
-	case SamlRPCs_SAML_RPCS_GET_IDP_METADATA:
-		return "saml-rpcs-get-idp-metadata"
-	case SamlRPCs_SAML_RPCS_GET_SP_METADATA:
-		return "saml-rpcs-get-sp-metadata"
-	case SamlRPCs_SAML_RPCS_GET_IDP_DESCRIPTOR:
-		return "saml-rpcs-get-idp-descriptor"
-	case SamlRPCs_SAML_RPCS_BROKER_METADATA_MCP_SESSION:
-		return "saml-rpcs-broker-metadata-mcp-session"
-	case SamlRPCs_SAML_RPCS_ANY:
-		return "saml-rpcs-any"
-	default:
-		return ""
-	}
-}
-
-// ParseSamlRPCsLiberal parses a SamlRPCs liberally, accepting:
-// - Integer values (as string or int)
-// - Enum names in any case
-// - RFC-compliant JSON names
-func ParseSamlRPCsLiberal(s string) SamlRPCs {
-	if s == "" {
-		return SamlRPCs_SAML_RPCS_UNSPECIFIED
-	}
-	// Try parsing as integer
-	if num, err := strconv.Atoi(s); err == nil {
-		return SamlRPCs(num)
-	}
-	// Normalize and try parsing
-	normalized := strings.ToLower(strings.TrimSpace(s))
-	normalized = strings.ReplaceAll(normalized, "_", "-")
-	normalized = strings.ReplaceAll(normalized, " ", "-")
-	switch normalized {
-	case "saml-rpcs-mint-acs-tokens":
-		return SamlRPCs_SAML_RPCS_MINT_ACS_TOKENS
-	case "saml-rpcs-authorize":
-		return SamlRPCs_SAML_RPCS_AUTHORIZE
-	case "saml-rpcs-mint-assertion":
-		return SamlRPCs_SAML_RPCS_MINT_ASSERTION
-	case "saml-rpcs-list-s-ps":
-		return SamlRPCs_SAML_RPCS_LIST_S_PS
-	case "saml-rpcs-broker-outbound-mcp-session":
-		return SamlRPCs_SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION
-	case "saml-rpcs-get-idp-metadata":
-		return SamlRPCs_SAML_RPCS_GET_IDP_METADATA
-	case "saml-rpcs-get-sp-metadata":
-		return SamlRPCs_SAML_RPCS_GET_SP_METADATA
-	case "saml-rpcs-get-idp-descriptor":
-		return SamlRPCs_SAML_RPCS_GET_IDP_DESCRIPTOR
-	case "saml-rpcs-broker-metadata-mcp-session":
-		return SamlRPCs_SAML_RPCS_BROKER_METADATA_MCP_SESSION
-	case "saml-rpcs-any":
-		return SamlRPCs_SAML_RPCS_ANY
-	default:
-		return SamlRPCs_SAML_RPCS_UNSPECIFIED
-	}
-}
-
-// SamlRPCsToSpecName converts a SamlRPCs to its canonical protobuf spec name
-func SamlRPCsToSpecName(v SamlRPCs) string {
-	switch v {
-	case SamlRPCs_SAML_RPCS_UNSPECIFIED:
-		return "SAML_RPCS_UNSPECIFIED"
-	case SamlRPCs_SAML_RPCS_MINT_ACS_TOKENS:
-		return "SAML_RPCS_MINT_ACS_TOKENS"
-	case SamlRPCs_SAML_RPCS_AUTHORIZE:
-		return "SAML_RPCS_AUTHORIZE"
-	case SamlRPCs_SAML_RPCS_MINT_ASSERTION:
-		return "SAML_RPCS_MINT_ASSERTION"
-	case SamlRPCs_SAML_RPCS_LIST_S_PS:
-		return "SAML_RPCS_LIST_S_PS"
-	case SamlRPCs_SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION:
-		return "SAML_RPCS_BROKER_OUTBOUND_MCP_SESSION"
-	case SamlRPCs_SAML_RPCS_GET_IDP_METADATA:
-		return "SAML_RPCS_GET_IDP_METADATA"
-	case SamlRPCs_SAML_RPCS_GET_SP_METADATA:
-		return "SAML_RPCS_GET_SP_METADATA"
-	case SamlRPCs_SAML_RPCS_GET_IDP_DESCRIPTOR:
-		return "SAML_RPCS_GET_IDP_DESCRIPTOR"
-	case SamlRPCs_SAML_RPCS_BROKER_METADATA_MCP_SESSION:
-		return "SAML_RPCS_BROKER_METADATA_MCP_SESSION"
-	case SamlRPCs_SAML_RPCS_ANY:
-		return "SAML_RPCS_ANY"
 	default:
 		return ""
 	}

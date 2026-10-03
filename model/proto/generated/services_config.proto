@@ -13,7 +13,6 @@ import "services/eventbus.proto";
 import "services/oauth.proto";
 import "services/opa.proto";
 import "services/stratum.proto";
-import "services/saml.proto";
 import "services/operator.proto";
 import "services/kmaker.proto";
 import "services/messaging.proto";
@@ -28,6 +27,9 @@ import "services/work.proto";
 import "services/weather.proto";
 import "services/llmproxy.proto";
 import "services/profile.proto";
+import "services/beagle.proto";
+import "services/otto.proto";
+import "services/tally.proto";
 import "services/docmanager.proto";
 import "services/reveille.proto";
 
@@ -39,7 +41,6 @@ message Services {
   oauth.Config oauth_config = 21;
   opa.Config opa_config = 29;
   stratum.Config stratum_config = 34;
-  samlsvc.Config saml_config = 38;
   operator.Config operator_config = 47;
   kmaker.Config kmaker_config = 49;
   messaging.Config messaging_config = 53;
@@ -54,6 +55,9 @@ message Services {
   weather.Config weather_config = 74;
   llmproxy.Config llmproxy_config = 75;
   profile.Config profile_config = 76;
+  beagle.Config beagle_config = 77;
+  otto.Config otto_config = 78;
+  tally.Config tally_config = 79;
   docmanager.Config docmanager_config = 80;
   reveille.Config reveille_config = 81;
 }

@@ -5,9 +5,9 @@ This file is embedded in `registry.json` and describes how to navigate it.
 ## Overview
 
 This registry describes a tacplus-generated service mesh with:
-- **1963** message types across **75** packages
-- **1088** RPCs across **117** gRPC services
-- **106** state boundaries
+- **2276** message types across **78** packages
+- **1215** RPCs across **129** gRPC services
+- **121** state boundaries
 
 ## Structure
 
@@ -476,6 +476,7 @@ Each `RpcInfo` carries:
 - **AgentSessionStateBusStateService**
 - **AlertBusStateService**
 - **Auth**
+- **BeagleConfigStateService**
 - **BlobBusStateService**
 - **BlobLinkBusStateService**
 - **BlobLinkStatsBusStateService**
@@ -489,7 +490,10 @@ Each `RpcInfo` carries:
 - **CliTokenBroker**
 - **ClusterService**
 - **ClusterStateService**
+- **CompanyStructureBusStateService**
 - **ConfigStateService**
+- **CrewCursorBusStateService**
+- **CrewEventBusStateService**
 - **Dashboard**
 - **Device**
 - **DocFileMetadataBusStateService**
@@ -502,11 +506,14 @@ Each `RpcInfo` carries:
 - **FencedLock**
 - **ForecastBusStateService**
 - **GatewayConfigStateService**
+- **GrantBusStateService**
 - **HumanBusStateService**
 - **IdentityStateService**
-- **Inbound**
 - **IngestPipelineBusStateService**
+- **JobBidBusStateService**
 - **JobBusStateService**
+- **JobEquipmentBusStateService**
+- **JobPermitsBusStateService**
 - **JwkVerifyingKeysViewService**
 - **Kmaker**
 - **KmakerConfigStateService**
@@ -519,13 +526,13 @@ Each `RpcInfo` carries:
 - **LlmSettings**
 - **LlmproxyConfigStateService**
 - **LlmsettingsConfigStateService**
+- **Locate811TicketBusStateService**
 - **Mailbox**
 - **MailboxConfigStateService**
 - **MailboxEntryBusStateService**
 - **MessageBusStateService**
 - **Messaging**
 - **MessagingConfigStateService**
-- **Metadata**
 - **Mint**
 - **OauthConfigStateService**
 - **ObservationBusStateService**
@@ -533,7 +540,7 @@ Each `RpcInfo` carries:
 - **OpaEval**
 - **OpaStateService**
 - **OperatorConfigStateService**
-- **Outbound**
+- **OttoConfigStateService**
 - **PartnerBusStateService**
 - **PermitBusStateService**
 - **PersonalIdentity**
@@ -545,11 +552,12 @@ Each `RpcInfo` carries:
 - **ProfileConfigStateService**
 - **PublicJwksViewService**
 - **RecordMap**
+- **ReportBusStateService**
 - **Reveille**
 - **ReveilleConfigStateService**
 - **RfpBusStateService**
 - **RuleNodeBusStateService**
-- **SamlConfigStateService**
+- **RunCheckpointBusStateService**
 - **Scotty**
 - **ScottyActivityBusStateService**
 - **ScottyAgent**
@@ -565,19 +573,23 @@ Each `RpcInfo` carries:
 - **Session**
 - **SmbCertService**
 - **StratumConfigStateService**
+- **TallyConfigStateService**
 - **TaskBusStateService**
 - **TenantAdmin**
+- **ThreadMapEntryBusStateService**
 - **TicketAdviceBusStateService**
 - **TicketBusStateService**
 - **TicketCommentBusStateService**
 - **TicketDecisionBusStateService**
 - **TlsCertService**
+- **ToolCallOutcomeBusStateService**
 - **TraceEventBusStateService**
 - **TraceSession**
 - **TrustedCaStateService**
 - **UploadSessionBusStateService**
 - **UserMint**
 - **UserProfileBusStateService**
+- **WaitBusStateService**
 - **Weather**
 - **WeatherConfigStateService**
 - **Work**
@@ -598,6 +610,7 @@ Each `RpcInfo` carries:
 - `generated/services`
 - `generated/services_config`
 - `generated/tenant_config`
+- `services/beagle`
 - `services/blobstore`
 - `services/docmanager`
 - `services/eventbus`
@@ -612,17 +625,20 @@ Each `RpcInfo` carries:
 - `services/oauth`
 - `services/opa`
 - `services/operator`
+- `services/otto`
 - `services/personalauth`
 - `services/profile`
 - `services/reveille`
-- `services/saml`
 - `services/scotty`
 - `services/scottyagent`
 - `services/scottypersonal`
 - `services/sentinel`
 - `services/stratum`
+- `services/tally`
 - `services/weather`
 - `services/work`
+- `shared/crew`
+- `shared/pigeon`
 - `sys/accounting`
 - `sys/alpn`
 - `sys/cloudidentity`
@@ -647,7 +663,6 @@ Each `RpcInfo` carries:
 - `sys/outputformat`
 - `sys/publicjwksview`
 - `sys/query`
-- `sys/saml`
 - `sys/smbcert`
 - `sys/spec`
 - `sys/tacplus`

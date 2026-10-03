@@ -93,7 +93,7 @@ type MintClient interface {
 	// check that matters is Delegate.auth_broker_kinds containing the request's
 	// broker_kind, done inside the handler, exactly as doMintDelegatedToken
 	// checks grant.delegate_name. Empty auth_broker_kinds — the default — is
-	// refused, so this is a relocation of the former ["oauth", "saml"] allowlist,
+	// refused, so this is a relocation of the former hardcoded broker allowlist,
 	// not a widening.
 	MintUserToken(ctx context.Context, in *tokenrequest.MintUserTokenRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error)
 	// MintDelegatedToken — standing delegation (Grant) mint. A delegate presents
@@ -106,7 +106,7 @@ type MintClient interface {
 	// mints this directly, not on a broker's attestation). No refresh/offline
 	// token is issued; the delegate re-mints per use from the same Grant id.
 	// auth_services: ["*"] because any registered delegate may hold a grant (not
-	// just oauth/saml); the identity check that matters is grant.delegate_name,
+	// just oauth); the identity check that matters is grant.delegate_name,
 	// done inside the handler, exactly as doMintUserToken checks the caller
 	// against a Delegate today.
 	MintDelegatedToken(ctx context.Context, in *tokenrequest.MintDelegatedTokenRequest, opts ...grpc.CallOption) (*tokenrequest.MintDelegatedTokenResponse, error)
@@ -117,7 +117,7 @@ type MintClient interface {
 	// single-use, and releases the Offline Token. The code alone is not
 	// sufficient — the redeeming identity is the security boundary.
 	// auth_services: ["*"] because any registered delegate may be handed a code
-	// (not just oauth/saml); the identity check that matters is the withheld
+	// (not just oauth); the identity check that matters is the withheld
 	// token's act claim, done inside the handler, exactly as doMintDelegatedToken
 	// checks grant.delegate_name today.
 	// Named Broker, not Redeem: "Redeem" is not in tacplus's closed verb registry
@@ -463,7 +463,7 @@ type MintServer interface {
 	// check that matters is Delegate.auth_broker_kinds containing the request's
 	// broker_kind, done inside the handler, exactly as doMintDelegatedToken
 	// checks grant.delegate_name. Empty auth_broker_kinds — the default — is
-	// refused, so this is a relocation of the former ["oauth", "saml"] allowlist,
+	// refused, so this is a relocation of the former hardcoded broker allowlist,
 	// not a widening.
 	MintUserToken(context.Context, *tokenrequest.MintUserTokenRequest) (*tokenrequest.TokenMintResponse, error)
 	// MintDelegatedToken — standing delegation (Grant) mint. A delegate presents
@@ -476,7 +476,7 @@ type MintServer interface {
 	// mints this directly, not on a broker's attestation). No refresh/offline
 	// token is issued; the delegate re-mints per use from the same Grant id.
 	// auth_services: ["*"] because any registered delegate may hold a grant (not
-	// just oauth/saml); the identity check that matters is grant.delegate_name,
+	// just oauth); the identity check that matters is grant.delegate_name,
 	// done inside the handler, exactly as doMintUserToken checks the caller
 	// against a Delegate today.
 	MintDelegatedToken(context.Context, *tokenrequest.MintDelegatedTokenRequest) (*tokenrequest.MintDelegatedTokenResponse, error)
@@ -487,7 +487,7 @@ type MintServer interface {
 	// single-use, and releases the Offline Token. The code alone is not
 	// sufficient — the redeeming identity is the security boundary.
 	// auth_services: ["*"] because any registered delegate may be handed a code
-	// (not just oauth/saml); the identity check that matters is the withheld
+	// (not just oauth); the identity check that matters is the withheld
 	// token's act claim, done inside the handler, exactly as doMintDelegatedToken
 	// checks grant.delegate_name today.
 	// Named Broker, not Redeem: "Redeem" is not in tacplus's closed verb registry

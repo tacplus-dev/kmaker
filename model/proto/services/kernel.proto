@@ -62,14 +62,10 @@ import "sys/trace.proto";
 // Import OPA proxy policy evaluation for external token minting.
 // Kernel calls OPA with the caller's claims and dst_url before minting
 // an external token via Mint.MintExternalToken. The policy decides permit/deny,
-// URL rewrite, aud override, extra claims, and credential format (JWT/SAML).
+// URL rewrite, aud override, extra claims, and credential format.
 
 // Data must exist on at least 3 nodes (1 primary + 2 backups).
 // Hazelcast backupCount = min(MIN_DATA_COPIES - 1, clusterSize - 1).
-
-// REST_ROOT_PATH is the base path for all REST endpoints exposed by the gateway.
-// All service methods are exposed at {REST_ROOT_PATH}/{service_grpc}/{MethodName}.
-// Also used by kernel as the token issuer path suffix.
 
 // SIGNING_KEY_FILE is the filename written under disk_dir for the active
 // signing key. Each kernel instance writes its own key independently.
@@ -388,7 +384,7 @@ service Mint {
   // check that matters is Delegate.auth_broker_kinds containing the request's
   // broker_kind, done inside the handler, exactly as doMintDelegatedToken
   // checks grant.delegate_name. Empty auth_broker_kinds — the default — is
-  // refused, so this is a relocation of the former ["oauth", "saml"] allowlist,
+  // refused, so this is a relocation of the former hardcoded broker allowlist,
   // not a widening.
   rpc MintUserToken(tokenrequest.MintUserTokenRequest) returns (tokenrequest.TokenMintResponse) {
   }
@@ -403,7 +399,7 @@ service Mint {
   // mints this directly, not on a broker's attestation). No refresh/offline
   // token is issued; the delegate re-mints per use from the same Grant id.
   // auth_services: ["*"] because any registered delegate may hold a grant (not
-  // just oauth/saml); the identity check that matters is grant.delegate_name,
+  // just oauth); the identity check that matters is grant.delegate_name,
   // done inside the handler, exactly as doMintUserToken checks the caller
   // against a Delegate today.
   rpc MintDelegatedToken(tokenrequest.MintDelegatedTokenRequest)
@@ -417,7 +413,7 @@ service Mint {
   // single-use, and releases the Offline Token. The code alone is not
   // sufficient — the redeeming identity is the security boundary.
   // auth_services: ["*"] because any registered delegate may be handed a code
-  // (not just oauth/saml); the identity check that matters is the withheld
+  // (not just oauth); the identity check that matters is the withheld
   // token's act claim, done inside the handler, exactly as doMintDelegatedToken
   // checks grant.delegate_name today.
   // Named Broker, not Redeem: "Redeem" is not in tacplus's closed verb registry
@@ -924,7 +920,7 @@ message Delegate {
   // delegate is trusted to broker into Mint.MintUserToken. EMPTY — the default,
   // and every delegate in the fleet today — means this delegate is NOT an auth
   // broker and MintUserToken refuses it. This replaces the former hardcoded
-  // auth_services: ["oauth","saml"] allowlist on that RPC: who may attest a
+  // auth_services broker allowlist on that RPC: who may attest a
   // human login is per-delegate runtime config, not a compile-time literal in
   // this file.
   repeated tokenrequest.AuthBrokerKind auth_broker_kinds = 8;

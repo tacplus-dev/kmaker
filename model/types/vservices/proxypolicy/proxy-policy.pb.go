@@ -246,7 +246,7 @@ type ProxyPolicyEvalResult struct {
 	// external token's aud claim. The caller's original aud is always preserved —
 	// OPA may only add audiences, never replace or remove the original.
 	// Most policies leave this empty. Set it when the upstream requires a specific
-	// audience value (e.g. an OIDC client ID or SAML SP entity ID) in addition to
+	// audience value (e.g. an OIDC client ID) in addition to
 	// the caller's existing aud.
 	AppendAud []string `protobuf:"bytes,4,rep,name=append_aud,json=appendAud,proto3" json:"append_aud,omitempty"`
 	// extra_claims contains additional JWT claims to inject into the minted token.
@@ -256,7 +256,6 @@ type ProxyPolicyEvalResult struct {
 	ExtraClaims *structpb.Struct `protobuf:"bytes,5,opt,name=extra_claims,json=extraClaims,proto3" json:"extra_claims,omitempty"`
 	// auth_type determines the credential format kernel returns to the proxy.
 	// TOKEN_TYPE_JWT (default): kernel returns a signed JWT in the response.
-	// TOKEN_TYPE_SAML: kernel returns a SAML assertion in the response.
 	// Unset is treated as TOKEN_TYPE_JWT.
 	AuthType token.TokenType `protobuf:"varint,6,opt,name=auth_type,json=authType,proto3,enum=token.TokenType" json:"auth_type,omitempty"`
 	// token_use sets the token_use claim on the minted external token.
