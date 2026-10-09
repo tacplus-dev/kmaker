@@ -375,6 +375,17 @@ service Mint {
   rpc MintServiceToken(tokenrequest.MintServiceTokenRequest) returns (tokenrequest.TokenMintResponse) {
   }
 
+  // MintExternalServiceToken — a service's OWN identity for an off-cluster
+  // audience (WIF jwt-bearer assertion, e.g. aud = https://api.anthropic.com).
+  // The caller presents its kernel-signed service token in input_token; kernel
+  // verifies it, takes sub from it (never from the request), checks aud against
+  // the caller Delegate's external-audience allowlist, and mints a NEW token on
+  // every call. Never calls OPA. Signs ES256 (WIF rejects EdDSA).
+  // auth_disabled: the credential is input_token in the body, as MintServiceToken.
+  rpc MintExternalServiceToken(tokenrequest.MintExternalServiceTokenRequest)
+      returns (tokenrequest.TokenMintResponse) {
+  }
+
   // MintUserToken — on-behalf-of (AZP). A broker presents the user's
   // already-IDP-validated claims; kernel runs OPA EvalEntitlement on them, then
   // signs a user token with sub = user and azp = the broker's identity (the
@@ -924,6 +935,12 @@ message Delegate {
   // human login is per-delegate runtime config, not a compile-time literal in
   // this file.
   repeated tokenrequest.AuthBrokerKind auth_broker_kinds = 8;
+
+  // external_audiences lists the off-cluster audiences (e.g.
+  // "https://api.anthropic.com") this delegate may mint its OWN identity for
+  // via Mint.MintExternalServiceToken. Exact match. EMPTY — the default —
+  // means the delegate may mint no external service token.
+  repeated string external_audiences = 9;
   string trace_id = 200;
   bool noop = 201;
 }
@@ -4864,19 +4881,20 @@ enum MintRpcId {
   MINT_RPC_ID_ALL_MUTATORS = 2;
   MINT_RPC_ID_ALL_EXECUTORS = 3;
   MINT_RPC_ID_MINT_SERVICE_TOKEN = 4;
-  MINT_RPC_ID_MINT_USER_TOKEN = 5;
-  MINT_RPC_ID_MINT_DELEGATED_TOKEN = 6;
-  MINT_RPC_ID_BROKER_DELEGATE_OFFLINE_TOKEN = 7;
-  MINT_RPC_ID_MINT_TOKEN = 8;
-  MINT_RPC_ID_MINT_EXTERNAL_TOKEN = 9;
-  MINT_RPC_ID_MINT_CLIENT_TOKEN = 10;
-  MINT_RPC_ID_CREATE_PERSONAL_PRINCIPAL = 11;
-  MINT_RPC_ID_CREATE_TENANT_USER_LINK = 12;
-  MINT_RPC_ID_BROKER_PENDING_APPROVAL = 13;
-  MINT_RPC_ID_MINT_X509_CERT = 14;
-  MINT_RPC_ID_MINT_WORKLOAD = 15;
-  MINT_RPC_ID_REVOKE_WORKLOAD = 16;
-  MINT_RPC_ID_REVOKE_GRANT = 17;
+  MINT_RPC_ID_MINT_EXTERNAL_SERVICE_TOKEN = 5;
+  MINT_RPC_ID_MINT_USER_TOKEN = 6;
+  MINT_RPC_ID_MINT_DELEGATED_TOKEN = 7;
+  MINT_RPC_ID_BROKER_DELEGATE_OFFLINE_TOKEN = 8;
+  MINT_RPC_ID_MINT_TOKEN = 9;
+  MINT_RPC_ID_MINT_EXTERNAL_TOKEN = 10;
+  MINT_RPC_ID_MINT_CLIENT_TOKEN = 11;
+  MINT_RPC_ID_CREATE_PERSONAL_PRINCIPAL = 12;
+  MINT_RPC_ID_CREATE_TENANT_USER_LINK = 13;
+  MINT_RPC_ID_BROKER_PENDING_APPROVAL = 14;
+  MINT_RPC_ID_MINT_X509_CERT = 15;
+  MINT_RPC_ID_MINT_WORKLOAD = 16;
+  MINT_RPC_ID_REVOKE_WORKLOAD = 17;
+  MINT_RPC_ID_REVOKE_GRANT = 18;
 }
 
 enum UserMintRpcId {

@@ -43,6 +43,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Mint_MintServiceToken_FullMethodName           = "/kernel.Mint/MintServiceToken"
+	Mint_MintExternalServiceToken_FullMethodName   = "/kernel.Mint/MintExternalServiceToken"
 	Mint_MintUserToken_FullMethodName              = "/kernel.Mint/MintUserToken"
 	Mint_MintDelegatedToken_FullMethodName         = "/kernel.Mint/MintDelegatedToken"
 	Mint_BrokerDelegateOfflineToken_FullMethodName = "/kernel.Mint/BrokerDelegateOfflineToken"
@@ -84,6 +85,14 @@ type MintClient interface {
 	// auth_disabled: the caller authenticates via credentials in the request body
 	// (kubernetes_token / cloud_proof / kernel-signed input_token), not a bearer header.
 	MintServiceToken(ctx context.Context, in *tokenrequest.MintServiceTokenRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error)
+	// MintExternalServiceToken — a service's OWN identity for an off-cluster
+	// audience (WIF jwt-bearer assertion, e.g. aud = https://api.anthropic.com).
+	// The caller presents its kernel-signed service token in input_token; kernel
+	// verifies it, takes sub from it (never from the request), checks aud against
+	// the caller Delegate's external-audience allowlist, and mints a NEW token on
+	// every call. Never calls OPA. Signs ES256 (WIF rejects EdDSA).
+	// auth_disabled: the credential is input_token in the body, as MintServiceToken.
+	MintExternalServiceToken(ctx context.Context, in *tokenrequest.MintExternalServiceTokenRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error)
 	// MintUserToken — on-behalf-of (AZP). A broker presents the user's
 	// already-IDP-validated claims; kernel runs OPA EvalEntitlement on them, then
 	// signs a user token with sub = user and azp = the broker's identity (the
@@ -298,6 +307,16 @@ func (c *mintClient) MintServiceToken(ctx context.Context, in *tokenrequest.Mint
 	return out, nil
 }
 
+func (c *mintClient) MintExternalServiceToken(ctx context.Context, in *tokenrequest.MintExternalServiceTokenRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(tokenrequest.TokenMintResponse)
+	err := c.cc.Invoke(ctx, Mint_MintExternalServiceToken_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *mintClient) MintUserToken(ctx context.Context, in *tokenrequest.MintUserTokenRequest, opts ...grpc.CallOption) (*tokenrequest.TokenMintResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(tokenrequest.TokenMintResponse)
@@ -454,6 +473,14 @@ type MintServer interface {
 	// auth_disabled: the caller authenticates via credentials in the request body
 	// (kubernetes_token / cloud_proof / kernel-signed input_token), not a bearer header.
 	MintServiceToken(context.Context, *tokenrequest.MintServiceTokenRequest) (*tokenrequest.TokenMintResponse, error)
+	// MintExternalServiceToken — a service's OWN identity for an off-cluster
+	// audience (WIF jwt-bearer assertion, e.g. aud = https://api.anthropic.com).
+	// The caller presents its kernel-signed service token in input_token; kernel
+	// verifies it, takes sub from it (never from the request), checks aud against
+	// the caller Delegate's external-audience allowlist, and mints a NEW token on
+	// every call. Never calls OPA. Signs ES256 (WIF rejects EdDSA).
+	// auth_disabled: the credential is input_token in the body, as MintServiceToken.
+	MintExternalServiceToken(context.Context, *tokenrequest.MintExternalServiceTokenRequest) (*tokenrequest.TokenMintResponse, error)
 	// MintUserToken — on-behalf-of (AZP). A broker presents the user's
 	// already-IDP-validated claims; kernel runs OPA EvalEntitlement on them, then
 	// signs a user token with sub = user and azp = the broker's identity (the
@@ -661,6 +688,9 @@ type UnimplementedMintServer struct{}
 func (UnimplementedMintServer) MintServiceToken(context.Context, *tokenrequest.MintServiceTokenRequest) (*tokenrequest.TokenMintResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method MintServiceToken not implemented")
 }
+func (UnimplementedMintServer) MintExternalServiceToken(context.Context, *tokenrequest.MintExternalServiceTokenRequest) (*tokenrequest.TokenMintResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MintExternalServiceToken not implemented")
+}
 func (UnimplementedMintServer) MintUserToken(context.Context, *tokenrequest.MintUserTokenRequest) (*tokenrequest.TokenMintResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method MintUserToken not implemented")
 }
@@ -735,6 +765,24 @@ func _Mint_MintServiceToken_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MintServer).MintServiceToken(ctx, req.(*tokenrequest.MintServiceTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Mint_MintExternalServiceToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(tokenrequest.MintExternalServiceTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MintServer).MintExternalServiceToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Mint_MintExternalServiceToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MintServer).MintExternalServiceToken(ctx, req.(*tokenrequest.MintExternalServiceTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -983,6 +1031,10 @@ var Mint_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "MintServiceToken",
 			Handler:    _Mint_MintServiceToken_Handler,
+		},
+		{
+			MethodName: "MintExternalServiceToken",
+			Handler:    _Mint_MintExternalServiceToken_Handler,
 		},
 		{
 			MethodName: "MintUserToken",

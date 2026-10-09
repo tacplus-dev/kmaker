@@ -1,5 +1,5 @@
 {
-  "binary_hash": "12f70d296494559d7f3ce2147313b3299997131352dc3e0a3210ce5bf9b6d2e2",
+  "binary_hash": "cda8bd22c3d185689e7a0fe356b43ae9272ed560c90451e58d2bf68096220683",
   "config_hash": "96afe4a4ffbb098627b91943011748a93631d6d3017ac569fecd67829349c203",
   "structure_hash": "2fa13f5e78984c47e08d675aa5f2d9104b58e17b2be27aafb6452d3dc0726648",
   "files": {
@@ -16,7 +16,7 @@
     "services/docmanager.proto": "2b40c3a0f39903d95f625ac757d699126beac0d993c6b8ebc24dfd74a86783d7",
     "services/eventbus.proto": "3c813bb3d6a6217c388185fdb46f3a93b8c9360fdb00c7f70dd9d2ac8ae261d1",
     "services/gateway.proto": "5a80a7a7933a542f13060557e0859b1c65d72335a7c19d0f797fc1f9052dbf0a",
-    "services/kernel.proto": "ba8386001a71a9c7763112a0bcb0b7e02efb3bb58aa2e083a5e23dc33f5b09e7",
+    "services/kernel.proto": "6e7785691b3ff7cc39a741325d59272815e1046f4c60e2bb612f92fd70ccb17d",
     "services/kmaker.proto": "c28c57f73b252363e9da38576365c8721e69779055485de73c7322ee80a6f248",
     "services/letsencrypt.proto": "d6842bd779bf5af7488a2d883962e868a9343545f4a11b6fbf7d0e0a65f40143",
     "services/llmproxy.proto": "b805d39dd79a2f7ebbc2e81da383687c4af6e5afe35db0dfa2a730de51eeaaed",
@@ -30,9 +30,9 @@
     "services/personalauth.proto": "388afee628dc18bd5f2f4437398c5f351e773e2cd77be259e0acd943e07a5bc2",
     "services/profile.proto": "b02c44e522a263b6880f7ed6043de6a9d17d1b9d2fab0cea0007292650e47538",
     "services/reveille.proto": "6cafb64933be8e16fc42ef2308301e6e0db01279ef3562c009606be551d54af1",
-    "services/scotty.proto": "2d5612dc90af69ed7fd1ebc080d9cbf5299bf8d7085919058c094c982b0bda55",
+    "services/scotty.proto": "0cc1838c97c124b3a3a0c8d256ea55b41eb544667a7daff720cc16a58f655b5b",
     "services/scottyagent.proto": "4ba93dbe1b34f03b871072b791d2d1a5351800235fdf7aafef1308a041326cf8",
-    "services/scottypersonal.proto": "1520d8ce0c7c477888e436063b305acef2c29db47cd015ea081377da14652c5e",
+    "services/scottypersonal.proto": "89a52c8d1d7f7629fff46e829d4ce6b8f98a8162c3a5fb11325b0d306c5ff32a",
     "services/sentinel.proto": "2deb5ebe7a7e53a081ef7331001bd3a4db7842ca218206a731f4f8d480d68869",
     "services/stratum.proto": "4e8388944f17afc7b2dd876c44bb9451c3750e8437bac7b2a0a6565657291093",
     "services/tally.proto": "d699d63c5f57be923050bb10082e80693a4ea90702494e454651524ac934e8ad",

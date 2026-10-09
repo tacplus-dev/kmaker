@@ -4489,6 +4489,7 @@ func MintRpcIdValues() []MintRpcId {
 		MintRpcId_MINT_RPC_ID_ALL_MUTATORS,
 		MintRpcId_MINT_RPC_ID_ALL_EXECUTORS,
 		MintRpcId_MINT_RPC_ID_MINT_SERVICE_TOKEN,
+		MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_SERVICE_TOKEN,
 		MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN,
 		MintRpcId_MINT_RPC_ID_MINT_DELEGATED_TOKEN,
 		MintRpcId_MINT_RPC_ID_BROKER_DELEGATE_OFFLINE_TOKEN,
@@ -4507,7 +4508,7 @@ func MintRpcIdValues() []MintRpcId {
 
 // MintRpcIdStringValues returns all valid MintRpcId names as strings
 func MintRpcIdStringValues() []string {
-	return []string{"all-accessors", "all-mutators", "all-executors", "mint-service-token", "mint-user-token", "mint-delegated-token", "broker-delegate-offline-token", "mint-token", "mint-external-token", "mint-client-token", "create-personal-principal", "create-tenant-user-link", "broker-pending-approval", "mint-x509-cert", "mint-workload", "revoke-workload", "revoke-grant"}
+	return []string{"all-accessors", "all-mutators", "all-executors", "mint-service-token", "mint-external-service-token", "mint-user-token", "mint-delegated-token", "broker-delegate-offline-token", "mint-token", "mint-external-token", "mint-client-token", "create-personal-principal", "create-tenant-user-link", "broker-pending-approval", "mint-x509-cert", "mint-workload", "revoke-workload", "revoke-grant"}
 }
 
 // ParseMintRpcId converts a string to a MintRpcId enum value
@@ -4526,6 +4527,8 @@ func ParseMintRpcId(s string) (MintRpcId, error) {
 		return MintRpcId_MINT_RPC_ID_ALL_EXECUTORS, nil
 	case "mint-service-token", "mint-rpc-id-mint-service-token":
 		return MintRpcId_MINT_RPC_ID_MINT_SERVICE_TOKEN, nil
+	case "mint-external-service-token", "mint-rpc-id-mint-external-service-token":
+		return MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_SERVICE_TOKEN, nil
 	case "mint-user-token", "mint-rpc-id-mint-user-token":
 		return MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN, nil
 	case "mint-delegated-token", "mint-rpc-id-mint-delegated-token":
@@ -4590,6 +4593,8 @@ func MintRpcIdToString(v MintRpcId) string {
 		return "all-executors"
 	case MintRpcId_MINT_RPC_ID_MINT_SERVICE_TOKEN:
 		return "mint-service-token"
+	case MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_SERVICE_TOKEN:
+		return "mint-external-service-token"
 	case MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN:
 		return "mint-user-token"
 	case MintRpcId_MINT_RPC_ID_MINT_DELEGATED_TOKEN:
@@ -4646,6 +4651,8 @@ func ParseMintRpcIdLiberal(s string) MintRpcId {
 		return MintRpcId_MINT_RPC_ID_ALL_EXECUTORS
 	case "mint-service-token", "mint-rpc-id-mint-service-token":
 		return MintRpcId_MINT_RPC_ID_MINT_SERVICE_TOKEN
+	case "mint-external-service-token", "mint-rpc-id-mint-external-service-token":
+		return MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_SERVICE_TOKEN
 	case "mint-user-token", "mint-rpc-id-mint-user-token":
 		return MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN
 	case "mint-delegated-token", "mint-rpc-id-mint-delegated-token":
@@ -4690,6 +4697,8 @@ func MintRpcIdToSpecName(v MintRpcId) string {
 		return "MINT_RPC_ID_ALL_EXECUTORS"
 	case MintRpcId_MINT_RPC_ID_MINT_SERVICE_TOKEN:
 		return "MINT_RPC_ID_MINT_SERVICE_TOKEN"
+	case MintRpcId_MINT_RPC_ID_MINT_EXTERNAL_SERVICE_TOKEN:
+		return "MINT_RPC_ID_MINT_EXTERNAL_SERVICE_TOKEN"
 	case MintRpcId_MINT_RPC_ID_MINT_USER_TOKEN:
 		return "MINT_RPC_ID_MINT_USER_TOKEN"
 	case MintRpcId_MINT_RPC_ID_MINT_DELEGATED_TOKEN:
@@ -13264,6 +13273,7 @@ type delegateJSON struct {
 	AuthorizedServices        []string          `json:"authorized_services,omitempty"`
 	CustomClaims              map[string]string `json:"custom_claims,omitempty"`
 	AuthBrokerKinds           []string          `json:"auth_broker_kinds,omitempty"`
+	ExternalAudiences         []string          `json:"external_audiences,omitempty"`
 	TraceId                   string            `json:"trace_id,omitempty"`
 	Noop                      bool              `json:"noop,omitempty"`
 }
@@ -13327,8 +13337,9 @@ func DelegateToJSON(v *Delegate) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		ExternalAudiences: v.ExternalAudiences,
+		TraceId:           v.TraceId,
+		Noop:              v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -13392,8 +13403,9 @@ func DelegateToJSONPretty(v *Delegate) ([]byte, error) {
 			}
 			return result
 		}(),
-		TraceId: v.TraceId,
-		Noop:    v.Noop,
+		ExternalAudiences: v.ExternalAudiences,
+		TraceId:           v.TraceId,
+		Noop:              v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -13513,6 +13525,7 @@ func DelegateFromJSON(data []byte) (*Delegate, error) {
 			}
 		}
 	}
+	result.ExternalAudiences = raw.ExternalAudiences
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -76003,6 +76016,9 @@ func DelegateToEnvVar(v *Delegate) map[string]string {
 		}
 		result["PROTO_SERVICES_KERNEL_DELEGATE_AUTH_BROKER_KINDS"] = strings.Join(parts, ",")
 	}
+	if len(v.ExternalAudiences) > 0 {
+		result["PROTO_SERVICES_KERNEL_DELEGATE_EXTERNAL_AUDIENCES"] = strings.Join(v.ExternalAudiences, ",")
+	}
 	result["PROTO_SERVICES_KERNEL_DELEGATE_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_KERNEL_DELEGATE_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -76038,6 +76054,9 @@ func DelegateFromEnvVar(env map[string]string) (*Delegate, error) {
 			}
 			result.AuthBrokerKinds = append(result.AuthBrokerKinds, parsed)
 		}
+	}
+	if val, ok := env["PROTO_SERVICES_KERNEL_DELEGATE_EXTERNAL_AUDIENCES"]; ok && val != "" {
+		result.ExternalAudiences = strings.Split(val, ",")
 	}
 	if val, ok := env["PROTO_SERVICES_KERNEL_DELEGATE_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -90289,6 +90308,11 @@ func ValidateDelegateWithDepth(m *Delegate, depth int) error {
 		return protoerrors.NewErrMissingInvalidData(nil, "field AuthBrokerKinds exceeds max size of 8, got: %d", len(m.AuthBrokerKinds))
 	}
 
+	// Validate ExternalAudiences (assert_max_size: 8)
+	if len(m.ExternalAudiences) > 8 {
+		return protoerrors.NewErrMissingInvalidData(nil, "field ExternalAudiences exceeds max size of 8, got: %d", len(m.ExternalAudiences))
+	}
+
 	// Validate CustomClaims keys (default max size: 32768 bytes)
 	for key := range m.CustomClaims {
 		if len(key) > 32768 {
@@ -90300,6 +90324,13 @@ func ValidateDelegateWithDepth(m *Delegate, depth int) error {
 	for key, val := range m.CustomClaims {
 		if len(val) > 32768 {
 			return protoerrors.NewErrMissingInvalidData(nil, "field CustomClaims[%v] exceeds max size of 32768 bytes, got: %d", key, len(val))
+		}
+	}
+
+	// Validate ExternalAudiences elements (default max size: 32768 bytes)
+	for i, val := range m.ExternalAudiences {
+		if len(val) > 32768 {
+			return protoerrors.NewErrMissingInvalidData(nil, "field ExternalAudiences[%d] exceeds max size of 32768 bytes, got: %d", i, len(val))
 		}
 	}
 
@@ -103214,6 +103245,7 @@ const (
 	MaxSizeDelegateAuthorizedServices                              int = 64
 	MaxSizeDelegateCustomClaims                                    int = 20
 	MaxSizeDelegateAuthBrokerKinds                                 int = 8
+	MaxSizeDelegateExternalAudiences                               int = 8
 	MaxSizeDelegateTraceId                                         int = 32768
 	MaxSizeClusterNodeMetrics                                      int = 32
 	MaxSizeClusterGrpcStats                                        int = 32
@@ -112873,6 +112905,9 @@ func MergeDelegate(dst, src *Delegate) {
 	}
 	if len(dst.AuthBrokerKinds) == 0 {
 		dst.AuthBrokerKinds = src.AuthBrokerKinds
+	}
+	if len(dst.ExternalAudiences) == 0 {
+		dst.ExternalAudiences = src.ExternalAudiences
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId
