@@ -802,15 +802,17 @@ func TopologyToTOML(v *Topology) ([]byte, error) {
 // OptionalServicesJSON represents OptionalServices in external JSON format (with string enums)
 // MARKER: JSON helper struct generated from serial.go
 type optionalservicesJSON struct {
-	Oauth        bool   `json:"oauth,omitempty"`
-	Keycloak     bool   `json:"keycloak,omitempty"`
-	Echo         bool   `json:"echo,omitempty"`
-	Messaging    bool   `json:"messaging,omitempty"`
-	Mailbox      bool   `json:"mailbox,omitempty"`
-	Personalauth bool   `json:"personalauth,omitempty"`
-	Blobstore    bool   `json:"blobstore,omitempty"`
-	TraceId      string `json:"trace_id,omitempty"`
-	Noop         bool   `json:"noop,omitempty"`
+	Oauth              bool   `json:"oauth,omitempty"`
+	Keycloak           bool   `json:"keycloak,omitempty"`
+	Echo               bool   `json:"echo,omitempty"`
+	Messaging          bool   `json:"messaging,omitempty"`
+	Mailbox            bool   `json:"mailbox,omitempty"`
+	Personalauth       bool   `json:"personalauth,omitempty"`
+	Blobstore          bool   `json:"blobstore,omitempty"`
+	Harness            bool   `json:"harness,omitempty"`
+	HarnessDestructive bool   `json:"harness_destructive,omitempty"`
+	TraceId            string `json:"trace_id,omitempty"`
+	Noop               bool   `json:"noop,omitempty"`
 }
 
 // OptionalServicesToJSON converts OptionalServices to JSON bytes.
@@ -821,15 +823,17 @@ func OptionalServicesToJSON(v *OptionalServices) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := optionalservicesJSON{
-		Oauth:        v.Oauth,
-		Keycloak:     v.Keycloak,
-		Echo:         v.Echo,
-		Messaging:    v.Messaging,
-		Mailbox:      v.Mailbox,
-		Personalauth: v.Personalauth,
-		Blobstore:    v.Blobstore,
-		TraceId:      v.TraceId,
-		Noop:         v.Noop,
+		Oauth:              v.Oauth,
+		Keycloak:           v.Keycloak,
+		Echo:               v.Echo,
+		Messaging:          v.Messaging,
+		Mailbox:            v.Mailbox,
+		Personalauth:       v.Personalauth,
+		Blobstore:          v.Blobstore,
+		Harness:            v.Harness,
+		HarnessDestructive: v.HarnessDestructive,
+		TraceId:            v.TraceId,
+		Noop:               v.Noop,
 	}
 	return json.Marshal(helper)
 }
@@ -842,15 +846,17 @@ func OptionalServicesToJSONPretty(v *OptionalServices) ([]byte, error) {
 	}
 	// Convert to JSON helper struct with string enums
 	helper := optionalservicesJSON{
-		Oauth:        v.Oauth,
-		Keycloak:     v.Keycloak,
-		Echo:         v.Echo,
-		Messaging:    v.Messaging,
-		Mailbox:      v.Mailbox,
-		Personalauth: v.Personalauth,
-		Blobstore:    v.Blobstore,
-		TraceId:      v.TraceId,
-		Noop:         v.Noop,
+		Oauth:              v.Oauth,
+		Keycloak:           v.Keycloak,
+		Echo:               v.Echo,
+		Messaging:          v.Messaging,
+		Mailbox:            v.Mailbox,
+		Personalauth:       v.Personalauth,
+		Blobstore:          v.Blobstore,
+		Harness:            v.Harness,
+		HarnessDestructive: v.HarnessDestructive,
+		TraceId:            v.TraceId,
+		Noop:               v.Noop,
 	}
 	return json.MarshalIndent(helper, "", "  ")
 }
@@ -922,6 +928,8 @@ func OptionalServicesFromJSON(data []byte) (*OptionalServices, error) {
 	result.Mailbox = raw.Mailbox
 	result.Personalauth = raw.Personalauth
 	result.Blobstore = raw.Blobstore
+	result.Harness = raw.Harness
+	result.HarnessDestructive = raw.HarnessDestructive
 	result.TraceId = raw.TraceId
 	result.Noop = raw.Noop
 	return result, nil
@@ -2254,6 +2262,8 @@ func OptionalServicesToEnvVar(v *OptionalServices) map[string]string {
 	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_MAILBOX"] = strconv.FormatBool(v.Mailbox)
 	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_PERSONALAUTH"] = strconv.FormatBool(v.Personalauth)
 	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_BLOBSTORE"] = strconv.FormatBool(v.Blobstore)
+	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_HARNESS"] = strconv.FormatBool(v.Harness)
+	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_HARNESS_DESTRUCTIVE"] = strconv.FormatBool(v.HarnessDestructive)
 	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_TRACE_ID"] = v.TraceId
 	result["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_NOOP"] = strconv.FormatBool(v.Noop)
 	return result
@@ -2310,6 +2320,20 @@ func OptionalServicesFromEnvVar(env map[string]string) (*OptionalServices, error
 			return nil, err
 		}
 		result.Blobstore = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_HARNESS"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.Harness = parsed
+	}
+	if val, ok := env["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_HARNESS_DESTRUCTIVE"]; ok && val != "" {
+		parsed, err := strconv.ParseBool(val)
+		if err != nil {
+			return nil, err
+		}
+		result.HarnessDestructive = parsed
 	}
 	if val, ok := env["PROTO_SERVICES_OPERATOR_OPTIONAL_SERVICES_TRACE_ID"]; ok && val != "" {
 		result.TraceId = val
@@ -3473,6 +3497,12 @@ func MergeOptionalServices(dst, src *OptionalServices) {
 	}
 	if !dst.Blobstore {
 		dst.Blobstore = src.Blobstore
+	}
+	if !dst.Harness {
+		dst.Harness = src.Harness
+	}
+	if !dst.HarnessDestructive {
+		dst.HarnessDestructive = src.HarnessDestructive
 	}
 	if dst.TraceId == "" {
 		dst.TraceId = src.TraceId

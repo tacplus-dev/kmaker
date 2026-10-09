@@ -586,11 +586,22 @@ type OptionalServices struct {
 	// Disabled by default, and enabling it costs two PersistentVolumeClaims, so a
 	// cluster whose services declare no volume groups should leave it off — with no
 	// group declared it would accept no upload anyway ("no group, no upload").
-	Blobstore     bool   `protobuf:"varint,13,opt,name=blobstore,proto3" json:"blobstore,omitempty"`
-	TraceId       string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	Noop          bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Blobstore bool `protobuf:"varint,13,opt,name=blobstore,proto3" json:"blobstore,omitempty"`
+	// harness — the runtime test harness (D27, clients/harness.proto). Not a
+	// service: a suspended CronJob template "harness" running the gate profile,
+	// which the pipeline starts with `kubectl create job --from=cronjob/harness`.
+	// Its ServiceAccount has no kernel delegate and its pod mounts no token, so
+	// it reaches the fleet only through public doors. Disabled by default.
+	Harness bool `protobuf:"varint,14,opt,name=harness,proto3" json:"harness,omitempty"`
+	// harness_destructive adds the second template, "harness-destructive", which
+	// runs the destructive profile (pod kill, PVC wipe) under a Role that may
+	// delete only the named blobstore and kernel pods and blobstore PVCs. Dev
+	// only: never enable it on pilot. Has no effect unless harness is enabled.
+	HarnessDestructive bool   `protobuf:"varint,15,opt,name=harness_destructive,json=harnessDestructive,proto3" json:"harness_destructive,omitempty"`
+	TraceId            string `protobuf:"bytes,200,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	Noop               bool   `protobuf:"varint,201,opt,name=noop,proto3" json:"noop,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *OptionalServices) Reset() {
@@ -668,6 +679,20 @@ func (x *OptionalServices) GetPersonalauth() bool {
 func (x *OptionalServices) GetBlobstore() bool {
 	if x != nil {
 		return x.Blobstore
+	}
+	return false
+}
+
+func (x *OptionalServices) GetHarness() bool {
+	if x != nil {
+		return x.Harness
+	}
+	return false
+}
+
+func (x *OptionalServices) GetHarnessDestructive() bool {
+	if x != nil {
+		return x.HarnessDestructive
 	}
 	return false
 }
@@ -1305,7 +1330,7 @@ const file_services_operator_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01J\x04\b\x06\x10\aJ\x04\b\b\x10\tJ\x04\b\t\x10\n" +
 	"J\x04\b\v\x10\fJ\x04\b\r\x10\x0eR\x10msggateway_nodesR\ftimedb_nodesR\rgraphdb_nodesR\vargus_nodesR\n" +
-	"saml_nodes\"\xe1\x02\n" +
+	"saml_nodes\"\xac\x03\n" +
 	"\x10OptionalServices\x12\x1a\n" +
 	"\x05oauth\x18\a \x01(\bB\x04\xa0\xa8\x1d\x01R\x05oauth\x12 \n" +
 	"\bkeycloak\x18\b \x01(\bB\x04\xa0\xa8\x1d\x01R\bkeycloak\x12\x12\n" +
@@ -1314,7 +1339,9 @@ const file_services_operator_proto_rawDesc = "" +
 	" \x01(\bR\tmessaging\x12\x18\n" +
 	"\amailbox\x18\v \x01(\bR\amailbox\x12\"\n" +
 	"\fpersonalauth\x18\f \x01(\bR\fpersonalauth\x12\x1c\n" +
-	"\tblobstore\x18\r \x01(\bR\tblobstore\x12\x1a\n" +
+	"\tblobstore\x18\r \x01(\bR\tblobstore\x12\x18\n" +
+	"\aharness\x18\x0e \x01(\bR\aharness\x12/\n" +
+	"\x13harness_destructive\x18\x0f \x01(\bR\x12harnessDestructive\x12\x1a\n" +
 	"\btrace_id\x18\xc8\x01 \x01(\tR\atraceId\x12\x13\n" +
 	"\x04noop\x18\xc9\x01 \x01(\bR\x04noopJ\x04\b\x01\x10\x02J\x04\b\x02\x10\x03J\x04\b\x03\x10\x04J\x04\b\x04\x10\x05J\x04\b\x05\x10\x06J\x04\b\x06\x10\aR\tanthropicR\x06openaiR\x06gitlabR\x06githubR\x03mcpR\x04saml\"\xea\x03\n" +
 	"\x03PKI\x12,\n" +

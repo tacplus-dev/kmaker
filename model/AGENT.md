@@ -5,9 +5,9 @@ This file is embedded in `registry.json` and describes how to navigate it.
 ## Overview
 
 This registry describes a tacplus-generated service mesh with:
-- **2276** message types across **78** packages
-- **1215** RPCs across **129** gRPC services
-- **121** state boundaries
+- **2299** message types across **79** packages
+- **1225** RPCs across **130** gRPC services
+- **122** state boundaries
 
 ## Structure
 
@@ -527,6 +527,7 @@ Each `RpcInfo` carries:
 - **LlmproxyConfigStateService**
 - **LlmsettingsConfigStateService**
 - **Locate811TicketBusStateService**
+- **LogbookEntryBusStateService**
 - **Mailbox**
 - **MailboxConfigStateService**
 - **MailboxEntryBusStateService**
@@ -600,6 +601,7 @@ Each `RpcInfo` carries:
 
 ## Packages
 
+- `clients/harness`
 - `clients/schematicctl`
 - `common/credentials`
 - `common/hazelcast`

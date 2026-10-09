@@ -265,6 +265,19 @@ message OptionalServices {
   // cluster whose services declare no volume groups should leave it off — with no
   // group declared it would accept no upload anyway ("no group, no upload").
   bool blobstore = 13;
+
+  // harness — the runtime test harness (D27, clients/harness.proto). Not a
+  // service: a suspended CronJob template "harness" running the gate profile,
+  // which the pipeline starts with `kubectl create job --from=cronjob/harness`.
+  // Its ServiceAccount has no kernel delegate and its pod mounts no token, so
+  // it reaches the fleet only through public doors. Disabled by default.
+  bool harness = 14;
+
+  // harness_destructive adds the second template, "harness-destructive", which
+  // runs the destructive profile (pod kill, PVC wipe) under a Role that may
+  // delete only the named blobstore and kernel pods and blobstore PVCs. Dev
+  // only: never enable it on pilot. Has no effect unless harness is enabled.
+  bool harness_destructive = 15;
   string trace_id = 200;
   bool noop = 201;
 }
