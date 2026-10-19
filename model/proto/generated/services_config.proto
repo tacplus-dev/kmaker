@@ -6,7 +6,6 @@ syntax = "proto3";
 package services_config;
 option go_package = "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/services_config";
 
-import "services/sentinel.proto";
 import "services/gateway.proto";
 import "services/letsencrypt.proto";
 import "services/eventbus.proto";
@@ -34,7 +33,6 @@ import "services/docmanager.proto";
 import "services/reveille.proto";
 
 message Services {
-  sentinel.Config sentinel_config = 5;
   gateway.Config gateway_config = 7;
   letsencrypt.Config letsencrypt_config = 9;
   eventbus.Config eventbus_config = 18;

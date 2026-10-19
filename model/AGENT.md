@@ -5,9 +5,9 @@ This file is embedded in `registry.json` and describes how to navigate it.
 ## Overview
 
 This registry describes a tacplus-generated service mesh with:
-- **2302** message types across **79** packages
-- **1228** RPCs across **131** gRPC services
-- **123** state boundaries
+- **2566** message types across **78** packages
+- **1339** RPCs across **140** gRPC services
+- **133** state boundaries
 
 ## Structure
 
@@ -495,7 +495,6 @@ Each `RpcInfo` carries:
 - **CrewCursorBusStateService**
 - **CrewEventBusStateService**
 - **CrewRoomMessageBusStateService**
-- **Dashboard**
 - **Device**
 - **DocFileMetadataBusStateService**
 - **DocHashIndexBusStateService**
@@ -516,6 +515,7 @@ Each `RpcInfo` carries:
 - **JobEquipmentBusStateService**
 - **JobPermitsBusStateService**
 - **JwkVerifyingKeysViewService**
+- **KennelBusStateService**
 - **Kmaker**
 - **KmakerConfigStateService**
 - **LetsEncryptCertBusStateService**
@@ -535,6 +535,7 @@ Each `RpcInfo` carries:
 - **MessageBusStateService**
 - **Messaging**
 - **MessagingConfigStateService**
+- **MeteringRunBusStateService**
 - **Mint**
 - **OauthConfigStateService**
 - **ObservationBusStateService**
@@ -547,11 +548,13 @@ Each `RpcInfo` carries:
 - **PermitBusStateService**
 - **PersonalIdentity**
 - **PersonalauthConfigStateService**
+- **PitchMarkerBusStateService**
 - **PlaceBusStateService**
 - **PolicyVersionBusStateService**
 - **PrincipalStateService**
 - **Profile**
 - **ProfileConfigStateService**
+- **ProspectBusStateService**
 - **PublicJwksViewService**
 - **RecordMap**
 - **ReportBusStateService**
@@ -569,7 +572,6 @@ Each `RpcInfo` carries:
 - **ScottyagentConfigStateService**
 - **ScottypersonalConfigStateService**
 - **ScottypersonalRecords**
-- **SentinelConfigStateService**
 - **ServiceConfigStateService**
 - **ServiceHealthStateService**
 - **Session**
@@ -578,6 +580,7 @@ Each `RpcInfo` carries:
 - **TallyConfigStateService**
 - **TaskBusStateService**
 - **TenantAdmin**
+- **TenantRequestBusStateService**
 - **ThreadMapEntryBusStateService**
 - **TicketAdviceBusStateService**
 - **TicketBusStateService**
@@ -599,6 +602,12 @@ Each `RpcInfo` carries:
 - **WorkConfigStateService**
 - **WorkRecords**
 - **WorkloadStateService**
+- **WorkspaceArtifactBusStateService**
+- **WorkspaceArtifactVersionBusStateService**
+- **WorkspaceBusStateService**
+- **WorkspaceMemberBusStateService**
+- **WorkspaceNoteBusStateService**
+- **WorkspaceTransferBusStateService**
 
 ## Packages
 
@@ -635,7 +644,6 @@ Each `RpcInfo` carries:
 - `services/scotty`
 - `services/scottyagent`
 - `services/scottypersonal`
-- `services/sentinel`
 - `services/stratum`
 - `services/tally`
 - `services/weather`
