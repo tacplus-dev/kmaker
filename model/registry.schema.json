@@ -188,6 +188,9 @@
         "service_name": {
           "type": "string"
         },
+        "source": {
+          "type": "string"
+        },
         "token": {
           "type": "string"
         }
@@ -936,6 +939,9 @@
             "SMB_ROOT_ISOLATED",
             "SMB_ROOT_CLUSTER"
           ],
+          "type": "string"
+        },
+        "source": {
           "type": "string"
         },
         "tenant_owned": {

@@ -5,24 +5,6 @@ syntax = "proto3";
 package accounting_method;
 option go_package = "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/generated/accounting_method";
 
-import "generated/services.proto";
-
 // AccountingMethod identifies which RPC an event relates to.
-// Only one field will be set — the rest default to 0 (UNSPECIFIED)
-// and are not encoded by proto3, so there is no overhead.
 message AccountingMethod {
-  services.GatewayRPCs gateway = 7;
-  services.KernelRPCs kernel = 8;
-  services.EventbusRPCs eventbus = 18;
-  services.OauthRPCs oauth = 21;
-  services.MessagingRPCs messaging = 53;
-  services.ScottyagentRPCs scottyagent = 54;
-  services.MailboxRPCs mailbox = 55;
-  services.LlmsettingsRPCs llmsettings = 56;
-  services.PersonalauthRPCs personalauth = 57;
-  services.ScottyRPCs scotty = 70;
-  services.ScottypersonalRPCs scottypersonal = 72;
-  services.WorkRPCs work = 73;
-  services.ProfileRPCs profile = 76;
-  services.DocmanagerRPCs docmanager = 80;
 }

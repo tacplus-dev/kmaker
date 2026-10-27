@@ -14,9 +14,9 @@ import (
 	"testing"
 	"time"
 
+	pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker"
 	keypb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/key"
 	x509pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
-	pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker"
 )
 
 // signingCAInto replaces cfg.SigningCa with a certificate built from tmpl and

@@ -6,8 +6,8 @@ import (
 
 	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/servicemanager"
 	kmakergrpc "gitlab.com/seabeam/schematic/platform/services/kmaker/model/s2sm/grpc/servers/services/kmaker"
-	x509pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
 	pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker"
+	x509pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

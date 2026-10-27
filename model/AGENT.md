@@ -5,9 +5,9 @@ This file is embedded in `registry.json` and describes how to navigate it.
 ## Overview
 
 This registry describes a tacplus-generated service mesh with:
-- **2566** message types across **78** packages
-- **1339** RPCs across **140** gRPC services
-- **133** state boundaries
+- **219** message types across **42** packages
+- **26** RPCs across **9** gRPC services
+- **3** state boundaries
 
 ## Structure
 
@@ -290,6 +290,7 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `tenant_owned` — bool
 - `pinned_tenant` — string
 - `volume_groups` — repeated tacplus.VolumeGroupInfo
+- `source` — string
 
 
 ### VolumeGroupInfo
@@ -322,6 +323,7 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `capability_scope` — string
 - `expands_to` — repeated string
 - `routing_alias_packages` — repeated string
+- `source` — string
 
 
 ### BuildInfo
@@ -468,188 +470,25 @@ Each `RpcInfo` carries:
 
 ## Services
 
-- **AccountingRecordBusStateService**
-- **Admin**
-- **AgentCursorBusStateService**
-- **AgentCycleBusStateService**
-- **AgentEventBusStateService**
-- **AgentSessionStateBusStateService**
-- **AlertBusStateService**
-- **Auth**
-- **BeagleConfigStateService**
-- **BlobBusStateService**
-- **BlobLinkBusStateService**
-- **BlobLinkStatsBusStateService**
-- **BlobStore**
-- **BlobstoreConfigStateService**
-- **CaStateService**
-- **ChatBusStateService**
-- **ChatEventBusStateService**
-- **ChatMembershipBusStateService**
-- **ChatSessionBusStateService**
-- **CliTokenBroker**
 - **ClusterService**
-- **ClusterStateService**
-- **CompanyStructureBusStateService**
-- **ConfigStateService**
-- **CrewCursorBusStateService**
-- **CrewEventBusStateService**
-- **CrewRoomMessageBusStateService**
-- **Device**
-- **DocFileMetadataBusStateService**
-- **DocHashIndexBusStateService**
-- **DocManager**
-- **DocmanagerConfigStateService**
-- **EquipmentBusStateService**
-- **EventbusConfigStateService**
-- **EventbusStateService**
-- **FencedLock**
-- **ForecastBusStateService**
-- **GatewayConfigStateService**
-- **GrantBusStateService**
-- **HumanBusStateService**
-- **IdentityStateService**
-- **IngestPipelineBusStateService**
-- **JobBidBusStateService**
-- **JobBusStateService**
-- **JobEquipmentBusStateService**
-- **JobPermitsBusStateService**
 - **JwkVerifyingKeysViewService**
-- **KennelBusStateService**
 - **Kmaker**
 - **KmakerConfigStateService**
-- **LetsEncryptCertBusStateService**
-- **LetsEncryptStateService**
-- **LetsencryptConfigStateService**
-- **LlmProviderSecretBusStateService**
-- **LlmProviderSettingsBusStateService**
-- **LlmProxy**
-- **LlmSettings**
-- **LlmproxyConfigStateService**
-- **LlmsettingsConfigStateService**
-- **Locate811TicketBusStateService**
-- **LogbookEntryBusStateService**
-- **Mailbox**
-- **MailboxConfigStateService**
-- **MailboxEntryBusStateService**
-- **MessageBusStateService**
-- **Messaging**
-- **MessagingConfigStateService**
-- **MeteringRunBusStateService**
-- **Mint**
-- **OauthConfigStateService**
-- **ObservationBusStateService**
-- **OpaConfigStateService**
-- **OpaEval**
-- **OpaStateService**
-- **OperatorConfigStateService**
-- **OttoConfigStateService**
-- **PartnerBusStateService**
-- **PermitBusStateService**
-- **PersonalIdentity**
-- **PersonalauthConfigStateService**
-- **PitchMarkerBusStateService**
-- **PlaceBusStateService**
-- **PolicyVersionBusStateService**
-- **PrincipalStateService**
-- **Profile**
-- **ProfileConfigStateService**
-- **ProspectBusStateService**
 - **PublicJwksViewService**
-- **RecordMap**
-- **ReportBusStateService**
-- **Reveille**
-- **ReveilleConfigStateService**
-- **RfpBusStateService**
-- **RuleNodeBusStateService**
-- **RunCheckpointBusStateService**
-- **Scotty**
-- **ScottyActivityBusStateService**
-- **ScottyAgent**
-- **ScottyConfigStateService**
-- **ScottyPersonal**
-- **ScottyRecords**
-- **ScottyagentConfigStateService**
-- **ScottypersonalConfigStateService**
-- **ScottypersonalRecords**
 - **ServiceConfigStateService**
 - **ServiceHealthStateService**
-- **Session**
 - **SmbCertService**
-- **StratumConfigStateService**
-- **TallyConfigStateService**
-- **TaskBusStateService**
-- **TenantAdmin**
-- **TenantRequestBusStateService**
-- **ThreadMapEntryBusStateService**
-- **TicketAdviceBusStateService**
-- **TicketBusStateService**
-- **TicketCommentBusStateService**
-- **TicketDecisionBusStateService**
 - **TlsCertService**
-- **ToolCallOutcomeBusStateService**
-- **TraceEventBusStateService**
-- **TraceSession**
-- **TrustedCaStateService**
-- **UploadSessionBusStateService**
-- **UserMint**
-- **UserProfileBusStateService**
-- **WaitBusStateService**
-- **Weather**
-- **WeatherConfigStateService**
-- **Work**
-- **WorkActivityBusStateService**
-- **WorkConfigStateService**
-- **WorkRecords**
-- **WorkloadStateService**
-- **WorkspaceArtifactBusStateService**
-- **WorkspaceArtifactVersionBusStateService**
-- **WorkspaceBusStateService**
-- **WorkspaceMemberBusStateService**
-- **WorkspaceNoteBusStateService**
-- **WorkspaceTransferBusStateService**
 
 ## Packages
 
-- `clients/harness`
-- `clients/schematicctl`
-- `common/credentials`
-- `common/hazelcast`
 - `generated/accounting_method`
 - `generated/entitlements`
-- `generated/eventbus_support`
 - `generated/project_config`
 - `generated/services`
 - `generated/services_config`
 - `generated/tenant_config`
-- `services/beagle`
-- `services/blobstore`
-- `services/docmanager`
-- `services/eventbus`
-- `services/gateway`
-- `services/kernel`
 - `services/kmaker`
-- `services/letsencrypt`
-- `services/llmproxy`
-- `services/llmsettings`
-- `services/mailbox`
-- `services/messaging`
-- `services/oauth`
-- `services/opa`
-- `services/operator`
-- `services/otto`
-- `services/personalauth`
-- `services/profile`
-- `services/reveille`
-- `services/scotty`
-- `services/scottyagent`
-- `services/scottypersonal`
-- `services/stratum`
-- `services/tally`
-- `services/weather`
-- `services/work`
-- `shared/crew`
-- `shared/pigeon`
 - `sys/accounting`
 - `sys/alpn`
 - `sys/cloudidentity`
@@ -674,6 +513,7 @@ Each `RpcInfo` carries:
 - `sys/outputformat`
 - `sys/publicjwksview`
 - `sys/query`
+- `sys/servicehealth`
 - `sys/smbcert`
 - `sys/spec`
 - `sys/tacplus`
@@ -684,11 +524,6 @@ Each `RpcInfo` carries:
 - `sys/tokenrequest`
 - `sys/trace`
 - `sys/x509`
-- `vservices/accounting-record`
-- `vservices/agent-sensor`
-- `vservices/entitlements`
-- `vservices/proxy-policy`
-- `vservices/query`
 
 ## Documentation
 

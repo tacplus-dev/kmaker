@@ -5,8 +5,8 @@ import (
 	"net"
 	"os"
 
-	hostpb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/host"
 	pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker"
+	hostpb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/host"
 )
 
 const (
