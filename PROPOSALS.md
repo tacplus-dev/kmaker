@@ -11,5 +11,8 @@ the looper then marks it `promoted` or `declined` here with the date.
   or patch. The `gates` recipe now ignores those stamps; the lasting fix belongs in tacplus (stamp at build or run
   time, or from the proto inputs rather than `HEAD`), after which the `-I` filter in the justfile can go. No tacplus
   issue exists for it yet.
+  Also (2026-10-29, [#8](https://github.com/tacplus-dev/kmaker/issues/8)): `model/registry.json` embeds tacplus's own
+  docs (`USER.md`, …), so any patch of the floor's line that edits them (2.4.0 → 2.4.2 did) breaks the freshness check
+  the same way. The same fix applies: keep compiler docs out of generated output, or reference them by version.
 
 ## Promoted / declined
