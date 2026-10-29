@@ -5,8 +5,8 @@ This file is embedded in `registry.json` and describes how to navigate it.
 ## Overview
 
 This registry describes a tacplus-generated service mesh with:
-- **219** message types across **42** packages
-- **26** RPCs across **9** gRPC services
+- **226** message types across **43** packages
+- **28** RPCs across **10** gRPC services
 - **3** state boundaries
 
 ## Structure
@@ -264,6 +264,9 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `mcp_tool_name` — string
 - `mcp_session_carrier` — bool
 - `tenant_scope` — string
+- `route_field` — string
+- `route_field_number` — int32
+- `any_tenant` — bool
 
 
 ### EnumInfo
@@ -475,6 +478,7 @@ Each `RpcInfo` carries:
 - **Kmaker**
 - **KmakerConfigStateService**
 - **PublicJwksViewService**
+- **Redo**
 - **ServiceConfigStateService**
 - **ServiceHealthStateService**
 - **SmbCertService**
@@ -513,6 +517,7 @@ Each `RpcInfo` carries:
 - `sys/outputformat`
 - `sys/publicjwksview`
 - `sys/query`
+- `sys/redolog`
 - `sys/servicehealth`
 - `sys/smbcert`
 - `sys/spec`

@@ -52,6 +52,7 @@ type Kmaker struct {
 	authorizeFunc             func(ctx context.Context, fullMethod string, req any) (*wrapperToken.TokenWrapper, error)
 	authenticateFunc          func(ctx context.Context) (*wrapperToken.TokenWrapper, error)
 	authenticateAtOrBelowFunc func(ctx context.Context, targetNamespace string) (*wrapperToken.TokenWrapper, error)
+	routeCheckFunc            func(fullMethod string, req any) error
 	emitter                   *am.Emitter
 	instanceId                string
 	tracePublish              func(ctx context.Context, event *trace_pb.TraceEvent)
@@ -143,6 +144,28 @@ func (p *Kmaker) SetAuthenticateAtOrBelowFunc(f func(ctx context.Context, target
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	p.authenticateAtOrBelowFunc = f
+}
+
+// SetRouteCheckFunc sets the tenant routing backstop (the authorizer's
+// CheckRoute) that every rpc declaring (spec.rpc).route_field runs after
+// request validation and before its handler.
+func (p *Kmaker) SetRouteCheckFunc(f func(fullMethod string, req any) error) {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	p.routeCheckFunc = f
+}
+
+// checkRoute runs the routing backstop. Fail-closed: a routed rpc whose
+// backstop was never wired refuses rather than serving a request it cannot
+// tell was routed to this instance.
+func (p *Kmaker) checkRoute(fullMethod string, req any) error {
+	p.mu.RLock()
+	f := p.routeCheckFunc
+	p.mu.RUnlock()
+	if f == nil {
+		return status.Errorf(codes.Internal, "tenant routing backstop not configured for %q", fullMethod)
+	}
+	return f(fullMethod, req)
 }
 
 // HasAuthorizer reports whether all mandatory auth paths are wired.
@@ -240,6 +263,9 @@ type KmakerValidatingClientStreamingServer[Req, Res any] struct {
 	// message, so a later one cannot name a principal an earlier one did not.
 	scopeReq    func(*Req) error
 	validateReq func(*Req) error
+	// routeReq is the per-message tenant routing backstop of a routed rpc,
+	// after validation: every inbound message names its target tenant.
+	routeReq    func(*Req) error
 	validateRes func(*Res) error
 }
 
@@ -263,6 +289,11 @@ func (s KmakerValidatingClientStreamingServer[Req, Res]) Recv() (*Req, error) {
 			return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("validation failed: %v", err))
 		}
 	}
+	if s.routeReq != nil {
+		if err := s.routeReq(msg); err != nil {
+			return nil, err
+		}
+	}
 	return msg, nil
 }
 
@@ -283,6 +314,9 @@ type KmakerValidatingBidiStreamingServer[Req, Res any] struct {
 	// message, so a later one cannot name a principal an earlier one did not.
 	scopeReq    func(*Req) error
 	validateReq func(*Req) error
+	// routeReq is the per-message tenant routing backstop of a routed rpc,
+	// after validation: every inbound message names its target tenant.
+	routeReq    func(*Req) error
 	validateRes func(*Res) error
 }
 
@@ -304,6 +338,11 @@ func (s KmakerValidatingBidiStreamingServer[Req, Res]) Recv() (*Req, error) {
 	if s.validateReq != nil {
 		if err := s.validateReq(msg); err != nil {
 			return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("validation failed: %v", err))
+		}
+	}
+	if s.routeReq != nil {
+		if err := s.routeReq(msg); err != nil {
+			return nil, err
 		}
 	}
 	return msg, nil

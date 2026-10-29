@@ -647,6 +647,9 @@
           },
           "type": "array"
         },
+        "any_tenant": {
+          "type": "boolean"
+        },
         "audit_meaning": {
           "type": "string"
         },
@@ -763,6 +766,12 @@
         },
         "retry_policy": {
           "type": "string"
+        },
+        "route_field": {
+          "type": "string"
+        },
+        "route_field_number": {
+          "type": "integer"
         },
         "rpc": {
           "type": "string"
