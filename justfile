@@ -17,13 +17,14 @@ generate:
 # time and the compiler stamps (tacplus_*, model/.hash.json) move with every patch
 # of the floor's line, so they differ on any later commit or compiler (#7).
 # Nor are the compiler's own docs that model/registry.json embeds under "docs"
-# (one `"NAME.md":  "…"` line each): they too move with every patch of the
-# floor's line (#8, #9; PROPOSALS.md "Reproducible generation").
+# (one `"NAME.md": "…"` line each; 2.5.3 wrote two spaces after the colon, 2.5.6
+# one, so the filter takes either): they too move with every patch of the
+# floor's line (#8, #9, #10; PROPOSALS.md "Reproducible generation").
 gates: generate
   #!/usr/bin/env bash
   set -euo pipefail
   git diff --exit-code -I '"(tacplus_version|tacplus_sha|proto_version|proto_sha)"' \
-    -I '^    "[A-Z_]+\.md":  "' -- model ':(exclude)model/.hash.json' >&2 \
+    -I '^    "[A-Z_]+\.md": +"' -- model ':(exclude)model/.hash.json' >&2 \
     || { echo "tracked model/ files differ from a fresh generation; regenerate and commit" >&2; exit 1; }
   unformatted="$(gofmt -l main.go internal)"
   test -z "$unformatted" || { echo "gofmt needed:" >&2; echo "$unformatted" >&2; exit 1; }
