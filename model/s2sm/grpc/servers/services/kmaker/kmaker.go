@@ -53,6 +53,7 @@ type Kmaker struct {
 	authenticateFunc          func(ctx context.Context) (*wrapperToken.TokenWrapper, error)
 	authenticateAtOrBelowFunc func(ctx context.Context, targetNamespace string) (*wrapperToken.TokenWrapper, error)
 	routeCheckFunc            func(fullMethod string, req any) error
+	routeNamespaceFunc        func(tid string) (string, error)
 	emitter                   *am.Emitter
 	instanceId                string
 	tracePublish              func(ctx context.Context, event *trace_pb.TraceEvent)
@@ -153,6 +154,28 @@ func (p *Kmaker) SetRouteCheckFunc(f func(fullMethod string, req any) error) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	p.routeCheckFunc = f
+}
+
+// SetRouteNamespaceFunc sets the namespace lookup (the authorizer's
+// RouteNamespace) the record plane's route pin holds a routed call's entries
+// to: the route field names the tenant by tid, the entry by namespace.
+func (p *Kmaker) SetRouteNamespaceFunc(f func(tid string) (string, error)) {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	p.routeNamespaceFunc = f
+}
+
+// routeNamespace returns the namespace tenant tid's entries live in on this
+// instance. Fail-closed: an unwired lookup refuses, never guesses the tenant's
+// name from its tid.
+func (p *Kmaker) routeNamespace(tid string) (string, error) {
+	p.mu.RLock()
+	f := p.routeNamespaceFunc
+	p.mu.RUnlock()
+	if f == nil {
+		return "", status.Errorf(codes.Internal, "tenant route namespace not configured for tenant %q", tid)
+	}
+	return f(tid)
 }
 
 // checkRoute runs the routing backstop. Fail-closed: a routed rpc whose

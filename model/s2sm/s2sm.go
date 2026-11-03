@@ -355,8 +355,8 @@ func New() (*ServiceManager, error) {
 
 	zap.L().Info("ServiceManager initialized",
 		zap.String("service", "kmaker"),
-		zap.String("tacplus_version", "2.5.6"),
-		zap.String("tacplus_sha", "76195f2b"),
+		zap.String("tacplus_version", "2.5.8"),
+		zap.String("tacplus_sha", "bb23800b"),
 		zap.String("proto_version", ""),
 		zap.String("proto_sha", ""),
 	)
