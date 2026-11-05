@@ -53,7 +53,7 @@ func NewHandler(cfg *pb.Config, signer *Signer, reviewer TokenReviewer, podGette
 }
 
 func (h *Handler) MintKernelCert(ctx context.Context, _ *servicemanager.Caller, req *pb.MintKernelCertRequest) (*x509pb.X509CertChain, error) {
-	review, err := h.reviewer.ReviewToken(ctx, req.GetK8SToken(), []string{h.audience})
+	review, err := h.reviewer.ReviewToken(ctx, req.GetTraceId(), req.GetK8SToken(), []string{h.audience})
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "kubernetes token review failed: %v", err)
 	}
@@ -92,7 +92,8 @@ func (h *Handler) MintKernelCert(ctx context.Context, _ *servicemanager.Caller, 
 		zap.String("pod_uid", pod.UID),
 		zap.String("instance_id", signReq.GetInstanceId()),
 		zap.Bool("is_ca", signReq.GetCertRequest().GetIsCa()),
-		zap.Int("chain_len", len(chain.GetChain())))
+		zap.Int("chain_len", len(chain.GetChain())),
+		zap.String("trace_id", req.GetTraceId()))
 	return chain, nil
 }
 
@@ -112,7 +113,7 @@ func (h *Handler) signingRequestForVerifiedPod(ctx context.Context, req *pb.Mint
 	if err != nil {
 		return nil, verifiedPodIdentity{}, status.Error(codes.PermissionDenied, err.Error())
 	}
-	livePod, err := h.podGetter.GetPod(ctx, sa.Namespace, pod.Name)
+	livePod, err := h.podGetter.GetPod(ctx, req.GetTraceId(), sa.Namespace, pod.Name)
 	if err != nil {
 		return nil, verifiedPodIdentity{}, status.Errorf(codes.PermissionDenied, "token-bound pod lookup failed: %v", err)
 	}

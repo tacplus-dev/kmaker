@@ -3,8 +3,10 @@ package kmaker
 import (
 	"bytes"
 	"context"
+	"crypto/rand"
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -21,14 +23,20 @@ const (
 	defaultSACAFile    = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
 )
 
+// traceIDHeader carries a request's trace_id on a call to a non-tacplus HTTP
+// API when it is not a W3C trace-id (tacplus USER.md, Distributed Tracing).
+const traceIDHeader = "X-Tacplus-Trace-Id"
+
 var ErrNoKubernetesConfig = errors.New("kubernetes API endpoint is not configured")
 
+// TokenReviewer and PodGetter take the causing request's trace_id, which each
+// call carries to the apiserver (setTraceHeader).
 type TokenReviewer interface {
-	ReviewToken(ctx context.Context, token string, audiences []string) (*TokenReviewStatus, error)
+	ReviewToken(ctx context.Context, traceID, token string, audiences []string) (*TokenReviewStatus, error)
 }
 
 type PodGetter interface {
-	GetPod(ctx context.Context, namespace, name string) (*KubernetesPod, error)
+	GetPod(ctx context.Context, traceID, namespace, name string) (*KubernetesPod, error)
 }
 
 type TokenReviewStatus struct {
@@ -132,7 +140,7 @@ func getenvDefault(name, fallback string) string {
 	return fallback
 }
 
-func (r *HTTPKubernetesClient) ReviewToken(ctx context.Context, token string, audiences []string) (*TokenReviewStatus, error) {
+func (r *HTTPKubernetesClient) ReviewToken(ctx context.Context, traceID, token string, audiences []string) (*TokenReviewStatus, error) {
 	if r == nil || r.client == nil || r.baseURL == nil {
 		return nil, ErrNoKubernetesConfig
 	}
@@ -159,6 +167,7 @@ func (r *HTTPKubernetesClient) ReviewToken(ctx context.Context, token string, au
 	req.Header.Set("Authorization", "Bearer "+reviewerToken)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
+	setTraceHeader(req.Header, traceID)
 
 	resp, err := r.client.Do(req)
 	if err != nil {
@@ -186,7 +195,7 @@ func (r *HTTPKubernetesClient) ReviewToken(ctx context.Context, token string, au
 	}, nil
 }
 
-func (r *HTTPKubernetesClient) GetPod(ctx context.Context, namespace, name string) (*KubernetesPod, error) {
+func (r *HTTPKubernetesClient) GetPod(ctx context.Context, traceID, namespace, name string) (*KubernetesPod, error) {
 	if r == nil || r.client == nil || r.baseURL == nil {
 		return nil, ErrNoKubernetesConfig
 	}
@@ -204,6 +213,7 @@ func (r *HTTPKubernetesClient) GetPod(ctx context.Context, namespace, name strin
 	}
 	req.Header.Set("Authorization", "Bearer "+reviewerToken)
 	req.Header.Set("Accept", "application/json")
+	setTraceHeader(req.Header, traceID)
 
 	resp, err := r.client.Do(req)
 	if err != nil {
@@ -227,6 +237,45 @@ func (r *HTTPKubernetesClient) GetPod(ctx context.Context, namespace, name strin
 		ServiceAccountName: out.Spec.ServiceAccountName,
 		Phase:              out.Status.Phase,
 	}, nil
+}
+
+// setTraceHeader carries traceID on a call to the apiserver, a non-tacplus HTTP
+// API (tacplus USER.md, Distributed Tracing): as a W3C traceparent when it is a
+// W3C trace-id, with a fresh parent-id, else verbatim as X-Tacplus-Trace-Id,
+// percent-encoded if no header could carry it as is. No trace_id, no header.
+func setTraceHeader(h http.Header, traceID string) {
+	if traceID == "" {
+		return
+	}
+	if isW3CTraceID(traceID) {
+		var parent [8]byte
+		for parent == [8]byte{} {
+			_, _ = rand.Read(parent[:])
+		}
+		h.Set("traceparent", "00-"+traceID+"-"+hex.EncodeToString(parent[:])+"-01")
+		return
+	}
+	for i := 0; i < len(traceID); i++ {
+		if c := traceID[i]; c < 0x20 || c > 0x7e {
+			traceID = url.QueryEscape(traceID)
+			break
+		}
+	}
+	h.Set(traceIDHeader, traceID)
+}
+
+// isW3CTraceID reports whether id is a valid W3C Trace Context trace-id: 32
+// lowercase hex characters, not all zero.
+func isW3CTraceID(id string) bool {
+	if len(id) != 32 || id == strings.Repeat("0", 32) {
+		return false
+	}
+	for i := 0; i < len(id); i++ {
+		if c := id[i]; (c < '0' || c > '9') && (c < 'a' || c > 'f') {
+			return false
+		}
+	}
+	return true
 }
 
 func (r *HTTPKubernetesClient) urlFor(p string) string {

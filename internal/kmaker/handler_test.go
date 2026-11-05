@@ -26,7 +26,7 @@ type fakeReviewer struct {
 	err    error
 }
 
-func (f fakeReviewer) ReviewToken(context.Context, string, []string) (*TokenReviewStatus, error) {
+func (f fakeReviewer) ReviewToken(context.Context, string, string, []string) (*TokenReviewStatus, error) {
 	return f.status, f.err
 }
 
@@ -35,7 +35,7 @@ type fakePodGetter struct {
 	err error
 }
 
-func (f fakePodGetter) GetPod(context.Context, string, string) (*KubernetesPod, error) {
+func (f fakePodGetter) GetPod(context.Context, string, string, string) (*KubernetesPod, error) {
 	return f.pod, f.err
 }
 

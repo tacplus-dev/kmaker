@@ -50,14 +50,14 @@ func TestReviewTokenReadsTokenPerRequest(t *testing.T) {
 
 	c := newTestClient(t, srv.URL, tokenFile)
 
-	if _, err := c.ReviewToken(context.Background(), "sometoken", []string{"aud"}); err != nil {
+	if _, err := c.ReviewToken(context.Background(), "", "sometoken", []string{"aud"}); err != nil {
 		t.Fatalf("first ReviewToken: %v", err)
 	}
 
 	// Rotate the token on disk.
 	writeTokenFile(t, tokenFile, "second-token")
 
-	if _, err := c.ReviewToken(context.Background(), "sometoken", []string{"aud"}); err != nil {
+	if _, err := c.ReviewToken(context.Background(), "", "sometoken", []string{"aud"}); err != nil {
 		t.Fatalf("second ReviewToken: %v", err)
 	}
 
@@ -89,13 +89,13 @@ func TestGetPodReadsTokenPerRequest(t *testing.T) {
 
 	c := newTestClient(t, srv.URL, tokenFile)
 
-	if _, err := c.GetPod(context.Background(), "ns", "pod"); err != nil {
+	if _, err := c.GetPod(context.Background(), "", "ns", "pod"); err != nil {
 		t.Fatalf("first GetPod: %v", err)
 	}
 
 	writeTokenFile(t, tokenFile, "second-token")
 
-	if _, err := c.GetPod(context.Background(), "ns", "pod"); err != nil {
+	if _, err := c.GetPod(context.Background(), "", "ns", "pod"); err != nil {
 		t.Fatalf("second GetPod: %v", err)
 	}
 
@@ -124,7 +124,7 @@ func TestReviewTokenFailsClosedOnMissingTokenFile(t *testing.T) {
 	missing := filepath.Join(t.TempDir(), "does-not-exist")
 	c := newTestClient(t, srv.URL, missing)
 
-	if _, err := c.ReviewToken(context.Background(), "sometoken", nil); err == nil {
+	if _, err := c.ReviewToken(context.Background(), "", "sometoken", nil); err == nil {
 		t.Fatalf("ReviewToken: expected error for missing token file, got nil")
 	}
 	if requested {
@@ -145,7 +145,7 @@ func TestGetPodFailsClosedOnMissingTokenFile(t *testing.T) {
 	missing := filepath.Join(t.TempDir(), "does-not-exist")
 	c := newTestClient(t, srv.URL, missing)
 
-	if _, err := c.GetPod(context.Background(), "ns", "pod"); err == nil {
+	if _, err := c.GetPod(context.Background(), "", "ns", "pod"); err == nil {
 		t.Fatalf("GetPod: expected error for missing token file, got nil")
 	}
 	if requested {
