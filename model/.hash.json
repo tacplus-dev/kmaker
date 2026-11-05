@@ -1,5 +1,5 @@
 {
-  "binary_hash": "42fb6897d3292ecb64c7730711b1533a81ad2bcfc28d8838b68829f98a61e18c",
+  "binary_hash": "521bade3ea14b2d712886a1221267f90df6bb9f2bd5f5b2395ed1d77c52fee45",
   "config_hash": "b385299c655813a730b3e0850ca5b1821812a5acff359631d3095b53caad4b12",
   "structure_hash": "d6b0e3842e8b37688ca76724d5a5901b8afe60e12c531d367ada9f65ceb30641",
   "files": {
@@ -7,5 +7,5 @@
     "registry.yaml": "93df774cf1c6bc8e395073e5e8fb7ff7e85611c3c30146d5391001c3f7295f02",
     "services/kmaker.proto": "46f6faddb6bfb77b4aa22f26fc21ab8a867c69a0a17731b76a8956cb131ffef5"
   },
-  "src_hash": "1285331d50f7549e19bf52a589a01b93439a90a9b913af82d8d6dd11438b67e9"
+  "src_hash": "0d8ed2890ed594446f094c77279991fa9dc62f87a52ccf7de321c25a72bc2b71"
 }
