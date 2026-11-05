@@ -25,6 +25,14 @@ the looper then marks it `promoted` or `declined` here with the date.
   `:`, the third flip within the 2.5 line (2.5.3 two, 2.5.6 one, 2.5.8 two). All 28,493 lines of `model/registry.json`
   moved with no change under `git diff -w`. Formatting that changes this often is a further argument for the
   semantic comparison.
+- **tacplus's build cache skips generation in a clean checkout** (2026-11-05, [#12](https://github.com/tacplus-dev/kmaker/issues/12)):
+  `tacplus build` (2.5.11) reports "Build cache hit — inputs unchanged, skipping generation" when the committed
+  `model/.hash.json` matches its inputs, without checking that the outputs exist; in a fresh clone the untracked
+  part of model/ (`model/types/sys/…`, `model/chassis/…`) is then never written and `go build` fails. And a
+  generation that does run rewrites `proto_sha` to the checkout's HEAD, so no committed tree is stable under it. The
+  manager's fresh-checkout gates (after tacplus-dev/looper#79) hit both. `just gates` now removes the stamp to
+  force generation and restores the tracked files after comparing them. The cache should verify its outputs (or
+  offer a flag to bypass it) in tacplus-dev/tacplus; then the `rm` can go.
 - **looper-trace does not see calls made through interface helpers** (2026-11-04, [#12](https://github.com/tacplus-dev/kmaker/issues/12)):
   `looper-trace check` reported `pass (0 handlers, 0 findings)` while `MintKernelCert` dropped its trace on both
   Kubernetes calls, because they go through the `TokenReviewer`/`PodGetter` interfaces, not a generated client, and the
