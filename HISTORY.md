@@ -10,3 +10,4 @@ Append-only: add entries at the end, never edit or remove one (CI enforces it). 
 - 2026-11-03 looper issue Gates fail on main with tacplus 2.5.8: registry.json spacing flipped back and a new generated route-namespace hook (#11, 9104b62)
 - 2026-11-05 looper issue Trace: MintKernelCert drops the inbound trace_id on its Kubernetes TokenReview and Pod calls, and no test covers it (#12)
 - 2026-11-06 looper issue Pins: tacplus floor 2.5 is behind the latest released line 2.6: move the floor and commit tacplus.lock (#13, 7deecd2)
+- 2026-11-06 looper issue Declare the tacplus floor: 2.4 (#1)
