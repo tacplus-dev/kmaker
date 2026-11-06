@@ -5,7 +5,7 @@ This file is embedded in `registry.json` and describes how to navigate it.
 ## Overview
 
 This registry describes a tacplus-generated service mesh with:
-- **226** message types across **43** packages
+- **229** message types across **43** packages
 - **28** RPCs across **10** gRPC services
 - **3** state boundaries
 
@@ -294,6 +294,7 @@ This field list is generated from `pkg/proto/sys/tacplus.proto`.
 - `pinned_tenant` — string
 - `volume_groups` — repeated tacplus.VolumeGroupInfo
 - `source` — string
+- `member_port` — bool
 
 
 ### VolumeGroupInfo

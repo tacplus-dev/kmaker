@@ -922,6 +922,9 @@
           ],
           "type": "string"
         },
+        "member_port": {
+          "type": "boolean"
+        },
         "name": {
           "type": "string"
         },

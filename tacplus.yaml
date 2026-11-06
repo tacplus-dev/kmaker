@@ -1,6 +1,6 @@
 language: go
-# compiler floor: the looper runs the latest 2.5.x image (tacplus#161).
-tacplus: "2.5"
+# compiler floor: the 2.6 line; tacplus.lock pins its release and build image (tacplus#193).
+tacplus: "2.6"
 # pkg kept as copied so the hand-written code keeps compiling; moves with the packages later.
 pkg: com.gitlab.seabeam.schematic.platform.services.kmaker
 output-dir: model
