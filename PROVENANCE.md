@@ -11,3 +11,8 @@ eventbus oauth"*. The private copy runs the launch fleet unchanged; new-design c
 
 Divergences: headers in tacplus.yaml (Jody Scott, Apache-2.0; LICENSE added); `src: proto` (this repo
 holds the service's own proto); `proto/registry.yaml` is a lock of github.com/tacplus-dev/registry.
+Since 2026-11-07 (#3) nothing refers to SeaBeam: the module is `github.com/tacplus-dev/kmaker` (was
+`gitlab.com/seabeam/schematic/platform/services/kmaker`), generated into `tacplus/` (was `model/`); the proto stays
+vendored here and the registry's contract is this repository (was `platform/proto`); the proto's header and the
+image labels name Jody Scott (was Seabeam LLC); `proto/dependencies.yaml` lost its SeaBeam `registry:` block; and
+SeaBeam's `.gitlab-ci.yml` (its registry, runners and private modules) is removed, builds being tacplus-dev's.

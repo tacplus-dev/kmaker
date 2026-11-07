@@ -18,15 +18,15 @@ import (
 	"strings"
 	"time"
 
-	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/spiffe"
-	pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker"
-	keypb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/key"
-	x509pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/sys/x509"
+	"github.com/tacplus-dev/kmaker/tacplus/chassis/spiffe"
+	pb "github.com/tacplus-dev/kmaker/tacplus/types/services/kmaker"
+	keypb "github.com/tacplus-dev/kmaker/tacplus/types/sys/key"
+	x509pb "github.com/tacplus-dev/kmaker/tacplus/types/sys/x509"
 )
 
 // minSubjectRSAKeyBits is the smallest RSA subject key kmaker will sign. It
 // matches the floor the platform key chassis already enforces, which rejects an
-// RSA key whose modulus is under 256 bytes (model/chassis/key/key.go).
+// RSA key whose modulus is under 256 bytes (tacplus/chassis/key/key.go).
 const minSubjectRSAKeyBits = 2048
 
 type Signer struct {

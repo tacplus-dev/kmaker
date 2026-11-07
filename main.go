@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	kmaker "gitlab.com/seabeam/schematic/platform/services/kmaker/internal/kmaker"
+	kmaker "github.com/tacplus-dev/kmaker/internal/kmaker"
 )
 
 func main() {

@@ -1,0 +1,11 @@
+{
+  "binary_hash": "17c498cdee8b61fa84a2142f1f8045fe3aba0ec46e4de63b831c4289c39f06a0",
+  "config_hash": "d1110c13307c430592a634ff3fc64f20808957fc61dcfb0a40f006232fb066c9",
+  "structure_hash": "d6b0e3842e8b37688ca76724d5a5901b8afe60e12c531d367ada9f65ceb30641",
+  "files": {
+    "dependencies.yaml": "e888984e50f3e77dfb7edb769f194ec03b6aefae53b3a7288b75b709a3d355f4",
+    "registry.yaml": "b909e67efc18574b96cc773f941081eed33c95626cb09d0d77f5097fd3ee6ae1",
+    "services/kmaker.proto": "c765c41d664645167db0159357896bddf340576e2f616c6e3b4349b0d76b05b9"
+  },
+  "src_hash": "8e75361f53372d0b3b433f6a64d66c0a6f3edb8c8d03b9e76536d3cc7fd414c7"
+}

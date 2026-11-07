@@ -10,7 +10,7 @@ import (
 	"sync"
 	"testing"
 
-	pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker"
+	pb "github.com/tacplus-dev/kmaker/tacplus/types/services/kmaker"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"go.uber.org/zap/zaptest/observer"

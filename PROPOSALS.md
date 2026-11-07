@@ -71,7 +71,17 @@ the looper then marks it `promoted` or `declined` here with the date.
   GO-2025-3922), both required only by `github.com/dsnet/compress v0.0.1` for its own tests; `go mod why -m` says
   kmaker does not need them and they are not in the build. A scanner that reads the whole graph (OSV over
   `go list -m all`, as the nightly scan did) keeps flagging them. Its only importer is generated code
-  (`model/chassis/diskstore/compress.go`, `dsnet/compress/bzip2`), so the fix belongs in tacplus-dev/tacplus's
+  (`tacplus/chassis/diskstore/compress.go`, `model/` before #3; `dsnet/compress/bzip2`), so the fix belongs in tacplus-dev/tacplus's
   generator: another bzip2 writer (dsnet/compress has had no release since 2018) would clear the graph.
+- **Upstream product names in the compiler's own output** (2026-11-07, [#3](https://github.com/tacplus-dev/kmaker/issues/3)):
+  this repository no longer names SeaBeam outside PROVENANCE.md and the dated records, and `just gates` now fails on any
+  `seabeam|sonar/` match elsewhere. But the tracked `tacplus/registry.json` still carries upstream names that tacplus
+  2.6.1 itself writes: the comments of its `sys/spec.proto` (`ScottyActivity`, `scottypersonal.ChatEvent`, as examples
+  in `MethodCollection` and `RecordRead`) and its embedded `VERSIONING.md` ("until SeaBeam's launch"). The gates skip the
+  embedded doc lines; the spec comments do not match the gates' pattern. tacplus-dev/tacplus could use neutral examples
+  there (or keep its docs out of generated output, as "Reproducible generation" above asks); no tacplus issue exists yet.
+- **ROADMAP.md's #3 entry can go** (2026-11-07, [#3](https://github.com/tacplus-dev/kmaker/issues/3)): the module is
+  `github.com/tacplus-dev/kmaker`, the proto is vendored here and nothing is fetched from gitlab.com. ROADMAP.md is
+  Jody's to change.
 
 ## Promoted / declined

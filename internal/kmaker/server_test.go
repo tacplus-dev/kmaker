@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/grpcserver"
+	"github.com/tacplus-dev/kmaker/tacplus/chassis/grpcserver"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"

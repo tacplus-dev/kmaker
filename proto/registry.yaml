@@ -4,5 +4,5 @@ registries:
 services:
     - name: kmaker
       id: 49
-      contract: https://gitlab.com/seabeam/schematic/platform/proto.git
+      contract: https://github.com/tacplus-dev/kmaker.git
       visibility: private

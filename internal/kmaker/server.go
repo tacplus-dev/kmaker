@@ -12,10 +12,10 @@ import (
 	"syscall"
 	"time"
 
-	"gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/grpcserver"
-	loggerchassis "gitlab.com/seabeam/schematic/platform/services/kmaker/model/chassis/logger"
-	kmakergrpc "gitlab.com/seabeam/schematic/platform/services/kmaker/model/s2sm/grpc/servers/services/kmaker"
-	pb "gitlab.com/seabeam/schematic/platform/services/kmaker/model/types/services/kmaker"
+	"github.com/tacplus-dev/kmaker/tacplus/chassis/grpcserver"
+	loggerchassis "github.com/tacplus-dev/kmaker/tacplus/chassis/logger"
+	kmakergrpc "github.com/tacplus-dev/kmaker/tacplus/s2sm/grpc/servers/services/kmaker"
+	pb "github.com/tacplus-dev/kmaker/tacplus/types/services/kmaker"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -157,7 +157,7 @@ func Run(args []string) error {
 // is a refusal.
 //
 // There is no dev bypass anywhere else in the fleet to copy: every other Go
-// service serves through the generated chassis (model/chassis/grpcserver),
+// service serves through the generated chassis (tacplus/chassis/grpcserver),
 // whose Listen() refuses unconditionally with "TLS certificate and key are
 // required — plaintext gRPC is not permitted". kmaker builds its own
 // grpc.Server rather than using the chassis, which is how it kept a

@@ -1,4 +1,4 @@
-module gitlab.com/seabeam/schematic/platform/services/kmaker
+module github.com/tacplus-dev/kmaker
 
 go 1.26.0
 
