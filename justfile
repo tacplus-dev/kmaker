@@ -1,4 +1,5 @@
-# Local development builds only - not used in CI/CD.
+# Local development builds, and the gates every push to main must pass (the looper's
+# manager runs `just gates` before it lands a change). Release builds are CI/CD's.
 
 TACPLUS := env_var_or_default("TACPLUS_BIN", "tacplus")
 
