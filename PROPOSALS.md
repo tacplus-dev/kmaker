@@ -59,12 +59,24 @@ the looper then marks it `promoted` or `declined` here with the date.
   its Later entry for #1 ("Declare the tacplus floor 2.4") still say 2.4. Loopers may not edit ROADMAP.md; Jody (via an
   agent) to change both to 2.5. Since 2026-11-06 ([#13](https://github.com/tacplus-dev/kmaker/issues/13)) the floor is
   2.6 (pinned to 2.6.1 in tacplus.lock), so both should now say 2.6.
+  Jody asked for "Now" to name the floor in force ([#14](https://github.com/tacplus-dev/kmaker/issues/14)), but a
+  looper's push that touches ROADMAP.md is refused. The line for an agent at his request: "Unreleased; tacplus floor
+  2.6 (2.6.1 and its build image pinned in tacplus.lock)."; the Later entry for #1 is done and can go.
 - **The looper's `tacplus` wrapper runs the lock's release but not its image digest** (2026-11-06,
   [#13](https://github.com/tacplus-dev/kmaker/issues/13)): tacplus.lock pins `build_image:
   ghcr.io/tacplus-dev/tacplus/build:2.6.1@sha256:…`, but the wrapper runs the pinned binary in `build:<line>` (the
   line's latest patch image), so the gates here and on land are not run in exactly the pinned image. Running
   `build_image` from the lock when there is one would make them deterministic as tacplus 2.6 intends (a
   tacplus-dev/looper change).
+  Checked by hand on 2026-11-07 ([#14](https://github.com/tacplus-dev/kmaker/issues/14)): `just gates` passes inside
+  the digest-pinned image itself (no docker in it, the image's own `tacplus` launcher, as tacplus-dev/build runs it).
+- **The build's security checks fail on generated code until tacplus-dev/looper#108** (2026-11-07,
+  [#14](https://github.com/tacplus-dev/kmaker/issues/14)): `looper-scan local` on main with the gates' generated
+  `tacplus/` laid over it (as the security job does) fails the policy on 144 findings in compiler output (gosec G115
+  ×120, G703 ×9, G404 ×6, G402 ×2, G123 ×2, G704 ×2; gitleaks generic-api-key ×3 in chassis test fixtures). The hub
+  decided for blobstore#17: no per-service exceptions for generated code; services' SAST skips `tacplus/`
+  (tacplus-dev/looper#108) and tacplus fixes the TLS findings at the source (tacplus-dev/tacplus#359). The one finding
+  in hand-written files (the image ran as root, semgrep `missing-user-entrypoint`) is fixed in #14.
 - **Old compressors in dsnet/compress's module graph** (2026-11-07, [#4](https://github.com/tacplus-dev/kmaker/issues/4)):
   after the #4 bumps `govulncheck ./...` (source and module mode) finds nothing, but `go list -m all` still lists
   `github.com/klauspost/compress v1.4.1` (GHSA-259r-337f-4rfw) and `github.com/ulikunitz/xz v0.5.6` (GO-2020-0016,

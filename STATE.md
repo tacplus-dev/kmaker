@@ -8,8 +8,8 @@ Overwritten to stay current (loopers and agents). Last updated: 2026-11-07 by lo
   SeaBeam and the gates pass with gitlab.com unreachable (#3)
 - **Works:** `Kmaker.MintKernelCert` (TokenReview + Pod API checks, signing under the cluster CA; the inbound
   `trace_id` rides both apiserver calls as `traceparent` or `X-Tacplus-Trace-Id` and is logged, #12); `just gates`
-  (tacplus/ freshness, ignoring build stamps and the embedded compiler docs; no upstream reference; gofmt, vet, build, test) passes with the stock `tacplus` wrapper (the pinned 2.6.1 in the 2.6 build image, #13)
-- **Released / deployed:** source tags v0.1.0 and v0.1.1 on main; no image published yet (#2); deployed nowhere yet;
+  (tacplus/ freshness, ignoring build stamps and the embedded compiler docs; no upstream reference; gofmt, vet, build, test) passes with the stock `tacplus` wrapper (the pinned 2.6.1 in the 2.6 build image, #13) and inside the digest-pinned image itself, as tacplus-dev/build runs it (#14); the image runs as uid 65532, not root (#14)
+- **Released / deployed:** source tags v0.1.0 and v0.1.1 on main; no image published yet (#2); deployed nowhere yet; the build's security checks fail on 144 findings in generated `tacplus/` until services' SAST skips it (tacplus-dev/looper#108; PROPOSALS.md);
   no CI file in the repository (SeaBeam's `.gitlab-ci.yml` removed, #3): builds run in the tacplus-dev GitLab build pipeline (#2)
 - **Dependencies:** grpc v1.85.0, x/net v0.62.0, x/sys v0.49.0, x/text v0.43.0, x/crypto v0.58.0; go directive 1.26.0
   (x/net ≥ v0.60.0 requires it); `govulncheck ./...` on a generated tree finds none (#4)

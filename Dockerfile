@@ -18,8 +18,11 @@ LABEL org.opencontainers.image.created="${BUILD_DATE}" \
       org.opencontainers.image.title="Kmaker" \
       org.opencontainers.image.description="Kernel bootstrap certificate signing service for Schematic control plane"
 
-RUN apk add --no-cache ca-certificates
+RUN apk add --no-cache ca-certificates && adduser -D -u 65532 app
 COPY bin/kmaker /usr/local/bin/kmaker
+# Not root: kmaker listens on 8443 and reads only its config (which carries the
+# signing CA) and the pod's service-account token and CA, all readable to it.
+USER 65532
 
 # Every service runs under the launcher (github.com/tacplus-dev/launcher): PID 1
 # that forwards signals, propagates the exit code, and kills a deadlocked child
