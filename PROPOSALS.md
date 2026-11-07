@@ -65,5 +65,13 @@ the looper then marks it `promoted` or `declined` here with the date.
   line's latest patch image), so the gates here and on land are not run in exactly the pinned image. Running
   `build_image` from the lock when there is one would make them deterministic as tacplus 2.6 intends (a
   tacplus-dev/looper change).
+- **Old compressors in dsnet/compress's module graph** (2026-11-07, [#4](https://github.com/tacplus-dev/kmaker/issues/4)):
+  after the #4 bumps `govulncheck ./...` (source and module mode) finds nothing, but `go list -m all` still lists
+  `github.com/klauspost/compress v1.4.1` (GHSA-259r-337f-4rfw) and `github.com/ulikunitz/xz v0.5.6` (GO-2020-0016,
+  GO-2025-3922), both required only by `github.com/dsnet/compress v0.0.1` for its own tests; `go mod why -m` says
+  kmaker does not need them and they are not in the build. A scanner that reads the whole graph (OSV over
+  `go list -m all`, as the nightly scan did) keeps flagging them. Its only importer is generated code
+  (`model/chassis/diskstore/compress.go`, `dsnet/compress/bzip2`), so the fix belongs in tacplus-dev/tacplus's
+  generator: another bzip2 writer (dsnet/compress has had no release since 2018) would clear the graph.
 
 ## Promoted / declined
