@@ -13,3 +13,4 @@ Append-only: add entries at the end, never edit or remove one (CI enforces it). 
 - 2026-11-06 looper issue Declare the tacplus floor: 2.4 (#1)
 - 2026-11-07 looper issue Patch vulnerable gRPC and golang.org/x dependencies (grpc 1.79.1 → ≥1.83.2, x/net, x/sys, x/text) (#4, a4b0ffa)
 - 2026-11-07 looper issue No gates: justfile has no `gates` recipe (#5)
+- 2026-11-08 looper issue Work without SeaBeam: no gitlab.com/seabeam module paths, sources or registries (#3)
