@@ -1,5 +1,7 @@
 # Kmaker
 
+> **Retired** (Jody, 2026-10-29). The operator no longer renders kmaker (tacplus-dev/operator#16), and nothing calls it. This repository is archived (2026-11-10); see tacplus-dev/roadmap suggestions/2026-11-10-retire-kmaker-everywhere-not-only-in-the-operator.md.
+
 Kmaker is the bootstrap certificate authority for kernel instances.
 Kernel pods present Kubernetes projected service account tokens to
 `Kmaker.MintKernelCert`; kmaker validates the token with the Kubernetes
